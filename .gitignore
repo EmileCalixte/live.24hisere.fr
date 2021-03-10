@@ -1,0 +1,4 @@
+.idea/
+frontend/build/
+node_modules/
+vendor/
