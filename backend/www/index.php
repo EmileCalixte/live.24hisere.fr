@@ -1,16 +1,15 @@
 <?php
 
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Slim\Factory\AppFactory;
+use App\MainApp;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$app = AppFactory::create();
+try { // TODO find a better way to display all errors ?
+    (new MainApp())->run();
+} catch (Throwable $e) {
+    if (true) { // TODO DEV MODE ONLY
+        dd($e);
+    }
 
-$app->get('/', function (ServerRequestInterface $request, ResponseInterface $response, $args) {
-    $response->getBody()->write("Hello world!");
-    return $response;
-});
-
-$app->run();
+    throw $e;
+}
