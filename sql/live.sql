@@ -10606,7 +10606,7 @@ ALTER TABLE `misc`
 --
 ALTER TABLE `passage`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `dossard` (`runner_id`);
+  ADD KEY `passage_runner_id` (`runner_id`);
 
 --
 -- Index pour la table `runner`
