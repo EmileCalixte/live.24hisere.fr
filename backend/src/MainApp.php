@@ -29,9 +29,10 @@ class MainApp
     public function __construct()
     {
         $this->config = new Config();
-        $this->db = new DAO($this->getConfig()->getDbHost(), $this->getConfig()->getDbName(), $this->getConfig()->getDbUser(), $this->getConfig()->getDbPassword());
 
         self::$app = $this;
+
+        $this->db = new DAO($this->getConfig()->getDbHost(), $this->getConfig()->getDbName(), $this->getConfig()->getDbUser(), $this->getConfig()->getDbPassword());
 
         $this->slim = SlimFactory::create();
         $this->router = new Router($this->slim);
