@@ -68,4 +68,13 @@ class DAO
 
         return $result;
     }
+
+    public function getRunners(): array
+    {
+        $query = $this->database->prepare('SELECT * FROM ' . self::TABLE_RUNNER);
+        $query->execute();
+        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result;
+    }
 }

@@ -7,6 +7,7 @@ namespace App\Router;
 use App\Responder\HelloResponder;
 use App\Responder\ResponderInterface;
 use App\Responder\RunnerDetailsResponder;
+use App\Responder\RunnersResponder;
 use Slim\App;
 use Slim\Interfaces\RouteInterface;
 
@@ -22,6 +23,7 @@ class Router
     {
         $this->registerRoute('/hello-world', HelloResponder::class, 'GET');
         $this->registerRoute('/runner-details/{id}', RunnerDetailsResponder::class, 'GET');
+        $this->registerRoute('/runners', RunnersResponder::class, 'GET');
     }
 
     private function registerRoute(string $uri, string $responderClass, array|string $methods = null): RouteInterface
