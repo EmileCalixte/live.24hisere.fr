@@ -4,6 +4,8 @@
 namespace App;
 
 
+use App\Config\Config;
+use App\Database\DAO;
 use App\Router\Router;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -14,17 +16,38 @@ use Throwable;
 
 class MainApp
 {
+    public static MainApp $app;
+
+    private Config $config;
+
+    private DAO $db;
+
     private Router $router;
 
     private App $slim;
 
     public function __construct()
     {
+        $this->config = new Config();
+        $this->db = new DAO($this->getConfig()->getDbHost(), $this->getConfig()->getDbName(), $this->getConfig()->getDbUser(), $this->getConfig()->getDbPassword());
+
+        self::$app = $this;
+
         $this->slim = SlimFactory::create();
         $this->router = new Router($this->slim);
 
         $this->registerErrorMiddleware();
         $this->router->registerRoutes();
+    }
+
+    public function getConfig(): Config
+    {
+        return $this->config;
+    }
+
+    public function getDb(): DAO
+    {
+        return $this->db;
     }
 
     public function run()
@@ -52,12 +75,12 @@ class MainApp
                 'error' => $exception->getMessage(),
             ];
 
-            if (true) { // TODO DEV MODE ONLY
+            if ($this->getConfig()->isDevMode()) {
                 $payload['stackTrace'] = $exception->getTrace();
             }
 
             $jsonEncodedFlags = JSON_UNESCAPED_UNICODE;
-            if (true) { // TODO DEV MODE ONLY
+            if ($this->getConfig()->isDevMode()) {
                 $jsonEncodedFlags |= JSON_PRETTY_PRINT;
             }
 
@@ -75,7 +98,7 @@ class MainApp
     private function registerErrorMiddleware()
     {
         $errorHandler = $this->getErrorHandler();
-        $errorMiddleware = $this->slim->addErrorMiddleware(true/* TODO DEV MODE ONLY */, true, true);
+        $errorMiddleware = $this->slim->addErrorMiddleware($this->getConfig()->isDevMode(), true, true);
         $errorMiddleware->setDefaultErrorHandler($errorHandler);
     }
 }

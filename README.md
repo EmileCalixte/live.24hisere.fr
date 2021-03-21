@@ -26,8 +26,9 @@ Les dépendances de l'application frontend sont installées automatiquement au l
 
 ### Configuration
 
-> TODO
+#### Backend (API)
 
+Créez le fichier `backend/config/config.php` à partir du modèle `backend/config/config.default.php` et renseignez-y les paramètres relatifs à l'environnement d'exécution.
 
 ### Accès
 
@@ -35,7 +36,7 @@ Les dépendances de l'application frontend sont installées automatiquement au l
 - API : [http://127.0.0.1:8000](http://127.0.0.1:8000)
 - PHPMyAdmin : [http://127.0.0.1:8080](http://127.0.0.1:8080)
 
-> Si vous utiliser Docker Toolbox, changez l'adresse locale par celle de votre machine virtuelle
+> Si vous utilisez Docker Toolbox, changez l'adresse locale par celle de votre machine virtuelle
 
 ### Base de données
 
