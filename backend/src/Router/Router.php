@@ -22,8 +22,8 @@ class Router
     public function registerRoutes()
     {
         $this->registerRoute('/hello-world', HelloResponder::class, 'GET');
-        $this->registerRoute('/runner-details/{id}', RunnerDetailsResponder::class, 'GET');
         $this->registerRoute('/runners', RunnersResponder::class, 'GET');
+        $this->registerRoute('/runners/{id}', RunnerDetailsResponder::class, 'GET');
     }
 
     private function registerRoute(string $uri, string $responderClass, array|string $methods = null): RouteInterface
