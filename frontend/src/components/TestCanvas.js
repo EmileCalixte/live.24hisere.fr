@@ -1,5 +1,5 @@
 import React from "react";
-import CanvasJSReact from "./lib/canvasjs/canvasjs.react";
+import CanvasJSReact from "../lib/canvasjs/canvasjs.react";
 
 const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
