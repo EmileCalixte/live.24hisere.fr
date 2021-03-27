@@ -24,6 +24,17 @@ class DAO
         }
     }
 
+    public function getCategories(): array
+    {
+        $query = $this->database->query('SELECT DISTINCT category from ' . self::TABLE_RUNNER);
+
+        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        return array_map(function ($fetch) {
+            return $fetch['category'];
+        }, $result);
+    }
+
     public function getMetadata(): array
     {
         $query = $this->database->prepare('SELECT * FROM ' . self::TABLE_MISC);
