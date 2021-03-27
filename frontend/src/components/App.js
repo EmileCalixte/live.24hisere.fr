@@ -1,21 +1,22 @@
 import React from "react";
-import TestCanvas from "./TestCanvas";
+import {BrowserRouter} from "react-router-dom";
+import Header from "./Header";
+import Footer from "./Footer";
 
 class App extends React.Component {
     render = () => {
         return (
-            <div className="app">
-                <div className="container-fluid">
-                    <div className="row">
-                        <div className="col-sm">
-                            App
-                        </div>
-                        <div className="col-sm">
-                            <TestCanvas/>
+            <BrowserRouter>
+                <div id="app">
+                    <div id="app-content-wrapper">
+                        <Header />
+                        <div id="app-content">
+                            Content
                         </div>
                     </div>
+                    <Footer />
                 </div>
-            </div>
+            </BrowserRouter>
         );
     }
 }

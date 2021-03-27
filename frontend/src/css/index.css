@@ -5,4 +5,46 @@ body {
     sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+
+    background-color: #f8f8f8;
+}
+
+#app-content-wrapper {
+    min-height: calc(100vh - 80px); /* Total height minux footer height */
+}
+
+#app-header {
+    height: 64px;
+
+    display: flex;
+
+    background-color: #fff;
+    box-shadow: 0 1px 2px rgb(208 208 208);
+}
+
+#app-footer {
+    height: 80px;
+
+    background-color: #131119;
+    color: #fff
+}
+
+#app-header-logo-container {
+    height: 100%;
+
+    display: inline-flex;
+    align-items: center;
+
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+#app-header-logo-container img {
+    height: 90%;
+}
+
+#app-header nav {
+    height: 100%;
+
+    flex: 1
 }
