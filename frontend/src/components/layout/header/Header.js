@@ -1,4 +1,5 @@
 import React from "react";
+import Navbar from "./Navbar";
 
 class Header extends React.Component {
     render = () => {
@@ -7,9 +8,7 @@ class Header extends React.Component {
                 <div id="app-header-logo-container">
                     <img alt="Logo" src="/img/24hisere.svg" />
                 </div>
-                <nav>
-                    Nav
-                </nav>
+                <Navbar />
             </header>
         )
     }
