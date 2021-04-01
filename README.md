@@ -30,6 +30,10 @@ Les dépendances de l'application frontend sont installées automatiquement au l
 
 Créez le fichier `backend/config/config.php` à partir du modèle `backend/config/config.default.php` et renseignez-y les paramètres relatifs à l'environnement d'exécution.
 
+#### Frontend
+
+Créez le fichier `frontend/src/config/config.js` à partir du modèle `frontend/src/config/config.default.js` et renseignez-y les paramètres relatifs à l'environnement d'exécution.
+
 ### Accès
 
 - Application frontend : [http://127.0.0.1](http://127.0.0.1)

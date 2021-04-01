@@ -1,5 +1,6 @@
 .idea/
 backend/config/config.php
 frontend/build/
+frontend/src/config/config.js
 node_modules/
 vendor/

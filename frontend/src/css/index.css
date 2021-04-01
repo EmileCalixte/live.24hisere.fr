@@ -7,6 +7,7 @@ body {
     -moz-osx-font-smoothing: grayscale;
 
     background-color: #f8f8f8;
+    color: #222;
 }
 
 #app-content-wrapper {
@@ -96,4 +97,22 @@ body {
     bottom: 0;
     left: 0;
     right: 0;
+}
+
+#ranking-settings-container {
+    display: flex;
+    flex-wrap: wrap;
+
+    margin-left: -15px;
+    margin-right: -15px;
+}
+
+.ranking-settings {
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+#ranking-settings-category-select {
+    width: 360px;
+    max-width: calc(100vw - 32px);
 }

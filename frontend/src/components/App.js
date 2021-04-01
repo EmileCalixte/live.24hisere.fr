@@ -13,7 +13,7 @@ class App extends React.Component {
                     <div id="app-content-wrapper">
                         <Header />
                         <div id="app-content">
-                            <div id="page-content">
+                            <div id="page-content" className="container-fluid">
                                 <Switch>
                                     <Route exact path="/ranking" component={Ranking} />
                                     <Route exact path="/runner-details" component={RunnerDetails} />
