@@ -6,6 +6,7 @@ namespace App\Router;
 
 use App\Responder\CategoriesResponder;
 use App\Responder\HelloResponder;
+use App\Responder\RankingResponder;
 use App\Responder\ResponderInterface;
 use App\Responder\RunnerDetailsResponder;
 use App\Responder\RunnersResponder;
@@ -24,6 +25,7 @@ class Router
     {
         $this->registerRoute('/categories', CategoriesResponder::class, 'GET');
         $this->registerRoute('/hello-world', HelloResponder::class, 'GET');
+        $this->registerRoute('/ranking', RankingResponder::class, 'GET');
         $this->registerRoute('/runners', RunnersResponder::class, 'GET');
         $this->registerRoute('/runners/{id}', RunnerDetailsResponder::class, 'GET');
     }

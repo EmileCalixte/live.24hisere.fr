@@ -56,6 +56,65 @@ class DAO
         return $metadata;
     }
 
+    public function getRanking(string $at = null)
+    {
+        $toBind = [];
+
+        $passageTableName = self::TABLE_PASSAGE;
+        $runnerTableName = self::TABLE_RUNNER;
+
+        $stmt = <<<EOF
+            SELECT 
+                r.*, 
+                count(p.id) AS passageCount,
+                (
+                    SELECT p1.time
+                    FROM 
+                        $passageTableName p1 
+                    WHERE 
+                        p1.runner_id = r.id 
+        EOF;
+
+        if (!is_null($at)) {
+            $stmt .= ' AND p1.time <= :at';
+        }
+
+        $stmt .= " AND p1.id = (SELECT p2.id FROM $passageTableName p2 WHERE p2.runner_id = p1.runner_id";
+
+        if (!is_null($at)) {
+            $stmt .= ' AND p2.time <= :at';
+        }
+
+        $stmt .= <<<EOF
+             ORDER BY p2.time DESC LIMIT 1)
+                ) AS lastPassageTime
+            FROM 
+                $runnerTableName r 
+            LEFT JOIN 
+                $passageTableName p ON p.runner_id = r.id 
+        EOF;
+
+        if (!is_null($at)) {
+            $stmt .= ' AND p.time < :at';
+            $toBind[':at'] = $at;
+        }
+
+        $stmt .= <<<EOF
+             GROUP BY r.id 
+            ORDER BY passageCount DESC, lastPassageTime ASC, lastname ASC, firstname ASC
+        EOF;
+
+        $query = $this->database->prepare($stmt);
+        foreach (array_keys($toBind) as $param) {
+            $query->bindParam($param, $toBind[$param]);
+        }
+        $query->execute();
+        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
+
+
+
     public function getRunner(int|string $id): array
     {
         $query = $this->database->prepare('SELECT * FROM ' . self::TABLE_RUNNER . ' WHERE id = :id');
