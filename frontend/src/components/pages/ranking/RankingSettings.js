@@ -6,7 +6,6 @@ class RankingSettings extends React.Component {
     render = () => {
         return(
             <section id="ranking-settings-section">
-                <h2>Filtres</h2>
                 <div id="ranking-settings-container">
 
                     <div className="ranking-settings">

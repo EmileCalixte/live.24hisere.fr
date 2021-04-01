@@ -10,6 +10,10 @@ class Util {
         }
         console.log('%c[v]', 'color: orange', ...items);
     };
+
+    static formatFloatNumber = (number, decimalsCount) => {
+        return Number.parseFloat(number).toFixed(decimalsCount);
+    }
 }
 
 export default Util;

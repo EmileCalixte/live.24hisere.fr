@@ -1,6 +1,7 @@
 import React from "react";
 import RankingSettings from "./RankingSettings";
 import ApiUtil from "../../../util/ApiUtil";
+import RankingTable from "./RankingTable";
 
 class Ranking extends React.Component {
     static CATEGORY_ALL = 'all';
@@ -10,18 +11,28 @@ class Ranking extends React.Component {
     static GENDER_H = 'h';
     static GENDER_F = 'f';
 
+    refreshRankingInterval = null;
+
     constructor(props) {
         super(props);
 
         this.state = {
             categories: false,
+            ranking: [],
             selectedCategory: Ranking.CATEGORY_ALL,
             selectedGender: Ranking.GENDER_MIXED,
         }
     }
 
-    componentDidMount = async () => {
-        await this.fetchCategories();
+    componentDidMount = () => {
+        this.fetchCategories();
+        this.fetchRanking();
+
+        this.refreshRankingInterval = setInterval(this.fetchRanking, 30000);
+    }
+
+    componentWillUnmount = () => {
+        clearInterval(this.refreshRankingInterval);
     }
 
     fetchCategories = async () => {
@@ -29,8 +40,19 @@ class Ranking extends React.Component {
         const responseJson = await response.json();
 
         this.setState({
-            categories: responseJson.categories
+            categories: responseJson.categories,
         });
+    }
+
+    fetchRanking = async () => {
+        const response = await ApiUtil.performAPIRequest('/ranking');
+        const responseJson = await response.json();
+
+        // TODO process ranking and add missing fields (avg speed, ranking per gender, per category...)
+
+        this.setState({
+            ranking: responseJson.ranking,
+        })
     }
 
     onCategorySelect = (e) => {
@@ -56,6 +78,11 @@ class Ranking extends React.Component {
                 <div className="row">
                     <div className="col-12">
                         <RankingSettings rankingComponent={this} />
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-12">
+                        <RankingTable ranking={this.state.ranking} category={this.state.selectedCategory} gender={this.state.selectedGender} />
                     </div>
                 </div>
             </div>
