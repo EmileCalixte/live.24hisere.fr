@@ -1,5 +1,6 @@
 import React from "react";
 import LoadingCategoriesOption from "./LoadingCategoriesOption";
+import Ranking from "./Ranking";
 
 class RankingSettings extends React.Component {
     render = () => {
@@ -13,9 +14,15 @@ class RankingSettings extends React.Component {
                             <label htmlFor="ranking-settings-category-select">
                                 Catégorie
                             </label>
-                            <select id="ranking-settings-category-select" defaultValue="all" className="input-select">
-                                <option value="all">Scratch (toutes catégories)</option>
+                            <select
+                                id="ranking-settings-category-select"
+                                value={this.props.rankingComponent.state.selectedCategory}
+                                onChange={this.props.rankingComponent.onCategorySelect}
+                                className="input-select"
+                            >
+                                <option value={Ranking.CATEGORY_ALL}>Scratch (toutes catégories)</option>
                                 {this.renderCategoriesOptions()}
+                                <option value={Ranking.CATEGORY_TEAM}>Équipes</option>
                             </select>
                         </div>
                     </div>
@@ -25,7 +32,12 @@ class RankingSettings extends React.Component {
 
                         <div className="inline-input-group">
                             <label className="input-radio">
-                                <input defaultChecked={true} type="radio" id="ranking-settings-gender-mixed-radio" name="gender" value="mixed" />
+                                <input
+                                    type="radio"
+                                    defaultChecked={this.props.rankingComponent.state.selectedGender === Ranking.GENDER_MIXED}
+                                    onChange={this.props.rankingComponent.onGenderSelect}
+                                    name="gender"
+                                    value={Ranking.GENDER_MIXED} />
                                 <span/>
                                 Mixte
                             </label>
@@ -33,7 +45,12 @@ class RankingSettings extends React.Component {
 
                         <div className="inline-input-group">
                             <label className="input-radio">
-                                <input type="radio" name="gender" value="h" />
+                                <input
+                                    type="radio"
+                                    defaultChecked={this.props.rankingComponent.state.selectedGender === Ranking.GENDER_H}
+                                    onChange={this.props.rankingComponent.onGenderSelect}
+                                    name="gender"
+                                    value={Ranking.GENDER_H} />
                                 <span/>
                                 Hommes
                             </label>
@@ -41,7 +58,12 @@ class RankingSettings extends React.Component {
 
                         <div className="inline-input-group">
                             <label className="input-radio">
-                                <input type="radio" name="gender" value="f" />
+                                <input
+                                    type="radio"
+                                    defaultChecked={this.props.rankingComponent.state.selectedGender === Ranking.GENDER_F}
+                                    onChange={this.props.rankingComponent.onGenderSelect}
+                                    name="gender"
+                                    value={Ranking.GENDER_F} />
                                 <span/>
                                 Femmes
                             </label>
@@ -54,7 +76,7 @@ class RankingSettings extends React.Component {
     }
 
     renderCategoriesOptions = () => {
-        if (this.props.categories === false) {
+        if (this.props.rankingComponent.state.categories === false) {
             return(
                 <LoadingCategoriesOption/>
             );
@@ -62,7 +84,7 @@ class RankingSettings extends React.Component {
 
         const items = [];
 
-        for (const [key, name] of Object.entries(this.props.categories)) {
+        for (const [key, name] of Object.entries(this.props.rankingComponent.state.categories)) {
             items.push(<option key={key} value={key}>{name}</option>)
         }
 

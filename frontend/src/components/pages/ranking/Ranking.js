@@ -3,11 +3,20 @@ import RankingSettings from "./RankingSettings";
 import ApiUtil from "../../../util/ApiUtil";
 
 class Ranking extends React.Component {
+    static CATEGORY_ALL = 'all';
+    static CATEGORY_TEAM = 'team';
+
+    static GENDER_MIXED = 'mixed';
+    static GENDER_H = 'h';
+    static GENDER_F = 'f';
+
     constructor(props) {
         super(props);
 
         this.state = {
             categories: false,
+            selectedCategory: Ranking.CATEGORY_ALL,
+            selectedGender: Ranking.GENDER_MIXED,
         }
     }
 
@@ -24,6 +33,18 @@ class Ranking extends React.Component {
         });
     }
 
+    onCategorySelect = (e) => {
+        this.setState({
+            selectedCategory: e.target.value,
+        });
+    }
+
+    onGenderSelect = (e) => {
+        this.setState({
+            selectedGender: e.target.value,
+        });
+    }
+
     render = () => {
         return(
             <div id="page-ranking">
@@ -34,7 +55,7 @@ class Ranking extends React.Component {
                 </div>
                 <div className="row">
                     <div className="col-12">
-                        <RankingSettings categories={this.state.categories} />
+                        <RankingSettings rankingComponent={this} />
                     </div>
                 </div>
             </div>
