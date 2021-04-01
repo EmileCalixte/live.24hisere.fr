@@ -32,7 +32,6 @@ class RunnerDetailsResponder implements ResponderInterface
 
         $response->getBody()->write(Util::jsonEncode($responseData));
 
-        return $response
-            ->withHeader('Content-Type', 'application/json');
+        return Util::getApiResponseWithHeaders($response);
     }
 }

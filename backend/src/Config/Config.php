@@ -19,6 +19,8 @@ class Config
 
     private bool $devMode = false;
 
+    private string $frontendUrl;
+
     public function __construct()
     {
         $this->loadFromConfigArray();
@@ -47,6 +49,11 @@ class Config
     public function getDbUser(): string
     {
         return $this->dbUser;
+    }
+
+    public function getFrontendUrl(): string
+    {
+        return $this->frontendUrl;
     }
 
     public function isDevMode(): bool
@@ -82,6 +89,8 @@ class Config
 
         $devModeParam = 'devMode';
 
+        $frontendUrlParam = 'frontendUrl';
+
         if (!isset($configArray[$dbHostParam])) {
             throw new \RuntimeException("Configuration file must contain a '{$dbHostParam}' parameter");
         }
@@ -96,6 +105,10 @@ class Config
 
         if (!isset($configArray[$dbPasswordParam])) {
             throw new \RuntimeException("Configuration file must contain a '{$dbPasswordParam}' parameter");
+        }
+
+        if (!isset($configArray[$frontendUrlParam])) {
+            throw new \RuntimeException("Configuration file must contain a '{$frontendUrlParam}' parameter");
         }
 
         if (!is_string($configArray[$dbHostParam])) {
@@ -114,10 +127,16 @@ class Config
             throw new \RuntimeException("'{$dbPasswordParam}' parameter in configuration file must be a string");
         }
 
+        if (!is_string($configArray[$frontendUrlParam])) {
+            throw new \RuntimeException("'{$frontendUrlParam}' parameter in configuration file must be a string");
+        }
+
         $this->dbHost = $configArray[$dbHostParam];
         $this->dbName = $configArray[$dbNameParam];
         $this->dbUser = $configArray[$dbUserParam];
         $this->dbPassword = $configArray[$dbPasswordParam];
+
+        $this->frontendUrl = $configArray[$frontendUrlParam];
 
         if (isset($configArray[$devModeParam])) {
             if (!is_bool($configArray[$devModeParam])) {

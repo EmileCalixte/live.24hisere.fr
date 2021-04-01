@@ -7,4 +7,6 @@ return [
     'dbName' => 'live',
     'dbUser' => 'admin',
     'dbPassword' => 'admin',
+
+    'frontendUrl' => 'http://localhost',
 ];

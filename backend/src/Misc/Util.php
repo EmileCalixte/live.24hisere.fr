@@ -5,6 +5,8 @@ namespace App\Misc;
 
 
 use App\MainApp;
+use Psr\Http\Message\MessageInterface;
+use Psr\Http\Message\ResponseInterface;
 
 class Util
 {
@@ -39,6 +41,13 @@ class Util
         }
 
         return json_encode($data, $flags, $depth);
+    }
+
+    public static function getApiResponseWithHeaders(ResponseInterface $response): MessageInterface
+    {
+        return $response
+            ->withHeader('Access-Control-Allow-Origin', MainApp::$app->getConfig()->getFrontendUrl())
+            ->withHeader('Content-Type', 'application/json');
     }
 
     private static function getMetadata(): array
