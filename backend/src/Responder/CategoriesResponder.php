@@ -49,10 +49,14 @@ class CategoriesResponder implements ResponderInterface
             if (!in_array($categoryCode, $dbCategories)) {
                 continue;
             }
-            $responseData['categories'][$categoryCode] = $categoryName;
+            $responseData['categories'][] = [
+                'code' => $categoryCode,
+                'name' => $categoryName,
+            ];
         }
 
         Util::insertMetadataInResponseArray($responseData);
+        Util::camelizeApiResponseFields($responseData);
 
         $response->getBody()->write(Util::jsonEncode($responseData));
 

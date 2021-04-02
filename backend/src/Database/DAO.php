@@ -110,6 +110,14 @@ class DAO
         }
         $query->execute();
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
+
+        for ($i = 0; $i < count($result); ++$i) {
+            $row = &$result[$i];
+            if (!is_null($row['last_passage_time'])) {
+                $row['last_passage_time'] = Util::convertDatabaseDateToJavascriptDate($row['last_passage_time']);
+            }
+        }
+
         return $result;
     }
 

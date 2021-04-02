@@ -39,8 +39,14 @@ class Ranking extends React.Component {
         const response = await ApiUtil.performAPIRequest('/categories');
         const responseJson = await response.json();
 
+        const categories = {};
+
+        responseJson.categories.forEach((category) => {
+            categories[category.code] = category.name;
+        });
+
         this.setState({
-            categories: responseJson.categories,
+            categories,
         });
     }
 

@@ -29,6 +29,7 @@ class RunnerDetailsResponder implements ResponderInterface
         ];
 
         Util::insertMetadataInResponseArray($responseData);
+        Util::camelizeApiResponseFields($responseData);
 
         $response->getBody()->write(Util::jsonEncode($responseData));
 

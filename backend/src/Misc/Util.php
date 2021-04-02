@@ -5,11 +5,34 @@ namespace App\Misc;
 
 
 use App\MainApp;
+use ICanBoogie\Inflector;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class Util
 {
+    /**
+     *
+     * @param array $responseData
+     */
+    public static function camelizeApiResponseFields(array &$responseData)
+    {
+        $inflector = new Inflector();
+
+        foreach (array_keys($responseData) as $key) {
+            $value = $responseData[$key];
+
+            if (is_array($value)) {
+                self::camelizeApiResponseFields($value);
+            }
+
+            $camelizedKey = $inflector->camelize($key, Inflector::DOWNCASE_FIRST_LETTER);
+            unset($responseData[$key]);
+
+            $responseData[$camelizedKey] = $value;
+        }
+    }
+
     public static function convertDatabaseDateToJavascriptDate(string $dbDate, bool $withMilliseconds = true): ?string
     {
         $dbFormat = 'Y-m-d H:i:s';
