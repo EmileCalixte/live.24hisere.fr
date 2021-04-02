@@ -66,7 +66,7 @@ class DAO
         $stmt = <<<EOF
             SELECT 
                 r.*, 
-                count(p.id) AS passageCount,
+                count(p.id) AS passage_count,
                 (
                     SELECT p1.time
                     FROM 
@@ -87,7 +87,7 @@ class DAO
 
         $stmt .= <<<EOF
              ORDER BY p2.time DESC LIMIT 1)
-                ) AS lastPassageTime
+                ) AS last_passage_time
             FROM 
                 $runnerTableName r 
             LEFT JOIN 
@@ -101,7 +101,7 @@ class DAO
 
         $stmt .= <<<EOF
              GROUP BY r.id 
-            ORDER BY passageCount DESC, lastPassageTime ASC, lastname ASC, firstname ASC
+            ORDER BY passage_count DESC, last_passage_time ASC, lastname ASC, firstname ASC
         EOF;
 
         $query = $this->database->prepare($stmt);
