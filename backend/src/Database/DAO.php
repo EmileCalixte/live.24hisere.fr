@@ -116,12 +116,12 @@ class DAO
             if (!is_null($row['last_passage_time'])) {
                 $row['last_passage_time'] = Util::convertDatabaseDateToJavascriptDate($row['last_passage_time']);
             }
+
+            $row['is_team'] = $row['is_team'] === '1';
         }
 
         return $result;
     }
-
-
 
     public function getRunner(int|string $id): array
     {
