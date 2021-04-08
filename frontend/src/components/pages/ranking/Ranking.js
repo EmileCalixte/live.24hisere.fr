@@ -2,13 +2,14 @@ import React from "react";
 import RankingSettings from "./RankingSettings";
 import ApiUtil from "../../../util/ApiUtil";
 import RankingTable from "./RankingTable";
+import RankingUtil from "../../../util/RankingUtil";
 
 class Ranking extends React.Component {
     static CATEGORY_ALL = 'all';
     static CATEGORY_TEAM = 'team';
 
     static GENDER_MIXED = 'mixed';
-    static GENDER_H = 'h';
+    static GENDER_M = 'm';
     static GENDER_F = 'f';
 
     refreshRankingInterval = null;
@@ -19,6 +20,7 @@ class Ranking extends React.Component {
         this.state = {
             categories: false,
             ranking: [],
+            processedRanking: [],
             selectedCategory: Ranking.CATEGORY_ALL,
             selectedGender: Ranking.GENDER_MIXED,
         }
@@ -54,10 +56,9 @@ class Ranking extends React.Component {
         const response = await ApiUtil.performAPIRequest('/ranking');
         const responseJson = await response.json();
 
-        // TODO process ranking and add missing fields (avg speed, ranking per gender, per category...)
-
         this.setState({
             ranking: responseJson.ranking,
+            processedRanking: RankingUtil.getProcessedRanking(responseJson.ranking),
         })
     }
 
@@ -88,7 +89,7 @@ class Ranking extends React.Component {
                 </div>
                 <div className="row">
                     <div className="col-12">
-                        <RankingTable ranking={this.state.ranking} category={this.state.selectedCategory} gender={this.state.selectedGender} />
+                        <RankingTable ranking={this.state.processedRanking} category={this.state.selectedCategory} gender={this.state.selectedGender} />
                     </div>
                 </div>
             </div>

@@ -46,10 +46,10 @@ class RankingSettings extends React.Component {
                             <label className="input-radio">
                                 <input
                                     type="radio"
-                                    defaultChecked={this.props.rankingComponent.state.selectedGender === Ranking.GENDER_H}
+                                    defaultChecked={this.props.rankingComponent.state.selectedGender === Ranking.GENDER_M}
                                     onChange={this.props.rankingComponent.onGenderSelect}
                                     name="gender"
-                                    value={Ranking.GENDER_H} />
+                                    value={Ranking.GENDER_M} />
                                 <span/>
                                 Hommes
                             </label>
