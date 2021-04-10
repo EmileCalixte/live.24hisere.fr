@@ -8,22 +8,7 @@ class RankingTable extends React.Component {
             <table id="ranking-table" className="table">
                 <thead>
                 <tr>
-                    <th>N°</th>
-                    {(() => {
-                        if (this.props.category === Ranking.CATEGORY_TEAM) {
-                            return null;
-                        }
-
-                        if (this.props.category === Ranking.CATEGORY_ALL) {
-                            return (
-                                <th>N° Cat.</th>
-                            )
-                        }
-
-                        return (
-                            <th>N° Scratch</th>
-                        )
-                    })()}
+                    <th colSpan={this.props.category === Ranking.CATEGORY_TEAM ? 1 : 4}>N°</th>
                     <th>Doss.</th>
                     <th>Nom</th>
                     <th>Nb. tours</th>

@@ -1,56 +1,95 @@
+import Util from "./Util";
+
 class RankingUtil {
     static getProcessedRanking = (ranking) => {
+        Util.verbose('Processing ranking');
+
         const processedRanking = [];
 
         // Initialize temporary objects to keep track of the current ranking for each category and each gender
-
-        // TODO save ranking PER CATEGORY AND PER GENDER IN RUNNER => runner.rankings[category][gender]
-
-        const ranksByCategory = {
+        const currentRanksByCategory = {
             scratch: { // Scratch includes all solo runners regardless of their category
-                rank: 0,
-                lastRunner: null,
-            },
-            team: { // Team is a particular category
-                rank: 0,
-                lastRunner: null,
-            },
-            // Other categories will be added in this object dynamically
-        };
-        const ranksByGender = {
-            M: {
-                rank: 0,
-                lastRunner: null,
-            },
-            F: {
-                rank: 0,
-                lastRunner: null,
-            },
-        };
-
-        const updateRanksByCategory = (runner, category) => {
-            if (!ranksByCategory.hasOwnProperty(category)) {
-                ranksByCategory[category] = {
+                mixed: {
                     rank: 0,
                     lastRunner: null,
-                };
-            }
-
-            ++ranksByCategory[category].rank;
-            ranksByCategory[category].lastRunner = runner;
-
-            console.log(category, ranksByCategory[category].rank);
+                },
+                M: {
+                    rank: 0,
+                    lastRunner: null,
+                },
+                F: {
+                    rank: 0,
+                    lastRunner: null,
+                },
+            },
+            team: {
+                mixed: {
+                    rank: 0,
+                    lastRunner: null,
+                },
+                // UNUSED FOR TEAMS
+                // M: {
+                //     rank: 0,
+                //     lastRunner: null,
+                // },
+                // F: {
+                //     rank: 0,
+                //     lastRunner: null,
+                // },
+            },
+            // Other categories will be appended here
         }
 
-        const updateRanksByGender = (runner, gender) => {
-            if (!ranksByGender.hasOwnProperty(gender)) {
-                throw new Error('Unknown gender');
+        const getLastRunner = (category, gender) => {
+            if (!currentRanksByCategory.hasOwnProperty(category)) {
+                return null;
             }
 
-            ++ranksByGender[gender].rank
-            ranksByGender[gender].lastRunner = runner;
+            if (!currentRanksByCategory[category].hasOwnProperty(gender)) {
+                return null;
+            }
 
-            console.log(gender, ranksByGender[gender].rank);
+            return currentRanksByCategory[category][gender].lastRunner;
+        }
+
+        const addCategoryToCurrentRanks = (categoryName) => {
+            currentRanksByCategory[categoryName] = {
+                mixed: {
+                    rank: 0,
+                    lastRunner: null,
+                },
+                M: {
+                    rank: 0,
+                    lastRunner: null,
+                },
+                F: {
+                    rank: 0,
+                    lastRunner: null,
+                },
+            };
+        }
+
+        const updateCurrentRanks = (runner) => {
+            if (runner.isTeam) {
+                ++currentRanksByCategory.team.mixed.rank;
+                currentRanksByCategory.team.mixed.lastRunner = runner;
+            } else {
+                if (!currentRanksByCategory.hasOwnProperty(runner.category.toUpperCase())) {
+                    addCategoryToCurrentRanks(runner.category.toUpperCase());
+                }
+
+                ++currentRanksByCategory.scratch.mixed.rank;
+                currentRanksByCategory.scratch.mixed.lastRunner = runner;
+
+                ++currentRanksByCategory.scratch[runner.gender.toUpperCase()].rank;
+                currentRanksByCategory.scratch[runner.gender.toUpperCase()].lastRunner = runner;
+
+                ++currentRanksByCategory[runner.category.toUpperCase()].mixed.rank;
+                currentRanksByCategory[runner.category.toUpperCase()].mixed.lastRunner = runner;
+
+                ++currentRanksByCategory[runner.category.toUpperCase()][runner.gender.toUpperCase()].rank;
+                currentRanksByCategory[runner.category.toUpperCase()][runner.gender.toUpperCase()].lastRunner = runner;
+            }
         }
 
         const areRunnersEqual = (runner1, runner2) => {
@@ -65,55 +104,66 @@ class RankingUtil {
             return (new Date(runner1.lastPassageTime)).getTime() === (new Date(runner2.lastPassageTime)).getTime();
         }
 
-        console.log(ranking);
-
         for (let i = 0; i < ranking.length; ++i) {
             const runner = {...ranking[i]}; // Clone runner object to keep the original object unchanged
 
-            let scratchPreviousRunner = null;
-            let categoryPreviousRunner = null;
-            let genderPreviousRunner = null;
+            runner.rankings = {
+                real: {
+                    scratchMixed: null,
+                    scratchGender: null,
+                    categoryMixed: null,
+                    categoryGender: null,
+                },
+                displayed: { // Same as real, except in case of equality with the previous runner
+                    scratchMixed: null,
+                    scratchGender: null,
+                    categoryMixed: null,
+                    categoryGender: null,
+                },
+            }
+
+            let scratchMixedPreviousRunner = null;
+            let scratchGenderPreviousRunner = null;
+            let categoryMixedPreviousRunner = null;
+            let categoryGenderPreviousRunner = null;
 
             if (runner.isTeam) {
-                scratchPreviousRunner = ranksByCategory.team.lastRunner;
-
-                updateRanksByCategory(runner, 'team');
-
-                runner.scratchRanking = ranksByCategory.team.rank;
+                scratchMixedPreviousRunner = getLastRunner('team', 'mixed');
             } else {
-                scratchPreviousRunner = ranksByCategory.scratch.lastRunner;
-
-                if (ranksByCategory.hasOwnProperty(runner.category.toUpperCase())) {
-                    categoryPreviousRunner = ranksByCategory[runner.category.toUpperCase()].lastRunner;
-                }
-
-                genderPreviousRunner = ranksByGender[runner.gender.toUpperCase()].lastRunner;
-
-                updateRanksByCategory(runner, 'scratch');
-                updateRanksByCategory(runner, runner.category.toUpperCase());
-                updateRanksByGender(runner, runner.gender.toUpperCase());
-
-                runner.scratchRanking = ranksByCategory.scratch.rank;
-                runner.categoryRanking = ranksByCategory[runner.category.toUpperCase()].rank
-                runner.genderRanking = ranksByGender[runner.gender.toUpperCase()].rank
+                scratchMixedPreviousRunner = getLastRunner('scratch', 'mixed');
+                scratchGenderPreviousRunner = getLastRunner('scratch', runner.gender.toUpperCase());
+                categoryMixedPreviousRunner = getLastRunner(runner.category.toUpperCase(), 'mixed');
+                categoryGenderPreviousRunner = getLastRunner(runner.category.toUpperCase(), runner.gender.toUpperCase());
             }
 
-            console.log(ranksByCategory, ranksByGender);
+            updateCurrentRanks(runner);
 
-            let scratchPreviousRunnerEquality = areRunnersEqual(runner, scratchPreviousRunner);
-            let categoryPreviousRunnerEquality = areRunnersEqual(runner, categoryPreviousRunner);
-            let genderPreviousRunnerEquality = areRunnersEqual(runner, genderPreviousRunner);
+            if (runner.isTeam) {
+                runner.rankings.real.scratchMixed = currentRanksByCategory.team.mixed.rank;
+            } else {
+                runner.rankings.real.scratchMixed = currentRanksByCategory.scratch.mixed.rank;
+                runner.rankings.real.scratchGender = currentRanksByCategory.scratch[runner.gender.toUpperCase()].rank;
+                runner.rankings.real.categoryMixed = currentRanksByCategory[runner.category.toUpperCase()].mixed.rank;
+                runner.rankings.real.categoryGender = currentRanksByCategory[runner.category.toUpperCase()][runner.gender.toUpperCase()].rank;
+            }
 
-            console.log(scratchPreviousRunnerEquality, categoryPreviousRunnerEquality, genderPreviousRunnerEquality);
+            let scratchMixedPreviousRunnerEquality = false;
+            let scratchGenderPreviousRunnerEquality = false;
+            let categoryMixedPreviousRunnerEquality = false;
+            let categoryGenderPreviousRunnerEquality = false;
 
-            runner.displayedScratchRanking = scratchPreviousRunnerEquality ? scratchPreviousRunner.displayedScratchRanking : runner.scratchRanking;
+            scratchMixedPreviousRunnerEquality = areRunnersEqual(runner, scratchMixedPreviousRunner);
+            scratchGenderPreviousRunnerEquality = areRunnersEqual(runner, scratchGenderPreviousRunner);
+            categoryMixedPreviousRunnerEquality = areRunnersEqual(runner, categoryMixedPreviousRunner);
+            categoryGenderPreviousRunnerEquality = areRunnersEqual(runner, categoryGenderPreviousRunner);
+
+            runner.rankings.displayed.scratchMixed = scratchMixedPreviousRunnerEquality ? scratchMixedPreviousRunner.rankings.displayed.scratchMixed : runner.rankings.real.scratchMixed;
 
             if (!runner.isTeam) {
-                runner.displayedCategoryRanking = categoryPreviousRunnerEquality ? categoryPreviousRunner.displayedCategoryRanking : runner.categoryRanking;
-                runner.displayedGenderRanking = genderPreviousRunnerEquality ? genderPreviousRunner.displayedGenderRanking : runner.genderRanking;
+                runner.rankings.displayed.scratchGender = scratchGenderPreviousRunnerEquality ? scratchGenderPreviousRunner.rankings.displayed.scratchGender : runner.rankings.real.scratchGender;
+                runner.rankings.displayed.categoryMixed = categoryMixedPreviousRunnerEquality ? categoryMixedPreviousRunner.rankings.displayed.categoryMixed : runner.rankings.real.categoryMixed;
+                runner.rankings.displayed.categoryGender = categoryGenderPreviousRunnerEquality ? categoryGenderPreviousRunner.rankings.displayed.categoryGender : runner.rankings.real.categoryGender;
             }
-
-            runner.displayedScratchRanking = runner.scratchRanking; // TODO Handle equality
 
             // TODO compute distance
             // TODO compute average speed
@@ -121,7 +171,7 @@ class RankingUtil {
             processedRanking.push(runner)
         }
 
-        console.log(processedRanking);
+        Util.verbose('Ranking processed');
 
         return processedRanking;
     }
