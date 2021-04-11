@@ -10,6 +10,10 @@ body {
     color: #222;
 }
 
+.ranking-table-print-header {
+    display: none;
+}
+
 a {
     color: #22aa22;
 }

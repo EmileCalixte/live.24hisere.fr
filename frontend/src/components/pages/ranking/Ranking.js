@@ -1,3 +1,4 @@
+import '../../../css/print-ranking-table.css';
 import React from "react";
 import RankingSettings from "./RankingSettings";
 import ApiUtil from "../../../util/ApiUtil";
@@ -77,12 +78,12 @@ class Ranking extends React.Component {
     render = () => {
         return(
             <div id="page-ranking">
-                <div className="row">
+                <div className="row hide-on-print">
                     <div className="col-12">
                         <h1>Classements</h1>
                     </div>
                 </div>
-                <div className="row">
+                <div className="row hide-on-print">
                     <div className="col-12">
                         <RankingSettings rankingComponent={this} />
                     </div>

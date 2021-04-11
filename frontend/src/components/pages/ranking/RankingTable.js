@@ -8,6 +8,33 @@ class RankingTable extends React.Component {
             <table id="ranking-table" className="table">
                 <thead>
                 <tr>
+                    <td colSpan="42" className="ranking-table-print-header">
+                        Classement {(() => {
+                            if (this.props.category === Ranking.CATEGORY_TEAM) {
+                                return 'équipes';
+                            } else if (this.props.category === Ranking.CATEGORY_ALL) {
+                                return 'scratch';
+                            } else {
+                                return this.props.category.toUpperCase();
+                            }
+                        })()} {(() => {
+                            if (this.props.category === Ranking.CATEGORY_TEAM) {
+                                return null;
+                            }
+
+                            if (this.props.gender === Ranking.GENDER_MIXED) {
+                                return 'mixte';
+                            } else if (this.props.gender === Ranking.GENDER_M) {
+                                return 'hommes';
+                            } else if (this.props.gender === Ranking.GENDER_F) {
+                                return 'femmes';
+                            } else {
+                                return this.props.gender;
+                            }
+                        })()}
+                    </td>
+                </tr>
+                <tr>
                     <th colSpan={this.props.category === Ranking.CATEGORY_TEAM ? 1 : 4}>N°</th>
                     <th>Doss.</th>
                     <th>Nom</th>
@@ -15,7 +42,7 @@ class RankingTable extends React.Component {
                     <th>Distance</th>
                     <th>Dernier passage</th>
                     <th>Vitesse moy.</th>
-                    <th>Détails</th>
+                    <th className="hide-on-print">Détails</th>
                 </tr>
                 </thead>
                 <tbody>

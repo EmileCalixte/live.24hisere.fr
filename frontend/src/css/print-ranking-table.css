@@ -1,0 +1,39 @@
+@media print {
+    body {
+        font-size: 8pt;
+    }
+
+    .ranking-table-print-header {
+        display: table-cell !important;
+    }
+
+    #app-header,
+    #app-footer {
+        display: none;
+    }
+
+    .hide-on-print {
+        display: none;
+    }
+
+    table.table {
+        border: none !important;
+    }
+
+    table.table thead tr:first-child td {
+        border-top: none !important;
+        font-size: 1.25em;
+    }
+
+    table.table td, .table th {
+        padding: 3px !important;
+        border-top: 1px solid #aaa !important;
+        border-bottom: 1px solid #aaa !important;
+        border-left: none !important;
+        border-right: none !important;
+    }
+
+    table.table th {
+        text-align: left !important;
+    }
+}

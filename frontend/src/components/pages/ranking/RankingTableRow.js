@@ -138,7 +138,7 @@ class RankingTableRow extends React.Component {
                     })()}
                 </td>
 
-                <td>
+                <td className="hide-on-print">
                     <Link to={`/runner-details?id=${runner.id}`}>Détails</Link>
                 </td>
             </tr>
