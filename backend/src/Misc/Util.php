@@ -69,7 +69,7 @@ class Util
     public static function getApiResponseWithHeaders(ResponseInterface $response): MessageInterface
     {
         return $response
-            ->withHeader('Access-Control-Allow-Origin', MainApp::$app->getConfig()->getFrontendUrl())
+            ->withHeader('Access-Control-Allow-Origin', MainApp::$app->getConfig()->isDevMode() ? '*' : MainApp::$app->getConfig()->getFrontendUrl())
             ->withHeader('Content-Type', 'application/json');
     }
 
