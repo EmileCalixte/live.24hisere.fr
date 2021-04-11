@@ -14,6 +14,18 @@ class Util {
     static formatFloatNumber = (number, decimalsCount) => {
         return Number.parseFloat(number).toFixed(decimalsCount);
     }
+
+    static formatMsAsDuration = (ms) => {
+        const seconds = Math.floor((ms / 1000) % 60);
+        const minutes = Math.floor((ms / (1000 * 60)) % 60);
+        const hours = Math.floor((ms / (1000 * 60 * 60)));
+
+        const stringSeconds = (seconds < 10) ? "0" + seconds.toString() : seconds.toString();
+        const stringMinutes = (minutes < 10) ? "0" + minutes.toString() : minutes.toString();
+        const stringHours = (hours < 10) ? "0" + hours.toString() : hours.toString();
+
+        return stringHours + ':' + stringMinutes + ':' + stringSeconds;
+    }
 }
 
 export default Util;

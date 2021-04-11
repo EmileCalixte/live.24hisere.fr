@@ -115,8 +115,28 @@ class RankingTableRow extends React.Component {
 
                 <td>{Math.max(0, this.props.runner.passageCount - 1)}</td>
                 <td>{Util.formatFloatNumber(runner.distance / 1000, 2)} km</td>
-                <td>{runner.lastPassageTime} (TODO)</td>
-                <td>VMOY</td>
+                <td>
+                    {(() => {
+                        if (runner.lastPassageRaceTime === null) {
+                            return 'n/a';
+                        } else {
+                            return Util.formatMsAsDuration(runner.lastPassageRaceTime);
+                        }
+                    })()}
+                </td>
+                <td>
+                    {(() => {
+                        if (runner.averageSpeed === null) {
+                            return 'n/a';
+                        } else {
+                            return (
+                                <>
+                                    {Util.formatFloatNumber(runner.averageSpeed, 2)} km/h
+                                </>
+                            )
+                        }
+                    })()}
+                </td>
 
                 <td>
                     <Link to={`/runner-details?id=${runner.id}`}>Détails</Link>

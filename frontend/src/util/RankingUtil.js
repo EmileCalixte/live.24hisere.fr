@@ -176,10 +176,20 @@ class RankingUtil {
                 runner.distance += App.LAP_DISTANCE * (runner.passageCount - 1);
             }
 
-            // TODO compute distance
-            // TODO compute average speed
+            runner.lastPassageRaceTime = null;
+            runner.averageSpeed = null;
 
-            processedRanking.push(runner)
+            if (runner.lastPassageTime !== null) {
+                const lastPassageTime = new Date(runner.lastPassageTime);
+
+                runner.lastPassageRaceTime = lastPassageTime.getTime() - App.RACE_START_TIME.getTime();
+            }
+
+            if (runner.lastPassageRaceTime !== null) {
+                runner.averageSpeed = (runner.distance / (runner.lastPassageRaceTime / 1000)) * 3.6;
+            }
+
+            processedRanking.push(runner);
         }
 
         Util.verbose('Ranking processed');
