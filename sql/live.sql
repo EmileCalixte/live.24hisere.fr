@@ -37,6 +37,7 @@ CREATE TABLE `misc` (
 --
 
 INSERT INTO `misc` (`key`, `value`) VALUES
+('race_start_time', '2019-04-06 10:00:24'),
 ('first_lap_distance', '778.21'),
 ('lap_distance', '1025.54'),
 ('last_update_time', '2019-04-07 10:01:12');

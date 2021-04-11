@@ -53,6 +53,10 @@ class DAO
             $metadata['last_update_time'] = Util::convertDatabaseDateToJavascriptDate($metadata['last_update_time'], false);
         }
 
+        if (isset($metadata['race_start_time'])) {
+            $metadata['race_start_time'] = Util::convertDatabaseDateToJavascriptDate($metadata['race_start_time'], false);
+        }
+
         return $metadata;
     }
 
