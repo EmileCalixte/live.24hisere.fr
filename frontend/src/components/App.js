@@ -6,6 +6,11 @@ import Ranking from "./pages/ranking/Ranking";
 import RunnerDetails from "./pages/runner-details/RunnerDetails";
 
 class App extends React.Component {
+    static FIRST_LAP_DISTANCE = 0;
+    static LAP_DISTANCE = 0;
+    static RACE_START_TIME = new Date();
+    static LAST_UPDATE_TIME = new Date();
+
     render = () => {
         return (
             <BrowserRouter>

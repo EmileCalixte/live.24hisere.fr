@@ -49,6 +49,14 @@ class DAO
             $metadata[$key] = $value;
         }
 
+        if (isset($metadata['first_lap_distance'])) {
+            $metadata['first_lap_distance'] = (float) $metadata['first_lap_distance'];
+        }
+
+        if (isset($metadata['lap_distance'])) {
+            $metadata['lap_distance'] = (float) $metadata['lap_distance'];
+        }
+
         if (isset($metadata['last_update_time'])) {
             $metadata['last_update_time'] = Util::convertDatabaseDateToJavascriptDate($metadata['last_update_time'], false);
         }
