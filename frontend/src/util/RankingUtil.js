@@ -1,4 +1,5 @@
 import Util from "./Util";
+import App from "../components/App";
 
 class RankingUtil {
     static getProcessedRanking = (ranking) => {
@@ -163,6 +164,16 @@ class RankingUtil {
                 runner.rankings.displayed.scratchGender = scratchGenderPreviousRunnerEquality ? scratchGenderPreviousRunner.rankings.displayed.scratchGender : runner.rankings.real.scratchGender;
                 runner.rankings.displayed.categoryMixed = categoryMixedPreviousRunnerEquality ? categoryMixedPreviousRunner.rankings.displayed.categoryMixed : runner.rankings.real.categoryMixed;
                 runner.rankings.displayed.categoryGender = categoryGenderPreviousRunnerEquality ? categoryGenderPreviousRunner.rankings.displayed.categoryGender : runner.rankings.real.categoryGender;
+            }
+
+            runner.distance = 0;
+
+            if (runner.passageCount > 0) {
+                runner.distance = App.FIRST_LAP_DISTANCE;
+            }
+
+            if (runner.passageCount > 1) {
+                runner.distance += App.LAP_DISTANCE * (runner.passageCount - 1);
             }
 
             // TODO compute distance

@@ -1,6 +1,7 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import Ranking from "./Ranking";
+import Util from "../../../util/Util";
 
 class RankingTableRow extends React.Component {
     renderRankingsCell = () => {
@@ -113,7 +114,7 @@ class RankingTableRow extends React.Component {
                 })()}
 
                 <td>{Math.max(0, this.props.runner.passageCount - 1)}</td>
-                <td>DISTANCE</td>
+                <td>{Util.formatFloatNumber(runner.distance / 1000, 2)} km</td>
                 <td>{runner.lastPassageTime} (TODO)</td>
                 <td>VMOY</td>
 
