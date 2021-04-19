@@ -69,6 +69,48 @@ class RankingSettings extends React.Component {
                         </div>
                     </div>
 
+                    <div className="ranking-settings">
+                        <legend>Heure</legend>
+
+                        <div className="inline-input-group">
+                            <label className="input-radio">
+                                <input
+                                    type="radio"
+                                    defaultChecked={true}
+                                    // onChange={this.props.rankingComponent.onGenderSelect}
+                                    name="time"
+                                    value="current" />
+                                <span/>
+                                Classement actuel
+                            </label>
+                        </div>
+
+                        <div className="inline-input-group">
+                            <label className="input-radio">
+                                <input
+                                    type="radio"
+                                    // defaultChecked={this.props.rankingComponent.state.selectedGender === Ranking.GENDER_M}
+                                    // onChange={this.props.rankingComponent.onGenderSelect}
+                                    name="time"
+                                    value="atTime" />
+                                <span/>
+                                À l'heure
+                            </label>
+                        </div>
+
+                        <div className="inline-input-group">
+                            <label className="input-radio">
+                                <input
+                                    type="radio"
+                                    // defaultChecked={this.props.rankingComponent.state.selectedGender === Ranking.GENDER_F}
+                                    // onChange={this.props.rankingComponent.onGenderSelect}
+                                    name="time"
+                                    value="atRaceDuration" />
+                                <span/>
+                                Depuis le départ
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </section>
         )
