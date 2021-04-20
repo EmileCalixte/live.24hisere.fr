@@ -1,55 +1,34 @@
-import React from "react"
+import {useEffect, useState} from "react"
 
-class LoadingCategoriesOption extends React.Component {
-    static MIN_DOTS = 0;
-    static MAX_DOTS = 3;
+export const MIN_DOTS = 0;
+export const MAX_DOTS = 3;
+export const UPDATE_DOT_COUNT_INTERVAL_TIME = 250;
 
-    constructor(props) {
-        super(props);
+const LoadingCategoriesOption = () => {
+    const [dotCount, setDotCount] = useState(MAX_DOTS);
+    const updateDotCount = () => setDotCount(dotCount => dotCount >= MAX_DOTS ? MIN_DOTS : dotCount + 1);
 
-        this.state = {
-            dotCount: LoadingCategoriesOption.MAX_DOTS,
-        }
-    }
+    useEffect(() => {
+        const dotsInterval = setInterval(() => updateDotCount(), UPDATE_DOT_COUNT_INTERVAL_TIME);
 
-    dotsInterval = null;
+        return (() => clearInterval(dotsInterval));
+    }, []);
 
-    componentDidMount() {
-        this.dotsInterval = setInterval(() => {
-            if (this.state.dotCount >= LoadingCategoriesOption.MAX_DOTS) {
-                this.setState({
-                    dotCount: LoadingCategoriesOption.MIN_DOTS,
-                });
-                return;
-            }
-
-            this.setState({
-                dotCount: this.state.dotCount + 1,
-            })
-        }, 200);
-    }
-
-    render = () => {
-        return (
-            <option disabled>
-                Chargement des catégories{this.getDots()}
-            </option>
-        );
-    }
-
-    getDots = () => {
+    const getDots = () => {
         let dots = [];
 
-        for(let i = 0; i < this.state.dotCount; ++i) {
+        for(let i = 0; i < dotCount; ++i) {
             dots.push('.');
         }
 
         return dots.join('');
-    }
+    };
 
-    componentWillUnmount() {
-        clearInterval(this.dotsInterval);
-    }
+    return (
+        <option disabled>
+            Chargement des catégories{getDots()}
+        </option>
+    );
 }
 
 export default LoadingCategoriesOption
