@@ -1,4 +1,4 @@
-import Ranking, {CATEGORY_ALL, CATEGORY_TEAM, GENDER_MIXED} from "./Ranking";
+import {CATEGORY_ALL, CATEGORY_TEAM, GENDER_MIXED} from "./Ranking";
 
 const RankingTableRowNCells = ({runner, tableCategory, tableGender}) => {
     if (tableCategory === CATEGORY_TEAM) {
