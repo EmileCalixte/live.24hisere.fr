@@ -1,98 +1,93 @@
-import React from "react";
 import LoadingCategoriesOption from "./LoadingCategoriesOption";
-import Ranking from "./Ranking";
+import {CATEGORY_ALL, CATEGORY_TEAM, GENDER_F, GENDER_M, GENDER_MIXED} from "./Ranking";
 
-class RankingSettings extends React.Component {
-    render = () => {
-        return(
-            <section id="ranking-settings-section">
-                <div id="ranking-settings-container">
+const RankingSettings = ({categories, onCategorySelect, onGenderSelect, selectedCategory, selectedGender}) => {
+    return(
+        <section id="ranking-settings-section">
+            <div id="ranking-settings-container">
 
-                    <div className="ranking-settings">
-                        <div className="input-group">
-                            <label htmlFor="ranking-settings-category-select">
-                                Catégorie
-                            </label>
-                            <select
-                                id="ranking-settings-category-select"
-                                value={this.props.rankingComponent.state.selectedCategory}
-                                onChange={this.props.rankingComponent.onCategorySelect}
-                                className="input-select"
-                            >
-                                <option value={Ranking.CATEGORY_ALL}>Scratch (toutes catégories)</option>
-                                {this.renderCategoriesOptions()}
-                                <option value={Ranking.CATEGORY_TEAM}>Équipes</option>
-                            </select>
-                        </div>
+                <div className="ranking-settings">
+                    <div className="input-group">
+                        <label htmlFor="ranking-settings-category-select">
+                            Catégorie
+                        </label>
+                        <select
+                            id="ranking-settings-category-select"
+                            value={selectedCategory}
+                            onChange={onCategorySelect}
+                            className="input-select"
+                        >
+                            <option value={CATEGORY_ALL}>Scratch (toutes catégories)</option>
+                            {(() => {
+                                if (categories === false) {
+                                    return(
+                                        <LoadingCategoriesOption/>
+                                    );
+                                }
+
+                                const items = [];
+
+                                for (const [key, name] of Object.entries(categories)) {
+                                    items.push(<option key={key} value={key}>{name}</option>)
+                                }
+
+                                return (
+                                    <>
+                                        {items}
+                                    </>
+                                );
+                            })()}
+                            <option value={CATEGORY_TEAM}>Équipes</option>
+                        </select>
                     </div>
-
-                    <div className="ranking-settings">
-                        <legend>Genre</legend>
-
-                        <div className="inline-input-group">
-                            <label className="input-radio">
-                                <input
-                                    type="radio"
-                                    defaultChecked={this.props.rankingComponent.state.selectedGender === Ranking.GENDER_MIXED}
-                                    onChange={this.props.rankingComponent.onGenderSelect}
-                                    name="gender"
-                                    value={Ranking.GENDER_MIXED} />
-                                <span/>
-                                Mixte
-                            </label>
-                        </div>
-
-                        <div className="inline-input-group">
-                            <label className="input-radio">
-                                <input
-                                    type="radio"
-                                    defaultChecked={this.props.rankingComponent.state.selectedGender === Ranking.GENDER_M}
-                                    onChange={this.props.rankingComponent.onGenderSelect}
-                                    name="gender"
-                                    value={Ranking.GENDER_M} />
-                                <span/>
-                                Hommes
-                            </label>
-                        </div>
-
-                        <div className="inline-input-group">
-                            <label className="input-radio">
-                                <input
-                                    type="radio"
-                                    defaultChecked={this.props.rankingComponent.state.selectedGender === Ranking.GENDER_F}
-                                    onChange={this.props.rankingComponent.onGenderSelect}
-                                    name="gender"
-                                    value={Ranking.GENDER_F} />
-                                <span/>
-                                Femmes
-                            </label>
-                        </div>
-                    </div>
-
                 </div>
-            </section>
-        )
-    }
 
-    renderCategoriesOptions = () => {
-        if (this.props.rankingComponent.state.categories === false) {
-            return(
-                <LoadingCategoriesOption/>
-            );
-        }
+                <div className="ranking-settings">
+                    <legend>Genre</legend>
 
-        const items = [];
+                    <div className="inline-input-group">
+                        <label className="input-radio">
+                            <input
+                                type="radio"
+                                defaultChecked={selectedGender === GENDER_MIXED}
+                                onChange={onGenderSelect}
+                                name="gender"
+                                value={GENDER_MIXED} />
+                            <span/>
+                            Mixte
+                        </label>
+                    </div>
 
-        for (const [key, name] of Object.entries(this.props.rankingComponent.state.categories)) {
-            items.push(<option key={key} value={key}>{name}</option>)
-        }
+                    <div className="inline-input-group">
+                        <label className="input-radio">
+                            <input
+                                type="radio"
+                                defaultChecked={selectedGender === GENDER_M}
+                                onChange={onGenderSelect}
+                                name="gender"
+                                value={GENDER_M} />
+                            <span/>
+                            Hommes
+                        </label>
+                    </div>
 
-        return (
-            <>
-                {items}
-            </>
-        );
-    }
+                    <div className="inline-input-group">
+                        <label className="input-radio">
+                            <input
+                                type="radio"
+                                defaultChecked={selectedGender === GENDER_F}
+                                onChange={onGenderSelect}
+                                name="gender"
+                                value={GENDER_F} />
+                            <span/>
+                            Femmes
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    );
 }
 
 export default RankingSettings;

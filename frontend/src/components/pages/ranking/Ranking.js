@@ -1,101 +1,92 @@
 import '../../../css/print-ranking-table.css';
-import React from "react";
+import {useState, useEffect} from "react";
 import RankingSettings from "./RankingSettings";
 import ApiUtil from "../../../util/ApiUtil";
 import RankingTable from "./RankingTable";
 import RankingUtil from "../../../util/RankingUtil";
 
-class Ranking extends React.Component {
-    static CATEGORY_ALL = 'all';
-    static CATEGORY_TEAM = 'team';
+export const CATEGORY_ALL = 'all';
+export const CATEGORY_TEAM = 'team';
 
-    static GENDER_MIXED = 'mixed';
-    static GENDER_M = 'm';
-    static GENDER_F = 'f';
+export const GENDER_MIXED = 'mixed';
+export const GENDER_M = 'm';
+export const GENDER_F = 'f';
 
-    refreshRankingInterval = null;
+export const RANKING_UPDATE_INTERVAL_TIME = 30000;
 
-    constructor(props) {
-        super(props);
+const Ranking = () => {
+    const [categories, setCategories] = useState(false);
+    const [ranking, setRanking] = useState([]);
+    const [processedRanking, setProcessedRanking] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState(CATEGORY_ALL);
+    const [selectedGender, setSelectedGender] = useState(GENDER_MIXED);
 
-        this.state = {
-            categories: false,
-            ranking: [],
-            processedRanking: [],
-            selectedCategory: Ranking.CATEGORY_ALL,
-            selectedGender: Ranking.GENDER_MIXED,
-        }
-    }
-
-    componentDidMount = () => {
-        this.fetchCategories();
-        this.fetchRanking();
-
-        this.refreshRankingInterval = setInterval(this.fetchRanking, 30000);
-    }
-
-    componentWillUnmount = () => {
-        clearInterval(this.refreshRankingInterval);
-    }
-
-    fetchCategories = async () => {
+    const fetchCategories = async () => {
         const response = await ApiUtil.performAPIRequest('/categories');
         const responseJson = await response.json();
 
-        const categories = {};
+        const responseCategories = {};
 
         responseJson.categories.forEach((category) => {
-            categories[category.code] = category.name;
+            responseCategories[category.code] = category.name;
         });
 
-        this.setState({
-            categories,
-        });
+        setCategories(() => responseCategories);
     }
 
-    fetchRanking = async () => {
+    const fetchRanking = async () => {
         const response = await ApiUtil.performAPIRequest('/ranking');
         const responseJson = await response.json();
 
-        this.setState({
-            ranking: responseJson.ranking,
-            processedRanking: RankingUtil.getProcessedRanking(responseJson.ranking),
-        })
+        setRanking(() => responseJson.ranking);
+        setProcessedRanking(() => RankingUtil.getProcessedRanking(responseJson.ranking));
     }
 
-    onCategorySelect = (e) => {
-        this.setState({
-            selectedCategory: e.target.value,
-        });
+    const onCategorySelect = (e) => {
+        console.log(e.target.value);
+        setSelectedCategory(() => e.target.value);
     }
 
-    onGenderSelect = (e) => {
-        this.setState({
-            selectedGender: e.target.value,
-        });
+    const onGenderSelect = (e) => {
+        console.log(e.target.value);
+        setSelectedGender(() => e.target.value);
     }
 
-    render = () => {
-        return(
-            <div id="page-ranking">
-                <div className="row hide-on-print">
-                    <div className="col-12">
-                        <h1>Classements</h1>
-                    </div>
-                </div>
-                <div className="row hide-on-print">
-                    <div className="col-12">
-                        <RankingSettings rankingComponent={this} />
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-12">
-                        <RankingTable ranking={this.state.processedRanking} category={this.state.selectedCategory} gender={this.state.selectedGender} />
-                    </div>
+    useEffect(() => {
+        fetchCategories();
+        fetchRanking();
+
+        const refreshRankingInterval = setInterval(fetchRanking, RANKING_UPDATE_INTERVAL_TIME);
+
+        return (() => clearInterval(refreshRankingInterval));
+    }, []);
+
+    return(
+        <div id="page-ranking">
+            <div className="row hide-on-print">
+                <div className="col-12">
+                    <h1>Classements</h1>
                 </div>
             </div>
-        )
-    }
+            <div className="row hide-on-print">
+                <div className="col-12">
+                    <RankingSettings
+                        rankingComponent={this}
+                        categories={categories}
+                        selectedCategory={selectedCategory}
+                        onCategorySelect={onCategorySelect}
+                        selectedGender={selectedGender}
+                        onGenderSelect={onGenderSelect}
+                    />
+                </div>
+            </div>
+            <div className="row">
+                <div className="col-12">
+                    <RankingTable ranking={processedRanking} tableCategory={selectedCategory} tableGender={selectedGender} />
+                </div>
+            </div>
+        </div>
+    );
 }
 
 export default Ranking;
