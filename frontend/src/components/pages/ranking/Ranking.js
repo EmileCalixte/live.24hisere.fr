@@ -43,12 +43,10 @@ const Ranking = () => {
     }
 
     const onCategorySelect = (e) => {
-        console.log(e.target.value);
         setSelectedCategory(() => e.target.value);
     }
 
     const onGenderSelect = (e) => {
-        console.log(e.target.value);
         setSelectedGender(() => e.target.value);
     }
 
