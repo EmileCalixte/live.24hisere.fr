@@ -123,7 +123,7 @@ const RankingSettings = ({categories, onCategorySelect, onGenderSelect, selected
                                 name="time"
                                 value="atRaceDuration" />
                             <span/>
-                            Depuis le départ
+                            Au temps de course
                         </label>
                     </div>
                 </div>
