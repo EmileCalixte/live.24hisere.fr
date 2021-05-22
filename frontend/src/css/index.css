@@ -131,6 +131,13 @@ a {
     max-width: calc(100vw - 32px);
 }
 
+.race-time-input {
+    font-size: 0.9em;
+    width: 6ch;
+    margin-left: 5px;
+    margin-right: 2px;
+}
+
 table.table {
     width: 100%;
 

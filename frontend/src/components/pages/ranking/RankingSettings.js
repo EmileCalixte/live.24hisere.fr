@@ -1,7 +1,8 @@
 import LoadingCategoriesOption from "./LoadingCategoriesOption";
-import {CATEGORY_ALL, CATEGORY_TEAM, GENDER_F, GENDER_M, GENDER_MIXED} from "./Ranking";
+import {CATEGORY_ALL, CATEGORY_TEAM, GENDER_F, GENDER_M, GENDER_MIXED, TIME_MODE_AT, TIME_MODE_NOW} from "./Ranking";
+import RankingSettingsTime from "./RankingSettingsTime";
 
-const RankingSettings = ({categories, onCategorySelect, onGenderSelect, selectedCategory, selectedGender}) => {
+const RankingSettings = ({categories, onCategorySelect, onGenderSelect, onTimeModeSelect, selectedCategory, selectedGender, selectedTimeMode}) => {
     return(
         <section id="ranking-settings-section">
             <div id="ranking-settings-container">
@@ -92,10 +93,10 @@ const RankingSettings = ({categories, onCategorySelect, onGenderSelect, selected
                         <label className="input-radio">
                             <input
                                 type="radio"
-                                defaultChecked={true}
-                                // onChange={this.props.rankingComponent.onGenderSelect}
+                                defaultChecked={selectedTimeMode === TIME_MODE_NOW}
+                                onChange={onTimeModeSelect}
                                 name="time"
-                                value="current" />
+                                value={TIME_MODE_NOW} />
                             <span/>
                             Classement actuel
                         </label>
@@ -105,27 +106,16 @@ const RankingSettings = ({categories, onCategorySelect, onGenderSelect, selected
                         <label className="input-radio">
                             <input
                                 type="radio"
-                                // defaultChecked={this.props.rankingComponent.state.selectedGender === Ranking.GENDER_M}
-                                // onChange={this.props.rankingComponent.onGenderSelect}
+                                defaultChecked={selectedTimeMode === TIME_MODE_AT}
+                                onChange={onTimeModeSelect}
                                 name="time"
-                                value="atTime" />
-                            <span/>
-                            À l'heure
-                        </label>
-                    </div>
-
-                    <div className="inline-input-group">
-                        <label className="input-radio">
-                            <input
-                                type="radio"
-                                // defaultChecked={this.props.rankingComponent.state.selectedGender === Ranking.GENDER_F}
-                                // onChange={this.props.rankingComponent.onGenderSelect}
-                                name="time"
-                                value="atRaceDuration" />
+                                value={TIME_MODE_AT} />
                             <span/>
                             Au temps de course
                         </label>
                     </div>
+
+                    <RankingSettingsTime isVisible={selectedTimeMode === TIME_MODE_AT} />
                 </div>
 
             </div>

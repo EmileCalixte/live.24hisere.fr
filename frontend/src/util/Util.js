@@ -26,6 +26,44 @@ class Util {
 
         return stringHours + ':' + stringMinutes + ':' + stringSeconds;
     }
+
+    /**
+     * Prefix a number with 0's so that the integer part of the number has at least minDigits digits
+     * @param number the number to format
+     * @param minDigits
+     * @return {string|NaN}
+     */
+    static prefixNumber = (number, minDigits = 2) => {
+        if (isNaN(number)) {
+            return NaN;
+        }
+
+        let stringNumber = number.toString();
+
+        const numberIsNegative = stringNumber.charAt(0) === '-';
+
+        if (numberIsNegative) {
+            stringNumber = stringNumber.substring(1);
+        }
+
+        const splittedStringNumber = stringNumber.split('.');
+
+        let stringNumberIntPart = splittedStringNumber[0];
+        const stringNumberDecimalPart = splittedStringNumber[1] ?? null;
+
+        while (stringNumberIntPart.length < minDigits) {
+            stringNumberIntPart = "0" + stringNumberIntPart;
+        }
+
+        let formattedString = numberIsNegative ? '-' : '';
+        formattedString += stringNumberIntPart;
+
+        if (stringNumberDecimalPart !== null) {
+            formattedString += '.' + stringNumberDecimalPart;
+        }
+
+        return formattedString;
+    }
 }
 
 export default Util;

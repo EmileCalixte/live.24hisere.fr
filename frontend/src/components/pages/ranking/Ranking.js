@@ -12,6 +12,9 @@ export const GENDER_MIXED = 'mixed';
 export const GENDER_M = 'm';
 export const GENDER_F = 'f';
 
+export const TIME_MODE_NOW = 'now';
+export const TIME_MODE_AT = 'at';
+
 export const RANKING_UPDATE_INTERVAL_TIME = 30000;
 
 const Ranking = () => {
@@ -20,6 +23,7 @@ const Ranking = () => {
     const [processedRanking, setProcessedRanking] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(CATEGORY_ALL);
     const [selectedGender, setSelectedGender] = useState(GENDER_MIXED);
+    const [selectedTimeMode, setSelectedTimeMode] = useState(TIME_MODE_NOW);
 
     const fetchCategories = async () => {
         const response = await ApiUtil.performAPIRequest('/categories');
@@ -50,6 +54,10 @@ const Ranking = () => {
         setSelectedGender(() => e.target.value);
     }
 
+    const onTimeModeSelect = (e) => {
+        setSelectedTimeMode(() => e.target.value);
+    }
+
     useEffect(() => {
         fetchCategories();
         fetchRanking();
@@ -75,6 +83,8 @@ const Ranking = () => {
                         onCategorySelect={onCategorySelect}
                         selectedGender={selectedGender}
                         onGenderSelect={onGenderSelect}
+                        selectedTimeMode={selectedTimeMode}
+                        onTimeModeSelect={onTimeModeSelect}
                     />
                 </div>
             </div>
