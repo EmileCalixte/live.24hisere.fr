@@ -18,6 +18,10 @@ const RankingSettingsTime = ({isVisible}) => {
     const onHourChange = (e) => {
         const newValue = parseInt(e.target.value);
 
+        if (isNaN(newValue)) {
+            return;
+        }
+
         if (newValue >= MAX_HOURS) {
             setHours(MAX_HOURS);
             capValues(newValue, minutes, seconds);
@@ -36,8 +40,12 @@ const RankingSettingsTime = ({isVisible}) => {
     const onMinuteChange = (e) => {
         const newValue = parseInt(e.target.value);
 
+        if (isNaN(newValue)) {
+            return;
+        }
+
         if (newValue >= 60) {
-            if (!incrementHours()) {
+            if (!incrementHours().hours) {
                 return;
             }
 
@@ -47,7 +55,7 @@ const RankingSettingsTime = ({isVisible}) => {
         }
 
         if (newValue < 0) {
-            if (!decrementHours()) {
+            if (!decrementHours().hours) {
                 return;
             }
 
@@ -62,18 +70,26 @@ const RankingSettingsTime = ({isVisible}) => {
     const onSecondChange = (e) => {
         const newValue = parseInt(e.target.value);
 
+        if (isNaN(newValue)) {
+            return;
+        }
+
         if (newValue >= 60) {
-            if (!incrementMinutes()) { // FIXME when hours are incremented too
+            const incremented = incrementMinutes();
+
+            if (!incremented.minutes) {
                 return;
             }
 
             setSeconds(newValue % 60);
-            capValues(hours, minutes + 1, newValue);
+            capValues(incremented.hours ? hours + 1 : hours, minutes + 1, newValue);
             return;
         }
 
         if (newValue < 0) {
-            if (!decrementMinutes()) {
+            const decremented = decrementMinutes();
+
+            if (!decremented.minutes) {
                 return;
             }
 
@@ -85,54 +101,97 @@ const RankingSettingsTime = ({isVisible}) => {
         capValues(hours, minutes, newValue);
     }
 
+    /**
+     * @return {{hours: boolean}}
+     */
     const incrementHours = () => {
+        const incremented = {
+            hours: false,
+        };
+
         if (hours >= MAX_HOURS) {
-            return false;
+            return incremented;
         }
 
         setHours(hours + 1);
+        incremented.hours = true;
 
-        return true;
+        return incremented;
     }
 
+    /**
+     * @return {{hours: boolean}}
+     */
     const decrementHours = () => {
+        const decremented = {
+            hours: false,
+        };
+
         if (hours <= 0) {
-            return false;
+            return decremented;
         }
 
         setHours(hours - 1);
+        decremented.hours = true;
 
-        return true;
+        return decremented;
     }
 
+    /**
+     * @return {{hours: boolean, minutes: boolean}}
+     */
     const incrementMinutes = () => {
+        const incremented = {
+            hours: false,
+            minutes: false,
+        };
+
         if (minutes >= 59) {
-            if (!incrementHours()) {
-                return false;
+            incremented.hours = incrementHours().hours;
+
+            // If hours can't be incremented, we can't increment minutes
+            if (!incremented.hours) {
+                return incremented;
             }
 
             setMinutes(0);
-            return true;
+            incremented.minutes = true;
+
+            return incremented;
         }
 
         setMinutes(minutes + 1);
+        incremented.minutes = true;
 
-        return true;
+        return incremented;
     }
 
+    /**
+     * @return {{hours: boolean, minutes: boolean}}
+     */
     const decrementMinutes = () => {
+        const decremented = {
+            hours: false,
+            minutes: false,
+        };
+
         if (minutes <= 0) {
-            if (!decrementHours()) {
-                return false;
+            decremented.hours = decrementHours().hours;
+
+            if (!decremented.hours) {
+                return decremented;
             }
 
             setMinutes(59);
-            return true;
+            decremented.minutes = true;
+
+            return decremented;
         }
 
         setMinutes(minutes - 1);
+        decremented.minutes = true;
 
-        return true;
+        return decremented;
     }
 
     const capValues = (hours, minutes, seconds) => {
@@ -222,8 +281,6 @@ const RankingSettingsTime = ({isVisible}) => {
             >
                 OK
             </button>
-
-            {getValuesAsMs(hours, minutes, seconds)} {time}
         </form>
     );
 }
