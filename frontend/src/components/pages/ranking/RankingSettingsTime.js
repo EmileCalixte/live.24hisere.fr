@@ -5,7 +5,15 @@ export const MAX_HOURS = 24;
 export const MAX_MINUTES_AT_MAX_HOURS = 0;
 export const MAX_SECONDS_AT_MAX_MINUTES = 0;
 
-const RankingSettingsTime = ({isVisible}) => {
+export const getValuesAsMs = (hours, minutes, seconds) => {
+    return (seconds * 1000) + (minutes * 60 * 1000) + (hours * 60 * 60 * 1000);
+};
+
+export const getMaxTime = () => {
+    return getValuesAsMs(MAX_HOURS, MAX_MINUTES_AT_MAX_HOURS, MAX_SECONDS_AT_MAX_MINUTES);
+};
+
+const RankingSettingsTime = ({isVisible, onRankingTimeSelect}) => {
     // The current input values, saved or not
     const [hours, setHours] = useState(MAX_HOURS);
     const [minutes, setMinutes] = useState(MAX_MINUTES_AT_MAX_HOURS);
@@ -222,13 +230,11 @@ const RankingSettingsTime = ({isVisible}) => {
         return newValues;
     }
 
-    const getValuesAsMs = (hours, minutes, seconds) => {
-        return (seconds * 1000) + (minutes * 60 * 1000) + (hours * 60 * 60 * 1000);
-    }
-
     const onSubmit = (e) => {
         e.preventDefault();
-        setTime(getValuesAsMs(hours, minutes, seconds));
+        const newTime = getValuesAsMs(hours, minutes, seconds)
+        setTime(newTime);
+        onRankingTimeSelect(newTime);
     }
 
     // The saved time in ms
@@ -281,6 +287,8 @@ const RankingSettingsTime = ({isVisible}) => {
             >
                 OK
             </button>
+
+            {time}
         </form>
     );
 }

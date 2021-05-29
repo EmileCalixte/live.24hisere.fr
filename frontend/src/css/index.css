@@ -10,10 +10,6 @@ body {
     color: #222;
 }
 
-.ranking-table-print-header {
-    display: none;
-}
-
 a {
     color: #22aa22;
 }
@@ -167,4 +163,8 @@ table.table tbody tr:nth-child(2n) {
 
 table.table tbody tr:hover {
     background-color: #e8e8e8;
+}
+
+.ranking-table-info-header {
+    background-color: #fff;
 }

@@ -16,7 +16,7 @@ class RankingResponder implements ResponderInterface
         $at = null;
 
         if(isset($_GET['at'])) {
-            if(\DateTime::createFromFormat('Y-m-d H:i:s', $_GET['at'])) {
+            if(\DateTime::createFromFormat('Y-m-d\TH:i:s', $_GET['at'])) {
                 $at = $_GET['at'];
             }
         }

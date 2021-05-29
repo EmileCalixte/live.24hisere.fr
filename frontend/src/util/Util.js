@@ -11,6 +11,21 @@ class Util {
         console.log('%c[v]', 'color: orange', ...items);
     };
 
+    static formatDateForApi = (date) => {
+        if (!(date instanceof Date)) {
+            throw new Error('date must be a Date');
+        }
+
+        const year = date.getFullYear();
+        const month = Util.prefixNumber(date.getMonth() + 1, 2);
+        const day = Util.prefixNumber(date.getDate(), 2);
+        const hours = Util.prefixNumber(date.getHours(), 2);
+        const minutes = Util.prefixNumber(date.getMinutes(), 2);
+        const seconds = Util.prefixNumber(date.getSeconds(), 2);
+
+        return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+    }
+
     static formatFloatNumber = (number, decimalsCount) => {
         return Number.parseFloat(number).toFixed(decimalsCount);
     }

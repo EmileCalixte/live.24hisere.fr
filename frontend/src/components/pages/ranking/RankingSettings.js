@@ -2,7 +2,7 @@ import LoadingCategoriesOption from "./LoadingCategoriesOption";
 import {CATEGORY_ALL, CATEGORY_TEAM, GENDER_F, GENDER_M, GENDER_MIXED, TIME_MODE_AT, TIME_MODE_NOW} from "./Ranking";
 import RankingSettingsTime from "./RankingSettingsTime";
 
-const RankingSettings = ({categories, onCategorySelect, onGenderSelect, onTimeModeSelect, selectedCategory, selectedGender, selectedTimeMode}) => {
+const RankingSettings = ({categories, onCategorySelect, onGenderSelect, onTimeModeSelect, onRankingTimeSelect, selectedCategory, selectedGender, selectedTimeMode}) => {
     return(
         <section id="ranking-settings-section">
             <div id="ranking-settings-container">
@@ -115,7 +115,7 @@ const RankingSettings = ({categories, onCategorySelect, onGenderSelect, onTimeMo
                         </label>
                     </div>
 
-                    <RankingSettingsTime isVisible={selectedTimeMode === TIME_MODE_AT} />
+                    <RankingSettingsTime isVisible={selectedTimeMode === TIME_MODE_AT} onRankingTimeSelect={onRankingTimeSelect} />
                 </div>
 
             </div>

@@ -107,7 +107,7 @@ class DAO
         EOF;
 
         if (!is_null($at)) {
-            $stmt .= ' AND p.time < :at';
+            $stmt .= ' AND p.time <= :at';
             $toBind[':at'] = $at;
         }
 

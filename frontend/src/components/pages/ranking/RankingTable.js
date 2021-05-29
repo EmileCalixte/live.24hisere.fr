@@ -6,7 +6,7 @@ const RankingTable = ({ranking, tableCategory, tableGender}) => {
         <table id="ranking-table" className="table">
             <thead>
             <tr>
-                <td colSpan="42" className="ranking-table-print-header">
+                <td colSpan="42" className="ranking-table-info-header">
                     Classement {(() => {
                         if (tableCategory === CATEGORY_TEAM) {
                             return 'équipes';
