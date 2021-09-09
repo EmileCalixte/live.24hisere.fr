@@ -5,7 +5,7 @@ import ApiUtil from "../../../util/ApiUtil";
 import RankingTable from "./RankingTable";
 import RankingUtil from "../../../util/RankingUtil";
 import {getMaxTime as getMaxRankingTime} from "./RankingSettingsTime";
-import App, {app} from "../../App";
+import {app} from "../../App";
 import Util from "../../../util/Util";
 
 export const CATEGORY_ALL = 'all';
@@ -19,8 +19,6 @@ export const TIME_MODE_NOW = 'now';
 export const TIME_MODE_AT = 'at';
 
 export const RANKING_UPDATE_INTERVAL_TIME = 3000;
-
-let refreshRankingInterval = null; // Must be outside of the component to be common
 
 const Ranking = () => {
 
@@ -46,13 +44,16 @@ const Ranking = () => {
     }
 
     const fetchRanking = async (rankingTime = selectedRankingTime) => {
-        console.log('FETCH', rankingTime);
+        let requestUrl = '/ranking';
 
-        const rankingDate = new Date();
-        rankingDate.setTime(app.state.raceStartTime.getTime() + rankingTime);
-        const rankingDateString = Util.formatDateForApi(rankingDate);
+        if (selectedTimeMode === TIME_MODE_AT) {
+            const rankingDate = new Date();
+            rankingDate.setTime(app.state.raceStartTime.getTime() + rankingTime);
+            const rankingDateString = Util.formatDateForApi(rankingDate);
+            requestUrl += `?at=${rankingDateString}`;
+        }
 
-        const response = await ApiUtil.performAPIRequest(`/ranking?at=${rankingDateString}`);
+        const response = await ApiUtil.performAPIRequest(requestUrl);
         const responseJson = await response.json();
 
         setRanking(() => responseJson.ranking);
@@ -76,29 +77,21 @@ const Ranking = () => {
      */
     const onRankingTimeSelect = async (time) => {
         setSelectedRankingTime(time);
-
-        clearInterval(refreshRankingInterval);
-
-        fetchRanking(time);
-
-        refreshRankingInterval = setInterval(() => {
-            fetchRanking(time);
-        }, RANKING_UPDATE_INTERVAL_TIME);
     }
 
     useEffect(() => {
         fetchCategories();
         fetchRanking();
 
-        refreshRankingInterval = setInterval(fetchRanking, RANKING_UPDATE_INTERVAL_TIME);
+        const refreshRankingInterval = setInterval(fetchRanking, RANKING_UPDATE_INTERVAL_TIME);
         return (() => clearInterval(refreshRankingInterval));
-    }, []);
+    }, [selectedRankingTime, selectedTimeMode]);
 
     return(
         <div id="page-ranking">
             <div className="row hide-on-print">
                 <div className="col-12">
-                    <h1>Classements {selectedRankingTime} {app.state.raceStartTime.toString()}</h1>
+                    <h1>Classements</h1>
                 </div>
             </div>
             <div className="row hide-on-print">
@@ -118,7 +111,12 @@ const Ranking = () => {
             </div>
             <div className="row">
                 <div className="col-12">
-                    <RankingTable ranking={processedRanking} tableCategory={selectedCategory} tableGender={selectedGender} />
+                    <RankingTable
+                        ranking={processedRanking}
+                        tableCategory={selectedCategory}
+                        tableGender={selectedGender}
+                        tableRaceDuration={selectedTimeMode === TIME_MODE_AT ? selectedRankingTime : null}
+                    />
                 </div>
             </div>
         </div>

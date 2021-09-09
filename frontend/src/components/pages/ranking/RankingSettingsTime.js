@@ -287,8 +287,6 @@ const RankingSettingsTime = ({isVisible, onRankingTimeSelect}) => {
             >
                 OK
             </button>
-
-            {time}
         </form>
     );
 }

@@ -1,7 +1,8 @@
 import RankingTableRow from "./RankingTableRow";
 import {CATEGORY_ALL, CATEGORY_TEAM, GENDER_F, GENDER_M, GENDER_MIXED} from "./Ranking";
+import Util from "../../../util/Util";
 
-const RankingTable = ({ranking, tableCategory, tableGender}) => {
+const RankingTable = ({ranking, tableCategory, tableGender, tableRaceDuration}) => {
     return(
         <table id="ranking-table" className="table">
             <thead>
@@ -28,6 +29,10 @@ const RankingTable = ({ranking, tableCategory, tableGender}) => {
                             return 'femmes';
                         } else {
                             return tableGender;
+                        }
+                    })()} {(() => {
+                        if (tableRaceDuration !== null) {
+                            return `à ${Util.formatMsAsDuration(tableRaceDuration)} de course`;
                         }
                     })()}
                 </td>
