@@ -18,7 +18,7 @@ export const GENDER_F = 'f';
 export const TIME_MODE_NOW = 'now';
 export const TIME_MODE_AT = 'at';
 
-export const RANKING_UPDATE_INTERVAL_TIME = 3000;
+export const RANKING_UPDATE_INTERVAL_TIME = 30000;
 
 const Ranking = () => {
 
