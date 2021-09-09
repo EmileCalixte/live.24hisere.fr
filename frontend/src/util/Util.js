@@ -16,6 +16,10 @@ class Util {
     }
 
     static formatMsAsDuration = (ms) => {
+        if (ms < 0) {
+            return '−' + Util.formatMsAsDuration((ms - 1000) * -1);
+        }
+
         const seconds = Math.floor((ms / 1000) % 60);
         const minutes = Math.floor((ms / (1000 * 60)) % 60);
         const hours = Math.floor((ms / (1000 * 60 * 60)));

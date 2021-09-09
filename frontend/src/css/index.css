@@ -54,8 +54,6 @@ a {
 
 #app-header nav {
     height: 100%;
-
-    flex: 1
 }
 
 #app-header nav ul {
@@ -105,6 +103,23 @@ a {
     bottom: 0;
     left: 0;
     right: 0;
+}
+
+#app-header .header-timer-container {
+    height: 100%;
+
+    flex: 1;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+#app-header .header-timer-container .header-timer {
+    margin-right: 20px;
+
+    font-weight: 700;
+    color: #444;
 }
 
 #app-content {

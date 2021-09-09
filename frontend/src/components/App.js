@@ -15,6 +15,7 @@ class App extends React.Component {
         lapDistance: 0,
         raceStartTime: new Date(),
         lastUpdateTime: new Date(),
+        serverTimeOffset: 0, // Difference between server time and client time in seconds. > 0 if the server is ahead, < 0 otherwise.
     }
 
     constructor() {
@@ -40,7 +41,9 @@ class App extends React.Component {
 
         const timeOffsetMs = serverTime - clientTime;
 
-        console.log('OFFSET', timeOffsetMs);
+        this.setState({
+            serverTimeOffset: Math.round(timeOffsetMs / 1000),
+        });
     }
 
     fetchInitialData = async () => {
