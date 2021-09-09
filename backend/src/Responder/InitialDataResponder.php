@@ -13,9 +13,7 @@ class InitialDataResponder implements ResponderInterface
 {
     public function respond(ServerRequestInterface $request, ResponseInterface $response, $args)
     {
-        $data = MainApp::$app->getDb()->getMetadata();
-
-        Util::camelizeApiResponseFields($data);
+        $data = Util::getMetadata();
 
         $response->getBody()->write(Util::jsonEncode($data));
 

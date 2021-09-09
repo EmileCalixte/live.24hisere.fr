@@ -4,12 +4,26 @@ import Header from "./layout/header/Header";
 import Footer from "./layout/footer/Footer";
 import Ranking from "./pages/ranking/Ranking";
 import RunnerDetails from "./pages/runner-details/RunnerDetails";
+import ApiUtil from "../util/ApiUtil";
 
 class App extends React.Component {
     static FIRST_LAP_DISTANCE = 0;
     static LAP_DISTANCE = 0;
     static RACE_START_TIME = new Date();
     static LAST_UPDATE_TIME = new Date();
+
+    componentDidMount = async () => {
+        await this.fetchInitialData();
+    }
+
+    fetchInitialData = async () => {
+        const response = await ApiUtil.performAPIRequest('/initial-data', {}, false);
+        const responseJson = await response.json();
+
+        console.log(responseJson);
+        console.log(responseJson.currentTime);
+        console.log(new Date(responseJson.currentTime));
+    }
 
     render = () => {
         return (

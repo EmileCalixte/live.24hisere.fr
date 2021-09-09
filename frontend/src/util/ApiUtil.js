@@ -37,16 +37,19 @@ class ApiUtil {
     /**
      * @param url
      * @param init
+     * @param saveMetadata
      * @returns {Response}
      */
-    static performAPIRequest = async (url, init = {}) => {
+    static performAPIRequest = async (url, init = {}, saveMetadata = true) => {
         if (!url.startsWith(ApiUtil.APP_BACKEND_URL)) {
             url = ApiUtil.getBackendFullUrl(url);
         }
 
         const response = await ApiUtil.fetch(url, init);
 
-        await ApiUtil.saveMetadata(response);
+        if (saveMetadata) {
+            await ApiUtil.saveMetadata(response);
+        }
 
         return response;
     }
