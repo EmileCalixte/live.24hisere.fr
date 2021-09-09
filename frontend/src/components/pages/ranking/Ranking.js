@@ -5,7 +5,7 @@ import ApiUtil from "../../../util/ApiUtil";
 import RankingTable from "./RankingTable";
 import RankingUtil from "../../../util/RankingUtil";
 import {getMaxTime as getMaxRankingTime} from "./RankingSettingsTime";
-import App from "../../App";
+import App, {app} from "../../App";
 import Util from "../../../util/Util";
 
 export const CATEGORY_ALL = 'all';
@@ -49,7 +49,7 @@ const Ranking = () => {
         console.log('FETCH', rankingTime);
 
         const rankingDate = new Date();
-        rankingDate.setTime(App.RACE_START_TIME.getTime() + rankingTime);
+        rankingDate.setTime(app.state.raceStartTime.getTime() + rankingTime);
         const rankingDateString = Util.formatDateForApi(rankingDate);
 
         const response = await ApiUtil.performAPIRequest(`/ranking?at=${rankingDateString}`);
@@ -98,7 +98,7 @@ const Ranking = () => {
         <div id="page-ranking">
             <div className="row hide-on-print">
                 <div className="col-12">
-                    <h1>Classements {selectedRankingTime} {App.RACE_START_TIME.toString()}</h1>
+                    <h1>Classements {selectedRankingTime} {app.state.raceStartTime.toString()}</h1>
                 </div>
             </div>
             <div className="row hide-on-print">
