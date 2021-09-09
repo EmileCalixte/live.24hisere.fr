@@ -36,11 +36,9 @@ class Util
     public static function convertDatabaseDateToJavascriptDate(string $dbDate, bool $withMilliseconds = true): ?string
     {
         $dbFormat = 'Y-m-d H:i:s';
-        $jsFormat = 'Y-m-d\TH:i:s';
 
         if ($withMilliseconds) {
             $dbFormat .= '.u';
-            $jsFormat .= '.u';
         }
 
         $date = \DateTimeImmutable::createFromFormat($dbFormat, $dbDate);
@@ -49,7 +47,31 @@ class Util
             return null;
         }
 
+        return self::convertDateToJavascriptDate($date, $withMilliseconds);
+    }
+
+    public static function convertDateToJavascriptDate(\DateTimeInterface $date, bool $withMilliseconds = true): ?string
+    {
+        $jsFormat = 'Y-m-d\TH:i:s';
+
+        if ($withMilliseconds) {
+            $jsFormat .= '.u';
+        }
+
         return $date->format($jsFormat);
+    }
+
+    public static function getMetadata(): array
+    {
+        $data = MainApp::$app->getDb()->getMetadata();
+
+        $currentDate = (new \DateTimeImmutable())->setTimezone(new \DateTimeZone('Europe/Paris'))->modify('+10 seconds'); // Just for debug, TODO REMOVE MODIFY
+
+        $data['currentTime'] = Util::convertDateToJavascriptDate($currentDate, false);
+
+        Util::camelizeApiResponseFields($data);
+
+        return $data;
     }
 
     public static function insertMetadataInResponseArray(array &$responseArray)
@@ -71,10 +93,5 @@ class Util
         return $response
             ->withHeader('Access-Control-Allow-Origin', MainApp::$app->getConfig()->isDevMode() ? '*' : MainApp::$app->getConfig()->getFrontendUrl())
             ->withHeader('Content-Type', 'application/json');
-    }
-
-    private static function getMetadata(): array
-    {
-        return MainApp::$app->getDb()->getMetadata();
     }
 }

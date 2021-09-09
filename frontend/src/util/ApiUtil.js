@@ -1,6 +1,6 @@
 import config from '../config/config';
 import Util from "./Util";
-import App from "../components/App";
+import {app} from "../components/App";
 
 class ApiUtil {
     static APP_BACKEND_URL = config.apiUrl
@@ -37,31 +37,31 @@ class ApiUtil {
     /**
      * @param url
      * @param init
+     * @param saveMetadata
      * @returns {Response}
      */
-    static performAPIRequest = async (url, init = {}) => {
+    static performAPIRequest = async (url, init = {}, saveMetadata = true) => {
         if (!url.startsWith(ApiUtil.APP_BACKEND_URL)) {
             url = ApiUtil.getBackendFullUrl(url);
         }
 
         const response = await ApiUtil.fetch(url, init);
 
-        await ApiUtil.saveMetadata(response);
+        if (saveMetadata) {
+            await ApiUtil.saveMetadataFromAPIRequest(response);
+        }
 
         return response;
     }
 
-    static saveMetadata = async (fetchResponse) => {
+    static saveMetadataFromAPIRequest = async (fetchResponse) => {
         try {
             const responseClone = fetchResponse.clone();
 
             const responseJson = await responseClone.json();
             const metadata = responseJson.metadata;
 
-            App.FIRST_LAP_DISTANCE = metadata.firstLapDistance;
-            App.LAP_DISTANCE = metadata.lapDistance;
-            App.RACE_START_TIME = new Date(metadata.raceStartTime);
-            App.LAST_UPDATE_TIME = new Date(metadata.lastUpdateTime);
+            await app.saveMetadata(metadata);
         } catch (e) {
             console.error('Unable to save response metadata');
             console.error(e);

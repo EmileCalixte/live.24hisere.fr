@@ -1,5 +1,5 @@
 import Util from "./Util";
-import App from "../components/App";
+import {app} from "../components/App";
 
 class RankingUtil {
     static getProcessedRanking = (ranking) => {
@@ -169,11 +169,11 @@ class RankingUtil {
             runner.distance = 0;
 
             if (runner.passageCount > 0) {
-                runner.distance = App.FIRST_LAP_DISTANCE;
+                runner.distance = app.state.firstLapDistance;
             }
 
             if (runner.passageCount > 1) {
-                runner.distance += App.LAP_DISTANCE * (runner.passageCount - 1);
+                runner.distance += app.state.lapDistance * (runner.passageCount - 1);
             }
 
             runner.lastPassageRaceTime = null;
@@ -182,7 +182,7 @@ class RankingUtil {
             if (runner.lastPassageTime !== null) {
                 const lastPassageTime = new Date(runner.lastPassageTime);
 
-                runner.lastPassageRaceTime = lastPassageTime.getTime() - App.RACE_START_TIME.getTime();
+                runner.lastPassageRaceTime = lastPassageTime.getTime() - app.state.raceStartTime.getTime();
             }
 
             if (runner.lastPassageRaceTime !== null) {

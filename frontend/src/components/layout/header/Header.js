@@ -1,4 +1,6 @@
 import Navbar from "./Navbar";
+import HeaderTimer from "./HeaderTimer";
+import {app} from "../../App";
 
 const Header = () => {
     return(
@@ -7,6 +9,10 @@ const Header = () => {
                 <img alt="Logo" src="/img/24hisere.svg" />
             </div>
             <Navbar />
+
+            {!app.state.isLoading &&
+                <HeaderTimer />
+            }
         </header>
     )
 }
