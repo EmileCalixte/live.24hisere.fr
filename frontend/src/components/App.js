@@ -6,23 +6,59 @@ import Ranking from "./pages/ranking/Ranking";
 import RunnerDetails from "./pages/runner-details/RunnerDetails";
 import ApiUtil from "../util/ApiUtil";
 
+let instance;
+
 class App extends React.Component {
-    static FIRST_LAP_DISTANCE = 0;
-    static LAP_DISTANCE = 0;
-    static RACE_START_TIME = new Date();
-    static LAST_UPDATE_TIME = new Date();
+    state = {
+        isLoading: true,
+        firstLapDistance: 0,
+        lapDistance: 0,
+        raceStartTime: new Date(),
+        lastUpdateTime: new Date(),
+    }
+
+    constructor() {
+        if (instance) {
+            throw new Error('App has already been instanciated');
+        }
+
+        super();
+
+        instance = this;
+    }
 
     componentDidMount = async () => {
         await this.fetchInitialData();
+        this.setState({
+            isLoading: false,
+        })
+    }
+
+    computeServerTimeOffset = (serverTimeString) => {
+        const serverTime = new Date(serverTimeString);
+        const clientTime = new Date();
+
+        const timeOffsetMs = serverTime - clientTime;
+
+        console.log('OFFSET', timeOffsetMs);
     }
 
     fetchInitialData = async () => {
         const response = await ApiUtil.performAPIRequest('/initial-data', {}, false);
         const responseJson = await response.json();
 
-        console.log(responseJson);
-        console.log(responseJson.currentTime);
-        console.log(new Date(responseJson.currentTime));
+        this.saveMetadata(responseJson);
+    }
+
+    saveMetadata = async (metadata) => {
+        this.computeServerTimeOffset(metadata.currentTime);
+
+        this.setState({
+            firstLapDistance: metadata.firstLapDistance,
+            lapDistance: metadata.lapDistance,
+            raceStartTime: new Date(metadata.raceStartTime),
+            lastUpdateTime: new Date(metadata.lastUpdateTime),
+        });
     }
 
     render = () => {
@@ -49,5 +85,7 @@ class App extends React.Component {
         );
     }
 }
+
+export { instance as app };
 
 export default App;
