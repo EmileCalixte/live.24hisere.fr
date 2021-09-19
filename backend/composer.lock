@@ -64,27 +64,35 @@
         },
         {
             "name": "icanboogie/inflector",
-            "version": "v2.0.1",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ICanBoogie/Inflector.git",
-                "reference": "4cbb0749c7092d9e5007297b3293a4bd6013e322"
+                "reference": "4dbefb8ac87942e499975537b42f0a8c0a276214"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ICanBoogie/Inflector/zipball/4cbb0749c7092d9e5007297b3293a4bd6013e322",
-                "reference": "4cbb0749c7092d9e5007297b3293a4bd6013e322",
+                "url": "https://api.github.com/repos/ICanBoogie/Inflector/zipball/4dbefb8ac87942e499975537b42f0a8c0a276214",
+                "reference": "4dbefb8ac87942e499975537b42f0a8c0a276214",
                 "shasum": ""
             },
             "require": {
                 "ext-mbstring": "*",
                 "php": ">=7.1"
             },
+            "conflict": {
+                "icanboogie/common": "<2.0"
+            },
+            "require-dev": {
+                "icanboogie/common": "^2.0",
+                "phpstan/phpstan": "^0.12.92",
+                "phpunit/phpunit": "^7.5"
+            },
             "type": "library",
             "autoload": {
-                "classmap": [
-                    "lib/"
-                ],
+                "psr-4": {
+                    "ICanBoogie\\": "lib/"
+                },
                 "files": [
                     "lib/helpers.php"
                 ]
@@ -116,7 +124,7 @@
                 "issues": "https://github.com/ICanBoogie/Inflector/issues",
                 "source": "https://github.com/ICanBoogie/Inflector"
             },
-            "time": "2020-12-08T23:54:41+00:00"
+            "time": "2021-07-16T23:37:38+00:00"
         },
         {
             "name": "nikic/fast-route",
@@ -991,5 +999,5 @@
         "ext-pdo": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.1.0"
 }
