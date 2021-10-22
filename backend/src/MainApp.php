@@ -21,8 +21,6 @@ class MainApp extends Singleton
 
     private Config $config;
 
-    private DAO $db;
-
     private Router $router;
 
     private App $slim;
@@ -33,7 +31,7 @@ class MainApp extends Singleton
 
         $this->config = new Config();
 
-        $this->db = new DAO($this->getConfig()->getDbHost(), $this->getConfig()->getDbName(), $this->getConfig()->getDbUser(), $this->getConfig()->getDbPassword());
+        DAO::getInstance()->initialize($this->getConfig()->getDbHost(), $this->getConfig()->getDbName(), $this->getConfig()->getDbUser(), $this->getConfig()->getDbPassword());
 
         $this->slim = SlimFactory::create();
         $this->router = new Router($this->slim);
@@ -45,11 +43,6 @@ class MainApp extends Singleton
     public function getConfig(): Config
     {
         return $this->config;
-    }
-
-    public function getDb(): DAO
-    {
-        return $this->db;
     }
 
     public function run()

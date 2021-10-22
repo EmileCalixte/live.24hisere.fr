@@ -4,6 +4,7 @@
 namespace App\Misc;
 
 
+use App\Database\DAO;
 use App\MainApp;
 use ICanBoogie\Inflector;
 use Psr\Http\Message\MessageInterface;
@@ -63,7 +64,7 @@ class Util
 
     public static function getMetadata(): array
     {
-        $data = MainApp::getInstance()->getDb()->getMetadata();
+        $data = DAO::getInstance()->getMetadata();
 
         $currentDate = (new \DateTimeImmutable())->setTimezone(new \DateTimeZone('Europe/Paris'))->modify('+10 seconds'); // Just for debug, TODO REMOVE MODIFY
 

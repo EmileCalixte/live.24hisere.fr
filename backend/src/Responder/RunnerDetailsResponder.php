@@ -4,7 +4,7 @@
 namespace App\Responder;
 
 
-use App\MainApp;
+use App\Database\DAO;
 use App\Misc\Util;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -16,13 +16,13 @@ class RunnerDetailsResponder implements ResponderInterface
     {
         $runnerId = $args['id'];
 
-        $dbRunner = MainApp::getInstance()->getDb()->getRunner($runnerId);
+        $dbRunner = DAO::getInstance()->getRunner($runnerId);
 
         if ($dbRunner === false) {
             throw new HttpNotFoundException($request);
         }
 
-        $dbPassages = MainApp::getInstance()->getDb()->getRunnerPassages($runnerId);
+        $dbPassages = DAO::getInstance()->getRunnerPassages($runnerId);
 
         $responseData = [
             'runner' => $dbRunner + ['passages' => $dbPassages],
