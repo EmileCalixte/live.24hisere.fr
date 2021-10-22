@@ -14,7 +14,7 @@ class RunnersResponder implements ResponderInterface
 
     public function respond(ServerRequestInterface $request, ResponseInterface $response, $args)
     {
-        $dbRunners = MainApp::$app->getDb()->getRunners();
+        $dbRunners = MainApp::getInstance()->getDb()->getRunners();
 
         $responseData = [
             'runners' => $dbRunners,

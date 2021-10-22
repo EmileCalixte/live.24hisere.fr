@@ -4,6 +4,7 @@
 namespace App;
 
 
+use App\Base\Singleton\Singleton;
 use App\Config\Config;
 use App\Database\DAO;
 use App\Router\Router;
@@ -14,7 +15,7 @@ use Slim\Exception\HttpException;
 use Slim\Factory\AppFactory as SlimFactory;
 use Throwable;
 
-class MainApp
+class MainApp extends Singleton
 {
     public static MainApp $app;
 
@@ -26,11 +27,11 @@ class MainApp
 
     private App $slim;
 
-    public function __construct()
+    protected function __construct()
     {
-        $this->config = new Config();
+        parent::__construct();
 
-        self::$app = $this;
+        $this->config = new Config();
 
         $this->db = new DAO($this->getConfig()->getDbHost(), $this->getConfig()->getDbName(), $this->getConfig()->getDbUser(), $this->getConfig()->getDbPassword());
 

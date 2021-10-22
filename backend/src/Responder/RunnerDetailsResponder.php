@@ -16,13 +16,13 @@ class RunnerDetailsResponder implements ResponderInterface
     {
         $runnerId = $args['id'];
 
-        $dbRunner = MainApp::$app->getDb()->getRunner($runnerId);
+        $dbRunner = MainApp::getInstance()->getDb()->getRunner($runnerId);
 
         if ($dbRunner === false) {
             throw new HttpNotFoundException($request);
         }
 
-        $dbPassages = MainApp::$app->getDb()->getRunnerPassages($runnerId);
+        $dbPassages = MainApp::getInstance()->getDb()->getRunnerPassages($runnerId);
 
         $responseData = [
             'runner' => $dbRunner + ['passages' => $dbPassages],

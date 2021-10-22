@@ -39,7 +39,7 @@ class CategoriesResponder implements ResponderInterface
 
     public function respond(ServerRequestInterface $request, ResponseInterface $response, $args)
     {
-        $dbCategories = MainApp::$app->getDb()->getCategories();
+        $dbCategories = MainApp::getInstance()->getDb()->getCategories();
 
         $responseData = [
             'categories' => [],

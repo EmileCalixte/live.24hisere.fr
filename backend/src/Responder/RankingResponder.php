@@ -21,7 +21,7 @@ class RankingResponder implements ResponderInterface
             }
         }
 
-        $dbRanking = MainApp::$app->getDb()->getRanking($at);
+        $dbRanking = MainApp::getInstance()->getDb()->getRanking($at);
 
         $responseData = [
             'ranking' => $dbRanking,
