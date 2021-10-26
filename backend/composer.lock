@@ -64,16 +64,16 @@
         },
         {
             "name": "icanboogie/inflector",
-            "version": "v2.1.0",
+            "version": "v2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ICanBoogie/Inflector.git",
-                "reference": "4dbefb8ac87942e499975537b42f0a8c0a276214"
+                "reference": "bd9173bf1a267f0a89a04d8a66c486bca1f13230"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ICanBoogie/Inflector/zipball/4dbefb8ac87942e499975537b42f0a8c0a276214",
-                "reference": "4dbefb8ac87942e499975537b42f0a8c0a276214",
+                "url": "https://api.github.com/repos/ICanBoogie/Inflector/zipball/bd9173bf1a267f0a89a04d8a66c486bca1f13230",
+                "reference": "bd9173bf1a267f0a89a04d8a66c486bca1f13230",
                 "shasum": ""
             },
             "require": {
@@ -124,7 +124,7 @@
                 "issues": "https://github.com/ICanBoogie/Inflector/issues",
                 "source": "https://github.com/ICanBoogie/Inflector"
             },
-            "time": "2021-07-16T23:37:38+00:00"
+            "time": "2021-10-20T02:15:30+00:00"
         },
         {
             "name": "nikic/fast-route",
