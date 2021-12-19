@@ -3,7 +3,7 @@ import {CATEGORY_ALL, CATEGORY_TEAM, GENDER_F, GENDER_M, GENDER_MIXED, TIME_MODE
 import RankingSettingsTime from "./RankingSettingsTime";
 
 const RankingSettings = ({categories, onCategorySelect, onGenderSelect, onTimeModeSelect, onRankingTimeSelect, selectedCategory, selectedGender, selectedTimeMode}) => {
-    return(
+    return (
         <section id="ranking-settings-section">
             <div id="ranking-settings-container">
 
@@ -12,16 +12,15 @@ const RankingSettings = ({categories, onCategorySelect, onGenderSelect, onTimeMo
                         <label htmlFor="ranking-settings-category-select">
                             Catégorie
                         </label>
-                        <select
-                            id="ranking-settings-category-select"
-                            value={selectedCategory}
-                            onChange={onCategorySelect}
-                            className="input-select"
+                        <select id="ranking-settings-category-select"
+                                value={selectedCategory}
+                                onChange={onCategorySelect}
+                                className="input-select"
                         >
                             <option value={CATEGORY_ALL}>Scratch (toutes catégories)</option>
                             {(() => {
                                 if (categories === false) {
-                                    return(
+                                    return (
                                         <LoadingCategoriesOption/>
                                     );
                                 }
@@ -48,12 +47,11 @@ const RankingSettings = ({categories, onCategorySelect, onGenderSelect, onTimeMo
 
                     <div className="inline-input-group">
                         <label className="input-radio">
-                            <input
-                                type="radio"
-                                defaultChecked={selectedGender === GENDER_MIXED}
-                                onChange={onGenderSelect}
-                                name="gender"
-                                value={GENDER_MIXED} />
+                            <input type="radio"
+                                   defaultChecked={selectedGender === GENDER_MIXED}
+                                   onChange={onGenderSelect}
+                                   name="gender"
+                                   value={GENDER_MIXED}/>
                             <span/>
                             Mixte
                         </label>
@@ -61,12 +59,11 @@ const RankingSettings = ({categories, onCategorySelect, onGenderSelect, onTimeMo
 
                     <div className="inline-input-group">
                         <label className="input-radio">
-                            <input
-                                type="radio"
-                                defaultChecked={selectedGender === GENDER_M}
-                                onChange={onGenderSelect}
-                                name="gender"
-                                value={GENDER_M} />
+                            <input type="radio"
+                                   defaultChecked={selectedGender === GENDER_M}
+                                   onChange={onGenderSelect}
+                                   name="gender"
+                                   value={GENDER_M}/>
                             <span/>
                             Hommes
                         </label>
@@ -74,12 +71,11 @@ const RankingSettings = ({categories, onCategorySelect, onGenderSelect, onTimeMo
 
                     <div className="inline-input-group">
                         <label className="input-radio">
-                            <input
-                                type="radio"
-                                defaultChecked={selectedGender === GENDER_F}
-                                onChange={onGenderSelect}
-                                name="gender"
-                                value={GENDER_F} />
+                            <input type="radio"
+                                   defaultChecked={selectedGender === GENDER_F}
+                                   onChange={onGenderSelect}
+                                   name="gender"
+                                   value={GENDER_F}/>
                             <span/>
                             Femmes
                         </label>
@@ -91,12 +87,11 @@ const RankingSettings = ({categories, onCategorySelect, onGenderSelect, onTimeMo
 
                     <div className="inline-input-group">
                         <label className="input-radio">
-                            <input
-                                type="radio"
-                                defaultChecked={selectedTimeMode === TIME_MODE_NOW}
-                                onChange={onTimeModeSelect}
-                                name="time"
-                                value={TIME_MODE_NOW} />
+                            <input type="radio"
+                                   defaultChecked={selectedTimeMode === TIME_MODE_NOW}
+                                   onChange={onTimeModeSelect}
+                                   name="time"
+                                   value={TIME_MODE_NOW}/>
                             <span/>
                             Classement actuel
                         </label>
@@ -104,18 +99,18 @@ const RankingSettings = ({categories, onCategorySelect, onGenderSelect, onTimeMo
 
                     <div className="inline-input-group">
                         <label className="input-radio">
-                            <input
-                                type="radio"
-                                defaultChecked={selectedTimeMode === TIME_MODE_AT}
-                                onChange={onTimeModeSelect}
-                                name="time"
-                                value={TIME_MODE_AT} />
+                            <input type="radio"
+                                   defaultChecked={selectedTimeMode === TIME_MODE_AT}
+                                   onChange={onTimeModeSelect}
+                                   name="time"
+                                   value={TIME_MODE_AT}/>
                             <span/>
                             Au temps de course
                         </label>
                     </div>
 
-                    <RankingSettingsTime isVisible={selectedTimeMode === TIME_MODE_AT} onRankingTimeSelect={onRankingTimeSelect} />
+                    <RankingSettingsTime isVisible={selectedTimeMode === TIME_MODE_AT}
+                                         onRankingTimeSelect={onRankingTimeSelect}/>
                 </div>
 
             </div>
