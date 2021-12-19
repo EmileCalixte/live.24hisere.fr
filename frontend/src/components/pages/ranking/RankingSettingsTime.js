@@ -241,49 +241,44 @@ const RankingSettingsTime = ({isVisible, onRankingTimeSelect}) => {
     const [time, setTime] = useState(getValuesAsMs(MAX_HOURS, MAX_MINUTES_AT_MAX_HOURS, MAX_SECONDS_AT_MAX_MINUTES));
 
     return (
-        <form
-            className="inline-input-group"
-            style={{visibility: isVisible ? 'visible' : 'hidden'}}
-            onSubmit={onSubmit}
+        <form className="inline-input-group"
+              style={{visibility: isVisible ? 'visible' : 'hidden'}}
+              onSubmit={onSubmit}
         >
             <label style={{marginLeft: -5}}>
-                <input
-                    className="input race-time-input"
-                    type="number"
-                    value={Util.prefixNumber(hours, 2)}
-                    name="race-time-hours"
-                    onFocus={onFocus}
-                    onChange={onHourChange}
+                <input className="input race-time-input"
+                       type="number"
+                       value={Util.prefixNumber(hours, 2)}
+                       name="race-time-hours"
+                       onFocus={onFocus}
+                       onChange={onHourChange}
                 />
                 h
             </label>
             <label>
-                <input
-                    className="input race-time-input"
-                    type="number"
-                    value={Util.prefixNumber(minutes, 2)}
-                    name="race-time-minutes"
-                    onFocus={onFocus}
-                    onChange={onMinuteChange}
+                <input className="input race-time-input"
+                       type="number"
+                       value={Util.prefixNumber(minutes, 2)}
+                       name="race-time-minutes"
+                       onFocus={onFocus}
+                       onChange={onMinuteChange}
                 />
                 m
             </label>
             <label>
-                <input
-                    className="input race-time-input"
-                    type="number"
-                    value={Util.prefixNumber(seconds, 2)}
-                    name="race-time-seconds"
-                    onFocus={onFocus}
-                    onChange={onSecondChange}
+                <input className="input race-time-input"
+                       type="number"
+                       value={Util.prefixNumber(seconds, 2)}
+                       name="race-time-seconds"
+                       onFocus={onFocus}
+                       onChange={onSecondChange}
                 />
                 s
             </label>
 
-            <button
-                className="button"
-                disabled={time === getValuesAsMs(hours, minutes, seconds)}
-                style={{marginLeft: 10}}
+            <button className="button"
+                    disabled={time === getValuesAsMs(hours, minutes, seconds)}
+                    style={{marginLeft: 10}}
             >
                 OK
             </button>
