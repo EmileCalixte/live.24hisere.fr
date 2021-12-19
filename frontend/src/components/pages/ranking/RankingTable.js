@@ -3,7 +3,7 @@ import {CATEGORY_ALL, CATEGORY_TEAM, GENDER_F, GENDER_M, GENDER_MIXED} from "./R
 import Util from "../../../util/Util";
 
 const RankingTable = ({ranking, tableCategory, tableGender, tableRaceDuration}) => {
-    return(
+    return (
         <table id="ranking-table" className="table">
             <thead>
             <tr>
@@ -69,11 +69,10 @@ const RankingTable = ({ranking, tableCategory, tableGender, tableRaceDuration}) 
                 }
 
                 return (
-                    <RankingTableRow
-                        key={runner.id}
-                        runner={runner}
-                        tableCategory={tableCategory}
-                        tableGender={tableGender}
+                    <RankingTableRow key={runner.id}
+                                     runner={runner}
+                                     tableCategory={tableCategory}
+                                     tableGender={tableGender}
                     />
                 );
             })}
