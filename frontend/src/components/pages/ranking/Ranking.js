@@ -23,7 +23,6 @@ export const RANKING_UPDATE_INTERVAL_TIME = 30000;
 const Ranking = () => {
 
     const [categories, setCategories] = useState(false);
-    const [ranking, setRanking] = useState([]);
     const [processedRanking, setProcessedRanking] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(CATEGORY_ALL);
     const [selectedGender, setSelectedGender] = useState(GENDER_MIXED);
@@ -40,7 +39,7 @@ const Ranking = () => {
             responseCategories[category.code] = category.name;
         });
 
-        setCategories(() => responseCategories);
+        setCategories(responseCategories);
     }
 
     const fetchRanking = async (rankingTime = selectedRankingTime) => {
@@ -56,20 +55,19 @@ const Ranking = () => {
         const response = await ApiUtil.performAPIRequest(requestUrl);
         const responseJson = await response.json();
 
-        setRanking(() => responseJson.ranking);
-        setProcessedRanking(() => RankingUtil.getProcessedRanking(responseJson.ranking));
+        setProcessedRanking(RankingUtil.getProcessedRanking(responseJson.ranking));
     }
 
     const onCategorySelect = (e) => {
-        setSelectedCategory(() => e.target.value);
+        setSelectedCategory(e.target.value);
     }
 
     const onGenderSelect = (e) => {
-        setSelectedGender(() => e.target.value);
+        setSelectedGender(e.target.value);
     }
 
     const onTimeModeSelect = (e) => {
-        setSelectedTimeMode(() => e.target.value);
+        setSelectedTimeMode(e.target.value);
     }
 
     /**
