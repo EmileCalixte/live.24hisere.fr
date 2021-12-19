@@ -3,6 +3,34 @@ import {CATEGORY_ALL, CATEGORY_TEAM, GENDER_F, GENDER_M, GENDER_MIXED} from "./R
 import Util from "../../../util/Util";
 
 const RankingTable = ({ranking, tableCategory, tableGender, tableRaceDuration}) => {
+    const getRankingTableRow = (rankingRunner) => {
+        if (tableCategory !== CATEGORY_TEAM && rankingRunner.isTeam) {
+            return null;
+        } else if (tableCategory === CATEGORY_TEAM && !rankingRunner.isTeam) {
+            return null;
+        } else if (tableCategory !== CATEGORY_ALL && tableCategory !== CATEGORY_TEAM) {
+            if (tableCategory.toUpperCase() !== rankingRunner.category.toUpperCase()) {
+                return null;
+            }
+        }
+
+        if (tableCategory !== CATEGORY_TEAM) {
+            if (tableGender !== GENDER_MIXED) {
+                if (tableGender.toUpperCase() !== rankingRunner.gender.toUpperCase()) {
+                    return null;
+                }
+            }
+        }
+
+        return (
+            <RankingTableRow key={rankingRunner.id}
+                             runner={rankingRunner}
+                             tableCategory={tableCategory}
+                             tableGender={tableGender}
+            />
+        );
+    }
+
     return (
         <table id="ranking-table" className="table">
             <thead>
@@ -49,33 +77,7 @@ const RankingTable = ({ranking, tableCategory, tableGender, tableRaceDuration}) 
             </tr>
             </thead>
             <tbody>
-            {ranking.map((runner) => {
-                if (tableCategory !== CATEGORY_TEAM && runner.isTeam) {
-                    return null;
-                } else if (tableCategory === CATEGORY_TEAM && !runner.isTeam) {
-                    return null;
-                } else if (tableCategory !== CATEGORY_ALL && tableCategory !== CATEGORY_TEAM) {
-                    if (tableCategory.toUpperCase() !== runner.category.toUpperCase()) {
-                        return null;
-                    }
-                }
-
-                if (tableCategory !== CATEGORY_TEAM) {
-                    if (tableGender !== GENDER_MIXED) {
-                        if (tableGender.toUpperCase() !== runner.gender.toUpperCase()) {
-                            return null;
-                        }
-                    }
-                }
-
-                return (
-                    <RankingTableRow key={runner.id}
-                                     runner={runner}
-                                     tableCategory={tableCategory}
-                                     tableGender={tableGender}
-                    />
-                );
-            })}
+            {ranking.map((runner) => getRankingTableRow(runner))}
             </tbody>
         </table>
     );
