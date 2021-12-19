@@ -48,7 +48,7 @@ const RankingTableRow = ({runner, tableCategory, tableGender}) => {
             </td>
 
             <td className="hide-on-print">
-                <Link to={`/runner-details?id=${runner.id}`}>Détails</Link>
+                <Link to={`/runner-details/${runner.id}`}>Détails</Link>
             </td>
         </tr>
     );

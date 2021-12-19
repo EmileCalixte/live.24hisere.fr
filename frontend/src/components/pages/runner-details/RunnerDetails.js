@@ -1,6 +1,10 @@
+import {useParams} from "react-router-dom";
+
 const RunnerDetails = () => {
+    const {runnerId} = useParams();
+
     return(
-        <div>Runner details</div>
+        <div>Runner details {runnerId}</div>
     )
 }
 

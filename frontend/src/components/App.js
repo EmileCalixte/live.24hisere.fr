@@ -75,6 +75,7 @@ class App extends React.Component {
                                 <Routes>
                                     <Route exact path="/ranking" element={<Ranking />} />
                                     <Route exact path="/runner-details" element={<RunnerDetails />} />
+                                    <Route exact path="/runner-details/:runnerId" element={<RunnerDetails />} />
 
                                     {/* Redirect any unresolved route to /ranking */}
                                     <Route path="*" element={<Navigate to="/ranking" replace />} />
