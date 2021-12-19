@@ -1,5 +1,5 @@
 import React from "react";
-import {BrowserRouter, Redirect, Route, Switch} from "react-router-dom";
+import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import Header from "./layout/header/Header";
 import Footer from "./layout/footer/Footer";
 import Ranking from "./pages/ranking/Ranking";
@@ -72,13 +72,13 @@ class App extends React.Component {
                         <Header />
                         <div id="app-content">
                             <div id="page-content" className="container-fluid">
-                                <Switch>
-                                    <Route exact path="/ranking" component={Ranking} />
-                                    <Route exact path="/runner-details" component={RunnerDetails} />
-                                    <Route> {/* Redirect any unresolved route to /ranking */}
-                                        <Redirect to="/ranking" />
-                                    </Route>
-                                </Switch>
+                                <Routes>
+                                    <Route exact path="/ranking" element={<Ranking />} />
+                                    <Route exact path="/runner-details" element={<RunnerDetails />} />
+
+                                    {/* Redirect any unresolved route to /ranking */}
+                                    <Route path="*" element={<Navigate to="/ranking" replace />} />
+                                </Routes>
                             </div>
                         </div>
                     </div>

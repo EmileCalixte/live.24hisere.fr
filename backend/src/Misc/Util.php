@@ -4,6 +4,7 @@
 namespace App\Misc;
 
 
+use App\Database\DAO;
 use App\MainApp;
 use ICanBoogie\Inflector;
 use Psr\Http\Message\MessageInterface;
@@ -63,7 +64,7 @@ class Util
 
     public static function getMetadata(): array
     {
-        $data = MainApp::$app->getDb()->getMetadata();
+        $data = DAO::getInstance()->getMetadata();
 
         $currentDate = (new \DateTimeImmutable())->setTimezone(new \DateTimeZone('Europe/Paris'))->modify('+10 seconds'); // Just for debug, TODO REMOVE MODIFY
 
@@ -81,7 +82,7 @@ class Util
 
     public static function jsonEncode($data, int $flags = JSON_UNESCAPED_UNICODE, int $depth = 512): string
     {
-        if(MainApp::$app->getConfig()->isDevMode()) {
+        if(MainApp::getInstance()->getConfig()->isDevMode()) {
             $flags |= JSON_PRETTY_PRINT;
         }
 
@@ -91,7 +92,7 @@ class Util
     public static function getApiResponseWithHeaders(ResponseInterface $response): MessageInterface
     {
         return $response
-            ->withHeader('Access-Control-Allow-Origin', MainApp::$app->getConfig()->isDevMode() ? '*' : MainApp::$app->getConfig()->getFrontendUrl())
+            ->withHeader('Access-Control-Allow-Origin', MainApp::getInstance()->getConfig()->isDevMode() ? '*' : MainApp::getInstance()->getConfig()->getFrontendUrl())
             ->withHeader('Content-Type', 'application/json');
     }
 }

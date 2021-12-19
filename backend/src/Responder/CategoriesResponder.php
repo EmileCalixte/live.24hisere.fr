@@ -4,7 +4,7 @@
 namespace App\Responder;
 
 
-use App\MainApp;
+use App\Database\DAO;
 use App\Misc\Util;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -39,7 +39,7 @@ class CategoriesResponder implements ResponderInterface
 
     public function respond(ServerRequestInterface $request, ResponseInterface $response, $args)
     {
-        $dbCategories = MainApp::$app->getDb()->getCategories();
+        $dbCategories = DAO::getInstance()->getCategories();
 
         $responseData = [
             'categories' => [],

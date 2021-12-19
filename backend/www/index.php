@@ -5,9 +5,9 @@ use App\MainApp;
 require __DIR__ . '/../vendor/autoload.php';
 
 try { // TODO find a better way to display all errors ?
-    (new MainApp())->run();
+    MainApp::getInstance()->run();
 } catch (Throwable $e) {
-    if (MainApp::$app?->getConfig()?->isDevMode()) {
+    if (MainApp::getInstance()?->getConfig()?->isDevMode()) {
         dd($e);
     }
 

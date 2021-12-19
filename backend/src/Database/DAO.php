@@ -4,29 +4,40 @@
 namespace App\Database;
 
 
+use App\Base\Singleton\Singleton;
+use App\Database\Exception\DatabaseException;
 use App\Misc\Util;
 use PDO;
 
-class DAO
+class DAO extends Singleton
 {
     const TABLE_MISC = 'misc';
     const TABLE_PASSAGE = 'passage';
     const TABLE_RUNNER = 'runner';
 
-    private PDO $database;
+    private ?PDO $database = null;
 
-    public function __construct(string $host, string $dbName, string $user, string $password)
+    public function initialize(string $host, string $dbName, string $user, string $password)
     {
         try {
             $this->database = new PDO("mysql:host={$host};dbname={$dbName};charset=utf8", $user, $password);
         } catch (\Exception $e) {
-            throw new \RuntimeException("Unable to connect to database: {$e->getMessage()}", $e->getCode(), $e);
+            throw new DatabaseException("Unable to connect to database: {$e->getMessage()}", $e->getCode(), $e);
         }
+    }
+
+    public function getDatabase(): PDO
+    {
+        if (is_null($this->database)) {
+            throw new DatabaseException("The database connection has not been initialized");
+        }
+
+        return $this->database;
     }
 
     public function getCategories(): array
     {
-        $query = $this->database->query('SELECT DISTINCT category from ' . self::TABLE_RUNNER);
+        $query = $this->getDatabase()->query('SELECT DISTINCT category from ' . self::TABLE_RUNNER);
 
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -37,7 +48,7 @@ class DAO
 
     public function getMetadata(): array
     {
-        $query = $this->database->prepare('SELECT * FROM ' . self::TABLE_MISC);
+        $query = $this->getDatabase()->prepare('SELECT * FROM ' . self::TABLE_MISC);
         $query->execute();
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -116,7 +127,7 @@ class DAO
             ORDER BY passage_count DESC, last_passage_time ASC, lastname ASC, firstname ASC
         EOF;
 
-        $query = $this->database->prepare($stmt);
+        $query = $this->getDatabase()->prepare($stmt);
         foreach (array_keys($toBind) as $param) {
             $query->bindParam($param, $toBind[$param]);
         }
@@ -137,7 +148,7 @@ class DAO
 
     public function getRunner(int|string $id): array
     {
-        $query = $this->database->prepare('SELECT * FROM ' . self::TABLE_RUNNER . ' WHERE id = :id');
+        $query = $this->getDatabase()->prepare('SELECT * FROM ' . self::TABLE_RUNNER . ' WHERE id = :id');
         $query->bindParam(':id', $id);
         $query->execute();
         $result = $query->fetch(PDO::FETCH_ASSOC);
@@ -146,7 +157,7 @@ class DAO
 
     public function getRunnerPassages(int|string $runnerId): array
     {
-        $query = $this->database->prepare('SELECT id, time FROM ' . self::TABLE_PASSAGE . ' WHERE runner_id = :runnerId ORDER BY time ASC');
+        $query = $this->getDatabase()->prepare('SELECT id, time FROM ' . self::TABLE_PASSAGE . ' WHERE runner_id = :runnerId ORDER BY time ASC');
         $query->bindParam(':runnerId', $runnerId);
         $query->execute();
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -161,7 +172,7 @@ class DAO
 
     public function getRunners(): array
     {
-        $query = $this->database->prepare('SELECT * FROM ' . self::TABLE_RUNNER);
+        $query = $this->getDatabase()->prepare('SELECT * FROM ' . self::TABLE_RUNNER);
         $query->execute();
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
 

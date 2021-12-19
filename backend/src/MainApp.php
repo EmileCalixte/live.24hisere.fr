@@ -4,6 +4,7 @@
 namespace App;
 
 
+use App\Base\Singleton\Singleton;
 use App\Config\Config;
 use App\Database\DAO;
 use App\Router\Router;
@@ -14,25 +15,23 @@ use Slim\Exception\HttpException;
 use Slim\Factory\AppFactory as SlimFactory;
 use Throwable;
 
-class MainApp
+class MainApp extends Singleton
 {
     public static MainApp $app;
 
     private Config $config;
 
-    private DAO $db;
-
     private Router $router;
 
     private App $slim;
 
-    public function __construct()
+    protected function __construct()
     {
+        parent::__construct();
+
         $this->config = new Config();
 
-        self::$app = $this;
-
-        $this->db = new DAO($this->getConfig()->getDbHost(), $this->getConfig()->getDbName(), $this->getConfig()->getDbUser(), $this->getConfig()->getDbPassword());
+        DAO::getInstance()->initialize($this->getConfig()->getDbHost(), $this->getConfig()->getDbName(), $this->getConfig()->getDbUser(), $this->getConfig()->getDbPassword());
 
         $this->slim = SlimFactory::create();
         $this->router = new Router($this->slim);
@@ -44,11 +43,6 @@ class MainApp
     public function getConfig(): Config
     {
         return $this->config;
-    }
-
-    public function getDb(): DAO
-    {
-        return $this->db;
     }
 
     public function run()

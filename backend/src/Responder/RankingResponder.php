@@ -4,7 +4,7 @@
 namespace App\Responder;
 
 
-use App\MainApp;
+use App\Database\DAO;
 use App\Misc\Util;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -21,7 +21,7 @@ class RankingResponder implements ResponderInterface
             }
         }
 
-        $dbRanking = MainApp::$app->getDb()->getRanking($at);
+        $dbRanking = DAO::getInstance()->getRanking($at);
 
         $responseData = [
             'ranking' => $dbRanking,
