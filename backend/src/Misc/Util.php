@@ -66,7 +66,7 @@ class Util
     {
         $data = DAO::getInstance()->getMetadata();
 
-        $currentDate = (new \DateTimeImmutable())->setTimezone(new \DateTimeZone('Europe/Paris'))->modify('+10 seconds'); // Just for debug, TODO REMOVE MODIFY
+        $currentDate = (new \DateTimeImmutable())->setTimezone(new \DateTimeZone('Europe/Paris'));
 
         $data['currentTime'] = Util::convertDateToJavascriptDate($currentDate, false);
 
