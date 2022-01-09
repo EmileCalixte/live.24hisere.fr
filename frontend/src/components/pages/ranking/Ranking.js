@@ -1,5 +1,5 @@
 import '../../../css/print-ranking-table.css';
-import {useState, useEffect} from "react";
+import {useState, useEffect, useCallback} from "react";
 import RankingSettings from "./RankingSettings";
 import ApiUtil from "../../../util/ApiUtil";
 import RankingTable from "./RankingTable";
@@ -42,7 +42,7 @@ const Ranking = () => {
         setCategories(responseCategories);
     }
 
-    const fetchRanking = async (rankingTime = selectedRankingTime) => {
+    const fetchRanking = useCallback(async (rankingTime = selectedRankingTime) => {
         let requestUrl = '/ranking';
 
         if (selectedTimeMode === TIME_MODE_AT) {
@@ -56,7 +56,7 @@ const Ranking = () => {
         const responseJson = await response.json();
 
         setProcessedRanking(RankingUtil.getProcessedRanking(responseJson.ranking));
-    }
+    }, [selectedRankingTime, selectedTimeMode]);
 
     const onCategorySelect = (e) => {
         setSelectedCategory(e.target.value);
@@ -83,7 +83,7 @@ const Ranking = () => {
 
         const refreshRankingInterval = setInterval(fetchRanking, RANKING_UPDATE_INTERVAL_TIME);
         return (() => clearInterval(refreshRankingInterval));
-    }, [selectedRankingTime, selectedTimeMode]);
+    }, [fetchRanking]);
 
     return(
         <div id="page-ranking">
