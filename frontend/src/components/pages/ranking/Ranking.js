@@ -29,7 +29,7 @@ const Ranking = () => {
     const [selectedTimeMode, setSelectedTimeMode] = useState(TIME_MODE_NOW);
     const [selectedRankingTime, setSelectedRankingTime] = useState(getMaxRankingTime());
 
-    const fetchCategories = async () => {
+    const fetchCategories = useCallback(async () => {
         const response = await ApiUtil.performAPIRequest('/categories');
         const responseJson = await response.json();
 
@@ -40,7 +40,7 @@ const Ranking = () => {
         });
 
         setCategories(responseCategories);
-    }
+    }, []);
 
     const fetchRanking = useCallback(async (rankingTime = selectedRankingTime) => {
         let requestUrl = '/ranking';
@@ -83,7 +83,7 @@ const Ranking = () => {
 
         const refreshRankingInterval = setInterval(fetchRanking, RANKING_UPDATE_INTERVAL_TIME);
         return (() => clearInterval(refreshRankingInterval));
-    }, [fetchRanking]);
+    }, [fetchCategories, fetchRanking]);
 
     return(
         <div id="page-ranking">
