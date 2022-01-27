@@ -1,8 +1,23 @@
 import {useParams} from "react-router-dom";
 import RunnerSelector from "./RunnerSelector";
+import {useCallback, useEffect, useState} from "react";
+import ApiUtil from "../../../util/ApiUtil";
 
 const RunnerDetails = () => {
     const {runnerId} = useParams();
+
+    const [runners, setRunners] = useState(false);
+
+    const fetchRunners = useCallback(async () => {
+        const response = await ApiUtil.performAPIRequest('/runners');
+        const responseJson = await response.json();
+
+        setRunners(responseJson.runners);
+    }, []);
+
+    useEffect(() => {
+        fetchRunners();
+    }, [fetchRunners]);
 
     return(
         <div id="page-runner-details">
