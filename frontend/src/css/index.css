@@ -183,3 +183,7 @@ table.table tbody tr:hover {
 .ranking-table-info-header {
     background-color: #fff;
 }
+
+.runner-details-runner-selector-container {
+    max-width: 500px;
+}
