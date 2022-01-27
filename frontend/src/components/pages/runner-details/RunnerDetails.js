@@ -5,17 +5,31 @@ const RunnerDetails = () => {
     const {runnerId} = useParams();
 
     return(
-        <>
-            <RunnerSelector />
+        <div id="page-runner-details">
+            <div className="row hide-on-print">
+                <div className="col-12">
+                    <h1>Détails coureur</h1>
+                </div>
+            </div>
 
-            {runnerId === undefined &&
-            <div>Select a runner</div>
-            }
+            <div className="row hide-on-print">
+                <div className="col-12">
+                    <RunnerSelector />
+                </div>
+            </div>
 
-            {runnerId !== undefined &&
-            <div>Runner details {runnerId}</div>
-            }
-        </>
+            <div className="row">
+                <div className="col-12">
+                    {runnerId === undefined &&
+                    <div>Select a runner</div>
+                    }
+
+                    {runnerId !== undefined &&
+                    <div>Runner details {runnerId}</div>
+                    }
+                </div>
+            </div>
+        </div>
     )
 }
 
