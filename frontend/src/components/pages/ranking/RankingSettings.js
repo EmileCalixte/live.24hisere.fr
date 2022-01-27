@@ -1,4 +1,4 @@
-import LoadingCategoriesOption from "./LoadingCategoriesOption";
+import OptionWithLoadingDots from "../../misc/OptionWithLoadingDots";
 import {CATEGORY_ALL, CATEGORY_TEAM, GENDER_F, GENDER_M, GENDER_MIXED, TIME_MODE_AT, TIME_MODE_NOW} from "./Ranking";
 import RankingSettingsTime from "./RankingSettingsTime";
 
@@ -21,7 +21,9 @@ const RankingSettings = ({categories, onCategorySelect, onGenderSelect, onTimeMo
                             {(() => {
                                 if (categories === false) {
                                     return (
-                                        <LoadingCategoriesOption/>
+                                        <OptionWithLoadingDots>
+                                            Chargement des catégories
+                                        </OptionWithLoadingDots>
                                     );
                                 }
 

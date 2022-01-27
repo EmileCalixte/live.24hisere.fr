@@ -1,3 +1,5 @@
+import OptionWithLoadingDots from "../../misc/OptionWithLoadingDots";
+
 const RunnerSelector = () => {
     return(
         <div className="runner-details-runner-selector-container">
@@ -9,6 +11,11 @@ const RunnerSelector = () => {
                         className="input-select"
                 >
                     <option selected disabled hidden>Sélectionnez un coureur</option>
+
+                    {/*TODO display this only if runners are not fetched yet*/}
+                    <OptionWithLoadingDots>
+                        Chargement des coureurs
+                    </OptionWithLoadingDots>
                 </select>
             </div>
         </div>
