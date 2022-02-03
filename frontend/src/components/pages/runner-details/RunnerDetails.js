@@ -7,6 +7,7 @@ const RunnerDetails = () => {
     const {runnerId: urlRunnerId} = useParams();
 
     const [selectedRunnerId, setSelectedRunnerId] = useState(urlRunnerId);
+    const [selectedRunner, setSelectedRunner] = useState(null);
 
     const [runners, setRunners] = useState(false);
 
@@ -17,6 +18,23 @@ const RunnerDetails = () => {
         setRunners(responseJson.runners);
     }, []);
 
+    const fetchSelectedRunner = useCallback(async () => {
+        if (!selectedRunnerId) {
+            return;
+        }
+
+        const response = await ApiUtil.performAPIRequest(`/runners/${selectedRunnerId}`);
+
+        if (!response.ok) {
+            console.error('ALED OSEKOUR');
+            return;
+        }
+
+        const responseJson = await response.json();
+
+        setSelectedRunner(responseJson);
+    }, [selectedRunnerId]);
+
     const onSelectRunner = useCallback((e) => {
         setSelectedRunnerId(e.target.value);
     }, []);
@@ -26,7 +44,10 @@ const RunnerDetails = () => {
     }, [fetchRunners]);
 
     useEffect(() => {
-        console.log(selectedRunnerId, urlRunnerId);
+        fetchSelectedRunner();
+    }, [selectedRunnerId]);
+
+    useEffect(() => {
         if (selectedRunnerId === urlRunnerId) {
             return;
         }
@@ -34,6 +55,8 @@ const RunnerDetails = () => {
         // TODO better UX: use pushState instead of replaceState & handle popState event
         history.replaceState(history.state, '', `/runner-details/${selectedRunnerId}`);
     }, [selectedRunnerId]);
+
+    console.log(selectedRunner);
 
     return(
         <div id="page-runner-details">
