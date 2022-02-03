@@ -1,7 +1,7 @@
 import OptionWithLoadingDots from "../../misc/OptionWithLoadingDots";
 import {useCallback, useEffect, useState} from "react";
 
-const RunnerSelector = ({runners, onSelectRunner}) => {
+const RunnerSelector = ({runners, onSelectRunner, selectedRunnerId}) => {
     const [idSortedRunners, setIdSortedRunners] = useState(false);
     const [nameSortedRunners, setNameSortedRunners] = useState(false);
 
@@ -30,7 +30,7 @@ const RunnerSelector = ({runners, onSelectRunner}) => {
             const bIsTeam = b.isTeam === '1';
             const aName = a.firstname + a.lastname;
             const bName = b.firstname + b.lastname;
-            
+
             if (aIsTeam && !bIsTeam) {
                 return -1;
             }
@@ -55,8 +55,6 @@ const RunnerSelector = ({runners, onSelectRunner}) => {
         sortRunners();
     }, [sortRunners]);
 
-    console.log(runners);
-
     return(
         <div className="runner-details-runner-selector-container">
             <div className="input-group">
@@ -65,9 +63,10 @@ const RunnerSelector = ({runners, onSelectRunner}) => {
                 </label>
                 <select id="runner-select"
                         className="input-select"
+                        value={selectedRunnerId ?? "_placeholder"}
                         onChange={onSelectRunner}
                 >
-                    <option selected disabled hidden>Sélectionnez un coureur</option>
+                    <option disabled hidden value="_placeholder">Sélectionnez un coureur</option>
 
                     {(() => {
                         if (idSortedRunners === false || nameSortedRunners === false) {

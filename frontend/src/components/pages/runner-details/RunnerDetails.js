@@ -4,7 +4,9 @@ import {useCallback, useEffect, useState} from "react";
 import ApiUtil from "../../../util/ApiUtil";
 
 const RunnerDetails = () => {
-    const {runnerId} = useParams();
+    const {runnerId: urlRunnerId} = useParams();
+
+    const [selectedRunnerId, setSelectedRunnerId] = useState(urlRunnerId);
 
     const [runners, setRunners] = useState(false);
 
@@ -16,12 +18,22 @@ const RunnerDetails = () => {
     }, []);
 
     const onSelectRunner = useCallback((e) => {
-        console.log(e);
+        setSelectedRunnerId(e.target.value);
     }, []);
 
     useEffect(() => {
         fetchRunners();
     }, [fetchRunners]);
+
+    useEffect(() => {
+        console.log(selectedRunnerId, urlRunnerId);
+        if (selectedRunnerId === urlRunnerId) {
+            return;
+        }
+
+        // TODO better UX: use pushState instead of replaceState & handle popState event
+        history.replaceState(history.state, '', `/runner-details/${selectedRunnerId}`);
+    }, [selectedRunnerId]);
 
     return(
         <div id="page-runner-details">
@@ -33,18 +45,21 @@ const RunnerDetails = () => {
 
             <div className="row hide-on-print">
                 <div className="col-12">
-                    <RunnerSelector runners={runners} onSelectRunner={onSelectRunner} />
+                    <RunnerSelector runners={runners}
+                                    onSelectRunner={onSelectRunner}
+                                    selectedRunnerId={selectedRunnerId}
+                    />
                 </div>
             </div>
 
             <div className="row">
                 <div className="col-12">
-                    {runnerId === undefined &&
+                    {selectedRunnerId === undefined &&
                     <div>Select a runner</div>
                     }
 
-                    {runnerId !== undefined &&
-                    <div>Runner details {runnerId}</div>
+                    {selectedRunnerId !== undefined &&
+                    <div>Runner details {selectedRunnerId}</div>
                     }
                 </div>
             </div>
