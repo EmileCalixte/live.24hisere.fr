@@ -146,7 +146,7 @@ class DAO extends Singleton
         return $result;
     }
 
-    public function getRunner(int|string $id): array
+    public function getRunner(int|string $id): array|bool
     {
         $query = $this->getDatabase()->prepare('SELECT * FROM ' . self::TABLE_RUNNER . ' WHERE id = :id');
         $query->bindParam(':id', $id);
