@@ -15,6 +15,10 @@ const RunnerDetails = () => {
         setRunners(responseJson.runners);
     }, []);
 
+    const onSelectRunner = useCallback((e) => {
+        console.log(e);
+    }, []);
+
     useEffect(() => {
         fetchRunners();
     }, [fetchRunners]);
@@ -29,7 +33,7 @@ const RunnerDetails = () => {
 
             <div className="row hide-on-print">
                 <div className="col-12">
-                    <RunnerSelector />
+                    <RunnerSelector runners={runners} onSelectRunner={onSelectRunner} />
                 </div>
             </div>
 
