@@ -4,7 +4,6 @@
 namespace App\Responder;
 
 
-use App\MainApp;
 use App\Misc\Util;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
