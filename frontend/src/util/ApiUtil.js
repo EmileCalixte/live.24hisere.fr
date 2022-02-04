@@ -47,7 +47,7 @@ class ApiUtil {
 
         const response = await ApiUtil.fetch(url, init);
 
-        if (saveMetadata) {
+        if (saveMetadata && response.ok) {
             await ApiUtil.saveMetadataFromAPIRequest(response);
         }
 
