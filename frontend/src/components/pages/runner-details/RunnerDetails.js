@@ -26,13 +26,14 @@ const RunnerDetails = () => {
         const response = await ApiUtil.performAPIRequest(`/runners/${selectedRunnerId}`);
 
         if (!response.ok) {
-            console.error('ALED OSEKOUR');
+            console.error('Failed to fetch runner', await response.json());
             return;
         }
 
         const responseJson = await response.json();
+        const runner = responseJson.runner;
 
-        setSelectedRunner(responseJson);
+        setSelectedRunner(runner);
     }, [selectedRunnerId]);
 
     const onSelectRunner = useCallback((e) => {
