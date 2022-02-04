@@ -27,6 +27,7 @@ const RunnerDetails = () => {
 
         if (!response.ok) {
             console.error('Failed to fetch runner', await response.json());
+            setSelectedRunner(null);
             return;
         }
 
@@ -78,11 +79,7 @@ const RunnerDetails = () => {
 
             <div className="row">
                 <div className="col-12">
-                    {selectedRunnerId === undefined &&
-                    <div>Select a runner</div>
-                    }
-
-                    {selectedRunnerId !== undefined &&
+                    {selectedRunner !== null &&
                     <div>Runner details {selectedRunnerId}</div>
                     }
                 </div>
