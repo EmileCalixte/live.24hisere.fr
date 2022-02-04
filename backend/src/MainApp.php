@@ -8,7 +8,9 @@ use App\Base\Singleton\Singleton;
 use App\Config\Config;
 use App\Database\DAO;
 use App\Router\Router;
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
 use Slim\App;
 use Slim\Exception\HttpException;
@@ -38,6 +40,8 @@ class MainApp extends Singleton
 
         $this->registerErrorMiddleware();
         $this->router->registerRoutes();
+
+        $this->registerHeadersMiddleware();
     }
 
     public function getConfig(): Config
@@ -95,5 +99,17 @@ class MainApp extends Singleton
         $errorHandler = $this->getErrorHandler();
         $errorMiddleware = $this->slim->addErrorMiddleware($this->getConfig()->isDevMode(), true, true);
         $errorMiddleware->setDefaultErrorHandler($errorHandler);
+    }
+
+    private function registerHeadersMiddleware()
+    {
+        // Add CORS & Content-Type headers to every response
+
+        $this->slim->add(function (RequestInterface $req, RequestHandlerInterface $handler) {
+            $response = $handler->handle($req);
+            return $response
+                ->withHeader('Access-Control-Allow-Origin', $this->getConfig()->isDevMode() ? '*' : $this->getConfig()->getFrontendUrl())
+                ->withHeader('Content-Type', 'application/json');
+        });
     }
 }

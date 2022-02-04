@@ -17,6 +17,6 @@ class InitialDataResponder implements ResponderInterface
 
         $response->getBody()->write(Util::jsonEncode($data));
 
-        return Util::getApiResponseWithHeaders($response);
+        return $response;
     }
 }

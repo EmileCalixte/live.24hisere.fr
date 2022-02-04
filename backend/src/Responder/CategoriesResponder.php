@@ -60,6 +60,6 @@ class CategoriesResponder implements ResponderInterface
 
         $response->getBody()->write(Util::jsonEncode($responseData));
 
-        return Util::getApiResponseWithHeaders($response);
+        return $response;
     }
 }
