@@ -88,11 +88,4 @@ class Util
 
         return json_encode($data, $flags, $depth);
     }
-
-    public static function getApiResponseWithHeaders(ResponseInterface $response): MessageInterface
-    {
-        return $response
-            ->withHeader('Access-Control-Allow-Origin', MainApp::getInstance()->getConfig()->isDevMode() ? '*' : MainApp::getInstance()->getConfig()->getFrontendUrl())
-            ->withHeader('Content-Type', 'application/json');
-    }
 }
