@@ -180,10 +180,66 @@ table.table tbody tr:hover {
     background-color: #e8e8e8;
 }
 
+.tabs-container {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    /* Move tabs over border below */
+    position: relative;
+    top: 1px;
+    margin-top: -1px;
+}
+
+.tabs-container li {
+    display: inline-block;
+
+    background-color: #eee;
+    border-left: 1px solid #eee;
+    border-right: 1px solid #eee;
+}
+
+.tabs-container li.active {
+    background-color: #fff;
+
+    border-left: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    border-bottom: transparent;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+.tabs-container li a,
+.tabs-container li button {
+    display: inline-block;
+
+    font-size: 1em;
+    font-family: inherit;
+    line-height: inherit;
+    color: inherit;
+    text-decoration: none;
+    border: none;
+    background-color: transparent;
+
+    padding: 0.6em 0.8em;
+}
+
+.tabs-container li:not(.active) a,
+.tabs-container li:not(.active) button {
+    cursor: pointer;
+}
+
 .ranking-table-info-header {
     background-color: #fff;
 }
 
 .runner-details-runner-selector-container {
     max-width: 500px;
+}
+
+.runner-details-data {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 0.75em;
 }

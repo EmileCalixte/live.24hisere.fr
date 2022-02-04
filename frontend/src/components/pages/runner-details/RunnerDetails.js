@@ -3,6 +3,9 @@ import RunnerSelector from "./RunnerSelector";
 import {useCallback, useEffect, useState} from "react";
 import ApiUtil from "../../../util/ApiUtil";
 
+const TAB_STATS = 'stats';
+const TAB_LAPS = 'laps';
+
 const RunnerDetails = () => {
     const {runnerId: urlRunnerId} = useParams();
 
@@ -10,6 +13,8 @@ const RunnerDetails = () => {
     const [selectedRunner, setSelectedRunner] = useState(null);
 
     const [runners, setRunners] = useState(false);
+
+    const [selectedTab, setSelectedTab] = useState(TAB_STATS);
 
     const fetchRunners = useCallback(async () => {
         const response = await ApiUtil.performAPIRequest('/runners');
@@ -39,6 +44,10 @@ const RunnerDetails = () => {
 
     const onSelectRunner = useCallback((e) => {
         setSelectedRunnerId(e.target.value);
+    }, []);
+
+    const onTabButtonClick = useCallback((e) => {
+        setSelectedTab(e.target.value);
     }, []);
 
     useEffect(() => {
@@ -77,13 +86,27 @@ const RunnerDetails = () => {
                 </div>
             </div>
 
-            <div className="row">
+            {selectedRunner !== null &&
+            <div className="row mt-3">
                 <div className="col-12">
-                    {selectedRunner !== null &&
-                    <div>Runner details {selectedRunnerId}</div>
-                    }
+                    <div className="runner-details-data-container">
+                        <ul className="tabs-container">
+                            <li className={selectedTab === TAB_STATS ? 'active' : ''}>
+                                <button value={TAB_STATS} onClick={onTabButtonClick}>Statistiques</button>
+                            </li>
+                            <li className={selectedTab === TAB_LAPS ? 'active' : ''}>
+                                <button value={TAB_LAPS} onClick={onTabButtonClick}>Détails des tours</button>
+                            </li>
+                        </ul>
+
+                        <div className="runner-details-data">
+                            Runner details {selectedRunnerId}
+                        </div>
+                    </div>
                 </div>
             </div>
+            }
+
         </div>
     )
 }
