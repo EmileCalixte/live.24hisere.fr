@@ -1,9 +1,21 @@
 import OptionWithLoadingDots from "../../misc/OptionWithLoadingDots";
-import {useCallback, useEffect, useState} from "react";
+import {useCallback, useEffect, useMemo, useState} from "react";
 
 const RunnerSelector = ({runners, onSelectRunner, selectedRunnerId}) => {
     const [idSortedRunners, setIdSortedRunners] = useState(false);
     const [nameSortedRunners, setNameSortedRunners] = useState(false);
+
+    const selectedRunnerExists = useMemo(() => {
+        if (!runners) {
+            return false;
+        }
+
+        const runner = runners.find(runner => {
+            return runner.id === selectedRunnerId;
+        })
+
+        return runner !== undefined;
+    }, [runners, selectedRunnerId]);
 
     const sortRunners = useCallback(() => {
         if (runners === false) {
@@ -63,7 +75,7 @@ const RunnerSelector = ({runners, onSelectRunner, selectedRunnerId}) => {
                 </label>
                 <select id="runner-select"
                         className="input-select"
-                        value={selectedRunnerId ?? "_placeholder"}
+                        value={selectedRunnerExists ? selectedRunnerId : "_placeholder"}
                         onChange={onSelectRunner}
                 >
                     <option disabled hidden value="_placeholder">Sélectionnez un coureur</option>
