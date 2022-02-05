@@ -41,6 +41,21 @@ const RunnerDetails = () => {
         const responseJson = await response.json();
         const runner = responseJson.runner;
 
+        runner.passages.sort((passageA, passageB) => {
+            const passageADate = new Date(passageA.time);
+            const passageBDate = new Date(passageB.time);
+
+            if (passageADate.getTime() < passageBDate.getTime()) {
+                return -1;
+            }
+
+            if (passageADate.getTime() > passageBDate.getTime()) {
+                return 1;
+            }
+
+            return 0;
+        });
+
         setSelectedRunner(runner);
     }, [selectedRunnerId]);
 
