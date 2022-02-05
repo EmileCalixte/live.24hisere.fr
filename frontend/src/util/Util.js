@@ -30,7 +30,7 @@ class Util {
         return Number.parseFloat(number).toFixed(decimalsCount);
     }
 
-    static formatMsAsDuration = (ms) => {
+    static formatMsAsDuration = (ms, forceDisplayHours = true) => {
         if (ms < 0) {
             return '−' + Util.formatMsAsDuration((ms - 1000) * -1);
         }
@@ -42,6 +42,10 @@ class Util {
         const stringSeconds = (seconds < 10) ? "0" + seconds.toString() : seconds.toString();
         const stringMinutes = (minutes < 10) ? "0" + minutes.toString() : minutes.toString();
         const stringHours = (hours < 10) ? "0" + hours.toString() : hours.toString();
+
+        if (!forceDisplayHours && hours === 0) {
+            return stringMinutes + ':' + stringSeconds;
+        }
 
         return stringHours + ':' + stringMinutes + ':' + stringSeconds;
     }
