@@ -2,6 +2,8 @@ import {useParams} from "react-router-dom";
 import RunnerSelector from "./RunnerSelector";
 import {useCallback, useEffect, useState} from "react";
 import ApiUtil from "../../../util/ApiUtil";
+import RunnerDetailsStats from "./RunnerDetailsStats";
+import RunnerDetailsLaps from "./RunnerDetailsLaps";
 
 const TAB_STATS = 'stats';
 const TAB_LAPS = 'laps';
@@ -100,7 +102,14 @@ const RunnerDetails = () => {
                         </ul>
 
                         <div className="runner-details-data">
-                            Runner details {selectedRunnerId}
+                            {(() => {
+                                switch (selectedTab) {
+                                    case TAB_STATS:
+                                        return <RunnerDetailsStats runner={selectedRunner} />
+                                    case TAB_LAPS:
+                                        return <RunnerDetailsLaps runner={selectedRunner} />
+                                }
+                            })()}
                         </div>
                     </div>
                 </div>
