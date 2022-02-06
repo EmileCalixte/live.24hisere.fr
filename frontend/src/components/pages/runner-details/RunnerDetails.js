@@ -4,6 +4,7 @@ import {useCallback, useEffect, useState} from "react";
 import ApiUtil from "../../../util/ApiUtil";
 import RunnerDetailsStats from "./RunnerDetailsStats";
 import RunnerDetailsLaps from "./RunnerDetailsLaps";
+import RunnerDetailsUtil from "../../../util/RunnerDetailsUtil";
 
 const TAB_STATS = 'stats';
 const TAB_LAPS = 'laps';
@@ -55,6 +56,8 @@ const RunnerDetails = () => {
 
             return 0;
         });
+
+        runner.passages = RunnerDetailsUtil.getProcessedPassages(runner.passages);
 
         setSelectedRunner(runner);
     }, [selectedRunnerId]);
