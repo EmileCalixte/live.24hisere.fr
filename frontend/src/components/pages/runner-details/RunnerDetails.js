@@ -84,7 +84,7 @@ const RunnerDetails = () => {
         }
 
         // TODO better UX: use pushState instead of replaceState & handle popState event
-        history.replaceState(history.state, '', `/runner-details/${selectedRunnerId}`);
+        window.history.replaceState(window.history.state, '', `/runner-details/${selectedRunnerId}`);
     }, [selectedRunnerId]);
 
     console.log(selectedRunner);
