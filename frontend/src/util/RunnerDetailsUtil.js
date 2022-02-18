@@ -4,6 +4,7 @@ import {app} from "../components/App";
 class RunnerDetailsUtil {
     /**
      * Adds a `processed` object to each runner.passages entry, with following keys :
+     * - `lapNumber`: the lap number (null if it's the first and incomplete lap)
      * - `lapDistance`: the lap distance in meters
      * - `totalDistance`: the total distance travelled at the time of passage in meters
      * - `lapStartTime`: a Date object representing the beginning of the lap
@@ -25,6 +26,8 @@ class RunnerDetailsUtil {
             const previousPassage = i > 0 ? runner.passages[i-1] : null
             const passage = runner.passages[i];
             passage.processed = {};
+
+            passage.processed.lapNumber = i === 0 ? null : i; // The first passage is an incomplete lap, so it's not counted
 
             passage.processed.lapDistance = i === 0 ? app.state.firstLapDistance : app.state.lapDistance;
             passage.processed.lapStartTime = i === 0 ? app.state.raceStartTime : new Date(previousPassage.time);
