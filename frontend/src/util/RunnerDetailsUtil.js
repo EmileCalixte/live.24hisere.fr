@@ -1,22 +1,17 @@
 import Util from "./Util";
 
 class RunnerDetailsUtil {
-    static getProcessedPassages = (passages) => {
+    static processRunnerPassages = (runner) => {
         Util.verbose('Processing passages');
 
-        const processedPassages = [];
-
-        for (let i = 0; i < passages.length; ++i) {
-            const passage = passages[i];
-
-            processedPassages.push(passage);
+        for (let i = 0; i < runner.passages.length; ++i) {
+            const passage = runner.passages[i];
+            passage.processed = {};
 
             // TODO
         }
 
         Util.verbose('Passages processed');
-
-        return processedPassages;
     }
 }
 

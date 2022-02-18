@@ -57,7 +57,7 @@ const RunnerDetails = () => {
             return 0;
         });
 
-        runner.passages = RunnerDetailsUtil.getProcessedPassages(runner.passages);
+        RunnerDetailsUtil.processRunnerPassages(runner);
 
         setSelectedRunner(runner);
     }, [selectedRunnerId]);
