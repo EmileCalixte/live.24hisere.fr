@@ -5,6 +5,7 @@ import ApiUtil from "../../../util/ApiUtil";
 import RunnerDetailsStats from "./RunnerDetailsStats";
 import RunnerDetailsLaps from "./RunnerDetailsLaps";
 import RunnerDetailsUtil from "../../../util/RunnerDetailsUtil";
+import {app} from "../../App";
 
 const TAB_STATS = 'stats';
 const TAB_LAPS = 'laps';
@@ -77,6 +78,16 @@ const RunnerDetails = () => {
     useEffect(() => {
         fetchSelectedRunner();
     }, [selectedRunnerId]);
+
+    useEffect(() => {
+        if (selectedRunner === null) {
+            return;
+        }
+
+        const runner = selectedRunner;
+        RunnerDetailsUtil.processRunnerPassages(runner);
+        setSelectedRunner(runner);
+    }, [app.state.firstLapDistance, app.state.lapDistance, app.state.raceStartTime])
 
     useEffect(() => {
         if (selectedRunnerId === urlRunnerId) {
