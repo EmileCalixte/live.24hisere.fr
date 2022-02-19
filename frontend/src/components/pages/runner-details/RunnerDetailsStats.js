@@ -38,6 +38,59 @@ const RunnerDetailsStats = ({runner}) => {
     }, [runner]);
 
     /**
+     * Fastest lap passage of the runner
+     * @type {object|null}
+     */
+    const fastestLapPassage = useMemo(() => {
+        let fastestLapPassage = null;
+
+        runner.passages.forEach(passage => {
+            if (passage.processed.lapNumber === null) {
+                return;
+            }
+
+            if (fastestLapPassage === null) {
+                fastestLapPassage = passage;
+                return;
+            }
+
+            if (passage.processed.lapDuration < fastestLapPassage.processed.lapDuration) {
+                fastestLapPassage = passage;
+            }
+        });
+
+        return fastestLapPassage;
+    }, [runner]);
+
+    /**
+     * Slowest lap passage of the runner
+     * @type {object|null}
+     */
+    const slowestLapPassage = useMemo(() => {
+        let slowestLapPassage = null;
+
+        runner.passages.forEach(passage => {
+            if (passage.processed.lapNumber === null) {
+                return;
+            }
+
+            if (fastestLapPassage === null) {
+                slowestLapPassage = passage;
+                return;
+            }
+
+            if (passage.processed.lapDuration > fastestLapPassage.processed.lapDuration) {
+                slowestLapPassage = passage;
+            }
+        });
+
+        return slowestLapPassage;
+    }, [runner]);
+
+    console.log('FASTEST', fastestLapPassage);
+    console.log('SLOWEST', slowestLapPassage);
+
+    /**
      * Last runner passage race time in ms
      * @type {number|null}
      */
