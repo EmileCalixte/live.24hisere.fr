@@ -25,7 +25,7 @@ const SpeedChart = ({runner}) => {
     }, [runner]);
 
     return (
-        <div className="speed-chart-container">
+        <div className="runner-details-chart-container speed-chart-container">
             <div className="row">
                 <div className="col-xl-3 col-lg-12">
                     Options

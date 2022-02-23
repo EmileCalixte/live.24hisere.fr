@@ -243,3 +243,9 @@ table.table tbody tr:hover {
     border: 1px solid #ddd;
     padding: 0.75em;
 }
+
+.runner-details-chart-container {
+    border: 1px solid #ddd;
+    padding: 0.75em;
+    box-shadow: 0 0 3px #ddd;
+}
