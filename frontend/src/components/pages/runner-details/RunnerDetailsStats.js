@@ -3,8 +3,6 @@ import {useMemo} from "react";
 import Util from "../../../util/Util";
 
 const RunnerDetailsStats = ({runner}) => {
-    console.log(runner);
-
     /**
      * Number of complete laps
      * @type {number}
@@ -86,9 +84,6 @@ const RunnerDetailsStats = ({runner}) => {
 
         return slowestLapPassage;
     }, [runner]);
-
-    console.log('FASTEST', fastestLapPassage);
-    console.log('SLOWEST', slowestLapPassage);
 
     /**
      * Last runner passage race time in ms
