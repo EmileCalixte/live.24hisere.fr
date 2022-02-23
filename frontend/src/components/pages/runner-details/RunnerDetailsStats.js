@@ -1,5 +1,6 @@
 import {app} from "../../App";
 import {useMemo} from "react";
+import SpeedChart from "./charts/SpeedChart";
 import Util from "../../../util/Util";
 
 const RunnerDetailsStats = ({runner}) => {
@@ -172,6 +173,12 @@ const RunnerDetailsStats = ({runner}) => {
                 <p>
                     Vitesse moyenne de 00:00:00 à {lastPassageRaceTime !== null ? Util.formatMsAsDuration(lastPassageRaceTime) : '--:--:--'} : <strong>{averageSpeed !== null ? averageSpeed.toFixed(2) + ' km/h' : 'n/a'}</strong> (allure moyenne : <strong>{averagePace !== null ? Util.formatMsAsDuration(averagePace, false) + '/km' : 'n/a'})</strong>
                 </p>
+            </div>
+
+            <div className="col-12">
+                <h2>Vitesse</h2>
+
+                <SpeedChart runner={runner} />
             </div>
         </div>
     )
