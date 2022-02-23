@@ -175,7 +175,7 @@ const RunnerDetailsStats = ({runner}) => {
                 </p>
 
                 <p>
-                    Vitesse moyenne de 00:00:00 à {lastPassageRaceTime !== null ? Util.formatMsAsDuration(lastPassageRaceTime) : '--:--:--'} : <strong>{averageSpeed !== null ? averageSpeed.toFixed(2) + ' km/h' : 'n/a'}</strong> (allure moyenne : {averagePace !== null ? Util.formatMsAsDuration(averagePace, false) + '/km' : 'n/a'})
+                    Vitesse moyenne de 00:00:00 à {lastPassageRaceTime !== null ? Util.formatMsAsDuration(lastPassageRaceTime) : '--:--:--'} : <strong>{averageSpeed !== null ? averageSpeed.toFixed(2) + ' km/h' : 'n/a'}</strong> (allure moyenne : <strong>{averagePace !== null ? Util.formatMsAsDuration(averagePace, false) + '/km' : 'n/a'})</strong>
                 </p>
             </div>
         </div>
