@@ -1,5 +1,6 @@
 import CanvasJSReact from "../../../../lib/canvasjs/canvasjs.react";
 import {useMemo, useState} from "react";
+import {app} from "../../../App";
 
 const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
@@ -13,19 +14,68 @@ const SpeedChart = ({runner}) => {
 
     const options = useMemo(() => {
         return {
-            title: {
-                text: "Basic Column Chart in React"
+            theme: "light2",
+            animationEnabled: false,
+            // animationDuration: 200,
+            toolTip: {
+                enabled: true,
+                contentFormatter: e => '<strong>TODO</strong> real data',
             },
-            data: [{
-                type: "column",
-                dataPoints: [
-                    {label: "Apple", y: runner.id * 2},
-                    {label: "Orange", y: 15},
-                    {label: "Banana", y: 25},
-                    {label: "Mango", y: 30},
-                    {label: "Grape", y: 28}
-                ]
-            }]
+            axisX: {
+                crosshair: {
+                    enabled: true,
+                    labelFormatter: e => null,
+                },
+                labelFormatter: e => e.value, // TODO format
+                minimum: app.state.raceStartTime,
+                maximum: 'TODO',
+                intervalType: "minute",
+                interval: 60,
+                labelAngle: -20,
+            },
+            axisY: {
+                suffix: ' km/h',
+                minimum: 0,
+                maximum: 20,
+            },
+            data: [
+                {
+                    type: "stepArea",
+                    markerType: null,
+                    showInLegend: true,
+                    name: "Vitesse du tour",
+                    color: "#ed9b3f",
+                    dataPoints: [],
+                },
+                {
+                    type: "stepArea",
+                    markerType: null,
+                    showInLegend: true,
+                    name: "Vitesse moyenne de l'heure",
+                    color: "#ff4a4f",
+                    fillOpacity: 0.4,
+                    dataPoints: [],
+                },
+                {
+                    type: "line",
+                    markerType: null,
+                    showInLegend: true,
+                    name: "Vitesse moyenne générale",
+                    color: "#a2d083",
+                    fillOpacity: 0,
+                    dataPoints: [],
+                },
+                {
+                    type: "line",
+                    markerType: null,
+                    showInLegend: true,
+                    name: "Vitesse moyenne générale au cours du temps",
+                    color: "#9e7eff",
+                    fillOpacity: 0,
+                    legendMarkerType: "square",
+                    dataPoints: [],
+                },
+            ]
         };
     }, [runner]);
 
