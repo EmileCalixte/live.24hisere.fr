@@ -36,7 +36,7 @@ const SpeedChart = ({runner}) => {
                     <p>Éléments à afficher</p>
 
                     <div className="inline-input-group">
-                        <label>
+                        <label className="input-checkbox">
                             <input type="checkbox" checked={displayEachLapSpeed} onChange={e => setDisplayEachLapSpeed(e.target.checked)} />
                             <span/>
                             Vitesse à chaque tour
@@ -44,7 +44,7 @@ const SpeedChart = ({runner}) => {
                     </div>
 
                     <div className="inline-input-group">
-                        <label>
+                        <label className="input-checkbox">
                             <input type="checkbox" checked={displayEachHourSpeed} onChange={e => setDisplayEachHourSpeed(e.target.checked)} />
                             <span/>
                             Vitesse moyenne à chaque heure
@@ -52,7 +52,7 @@ const SpeedChart = ({runner}) => {
                     </div>
 
                     <div className="inline-input-group">
-                        <label>
+                        <label className="input-checkbox">
                             <input type="checkbox" checked={displayAverageSpeed} onChange={e => setDisplayAverageSpeed(e.target.checked)} />
                             <span/>
                             Vitesse moyenne générale
@@ -60,7 +60,7 @@ const SpeedChart = ({runner}) => {
                     </div>
 
                     <div className="inline-input-group">
-                        <label>
+                        <label className="input-checkbox">
                             <input type="checkbox" checked={displayAverageSpeedEvolution} onChange={e => setDisplayAverageSpeedEvolution(e.target.checked)} />
                             <span/>
                             Évolution de la vitesse moyenne
