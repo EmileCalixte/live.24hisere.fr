@@ -141,6 +141,40 @@ const RunnerDetailsStats = ({runner}) => {
                 </p>
 
                 <p>
+                    Tour le plus rapide : {(() => {
+                    if (fastestLapPassage === null) {
+                        return 'n/a';
+                    }
+
+                    return (
+                        <>
+                            Tour {fastestLapPassage.processed.lapNumber} à <strong>{Util.formatMsAsDuration(fastestLapPassage.processed.lapEndRaceTime)}</strong> de course,
+                            durée : <strong>{Util.formatMsAsDuration(fastestLapPassage.processed.lapDuration)}</strong>,
+                            vitesse : <strong>{fastestLapPassage.processed.lapSpeed.toFixed(2)} km/h</strong>,
+                            allure : <strong>{Util.formatMsAsDuration(fastestLapPassage.processed.lapPace, false)}/km</strong>
+                        </>
+                    );
+                })()}
+                </p>
+
+                <p>
+                    Tour le plus lent : {(() => {
+                    if (slowestLapPassage === null) {
+                        return 'n/a';
+                    }
+
+                    return (
+                        <>
+                            Tour {slowestLapPassage.processed.lapNumber} à <strong>{Util.formatMsAsDuration(slowestLapPassage.processed.lapEndRaceTime)}</strong> de course,
+                            durée : <strong>{Util.formatMsAsDuration(slowestLapPassage.processed.lapDuration)}</strong>,
+                            vitesse : <strong>{slowestLapPassage.processed.lapSpeed.toFixed(2)} km/h</strong>,
+                            allure : <strong>{Util.formatMsAsDuration(slowestLapPassage.processed.lapPace, false)}/km</strong>
+                        </>
+                    );
+                })()}
+                </p>
+
+                <p>
                     Vitesse moyenne de 00:00:00 à {lastPassageRaceTime !== null ? Util.formatMsAsDuration(lastPassageRaceTime) : '--:--:--'} : <strong>{averageSpeed !== null ? averageSpeed.toFixed(2) + ' km/h' : 'n/a'}</strong> (allure moyenne : {averagePace !== null ? Util.formatMsAsDuration(averagePace, false) + '/km' : 'n/a'})
                 </p>
             </div>
