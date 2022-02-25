@@ -1,7 +1,12 @@
 import Util from "./Util";
-import {app} from "../components/App";
+import {app, RACE_DURATION} from "../components/App";
 
 class RunnerDetailsUtil {
+    static processRunnerData = (runner) => {
+        RunnerDetailsUtil.processRunnerPassages(runner);
+        RunnerDetailsUtil.processRunnerHourlyAverageSpeed(runner);
+    }
+
     /**
      * Adds a `processed` object to each runner.passages entry, with following keys :
      * - `lapNumber`: the lap number (null if it's the first and incomplete lap)
@@ -56,6 +61,48 @@ class RunnerDetailsUtil {
         }
 
         Util.verbose('Passages processed');
+    }
+
+    /**
+     * @param {object} runner a runner with processed passages
+     */
+    static processRunnerHourlyAverageSpeed = (runner) => {
+        const hourDuration = 60 * 60 * 1000; // in ms
+
+        const hours = [];
+
+        for (let hourStartRaceTime = 0; hourStartRaceTime <= RACE_DURATION; hourStartRaceTime += hourDuration) {
+            const hourEndRaceTime = Math.min(hourStartRaceTime + hourDuration - 1, RACE_DURATION);
+            const hourStartTime = new Date(app.state.raceStartTime.getTime() + hourStartRaceTime);
+            const hourEndTime = new Date(app.state.raceStartTime.getTime() + hourEndRaceTime);
+
+            hours.push({
+                hourStartRaceTime,
+                hourEndRaceTime,
+                hourStartTime,
+                hourEndTime,
+                passages: RunnerDetailsUtil.getLapsInRaceTimeInterval(runner.passages, hourStartRaceTime, hourEndRaceTime),
+            });
+        }
+
+        console.log('HOURS', hours);
+    }
+
+    static getLapsInRaceTimeInterval = (passages, intervalStartRaceTime, intervalEndRaceTime) => {
+        return passages.filter(passage => {
+
+            // lap END time is BEFORE interval
+            if (passage.processed.lapEndRaceTime < intervalStartRaceTime) {
+                return false;
+            }
+
+            // lap START time is AFTER interval
+            if (passage.processed.lapStartRaceTime > intervalEndRaceTime) {
+                return false;
+            }
+
+            return true;
+        });
     }
 }
 

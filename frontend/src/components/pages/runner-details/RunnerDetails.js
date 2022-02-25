@@ -58,7 +58,7 @@ const RunnerDetails = () => {
             return 0;
         });
 
-        RunnerDetailsUtil.processRunnerPassages(runner);
+        RunnerDetailsUtil.processRunnerData(runner);
 
         setSelectedRunner(runner);
     }, [selectedRunnerId]);
@@ -85,7 +85,7 @@ const RunnerDetails = () => {
         }
 
         const runner = selectedRunner;
-        RunnerDetailsUtil.processRunnerPassages(runner);
+        RunnerDetailsUtil.processRunnerData(runner);
         setSelectedRunner(runner);
     }, [app.state.firstLapDistance, app.state.lapDistance, app.state.raceStartTime])
 
