@@ -179,7 +179,7 @@ const RunnerDetailsStats = ({runner}) => {
             <div className="col-12">
                 <h2>Vitesse</h2>
 
-                <SpeedChart runner={runner} />
+                <SpeedChart runner={runner} averageSpeed={averageSpeed} />
             </div>
         </div>
     )

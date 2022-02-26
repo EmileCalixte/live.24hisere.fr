@@ -4,7 +4,7 @@ import {app, RACE_DURATION} from "../../../App";
 
 const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
-const SpeedChart = ({runner}) => {
+const SpeedChart = ({runner, averageSpeed}) => {
     console.log(runner);
 
     const [displayEachLapSpeed, setDisplayEachLapSpeed] = useState(true);
@@ -91,13 +91,26 @@ const SpeedChart = ({runner}) => {
         };
 
         const lapSpeedDataPoints = [];
+        const averageSpeedEvolutionDataPoints = [];
 
         for (let i = 0; i < runner.passages.length; ++i) {
             const passage = runner.passages[i];
 
+            if (i === 0) {
+                averageSpeedEvolutionDataPoints.push({
+                    x: passage.processed.lapStartTime,
+                    y: passage.processed.averageSpeedSinceRaceStart,
+                });
+            }
+
             lapSpeedDataPoints.push({
                 x: passage.processed.lapStartTime,
                 y: passage.processed.lapSpeed,
+            });
+
+            averageSpeedEvolutionDataPoints.push({
+                x: passage.processed.lapEndTime,
+                y: passage.processed.averageSpeedSinceRaceStart,
             });
 
             if (i === runner.passages.length - 1) {
@@ -126,6 +139,17 @@ const SpeedChart = ({runner}) => {
 
         options.data[0].dataPoints = lapSpeedDataPoints;
         options.data[1].dataPoints = lapHourSpeedDataPoints;
+        options.data[2].dataPoints = [
+            {
+                x: app.state.raceStartTime,
+                y: averageSpeed,
+            },
+            {
+                x: new Date(app.state.raceStartTime.getTime() + RACE_DURATION),
+                y: averageSpeed,
+            }
+        ];
+        options.data[3].dataPoints = averageSpeedEvolutionDataPoints;
 
         return options;
     }, [runner]);
