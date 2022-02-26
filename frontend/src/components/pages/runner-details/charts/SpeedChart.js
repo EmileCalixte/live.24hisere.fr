@@ -1,6 +1,7 @@
 import CanvasJSReact from "../../../../lib/canvasjs/canvasjs.react";
-import { useMemo, useState} from "react";
+import {useCallback, useMemo, useState} from "react";
 import {app, RACE_DURATION} from "../../../App";
+import Util from "../../../../util/Util";
 
 const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
@@ -11,6 +12,10 @@ const SpeedChart = ({runner, averageSpeed}) => {
     const [displayEachHourSpeed, setDisplayEachHourSpeed] = useState(true);
     const [displayAverageSpeed, setDisplayAverageSpeed] = useState(true);
     const [displayAverageSpeedEvolution, setDisplayAverageSpeedEvolution] = useState(true);
+
+    const getXAxisLabelValue = useCallback((e) => {
+        return Util.formatMsAsDuration(e.value.getTime());
+    }, []);
 
     const options = useMemo(() => {
         const options = {
@@ -26,12 +31,12 @@ const SpeedChart = ({runner, averageSpeed}) => {
                     enabled: true,
                     labelFormatter: e => null,
                 },
-                labelFormatter: e => e.value, // TODO format
-                minimum: app.state.raceStartTime,
-                maximum: new Date(app.state.raceStartTime.getTime() + RACE_DURATION),
+                labelFormatter: getXAxisLabelValue,
+                minimum: 0,
+                maximum: RACE_DURATION,
                 intervalType: "minute",
                 interval: 60,
-                labelAngle: -20,
+                labelAngle: -25,
             },
             axisY: {
                 suffix: ' km/h',
@@ -107,24 +112,24 @@ const SpeedChart = ({runner, averageSpeed}) => {
 
             if (i === 0) {
                 averageSpeedEvolutionDataPoints.push({
-                    x: passage.processed.lapStartTime,
+                    x: passage.processed.lapStartRaceTime,
                     y: passage.processed.averageSpeedSinceRaceStart,
                 });
             }
 
             lapSpeedDataPoints.push({
-                x: passage.processed.lapStartTime,
+                x: passage.processed.lapStartRaceTime,
                 y: passage.processed.lapSpeed,
             });
 
             averageSpeedEvolutionDataPoints.push({
-                x: passage.processed.lapEndTime,
+                x: passage.processed.lapEndRaceTime,
                 y: passage.processed.averageSpeedSinceRaceStart,
             });
 
             if (i === runner.passages.length - 1) {
                 lapSpeedDataPoints.push({
-                    x: passage.processed.lapEndTime,
+                    x: passage.processed.lapEndRaceTime,
                     y: passage.processed.lapSpeed,
                 });
             }
@@ -136,12 +141,12 @@ const SpeedChart = ({runner, averageSpeed}) => {
             const hour = runner.hours[i];
 
             lapHourSpeedDataPoints.push({
-                x: hour.startTime,
+                x: hour.startRaceTime,
                 y: hour.averageSpeed,
             });
 
             lapHourSpeedDataPoints.push({
-                x: hour.endTime,
+                x: hour.endRaceTime,
                 y: hour.averageSpeed,
             });
         }
@@ -150,11 +155,11 @@ const SpeedChart = ({runner, averageSpeed}) => {
         options.data[1].dataPoints = lapHourSpeedDataPoints;
         options.data[2].dataPoints = [
             {
-                x: app.state.raceStartTime,
+                x: options.axisX.minimum,
                 y: averageSpeed,
             },
             {
-                x: new Date(app.state.raceStartTime.getTime() + RACE_DURATION),
+                x:options.axisX.maximum,
                 y: averageSpeed,
             }
         ];
