@@ -13,9 +13,15 @@ const SpeedChart = ({runner, averageSpeed}) => {
     const [displayAverageSpeed, setDisplayAverageSpeed] = useState(true);
     const [displayAverageSpeedEvolution, setDisplayAverageSpeedEvolution] = useState(true);
 
-    const getXAxisLabelValue = useCallback((e) => {
+    const getXAxisLabelValue = useCallback(e => {
         return Util.formatMsAsDuration(e.value.getTime());
     }, []);
+
+    const getTooltipContent = useCallback(e => {
+        console.log(e);
+
+        return 'toto';
+    });
 
     const options = useMemo(() => {
         const options = {
@@ -24,7 +30,7 @@ const SpeedChart = ({runner, averageSpeed}) => {
             // animationDuration: 200,
             toolTip: {
                 enabled: true,
-                contentFormatter: e => '<strong>TODO</strong> real data',
+                contentFormatter: getTooltipContent,
             },
             axisX: {
                 crosshair: {
@@ -170,6 +176,7 @@ const SpeedChart = ({runner, averageSpeed}) => {
         runner,
         averageSpeed,
         getXAxisLabelValue,
+        getTooltipContent,
         displayEachLapSpeed,
         displayEachHourSpeed,
         displayAverageSpeed,
