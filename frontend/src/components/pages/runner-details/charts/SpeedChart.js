@@ -36,7 +36,7 @@ const SpeedChart = ({runner, averageSpeed}) => {
             axisY: {
                 suffix: ' km/h',
                 minimum: 0,
-                // maximum: 20,
+                maximum: 10,
             },
             data: [
                 {
@@ -99,6 +99,11 @@ const SpeedChart = ({runner, averageSpeed}) => {
 
         for (let i = 0; i < runner.passages.length; ++i) {
             const passage = runner.passages[i];
+
+            // Ensure that the max value of the speed axis is always higher than the runner max speed
+            if (passage.processed.lapSpeed > options.axisY.maximum) {
+                options.axisY.maximum = Math.ceil(passage.processed.lapSpeed);
+            }
 
             if (i === 0) {
                 averageSpeedEvolutionDataPoints.push({
