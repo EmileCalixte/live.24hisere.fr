@@ -54,10 +54,10 @@ class RunnerDetailsUtil {
             passage.processed.lapDuration = passage.processed.lapEndRaceTime - passage.processed.lapStartRaceTime;
 
             passage.processed.lapSpeed = passage.processed.lapDistance / passage.processed.lapDuration * 1000 * 3.6;
-            passage.processed.lapPace = (1 / (passage.processed.lapSpeed / 60)) * 60 * 1000;
+            passage.processed.lapPace = RunnerDetailsUtil.getPaceFromSpeed(passage.processed.lapSpeed);
 
             passage.processed.averageSpeedSinceRaceStart = passage.processed.totalDistance / passage.processed.lapEndRaceTime * 1000 * 3.6;
-            passage.processed.averagePaceSinceRaceStart = (1 / (passage.processed.averageSpeedSinceRaceStart / 60)) * 60 * 1000;
+            passage.processed.averagePaceSinceRaceStart = RunnerDetailsUtil.getPaceFromSpeed(passage.processed.averageSpeedSinceRaceStart);
         }
 
         Util.verbose('Passages processed');
@@ -103,6 +103,15 @@ class RunnerDetailsUtil {
 
             return true;
         });
+    }
+
+    /**
+     * Calculates a pace from a speed
+     * @param speed the speed in km/h
+     * @return {number} the corresponding pace in ms/km
+     */
+    static getPaceFromSpeed = (speed) => {
+        return (1 / (speed / 60)) * 60 * 1000;
     }
 }
 
