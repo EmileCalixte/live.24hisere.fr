@@ -77,15 +77,49 @@ class RunnerDetailsUtil {
             const hourEndTime = new Date(app.state.raceStartTime.getTime() + hourEndRaceTime);
 
             hours.push({
-                hourStartRaceTime,
-                hourEndRaceTime,
-                hourStartTime,
-                hourEndTime,
+                startRaceTime: hourStartRaceTime,
+                endRaceTime: hourEndRaceTime,
+                startTime: hourStartTime,
+                endTime: hourEndTime,
                 passages: RunnerDetailsUtil.getLapsInRaceTimeInterval(runner.passages, hourStartRaceTime, hourEndRaceTime),
             });
         }
 
-        console.log('HOURS', hours);
+        hours.forEach(hour => {
+            if (hour.passages.length <= 0) {
+                hour.averageSpeed = null;
+                hour.averagePace = null;
+                return;
+            }
+
+            let speedSum = 0;
+            let durationSum = 0;
+
+            hour.passages.forEach(passage => {
+                const lapStartsInHour = passage.processed.lapStartRaceTime >= hour.startRaceTime;
+                const lapEndsInHour = passage.processed.lapEndRaceTime <= hour.endRaceTime;
+
+                let lapDurationInHour;
+
+                if (lapStartsInHour && lapEndsInHour) { // Lap begins AND ends in current hour
+                    lapDurationInHour = passage.processed.lapDuration;
+                } else if (lapStartsInHour) { // Lap begins in current hour and ends in a following hour
+                    lapDurationInHour = passage.processed.lapDuration - (passage.processed.lapEndRaceTime - hour.endRaceTime);
+                } else if (lapEndsInHour) { // Lap begins in a previous hour and ends in current hour
+                    lapDurationInHour = passage.processed.lapDuration - (passage.processed.lapStartRaceTime - hour.startRaceTime);
+                } else { // Lap begins in a previous hour and ends in a following hour
+                    lapDurationInHour = passage.processed.lapDuration - (passage.processed.lapStartRaceTime - hour.startRaceTime) - (passage.processed.lapEndRaceTime - hour.endRaceTime);
+                }
+
+                speedSum += passage.processed.lapSpeed * lapDurationInHour;
+                durationSum += lapDurationInHour;
+            });
+
+            hour.averageSpeed = speedSum / durationSum;
+            hour.averagePace = RunnerDetailsUtil.getPaceFromSpeed(hour.averageSpeed);
+        });
+
+        runner.hours = hours;
     }
 
     static getLapsInRaceTimeInterval = (passages, intervalStartRaceTime, intervalEndRaceTime) => {
