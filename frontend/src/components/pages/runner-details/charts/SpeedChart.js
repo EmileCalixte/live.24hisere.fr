@@ -1,6 +1,6 @@
 import CanvasJSReact from "../../../../lib/canvasjs/canvasjs.react";
-import {useMemo, useState} from "react";
-import {app} from "../../../App";
+import { useMemo, useState} from "react";
+import {app, RACE_DURATION} from "../../../App";
 
 const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
@@ -13,7 +13,7 @@ const SpeedChart = ({runner}) => {
     const [displayAverageSpeedEvolution, setDisplayAverageSpeedEvolution] = useState(true);
 
     const options = useMemo(() => {
-        return {
+        const options = {
             theme: "light2",
             animationEnabled: false,
             // animationDuration: 200,
@@ -28,7 +28,7 @@ const SpeedChart = ({runner}) => {
                 },
                 labelFormatter: e => e.value, // TODO format
                 minimum: app.state.raceStartTime,
-                maximum: 'TODO',
+                maximum: new Date(app.state.raceStartTime.getTime() + RACE_DURATION),
                 intervalType: "minute",
                 interval: 60,
                 labelAngle: -20,
@@ -36,7 +36,7 @@ const SpeedChart = ({runner}) => {
             axisY: {
                 suffix: ' km/h',
                 minimum: 0,
-                maximum: 20,
+                // maximum: 20,
             },
             data: [
                 {
@@ -75,8 +75,42 @@ const SpeedChart = ({runner}) => {
                     legendMarkerType: "square",
                     dataPoints: [],
                 },
+                { // Necessary to avoid an infinite loop of CanvasJS
+                    type: "line",
+                    markerType: null,
+                    showInLegend: false,
+                    name: "Antifreeze",
+                    dataPoints: [
+                        {
+                            x: app.state.raceStartTime,
+                            y: 0,
+                        },
+                    ]
+                },
             ]
         };
+
+        const lapSpeedDataPoints = [];
+
+        for (let i = 0; i < runner.passages.length; ++i) {
+            const passage = runner.passages[i];
+
+            lapSpeedDataPoints.push({
+                x: passage.processed.lapStartTime,
+                y: passage.processed.lapSpeed,
+            });
+
+            if (i === runner.passages.length - 1) {
+                lapSpeedDataPoints.push({
+                    x: passage.processed.lapEndTime,
+                    y: passage.processed.lapSpeed,
+                });
+            }
+        }
+
+        options.data[0].dataPoints = lapSpeedDataPoints;
+
+        return options;
     }, [runner]);
 
     return (
