@@ -85,7 +85,7 @@ const RunnerDetailsStats = ({runner}) => {
         });
 
         return slowestLapPassage;
-    }, [runner]);
+    }, [runner, fastestLapPassage]);
 
     /**
      * Last runner passage race time in ms

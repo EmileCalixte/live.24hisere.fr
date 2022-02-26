@@ -166,7 +166,15 @@ const SpeedChart = ({runner, averageSpeed}) => {
         options.data[3].dataPoints = averageSpeedEvolutionDataPoints;
 
         return options;
-    }, [runner, displayEachLapSpeed, displayEachHourSpeed, displayAverageSpeed, displayAverageSpeedEvolution]);
+    }, [
+        runner,
+        averageSpeed,
+        getXAxisLabelValue,
+        displayEachLapSpeed,
+        displayEachHourSpeed,
+        displayAverageSpeed,
+        displayAverageSpeedEvolution,
+    ]);
 
     return (
         <div className="runner-details-chart-container speed-chart-container">

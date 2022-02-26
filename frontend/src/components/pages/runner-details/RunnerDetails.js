@@ -5,7 +5,6 @@ import ApiUtil from "../../../util/ApiUtil";
 import RunnerDetailsStats from "./RunnerDetailsStats";
 import RunnerDetailsLaps from "./RunnerDetailsLaps";
 import RunnerDetailsUtil from "../../../util/RunnerDetailsUtil";
-import {app} from "../../App";
 
 const TAB_STATS = 'stats';
 const TAB_LAPS = 'laps';
@@ -77,7 +76,7 @@ const RunnerDetails = () => {
 
     useEffect(() => {
         fetchSelectedRunner();
-    }, [selectedRunnerId]);
+    }, [fetchSelectedRunner]);
 
     useEffect(() => {
         if (selectedRunner === null) {
@@ -87,7 +86,7 @@ const RunnerDetails = () => {
         const runner = selectedRunner;
         RunnerDetailsUtil.processRunnerData(runner);
         setSelectedRunner(runner);
-    }, [app.state.firstLapDistance, app.state.lapDistance, app.state.raceStartTime])
+    }, [selectedRunner]);
 
     useEffect(() => {
         if (selectedRunnerId === urlRunnerId) {
@@ -96,7 +95,7 @@ const RunnerDetails = () => {
 
         // TODO better UX: use pushState instead of replaceState & handle popState event
         window.history.replaceState(window.history.state, '', `/runner-details/${selectedRunnerId}`);
-    }, [selectedRunnerId]);
+    }, [selectedRunnerId, urlRunnerId]);
 
     console.log(selectedRunner);
 
@@ -137,6 +136,8 @@ const RunnerDetails = () => {
                                         return <RunnerDetailsStats runner={selectedRunner} />
                                     case TAB_LAPS:
                                         return <RunnerDetailsLaps runner={selectedRunner} />
+                                    default:
+                                        return null;
                                 }
                             })()}
                         </div>
