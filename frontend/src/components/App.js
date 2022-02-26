@@ -8,6 +8,8 @@ import ApiUtil from "../util/ApiUtil";
 
 let instance;
 
+export const RACE_DURATION = 24 * 60 * 60 * 1000 - 1; // in ms
+
 class App extends React.Component {
     state = {
         isLoading: true,

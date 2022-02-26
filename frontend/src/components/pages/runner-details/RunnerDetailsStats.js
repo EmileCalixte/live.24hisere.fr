@@ -2,6 +2,7 @@ import {app} from "../../App";
 import {useMemo} from "react";
 import SpeedChart from "./charts/SpeedChart";
 import Util from "../../../util/Util";
+import RunnerDetailsUtil from "../../../util/RunnerDetailsUtil";
 
 const RunnerDetailsStats = ({runner}) => {
     /**
@@ -120,7 +121,7 @@ const RunnerDetailsStats = ({runner}) => {
             return null;
         }
 
-        return (1 / (averageSpeed / 60)) * 60 * 1000;
+        return RunnerDetailsUtil.getPaceFromSpeed(averageSpeed);
     }, [averageSpeed]);
 
     return (
