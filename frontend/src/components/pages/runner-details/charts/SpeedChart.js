@@ -108,7 +108,24 @@ const SpeedChart = ({runner}) => {
             }
         }
 
+        const lapHourSpeedDataPoints = [];
+
+        for (let i = 0; i < runner.hours.length; ++i) {
+            const hour = runner.hours[i];
+
+            lapHourSpeedDataPoints.push({
+                x: hour.startTime,
+                y: hour.averageSpeed,
+            });
+
+            lapHourSpeedDataPoints.push({
+                x: hour.endTime,
+                y: hour.averageSpeed,
+            });
+        }
+
         options.data[0].dataPoints = lapSpeedDataPoints;
+        options.data[1].dataPoints = lapHourSpeedDataPoints;
 
         return options;
     }, [runner]);
