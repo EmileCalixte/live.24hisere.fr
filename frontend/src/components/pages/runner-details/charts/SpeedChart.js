@@ -44,6 +44,7 @@ const SpeedChart = ({runner, averageSpeed}) => {
                     markerType: null,
                     showInLegend: true,
                     name: "Vitesse du tour",
+                    visible: displayEachLapSpeed,
                     color: "#ed9b3f",
                     dataPoints: [],
                 },
@@ -52,6 +53,7 @@ const SpeedChart = ({runner, averageSpeed}) => {
                     markerType: null,
                     showInLegend: true,
                     name: "Vitesse moyenne de l'heure",
+                    visible: displayEachHourSpeed,
                     color: "#ff4a4f",
                     fillOpacity: 0.4,
                     dataPoints: [],
@@ -61,6 +63,7 @@ const SpeedChart = ({runner, averageSpeed}) => {
                     markerType: null,
                     showInLegend: true,
                     name: "Vitesse moyenne générale",
+                    visible: displayAverageSpeed,
                     color: "#a2d083",
                     fillOpacity: 0,
                     dataPoints: [],
@@ -70,6 +73,7 @@ const SpeedChart = ({runner, averageSpeed}) => {
                     markerType: null,
                     showInLegend: true,
                     name: "Vitesse moyenne générale au cours du temps",
+                    visible: displayAverageSpeedEvolution,
                     color: "#9e7eff",
                     fillOpacity: 0,
                     legendMarkerType: "square",
@@ -152,7 +156,7 @@ const SpeedChart = ({runner, averageSpeed}) => {
         options.data[3].dataPoints = averageSpeedEvolutionDataPoints;
 
         return options;
-    }, [runner]);
+    }, [runner, displayEachLapSpeed, displayEachHourSpeed, displayAverageSpeed, displayAverageSpeedEvolution]);
 
     return (
         <div className="runner-details-chart-container speed-chart-container">
