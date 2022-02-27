@@ -14,7 +14,7 @@ const Footer = () => {
                         <p>Application développée pour Les 24 Heures de l'Isère par Emile Calixte, avec l'aide de Djeson Pascal-Valette</p>
 
                         <p>
-                            <a href="https://github.com/EmileCalixte/live.24hisere.fr" target="_blank">Code source</a> – <a href="https://www.24hisere.fr/" target="_blank">Les 24 Heures de l'Isère</a>
+                            <a href="https://github.com/EmileCalixte/live.24hisere.fr" target="_blank" rel="noopener noreferrer">Code source</a> – <a href="https://www.24hisere.fr/" target="_blank" rel="noopener noreferrer">Les 24 Heures de l'Isère</a>
                         </p>
                     </div>
                 </div>

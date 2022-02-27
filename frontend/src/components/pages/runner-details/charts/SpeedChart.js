@@ -93,7 +93,7 @@ const SpeedChart = ({runner, averageSpeed}) => {
         }
 
         return null;
-    });
+    }, [averageSpeed, runner]);
 
     const options = useMemo(() => {
         const options = {
