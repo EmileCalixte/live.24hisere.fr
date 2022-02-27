@@ -1,5 +1,6 @@
 import CanvasJSReact from "../../../../lib/canvasjs/canvasjs.react";
 import {useCallback, useMemo, useState} from "react";
+import ReactDOMServer from 'react-dom/server';
 import {app, RACE_DURATION} from "../../../App";
 import Util from "../../../../util/Util";
 
@@ -20,7 +21,49 @@ const SpeedChart = ({runner, averageSpeed}) => {
     const getTooltipContent = useCallback(e => {
         console.log(e);
 
-        return 'toto';
+        const dataPoint = e.entries[0].dataPoint;
+        const dataSeriesIndex = e.entries[0].dataSeries.index;
+
+        if (dataSeriesIndex === 0 || dataSeriesIndex === 3) {
+            const passageIndex = Math.min(e.entries[0].index, runner.passages.length - 1);
+
+            const passage = runner.passages[passageIndex];
+
+            console.log(passage);
+
+            return ReactDOMServer.renderToString(
+                <div>TODO {passage.processed.lapNumber}</div>
+            );
+        }
+
+        if (dataSeriesIndex === 1) {
+            const hourIndex = Math.min(Math.floor(e.entries[0].index / 2), runner.hours.length - 1);
+            const hour = runner.hours[hourIndex];
+
+            return ReactDOMServer.renderToString(
+                <div>
+                    <div>
+                        De <strong>{Util.formatMsAsDuration(hour.startRaceTime)}</strong> à <strong>{Util.formatMsAsDuration(hour.endRaceTime)}</strong> :
+                    </div>
+                    <div>
+                        Vitesse moyenne : <strong>{hour.averageSpeed !== null ? hour.averageSpeed.toFixed(2) + ' km/h' : '–'}</strong>
+                    </div>
+                    <div>
+                        Allure : <strong>{hour.averagePace !== null ? Util.formatMsAsDuration(hour.averagePace, false) + '/km' : '–'}</strong>
+                    </div>
+                </div>
+            );
+        }
+
+        if (dataSeriesIndex === 2) {
+            return ReactDOMServer.renderToString(
+                <div>
+                    Vitesse moyenne générale : <strong>{averageSpeed.toFixed(2)} km/h</strong>
+                </div>
+            );
+        }
+
+        return null;
     });
 
     const options = useMemo(() => {
