@@ -5,7 +5,7 @@ const SORT_BY_RACE_TIME = 'raceTime';
 const SORT_BY_LAP_SPEED = 'lapSpeed';
 
 const RunnerDetailsLaps = ({runner}) => {
-    const [sortColumn, setSortColumn] = useState(SORT_BY_LAP_SPEED);
+    const [sortColumn, setSortColumn] = useState(SORT_BY_RACE_TIME);
     const [sortDirection, setSortDirection] = useState(SORT_ASC);
 
     const passagesToDisplay = useMemo(() => {
@@ -73,6 +73,9 @@ const RunnerDetailsLaps = ({runner}) => {
                                    onClick={e => updateSort(e, SORT_BY_RACE_TIME)}
                                 >
                                     Temps de course
+                                    {sortColumn === SORT_BY_RACE_TIME &&
+                                    <i className={`table-column-sort-icon fa-solid fa-sort-${sortDirection === SORT_ASC ? 'down' : 'up'}`} />
+                                    }
                                 </a>
                             </th>
                             <th>Temps au tour</th>
@@ -81,6 +84,9 @@ const RunnerDetailsLaps = ({runner}) => {
                                    onClick={e => updateSort(e, SORT_BY_LAP_SPEED)}
                                 >
                                     Vitesse
+                                    {sortColumn === SORT_BY_LAP_SPEED &&
+                                    <i className={`table-column-sort-icon fa-solid fa-sort-${sortDirection === SORT_ASC ? 'down' : 'up'}`} />
+                                    }
                                 </a>
                             </th>
                             <th>Allure</th>

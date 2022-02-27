@@ -180,6 +180,10 @@ table.table tbody tr:hover {
     background-color: #e8e8e8;
 }
 
+.table-column-sort-icon {
+    margin-left: 0.3em;
+}
+
 .tabs-container {
     list-style: none;
     margin: 0;
