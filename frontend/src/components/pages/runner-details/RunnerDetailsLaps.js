@@ -1,9 +1,46 @@
-import {useMemo} from "react";
-import Util from "../../../util/Util";
+import {useMemo, useState} from "react";
+import Util, {SORT_ASC} from "../../../util/Util";
+
+const SORT_BY_RACE_TIME = 'raceTime';
+const SORT_BY_LAP_SPEED = 'lapSpeed';
 
 const RunnerDetailsLaps = ({runner}) => {
+    const [sortColumn, setSortColumn] = useState(SORT_BY_LAP_SPEED);
+    const [sortDirection, setSortDirection] = useState(SORT_ASC);
+
     const passagesToDisplay = useMemo(() => {
         const passagesToDisplay = [...runner.passages];
+
+        switch (sortColumn) {
+            case SORT_BY_RACE_TIME:
+                passagesToDisplay.sort((passageA, passageB) => {
+                    if (passageA.processed.lapEndRaceTime < passageB.processed.lapEndRaceTime) {
+                        return sortDirection === SORT_ASC ? -1 : 1;
+                    }
+
+                    if (passageA.processed.lapEndRaceTime > passageB.processed.lapEndRaceTime) {
+                        return sortDirection === SORT_ASC ? 1 : -1;
+                    }
+
+                    return 0;
+                });
+                break;
+            case SORT_BY_LAP_SPEED:
+                passagesToDisplay.sort((passageA, passageB) => {
+                    if (passageA.processed.lapSpeed < passageB.processed.lapSpeed) {
+                        return sortDirection === SORT_ASC ? -1 : 1;
+                    }
+
+                    if (passageA.processed.lapSpeed > passageB.processed.lapSpeed) {
+                        return sortDirection === SORT_ASC ? 1 : -1;
+                    }
+
+                    return 0;
+                });
+                break;
+            default:
+                throw new Error('Unknown sort column');
+        }
 
         return passagesToDisplay;
     }, [runner]);
