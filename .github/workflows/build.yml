@@ -58,7 +58,7 @@ jobs:
           rm -rf frontend/src
           rm -f frontend/.gitignore
           rm -f frontend/package.json
-          rm -f package-lock.json
+          rm -f frontend/package-lock.json
           rm -rf sql
           rm -f .gitattributes
           rm -f .gitignore
