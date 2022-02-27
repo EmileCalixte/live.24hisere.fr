@@ -15,7 +15,7 @@ a {
 }
 
 #app-content-wrapper {
-    min-height: calc(100vh - 80px); /* Total height minux footer height */
+    min-height: calc(100vh - 250px); /* Total height minux footer height */
 }
 
 #app-header {
@@ -25,13 +25,6 @@ a {
 
     background-color: #fff;
     box-shadow: 0 1px 2px rgb(208 208 208);
-}
-
-#app-footer {
-    height: 80px;
-
-    background-color: #131119;
-    color: #fff
 }
 
 #app-header-logo-container {
@@ -252,4 +245,22 @@ table.table tbody tr:hover {
     border: 1px solid #ddd;
     padding: 0.75em;
     box-shadow: 0 0 3px #ddd;
+}
+
+#app-footer {
+    background-color: #131119;
+    color: #fff;
+
+    font-size: 0.9em;
+
+    padding-top: 0.75em;
+    padding-bottom: 0.75em;
+
+    min-height: 250px;
+    display: flex;
+    align-items: center;
+}
+
+#app-footer a {
+    color: inherit;
 }
