@@ -10,8 +10,16 @@ body {
     color: #222;
 }
 
-a {
+a, button.a {
     color: #22aa22;
+    text-decoration: underline;
+    cursor: pointer;
+
+    border: none;
+    background-color: transparent;
+    font-size: inherit;
+    font-weight: inherit;
+    font-family: inherit;
 }
 
 #app-content-wrapper {

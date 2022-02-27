@@ -69,25 +69,25 @@ const RunnerDetailsLaps = ({runner}) => {
                             <th>Nb. tours</th>
                             <th>Distance</th>
                             <th>
-                                <a href=""
-                                   onClick={e => updateSort(e, SORT_BY_RACE_TIME)}
+                                <button className="a"
+                                        onClick={e => updateSort(e, SORT_BY_RACE_TIME)}
                                 >
                                     Temps de course
                                     {sortColumn === SORT_BY_RACE_TIME &&
                                     <i className={`table-column-sort-icon fa-solid fa-sort-${sortDirection === SORT_ASC ? 'down' : 'up'}`} />
                                     }
-                                </a>
+                                </button>
                             </th>
                             <th>Temps au tour</th>
                             <th>
-                                <a href=""
-                                   onClick={e => updateSort(e, SORT_BY_LAP_SPEED)}
+                                <button className="a"
+                                        onClick={e => updateSort(e, SORT_BY_LAP_SPEED)}
                                 >
                                     Vitesse
                                     {sortColumn === SORT_BY_LAP_SPEED &&
                                     <i className={`table-column-sort-icon fa-solid fa-sort-${sortDirection === SORT_ASC ? 'down' : 'up'}`} />
                                     }
-                                </a>
+                                </button>
                             </th>
                             <th>Allure</th>
                             <th>Vmoy. depuis le début</th>
