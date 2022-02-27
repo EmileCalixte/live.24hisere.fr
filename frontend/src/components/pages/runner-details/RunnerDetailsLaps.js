@@ -1,4 +1,4 @@
-import {useMemo, useState} from "react";
+import {useCallback, useMemo, useState} from "react";
 import Util, {SORT_ASC} from "../../../util/Util";
 
 const SORT_BY_RACE_TIME = 'raceTime';
@@ -45,6 +45,18 @@ const RunnerDetailsLaps = ({runner}) => {
         return passagesToDisplay;
     }, [runner, sortColumn, sortDirection]);
 
+    const updateSort = useCallback((e, clickedColumn) => {
+        e.preventDefault();
+
+        if (clickedColumn !== sortColumn) {
+            setSortColumn(clickedColumn);
+            setSortDirection(SORT_ASC);
+            return;
+        }
+
+        setSortDirection(sortDirection * -1);
+    }, [sortColumn, sortDirection, setSortColumn, setSortDirection]);
+
     return (
         <div className="row">
             <div className="col-12">
@@ -56,9 +68,21 @@ const RunnerDetailsLaps = ({runner}) => {
                         <tr>
                             <th>Nb. tours</th>
                             <th>Distance</th>
-                            <th>Temps de course</th>
+                            <th>
+                                <a href=""
+                                   onClick={e => updateSort(e, SORT_BY_RACE_TIME)}
+                                >
+                                    Temps de course
+                                </a>
+                            </th>
                             <th>Temps au tour</th>
-                            <th>Vitesse</th>
+                            <th>
+                                <a href=""
+                                   onClick={e => updateSort(e, SORT_BY_LAP_SPEED)}
+                                >
+                                    Vitesse
+                                </a>
+                            </th>
                             <th>Allure</th>
                             <th>Vmoy. depuis le début</th>
                             <th>Allure depuis le début</th>

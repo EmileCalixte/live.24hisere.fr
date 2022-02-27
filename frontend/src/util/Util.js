@@ -1,7 +1,7 @@
 import config from '../config/config';
 
 export const SORT_ASC = 1;
-export const SORT_DESC = 2;
+export const SORT_DESC = -1;
 
 class Util {
     static VERBOSE_ENABLED = !!config.devMode;
