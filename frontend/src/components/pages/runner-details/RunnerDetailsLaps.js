@@ -43,7 +43,7 @@ const RunnerDetailsLaps = ({runner}) => {
         }
 
         return passagesToDisplay;
-    }, [runner]);
+    }, [runner, sortColumn, sortDirection]);
 
     return (
         <div className="row">
