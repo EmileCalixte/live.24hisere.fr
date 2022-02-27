@@ -111,7 +111,7 @@ const SpeedChart = ({runner, averageSpeed}) => {
                 },
                 labelFormatter: getXAxisLabelValue,
                 minimum: 0,
-                maximum: RACE_DURATION,
+                maximum: RACE_DURATION + 1, // "+ 1" to display the "24h" label on X axis
                 intervalType: "minute",
                 interval: 60,
                 labelAngle: -25,
