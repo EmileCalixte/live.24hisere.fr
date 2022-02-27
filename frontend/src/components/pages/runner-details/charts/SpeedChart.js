@@ -19,9 +19,7 @@ const SpeedChart = ({runner, averageSpeed}) => {
     }, []);
 
     const getTooltipContent = useCallback(e => {
-        console.log(e);
-
-        const dataPoint = e.entries[0].dataPoint;
+        // const dataPoint = e.entries[0].dataPoint;
         const dataSeriesIndex = e.entries[0].dataSeries.index;
 
         if (dataSeriesIndex === 0 || dataSeriesIndex === 3) {
@@ -29,10 +27,41 @@ const SpeedChart = ({runner, averageSpeed}) => {
 
             const passage = runner.passages[passageIndex];
 
-            console.log(passage);
-
             return ReactDOMServer.renderToString(
-                <div>TODO {passage.processed.lapNumber}</div>
+                <div>
+                    {passage.processed.lapNumber !== null &&
+                    <div style={{marginBottom: "0.75em"}}>Tour {passage.processed.lapNumber}</div>
+                    }
+
+                    <div>
+                        De <strong>{Util.formatMsAsDuration(passage.processed.lapStartRaceTime)}</strong> à <strong>{Util.formatMsAsDuration(passage.processed.lapEndRaceTime)}</strong> :
+                    </div>
+
+                    <div>
+                        Durée : <strong>{Util.formatMsAsDuration(passage.processed.lapDuration, false)}</strong>
+                    </div>
+
+                    <div>
+                        Vitesse : <strong>{passage.processed.lapSpeed.toFixed(2)} km/h</strong>
+                    </div>
+
+                    <div>
+                        Allure : <strong>{Util.formatMsAsDuration(passage.processed.lapPace, false)}/km</strong>
+                    </div>
+
+                    <div style={{marginTop: "0.75em"}}>
+                        De <strong>{Util.formatMsAsDuration(0)}</strong> à <strong>{Util.formatMsAsDuration(passage.processed.lapEndRaceTime)}</strong> :
+                    </div>
+
+                    <div>
+                        Vitesse moyenne : <strong>{passage.processed.averageSpeedSinceRaceStart.toFixed(2)} km/h</strong>
+                    </div>
+
+                    <div>
+                        Allure moyenne : <strong>{Util.formatMsAsDuration(passage.processed.averagePaceSinceRaceStart, false)}/km</strong>
+                    </div>
+
+                </div>
             );
         }
 
