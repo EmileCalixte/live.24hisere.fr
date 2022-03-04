@@ -5,6 +5,7 @@ import ApiUtil from "../../../util/ApiUtil";
 import RunnerDetailsStats from "./RunnerDetailsStats";
 import RunnerDetailsLaps from "./RunnerDetailsLaps";
 import RunnerDetailsUtil from "../../../util/RunnerDetailsUtil";
+import ExcelUtil from "../../../util/ExcelUtil";
 
 const TAB_STATS = 'stats';
 const TAB_LAPS = 'laps';
@@ -119,6 +120,10 @@ const RunnerDetails = () => {
             {selectedRunner !== null &&
             <div className="row mt-3">
                 <div className="col-12">
+                    <button onClick={ExcelUtil.toto}>
+                        <i className="fa-solid fa-file-excel"/> Télécharger au format Excel
+                    </button>
+
                     <div className="runner-details-data-container">
                         <ul className="tabs-container">
                             <li className={selectedTab === TAB_STATS ? 'active' : ''}>
