@@ -5,6 +5,7 @@ import ApiUtil from "../../../util/ApiUtil";
 import RunnerDetailsStats from "./RunnerDetailsStats";
 import RunnerDetailsLaps from "./RunnerDetailsLaps";
 import RunnerDetailsUtil from "../../../util/RunnerDetailsUtil";
+import ExcelUtil from "../../../util/ExcelUtil";
 
 const TAB_STATS = 'stats';
 const TAB_LAPS = 'laps';
@@ -66,6 +67,12 @@ const RunnerDetails = () => {
         setSelectedRunnerId(e.target.value);
     }, []);
 
+    const exportRunnerToXlsx = useCallback(() => {
+        const filename = `${selectedRunner.firstname} ${selectedRunner.lastname}`.trim();
+
+        ExcelUtil.generateXlsxFromData(RunnerDetailsUtil.getDataForExcelExport(selectedRunner), filename);
+    }, [selectedRunner]);
+
     const onTabButtonClick = useCallback((e) => {
         setSelectedTab(e.target.value);
     }, []);
@@ -116,6 +123,12 @@ const RunnerDetails = () => {
 
             {selectedRunner !== null &&
             <div className="row mt-3">
+                <div className="col-12 mb-3">
+                    <button className="a" onClick={exportRunnerToXlsx}>
+                        <i className="fa-solid fa-file-excel"/> Générer un fichier Excel
+                    </button>
+                </div>
+
                 <div className="col-12">
                     <div className="runner-details-data-container">
                         <ul className="tabs-container">
