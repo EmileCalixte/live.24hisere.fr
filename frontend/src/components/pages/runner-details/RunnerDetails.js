@@ -97,8 +97,6 @@ const RunnerDetails = () => {
         window.history.replaceState(window.history.state, '', `/runner-details/${selectedRunnerId}`);
     }, [selectedRunnerId, urlRunnerId]);
 
-    console.log(selectedRunner);
-
     return(
         <div id="page-runner-details">
             <div className="row hide-on-print">

@@ -7,8 +7,6 @@ import Util from "../../../../util/Util";
 const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 const SpeedChart = ({runner, averageSpeed}) => {
-    console.log(runner);
-
     const [displayEachLapSpeed, setDisplayEachLapSpeed] = useState(true);
     const [displayEachHourSpeed, setDisplayEachHourSpeed] = useState(true);
     const [displayAverageSpeed, setDisplayAverageSpeed] = useState(true);
