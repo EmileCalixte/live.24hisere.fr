@@ -1,30 +1,16 @@
 import * as XLSX from 'xlsx/xlsx.mjs';
 
 class ExcelUtil {
-    static toto = () => {
-        const data = [
-            {name: "John", age: 27},
-            {name: "Emily", age: 22},
-            {name: "Tata", age: 31},
-        ];
+    static generateXlsxFromData = (data, filename = "Data") => {
+        if (!Array.isArray(data)) {
+            throw new Error('data must be an array of objects');
+        }
 
         const workSheet = XLSX.utils.json_to_sheet(data);
-
-        console.log('worksheet', workSheet);
-
         const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, workSheet, 'Data');
 
-        console.log('workbook', wb);
-
-        XLSX.utils.book_append_sheet(wb, workSheet, 'toto.xls');
-
-        // const bin = XLSX.write(wb, {bookType: "xlsx", type: "binary"});
-
-        XLSX.writeFile(wb, 'toto.xlsx');
-
-        console.log('bin', bin);
-
-        console.log(XLSX.utils);
+        XLSX.writeFile(wb, filename + ".xlsx");
     }
 }
 

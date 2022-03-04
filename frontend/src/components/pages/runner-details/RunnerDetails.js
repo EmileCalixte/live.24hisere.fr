@@ -67,6 +67,12 @@ const RunnerDetails = () => {
         setSelectedRunnerId(e.target.value);
     }, []);
 
+    const exportRunnerToXlsx = useCallback(() => {
+        const filename = `${selectedRunner.firstname} ${selectedRunner.lastname}`.trim();
+
+        ExcelUtil.generateXlsxFromData(RunnerDetailsUtil.getDataForExcelExport(selectedRunner), filename);
+    }, [selectedRunner]);
+
     const onTabButtonClick = useCallback((e) => {
         setSelectedTab(e.target.value);
     }, []);
@@ -120,7 +126,7 @@ const RunnerDetails = () => {
             {selectedRunner !== null &&
             <div className="row mt-3">
                 <div className="col-12">
-                    <button onClick={ExcelUtil.toto}>
+                    <button onClick={exportRunnerToXlsx}>
                         <i className="fa-solid fa-file-excel"/> Télécharger au format Excel
                     </button>
 

@@ -147,6 +147,34 @@ class RunnerDetailsUtil {
     static getPaceFromSpeed = (speed) => {
         return (1 / (speed / 60)) * 60 * 1000;
     }
+
+    /**
+     * Returns runner data ready for excel export
+     * @param {object} runner a runner with processed passages
+     * @return array
+     */
+    static getDataForExcelExport = (runner) => {
+        const excelData = [];
+
+        runner.passages.forEach(passage => {
+            console.log(passage);
+            excelData.push({
+                "Tours": passage.processed.lapNumber,
+                "Temps total": Util.formatMsAsDuration(passage.processed.lapEndRaceTime),
+                "Temps total (s)": Math.round(passage.processed.lapEndRaceTime / 1000),
+                "Distance totale (m)": passage.processed.totalDistance,
+                "Temps tour": Util.formatMsAsDuration(passage.processed.lapDuration, false),
+                "Temps tour (s)": Math.round(passage.processed.lapDuration / 1000),
+                "Distance tour (m)": passage.processed.lapDistance,
+                "Vitesse tour (km/h)": passage.processed.lapSpeed,
+                "Allure tour (min/km)": Util.formatMsAsDuration(passage.processed.lapPace, false),
+                "Vitesse moyenne depuis départ (km/h)": passage.processed.averageSpeedSinceRaceStart,
+                "Allure moyenne depuis départ (min/km)": Util.formatMsAsDuration(passage.processed.averagePaceSinceRaceStart, false),
+            });
+        });
+
+        return excelData;
+    }
 }
 
 export default RunnerDetailsUtil;
