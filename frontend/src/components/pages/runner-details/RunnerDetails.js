@@ -125,11 +125,13 @@ const RunnerDetails = () => {
 
             {selectedRunner !== null &&
             <div className="row mt-3">
-                <div className="col-12">
-                    <button onClick={exportRunnerToXlsx}>
-                        <i className="fa-solid fa-file-excel"/> Télécharger au format Excel
+                <div className="col-12 mb-3">
+                    <button className="a" onClick={exportRunnerToXlsx}>
+                        <i className="fa-solid fa-file-excel"/> Générer un fichier Excel
                     </button>
+                </div>
 
+                <div className="col-12">
                     <div className="runner-details-data-container">
                         <ul className="tabs-container">
                             <li className={selectedTab === TAB_STATS ? 'active' : ''}>
