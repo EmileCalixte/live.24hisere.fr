@@ -157,7 +157,6 @@ class RunnerDetailsUtil {
         const excelData = [];
 
         runner.passages.forEach(passage => {
-            console.log(passage);
             excelData.push({
                 "Tours": passage.processed.lapNumber,
                 "Temps total": Util.formatMsAsDuration(passage.processed.lapEndRaceTime),
