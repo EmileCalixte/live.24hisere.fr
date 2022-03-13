@@ -34,11 +34,29 @@ Write-Host ""
 
 log "Lecture du fichier de configuration : $configFilePath"
 
-$configFileExists = Test-Path -Path $configFilePath -PathType Leaf
+try {
+    $configFileExists = Test-Path -Path $configFilePath -PathType Leaf
 
-if (-Not $configFileExists) {
-    log "Fichier de configuration non trouvé !" red
-    Exit 1;
+    if (-Not $configFileExists) {
+        log "Fichier de configuration non trouvé !" red
+        Exit 1;
+    }
+
+    $config = Get-Content -Path $configFilePath | ConvertFrom-Json
+
+    # TODO check other keys & refactor in function
+    if ($null -eq $config.dagFilePath) {
+        log "Fichier de configuration invalide : clé dagFilePath manquante" red
+        Exit 1;
+    }
+
+    $dataFilePath = $config.dagFilePath
+
+    Write-Host $dataFilePath
+} catch {
+    log "Une erreur est survenue." red
+    Write-Host $_ -BackgroundColor red
+    Exit;
 }
 
 # TODO read config file
