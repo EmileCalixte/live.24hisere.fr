@@ -70,16 +70,26 @@ $importUrl = $config.importUrl
 $secretKey = $config.secretKey
 
 while ($true) {
-    log "Lecture du fichier de données"
+    try {
+        log "Lecture du fichier de données"
 
-    # TODO
+        $dagFileContent = [IO.File]::ReadAllText($dagFilePath) -replace "`r`n", "`n"
 
-    log "Envoi des données au serveur"
+        log "Envoi des données au serveur"
 
-    # TODO
+        $response = Invoke-WebRequest -Uri $importUrl -Method POST -Headers @{'content-type'='application/text'; 'secretKey'=$secretKey} -Body $dagFileContent
 
-    log "Données envoyées avec succès" $null green
+        if ($response.StatusCode -eq 200) {
+            log "Données envoyées avec succès" $null green
+        } else {
+            log "Code réponse du serveur : $($response.StatusCode)" $null red
+        }
 
-    log("Prochain envoi dans $sleepTime secondes")
-    Start-Sleep -s $sleepTime
+        log("Prochain envoi dans $sleepTime secondes")
+        Start-Sleep -s $sleepTime
+    } catch {
+        log "Une erreur est survenue" red
+        Write-Host $_ -BackgroundColor Red
+        Exit;
+    }
 }
