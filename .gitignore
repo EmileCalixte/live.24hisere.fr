@@ -2,5 +2,6 @@
 backend/config/config.php
 frontend/build/
 frontend/src/config/config.js
+import/config.json
 node_modules/
 vendor/

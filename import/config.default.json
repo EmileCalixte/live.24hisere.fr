@@ -1,0 +1,5 @@
+{
+  "dagFilePath": "C:/path/to/file.txt",
+  "importUrl": "http://localhost:8000/import",
+  "secretKey": "SECRET_KEY"
+}
