@@ -104,6 +104,34 @@ a, button.a {
     right: 0;
 }
 
+#app-header .header-fetch-loader-container {
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+#app-header .header-fetch-loader i {
+    animation-duration: 0.5s;
+    animation-name: header-fetch-loader;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+@keyframes header-fetch-loader {
+    from {
+        transform: rotate(0);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 #app-header .header-timer-container {
     height: 100%;
 
