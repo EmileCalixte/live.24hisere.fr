@@ -24,6 +24,12 @@ function log($string, $backgroundColor, $foregroundColor) {
     Write-Host "[$time] $string" -BackgroundColor $backgroundColor -ForegroundColor $foregroundColor
 }
 
+function ensureObjectKeyExists($object, $key) {
+    if ($null -eq $object.$key) {
+        throw "La clé $key est manquante"
+    }
+}
+
 log $scriptParentDir
 
 log "Lancement du script d'import automatique"
@@ -43,23 +49,25 @@ try {
     }
 
     $config = Get-Content -Path $configFilePath | ConvertFrom-Json
-
-    # TODO check other keys & refactor in function
-    if ($null -eq $config.dagFilePath) {
-        log "Fichier de configuration invalide : clé dagFilePath manquante" red
-        Exit 1;
-    }
-
-    $dataFilePath = $config.dagFilePath
-
-    Write-Host $dataFilePath
 } catch {
     log "Une erreur est survenue." red
     Write-Host $_ -BackgroundColor red
     Exit;
 }
 
-# TODO read config file
+try {
+    ensureObjectKeyExists $config dagFilePath
+    ensureObjectKeyExists $config importUrl
+    ensureObjectKeyExists $config secretKey
+} catch {
+    log "Fichier de configuration invalide" red
+    Write-Host $_ -BackgroundColor Red
+    Exit;
+}
+
+$dagFilePath = $config.dagFilePath
+$importUrl = $config.importUrl
+$secretKey = $config.secretKey
 
 while ($true) {
     log "Lecture du fichier de données"
