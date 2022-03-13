@@ -6,6 +6,7 @@ import RunnerDetailsStats from "./RunnerDetailsStats";
 import RunnerDetailsLaps from "./RunnerDetailsLaps";
 import RunnerDetailsUtil from "../../../util/RunnerDetailsUtil";
 import ExcelUtil from "../../../util/ExcelUtil";
+import {app} from "../../App";
 
 const TAB_STATS = 'stats';
 const TAB_LAPS = 'laps';
@@ -32,7 +33,15 @@ const RunnerDetails = () => {
             return;
         }
 
+        app.setState({
+            isFetching: true,
+        });
+
         const response = await ApiUtil.performAPIRequest(`/runners/${selectedRunnerId}`);
+
+        app.setState({
+            isFetching: false,
+        });
 
         if (!response.ok) {
             console.error('Failed to fetch runner', await response.json());

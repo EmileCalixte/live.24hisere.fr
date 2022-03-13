@@ -13,7 +13,7 @@ export const RACE_DURATION = 24 * 60 * 60 * 1000 - 1; // in ms
 class App extends React.Component {
     state = {
         isLoading: true,
-        isFetching: true,
+        isFetching: false,
         firstLapDistance: 0,
         lapDistance: 0,
         raceStartTime: new Date(),
