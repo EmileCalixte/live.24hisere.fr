@@ -11,6 +11,8 @@ import {app} from "../../App";
 const TAB_STATS = 'stats';
 const TAB_LAPS = 'laps';
 
+export const RUNNER_UPDATE_INTERVAL_TIME = 30000;
+
 const RunnerDetails = () => {
     const {runnerId: urlRunnerId} = useParams();
 
@@ -92,6 +94,9 @@ const RunnerDetails = () => {
 
     useEffect(() => {
         fetchSelectedRunner();
+
+        const refreshRunnerInterval = setInterval(fetchSelectedRunner, RUNNER_UPDATE_INTERVAL_TIME);
+        return (() => clearInterval(refreshRunnerInterval));
     }, [fetchSelectedRunner]);
 
     useEffect(() => {
