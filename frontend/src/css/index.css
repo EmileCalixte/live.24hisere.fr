@@ -51,6 +51,8 @@ a, button.a {
 
 #app-header nav {
     height: 100%;
+
+    flex: 1;
 }
 
 #app-header nav ul {
@@ -104,8 +106,6 @@ a, button.a {
 
 #app-header .header-timer-container {
     height: 100%;
-
-    flex: 1;
 
     display: flex;
     align-items: center;
