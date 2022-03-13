@@ -3,39 +3,56 @@ $scriptPath = $MyInvocation.MyCommand.Path
 $scriptParentDir = Split-Path -Path $scriptPath -Parent
 $configFilePath = "$scriptParentDir\config.json"
 
-function log {
-    Param($string)
+function log($string, $backgroundColor, $foregroundColor) {
     $time = Get-Date -Format "HH:mm:ss"
-    Write-Host "[$time] $string"
+
+    if ($null -eq $backgroundColor -and $null -eq $foregroundColor) {
+        Write-Host "[$time] $string"
+        return
+    }
+
+    if ($null -eq $backgroundColor) {
+        Write-Host "[$time] $string" -ForegroundColor $foregroundColor
+        return
+    }
+
+    if ($null -eq $foregroundColor) {
+        Write-Host "[$time] $string" -BackgroundColor $backgroundColor
+        return
+    }
+
+    Write-Host "[$time] $string" -BackgroundColor $backgroundColor -ForegroundColor $foregroundColor
 }
 
-log($scriptParentDir)
+log $scriptParentDir
 
-log("Lancement du script d'import automatique")
-log("Les données seront envoyées au serveur toutes les $sleepTime secondes")
-log("Arrêtez l'exécution avec Ctrl+C")
+log "Lancement du script d'import automatique"
+log "Les données seront envoyées au serveur toutes les $sleepTime secondes"
+log "Arrêtez l'exécution avec Ctrl+C"
 
 Write-Host ""
 
-log("Lecture du fichier de configuration : $configFilePath")
+log "Lecture du fichier de configuration : $configFilePath"
 
 $configFileExists = Test-Path -Path $configFilePath -PathType Leaf
 
 if (-Not $configFileExists) {
-    log("Fichier de configuration non trouvé !");
+    log "Fichier de configuration non trouvé !" red
     Exit 1;
 }
 
 # TODO read config file
 
 while ($true) {
-    log("Lecture du fichier de données")
+    log "Lecture du fichier de données"
 
     # TODO
 
-    log("Envoi des données au serveur")
+    log "Envoi des données au serveur"
 
     # TODO
+
+    log "Données envoyées avec succès" $null green
 
     log("Prochain envoi dans $sleepTime secondes")
     Start-Sleep -s $sleepTime
