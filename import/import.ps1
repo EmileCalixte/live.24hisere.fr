@@ -1,3 +1,4 @@
+. $PSScriptRoot\includes\retrieveData\GetDataFromFile.ps1
 . $PSScriptRoot\includes\util\EnsureObjectKeyExists.ps1
 . $PSScriptRoot\includes\util\Log.ps1
 
@@ -37,15 +38,12 @@ try {
     Exit;
 }
 
-$dagFilePath = $config.dagFilePath
 $importUrl = $config.importUrl
 $secretKey = $config.secretKey
 
 while ($true) {
     try {
-        Log "Lecture du fichier de données"
-
-        $dagFileContent = [IO.File]::ReadAllText($dagFilePath) -replace "`r`n", "`n"
+        $dagFileContent = GetDataFromFile($config.dagFilePath)
 
         Log "Envoi des données au serveur"
 
