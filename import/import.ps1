@@ -1,13 +1,8 @@
+. $PSScriptRoot\includes\util\EnsureObjectKeyExists.ps1
 . $PSScriptRoot\includes\util\Log.ps1
 
 $sleepTime = 15 # In seconds
 $configFilePath = "$PSScriptRoot\config.json"
-
-function EnsureObjectKeyExists($object, $key) {
-    if ($null -eq $object.$key) {
-        throw "La clé $key est manquante"
-    }
-}
 
 Log "Lancement du script d'import automatique"
 Log "Les données seront envoyées au serveur toutes les $sleepTime secondes"
