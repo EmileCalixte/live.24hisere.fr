@@ -1,4 +1,5 @@
 . $PSScriptRoot\includes\retrieveData\GetDataFromFile.ps1
+. $PSScriptRoot\includes\retrieveData\GetDataFromURl.ps1
 . $PSScriptRoot\includes\util\EnsureObjectKeyExists.ps1
 . $PSScriptRoot\includes\util\Log.ps1
 
@@ -29,11 +30,21 @@ try {
 }
 
 try {
-    EnsureObjectKeyExists $config dagFilePath
+    EnsureObjectKeyExists $config importFrom
     EnsureObjectKeyExists $config importUrl
     EnsureObjectKeyExists $config secretKey
+
+    if ($config.importFrom -eq "file") {
+        EnsureObjectKeyExists $config dagFilePath
+    }
+    elseif ($config.importFrom -eq "url") {
+        EnsureObjectKeyExists $config dataUrl
+    } else {
+        throw "La clé importFrom a une valeur incorrecte"
+    }
+
 } catch {
-    Log "Fichier de configuration invalide" red
+    Log "Une erreur est survenue lors de la lecture du fichier de configuration" red
     Write-Host $_ -BackgroundColor red
     Exit;
 }
@@ -43,11 +54,16 @@ $secretKey = $config.secretKey
 
 while ($true) {
     try {
-        $dagFileContent = GetDataFromFile($config.dagFilePath)
+        switch ($config.importFrom)
+        {
+            "file" { $dagFileContent = GetDataFromFile($config.dagFilePath) }
+            "url" { $dagFileContent = GetDataFromURl($config.dataUrl) }
+            default { throw "Invalid import method" }
+        }
 
         Log "Envoi des données au serveur"
 
-        $response = Invoke-WebRequest -Uri $importUrl -Method POST -Headers @{'content-type'='application/text'; 'secretKey'=$secretKey} -Body $dagFileContent
+        $response = Invoke-WebRequest -Uri $importUrl -Method POST -Headers @{'content-type'='application/text'; 'secretKey'=$secretKey} -Body $dagFileContent -UseBasicParsing
 
         if ($response.StatusCode -le 299) {
             Log "Données envoyées avec succès. Code réponse du serveur : $($response.StatusCode)" $null green
