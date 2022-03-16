@@ -1,5 +1,5 @@
 function EnsureObjectKeyExists($object, $key) {
     if ($null -eq $object.$key) {
-        throw "La clÃ© $key est manquante"
+        throw "La clé $key est manquante"
     }
 }
