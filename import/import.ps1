@@ -33,7 +33,7 @@ try {
     EnsureObjectKeyExists $config secretKey
 } catch {
     Log "Fichier de configuration invalide" red
-    Write-Host $_ -BackgroundColor Red
+    Write-Host $_ -BackgroundColor red
     Exit;
 }
 
@@ -61,7 +61,7 @@ while ($true) {
         Start-Sleep -s $sleepTime
     } catch {
         Log "Une erreur est survenue" red
-        Write-Host $_ -BackgroundColor Red
+        Write-Host $_ -BackgroundColor red
         Exit;
     }
 }
