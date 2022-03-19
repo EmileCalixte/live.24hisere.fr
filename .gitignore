@@ -1,5 +1,6 @@
 .idea/
 backend/config/config.php
+backend/logs
 frontend/build/
 frontend/src/config/config.js
 import/config.json

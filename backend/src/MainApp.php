@@ -7,6 +7,7 @@ namespace App;
 use App\Base\Singleton\Singleton;
 use App\Config\Config;
 use App\Database\DAO;
+use App\Log\AppLogger;
 use App\Router\Router;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -21,6 +22,8 @@ class MainApp extends Singleton
 {
     public static MainApp $app;
 
+    public static string $rootDir;
+
     private Config $config;
 
     private Router $router;
@@ -29,6 +32,8 @@ class MainApp extends Singleton
 
     protected function __construct()
     {
+        self::$rootDir = realpath(__DIR__ . '/..');
+
         parent::__construct();
 
         $this->config = new Config();
@@ -87,6 +92,8 @@ class MainApp extends Singleton
             $response->getBody()->write(
                 json_encode($payload, $jsonEncodedFlags)
             );
+
+            AppLogger::error($exception);
 
             return $response
                 ->withAddedHeader('Content-Type', 'application/json')

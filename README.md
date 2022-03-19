@@ -14,15 +14,7 @@ Une application web de suivi en direct des performances des coureurs, réalisée
 docker-compose up
 ```
 
-### Installation des dépendances
-
-API : Installation des dépendances PHP
-
-```bash
-docker-compose exec backend composer install
-```
-
-Les dépendances de l'application frontend sont installées automatiquement au lancement du docker-compose.
+Les dépendances des applications backend et frontend sont installées automatiquement au lancement du docker-compose.
 
 ### Configuration
 
