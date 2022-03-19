@@ -11,6 +11,19 @@ class ImportDataResponder implements ResponderInterface
 {
     public function respond(ServerRequestInterface $request, ResponseInterface $response, $args)
     {
+        $this->handleAuthorization($request);
+
+        dd('Authorization OK');
+
+        return $response;
+    }
+
+    /**
+     * @param ServerRequestInterface $request The request
+     * @throws HttpUnauthorizedException if request cannot be authorized
+     */
+    private function handleAuthorization(ServerRequestInterface $request)
+    {
         $secretKey = MainApp::getInstance()->getConfig()->getImportDataSecretKey();
 
         $authorizationHeader = $request->getHeader('Authorization');
@@ -24,9 +37,5 @@ class ImportDataResponder implements ResponderInterface
         if ($headerSecretKey !== $secretKey) {
             throw new HttpUnauthorizedException($request, "Invalid credentials");
         }
-
-        dd('Authorization OK');
-
-        return $response;
     }
 }
