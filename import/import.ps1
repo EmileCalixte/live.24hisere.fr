@@ -1,3 +1,7 @@
+$powerShellVersion = $host.Version.ToString()
+
+Write-Host "PowerShell $powerShellVersion"
+
 . $PSScriptRoot\includes\retrieveData\GetDataFromFile.ps1
 . $PSScriptRoot\includes\retrieveData\GetDataFromURl.ps1
 . $PSScriptRoot\includes\util\EnsureObjectKeyExists.ps1
