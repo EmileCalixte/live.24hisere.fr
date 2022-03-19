@@ -67,7 +67,7 @@ while ($true) {
 
         Log "Envoi des données au serveur"
 
-        $response = Invoke-WebRequest -Uri $importUrl -Method POST -Headers @{'content-type'='application/text'; 'secretKey'=$secretKey} -Body $dagFileContent -UseBasicParsing
+        $response = Invoke-WebRequest -Uri $importUrl -Method POST -Headers @{'Content-Type'='application/text'; 'Authorization'=$secretKey} -Body $dagFileContent -UseBasicParsing
 
         if ($response.StatusCode -le 299) {
             Log "Données envoyées avec succès. Code réponse du serveur : $($response.StatusCode)" $null green
