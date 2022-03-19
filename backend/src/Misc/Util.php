@@ -7,8 +7,7 @@ namespace App\Misc;
 use App\Database\DAO;
 use App\MainApp;
 use ICanBoogie\Inflector;
-use Psr\Http\Message\MessageInterface;
-use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 
 class Util
 {
@@ -87,5 +86,26 @@ class Util
         }
 
         return json_encode($data, $flags, $depth);
+    }
+
+    /**
+     * Writes stream content into file without memory issues for large content
+     * @param StreamInterface $stream The input stream
+     * @param string $filePath Path of the file where to write stream content
+     * @param int $chunkSize Maximum number of bytes in a reading
+     */
+    public static function writeStreamInFile(StreamInterface $stream, string $filePath, int $chunkSize = 2048)
+    {
+        $handle = fopen($filePath, 'w');
+
+        if ($handle === false) {
+            throw new \RuntimeException('Cannot create file');
+        }
+
+        while (!$stream->eof()) {
+            fwrite($handle, $stream->read($chunkSize));
+        }
+
+        fclose($handle);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Responder;
 
 use App\MainApp;
+use App\Misc\Util;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\HttpUnauthorizedException;
@@ -13,7 +14,8 @@ class ImportDataResponder implements ResponderInterface
     {
         $this->handleAuthorization($request);
 
-        dd('Authorization OK');
+        $this->handleRequestBody($request);
+
 
         return $response;
     }
@@ -36,6 +38,19 @@ class ImportDataResponder implements ResponderInterface
 
         if ($headerSecretKey !== $secretKey) {
             throw new HttpUnauthorizedException($request, "Invalid credentials");
+        }
+    }
+
+    private function handleRequestBody(ServerRequestInterface $request)
+    {
+        $tempFilePath = sys_get_temp_dir() . '/PHP_importDataBodyContent_' . str_replace('.', '', microtime(true)) . '.txt';
+
+        try {
+            Util::writeStreamInFile($request->getBody(), $tempFilePath);
+
+            dd(file_get_contents($tempFilePath));
+        } finally {
+            unlink($tempFilePath);
         }
     }
 }
