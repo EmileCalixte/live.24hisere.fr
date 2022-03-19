@@ -2,12 +2,14 @@
 
 namespace App\Log;
 
+use App\Base\Singleton\Singleton;
 use App\MainApp;
+use Monolog\Formatter\JsonFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Stringable;
 
-class AppLogger extends \App\Base\Singleton\Singleton
+class AppLogger extends Singleton
 {
     private Logger $logger;
 
@@ -16,7 +18,11 @@ class AppLogger extends \App\Base\Singleton\Singleton
         parent::__construct();
 
         $this->logger = new Logger('main');
-        $this->logger->pushHandler(new StreamHandler(MainApp::$rootDir . '/logs/logs.txt'));
+        $streamHandler = new StreamHandler(MainApp::$rootDir . '/logs/logs.txt');
+        $streamHandler->setFormatter(new JsonFormatter());
+
+        $this->logger->pushHandler($streamHandler);
+
         $this->logger->pushProcessor(function (array $entry): array {
             $entry['extra']['_GET'] = $_GET;
             $entry['extra']['_POST'] = $_POST;
