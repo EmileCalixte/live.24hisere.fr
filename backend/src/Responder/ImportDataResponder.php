@@ -48,9 +48,30 @@ class ImportDataResponder implements ResponderInterface
         try {
             Util::writeStreamInFile($request->getBody(), $tempFilePath);
 
-            dd(file_get_contents($tempFilePath));
+            $this->handleDataTempFile($tempFilePath);
         } finally {
             unlink($tempFilePath);
         }
+    }
+
+    private function handleDataTempFile(string $filePath)
+    {
+        $handle = fopen($filePath, 'r');
+
+        if ($handle === false) {
+            throw new \RuntimeException('Cannot read file');
+        }
+
+        // TODO open db transaction
+        // TODO clear data
+
+        while (($line = fgets($handle)) !== false) {
+            dump($line);
+            // TODO save line data (buffer & insert multiple lines to avoid too much db writes ?)
+        }
+
+        // TODO commit transaction
+
+        fclose($handle);
     }
 }
