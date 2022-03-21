@@ -37,7 +37,7 @@ class CategoriesResponder implements ResponderInterface
         'V5' => 'Vétéran 5',
     ];
 
-    public function respond(ServerRequestInterface $request, ResponseInterface $response, $args)
+    public function respond(ServerRequestInterface $request, ResponseInterface $response, $args): ResponseInterface
     {
         $dbCategories = DAO::getInstance()->getCategories();
 

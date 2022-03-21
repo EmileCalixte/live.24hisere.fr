@@ -12,7 +12,7 @@ use Slim\Exception\HttpNotFoundException;
 
 class RunnerDetailsResponder implements ResponderInterface
 {
-    public function respond(ServerRequestInterface $request, ResponseInterface $response, $args)
+    public function respond(ServerRequestInterface $request, ResponseInterface $response, $args): ResponseInterface
     {
         $runnerId = $args['id'];
 

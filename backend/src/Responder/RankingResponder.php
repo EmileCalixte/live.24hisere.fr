@@ -11,7 +11,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class RankingResponder implements ResponderInterface
 {
-    public function respond(ServerRequestInterface $request, ResponseInterface $response, $args)
+    public function respond(ServerRequestInterface $request, ResponseInterface $response, $args): ResponseInterface
     {
         $at = null;
 
