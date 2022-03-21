@@ -10,7 +10,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class InitialDataResponder implements ResponderInterface
 {
-    public function respond(ServerRequestInterface $request, ResponseInterface $response, $args)
+    public function respond(ServerRequestInterface $request, ResponseInterface $response, $args): ResponseInterface
     {
         $data = Util::getMetadata();
 

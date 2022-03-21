@@ -11,8 +11,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class RunnersResponder implements ResponderInterface
 {
-
-    public function respond(ServerRequestInterface $request, ResponseInterface $response, $args)
+    public function respond(ServerRequestInterface $request, ResponseInterface $response, $args): ResponseInterface
     {
         $dbRunners = DAO::getInstance()->getRunners();
 

@@ -15,7 +15,7 @@ use Slim\Exception\HttpUnauthorizedException;
 
 class ImportDataResponder implements ResponderInterface
 {
-    public function respond(ServerRequestInterface $request, ResponseInterface $response, $args)
+    public function respond(ServerRequestInterface $request, ResponseInterface $response, $args): ResponseInterface
     {
         $this->handleAuthorization($request);
 

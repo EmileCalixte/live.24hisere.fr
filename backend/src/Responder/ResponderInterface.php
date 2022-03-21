@@ -13,5 +13,5 @@ interface ResponderInterface
         ServerRequestInterface $request,
         ResponseInterface $response,
         $args
-    );
+    ): ResponseInterface;
 }
