@@ -198,4 +198,11 @@ class DAO extends Singleton
 
         return $result;
     }
+
+    public function setLastUpdateTime(\DateTimeInterface $dateTime): false|int
+    {
+        $dateTimeString = $dateTime->format('Y-m-d H:i:s');
+
+        return $this->getDatabase()->exec('REPLACE INTO ' . self::TABLE_MISC . " (`key`, `value`) VALUES ('last_update_time', '$dateTimeString')");
+    }
 }

@@ -89,6 +89,8 @@ class ImportDataResponder implements ResponderInterface
                 $dataLineSaver->saveDataLine(new DataLine($line));
             }
 
+            DAO::getInstance()->setLastUpdateTime(new \DateTimeImmutable("now", new \DateTimeZone("Europe/Paris")));
+
             DAO::getInstance()->commitTransaction();
         } catch (\Exception $e) {
             DAO::getInstance()->rollBackTransaction();
