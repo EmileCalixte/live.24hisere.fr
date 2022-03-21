@@ -2,6 +2,7 @@
 
 namespace App\Responder;
 
+use App\Database\DAO;
 use App\MainApp;
 use App\Misc\Util;
 use App\Model\DataLine\DataLine;
@@ -77,15 +78,21 @@ class ImportDataResponder implements ResponderInterface
             throw new \RuntimeException('Cannot read file');
         }
 
-        // TODO open db transaction
-        // TODO clear data
+        DAO::getInstance()->beginTransaction();
 
-        while (($line = fgets($handle)) !== false) {
-            dump(new DataLine($line));
-            // TODO save line data (buffer & insert multiple lines to avoid too much db writes ?)
+        try {
+            // TODO clear data
+
+            while (($line = fgets($handle)) !== false) {
+                dump(new DataLine($line));
+                // TODO save line data (buffer & insert multiple lines to avoid too much db writes ?)
+            }
+
+            DAO::getInstance()->commitTransaction();
+        } catch (\Exception $e) {
+            DAO::getInstance()->rollBackTransaction();
+            throw $e;
         }
-
-        // TODO commit transaction
 
         fclose($handle);
     }

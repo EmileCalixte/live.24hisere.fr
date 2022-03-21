@@ -35,6 +35,21 @@ class DAO extends Singleton
         return $this->database;
     }
 
+    public function beginTransaction(): bool
+    {
+        return $this->database->beginTransaction();
+    }
+
+    public function commitTransaction(): bool
+    {
+        return $this->database->commit();
+    }
+
+    public function rollBackTransaction(): bool
+    {
+        return $this->database->rollBack();
+    }
+
     public function getCategories(): array
     {
         $query = $this->getDatabase()->query('SELECT DISTINCT category from ' . self::TABLE_RUNNER);
