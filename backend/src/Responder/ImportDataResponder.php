@@ -3,6 +3,7 @@
 namespace App\Responder;
 
 use App\Database\DAO;
+use App\Database\DataLineSaver;
 use App\MainApp;
 use App\Misc\Util;
 use App\Model\DataLine\DataLine;
@@ -83,9 +84,10 @@ class ImportDataResponder implements ResponderInterface
         try {
             // TODO clear data
 
+            $dataLineSaver = new DataLineSaver();
+
             while (($line = fgets($handle)) !== false) {
-                dump(new DataLine($line));
-                // TODO save line data (buffer & insert multiple lines to avoid too much db writes ?)
+                $dataLineSaver->saveDataLine(new DataLine($line));
             }
 
             DAO::getInstance()->commitTransaction();
