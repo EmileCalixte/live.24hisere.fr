@@ -25,7 +25,6 @@ class ImportDataResponder implements ResponderInterface
             throw new HttpBadRequestException($request, $e->getMessage(), $e);
         }
 
-
         return $response;
     }
 
@@ -82,7 +81,7 @@ class ImportDataResponder implements ResponderInterface
         DAO::getInstance()->beginTransaction();
 
         try {
-            // TODO clear data
+            DAO::getInstance()->deleteAllRunnerPassages();
 
             $dataLineSaver = new DataLineSaver();
 

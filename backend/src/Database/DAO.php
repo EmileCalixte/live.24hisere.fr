@@ -50,6 +50,11 @@ class DAO extends Singleton
         return $this->database->rollBack();
     }
 
+    public function deleteAllRunnerPassages(): false|int
+    {
+        return $this->getDatabase()->exec('DELETE FROM ' . self::TABLE_PASSAGE);
+    }
+
     public function getCategories(): array
     {
         $query = $this->getDatabase()->query('SELECT DISTINCT category from ' . self::TABLE_RUNNER);
