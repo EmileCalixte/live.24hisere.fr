@@ -15,6 +15,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
 use Slim\App;
 use Slim\Exception\HttpException;
+use Slim\Exception\HttpInternalServerErrorException;
 use Slim\Factory\AppFactory as SlimFactory;
 use Throwable;
 
@@ -74,13 +75,19 @@ class MainApp extends Singleton
 
             $statusCode = $isHttpException ? $exception->getCode() : $defaultStatusCode;
 
+            if (!$this->getConfig()->isDevMode() && !$isHttpException) {
+                $exceptionToReturn = new HttpInternalServerErrorException($request, null, $exception);
+            } else {
+                $exceptionToReturn = $exception;
+            }
+
             $payload = [
                 'status' => $statusCode,
-                'error' => $exception->getMessage(),
+                'error' => $exceptionToReturn->getMessage(),
             ];
 
             if ($this->getConfig()->isDevMode()) {
-                $payload['stackTrace'] = $exception->getTrace();
+                $payload['stackTrace'] = $exceptionToReturn->getTrace();
             }
 
             $jsonEncodedFlags = JSON_UNESCAPED_UNICODE;
@@ -93,7 +100,7 @@ class MainApp extends Singleton
                 json_encode($payload, $jsonEncodedFlags)
             );
 
-            AppLogger::error($exception);
+            AppLogger::error($exceptionToReturn);
 
             return $response
                 ->withAddedHeader('Content-Type', 'application/json')
