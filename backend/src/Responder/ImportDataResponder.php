@@ -4,8 +4,11 @@ namespace App\Responder;
 
 use App\MainApp;
 use App\Misc\Util;
+use App\Model\DataLine\DataLine;
+use App\Model\DataLine\Exception\InvalidLineFormatException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Slim\Exception\HttpBadRequestException;
 use Slim\Exception\HttpUnauthorizedException;
 
 class ImportDataResponder implements ResponderInterface
@@ -14,7 +17,11 @@ class ImportDataResponder implements ResponderInterface
     {
         $this->handleAuthorization($request);
 
-        $this->handleRequestBody($request);
+        try {
+            $this->handleRequestBody($request);
+        } catch (InvalidLineFormatException $e) {
+            throw new HttpBadRequestException($request, $e->getMessage(), $e);
+        }
 
 
         return $response;
@@ -41,6 +48,10 @@ class ImportDataResponder implements ResponderInterface
         }
     }
 
+    /**
+     * @param ServerRequestInterface $request
+     * @throws InvalidLineFormatException if input data is malformed
+     */
     private function handleRequestBody(ServerRequestInterface $request)
     {
         $tempFilePath = sys_get_temp_dir() . '/PHP_importDataBodyContent_' . str_replace('.', '', microtime(true)) . '.txt';
@@ -54,6 +65,10 @@ class ImportDataResponder implements ResponderInterface
         }
     }
 
+    /**
+     * @param string $filePath
+     * @throws InvalidLineFormatException if file data is malformed
+     */
     private function handleDataTempFile(string $filePath)
     {
         $handle = fopen($filePath, 'r');
@@ -66,7 +81,7 @@ class ImportDataResponder implements ResponderInterface
         // TODO clear data
 
         while (($line = fgets($handle)) !== false) {
-            dump($line);
+            dump(new DataLine($line));
             // TODO save line data (buffer & insert multiple lines to avoid too much db writes ?)
         }
 
