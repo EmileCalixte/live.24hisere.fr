@@ -35,6 +35,26 @@ class DAO extends Singleton
         return $this->database;
     }
 
+    public function beginTransaction(): bool
+    {
+        return $this->database->beginTransaction();
+    }
+
+    public function commitTransaction(): bool
+    {
+        return $this->database->commit();
+    }
+
+    public function rollBackTransaction(): bool
+    {
+        return $this->database->rollBack();
+    }
+
+    public function deleteAllRunnerPassages(): false|int
+    {
+        return $this->getDatabase()->exec('DELETE FROM ' . self::TABLE_PASSAGE);
+    }
+
     public function getCategories(): array
     {
         $query = $this->getDatabase()->query('SELECT DISTINCT category from ' . self::TABLE_RUNNER);
@@ -177,5 +197,12 @@ class DAO extends Singleton
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
         return $result;
+    }
+
+    public function setLastUpdateTime(\DateTimeInterface $dateTime): false|int
+    {
+        $dateTimeString = $dateTime->format('Y-m-d H:i:s');
+
+        return $this->getDatabase()->exec('REPLACE INTO ' . self::TABLE_MISC . " (`key`, `value`) VALUES ('last_update_time', '$dateTimeString')");
     }
 }

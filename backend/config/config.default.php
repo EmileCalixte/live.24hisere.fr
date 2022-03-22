@@ -8,5 +8,7 @@ return [
     'dbUser' => 'admin',
     'dbPassword' => 'admin',
 
+    'importDataSecretKey' => 'SECRET_KEY',
+
     'frontendUrl' => 'http://localhost',
 ];

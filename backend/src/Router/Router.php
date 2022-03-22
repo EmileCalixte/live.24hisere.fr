@@ -5,6 +5,7 @@ namespace App\Router;
 
 
 use App\Responder\CategoriesResponder;
+use App\Responder\ImportDataResponder;
 use App\Responder\InitialDataResponder;
 use App\Responder\RankingResponder;
 use App\Responder\ResponderInterface;
@@ -24,6 +25,7 @@ class Router
     public function registerRoutes()
     {
         $this->registerRoute('/categories', CategoriesResponder::class, 'GET');
+        $this->registerRoute('/import-data', ImportDataResponder::class, 'POST');
         $this->registerRoute('/initial-data', InitialDataResponder::class, 'GET');
         $this->registerRoute('/ranking', RankingResponder::class, 'GET');
         $this->registerRoute('/runners', RunnersResponder::class, 'GET');

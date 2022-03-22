@@ -8,6 +8,8 @@ use App\Misc\Util;
 
 class Config
 {
+    public static bool $loaded = false;
+
     private const CONFIG_ARRAY_DIR_PATH = __DIR__ . '/../../config';
     private const CONFIG_ARRAY_FILENAME = 'config.php';
 
@@ -21,9 +23,13 @@ class Config
 
     private string $frontendUrl;
 
+    private string $importDataSecretKey;
+
     public function __construct()
     {
         $this->loadFromConfigArray();
+
+        self::$loaded = true;
     }
 
     public function getDbCharset(): string
@@ -54,6 +60,11 @@ class Config
     public function getFrontendUrl(): string
     {
         return $this->frontendUrl;
+    }
+
+    public function getImportDataSecretKey(): string
+    {
+        return $this->importDataSecretKey;
     }
 
     public function isDevMode(): bool
@@ -91,6 +102,8 @@ class Config
 
         $frontendUrlParam = 'frontendUrl';
 
+        $importDataSecretKeyParam = 'importDataSecretKey';
+
         if (!isset($configArray[$dbHostParam])) {
             throw new \RuntimeException("Configuration file must contain a '{$dbHostParam}' parameter");
         }
@@ -109,6 +122,10 @@ class Config
 
         if (!isset($configArray[$frontendUrlParam])) {
             throw new \RuntimeException("Configuration file must contain a '{$frontendUrlParam}' parameter");
+        }
+
+        if (!isset($configArray[$importDataSecretKeyParam])) {
+            throw new \RuntimeException("Configuration file must contain a '{$importDataSecretKeyParam}' parameter");
         }
 
         if (!is_string($configArray[$dbHostParam])) {
@@ -131,12 +148,18 @@ class Config
             throw new \RuntimeException("'{$frontendUrlParam}' parameter in configuration file must be a string");
         }
 
+        if (!is_string($configArray[$importDataSecretKeyParam])) {
+            throw new \RuntimeException("'{$importDataSecretKeyParam}' parameter in configuration file must be a string");
+        }
+
         $this->dbHost = $configArray[$dbHostParam];
         $this->dbName = $configArray[$dbNameParam];
         $this->dbUser = $configArray[$dbUserParam];
         $this->dbPassword = $configArray[$dbPasswordParam];
 
         $this->frontendUrl = $configArray[$frontendUrlParam];
+
+        $this->importDataSecretKey = $configArray[$importDataSecretKeyParam];
 
         if (isset($configArray[$devModeParam])) {
             if (!is_bool($configArray[$devModeParam])) {
