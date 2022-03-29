@@ -2,6 +2,6 @@
   "importFrom": "url OR file",
   "dataUrl": "http://example.com/if-import-from-url/url-to-data",
   "dagFilePath": "C:/path/to/file.txt",
-  "importUrl": "http://localhost:8000/import",
+  "importUrl": "http://localhost:8000/import-data",
   "secretKey": "SECRET_KEY"
 }
