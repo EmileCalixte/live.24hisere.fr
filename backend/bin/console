@@ -8,6 +8,6 @@ use Symfony\Component\Console\Application;
 $application = new Application();
 
 // Register commands
-$application->add(new \App\Command\ImportRunnersCommand());
+$application->add(new \App\Command\ImportRunners\ImportRunnersCommand());
 
 $application->run();
