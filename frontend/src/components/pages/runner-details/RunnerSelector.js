@@ -40,8 +40,8 @@ const RunnerSelector = ({runners, onSelectRunner, selectedRunnerId}) => {
         setNameSortedRunners([...runners].sort((a, b) => {
             const aIsTeam = a.isTeam === '1';
             const bIsTeam = b.isTeam === '1';
-            const aName = a.firstname + a.lastname;
-            const bName = b.firstname + b.lastname;
+            const aName = a.lastname + a.firstname;
+            const bName = b.lastname + b.firstname;
 
             if (aIsTeam && !bIsTeam) {
                 return -1;
@@ -51,15 +51,7 @@ const RunnerSelector = ({runners, onSelectRunner, selectedRunnerId}) => {
                 return 1;
             }
 
-            if (aName < bName) {
-                return -1;
-            }
-
-            if (aName > bName) {
-                return 1;
-            }
-
-            return 0;
+            return aName.localeCompare(bName);
         }));
     }, [runners]);
 
