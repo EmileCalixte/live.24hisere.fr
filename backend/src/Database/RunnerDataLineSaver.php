@@ -2,6 +2,7 @@
 
 namespace App\Database;
 
+use App\Misc\Util;
 use App\Model\RunnersCsvDataLine\DataLine;
 
 class RunnerDataLineSaver
@@ -24,7 +25,7 @@ class RunnerDataLineSaver
         $lastname = $dataLine->getRunnerLastname();
         $gender = $dataLine->getRunnerGender();
         $birthYear = $dataLine->getRunnerBirthYear();
-        $category = "TODO";
+        $category = Util::getFfaCategoryFromBirthYear($birthYear);
 
         $this->getQuery()->bindParam(':id', $id);
         $this->getQuery()->bindParam(':isTeam', $isTeam);

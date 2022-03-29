@@ -61,6 +61,92 @@ class Util
         return $date->format($jsFormat);
     }
 
+    /**
+     * Returns the category code from a birth year (valid until october 31st, 2022) {@see https://www.athle.fr/asp.net/main.html/html.aspx?htmlid=25}
+     * @param int $birthYear
+     * @return string the category code
+     */
+    public static function getFfaCategoryFromBirthYear(int $birthYear): string
+    {
+        if ($birthYear >= 2016) {
+            return 'BB';
+        }
+
+        if ($birthYear >= 2013) {
+            return 'EA';
+        }
+
+        if ($birthYear >= 2011) {
+            return 'PO';
+        }
+
+        if ($birthYear >= 2009) {
+            return 'BE';
+        }
+
+        if ($birthYear >= 2007) {
+            return 'MI';
+        }
+
+        if ($birthYear >= 2005) {
+            return 'CA';
+        }
+
+        if ($birthYear >= 2003) {
+            return 'JU';
+        }
+
+        if ($birthYear >= 2000) {
+            return 'ES';
+        }
+
+        if ($birthYear >= 1988) {
+            return 'SE';
+        }
+
+        if ($birthYear >= 1983) {
+            return 'M0';
+        }
+
+        if ($birthYear >= 1978) {
+            return 'M1';
+        }
+
+        if ($birthYear >= 1973) {
+            return 'M2';
+        }
+
+        if ($birthYear >= 1968) {
+            return 'M3';
+        }
+
+        if ($birthYear >= 1963) {
+            return 'M4';
+        }
+
+        if ($birthYear >= 1958) {
+            return 'M5';
+        }
+
+        if ($birthYear >= 1953) {
+            return 'M6';
+        }
+
+        if ($birthYear >= 1948) {
+            return 'M7';
+        }
+
+        if ($birthYear >= 1943) {
+            return 'M8';
+        }
+
+        if ($birthYear >= 1938) {
+            return 'M9';
+        }
+
+        return 'M10';
+    }
+
     public static function getMetadata(): array
     {
         $data = DAO::getInstance()->getMetadata();
