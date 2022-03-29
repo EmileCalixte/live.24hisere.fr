@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Command;
+namespace App\Command\ImportRunners;
 
 use App\Database\DAO;
 use Symfony\Component\Console\Attribute\AsCommand;
