@@ -192,7 +192,7 @@ class DAO extends Singleton
 
     public function getRunners(): array
     {
-        $query = $this->getDatabase()->prepare('SELECT * FROM ' . self::TABLE_RUNNER);
+        $query = $this->getDatabase()->prepare('SELECT * FROM ' . self::TABLE_RUNNER . ' ORDER BY lastname, firstname ASC');
         $query->execute();
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
