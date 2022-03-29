@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Model\DataLine;
+namespace App\Model\PassagesFileDataLine;
 
-use App\Model\DataLine\Exception\InvalidLineFormatException;
+use App\Model\PassagesFileDataLine\Exception\InvalidLineFormatException;
 
 class DataLine
 {

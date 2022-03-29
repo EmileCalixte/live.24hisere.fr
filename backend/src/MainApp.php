@@ -31,7 +31,7 @@ class MainApp extends Singleton
 
     private App $slim;
 
-    protected function __construct()
+    protected function __construct(bool $cli = false)
     {
         self::$rootDir = realpath(__DIR__ . '/..');
 
@@ -40,6 +40,10 @@ class MainApp extends Singleton
         $this->config = new Config();
 
         DAO::getInstance()->initialize($this->getConfig()->getDbHost(), $this->getConfig()->getDbName(), $this->getConfig()->getDbUser(), $this->getConfig()->getDbPassword());
+
+        if ($cli) {
+            return;
+        }
 
         $this->slim = SlimFactory::create();
         $this->router = new Router($this->slim);

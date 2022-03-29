@@ -3,17 +3,17 @@
 namespace App\Responder;
 
 use App\Database\DAO;
-use App\Database\DataLineSaver;
+use App\Database\RunnerPassageDataLineSaver;
 use App\MainApp;
 use App\Misc\Util;
-use App\Model\DataLine\DataLine;
-use App\Model\DataLine\Exception\InvalidLineFormatException;
+use App\Model\PassagesFileDataLine\DataLine;
+use App\Model\PassagesFileDataLine\Exception\InvalidLineFormatException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\HttpBadRequestException;
 use Slim\Exception\HttpUnauthorizedException;
 
-class ImportDataResponder implements ResponderInterface
+class ImportPassagesResponder implements ResponderInterface
 {
     public function respond(ServerRequestInterface $request, ResponseInterface $response, $args): ResponseInterface
     {
@@ -83,7 +83,7 @@ class ImportDataResponder implements ResponderInterface
         try {
             DAO::getInstance()->deleteAllRunnerPassages();
 
-            $dataLineSaver = new DataLineSaver();
+            $dataLineSaver = new RunnerPassageDataLineSaver();
 
             while (($line = fgets($handle)) !== false) {
                 $dataLineSaver->saveDataLine(new DataLine($line));
