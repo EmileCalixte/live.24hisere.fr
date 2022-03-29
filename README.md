@@ -44,3 +44,39 @@ Identifiants du serveur MariaDB du container docker `database` :
 - Nom de la base de données : `live`
 
 Un jeu de données est chargé automatiquement lors du lancement du docker-compose à partir du/des fichiers SQL contenus dans le répertoire `/sql`.
+
+## Import des données
+
+### Import des coureurs
+
+L'application backend fournit une commande à exécuter sur le serveur pour importer les coureurs à partir d'un fichier CSV.
+
+La structure du fichier CSV doit être la suivante (l'ordre des colonnes est important, mais les intitulés des colonnes dans la ligne d'en-tête n'ont pas d'importance) : 
+
+```csv
+Dossard;Nom;Prénom;Date de naissance;Sexe
+1;Doe;John;04/09/1962;M
+2;Smith;Emily;13/02/1989;F
+...
+```
+
+Utilisation de la commande : 
+
+```sh 
+./bin/console app:import-runners <chemin fichier CSV>
+
+# L'option "separator" permet de préciser le séparateur de données selon le format du fichier CSV
+./bin/console app:import-runners <chemin fichier CSV> --separator ","
+```
+
+L'utilisateur doit avoir la permission d'exécuter fichier `/backend/bin/console` : 
+
+```sh
+chmod u+x backend/bin/console
+```
+
+### Import des passages
+
+Le dossier `import-passages` contient un script permettant d'importer les temps des passages des coureurs toutes les 15 secondes depuis un fichier DAG, permettant de mettre à jour les informations en direct chez les utilisateurs.
+
+[Documentation détaillée](import-passages/README.md)
