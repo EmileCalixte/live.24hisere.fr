@@ -3,7 +3,11 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
+use App\MainApp;
 use Symfony\Component\Console\Application;
+
+// Initialize MainApp to initialize database from configuration
+(MainApp::getInstance());
 
 $application = new Application();
 
