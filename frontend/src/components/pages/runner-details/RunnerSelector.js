@@ -114,12 +114,6 @@ const RunnerSelector = ({runners, onSelectRunner, selectedRunnerId}) => {
                         );
                     })()}
 
-                    {runners === false &&
-                    <OptionWithLoadingDots>
-                        Chargement des coureurs
-                    </OptionWithLoadingDots>
-                    }
-
                 </select>
             </div>
         </div>
