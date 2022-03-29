@@ -3,9 +3,9 @@
 namespace App\Database;
 
 
-use App\Model\DataLine\DataLine;
+use App\Model\PassagesFileDataLine\DataLine;
 
-class DataLineSaver
+class RunnerPassageDataLineSaver
 {
     private \PDO $database;
 

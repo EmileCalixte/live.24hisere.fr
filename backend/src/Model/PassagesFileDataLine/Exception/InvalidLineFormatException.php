@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Model\DataLine\Exception;
+namespace App\Model\PassagesFileDataLine\Exception;
 
 class InvalidLineFormatException extends \Exception
 {
