@@ -13,7 +13,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\HttpBadRequestException;
 use Slim\Exception\HttpUnauthorizedException;
 
-class ImportDataResponder implements ResponderInterface
+class ImportPassagesResponder implements ResponderInterface
 {
     public function respond(ServerRequestInterface $request, ResponseInterface $response, $args): ResponseInterface
     {
