@@ -7,8 +7,12 @@ namespace App;
 use App\Base\Singleton\Singleton;
 use App\Config\Config;
 use App\Database\DAO;
+use App\Database\Entity\User;
+use App\Database\Repository\UserRepository;
 use App\Log\AppLogger;
 use App\Router\Router;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Tools\Setup;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -26,6 +30,8 @@ class MainApp extends Singleton
     public static string $rootDir;
 
     private Config $config;
+
+    private EntityManager $entityManager;
 
     private Router $router;
 
@@ -51,12 +57,39 @@ class MainApp extends Singleton
         $this->registerErrorMiddleware();
         $this->router->registerRoutes();
 
+        $this->initializeEntityManager();
+
+        // TEST
+        /** @var UserRepository $userRepository */
+        $userRepository = $this->entityManager->getRepository(User::class);
+
+        try {
+            dd($userRepository->findById(1));
+        } catch (\Exception $e) {
+            dd($e);
+        }
+
+        $user = new User();
+        $user->setUsername('Toto');
+        $user->setPasswordHash(password_hash('password', PASSWORD_BCRYPT));
+
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+
+        dd($user);
+        // END OF TEST
+
         $this->registerHeadersMiddleware();
     }
 
     public function getConfig(): Config
     {
         return $this->config;
+    }
+
+    public function getEntityManager(): EntityManager
+    {
+        return $this->entityManager;
     }
 
     public function run()
@@ -110,6 +143,21 @@ class MainApp extends Singleton
                 ->withAddedHeader('Content-Type', 'application/json')
                 ->withStatus($statusCode);
         };
+    }
+
+    private function initializeEntityManager()
+    {
+        $connection = [
+            'driver' => 'pdo_mysql',
+            'host' => $this->getConfig()->getDbHost(),
+            'dbname' => $this->getConfig()->getDbName(),
+            'user' => $this->getConfig()->getDbUser(),
+            'password' => $this->getConfig()->getDbPassword(),
+        ];
+
+        $config = Setup::createAttributeMetadataConfiguration([__DIR__ . '/Database/Entity'], $this->getConfig()->isDevMode());
+
+        $this->entityManager = EntityManager::create($connection, $config);
     }
 
     private function registerErrorMiddleware()
