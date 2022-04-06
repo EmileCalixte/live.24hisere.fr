@@ -56,12 +56,20 @@ try {
 $importUrl = $config.importUrl
 $secretKey = $config.secretKey
 
-while ($true) {
+:mainLoop while ($true) {
     try {
         switch ($config.importFrom)
         {
             "file" { $dagFileContent = GetDataFromFile($config.dagFilePath) }
-            "url" { $dagFileContent = GetDataFromURl($config.dataUrl) }
+            "url" {
+                try {
+                    $dagFileContent = GetDataFromURl($config.dataUrl)
+                } catch {
+                    Write-Host $_ -BackgroundColor red
+                    log("Nouvel essai dans $sleepTime secondes")
+                    Start-Sleep -s $sleepTime
+                    continue mainLoop
+                }}
             default { throw "Invalid import method" }
         }
 
