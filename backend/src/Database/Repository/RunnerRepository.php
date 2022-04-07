@@ -31,4 +31,17 @@ class RunnerRepository extends EntityRepository
             return null;
         }
     }
+
+    /**
+     * @return string[]
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function getCategories(): array
+    {
+        $connection = $this->getEntityManager()->getConnection();
+        $sql = "SELECT DISTINCT category FROM runner";
+
+        $stmt = $connection->prepare($sql);
+        return $stmt->executeQuery()->fetchFirstColumn();
+    }
 }

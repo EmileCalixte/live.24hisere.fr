@@ -5,6 +5,9 @@ namespace App\Responder;
 
 
 use App\Database\DAO;
+use App\Database\Entity\Runner;
+use App\Database\Repository\RepositoryProvider;
+use App\Database\Repository\RunnerRepository;
 use App\Misc\Util;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -39,7 +42,10 @@ class CategoriesResponder implements ResponderInterface
 
     public function respond(ServerRequestInterface $request, ResponseInterface $response, $args): ResponseInterface
     {
-        $dbCategories = DAO::getInstance()->getCategories();
+        /** @var RunnerRepository $runnerRepository */
+        $runnerRepository = RepositoryProvider::getRepository(Runner::class);
+
+        $dbCategories = $runnerRepository->getCategories();
 
         $responseData = [
             'categories' => [],
