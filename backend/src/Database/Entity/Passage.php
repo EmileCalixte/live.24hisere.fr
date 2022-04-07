@@ -19,7 +19,7 @@ class Passage
     #[Column]
     private int $id;
 
-    #[ManyToOne(targetEntity: Runner::class)]
+    #[ManyToOne(targetEntity: Runner::class, fetch: "EAGER")]
     #[JoinColumn(nullable: false)]
     private Runner $runner;
 
