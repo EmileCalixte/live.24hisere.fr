@@ -3,6 +3,9 @@
 namespace App\Command\ImportRunners;
 
 use App\Database\DAO;
+use App\Database\Entity\Runner;
+use App\Database\Repository\RepositoryProvider;
+use App\Database\Repository\RunnerRepository;
 use App\Database\RunnerDataLineSaver;
 use App\Exception\Csv\InvalidColumnCountException;
 use App\Exception\Csv\MalformedCsvFileException;
@@ -88,10 +91,13 @@ class ImportRunnersCommand extends Command
 
                 $dataLine = $this->getDataLineFromCsvLine($line, $i);
 
-                $existingRunner = DAO::getInstance()->getRunner($dataLine->getRunnerId());
+                /** @var RunnerRepository $runnerRepository */
+                $runnerRepository = RepositoryProvider::getRepository(Runner::class);
 
-                if ($existingRunner !== false) {
-                    $output->writeln("A runner with ID {$dataLine->getRunnerId()} already exists (${existingRunner['firstname']} {$existingRunner['lastname']}), ignoring");
+                $existingRunner = $runnerRepository->findById($dataLine->getRunnerId());
+
+                if (!is_null($existingRunner)) {
+                    $output->writeln("A runner with ID {$dataLine->getRunnerId()} already exists (" . $existingRunner->getFirstname() . ' ' . $existingRunner->getLastname() . '), ignoring');
                     continue;
                 }
 
