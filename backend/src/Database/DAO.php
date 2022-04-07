@@ -55,17 +55,6 @@ class DAO extends Singleton
         return $this->getDatabase()->exec('DELETE FROM ' . self::TABLE_PASSAGE);
     }
 
-    public function getCategories(): array
-    {
-        $query = $this->getDatabase()->query('SELECT DISTINCT category from ' . self::TABLE_RUNNER);
-
-        $result = $query->fetchAll(PDO::FETCH_ASSOC);
-
-        return array_map(function ($fetch) {
-            return $fetch['category'];
-        }, $result);
-    }
-
     public function getMetadata(): array
     {
         $query = $this->getDatabase()->prepare('SELECT * FROM ' . self::TABLE_MISC);
@@ -162,39 +151,6 @@ class DAO extends Singleton
 
             $row['is_team'] = $row['is_team'] === '1';
         }
-
-        return $result;
-    }
-
-    public function getRunner(int|string $id): array|bool
-    {
-        $query = $this->getDatabase()->prepare('SELECT * FROM ' . self::TABLE_RUNNER . ' WHERE id = :id');
-        $query->bindParam(':id', $id);
-        $query->execute();
-        $result = $query->fetch(PDO::FETCH_ASSOC);
-        return $result;
-    }
-
-    public function getRunnerPassages(int|string $runnerId): array
-    {
-        $query = $this->getDatabase()->prepare('SELECT id, time FROM ' . self::TABLE_PASSAGE . ' WHERE runner_id = :runnerId ORDER BY time ASC');
-        $query->bindParam(':runnerId', $runnerId);
-        $query->execute();
-        $result = $query->fetchAll(PDO::FETCH_ASSOC);
-
-        for ($i = 0; $i < count($result); ++$i) {
-            $row = &$result[$i];
-            $row['time'] = Util::convertDatabaseDateToJavascriptDate($row['time']);
-        }
-
-        return $result;
-    }
-
-    public function getRunners(): array
-    {
-        $query = $this->getDatabase()->prepare('SELECT * FROM ' . self::TABLE_RUNNER . ' ORDER BY lastname, firstname ASC');
-        $query->execute();
-        $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
         return $result;
     }
