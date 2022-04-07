@@ -7,7 +7,9 @@ use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\Table;
+use Doctrine\ORM\PersistentCollection;
 
 #[Entity(repositoryClass: RunnerRepository::class)]
 #[Table('runner')]
@@ -34,6 +36,9 @@ class Runner
 
     #[Column(length: 15)]
     private string $category;
+
+    #[OneToMany(targetEntity: Passage::class, mappedBy: "runner")]
+    private PersistentCollection $passages;
 
     public function getId(): int
     {
@@ -103,5 +108,15 @@ class Runner
     public function setCategory(string $category): void
     {
         $this->category = $category;
+    }
+
+    public function getPassages(): PersistentCollection
+    {
+        return $this->passages;
+    }
+
+    public function setPassages(PersistentCollection $passages): void
+    {
+        $this->passages = $passages;
     }
 }

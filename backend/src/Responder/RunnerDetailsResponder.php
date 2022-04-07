@@ -4,8 +4,9 @@
 namespace App\Responder;
 
 
-use App\Database\DAO;
+use App\Database\Entity\Passage;
 use App\Database\Entity\Runner;
+use App\Database\Repository\PassageRepository;
 use App\Database\Repository\RepositoryProvider;
 use App\Database\Repository\RunnerRepository;
 use App\Misc\Util;
@@ -28,10 +29,20 @@ class RunnerDetailsResponder implements ResponderInterface
             throw new HttpNotFoundException($request);
         }
 
-        $dbPassages = DAO::getInstance()->getRunnerPassages($runnerId);
+        /** @var PassageRepository $passageRepository */
+        $passageRepository = RepositoryProvider::getRepository(Passage::class);
+
+        $passages = $passageRepository->findByRunnerId($runnerId);
 
         $responseData = [
-            'runner' => $runner + ['passages' => $dbPassages],
+            'runner' => $runner + [
+                    'passages' => array_map(function (Passage $passage) {
+                        return [
+                            'id' => $passage->getId(),
+                            'time' => Util::convertDateToJavascriptDate($passage->getTime()),
+                        ];
+                    }, $passages)
+                ],
         ];
 
         Util::insertMetadataInResponseArray($responseData);
