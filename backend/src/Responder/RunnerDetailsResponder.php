@@ -34,15 +34,15 @@ class RunnerDetailsResponder implements ResponderInterface
 
         $passages = $passageRepository->findByRunnerId($runnerId);
 
+        $runner['passages'] = array_map(function (Passage $passage) {
+            return [
+                'id' => $passage->getId(),
+                'time' => Util::convertDateToJavascriptDate($passage->getTime()),
+            ];
+        }, $passages);
+
         $responseData = [
-            'runner' => $runner + [
-                    'passages' => array_map(function (Passage $passage) {
-                        return [
-                            'id' => $passage->getId(),
-                            'time' => Util::convertDateToJavascriptDate($passage->getTime()),
-                        ];
-                    }, $passages)
-                ],
+            'runner' => $runner,
         ];
 
         Util::insertMetadataInResponseArray($responseData);
