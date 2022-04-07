@@ -7,8 +7,6 @@ namespace App;
 use App\Base\Singleton\Singleton;
 use App\Config\Config;
 use App\Database\DAO;
-use App\Database\Entity\User;
-use App\Database\Repository\UserRepository;
 use App\Log\AppLogger;
 use App\Router\Router;
 use Doctrine\ORM\EntityManager;
@@ -47,6 +45,8 @@ class MainApp extends Singleton
 
         DAO::getInstance()->initialize($this->getConfig()->getDbHost(), $this->getConfig()->getDbName(), $this->getConfig()->getDbUser(), $this->getConfig()->getDbPassword());
 
+        $this->initializeEntityManager();
+
         if ($cli) {
             return;
         }
@@ -56,28 +56,6 @@ class MainApp extends Singleton
 
         $this->registerErrorMiddleware();
         $this->router->registerRoutes();
-
-        $this->initializeEntityManager();
-
-        // TEST
-        /** @var UserRepository $userRepository */
-        $userRepository = $this->entityManager->getRepository(User::class);
-
-        try {
-            dd($userRepository->findById(1));
-        } catch (\Exception $e) {
-            dd($e);
-        }
-
-        $user = new User();
-        $user->setUsername('Toto');
-        $user->setPasswordHash(password_hash('password', PASSWORD_BCRYPT));
-
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
-
-        dd($user);
-        // END OF TEST
 
         $this->registerHeadersMiddleware();
     }

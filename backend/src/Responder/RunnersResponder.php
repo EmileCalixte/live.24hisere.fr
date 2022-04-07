@@ -4,7 +4,9 @@
 namespace App\Responder;
 
 
-use App\Database\DAO;
+use App\Database\Entity\Runner;
+use App\Database\Repository\RepositoryProvider;
+use App\Database\Repository\RunnerRepository;
 use App\Misc\Util;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -13,10 +15,13 @@ class RunnersResponder implements ResponderInterface
 {
     public function respond(ServerRequestInterface $request, ResponseInterface $response, $args): ResponseInterface
     {
-        $dbRunners = DAO::getInstance()->getRunners();
+        /** @var RunnerRepository $runnerRepository */
+        $runnerRepository = RepositoryProvider::getRepository(Runner::class);
+
+        $runners = $runnerRepository->findAll(asArray: true);
 
         $responseData = [
-            'runners' => $dbRunners,
+            'runners' => $runners,
         ];
 
         Util::insertMetadataInResponseArray($responseData);
