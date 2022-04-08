@@ -6,6 +6,8 @@ use App\Model\PassagesFileDataLine\Exception\InvalidLineFormatException;
 
 class DataLine
 {
+    private int $passageId;
+
     private int $runnerId;
 
     private \DateTimeImmutable $passageDateTime;
@@ -17,6 +19,8 @@ class DataLine
     public function __construct(string $line)
     {
         $explodedLine = preg_split('/\s+/', trim($line));
+
+        $this->passageId = intval($explodedLine[0]);
 
         $this->runnerId = intval($explodedLine[2]);
 
@@ -30,6 +34,11 @@ class DataLine
         }
 
         $this->passageDateTime = $passageDateTime;
+    }
+
+    public function getPassageId(): int
+    {
+        return $this->passageId;
     }
 
     public function getRunnerId(): int

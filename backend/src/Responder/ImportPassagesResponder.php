@@ -3,6 +3,11 @@
 namespace App\Responder;
 
 use App\Database\DAO;
+use App\Database\Entity\Passage;
+use App\Database\Entity\Runner;
+use App\Database\Repository\PassageRepository;
+use App\Database\Repository\RepositoryProvider;
+use App\Database\Repository\RunnerRepository;
 use App\Database\RunnerPassageDataLineSaver;
 use App\MainApp;
 use App\Misc\Util;
@@ -78,22 +83,38 @@ class ImportPassagesResponder implements ResponderInterface
             throw new \RuntimeException('Cannot read file');
         }
 
-        DAO::getInstance()->beginTransaction();
+        /** @var PassageRepository $passageRepository */
+        $passageRepository = RepositoryProvider::getRepository(Passage::class);
+
+        /** @var RunnerRepository $runnerRepository */
+        $runnerRepository = RepositoryProvider::getRepository(Runner::class);
+
+        MainApp::getInstance()->getEntityManager()->beginTransaction();
 
         try {
-            DAO::getInstance()->deleteAllRunnerPassages();
+            // TODO do not delete all passages, save new passages but keep existing ones
+            $passageRepository->deleteAll();
 
             $dataLineSaver = new RunnerPassageDataLineSaver();
 
             while (($line = fgets($handle)) !== false) {
-                $dataLineSaver->saveDataLine(new DataLine($line));
+                $dataLine = new DataLine($line);
+
+                $runner = $runnerRepository->findById($dataLine->getRunnerId());
+
+                // If passage does not correspond to a known runner, ignore it
+                if (is_null($runner)) {
+                    continue;
+                }
+
+                $dataLineSaver->saveDataLine($dataLine);
             }
 
             DAO::getInstance()->setLastUpdateTime(new \DateTimeImmutable("now", new \DateTimeZone("Europe/Paris")));
 
-            DAO::getInstance()->commitTransaction();
+            MainApp::getInstance()->getEntityManager()->commit();
         } catch (\Exception $e) {
-            DAO::getInstance()->rollBackTransaction();
+            MainApp::getInstance()->getEntityManager()->rollback();
             throw $e;
         }
 

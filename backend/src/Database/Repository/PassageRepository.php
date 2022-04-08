@@ -23,4 +23,16 @@ class PassageRepository extends EntityRepository
 
         return $query->getResult($asArray ? Query::HYDRATE_ARRAY : Query::HYDRATE_OBJECT);
     }
+
+    /**
+     * @return int The number of deleted passages
+     */
+    public function deleteAll(): int
+    {
+        $connection = $this->getEntityManager()->getConnection();
+
+        $sql = "DELETE FROM passage";
+
+        return $connection->executeQuery($sql)->rowCount();
+    }
 }
