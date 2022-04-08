@@ -12,7 +12,7 @@ use Psr\Http\Message\StreamInterface;
 class Util
 {
     /**
-     *
+     * Converts recursively snake_case keys to camelCase keys in array
      * @param array $responseData
      */
     public static function camelizeApiResponseFields(array &$responseData)
