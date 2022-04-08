@@ -9,6 +9,8 @@ use App\Config\Config;
 use App\Database\DAO;
 use App\Log\AppLogger;
 use App\Router\Router;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Tools\Setup;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -27,6 +29,8 @@ class MainApp extends Singleton
 
     private Config $config;
 
+    private EntityManager $entityManager;
+
     private Router $router;
 
     private App $slim;
@@ -40,6 +44,8 @@ class MainApp extends Singleton
         $this->config = new Config();
 
         DAO::getInstance()->initialize($this->getConfig()->getDbHost(), $this->getConfig()->getDbName(), $this->getConfig()->getDbUser(), $this->getConfig()->getDbPassword());
+
+        $this->initializeEntityManager();
 
         if ($cli) {
             return;
@@ -57,6 +63,11 @@ class MainApp extends Singleton
     public function getConfig(): Config
     {
         return $this->config;
+    }
+
+    public function getEntityManager(): EntityManager
+    {
+        return $this->entityManager;
     }
 
     public function run()
@@ -110,6 +121,21 @@ class MainApp extends Singleton
                 ->withAddedHeader('Content-Type', 'application/json')
                 ->withStatus($statusCode);
         };
+    }
+
+    private function initializeEntityManager()
+    {
+        $connection = [
+            'driver' => 'pdo_mysql',
+            'host' => $this->getConfig()->getDbHost(),
+            'dbname' => $this->getConfig()->getDbName(),
+            'user' => $this->getConfig()->getDbUser(),
+            'password' => $this->getConfig()->getDbPassword(),
+        ];
+
+        $config = Setup::createAttributeMetadataConfiguration([__DIR__ . '/Database/Entity'], $this->getConfig()->isDevMode());
+
+        $this->entityManager = EntityManager::create($connection, $config);
     }
 
     private function registerErrorMiddleware()

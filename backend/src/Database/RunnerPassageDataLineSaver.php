@@ -3,37 +3,30 @@
 namespace App\Database;
 
 
+use App\MainApp;
 use App\Model\PassagesFileDataLine\DataLine;
+use Doctrine\DBAL\Statement;
 
 class RunnerPassageDataLineSaver
 {
-    private \PDO $database;
-
-    private \PDOStatement $query;
+    private Statement $statement;
 
     public function __construct()
     {
-        $this->database = DAO::getInstance()->getDatabase();
-        $this->query = $this->getDatabase()->prepare('INSERT INTO ' . DAO::TABLE_PASSAGE . ' (runner_id, time) VALUES (:runnerId, :time)');
+        $connection = MainApp::getInstance()->getEntityManager()->getConnection();
+        $this->statement = $connection->prepare('INSERT INTO passage (id, runner_id, time) VALUES (:id, :runnerId, :time)');
     }
 
     public function saveDataLine(DataLine $dataLine): bool
     {
+        $id = $dataLine->getPassageId();
         $runnerId = $dataLine->getRunnerId();
         $passageTime = $dataLine->getPassageDateTime()->format('Y-m-d H:i:s');
 
-        $this->getQuery()->bindParam(':runnerId', $runnerId);
-        $this->getQuery()->bindParam(':time', $passageTime);
-        return $this->getQuery()->execute();
-    }
+        $this->statement->bindParam('id', $id);
+        $this->statement->bindParam('runnerId', $runnerId);
+        $this->statement->bindParam('time', $passageTime);
 
-    private function getDatabase(): \PDO
-    {
-        return $this->database;
-    }
-
-    private function getQuery(): \PDOStatement
-    {
-        return $this->query;
+        return (bool) $this->statement->executeQuery()->rowCount();
     }
 }
