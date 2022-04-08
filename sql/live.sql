@@ -50,9 +50,9 @@ INSERT INTO `misc` (`key`, `value`) VALUES
 
 CREATE TABLE `passage` (
   `id` int(11) NOT NULL,
-  `runner_id` smallint(5) UNSIGNED NOT NULL,
-  `time` datetime(2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `runner_id` int(11) NOT NULL COMMENT 'Bib number',
+  `time` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Déchargement des données de la table `passage`
@@ -6013,14 +6013,14 @@ INSERT INTO `passage` (`id`, `runner_id`, `time`) VALUES
 --
 
 CREATE TABLE `runner` (
-  `id` smallint(5) UNSIGNED NOT NULL COMMENT 'Bib number',
-  `is_team` tinyint(1) NOT NULL DEFAULT 0,
-  `lastname` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `firstname` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `gender` varchar(1) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `birth_year` varchar(4) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `category` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `id` int(11) NOT NULL COMMENT 'Bib number',
+  `is_team` tinyint(1) NOT NULL,
+  `firstname` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `lastname` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `gender` varchar(1) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `birth_year` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `category` varchar(15) COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Déchargement des données de la table `runner`
@@ -6096,7 +6096,7 @@ ALTER TABLE `misc`
 --
 ALTER TABLE `passage`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `passage_runner_id` (`runner_id`);
+  ADD KEY `IDX_2B258F673C7FB593` (`runner_id`);
 
 --
 -- Index pour la table `runner`
@@ -6105,14 +6105,14 @@ ALTER TABLE `runner`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT pour les tables déchargées
+-- Contraintes pour les tables déchargées
 --
 
 --
--- AUTO_INCREMENT pour la table `passage`
+-- Contraintes pour la table `passage`
 --
 ALTER TABLE `passage`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19346888;
+  ADD CONSTRAINT `FK_2B258F673C7FB593` FOREIGN KEY (`runner_id`) REFERENCES `runner` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

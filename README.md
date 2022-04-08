@@ -45,6 +45,12 @@ Identifiants du serveur MariaDB du container docker `database` :
 
 Un jeu de données est chargé automatiquement lors du lancement du docker-compose à partir du/des fichiers SQL contenus dans le répertoire `/sql`.
 
+La commande suivante permet de mettre à jour la base de données depuis les entités Doctrine :
+
+```sh
+docker compose exec backend vendor/bin/doctrine orm:schema-tool:update --dump-sql --force
+```
+
 ## Import des données
 
 ### Import des coureurs

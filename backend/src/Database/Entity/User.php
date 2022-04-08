@@ -9,7 +9,8 @@ use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
 
-#[Entity(repositoryClass: UserRepository::class)]
+// TODO uncomment to generate SQL table
+//#[Entity(repositoryClass: UserRepository::class)]
 #[Table('user')]
 class User
 {
