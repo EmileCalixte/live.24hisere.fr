@@ -6,7 +6,7 @@ namespace App\Database;
 
 use App\Base\Singleton\Singleton;
 use App\Database\Exception\DatabaseException;
-use App\Misc\Util;
+use App\Misc\Util\DateUtil;
 use PDO;
 
 class DAO extends Singleton
@@ -73,11 +73,11 @@ class DAO extends Singleton
         }
 
         if (isset($metadata['last_update_time'])) {
-            $metadata['last_update_time'] = Util::convertDatabaseDateToJavascriptDate($metadata['last_update_time'], false);
+            $metadata['last_update_time'] = DateUtil::convertDatabaseDateToJavascriptDate($metadata['last_update_time'], false);
         }
 
         if (isset($metadata['race_start_time'])) {
-            $metadata['race_start_time'] = Util::convertDatabaseDateToJavascriptDate($metadata['race_start_time'], false);
+            $metadata['race_start_time'] = DateUtil::convertDatabaseDateToJavascriptDate($metadata['race_start_time'], false);
         }
 
         return $metadata;

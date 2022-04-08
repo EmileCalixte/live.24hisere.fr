@@ -3,7 +3,7 @@
 namespace App\Database\Repository;
 
 use App\Database\Entity\Runner;
-use App\Misc\Util;
+use App\Misc\Util\DateUtil;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
@@ -95,7 +95,7 @@ class RunnerRepository extends EntityRepository
 
         if (!is_null($atDate)) {
             $sql .= ' AND p.time <= :atDate';
-            $paramsToBind[':atDate'] = Util::convertDateToDatabaseDate($atDate);
+            $paramsToBind[':atDate'] = DateUtil::convertDateToDatabaseDate($atDate);
         }
 
         $sql .= <<<EOF

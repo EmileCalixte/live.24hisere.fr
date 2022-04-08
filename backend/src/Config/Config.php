@@ -4,8 +4,6 @@
 namespace App\Config;
 
 
-use App\Misc\Util;
-
 class Config
 {
     public static bool $loaded = false;

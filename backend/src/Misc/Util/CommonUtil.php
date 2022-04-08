@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Misc;
+namespace App\Misc\Util;
 
 
 use App\Database\DAO;
@@ -9,7 +9,7 @@ use App\MainApp;
 use ICanBoogie\Inflector;
 use Psr\Http\Message\StreamInterface;
 
-class Util
+class CommonUtil
 {
     /**
      * Converts recursively snake_case keys to camelCase keys in array
@@ -31,59 +31,6 @@ class Util
 
             $responseData[$camelizedKey] = $value;
         }
-    }
-
-    public static function convertDatabaseDateToJavascriptDate(string $dbDate, bool $withMilliseconds = true): ?string
-    {
-        $dbFormat = 'Y-m-d H:i:s';
-
-        if ($withMilliseconds) {
-            $dbFormat .= '.u';
-        }
-
-        $date = \DateTimeImmutable::createFromFormat($dbFormat, $dbDate);
-
-        if (!$date) {
-            return null;
-        }
-
-        return self::convertDateToJavascriptDate($date, $withMilliseconds);
-    }
-
-    public static function convertDateToJavascriptDate(\DateTimeInterface $date, bool $withMilliseconds = true): ?string
-    {
-        $jsFormat = 'Y-m-d\TH:i:s';
-
-        if ($withMilliseconds) {
-            $jsFormat .= '.u';
-        }
-
-        return $date->format($jsFormat);
-    }
-
-    public static function convertJavascriptDateToDate(string $jsDate, bool $withMilliseconds = true, bool $immutable = true): \DateTime|\DateTimeImmutable|null
-    {
-        /** @var \DateTimeImmutable|\DateTime $class */
-        $class = $immutable ? \DateTimeImmutable::class : \DateTime::class;
-
-        $jsFormat = 'Y-m-d\TH:i:s';
-
-        if ($withMilliseconds) {
-            $jsFormat .= '.u';
-        }
-
-        $date = $class::createFromFormat($jsFormat, $jsDate);
-
-        if ($date === false) {
-            return null;
-        }
-
-        return $date;
-    }
-
-    public static function convertDateToDatabaseDate(\DateTimeInterface $date): string
-    {
-        return $date->format('Y-m-d H:i:s');
     }
 
     /**
@@ -178,9 +125,9 @@ class Util
 
         $currentDate = (new \DateTimeImmutable())->setTimezone(new \DateTimeZone('Europe/Paris'));
 
-        $data['currentTime'] = Util::convertDateToJavascriptDate($currentDate, false);
+        $data['currentTime'] = DateUtil::convertDateToJavascriptDate($currentDate, false);
 
-        Util::camelizeApiResponseFields($data);
+        CommonUtil::camelizeApiResponseFields($data);
 
         return $data;
     }

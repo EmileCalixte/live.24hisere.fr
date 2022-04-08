@@ -9,7 +9,8 @@ use App\Database\Entity\Runner;
 use App\Database\Repository\PassageRepository;
 use App\Database\Repository\RepositoryProvider;
 use App\Database\Repository\RunnerRepository;
-use App\Misc\Util;
+use App\Misc\Util\CommonUtil;
+use App\Misc\Util\DateUtil;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\HttpNotFoundException;
@@ -37,7 +38,7 @@ class RunnerDetailsResponder implements ResponderInterface
         $runner['passages'] = array_map(function (Passage $passage) {
             return [
                 'id' => $passage->getId(),
-                'time' => Util::convertDateToJavascriptDate($passage->getTime()),
+                'time' => DateUtil::convertDateToJavascriptDate($passage->getTime()),
             ];
         }, $passages);
 
@@ -45,10 +46,10 @@ class RunnerDetailsResponder implements ResponderInterface
             'runner' => $runner,
         ];
 
-        Util::insertMetadataInResponseArray($responseData);
-        Util::camelizeApiResponseFields($responseData);
+        CommonUtil::insertMetadataInResponseArray($responseData);
+        CommonUtil::camelizeApiResponseFields($responseData);
 
-        $response->getBody()->write(Util::jsonEncode($responseData));
+        $response->getBody()->write(CommonUtil::jsonEncode($responseData));
 
         return $response;
     }

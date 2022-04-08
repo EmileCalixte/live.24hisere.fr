@@ -4,7 +4,7 @@
 namespace App\Responder;
 
 
-use App\Misc\Util;
+use App\Misc\Util\CommonUtil;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -12,9 +12,9 @@ class InitialDataResponder implements ResponderInterface
 {
     public function respond(ServerRequestInterface $request, ResponseInterface $response, $args): ResponseInterface
     {
-        $data = Util::getMetadata();
+        $data = CommonUtil::getMetadata();
 
-        $response->getBody()->write(Util::jsonEncode($data));
+        $response->getBody()->write(CommonUtil::jsonEncode($data));
 
         return $response;
     }

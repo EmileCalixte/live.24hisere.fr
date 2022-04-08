@@ -7,7 +7,8 @@ namespace App\Responder;
 use App\Database\Entity\Runner;
 use App\Database\Repository\RepositoryProvider;
 use App\Database\Repository\RunnerRepository;
-use App\Misc\Util;
+use App\Misc\Util\CommonUtil;
+use App\Misc\Util\DateUtil;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -18,7 +19,7 @@ class RankingResponder implements ResponderInterface
         $date = null;
 
         if (isset($_GET['at'])) {
-            $date = Util::convertJavascriptDateToDate($_GET['at'], withMilliseconds: false);
+            $date = DateUtil::convertJavascriptDateToDate($_GET['at'], withMilliseconds: false);
         }
 
         /** @var RunnerRepository $runnerRepository */
@@ -31,7 +32,7 @@ class RankingResponder implements ResponderInterface
                 continue;
             }
 
-            $ranking[$i]['last_passage_time'] = Util::convertDatabaseDateToJavascriptDate($ranking[$i]['last_passage_time']);
+            $ranking[$i]['last_passage_time'] = DateUtil::convertDatabaseDateToJavascriptDate($ranking[$i]['last_passage_time']);
             $ranking[$i]['is_team'] = (bool) $ranking[$i]['is_team'];
         }
 
@@ -39,10 +40,10 @@ class RankingResponder implements ResponderInterface
             'ranking' => $ranking,
         ];
 
-        Util::insertMetadataInResponseArray($responseData);
-        Util::camelizeApiResponseFields($responseData);
+        CommonUtil::insertMetadataInResponseArray($responseData);
+        CommonUtil::camelizeApiResponseFields($responseData);
 
-        $response->getBody()->write(Util::jsonEncode($responseData));
+        $response->getBody()->write(CommonUtil::jsonEncode($responseData));
 
         return $response;
     }

@@ -10,7 +10,7 @@ use App\Database\Repository\RepositoryProvider;
 use App\Database\Repository\RunnerRepository;
 use App\Database\RunnerPassageDataLineSaver;
 use App\MainApp;
-use App\Misc\Util;
+use App\Misc\Util\CommonUtil;
 use App\Model\PassagesFileDataLine\DataLine;
 use App\Model\PassagesFileDataLine\Exception\InvalidLineFormatException;
 use Psr\Http\Message\ResponseInterface;
@@ -63,7 +63,7 @@ class ImportPassagesResponder implements ResponderInterface
         $tempFilePath = sys_get_temp_dir() . '/PHP_importDataBodyContent_' . str_replace('.', '', microtime(true)) . '.txt';
 
         try {
-            Util::writeStreamInFile($request->getBody(), $tempFilePath);
+            CommonUtil::writeStreamInFile($request->getBody(), $tempFilePath);
 
             $this->handleDataTempFile($tempFilePath);
         } finally {

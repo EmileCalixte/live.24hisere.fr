@@ -7,7 +7,7 @@ namespace App\Responder;
 use App\Database\Entity\Runner;
 use App\Database\Repository\RepositoryProvider;
 use App\Database\Repository\RunnerRepository;
-use App\Misc\Util;
+use App\Misc\Util\CommonUtil;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -24,10 +24,10 @@ class RunnersResponder implements ResponderInterface
             'runners' => $runners,
         ];
 
-        Util::insertMetadataInResponseArray($responseData);
-        Util::camelizeApiResponseFields($responseData);
+        CommonUtil::insertMetadataInResponseArray($responseData);
+        CommonUtil::camelizeApiResponseFields($responseData);
 
-        $response->getBody()->write(Util::jsonEncode($responseData));
+        $response->getBody()->write(CommonUtil::jsonEncode($responseData));
 
         return $response;
     }
