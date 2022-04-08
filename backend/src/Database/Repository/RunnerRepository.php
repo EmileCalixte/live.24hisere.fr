@@ -9,6 +9,10 @@ use Doctrine\ORM\Query;
 
 class RunnerRepository extends EntityRepository
 {
+    /**
+     * @param bool $asArray
+     * @return Runner[]|array The list of runners
+     */
     public function findAll(bool $asArray = false): array
     {
         $query = $this->createQueryBuilder('r')
@@ -18,6 +22,11 @@ class RunnerRepository extends EntityRepository
         return $query->getResult($asArray ? Query::HYDRATE_ARRAY : Query::HYDRATE_OBJECT);
     }
 
+    /**
+     * @param int $id
+     * @param bool $asArray
+     * @return Runner|array|null
+     */
     public function findById(int $id, bool $asArray = false): Runner|array|null
     {
         $query = $this->createQueryBuilder('r')
@@ -33,7 +42,7 @@ class RunnerRepository extends EntityRepository
     }
 
     /**
-     * @return string[]
+     * @return string[] The list of category codes for which there is at least one runner
      * @throws \Doctrine\DBAL\Exception
      */
     public function getCategories(): array

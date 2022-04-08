@@ -11,7 +11,7 @@ class PassageRepository extends EntityRepository
     /**
      * @param int $runnerId
      * @param bool $asArray
-     * @return Passage[]|array
+     * @return Passage[]|array The list of the runner's passages, sorted by passage time
      */
     public function findByRunnerId(int $runnerId, bool $asArray = false): array
     {
