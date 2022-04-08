@@ -61,6 +61,31 @@ class Util
         return $date->format($jsFormat);
     }
 
+    public static function convertJavascriptDateToDate(string $jsDate, bool $withMilliseconds = true, bool $immutable = true): \DateTime|\DateTimeImmutable|null
+    {
+        /** @var \DateTimeImmutable|\DateTime $class */
+        $class = $immutable ? \DateTimeImmutable::class : \DateTime::class;
+
+        $jsFormat = 'Y-m-d\TH:i:s';
+
+        if ($withMilliseconds) {
+            $jsFormat .= '.u';
+        }
+
+        $date = $class::createFromFormat($jsFormat, $jsDate);
+
+        if ($date === false) {
+            return null;
+        }
+
+        return $date;
+    }
+
+    public static function convertDateToDatabaseDate(\DateTimeInterface $date): string
+    {
+        return $date->format('Y-m-d H:i:s');
+    }
+
     /**
      * Returns the category code from a birth year (valid until october 31st, 2022) {@see https://www.athle.fr/asp.net/main.html/html.aspx?htmlid=25}
      * @param int $birthYear
