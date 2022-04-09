@@ -15,7 +15,7 @@ class CommonUtil
      * Converts recursively snake_case keys to camelCase keys in array
      * @param array $responseData
      */
-    public static function camelizeApiResponseFields(array &$responseData)
+    public static function camelizeArrayKeysRecursively(array &$responseData)
     {
         $inflector = new Inflector();
 
@@ -23,7 +23,7 @@ class CommonUtil
             $value = $responseData[$key];
 
             if (is_array($value)) {
-                self::camelizeApiResponseFields($value);
+                self::camelizeArrayKeysRecursively($value);
             }
 
             $camelizedKey = $inflector->camelize($key, Inflector::DOWNCASE_FIRST_LETTER);
@@ -127,7 +127,7 @@ class CommonUtil
 
         $data['currentTime'] = DateUtil::convertDateToJavascriptDate($currentDate, false);
 
-        CommonUtil::camelizeApiResponseFields($data);
+        CommonUtil::camelizeArrayKeysRecursively($data);
 
         return $data;
     }
