@@ -9,7 +9,7 @@ class DateUtil
         $dbFormat = 'Y-m-d H:i:s';
 
         if ($withMilliseconds) {
-            $dbFormat .= '.u';
+            $dbFormat .= '.v';
         }
 
         $date = \DateTimeImmutable::createFromFormat($dbFormat, $dbDate);
@@ -26,7 +26,7 @@ class DateUtil
         $jsFormat = 'Y-m-d\TH:i:s';
 
         if ($withMilliseconds) {
-            $jsFormat .= '.u';
+            $jsFormat .= '.v';
         }
 
         return $date->format($jsFormat);
@@ -40,7 +40,7 @@ class DateUtil
         $jsFormat = 'Y-m-d\TH:i:s';
 
         if ($withMilliseconds) {
-            $jsFormat .= '.u';
+            $jsFormat .= '.v';
         }
 
         $date = $class::createFromFormat($jsFormat, $jsDate);
