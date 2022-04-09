@@ -86,3 +86,11 @@ chmod u+x backend/bin/console
 Le dossier `import-passages` contient un script permettant d'importer les temps des passages des coureurs toutes les 15 secondes depuis un fichier DAG, permettant de mettre à jour les informations en direct chez les utilisateurs.
 
 [Documentation détaillée](import-passages/README.md)
+
+## Tests
+
+### Backend
+
+```sh 
+docker compose exec backend ./vendor/bin/phpunit --testdox tests
+```
