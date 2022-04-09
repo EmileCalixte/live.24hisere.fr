@@ -15,7 +15,8 @@
         "doctrine/annotations": "^1.13"
     },
     "require-dev": {
-        "symfony/var-dumper": "^6.0"
+        "symfony/var-dumper": "^6.0",
+        "phpunit/phpunit": "^9.5"
     },
     "license": "MIT",
     "authors": [
