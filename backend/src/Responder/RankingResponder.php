@@ -41,7 +41,7 @@ class RankingResponder implements ResponderInterface
         ];
 
         CommonUtil::insertMetadataInResponseArray($responseData);
-        CommonUtil::camelizeApiResponseFields($responseData);
+        CommonUtil::camelizeArrayKeysRecursively($responseData);
 
         $response->getBody()->write(CommonUtil::jsonEncode($responseData));
 

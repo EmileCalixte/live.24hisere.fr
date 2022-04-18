@@ -1,51 +1,103 @@
-name: Build
+name: CI/CD
+
 on:
   push:
-    branches: [master]
+    branches: [ master ]
+
 jobs:
-  build:
+  test:
     runs-on: ubuntu-20.04
+
     steps:
       - name: Update apt
         run: sudo apt-get update
+
       - name: Uninstall current PHP version
         run: |
           sudo apt-get purge 'php*'
           sudo apt-get autoremove 'php*'
+
       - name: Uninstall current Node.js version
         run: |
           sudo apt-get purge nodejs
           sudo apt-get autoremove nodejs
+
+      - name: Install PHP 8.0
+        run: |
+          sudo apt-get install -y software-properties-common
+          sudo add-apt-repository ppa:ondrej/php
+          sudo apt-get install -y php8.0 php8.0-mbstring php8.0-dom
+
+      - name: Check out repository code
+        uses: actions/checkout@v2
+
+      - name: Install PHP dependencies
+        run: |
+          pushd backend
+          composer install
+          popd
+
+      - name: Run PHP tests
+        run: |
+          pushd backend
+          ./vendor/bin/phpunit --testdox tests
+          popd
+
+  build:
+    needs: test
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Update apt
+        run: sudo apt-get update
+
+      - name: Uninstall current PHP version
+        run: |
+          sudo apt-get purge 'php*'
+          sudo apt-get autoremove 'php*'
+
+      - name: Uninstall current Node.js version
+        run: |
+          sudo apt-get purge nodejs
+          sudo apt-get autoremove nodejs
+
       - name: Install PHP 8.0
         run: |
           sudo apt-get install -y software-properties-common
           sudo add-apt-repository ppa:ondrej/php
           sudo apt-get install -y php8.0 php8.0-mbstring
+
       - name: Install Node.js 16
         run: |
           curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
           sudo apt-get install -y nodejs
+
       - name: Check out repository code
         uses: actions/checkout@v2
+
       - name: Install PHP dependencies
         run: |
           cd backend
           composer install --no-dev
           cd ..
+
       - name: Install JS dependencies
         run: |
           cd frontend
           npm install
           cd ..
+
       - name: Create frontend config file
         env:
           FRONTEND_CONFIG_FILE_CONTENT: ${{ secrets.FRONTEND_CONFIG }}
         run: echo ${FRONTEND_CONFIG_FILE_CONTENT} > frontend/src/config/config.js
+
       - name: Create frontend production builds
         run: |
           cd frontend
           npm run build
           cd ..
+
       - name: Clean files
         run: |
           rm -rf .git
@@ -65,15 +117,18 @@ jobs:
           rm -f .gitignore
           rm -f docker-compose.yml
           rm -f README.md
+
       - name: Get current date
         uses: 1466587594/get-current-time@v2.0.0
         id: current-date
         with:
           format: YYYY-MM-DD-HHmmss
+
       - name: Create archive
         env:
           time: "${{ steps.current-date.outputs.formattedTime }}"
         run: zip -r live.24hisere.fr-${{ env.time }}.zip .
+
       - name: Create artifact
         env:
           time: "${{ steps.current-date.outputs.formattedTime }}"
