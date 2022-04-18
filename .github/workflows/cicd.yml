@@ -79,24 +79,14 @@ jobs:
           rm -f docker-compose.yml
           rm -f README.md
 
-      - name: Get current date
-        uses: 1466587594/get-current-time@v2.0.0
-        id: current-date
-        with:
-          format: YYYY-MM-DD-HHmmss
-
       - name: Create archive
-        env:
-          time: "${{ steps.current-date.outputs.formattedTime }}"
-        run: zip -r live.24hisere.fr-${{ env.time }}.zip .
+        run: zip -r live.24hisere.fr.zip .
 
       - name: Create artifact
-        env:
-          time: "${{ steps.current-date.outputs.formattedTime }}"
         uses: actions/upload-artifact@v3
         with:
           name: live.24hisere.fr-artifact
-          path: live.24hisere.fr-${{ env.time }}.zip
+          path: live.24hisere.fr.zip
           retention-days: 7
 
 
@@ -111,11 +101,10 @@ jobs:
         with:
           name: live.24hisere.fr-artifact
 
-      - name: List files
-        run: ls -al
+      - name: Unzip archive
+        run: unzip live.24hisere.fr.zip
 
-#      - name: Run PHP tests
-#        run: |
-#          pushd backend
-#          ./vendor/bin/phpunit --testdox tests
-#          popd
+      - name: Run PHP tests
+        run: |
+          ./vendor/bin/phpunit --testdox tests
+        working-directory: ./backend
