@@ -37,16 +37,12 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install PHP dependencies
-        run: |
-          cd backend
-          composer install
-          cd ..
+        run: composer install
+        working-directory: ./backend
 
       - name: Install JS dependencies
-        run: |
-          cd frontend
-          npm install
-          cd ..
+        run: npm install
+        working-directory: ./frontend
 
       - name: Create frontend config file
         env:
@@ -54,10 +50,8 @@ jobs:
         run: echo ${FRONTEND_CONFIG_FILE_CONTENT} > frontend/src/config/config.js
 
       - name: Create frontend production builds
-        run: |
-          cd frontend
-          npm run build
-          cd ..
+        run: npm run build
+        working-directory: ./frontend
 
       - name: Clean files
         run: |
