@@ -26,7 +26,7 @@ jobs:
         run: |
           sudo apt-get install -y software-properties-common
           sudo add-apt-repository ppa:ondrej/php
-          sudo apt-get install -y php8.0 php8.0-mbstring
+          sudo apt-get install -y php8.0 php8.0-mbstring php8.0-dom
 
       - name: Install Node.js 16
         run: |
@@ -39,7 +39,7 @@ jobs:
       - name: Install PHP dependencies
         run: |
           cd backend
-          composer install --no-dev
+          composer install
           cd ..
 
       - name: Install JS dependencies
