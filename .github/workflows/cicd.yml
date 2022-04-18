@@ -99,6 +99,5 @@ jobs:
         run: unzip live.24hisere.fr.zip
 
       - name: Run PHP tests
-        run: |
-          ./vendor/bin/phpunit --testdox tests
+        run: ./vendor/bin/phpunit --testdox tests
         working-directory: ./backend
