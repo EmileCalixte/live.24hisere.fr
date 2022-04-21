@@ -9,16 +9,17 @@ use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
 
-// TODO uncomment to generate SQL table
-//#[Entity(repositoryClass: UserRepository::class)]
+#[Entity(repositoryClass: UserRepository::class)]
 #[Table('user')]
 class User
 {
+    private const USERNAME_MAX_LENGTH = 32;
+
     #[Id, GeneratedValue]
     #[Column]
     private int $id;
 
-    #[Column]
+    #[Column(length: self::USERNAME_MAX_LENGTH)]
     private string $username;
 
     #[Column(name: 'password_hash')]
