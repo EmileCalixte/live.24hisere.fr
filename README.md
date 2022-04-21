@@ -87,7 +87,16 @@ Le dossier `import-passages` contient un script permettant d'importer les temps 
 
 [Documentation détaillée](import-passages/README.md)
 
-## Créer un utilisateur
+## Utilisateurs
+
+Il est nécessaire d'être connecté sur un compte d'utilisateur pour accéder à certaines informations et effectuer certaines opérations.
+
+Un utilisateur est inclut dans les données chargées par défaut depuis le répertoire `/sql` :
+
+- Nom d'utilisateur : `Admin`
+- Mot de passe : `admin`
+
+### Créer un utilisateur
 
 ```sh
 ./bin/console app:create-user

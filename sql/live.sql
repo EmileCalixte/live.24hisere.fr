@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : database
--- Généré le : jeu. 21 avr. 2022 à 18:43
+-- Généré le : jeu. 21 avr. 2022 à 21:06
 -- Version du serveur :  10.3.34-MariaDB-1:10.3.34+maria~focal
 -- Version de PHP : 7.4.20
 
@@ -6094,6 +6094,13 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
+-- Déchargement des données de la table `user`
+--
+
+INSERT INTO `user` (`id`, `username`, `password_hash`) VALUES
+(1, 'Admin', '$argon2id$v=19$m=65536,t=4,p=1$VC9URFFMNVhCemJ4Rklkeg$1yyPCjFEXp7r4UW2TV7EuAtRCqwMmKbtmO/jo97amUs');
+
+--
 -- Index pour les tables déchargées
 --
 
@@ -6130,7 +6137,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT pour la table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Contraintes pour les tables déchargées
