@@ -52,6 +52,14 @@ class User
 
     public function setUsername(string $username): void
     {
+        if (!ctype_alnum($username)) {
+            throw new \InvalidArgumentException('Username must be alphanumeric');
+        }
+
+        if (mb_strlen($username) > self::USERNAME_MAX_LENGTH) {
+            throw new \InvalidArgumentException('Username max length is ' . self::USERNAME_MAX_LENGTH . ' characters');
+        }
+
         $this->username = $username;
     }
 
