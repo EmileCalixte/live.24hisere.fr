@@ -19,7 +19,7 @@ class User
     #[Column]
     private int $id;
 
-    #[Column(length: self::USERNAME_MAX_LENGTH)]
+    #[Column(length: self::USERNAME_MAX_LENGTH, unique: true)]
     private string $username;
 
     #[Column(name: 'password_hash')]

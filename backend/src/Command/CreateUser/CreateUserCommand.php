@@ -3,6 +3,7 @@
 namespace App\Command\CreateUser;
 
 use App\Database\Entity\User;
+use App\Database\Repository\UserRepository;
 use App\MainApp;
 use App\Misc\Util\PasswordUtil;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -46,6 +47,15 @@ class CreateUserCommand extends Command
 
             try {
                 $user->setUsername($inputUsername);
+
+                /** @var UserRepository $userRepository */
+                $userRepository = MainApp::getInstance()->getEntityManager()->getRepository(User::class);
+                $existingUser = $userRepository->findByUsername($user->getUsername());
+
+                if (!is_null($existingUser)) {
+                    $output->writeln("User {$user->getUsername()} already exists");
+                    continue;
+                }
 
                 return;
             } catch (\InvalidArgumentException $e) {

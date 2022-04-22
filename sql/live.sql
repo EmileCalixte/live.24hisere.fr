@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : database
--- Généré le : jeu. 21 avr. 2022 à 21:06
+-- Généré le : ven. 22 avr. 2022 à 16:49
 -- Version du serveur :  10.3.34-MariaDB-1:10.3.34+maria~focal
 -- Version de PHP : 7.4.20
 
@@ -6127,7 +6127,8 @@ ALTER TABLE `runner`
 -- Index pour la table `user`
 --
 ALTER TABLE `user`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `UNIQ_8D93D649F85E0677` (`username`);
 
 --
 -- AUTO_INCREMENT pour les tables déchargées
