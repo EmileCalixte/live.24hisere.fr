@@ -4,6 +4,7 @@
 namespace App\Router;
 
 
+use App\Responder\Auth\LoginResponder;
 use App\Responder\CategoriesResponder;
 use App\Responder\ImportPassagesResponder;
 use App\Responder\InitialDataResponder;
@@ -30,6 +31,8 @@ class Router
         $this->registerRoute('/ranking', RankingResponder::class, 'GET');
         $this->registerRoute('/runners', RunnersResponder::class, 'GET');
         $this->registerRoute('/runners/{id}', RunnerDetailsResponder::class, 'GET');
+
+        $this->registerRoute('/auth/login', LoginResponder::class, 'POST');
     }
 
     private function registerRoute(string $uri, string $responderClass, array|string $methods = null): RouteInterface
