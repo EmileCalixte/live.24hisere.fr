@@ -2,6 +2,7 @@
 
 namespace App\Responder\Auth;
 
+use App\Database\Entity\AccessToken;
 use App\Database\Entity\User;
 use App\Database\Repository\UserRepository;
 use App\MainApp;
@@ -50,7 +51,10 @@ class LoginResponder implements ResponderInterface
             throw new HttpForbiddenException($request, "Invalid credentials");
         }
 
-        // TODO generate and return access token
+        $accessToken = $this->generateAccessToken($user);
+
+        dd($accessToken);
+
         $response->getBody()->write("TODO");
         return $response;
     }
@@ -75,5 +79,20 @@ class LoginResponder implements ResponderInterface
         }
 
         return $user;
+    }
+
+    private function generateAccessToken(User $user): AccessToken
+    {
+        $accessToken = new AccessToken();
+        $accessToken->setUser($user);
+        $accessToken->generateToken();
+        $accessToken->updateExpirationDate();
+
+        $entityManager = MainApp::getInstance()->getEntityManager();
+
+        $entityManager->persist($accessToken);
+        $entityManager->flush();
+
+        return $accessToken;
     }
 }

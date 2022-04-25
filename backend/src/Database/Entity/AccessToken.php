@@ -3,6 +3,9 @@
 namespace App\Database\Entity;
 
 use App\Database\Repository\AccessTokenRepository;
+use App\Exception\AccessTokenAlreadyExistsException;
+use App\MainApp;
+use App\Misc\Util\RandomStringUtil;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Id;
@@ -15,6 +18,8 @@ use Doctrine\ORM\Mapping\Table;
 class AccessToken
 {
     private const TOKEN_LENGTH = 32;
+
+    private const TOKEN_LIFETIME = 60 * 60 * 4;
 
     #[Id]
     #[Column(length: self::TOKEN_LENGTH)]
@@ -59,5 +64,26 @@ class AccessToken
     public function setExpirationDate(\DateTime $expirationDate): void
     {
         $this->expirationDate = $expirationDate;
+    }
+
+    public function generateToken(): void
+    {
+        $token = RandomStringUtil::getRandomString(32, RandomStringUtil::RANDOM_STRING_HEXADECIMAL);
+
+        /** @var AccessTokenRepository $accessTokenRepository */
+        $accessTokenRepository = MainApp::getInstance()->getEntityManager()->getRepository(self::class);
+
+        $existingAccessToken = $accessTokenRepository->findByToken($token);
+
+        if (!is_null($existingAccessToken)) {
+            throw new AccessTokenAlreadyExistsException();
+        }
+
+        $this->token = $token;
+    }
+
+    public function updateExpirationDate(): void
+    {
+        $this->setExpirationDate(new \DateTime('+' . self::TOKEN_LIFETIME . ' seconds'));
     }
 }
