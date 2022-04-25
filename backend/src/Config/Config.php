@@ -15,7 +15,7 @@ class Config
     private string $dbName;
     private string $dbUser;
     private string $dbPassword;
-    private string $dbCharset = 'utf8';
+    private string $dbCharset = 'utf8mb4';
 
     private bool $devMode = false;
 

@@ -131,6 +131,7 @@ class MainApp extends Singleton
             'dbname' => $this->getConfig()->getDbName(),
             'user' => $this->getConfig()->getDbUser(),
             'password' => $this->getConfig()->getDbPassword(),
+            'charset' => $this->getConfig()->getDbCharset(),
         ];
 
         $config = ORMSetup::createAttributeMetadataConfiguration([__DIR__ . '/Database/Entity'], $this->getConfig()->isDevMode());
