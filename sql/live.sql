@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : database
--- Généré le : ven. 22 avr. 2022 à 16:49
+-- Généré le : lun. 25 avr. 2022 à 18:51
 -- Version du serveur :  10.3.34-MariaDB-1:10.3.34+maria~focal
 -- Version de PHP : 7.4.20
 
@@ -20,6 +20,18 @@ SET time_zone = "+00:00";
 --
 -- Base de données : `live`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `access_token`
+--
+
+CREATE TABLE `access_token` (
+  `token` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `expiration_date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -6105,6 +6117,13 @@ INSERT INTO `user` (`id`, `username`, `password_hash`) VALUES
 --
 
 --
+-- Index pour la table `access_token`
+--
+ALTER TABLE `access_token`
+  ADD PRIMARY KEY (`token`),
+  ADD KEY `IDX_B6A2DD68A76ED395` (`user_id`);
+
+--
 -- Index pour la table `misc`
 --
 ALTER TABLE `misc`
@@ -6143,6 +6162,12 @@ ALTER TABLE `user`
 --
 -- Contraintes pour les tables déchargées
 --
+
+--
+-- Contraintes pour la table `access_token`
+--
+ALTER TABLE `access_token`
+  ADD CONSTRAINT `FK_B6A2DD68A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
 
 --
 -- Contraintes pour la table `passage`
