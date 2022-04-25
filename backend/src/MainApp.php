@@ -10,7 +10,7 @@ use App\Database\DAO;
 use App\Log\AppLogger;
 use App\Router\Router;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Tools\Setup;
+use Doctrine\ORM\ORMSetup;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -133,7 +133,7 @@ class MainApp extends Singleton
             'password' => $this->getConfig()->getDbPassword(),
         ];
 
-        $config = Setup::createAttributeMetadataConfiguration([__DIR__ . '/Database/Entity'], $this->getConfig()->isDevMode());
+        $config = ORMSetup::createAttributeMetadataConfiguration([__DIR__ . '/Database/Entity'], $this->getConfig()->isDevMode());
 
         $this->entityManager = EntityManager::create($connection, $config);
     }
