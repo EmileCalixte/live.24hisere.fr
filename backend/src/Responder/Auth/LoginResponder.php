@@ -7,6 +7,7 @@ use App\Database\Entity\User;
 use App\Database\Repository\UserRepository;
 use App\MainApp;
 use App\Misc\Util\CommonUtil;
+use App\Misc\Util\DateUtil;
 use App\Misc\Util\PasswordUtil;
 use App\Responder\ResponderInterface;
 use App\Validator\ArrayValidator;
@@ -53,9 +54,13 @@ class LoginResponder implements ResponderInterface
 
         $accessToken = $this->generateAccessToken($user);
 
-        dd($accessToken);
+        $responseData = [
+            'accessToken' => $accessToken->getToken(),
+            'expirationTime' => DateUtil::convertDateToJavascriptDate($accessToken->getExpirationDate(), withMilliseconds: false),
+        ];
 
-        $response->getBody()->write("TODO");
+        $response->getBody()->write(CommonUtil::jsonEncode($responseData));
+
         return $response;
     }
 
