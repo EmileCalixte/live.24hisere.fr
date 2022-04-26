@@ -4,6 +4,7 @@
 namespace App\Router;
 
 
+use App\Responder\Admin\UsersResponder;
 use App\Responder\Auth\LoginResponder;
 use App\Responder\CategoriesResponder;
 use App\Responder\ImportPassagesResponder;
@@ -33,6 +34,8 @@ class Router
         $this->registerRoute('/runners/{id}', RunnerDetailsResponder::class, 'GET');
 
         $this->registerRoute('/auth/login', LoginResponder::class, 'POST');
+
+        $this->registerRoute('/admin/users', UsersResponder::class, 'GET');
     }
 
     private function registerRoute(string $uri, string $responderClass, array|string $methods = null): RouteInterface
