@@ -37,11 +37,6 @@ class MainApp extends Singleton
 
     private App $slim;
 
-    /**
-     * @var User|null If a valid access token is provided in the request header, the corresponding user
-     */
-    private ?User $user = null;
-
     protected function __construct(bool $cli = false)
     {
         self::$rootDir = realpath(__DIR__ . '/..');
@@ -79,16 +74,6 @@ class MainApp extends Singleton
     public function getEntityManager(): EntityManager
     {
         return $this->entityManager;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(User $user)
-    {
-        $this->user = $user;
     }
 
     public function run()
