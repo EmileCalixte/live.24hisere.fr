@@ -11,7 +11,7 @@ use App\Misc\Util\CommonUtil;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class CategoriesResponder implements ResponderInterface
+class CategoriesResponder extends AbstractResponder
 {
     /**
      * Ordered categories array

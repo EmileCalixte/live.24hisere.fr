@@ -15,7 +15,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\HttpNotFoundException;
 
-class RunnerDetailsResponder implements ResponderInterface
+class RunnerDetailsResponder extends AbstractResponder
 {
     public function respond(ServerRequestInterface $request, ResponseInterface $response, $args): ResponseInterface
     {

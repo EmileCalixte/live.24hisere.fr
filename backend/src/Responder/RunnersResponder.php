@@ -11,7 +11,7 @@ use App\Misc\Util\CommonUtil;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class RunnersResponder implements ResponderInterface
+class RunnersResponder extends AbstractResponder
 {
     public function respond(ServerRequestInterface $request, ResponseInterface $response, $args): ResponseInterface
     {

@@ -2,12 +2,12 @@
 
 namespace App\Responder\Admin;
 
-use App\Responder\ResponderInterface;
+use App\Responder\AbstractResponder;
 use App\Security\Authentication\Authentication;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class UsersResponder implements ResponderInterface
+class UsersResponder extends AbstractResponder
 {
     public function respond(ServerRequestInterface $request, ResponseInterface $response, $args): ResponseInterface
     {

@@ -12,7 +12,7 @@ use App\Misc\Util\DateUtil;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class RankingResponder implements ResponderInterface
+class RankingResponder extends AbstractResponder
 {
     public function respond(ServerRequestInterface $request, ResponseInterface $response, $args): ResponseInterface
     {
