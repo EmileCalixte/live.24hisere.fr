@@ -32,7 +32,7 @@ class RankingResponder implements ResponderInterface
                 continue;
             }
 
-            $ranking[$i]['last_passage_time'] = DateUtil::convertDatabaseDateToJavascriptDate($ranking[$i]['last_passage_time']);
+            $ranking[$i]['last_passage_time'] = DateUtil::convertDatabaseDateToJavascriptDate($ranking[$i]['last_passage_time'], false);
             $ranking[$i]['is_team'] = (bool) $ranking[$i]['is_team'];
         }
 
