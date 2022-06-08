@@ -9,6 +9,11 @@ use Slim\Exception\HttpUnauthorizedException;
 
 abstract class AbstractResponder implements ResponderInterface
 {
+    /**
+     * @param ServerRequestInterface $request
+     * @throws HttpUnauthorizedException If user cannot be authenticated with provided credentials
+     * @throws HttpForbiddenException If no credentials are provided
+     */
     protected function requireAuthentication(ServerRequestInterface $request)
     {
         $authentication = Authentication::getInstance();
@@ -22,6 +27,11 @@ abstract class AbstractResponder implements ResponderInterface
         }
     }
 
+    /**
+     * @param Authentication $authentication The {@see Authentication} instance
+     * @param ServerRequestInterface $request
+     * @throws HttpUnauthorizedException
+     */
     private function throwUnauthorizedException(Authentication $authentication, ServerRequestInterface $request)
     {
         if ($authentication->isExpiredToken()) {
