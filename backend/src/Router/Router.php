@@ -6,6 +6,7 @@ namespace App\Router;
 
 use App\Responder\Admin\UsersResponder;
 use App\Responder\Auth\LoginResponder;
+use App\Responder\Auth\LogoutResponder;
 use App\Responder\CategoriesResponder;
 use App\Responder\ImportPassagesResponder;
 use App\Responder\InitialDataResponder;
@@ -34,6 +35,7 @@ class Router
         $this->registerRoute('/runners/{id}', RunnerDetailsResponder::class, 'GET');
 
         $this->registerRoute('/auth/login', LoginResponder::class, 'POST');
+        $this->registerRoute('/auth/logout', LogoutResponder::class, 'POST');
 
         $this->registerRoute('/admin/users', UsersResponder::class, 'GET');
     }
