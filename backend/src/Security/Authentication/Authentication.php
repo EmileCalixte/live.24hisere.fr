@@ -16,6 +16,11 @@ class Authentication extends Singleton
     private bool $authenticationOccurred = false;
 
     /**
+     * @var AccessToken|null If valid credentials are provided in request, the corresponding access token
+     */
+    private AccessToken|null $accessToken = null;
+
+    /**
      * @var User|null If valid credentials are provided in request, the corresponding user
      */
     private User|null $user = null;
@@ -44,12 +49,18 @@ class Authentication extends Singleton
             return;
         }
 
+        $this->accessToken = $accessToken;
         $this->user = $accessToken->getUser();
     }
 
     public function authenticationOccurred(): bool
     {
         return $this->authenticationOccurred;
+    }
+
+    public function getAccessToken(): ?AccessToken
+    {
+        return $this->accessToken;
     }
 
     public function getUser(): ?User
