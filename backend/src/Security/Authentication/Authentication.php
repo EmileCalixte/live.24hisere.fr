@@ -10,31 +10,65 @@ use App\MainApp;
 
 class Authentication extends Singleton
 {
+    private const ERROR_INVALID_TOKEN = 1;
+    private const ERROR_EXPIRED_TOKEN = 2;
+
+    private bool $authenticationOccurred = false;
+
     /**
      * @var User|null If valid credentials are provided in request, the corresponding user
      */
     private User|null $user = null;
 
+    /**
+     * @var int|null If the authentication failed, the nature of the error
+     */
+    private int|null $authenticationError = null;
+
     public function authenticateUserFromHeaderAccessToken(string $stringAccessToken)
     {
+        $this->authenticationOccurred = true;
+
         /** @var AccessTokenRepository $accessTokenRepository */
         $accessTokenRepository = MainApp::getInstance()->getEntityManager()->getRepository(AccessToken::class);
 
         $accessToken = $accessTokenRepository->findByToken($stringAccessToken);
 
         if (is_null($accessToken)) {
+            $this->authenticationError = self::ERROR_INVALID_TOKEN;
             return;
         }
 
         if (new \DateTime() >= $accessToken->getExpirationDate()) {
+            $this->authenticationError = self::ERROR_EXPIRED_TOKEN;
             return;
         }
 
         $this->user = $accessToken->getUser();
     }
 
+    public function authenticationOccurred(): bool
+    {
+        return $this->authenticationOccurred;
+    }
+
     public function getUser(): ?User
     {
         return $this->user;
+    }
+
+    public function getAuthenticationError(): ?int
+    {
+        return $this->authenticationError;
+    }
+
+    public function isInvalidToken(): bool
+    {
+        return $this->getAuthenticationError() === self::ERROR_INVALID_TOKEN;
+    }
+
+    public function isExpiredToken(): bool
+    {
+        return $this->getAuthenticationError() === self::ERROR_EXPIRED_TOKEN;
     }
 }
