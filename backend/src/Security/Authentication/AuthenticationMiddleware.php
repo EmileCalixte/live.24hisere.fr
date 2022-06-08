@@ -13,7 +13,9 @@ class AuthenticationMiddleware
         if ($request->hasHeader('Authorization')) {
             $headerAccessToken = $request->getHeaderLine('Authorization');
 
-            Authentication::getInstance()->authenticateUserFromHeaderAccessToken($headerAccessToken);
+            if (!is_null($headerAccessToken)) {
+                Authentication::getInstance()->authenticateUserFromHeaderAccessToken($headerAccessToken);
+            }
         }
 
         return $handler->handle($request);
