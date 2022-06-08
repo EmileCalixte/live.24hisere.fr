@@ -3,6 +3,7 @@
 namespace App\Database\Repository;
 
 use App\Database\Entity\AccessToken;
+use App\Database\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 
@@ -20,5 +21,16 @@ class AccessTokenRepository extends EntityRepository
         } catch (NoResultException) {
             return null;
         }
+    }
+
+    public function deleteAllOfUser(User $user)
+    {
+        $query = $this->createQueryBuilder('a')
+            ->delete()
+            ->andWhere('a.user = :userId')
+            ->setParameter('userId', $user->getId())
+            ->getQuery();
+
+        return $query->execute();
     }
 }
