@@ -5,6 +5,7 @@ import Footer from "./layout/footer/Footer";
 import Ranking from "./pages/ranking/Ranking";
 import RunnerDetails from "./pages/runner-details/RunnerDetails";
 import ApiUtil from "../util/ApiUtil";
+import Login from "./pages/login/Login";
 
 let instance;
 
@@ -79,6 +80,8 @@ class App extends React.Component {
                                     <Route exact path="/ranking" element={<Ranking />} />
                                     <Route exact path="/runner-details" element={<RunnerDetails />} />
                                     <Route exact path="/runner-details/:runnerId" element={<RunnerDetails />} />
+
+                                    <Route exact path="/login" element={<Login />} />
 
                                     {/* Redirect any unresolved route to /ranking */}
                                     <Route path="*" element={<Navigate to="/ranking" replace />} />
