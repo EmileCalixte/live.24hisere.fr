@@ -1,5 +1,8 @@
 import {useState} from "react";
 import ApiUtil from "../../../util/ApiUtil";
+import Toastr from "toastr2";
+
+const toastr = new Toastr();
 
 const Login = () => {
     const [username, setUsername] = useState('');
@@ -22,7 +25,11 @@ const Login = () => {
         const responseJson = await response.json();
 
         if (!response.ok) {
-            // TODO display error
+            if (response.status === 403) {
+                toastr.error("Identifiants incorrects");
+            } else {
+                toastr.error("Une erreur est survenue");
+            }
             setSubmitButtonDisabled(false);
             return;
         }

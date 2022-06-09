@@ -1,0 +1,38 @@
+#toast-container.toast-top-right {
+    top: 70px !important;
+}
+
+#toast-container > .toast-success,
+#toast-container > .toast.toast-info,
+#toast-container > .toast.toast-warning,
+#toast-container > .toast.toast-error {
+    background-image: none !important;
+}
+
+#toast-container > div {
+    padding: 10px 20px;
+    opacity: 1;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+
+    animation-name: toast-show;
+    animation-iteration-count: 1;
+    animation-duration: 0.2s;
+    animation-timing-function: ease-out;
+}
+
+#toast-container > div:hover {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+    cursor: default;
+}
+
+@keyframes toast-show {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateX(10%);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
