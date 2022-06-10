@@ -6,6 +6,7 @@ import Ranking from "./pages/ranking/Ranking";
 import RunnerDetails from "./pages/runner-details/RunnerDetails";
 import ApiUtil from "../util/ApiUtil";
 import Login from "./pages/login/Login";
+import Util from "../util/Util";
 
 let instance;
 
@@ -20,6 +21,8 @@ class App extends React.Component {
         raceStartTime: new Date(),
         lastUpdateTime: new Date(),
         serverTimeOffset: 0, // Difference between server time and client time in seconds. > 0 if the server is ahead, < 0 otherwise.
+        accessToken: localStorage.getItem('accessToken'),
+        username: null,
     }
 
     constructor() {
@@ -37,6 +40,34 @@ class App extends React.Component {
         this.setState({
             isLoading: false,
         })
+    }
+
+    componentDidUpdate = (prevProps, prevState) => {
+        if (prevState.accessToken !== this.state.accessToken) {
+            this.onAccessTokenUpdate();
+        }
+    }
+
+    saveAccessToken = (accessToken) => {
+        localStorage.setItem('accessToken', accessToken);
+        this.setState({accessToken});
+    }
+
+    forgetAccessToken = () => {
+        localStorage.removeItem('accessToken');
+        this.setState({accessToken: null});
+    }
+
+    onAccessTokenUpdate = () => {
+        Util.verbose('Access token updated');
+        if (this.state.accessToken === null) {
+            this.setState({
+                username: null,
+            });
+            return;
+        }
+
+        console.log('TODO FETCH USER INFO');
     }
 
     computeServerTimeOffset = (serverTimeString) => {

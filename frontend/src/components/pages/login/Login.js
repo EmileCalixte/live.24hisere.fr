@@ -1,6 +1,8 @@
 import {useState} from "react";
 import ApiUtil from "../../../util/ApiUtil";
 import Toastr from "toastr2";
+import {app} from "../../App";
+import {Navigate} from "react-router-dom";
 
 const toastr = new Toastr();
 
@@ -8,6 +10,7 @@ const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [submitButtonDisabled, setSubmitButtonDisabled] = useState(false);
+    const [loggedIn, setLoggedIn] = useState(app.state.accessToken !== null);
 
     const onSubmit = async (e) => {
         e.preventDefault();
@@ -35,10 +38,15 @@ const Login = () => {
         }
 
         const accessToken = responseJson.accessToken;
-        console.log(accessToken);
-        // TODO save access token and redirect
 
-        setSubmitButtonDisabled(false);
+        app.saveAccessToken(accessToken);
+        setLoggedIn(true);
+    }
+
+    if (loggedIn) {
+        return (
+            <Navigate to="/admin" replace={true} />
+        );
     }
 
     return (
