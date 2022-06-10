@@ -6,6 +6,7 @@ namespace App\Router;
 
 use App\Responder\Admin\DeleteUserAccessTokensResponder;
 use App\Responder\Admin\UsersResponder;
+use App\Responder\Auth\CurrentUserInfoResponder;
 use App\Responder\Auth\LoginResponder;
 use App\Responder\Auth\LogoutResponder;
 use App\Responder\CategoriesResponder;
@@ -37,6 +38,7 @@ class Router
 
         $this->registerRoute('/auth/login', LoginResponder::class, 'POST');
         $this->registerRoute('/auth/logout', LogoutResponder::class, 'POST');
+        $this->registerRoute('/auth/current-user-info', CurrentUserInfoResponder::class, 'GET');
 
         $this->registerRoute('/admin/users', UsersResponder::class, 'GET');
         $this->registerRoute('/admin/users/{id}/access-tokens', DeleteUserAccessTokensResponder::class, 'DELETE');
