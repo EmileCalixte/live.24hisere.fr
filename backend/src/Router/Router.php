@@ -68,6 +68,11 @@ class Router
             $methods = [$methods];
         }
 
+        // For CORS requests, allow OPTIONS method for all routes
+        if (!in_array('OPTIONS', $methods)) {
+            $methods[] = 'OPTIONS';
+        }
+
         return $this->slim->map($methods, $uri, $callable);
     }
 }
