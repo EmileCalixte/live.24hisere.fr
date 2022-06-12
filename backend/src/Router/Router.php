@@ -12,6 +12,7 @@ use App\Responder\Auth\LogoutResponder;
 use App\Responder\CategoriesResponder;
 use App\Responder\ImportPassagesResponder;
 use App\Responder\InitialDataResponder;
+use App\Responder\OptionsResponder;
 use App\Responder\RankingResponder;
 use App\Responder\ResponderInterface;
 use App\Responder\RunnerDetailsResponder;
@@ -29,6 +30,12 @@ class Router
 
     public function registerRoutes()
     {
+        // When request is OPTIONS, always return 200 with CORS headers
+        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+            $this->registerRoute($_SERVER['REQUEST_URI'], OptionsResponder::class, 'OPTIONS');
+            return;
+        }
+
         $this->registerRoute('/categories', CategoriesResponder::class, 'GET');
         $this->registerRoute('/import-passages', ImportPassagesResponder::class, 'POST');
         $this->registerRoute('/initial-data', InitialDataResponder::class, 'GET');
@@ -66,11 +73,6 @@ class Router
 
         if (is_string($methods)) {
             $methods = [$methods];
-        }
-
-        // For CORS requests, allow OPTIONS method for all routes
-        if (!in_array('OPTIONS', $methods)) {
-            $methods[] = 'OPTIONS';
         }
 
         return $this->slim->map($methods, $uri, $callable);
