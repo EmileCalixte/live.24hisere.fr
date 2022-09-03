@@ -37,10 +37,9 @@ class ApiUtil {
     /**
      * @param url
      * @param init
-     * @param saveMetadata
      * @returns {Response}
      */
-    static performAPIRequest = async (url, init = {}, saveMetadata = true) => {
+    static performAPIRequest = async (url, init = {}) => {
         if (!url.startsWith(ApiUtil.APP_BACKEND_URL)) {
             url = ApiUtil.getBackendFullUrl(url);
         }
@@ -53,27 +52,7 @@ class ApiUtil {
             init.headers.append('Authorization', app.state.accessToken);
         }
 
-        const response = await ApiUtil.fetch(url, init);
-
-        if (saveMetadata && response.ok) {
-            await ApiUtil.saveMetadataFromAPIRequest(response);
-        }
-
-        return response;
-    }
-
-    static saveMetadataFromAPIRequest = async (fetchResponse) => {
-        try {
-            const responseClone = fetchResponse.clone();
-
-            const responseJson = await responseClone.json();
-            const metadata = responseJson.metadata;
-
-            await app.saveMetadata(metadata);
-        } catch (e) {
-            console.error('Unable to save response metadata');
-            console.error(e);
-        }
+        return await ApiUtil.fetch(url, init);
     }
 }
 
