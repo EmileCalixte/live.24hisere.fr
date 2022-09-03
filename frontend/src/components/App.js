@@ -36,7 +36,7 @@ class App extends React.Component {
     }
 
     componentDidMount = async () => {
-        await this.fetchInitialData();
+        await this.fetchRaceData();
         this.setState({
             isLoading: false,
         });
@@ -92,21 +92,21 @@ class App extends React.Component {
         console.log(responseJson);
     }
 
-    fetchInitialData = async () => {
-        const response = await ApiUtil.performAPIRequest('/initial-data', {}, false);
+    fetchRaceData = async () => {
+        const response = await ApiUtil.performAPIRequest('/race-data', {}, false);
         const responseJson = await response.json();
 
-        this.saveMetadata(responseJson);
+        this.saveRaceData(responseJson);
     }
 
-    saveMetadata = async (metadata) => {
-        this.computeServerTimeOffset(metadata.currentTime);
+    saveRaceData = async (raceData) => {
+        this.computeServerTimeOffset(raceData.currentTime);
 
         this.setState({
-            firstLapDistance: metadata.firstLapDistance,
-            lapDistance: metadata.lapDistance,
-            raceStartTime: new Date(metadata.raceStartTime),
-            lastUpdateTime: new Date(metadata.lastUpdateTime),
+            firstLapDistance: raceData.firstLapDistance,
+            lapDistance: raceData.lapDistance,
+            raceStartTime: new Date(raceData.raceStartTime),
+            lastUpdateTime: new Date(raceData.lastUpdateTime),
         });
     }
 

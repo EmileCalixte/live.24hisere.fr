@@ -11,7 +11,7 @@ use App\Responder\Auth\LoginResponder;
 use App\Responder\Auth\LogoutResponder;
 use App\Responder\CategoriesResponder;
 use App\Responder\ImportPassagesResponder;
-use App\Responder\InitialDataResponder;
+use App\Responder\RaceDataResponder;
 use App\Responder\OptionsResponder;
 use App\Responder\RankingResponder;
 use App\Responder\ResponderInterface;
@@ -38,7 +38,7 @@ class Router
 
         $this->registerRoute('/categories', CategoriesResponder::class, 'GET');
         $this->registerRoute('/import-passages', ImportPassagesResponder::class, 'POST');
-        $this->registerRoute('/initial-data', InitialDataResponder::class, 'GET');
+        $this->registerRoute('/race-data', RaceDataResponder::class, 'GET');
         $this->registerRoute('/ranking', RankingResponder::class, 'GET');
         $this->registerRoute('/runners', RunnersResponder::class, 'GET');
         $this->registerRoute('/runners/{id}', RunnerDetailsResponder::class, 'GET');
