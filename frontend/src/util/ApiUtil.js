@@ -45,6 +45,14 @@ class ApiUtil {
             url = ApiUtil.getBackendFullUrl(url);
         }
 
+        if (!init.hasOwnProperty('headers') || !(init.headers instanceof Headers)) {
+            init.headers = new Headers();
+        }
+
+        if (!init.headers.has('Authorization') && app.state.accessToken !== null) {
+            init.headers.append('Authorization', app.state.accessToken);
+        }
+
         const response = await ApiUtil.fetch(url, init);
 
         if (saveMetadata && response.ok) {

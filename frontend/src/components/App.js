@@ -39,7 +39,10 @@ class App extends React.Component {
         await this.fetchInitialData();
         this.setState({
             isLoading: false,
-        })
+        });
+        if (this.state.accessToken !== null) {
+            this.fetchCurrentUserInfo();
+        }
     }
 
     componentDidUpdate = (prevProps, prevState) => {
@@ -67,7 +70,7 @@ class App extends React.Component {
             return;
         }
 
-        console.log('TODO FETCH USER INFO');
+        this.fetchCurrentUserInfo();
     }
 
     computeServerTimeOffset = (serverTimeString) => {
@@ -79,6 +82,14 @@ class App extends React.Component {
         this.setState({
             serverTimeOffset: Math.round(timeOffsetMs / 1000),
         });
+    }
+
+    fetchCurrentUserInfo = async () => {
+        Util.verbose('Fetching user info');
+        const response = await ApiUtil.performAPIRequest('/auth/current-user-info');
+        const responseJson = await response.json();
+
+        console.log(responseJson);
     }
 
     fetchInitialData = async () => {
