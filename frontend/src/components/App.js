@@ -12,6 +12,8 @@ let instance;
 
 export const RACE_DURATION = 24 * 60 * 60 * 1000 - 1; // in ms
 
+const FETCH_RACE_DATA_INTERVAL_TIME = 60 * 1000;
+
 class App extends React.Component {
     state = {
         isLoading: true,
@@ -37,9 +39,13 @@ class App extends React.Component {
 
     componentDidMount = async () => {
         await this.fetchRaceData();
+
+        this.fetchRaceDataInterval = setInterval(this.fetchRaceData, FETCH_RACE_DATA_INTERVAL_TIME);
+
         this.setState({
             isLoading: false,
         });
+
         if (this.state.accessToken !== null) {
             this.fetchCurrentUserInfo();
         }
@@ -49,6 +55,10 @@ class App extends React.Component {
         if (prevState.accessToken !== this.state.accessToken) {
             this.onAccessTokenUpdate();
         }
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.fetchRaceDataInterval);
     }
 
     saveAccessToken = (accessToken) => {
