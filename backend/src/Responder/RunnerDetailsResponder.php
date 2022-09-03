@@ -46,7 +46,6 @@ class RunnerDetailsResponder extends AbstractResponder
             'runner' => $runner,
         ];
 
-        CommonUtil::insertMetadataInResponseArray($responseData);
         CommonUtil::camelizeArrayKeysRecursively($responseData);
 
         $response->getBody()->write(CommonUtil::jsonEncode($responseData));
