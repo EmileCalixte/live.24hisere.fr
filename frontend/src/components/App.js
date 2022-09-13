@@ -6,6 +6,7 @@ import Ranking from "./pages/ranking/Ranking";
 import RunnerDetails from "./pages/runner-details/RunnerDetails";
 import ApiUtil from "../util/ApiUtil";
 import Login from "./pages/login/Login";
+import Admin from "./pages/admin/Admin";
 import Util from "../util/Util";
 import ToastUtil from "../util/ToastUtil";
 
@@ -169,6 +170,8 @@ class App extends React.Component {
                                     <Route exact path="/runner-details/:runnerId" element={<RunnerDetails />} />
 
                                     <Route exact path="/login" element={<Login />} />
+
+                                    <Route path="/admin/*" element={<Admin />} />
 
                                     {/* Redirect any unresolved route to /ranking */}
                                     <Route path="*" element={<Navigate to="/ranking" replace />} />
