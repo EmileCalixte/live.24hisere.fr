@@ -26,7 +26,29 @@ a, button.a {
     min-height: calc(100vh - 250px); /* Total height minux footer height */
 }
 
-#app-header {
+#app-header-admin-section {
+    display: flex;
+    justify-content: space-between;
+
+    background-color: #ffc048;
+
+    padding: 5px 20px;
+}
+
+.admin-header-user-button {
+    border: none;
+    background-color: transparent;
+    padding: 0;
+    font-size: inherit;
+    font-family: inherit;
+    line-height: inherit;
+}
+
+.admin-header-user-button:hover {
+    cursor: pointer;
+}
+
+#app-header-main-section {
     height: 64px;
 
     display: flex;
@@ -49,13 +71,13 @@ a, button.a {
     height: 90%;
 }
 
-#app-header nav {
+#app-header-main-section nav {
     height: 100%;
 
     flex: 1;
 }
 
-#app-header nav ul {
+#app-header-main-section nav ul {
     height: 100%;
 
     list-style-type: none;
@@ -63,13 +85,13 @@ a, button.a {
     margin: 0;
 }
 
-#app-header nav ul li {
+#app-header-main-section nav ul li {
     height: 100%;
 
     display: inline-block;
 }
 
-#app-header nav ul li a {
+#app-header-main-section nav ul li a {
     height: 100%;
 
     display: flex;
@@ -91,11 +113,11 @@ a, button.a {
     transition: color 0.1s ease-out, border 0.1s ease-out;
 }
 
-#app-header nav ul li a.active {
+#app-header-main-section nav ul li a.active {
     color: #33CC33;
 }
 
-#app-header nav ul li a.active::after {
+#app-header-main-section nav ul li a.active::after {
     content: ' ';
     border-bottom: 3px solid #33CC33;
     position: absolute;
@@ -104,7 +126,7 @@ a, button.a {
     right: 0;
 }
 
-#app-header .header-fetch-loader-container {
+#app-header-main-section .header-fetch-loader-container {
     height: 100%;
 
     display: flex;
@@ -115,7 +137,7 @@ a, button.a {
     margin-right: 10px;
 }
 
-#app-header .header-fetch-loader i {
+#app-header-main-section .header-fetch-loader i {
     animation-duration: 0.5s;
     animation-name: header-fetch-loader;
     animation-iteration-count: infinite;
@@ -132,7 +154,7 @@ a, button.a {
     }
 }
 
-#app-header .header-timer-container {
+#app-header-main-section .header-timer-container {
     height: 100%;
 
     display: flex;
@@ -140,7 +162,7 @@ a, button.a {
     justify-content: flex-end;
 }
 
-#app-header .header-timer-container .header-timer {
+#app-header-main-section .header-timer-container .header-timer {
     margin-right: 20px;
 
     font-weight: 700;
@@ -149,6 +171,17 @@ a, button.a {
 
 #app-content {
     padding-bottom: 20px;
+}
+
+.options-dropdown {
+    position: absolute;
+    top: calc(100% + 5px);
+    right: 0;
+
+    background-color: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 1px 2px rgb(220 220 220);
+    border-radius: 5px;
 }
 
 #ranking-settings-container {

@@ -1,3 +1,4 @@
+import AdminHeader from "./AdminHeader";
 import Navbar from "./Navbar";
 import HeaderTimer from "./HeaderTimer";
 import {app} from "../../App";
@@ -6,18 +7,23 @@ import HeaderFetchLoader from "./HeaderFetchLoader";
 const Header = () => {
     return(
         <header id="app-header">
-            <div id="app-header-logo-container">
-                <img alt="Logo" src="/img/24hisere.svg" />
-            </div>
-            <Navbar />
+            {app.state.user !== null &&
+            <AdminHeader />
+            }
+            <div id="app-header-main-section">
+                <div id="app-header-logo-container">
+                    <img alt="Logo" src="/img/24hisere.svg" />
+                </div>
+                <Navbar />
 
-            {app.state.isFetching &&
+                {app.state.isFetching &&
                 <HeaderFetchLoader />
-            }
+                }
 
-            {!app.state.isLoading &&
+                {!app.state.isLoading &&
                 <HeaderTimer />
-            }
+                }
+            </div>
         </header>
     )
 }
