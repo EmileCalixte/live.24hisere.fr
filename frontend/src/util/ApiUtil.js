@@ -1,6 +1,5 @@
 import config from '../config/config';
 import Util from "./Util";
-import {app} from "../components/App";
 
 class ApiUtil {
     static APP_BACKEND_URL = config.apiUrl
