@@ -9,7 +9,7 @@ class ApiUtil {
      * Fetch minimal wrapper with verbose
      * @param url
      * @param init
-     * @returns {Response}
+     * @returns {Promise<Response>}
      */
     static fetch = async (url, init) => {
         let method = 'GET';
@@ -37,22 +37,30 @@ class ApiUtil {
     /**
      * @param url
      * @param init
-     * @returns {Response}
+     * @return {Promise<Response>}
      */
     static performAPIRequest = async (url, init = {}) => {
         if (!url.startsWith(ApiUtil.APP_BACKEND_URL)) {
             url = ApiUtil.getBackendFullUrl(url);
         }
 
+        return await ApiUtil.fetch(url, init);
+    }
+
+    /**
+     * @param url
+     * @param accessToken
+     * @param init
+     * @return {Promise<Response>}
+     */
+    static performAuthenticatedAPIRequest = async (url, accessToken, init = {}) => {
         if (!init.hasOwnProperty('headers') || !(init.headers instanceof Headers)) {
             init.headers = new Headers();
         }
 
-        if (!init.headers.has('Authorization') && app.state.accessToken !== null) {
-            init.headers.append('Authorization', app.state.accessToken);
-        }
+        init.headers.append('Authorization', accessToken);
 
-        return await ApiUtil.fetch(url, init);
+        return ApiUtil.performAPIRequest(url, init);
     }
 }
 

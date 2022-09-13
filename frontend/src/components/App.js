@@ -96,7 +96,7 @@ class App extends React.Component {
 
     fetchCurrentUserInfo = async () => {
         Util.verbose('Fetching user info');
-        const response = await ApiUtil.performAPIRequest('/auth/current-user-info');
+        const response = await ApiUtil.performAuthenticatedAPIRequest('/auth/current-user-info', this.state.accessToken);
         const responseJson = await response.json();
 
         console.log(responseJson);
