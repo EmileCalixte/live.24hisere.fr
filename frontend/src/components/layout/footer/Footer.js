@@ -1,5 +1,6 @@
 import {app} from "../../App";
 import Util from "../../../util/Util";
+import {Link} from "react-router-dom";
 
 const Footer = () => {
     return(
@@ -16,6 +17,12 @@ const Footer = () => {
                         <p>
                             <a href="https://github.com/EmileCalixte/live.24hisere.fr" target="_blank" rel="noopener noreferrer">Code source</a> – <a href="https://www.24hisere.fr/" target="_blank" rel="noopener noreferrer">Les 24 Heures de l'Isère</a>
                         </p>
+
+                        {app.state.user === null &&
+                        <p>
+                            <Link to="/login">Connexion admin</Link>
+                        </p>
+                        }
                     </div>
                 </div>
             </div>
