@@ -7,7 +7,7 @@ import HeaderFetchLoader from "./HeaderFetchLoader";
 const Header = () => {
     return(
         <header id="app-header">
-            {app.state.user !== null &&
+            {app.state.user &&
             <AdminHeader />
             }
             <div id="app-header-main-section">

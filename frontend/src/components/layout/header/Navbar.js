@@ -11,7 +11,7 @@ const Navbar = () => {
                 <li>
                     <NavLink to="/runner-details">Détails coureur</NavLink>
                 </li>
-                {app.state.user !== null &&
+                {app.state.user &&
                 <li>
                     <NavLink to="/admin">Admin</NavLink>
                 </li>

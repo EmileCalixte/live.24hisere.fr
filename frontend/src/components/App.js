@@ -26,7 +26,7 @@ class App extends React.Component {
         lastUpdateTime: new Date(),
         serverTimeOffset: 0, // Difference between server time and client time in seconds. > 0 if the server is ahead, < 0 otherwise.
         accessToken: localStorage.getItem('accessToken'),
-        user: null,
+        user: undefined, // If null, user is not logged in. If undefined, user info was not fetched yet
         redirect: null, // Used to redirect the user to a specified location, for example when user logs out
     }
 
@@ -55,6 +55,8 @@ class App extends React.Component {
                 this.setState({user: null});
                 ToastUtil.getToastr().error('Vous avez été déconnecté');
             }
+        } else {
+            this.setState({user: null});
         }
     }
 
