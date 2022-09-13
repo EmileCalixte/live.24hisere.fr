@@ -25,7 +25,7 @@ class App extends React.Component {
         lastUpdateTime: new Date(),
         serverTimeOffset: 0, // Difference between server time and client time in seconds. > 0 if the server is ahead, < 0 otherwise.
         accessToken: localStorage.getItem('accessToken'),
-        username: null,
+        user: null,
     }
 
     constructor() {
@@ -50,6 +50,7 @@ class App extends React.Component {
         if (this.state.accessToken !== null) {
             if (await this.fetchCurrentUserInfo() === false) {
                 this.forgetAccessToken();
+                this.setState({user: null});
                 ToastUtil.getToastr().error('Vous avez été déconnecté');
             }
         }
@@ -104,6 +105,10 @@ class App extends React.Component {
         const responseJson = await response.json();
 
         Util.verbose('User info', responseJson);
+
+        this.setState({
+            user: responseJson.user
+        });
 
         return response.ok;
     }
