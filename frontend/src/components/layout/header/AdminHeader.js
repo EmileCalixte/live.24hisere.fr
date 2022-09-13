@@ -5,6 +5,10 @@ import AdminHeaderUserDropdown from "./AdminHeaderUserDropdown";
 const AdminHeader = () => {
     const [userDropdownShown, setUserDropdownShown] = useState(false);
 
+    const hideUserDropdown = () => {
+        setUserDropdownShown(false);
+    }
+
     return(
         <div id="app-header-admin-section">
             <span>
@@ -24,7 +28,7 @@ const AdminHeader = () => {
                     }
                 </button>
                 {userDropdownShown &&
-                <AdminHeaderUserDropdown />
+                <AdminHeaderUserDropdown hideDropdown={hideUserDropdown} />
                 }
             </div>
         </div>
