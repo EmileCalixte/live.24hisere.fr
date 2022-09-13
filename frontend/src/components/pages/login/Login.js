@@ -1,10 +1,8 @@
 import {useState} from "react";
 import ApiUtil from "../../../util/ApiUtil";
-import Toastr from "toastr2";
 import {app} from "../../App";
 import {Navigate} from "react-router-dom";
-
-const toastr = new Toastr();
+import ToastUtil from "../../../util/ToastUtil";
 
 const Login = () => {
     const [username, setUsername] = useState('');
@@ -29,9 +27,9 @@ const Login = () => {
 
         if (!response.ok) {
             if (response.status === 403) {
-                toastr.error("Identifiants incorrects");
+                ToastUtil.getToastr().error("Identifiants incorrects");
             } else {
-                toastr.error("Une erreur est survenue");
+                ToastUtil.getToastr().error("Une erreur est survenue");
             }
             setSubmitButtonDisabled(false);
             return;

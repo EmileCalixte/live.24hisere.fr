@@ -7,6 +7,7 @@ import RunnerDetails from "./pages/runner-details/RunnerDetails";
 import ApiUtil from "../util/ApiUtil";
 import Login from "./pages/login/Login";
 import Util from "../util/Util";
+import ToastUtil from "../util/ToastUtil";
 
 let instance;
 
@@ -49,6 +50,7 @@ class App extends React.Component {
         if (this.state.accessToken !== null) {
             if (await this.fetchCurrentUserInfo() === false) {
                 this.forgetAccessToken();
+                ToastUtil.getToastr().error('Vous avez été déconnecté');
             }
         }
     }
