@@ -47,7 +47,9 @@ class App extends React.Component {
         });
 
         if (this.state.accessToken !== null) {
-            this.fetchCurrentUserInfo();
+            if (await this.fetchCurrentUserInfo() === false) {
+                this.forgetAccessToken();
+            }
         }
     }
 
@@ -99,7 +101,9 @@ class App extends React.Component {
         const response = await ApiUtil.performAuthenticatedAPIRequest('/auth/current-user-info', this.state.accessToken);
         const responseJson = await response.json();
 
-        console.log(responseJson);
+        Util.verbose('User info', responseJson);
+
+        return response.ok;
     }
 
     fetchRaceData = async () => {
