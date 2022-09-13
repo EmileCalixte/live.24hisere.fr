@@ -1,4 +1,5 @@
 import {NavLink} from "react-router-dom";
+import {app} from "../../App";
 
 const Navbar = () => {
     return(
@@ -10,6 +11,11 @@ const Navbar = () => {
                 <li>
                     <NavLink to="/runner-details">Détails coureur</NavLink>
                 </li>
+                {app.state.user !== null &&
+                <li>
+                    <NavLink to="/admin">Admin</NavLink>
+                </li>
+                }
             </ul>
         </nav>
     )
