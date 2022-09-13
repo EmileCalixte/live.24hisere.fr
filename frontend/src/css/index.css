@@ -184,6 +184,42 @@ a, button.a {
     border-radius: 5px;
 }
 
+.options-dropdown ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.options-dropdown li {
+    white-space: nowrap;
+}
+
+.options-dropdown li a,
+.options-dropdown li button {
+    display: inline-block;
+    width: 100%;
+    padding: 5px 10px;
+}
+
+.options-dropdown li a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.options-dropdown li button {
+    border: none;
+    background-color: transparent;
+    font-size: inherit;
+    font-family: inherit;
+    line-height: inherit;
+}
+
+.options-dropdown li a:hover,
+.options-dropdown li button:hover {
+    background-color: #eee;
+    cursor: pointer;
+}
+
 #ranking-settings-container {
     display: flex;
     flex-wrap: wrap;

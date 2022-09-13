@@ -26,6 +26,7 @@ class App extends React.Component {
         serverTimeOffset: 0, // Difference between server time and client time in seconds. > 0 if the server is ahead, < 0 otherwise.
         accessToken: localStorage.getItem('accessToken'),
         user: null,
+        redirect: null, // Used to redirect the user to a specified location, for example when user logs out
     }
 
     constructor() {
@@ -74,6 +75,15 @@ class App extends React.Component {
     forgetAccessToken = () => {
         localStorage.removeItem('accessToken');
         this.setState({accessToken: null});
+    }
+
+    logout = () => {
+        this.forgetAccessToken();
+        this.setState({
+            user: null,
+            redirect: '/',
+        });
+        ToastUtil.getToastr().success('Vous avez été déconnecté');
     }
 
     onAccessTokenUpdate = () => {
@@ -132,6 +142,20 @@ class App extends React.Component {
     }
 
     render = () => {
+        if (this.state.redirect !== null) {
+            const url = this.state.redirect;
+
+            setTimeout(() => {
+                this.setState({redirect: null});
+            }, 0);
+
+            return (
+                <BrowserRouter>
+                    <Navigate to={url} />
+                </BrowserRouter>
+            );
+        }
+
         return (
             <BrowserRouter>
                 <div id="app">
