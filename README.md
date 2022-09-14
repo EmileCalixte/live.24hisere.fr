@@ -10,8 +10,8 @@ Une application web de suivi en direct des performances des coureurs, réalisée
 
 ### Lancement des containers Docker
 
-```bash
-docker-compose up
+```sh
+docker compose up
 ```
 
 Les dépendances des applications backend et frontend sont installées automatiquement au lancement du docker-compose.
@@ -86,6 +86,24 @@ chmod u+x backend/bin/console
 Le dossier `import-passages` contient un script permettant d'importer les temps des passages des coureurs toutes les 15 secondes depuis un fichier DAG, permettant de mettre à jour les informations en direct chez les utilisateurs.
 
 [Documentation détaillée](import-passages/README.md)
+
+## Utilisateurs
+
+Il est nécessaire d'être connecté sur un compte d'utilisateur pour accéder à certaines informations et effectuer certaines opérations.
+
+Un utilisateur est inclut dans les données chargées par défaut depuis le répertoire `/sql` :
+
+- Nom d'utilisateur : `Admin`
+- Mot de passe : `admin`
+
+### Créer un utilisateur
+
+```sh
+./bin/console app:create-user
+ 
+# Pour exécuter la commande avec l'environnement de développement Docker Compose :
+docker compose exec backend ./bin/console app:create-user
+```
 
 ## Tests
 

@@ -7,10 +7,12 @@ namespace App;
 use App\Base\Singleton\Singleton;
 use App\Config\Config;
 use App\Database\DAO;
+use App\Database\Entity\User;
 use App\Log\AppLogger;
 use App\Router\Router;
+use App\Security\Authentication\AuthenticationMiddleware;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Tools\Setup;
+use Doctrine\ORM\ORMSetup;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -52,6 +54,10 @@ class MainApp extends Singleton
         }
 
         $this->slim = SlimFactory::create();
+
+        /** Authenticates {@see $user} from access token provided in request header */
+        $this->slim->add(new AuthenticationMiddleware());
+
         $this->router = new Router($this->slim);
 
         $this->registerErrorMiddleware();
@@ -131,9 +137,10 @@ class MainApp extends Singleton
             'dbname' => $this->getConfig()->getDbName(),
             'user' => $this->getConfig()->getDbUser(),
             'password' => $this->getConfig()->getDbPassword(),
+            'charset' => $this->getConfig()->getDbCharset(),
         ];
 
-        $config = Setup::createAttributeMetadataConfiguration([__DIR__ . '/Database/Entity'], $this->getConfig()->isDevMode());
+        $config = ORMSetup::createAttributeMetadataConfiguration([__DIR__ . '/Database/Entity'], $this->getConfig()->isDevMode());
 
         $this->entityManager = EntityManager::create($connection, $config);
     }
@@ -153,6 +160,7 @@ class MainApp extends Singleton
             $response = $handler->handle($req);
             return $response
                 ->withHeader('Access-Control-Allow-Origin', $this->getConfig()->isDevMode() ? '*' : $this->getConfig()->getFrontendUrl())
+                ->withHeader('Access-Control-Allow-Headers', '*')
                 ->withHeader('Content-Type', 'application/json');
         });
     }

@@ -12,7 +12,7 @@ use App\Misc\Util\DateUtil;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class RankingResponder implements ResponderInterface
+class RankingResponder extends AbstractResponder
 {
     public function respond(ServerRequestInterface $request, ResponseInterface $response, $args): ResponseInterface
     {
@@ -40,7 +40,6 @@ class RankingResponder implements ResponderInterface
             'ranking' => $ranking,
         ];
 
-        CommonUtil::insertMetadataInResponseArray($responseData);
         CommonUtil::camelizeArrayKeysRecursively($responseData);
 
         $response->getBody()->write(CommonUtil::jsonEncode($responseData));

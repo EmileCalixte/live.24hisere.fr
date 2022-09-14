@@ -1,6 +1,5 @@
 import config from '../config/config';
 import Util from "./Util";
-import {app} from "../components/App";
 
 class ApiUtil {
     static APP_BACKEND_URL = config.apiUrl
@@ -9,7 +8,7 @@ class ApiUtil {
      * Fetch minimal wrapper with verbose
      * @param url
      * @param init
-     * @returns {Response}
+     * @returns {Promise<Response>}
      */
     static fetch = async (url, init) => {
         let method = 'GET';
@@ -37,35 +36,30 @@ class ApiUtil {
     /**
      * @param url
      * @param init
-     * @param saveMetadata
-     * @returns {Response}
+     * @return {Promise<Response>}
      */
-    static performAPIRequest = async (url, init = {}, saveMetadata = true) => {
+    static performAPIRequest = async (url, init = {}) => {
         if (!url.startsWith(ApiUtil.APP_BACKEND_URL)) {
             url = ApiUtil.getBackendFullUrl(url);
         }
 
-        const response = await ApiUtil.fetch(url, init);
-
-        if (saveMetadata && response.ok) {
-            await ApiUtil.saveMetadataFromAPIRequest(response);
-        }
-
-        return response;
+        return await ApiUtil.fetch(url, init);
     }
 
-    static saveMetadataFromAPIRequest = async (fetchResponse) => {
-        try {
-            const responseClone = fetchResponse.clone();
-
-            const responseJson = await responseClone.json();
-            const metadata = responseJson.metadata;
-
-            await app.saveMetadata(metadata);
-        } catch (e) {
-            console.error('Unable to save response metadata');
-            console.error(e);
+    /**
+     * @param url
+     * @param accessToken
+     * @param init
+     * @return {Promise<Response>}
+     */
+    static performAuthenticatedAPIRequest = async (url, accessToken, init = {}) => {
+        if (!init.hasOwnProperty('headers') || !(init.headers instanceof Headers)) {
+            init.headers = new Headers();
         }
+
+        init.headers.append('Authorization', accessToken);
+
+        return ApiUtil.performAPIRequest(url, init);
     }
 }
 

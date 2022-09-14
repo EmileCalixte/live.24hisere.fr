@@ -11,7 +11,7 @@ use App\Misc\Util\CommonUtil;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class CategoriesResponder implements ResponderInterface
+class CategoriesResponder extends AbstractResponder
 {
     /**
      * Ordered categories array
@@ -60,7 +60,6 @@ class CategoriesResponder implements ResponderInterface
             ];
         }
 
-        CommonUtil::insertMetadataInResponseArray($responseData);
         CommonUtil::camelizeArrayKeysRecursively($responseData);
 
         $response->getBody()->write(CommonUtil::jsonEncode($responseData));

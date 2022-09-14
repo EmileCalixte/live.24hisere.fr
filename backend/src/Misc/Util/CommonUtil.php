@@ -132,11 +132,6 @@ class CommonUtil
         return $data;
     }
 
-    public static function insertMetadataInResponseArray(array &$responseArray)
-    {
-        $responseArray['metadata'] = self::getMetadata();
-    }
-
     public static function jsonEncode($data, int $flags = JSON_UNESCAPED_UNICODE, int $depth = 512): string
     {
         if(MainApp::getInstance()->getConfig()->isDevMode()) {

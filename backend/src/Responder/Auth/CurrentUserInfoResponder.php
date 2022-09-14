@@ -1,27 +1,25 @@
 <?php
 
+namespace App\Responder\Auth;
 
-namespace App\Responder;
-
-
-use App\Database\Entity\Runner;
-use App\Database\Repository\RepositoryProvider;
-use App\Database\Repository\RunnerRepository;
 use App\Misc\Util\CommonUtil;
+use App\Responder\AbstractResponder;
+use App\Security\Authentication\Authentication;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class RunnersResponder extends AbstractResponder
+class CurrentUserInfoResponder extends AbstractResponder
 {
     public function respond(ServerRequestInterface $request, ResponseInterface $response, $args): ResponseInterface
     {
-        /** @var RunnerRepository $runnerRepository */
-        $runnerRepository = RepositoryProvider::getRepository(Runner::class);
+        $this->requireAuthentication($request);
 
-        $runners = $runnerRepository->findAll(asArray: true);
+        $user = Authentication::getInstance()->getUser();
 
         $responseData = [
-            'runners' => $runners,
+            'user' => [
+                'username' => $user->getUsername(),
+            ],
         ];
 
         CommonUtil::camelizeArrayKeysRecursively($responseData);

@@ -9,16 +9,17 @@ use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
 
-// TODO uncomment to generate SQL table
-//#[Entity(repositoryClass: UserRepository::class)]
+#[Entity(repositoryClass: UserRepository::class)]
 #[Table('user')]
 class User
 {
+    private const USERNAME_MAX_LENGTH = 32;
+
     #[Id, GeneratedValue]
     #[Column]
     private int $id;
 
-    #[Column]
+    #[Column(length: self::USERNAME_MAX_LENGTH, unique: true)]
     private string $username;
 
     #[Column(name: 'password_hash')]
@@ -51,6 +52,14 @@ class User
 
     public function setUsername(string $username): void
     {
+        if (!ctype_alnum($username)) {
+            throw new \InvalidArgumentException('Username must be alphanumeric');
+        }
+
+        if (mb_strlen($username) > self::USERNAME_MAX_LENGTH) {
+            throw new \InvalidArgumentException('Username max length is ' . self::USERNAME_MAX_LENGTH . ' characters');
+        }
+
         $this->username = $username;
     }
 

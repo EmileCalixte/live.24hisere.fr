@@ -7,7 +7,7 @@
         display: table-cell !important;
     }
 
-    #app-header,
+    #app-header-main-section,
     #app-footer {
         display: none;
     }
