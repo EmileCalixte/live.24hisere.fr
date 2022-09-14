@@ -81,11 +81,17 @@ class App extends React.Component {
     }
 
     logout = () => {
+        ApiUtil.performAuthenticatedAPIRequest('/auth/logout', this.state.accessToken, {
+            method: 'POST',
+        });
+
         this.forgetAccessToken();
+
         this.setState({
             user: null,
             redirect: '/',
         });
+
         ToastUtil.getToastr().success('Vous avez été déconnecté');
     }
 
