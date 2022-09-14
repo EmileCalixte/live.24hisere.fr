@@ -38,6 +38,7 @@ const Login = () => {
         const accessToken = responseJson.accessToken;
 
         app.saveAccessToken(accessToken);
+        app.setState({user: undefined}); // Will be defined when the application has fetched user info
         setLoggedIn(true);
     }
 
