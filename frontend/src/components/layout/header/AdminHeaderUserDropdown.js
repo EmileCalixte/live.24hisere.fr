@@ -1,14 +1,14 @@
 import {app} from "../../App";
-import {useEffect, useRef} from "react";
+import {useCallback, useEffect, useRef} from "react";
 
 const AdminHeaderUserDropdown = ({hideDropdown}) => {
     const dropdownNode = useRef();
 
-    const onClickOutside = (e) => {
+    const onClickOutside = useCallback((e) => {
         if (!dropdownNode.current.contains(e.target)) {
             hideDropdown();
         }
-    }
+    }, [hideDropdown]);
 
     useEffect(() => {
         setTimeout(() => {
@@ -18,7 +18,7 @@ const AdminHeaderUserDropdown = ({hideDropdown}) => {
         return () => {
             document.removeEventListener('click', onClickOutside);
         }
-    }, []);
+    }, [onClickOutside]);
 
     return (
         <div className="options-dropdown" ref={dropdownNode}>
