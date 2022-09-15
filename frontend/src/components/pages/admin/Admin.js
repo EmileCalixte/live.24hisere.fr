@@ -1,6 +1,6 @@
 import {app} from "../../App";
 import {Navigate, Route, Routes} from "react-router-dom";
-import AdminHome from "./AdminHome";
+import AdminHome from "./home/AdminHome";
 import Runners from "./runners/Runners";
 
 // TODO
