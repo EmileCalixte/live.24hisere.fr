@@ -1,4 +1,3 @@
-import {Link} from "react-router-dom";
 import MenuItem from "./MenuItem";
 
 const menuItems = [
