@@ -4,13 +4,6 @@ import AdminHome from "./home/AdminHome";
 import Runners from "./runners/Runners";
 import RaceSettings from "./race-settings/RaceSettings";
 
-// TODO
-// const breadcrumbs = {
-//     runners: {
-//
-//     }
-// };
-
 const Admin = () => {
     if (app.state.user === null) {
         return (

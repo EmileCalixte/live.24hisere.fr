@@ -173,6 +173,24 @@ a, button.a {
     padding-bottom: 20px;
 }
 
+.breadcrumbs {
+    border: 1px solid #eee;
+    background-color: #fff;
+    list-style: none;
+    padding: 10px 20px;
+    margin-top: 1rem;
+}
+
+.breadcrumbs .crumb {
+    display: inline-block;
+}
+
+.breadcrumbs .crumb-separator {
+    font-size: 0.7em;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
 .options-dropdown {
     position: absolute;
     top: calc(100% + 5px);
