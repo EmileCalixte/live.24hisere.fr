@@ -50,7 +50,7 @@ class DAO extends Singleton
         return $this->database->rollBack();
     }
 
-    public function getRaceData(): array
+    public function getRaceData(bool $includeLastUpdateTime): array
     {
         $query = $this->getDatabase()->prepare('SELECT * FROM ' . self::TABLE_MISC);
         $query->execute();
@@ -62,6 +62,10 @@ class DAO extends Singleton
             $key = $row['key'];
             $value = $row['value'];
             $metadata[$key] = $value;
+        }
+
+        if (!$includeLastUpdateTime) {
+            unset($metadata['last_update_time']);
         }
 
         if (isset($metadata['first_lap_distance'])) {
