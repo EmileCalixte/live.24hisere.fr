@@ -123,10 +123,6 @@ class CommonUtil
     {
         $data = DAO::getInstance()->getRaceData();
 
-        $currentDate = (new \DateTimeImmutable())->setTimezone(new \DateTimeZone('Europe/Paris'));
-
-        $data['currentTime'] = DateUtil::convertDateToJavascriptDate($currentDate, false);
-
         CommonUtil::camelizeArrayKeysRecursively($data);
 
         return $data;
