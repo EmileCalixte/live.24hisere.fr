@@ -56,35 +56,35 @@ class DAO extends Singleton
         $query->execute();
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
-        $metadata = [];
+        $raceData = [];
 
         foreach ($result as $row) {
             $key = $row['key'];
             $value = $row['value'];
-            $metadata[$key] = $value;
+            $raceData[$key] = $value;
         }
 
         if (!$includeLastUpdateTime) {
-            unset($metadata['last_update_time']);
+            unset($raceData['last_update_time']);
         }
 
-        if (isset($metadata['first_lap_distance'])) {
-            $metadata['first_lap_distance'] = (float) $metadata['first_lap_distance'];
+        if (isset($raceData['first_lap_distance'])) {
+            $raceData['first_lap_distance'] = (float) $raceData['first_lap_distance'];
         }
 
-        if (isset($metadata['lap_distance'])) {
-            $metadata['lap_distance'] = (float) $metadata['lap_distance'];
+        if (isset($raceData['lap_distance'])) {
+            $raceData['lap_distance'] = (float) $raceData['lap_distance'];
         }
 
-        if (isset($metadata['last_update_time'])) {
-            $metadata['last_update_time'] = DateUtil::convertDatabaseDateToJavascriptDate($metadata['last_update_time'], false);
+        if (isset($raceData['last_update_time'])) {
+            $raceData['last_update_time'] = DateUtil::convertDatabaseDateToJavascriptDate($raceData['last_update_time'], false);
         }
 
-        if (isset($metadata['race_start_time'])) {
-            $metadata['race_start_time'] = DateUtil::convertDatabaseDateToJavascriptDate($metadata['race_start_time'], false);
+        if (isset($raceData['race_start_time'])) {
+            $raceData['race_start_time'] = DateUtil::convertDatabaseDateToJavascriptDate($raceData['race_start_time'], false);
         }
 
-        return $metadata;
+        return $raceData;
     }
 
     public function setLastUpdateTime(\DateTimeInterface $dateTime): false|int
