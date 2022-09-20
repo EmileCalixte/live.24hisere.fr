@@ -119,9 +119,9 @@ class CommonUtil
         return 'M10';
     }
 
-    public static function getMetadata(): array
+    public static function getRaceData(): array
     {
-        $data = DAO::getInstance()->getMetadata();
+        $data = DAO::getInstance()->getRaceData();
 
         $currentDate = (new \DateTimeImmutable())->setTimezone(new \DateTimeZone('Europe/Paris'));
 

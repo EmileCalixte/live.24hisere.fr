@@ -50,7 +50,7 @@ class DAO extends Singleton
         return $this->database->rollBack();
     }
 
-    public function getMetadata(): array
+    public function getRaceData(): array
     {
         $query = $this->getDatabase()->prepare('SELECT * FROM ' . self::TABLE_MISC);
         $query->execute();

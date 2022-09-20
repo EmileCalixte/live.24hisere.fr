@@ -12,7 +12,7 @@ class RaceDataResponder extends AbstractResponder
 {
     public function respond(ServerRequestInterface $request, ResponseInterface $response, $args): ResponseInterface
     {
-        $data = CommonUtil::getMetadata();
+        $data = CommonUtil::getRaceData();
 
         $response->getBody()->write(CommonUtil::jsonEncode($data));
 
