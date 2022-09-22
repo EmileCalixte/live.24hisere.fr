@@ -4,12 +4,15 @@ import {useEffect, useMemo, useState} from "react";
 import {app} from "../../../App";
 import ApiUtil from "../../../../util/ApiUtil";
 import CircularLoader from "../../../misc/CircularLoader";
+import Util from "../../../../util/Util";
 
 const RaceSettings = () => {
     const [isWaitingForInitialFetch, setIsWaitingForInitialFetch] = useState(true);
     const [raceStartTime, setRaceStartTime] = useState(null);
     const [firstLapDistance, setFirstLapDistance] = useState(0);
     const [lapDistance, setLapDistance] = useState(0);
+
+    const [submitButtonDisabled, setSubmitButtonDisabled] = useState(false);
 
     useEffect(() => {
         (async () => {
@@ -33,8 +36,8 @@ const RaceSettings = () => {
             return '';
         }
 
-        console.log(raceStartTime);
-        return '2001-02-03'; // TODO
+        // Date input value requires YYYY-MM-DD format
+        return Util.getDateStringFromDate(raceStartTime, '-').split('-').reverse().join('-');
     }, [raceStartTime]);
 
     const raceStartTimeTime = useMemo(() => {
@@ -42,19 +45,25 @@ const RaceSettings = () => {
             return '';
         }
 
-        console.log(raceStartTime);
-        return '01:23:45'; // TODO
+        return Util.getTimeStringFromDate(raceStartTime);
     }, [raceStartTime]);
 
     const onRaceStartTimeDateChange = (e) => {
-        console.log('RACE START DATE CHANGE', e);
+        setRaceStartTime(new Date(`${e.target.value}T${raceStartTimeTime}`));
     }
 
     const onRaceStartTimeTimeChange = (e) => {
-        console.log('RACE START TIME CHANGE', e);
+        setRaceStartTime(new Date(`${raceStartTimeDate}T${e.target.value}`));
     }
 
     const onSubmit = (e) => {
+        e.preventDefault();
+        setSubmitButtonDisabled(true);
+
+        const formData = new FormData();
+
+        // TODO
+
         console.log('SUBMIT');
     }
 
@@ -102,6 +111,7 @@ const RaceSettings = () => {
                                 <input type="number"
                                        className="input"
                                        defaultValue={firstLapDistance}
+                                       onChange={(e) => setFirstLapDistance(parseFloat(e.target.value))}
                                 />
                             </label>
                         </div>
@@ -112,9 +122,17 @@ const RaceSettings = () => {
                                 <input type="number"
                                        className="input"
                                        defaultValue={lapDistance}
+                                       onChange={(e) => setLapDistance(parseFloat(e.target.value))}
                                 />
                             </label>
                         </div>
+
+                        <button className="button mt-3"
+                                type="submit"
+                                disabled={submitButtonDisabled}
+                        >
+                            Enregistrer
+                        </button>
                     </form>
                 </div>
             </div>

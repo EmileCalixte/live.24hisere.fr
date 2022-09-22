@@ -28,7 +28,18 @@ class Util {
         return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
     }
 
-    static formatDateAsString = (date) => {
+    static formatDateAsString = (date, dateAndTimeSeparator = ', ', dateSeparator = '/', timeSeparator = ':') => {
+        if (!(date instanceof Date)) {
+            throw new Error('date must be a Date');
+        }
+
+        const dateString = Util.getDateStringFromDate(date, dateSeparator);
+        const timeString = Util.getTimeStringFromDate(date, timeSeparator);
+
+        return `${dateString}${dateAndTimeSeparator}${timeString}`;
+    }
+
+    static getDateStringFromDate = (date, separator = '/') => {
         if (!(date instanceof Date)) {
             throw new Error('date must be a Date');
         }
@@ -36,11 +47,20 @@ class Util {
         const year = date.getFullYear();
         const month = Util.prefixNumber(date.getMonth() + 1, 2);
         const day = Util.prefixNumber(date.getDate(), 2);
+
+        return `${day}${separator}${month}${separator}${year}`;
+    }
+
+    static getTimeStringFromDate = (date, separator = ':') => {
+        if (!(date instanceof Date)) {
+            throw new Error('date must be a Date');
+        }
+
         const hours = Util.prefixNumber(date.getHours(), 2);
         const minutes = Util.prefixNumber(date.getMinutes(), 2);
         const seconds = Util.prefixNumber(date.getSeconds(), 2);
 
-        return `${day}/${month}/${year}, ${hours}:${minutes}:${seconds}`;
+        return `${hours}${separator}${minutes}${separator}${seconds}`;
     }
 
     static formatFloatNumber = (number, decimalsCount) => {
