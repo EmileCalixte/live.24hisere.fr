@@ -160,6 +160,7 @@ class MainApp extends Singleton
             $response = $handler->handle($req);
             return $response
                 ->withHeader('Access-Control-Allow-Origin', $this->getConfig()->isDevMode() ? '*' : $this->getConfig()->getFrontendUrl())
+                ->withHeader('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE')
                 ->withHeader('Access-Control-Allow-Headers', '*')
                 ->withHeader('Content-Type', 'application/json');
         });
