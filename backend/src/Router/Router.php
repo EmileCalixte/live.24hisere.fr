@@ -5,7 +5,8 @@ namespace App\Router;
 
 
 use App\Responder\Admin\DeleteUserAccessTokensResponder;
-use App\Responder\Admin\RaceSettingsResponder;
+use App\Responder\Admin\RaceSettings\UpdateRaceSettingsResponder;
+use App\Responder\Admin\RaceSettings\RaceSettingsResponder;
 use App\Responder\Admin\UsersResponder;
 use App\Responder\Auth\CurrentUserInfoResponder;
 use App\Responder\Auth\LoginResponder;
@@ -49,6 +50,7 @@ class Router
         $this->registerRoute('/auth/current-user-info', CurrentUserInfoResponder::class, 'GET');
 
         $this->registerRoute('/admin/race-settings', RaceSettingsResponder::class, 'GET');
+        $this->registerRoute('/admin/race-settings', UpdateRaceSettingsResponder::class, 'PATCH');
         $this->registerRoute('/admin/users', UsersResponder::class, 'GET');
         $this->registerRoute('/admin/users/{id}/access-tokens', DeleteUserAccessTokensResponder::class, 'DELETE');
     }

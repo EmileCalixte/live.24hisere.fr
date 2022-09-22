@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Responder\Admin;
+namespace App\Responder\Admin\RaceSettings;
 
 use App\Misc\Util\CommonUtil;
 use App\Responder\AbstractResponder;

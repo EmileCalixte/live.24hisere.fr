@@ -5,6 +5,7 @@ import {app} from "../../../App";
 import ApiUtil from "../../../../util/ApiUtil";
 import CircularLoader from "../../../misc/CircularLoader";
 import Util from "../../../../util/Util";
+import ToastUtil from "../../../../util/ToastUtil";
 
 const RaceSettings = () => {
     const [isWaitingForInitialFetch, setIsWaitingForInitialFetch] = useState(true);
@@ -56,15 +57,37 @@ const RaceSettings = () => {
         setRaceStartTime(new Date(`${raceStartTimeDate}T${e.target.value}`));
     }
 
-    const onSubmit = (e) => {
+    const onSubmit = async (e) => {
         e.preventDefault();
         setSubmitButtonDisabled(true);
 
         const formData = new FormData();
+        formData.append('raceStartTime', Util.formatDateForApi(raceStartTime));
+        formData.append('firstLapDistance', firstLapDistance);
+        formData.append('lapDistance', lapDistance);
 
-        // TODO
+        const body = {
+            raceStartTime: Util.formatDateForApi(raceStartTime),
+            firstLapDistance,
+            lapDistance
+        }
 
-        console.log('SUBMIT');
+        const response = await ApiUtil.performAuthenticatedAPIRequest('/admin/race-settings', app.state.accessToken, {
+            method: 'PATCH',
+            body: JSON.stringify(body),
+        });
+
+        const responseJson = await response.json();
+
+        if (!response.ok) {
+            ToastUtil.getToastr().error("Une erreur est survenue");
+            console.error(responseJson);
+            setSubmitButtonDisabled(false);
+            return;
+        }
+
+        setSubmitButtonDisabled(false);
+        ToastUtil.getToastr().success('Paramètres enregistrés');
     }
 
     return (

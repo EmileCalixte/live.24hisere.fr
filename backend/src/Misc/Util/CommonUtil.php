@@ -128,6 +128,18 @@ class CommonUtil
         return $data;
     }
 
+    /**
+     * @param string $json
+     * @param bool $associative
+     * @param int $depth
+     * @param int $flags
+     * @throws \JsonException
+     */
+    public static function jsonDecode(string $json, bool $associative = true, int $depth = 512, int $flags = JSON_THROW_ON_ERROR)
+    {
+        return json_decode($json, $associative, $depth, $flags);
+    }
+
     public static function jsonEncode($data, int $flags = JSON_UNESCAPED_UNICODE, int $depth = 512): string
     {
         if(MainApp::getInstance()->getConfig()->isDevMode()) {
