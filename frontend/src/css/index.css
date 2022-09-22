@@ -137,23 +137,6 @@ a, button.a {
     margin-right: 10px;
 }
 
-#app-header-main-section .header-fetch-loader i {
-    animation-duration: 0.5s;
-    animation-name: header-fetch-loader;
-    animation-iteration-count: infinite;
-    animation-timing-function: linear;
-}
-
-@keyframes header-fetch-loader {
-    from {
-        transform: rotate(0);
-    }
-
-    to {
-        transform: rotate(360deg);
-    }
-}
-
 #app-header-main-section .header-timer-container {
     height: 100%;
 
@@ -167,6 +150,23 @@ a, button.a {
 
     font-weight: 700;
     color: #444;
+}
+
+.circular-loader i {
+    animation-duration: 0.5s;
+    animation-name: circular-loader;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+@keyframes circular-loader {
+    from {
+        transform: rotate(0);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 #app-content {

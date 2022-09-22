@@ -1,11 +1,10 @@
 import React from "react";
+import CircularLoader from "../../misc/CircularLoader";
 
 const HeaderFetchLoader = () => {
     return (
         <div className="header-fetch-loader-container">
-            <span className="header-fetch-loader">
-                <i className="fa-solid fa-circle-notch"/>
-            </span>
+            <CircularLoader />
         </div>
     )
 }

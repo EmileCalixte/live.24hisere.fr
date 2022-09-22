@@ -3,6 +3,7 @@ import Crumb from "../../../layout/breadcrumbs/Crumb";
 import {useEffect, useMemo, useState} from "react";
 import {app} from "../../../App";
 import ApiUtil from "../../../../util/ApiUtil";
+import CircularLoader from "../../../misc/CircularLoader";
 
 const RaceSettings = () => {
     const [isWaitingForInitialFetch, setIsWaitingForInitialFetch] = useState(true);
@@ -69,7 +70,7 @@ const RaceSettings = () => {
             </div>
 
             {isWaitingForInitialFetch &&
-            <span>LOADER</span>
+            <CircularLoader />
             }
 
             {!isWaitingForInitialFetch &&
