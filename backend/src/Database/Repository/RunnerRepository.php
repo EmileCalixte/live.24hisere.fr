@@ -42,6 +42,17 @@ class RunnerRepository extends EntityRepository
         }
     }
 
+    public function countByRace(int $raceId): int
+    {
+        $query = $this->createQueryBuilder('r')
+            ->select('COUNT(r.id)')
+            ->andWhere("r.race = :raceId")
+            ->setParameter('raceId', $raceId)
+            ->getQuery();
+
+        return $query->getSingleResult(Query::HYDRATE_SINGLE_SCALAR);
+    }
+
     /**
      * @return string[] The list of category codes for which there is at least one runner
      * @throws \Doctrine\DBAL\Exception

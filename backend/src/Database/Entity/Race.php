@@ -3,6 +3,8 @@
 namespace App\Database\Entity;
 
 use App\Database\Repository\RaceRepository;
+use App\Database\Repository\RepositoryProvider;
+use App\Database\Repository\RunnerRepository;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
@@ -95,5 +97,13 @@ class Race
     public function setRunners(PersistentCollection $runners): void
     {
         $this->runners = $runners;
+    }
+
+    public function getRunnerCount(): int
+    {
+        /** @var RunnerRepository $runnerRepository */
+        $runnerRepository = RepositoryProvider::getRepository(Runner::class);
+
+        return $runnerRepository->countByRace($this->getId());
     }
 }
