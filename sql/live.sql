@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.0
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : database
--- Généré le : lun. 25 avr. 2022 à 18:51
--- Version du serveur :  10.3.34-MariaDB-1:10.3.34+maria~focal
--- Version de PHP : 7.4.20
+-- Généré le : ven. 23 sep. 2022 à 12:15
+-- Version du serveur : 10.3.35-MariaDB-1:10.3.35+maria~focal
+-- Version de PHP : 8.0.19
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -6021,6 +6021,27 @@ INSERT INTO `passage` (`id`, `runner_id`, `time`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `race`
+--
+
+CREATE TABLE `race` (
+  `id` int(11) NOT NULL,
+  `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `startTime` datetime NOT NULL,
+  `initial_distance` decimal(10,3) NOT NULL,
+  `lap_distance` decimal(10,3) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `race`
+--
+
+INSERT INTO `race` (`id`, `name`, `startTime`, `initial_distance`, `lap_distance`) VALUES
+(1, '24 heures - Solo', '2022-04-02 09:00:00', '297.000', '1015.540');
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `runner`
 --
 
@@ -6137,6 +6158,13 @@ ALTER TABLE `passage`
   ADD KEY `IDX_2B258F673C7FB593` (`runner_id`);
 
 --
+-- Index pour la table `race`
+--
+ALTER TABLE `race`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `UNIQ_DA6FBBAF5E237E06` (`name`);
+
+--
 -- Index pour la table `runner`
 --
 ALTER TABLE `runner`
@@ -6152,6 +6180,12 @@ ALTER TABLE `user`
 --
 -- AUTO_INCREMENT pour les tables déchargées
 --
+
+--
+-- AUTO_INCREMENT pour la table `race`
+--
+ALTER TABLE `race`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT pour la table `user`
