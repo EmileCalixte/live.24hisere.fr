@@ -26,6 +26,9 @@ class Race
     #[Column(length: self::RACE_MAX_LENGTH, unique: true)]
     private string $name;
 
+    #[Column]
+    private int $order;
+
     #[Column(type: "datetime")]
     private \DateTime $startTime;
 
@@ -57,6 +60,16 @@ class Race
     public function setName(string $name): void
     {
         $this->name = $name;
+    }
+
+    public function getOrder(): int
+    {
+        return $this->order;
+    }
+
+    public function setOrder(int $order): void
+    {
+        $this->order = $order;
     }
 
     public function getStartTime(): \DateTime

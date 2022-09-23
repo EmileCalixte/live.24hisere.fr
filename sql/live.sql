@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : database
--- Généré le : ven. 23 sep. 2022 à 18:51
+-- Généré le : ven. 23 sep. 2022 à 21:05
 -- Version du serveur : 10.3.35-MariaDB-1:10.3.35+maria~focal
 -- Version de PHP : 8.0.19
 
@@ -6029,16 +6029,17 @@ CREATE TABLE `race` (
   `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `startTime` datetime NOT NULL,
   `initial_distance` decimal(10,3) NOT NULL,
-  `lap_distance` decimal(10,3) NOT NULL
+  `lap_distance` decimal(10,3) NOT NULL,
+  `order` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `race`
 --
 
-INSERT INTO `race` (`id`, `name`, `startTime`, `initial_distance`, `lap_distance`) VALUES
-(1, '24 heures - Solo', '2022-04-02 09:00:00', '297.000', '1015.540'),
-(2, '24 heures - Equipes', '2022-04-02 09:00:00', '297.000', '1015.540');
+INSERT INTO `race` (`id`, `name`, `startTime`, `initial_distance`, `lap_distance`, `order`) VALUES
+(1, '24 heures - Solo', '2022-04-02 09:00:00', '297.000', '1015.540', 1),
+(2, '24 heures - Equipes', '2022-04-02 09:00:00', '297.000', '1015.540', 2);
 
 -- --------------------------------------------------------
 
