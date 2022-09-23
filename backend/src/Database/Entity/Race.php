@@ -7,7 +7,9 @@ use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\Table;
+use Doctrine\ORM\PersistentCollection;
 
 #[Entity(repositoryClass: RaceRepository::class)]
 #[Table('race')]
@@ -31,6 +33,9 @@ class Race
 
     #[Column(name: "lap_distance", type: "decimal", precision: 10, scale: 3)]
     private float $lapDistance;
+
+    #[OneToMany(targetEntity: Runner::class, mappedBy: "race")]
+    private PersistentCollection $runners;
 
     public function getId(): int
     {
@@ -80,5 +85,15 @@ class Race
     public function setLapDistance(float $lapDistance): void
     {
         $this->lapDistance = $lapDistance;
+    }
+
+    public function getRunners(): PersistentCollection
+    {
+        return $this->runners;
+    }
+
+    public function setRunners(PersistentCollection $runners): void
+    {
+        $this->runners = $runners;
     }
 }

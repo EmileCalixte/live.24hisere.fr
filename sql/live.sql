@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : database
--- Généré le : ven. 23 sep. 2022 à 12:15
+-- Généré le : ven. 23 sep. 2022 à 18:51
 -- Version du serveur : 10.3.35-MariaDB-1:10.3.35+maria~focal
 -- Version de PHP : 8.0.19
 
@@ -6037,7 +6037,8 @@ CREATE TABLE `race` (
 --
 
 INSERT INTO `race` (`id`, `name`, `startTime`, `initial_distance`, `lap_distance`) VALUES
-(1, '24 heures - Solo', '2022-04-02 09:00:00', '297.000', '1015.540');
+(1, '24 heures - Solo', '2022-04-02 09:00:00', '297.000', '1015.540'),
+(2, '24 heures - Equipes', '2022-04-02 09:00:00', '297.000', '1015.540');
 
 -- --------------------------------------------------------
 
@@ -6052,67 +6053,68 @@ CREATE TABLE `runner` (
   `lastname` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `gender` varchar(1) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `birth_year` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `category` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL
+  `category` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `race_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `runner`
 --
 
-INSERT INTO `runner` (`id`, `is_team`, `firstname`, `lastname`, `gender`, `birth_year`, `category`) VALUES
-(201, 0, 'Firstname201', 'Lastname201', 'M', '1958', 'M5'),
-(202, 0, 'Firstname202', 'Lastname202', 'M', '1990', 'SE'),
-(203, 0, 'Firstname203', 'Lastname203', 'M', '1964', 'M4'),
-(204, 0, 'Firstname204', 'Lastname204', 'M', '1988', 'SE'),
-(205, 0, 'Firstname205', 'Lastname205', 'F', '1997', 'SE'),
-(206, 0, 'Firstname206', 'Lastname206', 'M', '1977', 'M2'),
-(207, 0, 'Firstname207', 'Lastname207', 'M', '1980', 'M1'),
-(208, 0, 'Firstname208', 'Lastname208', 'M', '1965', 'M4'),
-(209, 0, 'Firstname209', 'Lastname209', 'F', '1972', 'M3'),
-(210, 0, 'Firstname210', 'Lastname210', 'F', '1959', 'M5'),
-(211, 0, 'Firstname211', 'Lastname211', 'M', '1949', 'M7'),
-(212, 0, 'Firstname212', 'Lastname212', 'M', '1966', 'M4'),
-(213, 0, 'Firstname213', 'Lastname213', 'M', '1969', 'M3'),
-(214, 0, 'Firstname214', 'Lastname214', 'F', '1959', 'M5'),
-(215, 0, 'Firstname215', 'Lastname215', 'M', '1956', 'M6'),
-(216, 0, 'Firstname216', 'Lastname216', 'F', '1980', 'M1'),
-(217, 0, 'Firstname217', 'Lastname217', 'M', '1956', 'M6'),
-(218, 0, 'Firstname218', 'Lastname218', 'M', '1962', 'M5'),
-(219, 0, 'Firstname219', 'Lastname219', 'M', '1975', 'M2'),
-(220, 0, 'Firstname220', 'Lastname220', 'M', '1960', 'M5'),
-(221, 0, 'Firstname221', 'Lastname221', 'M', '1947', 'M8'),
-(222, 0, 'Firstname222', 'Lastname222', 'F', '1973', 'M2'),
-(223, 0, 'Firstname223', 'Lastname223', 'M', '1982', 'M1'),
-(224, 0, 'Firstname224', 'Lastname224', 'M', '1977', 'M2'),
-(225, 0, 'Firstname225', 'Lastname225', 'M', '1987', 'M0'),
-(226, 0, 'Firstname226', 'Lastname226', 'F', '1969', 'M3'),
-(227, 0, 'Firstname227', 'Lastname227', 'M', '1964', 'M4'),
-(228, 0, 'Firstname228', 'Lastname228', 'M', '1945', 'M8'),
-(229, 0, 'Firstname229', 'Lastname229', 'M', '1952', 'M7'),
-(230, 0, 'Firstname230', 'Lastname230', 'M', '1949', 'M7'),
-(231, 0, 'Firstname231', 'Lastname231', 'M', '1960', 'M5'),
-(232, 0, 'Firstname232', 'Lastname232', 'M', '1997', 'SE'),
-(233, 0, 'Firstname233', 'Lastname233', 'M', '1961', 'M5'),
-(234, 0, 'Firstname234', 'Lastname234', 'M', '1977', 'M2'),
-(235, 0, 'Firstname235', 'Lastname235', 'M', '1962', 'M5'),
-(236, 0, 'Firstname236', 'Lastname236', 'M', '1974', 'M2'),
-(237, 0, 'Firstname237', 'Lastname237', 'M', '1987', 'M0'),
-(238, 0, 'Firstname238', 'Lastname238', 'M', '1981', 'M1'),
-(239, 0, 'Firstname239', 'Lastname239', 'F', '1994', 'SE'),
-(240, 0, 'Firstname240', 'Lastname240', 'M', '1947', 'M8'),
-(241, 0, 'Firstname241', 'Lastname241', 'F', '1970', 'M3'),
-(242, 0, 'Firstname242', 'Lastname242', 'F', '1966', 'M4'),
-(243, 0, 'Firstname243', 'Lastname243', 'M', '1971', 'M3'),
-(244, 0, 'Firstname244', 'Lastname244', 'M', '1964', 'M4'),
-(245, 0, 'Firstname245', 'Lastname245', 'M', '1957', 'M6'),
-(246, 0, 'Firstname246', 'Lastname246', 'F', '1966', 'M4'),
-(247, 0, 'Firstname247', 'Lastname247', 'F', '1964', 'M4'),
-(248, 0, 'Firstname248', 'Lastname248', 'M', '1967', 'M4'),
-(249, 0, 'Firstname249', 'Lastname249', 'M', '1969', 'M3'),
-(250, 0, 'Firstname250', 'Lastname250', 'M', '1963', 'M4'),
-(251, 0, 'Firstname251', 'Lastname251', 'F', '1962', 'M5'),
-(252, 0, 'Firstname252', 'Lastname252', 'F', '1944', 'M8'),
-(601, 1, 'Team601', '', NULL, NULL, 'ES');
+INSERT INTO `runner` (`id`, `is_team`, `firstname`, `lastname`, `gender`, `birth_year`, `category`, `race_id`) VALUES
+(201, 0, 'Firstname201', 'Lastname201', 'M', '1958', 'M5', 1),
+(202, 0, 'Firstname202', 'Lastname202', 'M', '1990', 'SE', 1),
+(203, 0, 'Firstname203', 'Lastname203', 'M', '1964', 'M4', 1),
+(204, 0, 'Firstname204', 'Lastname204', 'M', '1988', 'SE', 1),
+(205, 0, 'Firstname205', 'Lastname205', 'F', '1997', 'SE', 1),
+(206, 0, 'Firstname206', 'Lastname206', 'M', '1977', 'M2', 1),
+(207, 0, 'Firstname207', 'Lastname207', 'M', '1980', 'M1', 1),
+(208, 0, 'Firstname208', 'Lastname208', 'M', '1965', 'M4', 1),
+(209, 0, 'Firstname209', 'Lastname209', 'F', '1972', 'M3', 1),
+(210, 0, 'Firstname210', 'Lastname210', 'F', '1959', 'M5', 1),
+(211, 0, 'Firstname211', 'Lastname211', 'M', '1949', 'M7', 1),
+(212, 0, 'Firstname212', 'Lastname212', 'M', '1966', 'M4', 1),
+(213, 0, 'Firstname213', 'Lastname213', 'M', '1969', 'M3', 1),
+(214, 0, 'Firstname214', 'Lastname214', 'F', '1959', 'M5', 1),
+(215, 0, 'Firstname215', 'Lastname215', 'M', '1956', 'M6', 1),
+(216, 0, 'Firstname216', 'Lastname216', 'F', '1980', 'M1', 1),
+(217, 0, 'Firstname217', 'Lastname217', 'M', '1956', 'M6', 1),
+(218, 0, 'Firstname218', 'Lastname218', 'M', '1962', 'M5', 1),
+(219, 0, 'Firstname219', 'Lastname219', 'M', '1975', 'M2', 1),
+(220, 0, 'Firstname220', 'Lastname220', 'M', '1960', 'M5', 1),
+(221, 0, 'Firstname221', 'Lastname221', 'M', '1947', 'M8', 1),
+(222, 0, 'Firstname222', 'Lastname222', 'F', '1973', 'M2', 1),
+(223, 0, 'Firstname223', 'Lastname223', 'M', '1982', 'M1', 1),
+(224, 0, 'Firstname224', 'Lastname224', 'M', '1977', 'M2', 1),
+(225, 0, 'Firstname225', 'Lastname225', 'M', '1987', 'M0', 1),
+(226, 0, 'Firstname226', 'Lastname226', 'F', '1969', 'M3', 1),
+(227, 0, 'Firstname227', 'Lastname227', 'M', '1964', 'M4', 1),
+(228, 0, 'Firstname228', 'Lastname228', 'M', '1945', 'M8', 1),
+(229, 0, 'Firstname229', 'Lastname229', 'M', '1952', 'M7', 1),
+(230, 0, 'Firstname230', 'Lastname230', 'M', '1949', 'M7', 1),
+(231, 0, 'Firstname231', 'Lastname231', 'M', '1960', 'M5', 1),
+(232, 0, 'Firstname232', 'Lastname232', 'M', '1997', 'SE', 1),
+(233, 0, 'Firstname233', 'Lastname233', 'M', '1961', 'M5', 1),
+(234, 0, 'Firstname234', 'Lastname234', 'M', '1977', 'M2', 1),
+(235, 0, 'Firstname235', 'Lastname235', 'M', '1962', 'M5', 1),
+(236, 0, 'Firstname236', 'Lastname236', 'M', '1974', 'M2', 1),
+(237, 0, 'Firstname237', 'Lastname237', 'M', '1987', 'M0', 1),
+(238, 0, 'Firstname238', 'Lastname238', 'M', '1981', 'M1', 1),
+(239, 0, 'Firstname239', 'Lastname239', 'F', '1994', 'SE', 1),
+(240, 0, 'Firstname240', 'Lastname240', 'M', '1947', 'M8', 1),
+(241, 0, 'Firstname241', 'Lastname241', 'F', '1970', 'M3', 1),
+(242, 0, 'Firstname242', 'Lastname242', 'F', '1966', 'M4', 1),
+(243, 0, 'Firstname243', 'Lastname243', 'M', '1971', 'M3', 1),
+(244, 0, 'Firstname244', 'Lastname244', 'M', '1964', 'M4', 1),
+(245, 0, 'Firstname245', 'Lastname245', 'M', '1957', 'M6', 1),
+(246, 0, 'Firstname246', 'Lastname246', 'F', '1966', 'M4', 1),
+(247, 0, 'Firstname247', 'Lastname247', 'F', '1964', 'M4', 1),
+(248, 0, 'Firstname248', 'Lastname248', 'M', '1967', 'M4', 1),
+(249, 0, 'Firstname249', 'Lastname249', 'M', '1969', 'M3', 1),
+(250, 0, 'Firstname250', 'Lastname250', 'M', '1963', 'M4', 1),
+(251, 0, 'Firstname251', 'Lastname251', 'F', '1962', 'M5', 1),
+(252, 0, 'Firstname252', 'Lastname252', 'F', '1944', 'M8', 1),
+(601, 1, 'Team601', '', NULL, NULL, 'ES', 2);
 
 -- --------------------------------------------------------
 
@@ -6168,7 +6170,8 @@ ALTER TABLE `race`
 -- Index pour la table `runner`
 --
 ALTER TABLE `runner`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `IDX_F92B8B3E6E59D40D` (`race_id`);
 
 --
 -- Index pour la table `user`
@@ -6185,7 +6188,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT pour la table `race`
 --
 ALTER TABLE `race`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT pour la table `user`
@@ -6208,6 +6211,12 @@ ALTER TABLE `access_token`
 --
 ALTER TABLE `passage`
   ADD CONSTRAINT `FK_2B258F673C7FB593` FOREIGN KEY (`runner_id`) REFERENCES `runner` (`id`);
+
+--
+-- Contraintes pour la table `runner`
+--
+ALTER TABLE `runner`
+  ADD CONSTRAINT `FK_F92B8B3E6E59D40D` FOREIGN KEY (`race_id`) REFERENCES `race` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

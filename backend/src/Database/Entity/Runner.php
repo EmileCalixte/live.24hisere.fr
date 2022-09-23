@@ -7,6 +7,8 @@ use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\PersistentCollection;
@@ -36,6 +38,10 @@ class Runner
 
     #[Column(length: 15)]
     private string $category;
+
+    #[ManyToOne(targetEntity: Race::class)]
+    #[JoinColumn(nullable: false)]
+    private Race $race;
 
     #[OneToMany(targetEntity: Passage::class, mappedBy: "runner")]
     private PersistentCollection $passages;
@@ -108,6 +114,16 @@ class Runner
     public function setCategory(string $category): void
     {
         $this->category = $category;
+    }
+
+    public function getRace(): Race
+    {
+        return $this->race;
+    }
+
+    public function setRace(Race $race): void
+    {
+        $this->race = $race;
     }
 
     public function getPassages(): PersistentCollection
