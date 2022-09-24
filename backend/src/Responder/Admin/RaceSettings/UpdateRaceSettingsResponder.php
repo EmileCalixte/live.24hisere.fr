@@ -10,7 +10,6 @@ use App\Validator\PropertyValidator\IsDateString;
 use App\Validator\PropertyValidator\IsFloat;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\Exception\HttpBadRequestException;
 
 class UpdateRaceSettingsResponder extends AbstractResponder
 {
@@ -18,17 +17,7 @@ class UpdateRaceSettingsResponder extends AbstractResponder
     {
         $this->requireAuthentication($request);
 
-        $requestBody = $request->getBody()->getContents();
-
-        try {
-            $bodyParams = CommonUtil::jsonDecode($requestBody);
-        } catch (\JsonException $e) {
-            throw new HttpBadRequestException($request, null, $e);
-        }
-
-        if (!is_array($bodyParams)) {
-            throw new HttpBadRequestException($request);
-        }
+        $bodyParams = $this->getBodyJsonAsArray($request);
 
         $bodyValidator = new ArrayValidator($bodyParams);
         $bodyValidator->addValidator('raceStartTime', new IsDateString('Y-m-d\TH:i:s'));

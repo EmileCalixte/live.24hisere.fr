@@ -31,4 +31,13 @@ class RaceRepository extends EntityRepository
             return null;
         }
     }
+
+    public function getMaxOrder()
+    {
+        $query = $this->createQueryBuilder('r')
+            ->select("MAX(r.order)")
+            ->getQuery();
+
+        return $query->getSingleResult(Query::HYDRATE_SINGLE_SCALAR);
+    }
 }

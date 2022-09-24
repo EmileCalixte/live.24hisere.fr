@@ -17,19 +17,19 @@ use Doctrine\ORM\PersistentCollection;
 #[Table('race')]
 class Race
 {
-    private const RACE_MAX_LENGTH = 50;
+    public const NAME_MAX_LENGTH = 50;
 
     #[Id, GeneratedValue]
     #[Column]
     private int $id;
 
-    #[Column(length: self::RACE_MAX_LENGTH, unique: true)]
+    #[Column(length: self::NAME_MAX_LENGTH, unique: true)]
     private string $name;
 
     #[Column(name:"is_public")]
     private bool $isPublic;
 
-    #[Column]
+    #[Column(name:"`order`")] // "order" is a reserved keyword in SQL (https://stackoverflow.com/a/41166639/13208770)
     private int $order;
 
     #[Column(type: "datetime")]

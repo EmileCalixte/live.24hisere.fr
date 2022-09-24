@@ -2,8 +2,10 @@
 
 namespace App\Responder;
 
+use App\Misc\Util\CommonUtil;
 use App\Security\Authentication\Authentication;
 use Psr\Http\Message\ServerRequestInterface;
+use Slim\Exception\HttpBadRequestException;
 use Slim\Exception\HttpForbiddenException;
 use Slim\Exception\HttpUnauthorizedException;
 
@@ -25,6 +27,28 @@ abstract class AbstractResponder implements ResponderInterface
         if (is_null($authentication->getUser())) {
             $this->throwUnauthorizedException($authentication, $request);
         }
+    }
+
+    /**
+     * @param ServerRequestInterface $request
+     * @return array An associative array representing the json passed in request body
+     * @throws HttpBadRequestException If body content cannot be parsed or is not a json object
+     */
+    protected function getBodyJsonAsArray(ServerRequestInterface $request): array
+    {
+        $requestBody = $request->getBody()->getContents();
+
+        try {
+            $bodyParams = CommonUtil::jsonDecode($requestBody);
+        } catch (\JsonException $e) {
+            throw new HttpBadRequestException($request, null, $e);
+        }
+
+        if (!is_array($bodyParams)) {
+            throw new HttpBadRequestException($request);
+        }
+
+        return $bodyParams;
     }
 
     /**
