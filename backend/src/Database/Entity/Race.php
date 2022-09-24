@@ -26,6 +26,9 @@ class Race
     #[Column(length: self::RACE_MAX_LENGTH, unique: true)]
     private string $name;
 
+    #[Column(name:"is_public")]
+    private bool $isPublic;
+
     #[Column]
     private int $order;
 
@@ -60,6 +63,16 @@ class Race
     public function setName(string $name): void
     {
         $this->name = $name;
+    }
+
+    public function isPublic(): bool
+    {
+        return $this->isPublic;
+    }
+
+    public function setIsPublic(bool $isPublic): void
+    {
+        $this->isPublic = $isPublic;
     }
 
     public function getOrder(): int
