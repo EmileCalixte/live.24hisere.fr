@@ -11,7 +11,7 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
     "toastr2": "^3.0.0-alpha.18",
-    "web-vitals": "^3.0.1",
+    "web-vitals": "^3.0.3",
     "xlsx": "^0.18.5"
   },
   "scripts": {
