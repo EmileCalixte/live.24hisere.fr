@@ -5,9 +5,9 @@ namespace App\Router;
 
 
 use App\Responder\Admin\DeleteUserAccessTokensResponder;
+use App\Responder\Admin\Races\CreateRaceResponder;
 use App\Responder\Admin\Races\DeleteRaceResponder;
 use App\Responder\Admin\Races\RacesResponder;
-use App\Responder\Admin\RaceSettings\CreateRaceResponder;
 use App\Responder\Admin\RaceSettings\UpdateRaceSettingsResponder;
 use App\Responder\Admin\RaceSettings\RaceSettingsResponder;
 use App\Responder\Admin\UsersResponder;

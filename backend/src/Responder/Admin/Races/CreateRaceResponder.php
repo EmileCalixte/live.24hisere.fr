@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Responder\Admin\RaceSettings;
+namespace App\Responder\Admin\Races;
 
 use App\Database\Entity\Race;
 use App\Database\Repository\RaceRepository;
