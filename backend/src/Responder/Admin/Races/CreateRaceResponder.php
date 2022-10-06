@@ -10,11 +10,11 @@ use App\Misc\Util\CommonUtil;
 use App\Misc\Util\DateUtil;
 use App\Responder\AbstractResponder;
 use App\Validator\ArrayValidator;
-use App\Validator\PropertyValidator\IsBool;
-use App\Validator\PropertyValidator\IsDateString;
-use App\Validator\PropertyValidator\IsFloat;
 use App\Validator\PropertyValidator\IsRequired;
-use App\Validator\PropertyValidator\IsString;
+use App\Validator\PropertyValidator\TypeValidator\IsBool;
+use App\Validator\PropertyValidator\TypeValidator\IsDateString;
+use App\Validator\PropertyValidator\TypeValidator\IsFloat;
+use App\Validator\PropertyValidator\TypeValidator\IsString;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

@@ -6,8 +6,8 @@ use App\MainApp;
 use App\Misc\Util\CommonUtil;
 use App\Responder\AbstractResponder;
 use App\Validator\ArrayValidator;
-use App\Validator\PropertyValidator\IsDateString;
-use App\Validator\PropertyValidator\IsFloat;
+use App\Validator\PropertyValidator\TypeValidator\IsDateString;
+use App\Validator\PropertyValidator\TypeValidator\IsFloat;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

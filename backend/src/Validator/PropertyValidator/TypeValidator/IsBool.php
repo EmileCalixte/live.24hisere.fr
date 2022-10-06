@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Validator\PropertyValidator;
+namespace App\Validator\PropertyValidator\TypeValidator;
+
+use App\Validator\PropertyValidator\AbstractPropertyValidator;
 
 class IsBool extends AbstractPropertyValidator
 {
