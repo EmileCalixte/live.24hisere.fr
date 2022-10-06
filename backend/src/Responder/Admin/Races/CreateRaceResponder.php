@@ -29,6 +29,7 @@ class CreateRaceResponder extends AbstractResponder
         $bodyValidator = new ArrayValidator($bodyParams);
         $bodyValidator->addValidator('name', new IsRequired());
         $bodyValidator->addValidator('name', new IsString(maxLength: Race::NAME_MAX_LENGTH));
+        // TODO ADD VALIDATOR HERE TO CHECK IF RACE WITH SAME NAME ALREADY EXISTS
         $bodyValidator->addValidator('isPublic', new IsRequired());
         $bodyValidator->addValidator('isPublic', new IsBool());
         $bodyValidator->addValidator('startTime', new IsRequired());
@@ -71,6 +72,16 @@ class CreateRaceResponder extends AbstractResponder
         $entityManager->persist($race);
         $entityManager->flush();
 
-        dd($race);
+        $raceAsArray = $raceRepository->findById($race->getId(), asArray: true);
+        $raceAsArray['startTime'] = DateUtil::convertDateToJavascriptDate($raceAsArray['startTime']);
+        $raceAsArray['runnerCount'] = $race->getRunnerCount();
+
+        $responseData = $raceAsArray;
+
+        CommonUtil::camelizeArrayKeysRecursively($responseData);
+
+        $response->getBody()->write(CommonUtil::jsonEncode($responseData));
+
+        return $response->withStatus(201);
     }
 }
