@@ -10,6 +10,7 @@ use App\Misc\Util\CommonUtil;
 use App\Misc\Util\DateUtil;
 use App\Responder\AbstractResponder;
 use App\Validator\ArrayValidator;
+use App\Validator\PropertyValidator\CustomValidator\RaceNameIsNotUsedValidator;
 use App\Validator\PropertyValidator\IsRequired;
 use App\Validator\PropertyValidator\TypeValidator\IsBool;
 use App\Validator\PropertyValidator\TypeValidator\IsDateString;
@@ -29,7 +30,7 @@ class CreateRaceResponder extends AbstractResponder
         $bodyValidator = new ArrayValidator($bodyParams);
         $bodyValidator->addValidator('name', new IsRequired());
         $bodyValidator->addValidator('name', new IsString(maxLength: Race::NAME_MAX_LENGTH));
-        // TODO ADD VALIDATOR HERE TO CHECK IF RACE WITH SAME NAME ALREADY EXISTS
+        $bodyValidator->addValidator('name', new RaceNameIsNotUsedValidator());
         $bodyValidator->addValidator('isPublic', new IsRequired());
         $bodyValidator->addValidator('isPublic', new IsBool());
         $bodyValidator->addValidator('startTime', new IsRequired());

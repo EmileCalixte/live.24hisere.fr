@@ -32,6 +32,20 @@ class RaceRepository extends EntityRepository
         }
     }
 
+    public function findByName(string $name, bool $asArray = false): Race|array|null
+    {
+        $query = $this->createQueryBuilder('r')
+            ->andWhere("r.name = :name")
+            ->setParameter('name', $name)
+            ->getQuery();
+
+        try {
+            return $query->getSingleResult($asArray ? Query::HYDRATE_ARRAY : Query::HYDRATE_OBJECT);
+        } catch (NoResultException) {
+            return null;
+        }
+    }
+
     public function getMaxOrder()
     {
         $query = $this->createQueryBuilder('r')
