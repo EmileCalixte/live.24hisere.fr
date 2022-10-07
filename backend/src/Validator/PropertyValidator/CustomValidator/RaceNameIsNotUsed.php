@@ -7,7 +7,7 @@ use App\Database\Repository\RaceRepository;
 use App\Database\Repository\RepositoryProvider;
 use App\Validator\PropertyValidator\AbstractPropertyValidator;
 
-class RaceNameIsNotUsedValidator extends AbstractPropertyValidator
+class RaceNameIsNotUsed extends AbstractPropertyValidator
 {
     public function validate(): bool
     {
