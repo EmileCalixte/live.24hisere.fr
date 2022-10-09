@@ -5,7 +5,9 @@ namespace App\Responder\Admin\Races;
 use App\Database\Entity\Race;
 use App\Database\Repository\RaceRepository;
 use App\Database\Repository\RepositoryProvider;
+use App\MainApp;
 use App\Misc\Util\CommonUtil;
+use App\Misc\Util\DateUtil;
 use App\Responder\AbstractResponder;
 use App\Validator\ArrayValidator;
 use App\Validator\PropertyValidator\CustomValidator\RaceNameIsNotUsed;
@@ -56,6 +58,51 @@ class UpdateRaceResponder extends AbstractResponder
             return $response->withStatus(422);
         }
 
-        dd('TODO UPDATE');
+        $this->updateRace($race, $bodyParams);
+
+        $raceAsArray = $raceRepository->findById($race->getId(), asArray: true);
+        $raceAsArray['startTime'] = DateUtil::convertDateToJavascriptDate($raceAsArray['startTime']);
+        $raceAsArray['runnerCount'] = $race->getRunnerCount();
+
+        $responseData = $raceAsArray;
+
+        CommonUtil::camelizeArrayKeysRecursively($responseData);
+
+        $response->getBody()->write(CommonUtil::jsonEncode($responseData));
+
+        return $response;
+    }
+
+    private function updateRace(Race $race, array $bodyParams)
+    {
+        if (empty($bodyParams)) {
+            return;
+        }
+
+        if (isset($bodyParams['name'])) {
+            $race->setName($bodyParams['name']);
+        }
+
+        if (isset($bodyParams['isPublic'])) {
+            $race->setIsPublic($bodyParams['isPublic']);
+        }
+
+        if (isset($bodyParams['startTime'])) {
+            $startTime = DateUtil::convertJavascriptDateToDate($bodyParams['startTime'], false, false);
+            $race->setStartTime($startTime);
+        }
+
+        if (isset($bodyParams['initialDistance'])) {
+            $race->setInitialDistance($bodyParams['initialDistance']);
+        }
+
+        if (isset($bodyParams['lapDistance'])) {
+            $race->setLapDistance($bodyParams['lapDistance']);
+        }
+
+        $entityManager = MainApp::getInstance()->getEntityManager();
+
+        $entityManager->persist($race);
+        $entityManager->flush();
     }
 }
