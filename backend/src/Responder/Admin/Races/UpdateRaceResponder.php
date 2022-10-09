@@ -40,7 +40,7 @@ class UpdateRaceResponder extends AbstractResponder
 
         $bodyValidator = new ArrayValidator($bodyParams);
         $bodyValidator->addValidator('name', new IsString(maxLength: Race::NAME_MAX_LENGTH));
-        $bodyValidator->addValidator('name', (new RaceNameIsNotUsed())->setExistingRaceId($raceId));
+        $bodyValidator->addValidator('name', new RaceNameIsNotUsed(existingRaceId: $raceId));
         $bodyValidator->addValidator('isPublic', new IsBool());
         $bodyValidator->addValidator('startTime', new IsDateString());
         $bodyValidator->addValidator('initialDistance', new IsFloat());
