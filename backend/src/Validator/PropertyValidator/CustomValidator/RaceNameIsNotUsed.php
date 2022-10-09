@@ -9,6 +9,8 @@ use App\Validator\PropertyValidator\AbstractPropertyValidator;
 
 class RaceNameIsNotUsed extends AbstractPropertyValidator
 {
+    private ?int $existingRaceId = null;
+
     public function validate(): bool
     {
         if (!isset($this->array[$this->propertyName])) {
@@ -26,10 +28,17 @@ class RaceNameIsNotUsed extends AbstractPropertyValidator
 
         $existingRace = $raceRepository->findByName($raceName);
 
-        if (!is_null($existingRace)) {
+        if (!is_null($existingRace) && $existingRace->getId() !== $this->existingRaceId) {
             $this->addError('A race with the same name already exists');
         }
 
         return !$this->hasErrors();
+    }
+
+    public function setExistingRaceId(?int $existingRaceId): self
+    {
+        $this->existingRaceId = $existingRaceId;
+
+        return $this;
     }
 }
