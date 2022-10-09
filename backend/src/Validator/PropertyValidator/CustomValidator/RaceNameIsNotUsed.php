@@ -9,6 +9,9 @@ use App\Validator\PropertyValidator\AbstractPropertyValidator;
 
 class RaceNameIsNotUsed extends AbstractPropertyValidator
 {
+    /**
+     * @var int|null A race to be ignored if it is found with this name. Used when modifying a race
+     */
     private ?int $existingRaceId = null;
 
     public function validate(): bool
