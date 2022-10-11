@@ -22,7 +22,7 @@ const Races = () => {
     }, [fetchRaces]);
 
     return (
-        <div id="page-admin-runners">
+        <div id="page-admin-races">
             <div className="row">
                 <div className="col-12">
                     <Breadcrumbs>
