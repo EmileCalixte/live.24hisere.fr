@@ -1,7 +1,25 @@
 import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
+import {useCallback, useEffect, useState} from "react";
+import ApiUtil from "../../../../util/ApiUtil";
+import {app} from "../../../App";
+import CircularLoader from "../../../misc/CircularLoader";
 
 const Races = () => {
+    // false = not fetched yet. Once fetched, it's an array
+    const [races, setRaces] = useState(false);
+
+    const fetchRaces = useCallback(async () => {
+        const response = await ApiUtil.performAuthenticatedAPIRequest('/admin/races', app.state.accessToken);
+        const responseJson = await response.json();
+
+        setRaces(responseJson.races);
+    }, []);
+
+    useEffect(() => {
+        fetchRaces();
+    }, [fetchRaces]);
+
     return (
         <div id="page-admin-runners">
             <div className="row">
@@ -12,6 +30,29 @@ const Races = () => {
                     </Breadcrumbs>
                 </div>
             </div>
+
+            {races === false &&
+            <CircularLoader />
+            }
+
+            {races !== false &&
+            <div className="row">
+                <div className="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                    {races.length === 0 &&
+                    <p>Aucune course</p>
+                    }
+                    {races.length > 0 &&
+                    <ul>
+                        {races.map(race => {
+                            return (
+                                <li key={race.id}>{race.name} ({race.runnerCount})</li>
+                            )
+                        })}
+                    </ul>
+                    }
+                </div>
+            </div>
+            }
         </div>
     )
 }
