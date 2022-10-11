@@ -399,8 +399,23 @@ table.table tbody tr:hover {
     box-shadow: 0 1px 3px rgb(180 180 180);
 }
 
-.admin-home-menu-link-icon {
+.admin-list-link-icon {
     width: 1.75em;
+}
+
+.admin-list-link-secondary-icons {
+    font-size: 0.8em;
+    margin-left: 0.8em;
+
+    display: flex;
+    flex: 1;
+    align-items: end;
+    justify-content: right;
+}
+
+.admin-list-link-secondary-icon-group {
+    margin-left: 0.4em;
+    margin-right: 0.4em;
 }
 
 #app-footer {

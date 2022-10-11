@@ -49,7 +49,24 @@ const Races = () => {
                             return (
                                 <li key={race.id}>
                                     <Link to={`/admin/races/${race.id}`}>
-                                        {race.name} ({race.runnerCount})
+                                        <div className="admin-list-link-label">
+                                            {race.name}
+                                        </div>
+                                        <div className="admin-list-link-secondary-icons">
+                                            <div className="admin-list-link-secondary-icon-group">
+                                                <i className="fa-solid fa-person-running"/>
+                                                {race.runnerCount}
+                                            </div>
+                                            <div className="admin-list-link-secondary-icon-group">
+                                                {race.isPublic &&
+                                                <i className="fa-solid fa-eye"/>
+                                                }
+
+                                                {!race.isPublic &&
+                                                <i className="fa-solid fa-eye-slash" style={{color: "#999"}}/>
+                                                }
+                                            </div>
+                                        </div>
                                     </Link>
                                 </li>
                             )
