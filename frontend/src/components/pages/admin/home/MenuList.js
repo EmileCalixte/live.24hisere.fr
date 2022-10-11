@@ -7,6 +7,11 @@ const menuItems = [
         label: "Gestion des coureurs",
     },
     {
+        url: "/admin/races",
+        icon: "fa-sharp fa-solid fa-flag-checkered",
+        label: "Gestion des courses",
+    },
+    {
         url: "/admin/race-settings",
         icon: "fa-solid fa-gear",
         label: "Paramètres de course",
