@@ -4,6 +4,7 @@ import AdminHome from "./home/AdminHome";
 import Races from "./races/Races";
 import Runners from "./runners/Runners";
 import RaceSettings from "./race-settings/RaceSettings";
+import RaceDetails from "./races/RaceDetails";
 
 const Admin = () => {
     if (app.state.user === null) {
@@ -17,6 +18,7 @@ const Admin = () => {
             <Route exact path="/" element={<AdminHome />} />
             <Route exact path="runners" element={<Runners />} />
             <Route exact path="races" element={<Races />} />
+            <Route exact path="races/:raceId" element={<RaceDetails />} />
             <Route exact path="race-settings" element={<RaceSettings />} />
 
             <Route path="*" element={<Navigate to="/admin" replace />} />
