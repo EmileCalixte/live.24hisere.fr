@@ -370,21 +370,21 @@ table.table tbody tr:hover {
     box-shadow: 0 0 3px #ddd;
 }
 
-.admin-home-menu-list {
+.admin-list {
     padding: 0;
     margin: 0;
     list-style: none;
     display: inline-block;
 }
 
-.admin-home-menu-list li {
+.admin-list li {
     font-size: 1.2em;
     font-weight: bold;
     margin-top: 0.5em;
     margin-bottom: 0.5em;
 }
 
-.admin-home-menu-list li a {
+.admin-list li a {
     display: flex;
     text-decoration: none;
 
@@ -395,7 +395,7 @@ table.table tbody tr:hover {
     transition: box-shadow 0.05s ease-out;
 }
 
-.admin-home-menu-list li a:hover {
+.admin-list li a:hover {
     box-shadow: 0 1px 3px rgb(180 180 180);
 }
 

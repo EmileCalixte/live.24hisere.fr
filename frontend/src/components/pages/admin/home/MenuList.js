@@ -25,7 +25,7 @@ const menuItems = [
 
 const MenuList = () => {
     return (
-        <ul className="admin-home-menu-list">
+        <ul className="admin-list">
             {menuItems.map(({url, icon, label}, key) => <MenuItem key={key} url={url} icon={icon} label={label} />)}
         </ul>
     )

@@ -4,6 +4,7 @@ import {useCallback, useEffect, useState} from "react";
 import ApiUtil from "../../../../util/ApiUtil";
 import {app} from "../../../App";
 import CircularLoader from "../../../misc/CircularLoader";
+import {Link} from "react-router-dom";
 
 const Races = () => {
     // false = not fetched yet. Once fetched, it's an array
@@ -37,15 +38,20 @@ const Races = () => {
 
             {races !== false &&
             <div className="row">
-                <div className="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                <div className="col-12">
                     {races.length === 0 &&
                     <p>Aucune course</p>
                     }
+
                     {races.length > 0 &&
-                    <ul>
+                    <ul className="admin-list">
                         {races.map(race => {
                             return (
-                                <li key={race.id}>{race.name} ({race.runnerCount})</li>
+                                <li key={race.id}>
+                                    <Link to={`/admin/races/${race.id}`}>
+                                        {race.name} ({race.runnerCount})
+                                    </Link>
+                                </li>
                             )
                         })}
                     </ul>
