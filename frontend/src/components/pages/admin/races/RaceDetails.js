@@ -7,6 +7,7 @@ import ApiUtil from "../../../../util/ApiUtil";
 import {app} from "../../../App";
 import Util from "../../../../util/Util";
 import ToastUtil from "../../../../util/ToastUtil";
+import RaceDetailsForm from "./RaceDetailsForm";
 
 const RaceDetails = () => {
     const {raceId: urlRaceId} = useParams();
@@ -19,26 +20,9 @@ const RaceDetails = () => {
     const [startTime, setStartTime] = useState(null);
     const [isPublic, setIsPublic] = useState(null);
 
-    const [submitButtonDisabled, setSubmitButtonDisabled] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
 
     const [redirectAfterDelete, setRedirectAfterDelete] = useState(false);
-
-    const startTimeDate = useMemo(() => {
-        if (!startTime) {
-            return;
-        }
-
-        // Date input value requires YYYY-MM-DD format
-        return Util.getDateStringFromDate(startTime, '-').split('-').reverse().join('-');
-    }, [startTime]);
-
-    const startTimeTime = useMemo(() => {
-        if (!startTime) {
-            return '';
-        }
-
-        return Util.getTimeStringFromDate(startTime);
-    }, [startTime]);
 
     const unsavedChanges = useMemo(() => {
         if (!race) {
@@ -78,17 +62,9 @@ const RaceDetails = () => {
         fetchRace();
     }, [fetchRace]);
 
-    const onStartTimeDateChange = (e) => {
-        setStartTime(new Date(`${e.target.value}T${startTimeTime}`));
-    }
-
-    const onStartTimeTimeChange = (e) => {
-        setStartTime(new Date(`${startTimeDate}T${e.target.value}`));
-    }
-
     const onSubmit = async (e) => {
         e.preventDefault();
-        setSubmitButtonDisabled(true);
+        setIsSaving(true);
 
         const body = {
             name: raceName,
@@ -108,14 +84,14 @@ const RaceDetails = () => {
         if (!response.ok) {
             ToastUtil.getToastr().error("Une erreur est survenue");
             console.error(responseJson);
-            setSubmitButtonDisabled(false);
+            setIsSaving(false);
             return;
         }
 
         ToastUtil.getToastr().success("Paramètres de la course enregistrés");
 
         await fetchRace();
-        setSubmitButtonDisabled(false);
+        setIsSaving(false);
     }
 
     const deleteRace = async () => {
@@ -180,82 +156,19 @@ const RaceDetails = () => {
                     {race !== undefined &&
                     <div className="row">
                         <div className="col-12">
-                            <form onSubmit={onSubmit}>
-                                <div className="input-group">
-                                    <label>
-                                        Nom
-                                        <input className="input"
-                                               type="text"
-                                               value={raceName}
-                                               name="name"
-                                               onChange={(e) => setRaceName(e.target.value)}
-                                        />
-                                    </label>
-                                </div>
-
-                                <div className="input-group">
-                                    <label>
-                                        Distance avant premier passage (m)
-                                        <input className="input"
-                                               type="number"
-                                               step={0.001}
-                                               value={initialDistance}
-                                               name="initial-distance"
-                                               onChange={(e) => setInitialDistance(e.target.value)}
-                                        />
-                                    </label>
-                                </div>
-
-                                <div className="input-group">
-                                    <label>
-                                        Distance du tour (m)
-                                        <input className="input"
-                                               type="number"
-                                               step={0.001}
-                                               value={lapDistance}
-                                               name="initial-distance"
-                                               onChange={(e) => setLapDistance(e.target.value)}
-                                        />
-                                    </label>
-                                </div>
-
-                                <div className="input-group">
-                                    <label>
-                                        Départ
-                                        <input className="input"
-                                               type="date"
-                                               defaultValue={startTimeDate}
-                                               name="start-date"
-                                               onChange={onStartTimeDateChange}
-                                        />
-                                        <input className="input"
-                                               type="time"
-                                               step={1}
-                                               defaultValue={startTimeTime}
-                                               name="start-time"
-                                               onChange={onStartTimeTimeChange}
-                                        />
-                                    </label>
-                                </div>
-
-                                <div className="inline-input-group mt-3">
-                                    <label className="input-checkbox">
-                                        <input type="checkbox"
-                                               checked={isPublic}
-                                               onChange={(e) => setIsPublic(e.target.checked)}
-                                        />
-                                        <span/>
-                                        Visible par les utilisateurs
-                                    </label>
-                                </div>
-
-                                <button className="button mt-3"
-                                        type="submit"
-                                        disabled={submitButtonDisabled || !unsavedChanges}
-                                >
-                                    Enregistrer
-                                </button>
-                            </form>
+                            <RaceDetailsForm onSubmit={onSubmit}
+                                             name={raceName}
+                                             onNameInputChange={e => setRaceName(e.target.value)}
+                                             initialDistance={initialDistance}
+                                             onInitialDistanceInputChange={e => setInitialDistance(e.target.value)}
+                                             lapDistance={lapDistance}
+                                             onLapDistanceInputChange={e => setLapDistance(e.target.value)}
+                                             startTime={startTime}
+                                             setStartTime={setStartTime}
+                                             isPublic={isPublic}
+                                             onIsPublicInputChange={e => setIsPublic(e.target.checked)}
+                                             submitButtonDisabled={isSaving || !unsavedChanges}
+                            />
                         </div>
 
                         <div className="col-12">
