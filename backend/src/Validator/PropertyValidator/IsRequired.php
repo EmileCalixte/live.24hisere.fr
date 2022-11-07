@@ -8,10 +8,23 @@ class IsRequired extends AbstractPropertyValidator
     {
         $this->errors = [];
 
-        if (!isset($this->array[$this->propertyName])) {
+        if ($this->propertyIsMissing()) {
             $this->addError('This value is required');
         }
 
         return !$this->hasErrors();
+    }
+
+    private function propertyIsMissing(): bool
+    {
+        if (!isset($this->array[$this->propertyName])) {
+            return true;
+        }
+
+        if ($this->array[$this->propertyName] === '') {
+            return true;
+        }
+
+        return false;
     }
 }
