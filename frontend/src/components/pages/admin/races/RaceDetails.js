@@ -21,6 +21,8 @@ const RaceDetails = () => {
 
     const [submitButtonDisabled, setSubmitButtonDisabled] = useState(false);
 
+    const [redirectAfterDelete, setRedirectAfterDelete] = useState(false);
+
     const startTimeDate = useMemo(() => {
         if (!startTime) {
             return;
@@ -110,10 +112,36 @@ const RaceDetails = () => {
             return;
         }
 
-        ToastUtil.getToastr().success('Paramètres de la course enregistrés');
+        ToastUtil.getToastr().success("Paramètres de la course enregistrés");
 
         await fetchRace();
         setSubmitButtonDisabled(false);
+    }
+
+    const deleteRace = async () => {
+        if (race.runnerCount > 0) {
+            return;
+        }
+
+        const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/races/${race.id}`, app.state.accessToken, {
+            method: 'DELETE',
+        });
+
+        if (!response.ok) {
+            ToastUtil.getToastr().error("Une erreur est survenue");
+            const responseJson = await response.json();
+            console.error(responseJson);
+            return;
+        }
+
+        ToastUtil.getToastr().success("Course supprimée");
+        setRedirectAfterDelete(true);
+    }
+
+    if (redirectAfterDelete) {
+        return (
+            <Navigate to="/admin/races" />
+        )
     }
 
     if (race === null) {
@@ -150,82 +178,105 @@ const RaceDetails = () => {
                     }
 
                     {race !== undefined &&
-                    <form onSubmit={onSubmit}>
-                        <div className="input-group">
-                            <label>
-                                Nom
-                                <input className="input"
-                                       type="text"
-                                       value={raceName}
-                                       name="name"
-                                       onChange={(e) => setRaceName(e.target.value)}
-                                />
-                            </label>
+                    <div className="row">
+                        <div className="col-12">
+                            <form onSubmit={onSubmit}>
+                                <div className="input-group">
+                                    <label>
+                                        Nom
+                                        <input className="input"
+                                               type="text"
+                                               value={raceName}
+                                               name="name"
+                                               onChange={(e) => setRaceName(e.target.value)}
+                                        />
+                                    </label>
+                                </div>
+
+                                <div className="input-group">
+                                    <label>
+                                        Distance avant premier passage (m)
+                                        <input className="input"
+                                               type="number"
+                                               step={0.001}
+                                               value={initialDistance}
+                                               name="initial-distance"
+                                               onChange={(e) => setInitialDistance(e.target.value)}
+                                        />
+                                    </label>
+                                </div>
+
+                                <div className="input-group">
+                                    <label>
+                                        Distance du tour (m)
+                                        <input className="input"
+                                               type="number"
+                                               step={0.001}
+                                               value={lapDistance}
+                                               name="initial-distance"
+                                               onChange={(e) => setLapDistance(e.target.value)}
+                                        />
+                                    </label>
+                                </div>
+
+                                <div className="input-group">
+                                    <label>
+                                        Départ
+                                        <input className="input"
+                                               type="date"
+                                               defaultValue={startTimeDate}
+                                               name="start-date"
+                                               onChange={onStartTimeDateChange}
+                                        />
+                                        <input className="input"
+                                               type="time"
+                                               step={1}
+                                               defaultValue={startTimeTime}
+                                               name="start-time"
+                                               onChange={onStartTimeTimeChange}
+                                        />
+                                    </label>
+                                </div>
+
+                                <div className="inline-input-group mt-3">
+                                    <label className="input-checkbox">
+                                        <input type="checkbox"
+                                               checked={isPublic}
+                                               onChange={(e) => setIsPublic(e.target.checked)}
+                                        />
+                                        <span/>
+                                        Visible par les utilisateurs
+                                    </label>
+                                </div>
+
+                                <button className="button mt-3"
+                                        type="submit"
+                                        disabled={submitButtonDisabled || !unsavedChanges}
+                                >
+                                    Enregistrer
+                                </button>
+                            </form>
                         </div>
 
-                        <div className="input-group">
-                            <label>
-                                Distance avant premier passage (m)
-                                <input className="input"
-                                       type="number"
-                                       step={0.001}
-                                       value={initialDistance}
-                                       name="initial-distance"
-                                       onChange={(e) => setInitialDistance(e.target.value)}
-                                />
-                            </label>
-                        </div>
+                        <div className="col-12">
+                            <h3>Supprimer la course</h3>
 
-                        <div className="input-group">
-                            <label>
-                                Distance du tour (m)
-                                <input className="input"
-                                       type="number"
-                                       step={0.001}
-                                       value={lapDistance}
-                                       name="initial-distance"
-                                       onChange={(e) => setLapDistance(e.target.value)}
-                                />
-                            </label>
-                        </div>
+                            {race.runnerCount > 0 &&
+                            <p>La course ne peut pas être supprimée tant qu'elle contient des coureurs.</p>
+                            }
 
-                        <div className="input-group">
-                            <label>
-                                Départ
-                                <input className="input"
-                                       type="date"
-                                       defaultValue={startTimeDate}
-                                       name="start-date"
-                                       onChange={onStartTimeDateChange}
-                                />
-                                <input className="input"
-                                       type="time"
-                                       step={1}
-                                       defaultValue={startTimeTime}
-                                       name="start-time"
-                                       onChange={onStartTimeTimeChange}
-                                />
-                            </label>
-                        </div>
+                            {race.runnerCount === 0 &&
+                            <p>Cette action est irréversible.</p>
+                            }
 
-                        <div className="inline-input-group mt-3">
-                            <label className="input-checkbox">
-                                <input type="checkbox"
-                                       checked={isPublic}
-                                       onChange={(e) => setIsPublic(e.target.checked)}
-                                />
-                                <span/>
-                                Visible par les utilisateurs
-                            </label>
+                            <button className="button red mt-3"
+                                    disabled={race.runnerCount > 0}
+                                    onClick={deleteRace}
+                            >
+                                Supprimer la course
+                            </button>
                         </div>
-
-                        <button className="button mt-3"
-                                type="submit"
-                                disabled={submitButtonDisabled || !unsavedChanges}
-                        >
-                            Enregistrer
-                        </button>
-                    </form>
+                    </div>
                     }
                 </div>
             </div>
