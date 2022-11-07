@@ -33,10 +33,18 @@ const RaceDetailsForm = ({
     }, [startTime]);
 
     const onStartTimeDateChange = (e) => {
+        if (!e.target.value) {
+            return;
+        }
+
         setStartTime(new Date(`${e.target.value}T${startTimeTime}`));
     }
 
     const onStartTimeTimeChange = (e) => {
+        if (!e.target.value) {
+            return;
+        }
+
         setStartTime(new Date(`${startTimeDate}T${e.target.value}`));
     }
 
