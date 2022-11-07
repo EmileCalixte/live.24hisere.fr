@@ -5,12 +5,19 @@ import Races from "./races/Races";
 import Runners from "./runners/Runners";
 import RaceSettings from "./race-settings/RaceSettings";
 import RaceDetails from "./races/RaceDetails";
+import CircularLoader from "../../misc/CircularLoader";
 
 const Admin = () => {
     if (app.state.user === null) {
         return (
             <Navigate to="/" />
         );
+    }
+
+    if (app.state.user === undefined) {
+        return (
+            <CircularLoader />
+        )
     }
 
     return (
