@@ -22,8 +22,15 @@ a, button.a {
     font-family: inherit;
 }
 
+#app {
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+}
+
 #app-content-wrapper {
-    min-height: calc(100vh - 250px); /* Total height minux footer height */
+    flex: 1;
 }
 
 #app-header-admin-section {
@@ -427,7 +434,6 @@ table.table tbody tr:hover {
     padding-top: 0.75em;
     padding-bottom: 0.75em;
 
-    min-height: 250px;
     display: flex;
     align-items: center;
 }
