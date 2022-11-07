@@ -4,15 +4,15 @@ import Util from "../../../../util/Util";
 const RaceDetailsForm = ({
     onSubmit,
     name,
-    onNameInputChange,
+    setName,
     initialDistance,
-    onInitialDistanceInputChange,
+    setInitialDistance,
     lapDistance,
-    onLapDistanceInputChange,
+    setLapDistance,
     startTime,
     setStartTime,
     isPublic,
-    onIsPublicInputChange,
+    setIsPublic,
     submitButtonDisabled,
 }) => {
     const startTimeDate = useMemo(() => {
@@ -49,7 +49,7 @@ const RaceDetailsForm = ({
                            type="text"
                            value={name}
                            name="name"
-                           onChange={onNameInputChange}
+                           onChange={e => setName(e.target.value)}
                     />
                 </label>
             </div>
@@ -62,7 +62,7 @@ const RaceDetailsForm = ({
                            step={0.001}
                            value={initialDistance}
                            name="initial-distance"
-                           onChange={onInitialDistanceInputChange}
+                           onChange={e => setInitialDistance(e.target.value)}
                     />
                 </label>
             </div>
@@ -75,7 +75,7 @@ const RaceDetailsForm = ({
                            step={0.001}
                            value={lapDistance}
                            name="initial-distance"
-                           onChange={onLapDistanceInputChange}
+                           onChange={e => setLapDistance(e.target.value)}
                     />
                 </label>
             </div>
@@ -103,7 +103,7 @@ const RaceDetailsForm = ({
                 <label className="input-checkbox">
                     <input type="checkbox"
                            checked={isPublic}
-                           onChange={onIsPublicInputChange}
+                           onChange={e => setIsPublic(e.target.checked)}
                     />
                     <span/>
                     Visible par les utilisateurs

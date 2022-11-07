@@ -158,15 +158,15 @@ const RaceDetails = () => {
                         <div className="col-12">
                             <RaceDetailsForm onSubmit={onSubmit}
                                              name={raceName}
-                                             onNameInputChange={e => setRaceName(e.target.value)}
+                                             setName={setRaceName}
                                              initialDistance={initialDistance}
-                                             onInitialDistanceInputChange={e => setInitialDistance(e.target.value)}
+                                             setInitialDistance={setInitialDistance}
                                              lapDistance={lapDistance}
-                                             onLapDistanceInputChange={e => setLapDistance(e.target.value)}
+                                             setLapDistance={setLapDistance}
                                              startTime={startTime}
                                              setStartTime={setStartTime}
                                              isPublic={isPublic}
-                                             onIsPublicInputChange={e => setIsPublic(e.target.checked)}
+                                             setIsPublic={setIsPublic}
                                              submitButtonDisabled={isSaving || !unsavedChanges}
                             />
                         </div>
