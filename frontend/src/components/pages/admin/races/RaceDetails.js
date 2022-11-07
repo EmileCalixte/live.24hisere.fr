@@ -95,6 +95,10 @@ const RaceDetails = () => {
     }
 
     const deleteRace = async () => {
+        if (!confirm("Êtes-vous sûr de vouloir supprimer cette course ?")) {
+            return;
+        }
+
         if (race.runnerCount > 0) {
             return;
         }
