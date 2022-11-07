@@ -1,3 +1,7 @@
+:root {
+    --footer-min-height: 250px;
+}
+
 body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -23,7 +27,7 @@ a, button.a {
 }
 
 #app-content-wrapper {
-    min-height: calc(100vh - 250px); /* Total height minux footer height */
+    min-height: calc(100vh - var(--footer-min-height));
 }
 
 #app-header-admin-section {
@@ -412,7 +416,7 @@ table.table tbody tr:hover {
     padding-top: 0.75em;
     padding-bottom: 0.75em;
 
-    min-height: 250px;
+    min-height: var(--footer-min-height);
     display: flex;
     align-items: center;
 }
