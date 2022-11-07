@@ -30,6 +30,8 @@ class RacesResponder extends AbstractResponder
         array_walk($races, function (&$race) use ($runnerRepository) {
             $race['runnerCount'] = $runnerRepository->countByRace($race['id']);
             $race['startTime'] = DateUtil::convertDateToJavascriptDate($race['startTime']);
+            $race['initialDistance'] = floatval($race['initialDistance']);
+            $race['lapDistance'] = floatval($race['lapDistance']);
             unset($race['order']);
         });
 
