@@ -416,7 +416,7 @@ table.table tbody tr:hover {
 
     display: flex;
     flex: 1;
-    align-items: end;
+    align-items: flex-end;
     justify-content: right;
 }
 
