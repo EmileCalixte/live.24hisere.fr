@@ -39,6 +39,13 @@ const Races = () => {
             {races !== false &&
             <div className="row">
                 <div className="col-12">
+                    <Link to="/admin/races/create" className="button">
+                        <i className="fa-solid fa-plus mr-2"/>
+                        Créer une course
+                    </Link>
+                </div>
+
+                <div className="col-12">
                     {races.length === 0 &&
                     <p>Aucune course</p>
                     }

@@ -3,6 +3,7 @@ import {Navigate, Route, Routes} from "react-router-dom";
 import AdminHome from "./home/AdminHome";
 import Races from "./races/Races";
 import Runners from "./runners/Runners";
+import CreateRace from "./races/CreateRace";
 import RaceSettings from "./race-settings/RaceSettings";
 import RaceDetails from "./races/RaceDetails";
 import CircularLoader from "../../misc/CircularLoader";
@@ -25,6 +26,7 @@ const Admin = () => {
             <Route exact path="/" element={<AdminHome />} />
             <Route exact path="runners" element={<Runners />} />
             <Route exact path="races" element={<Races />} />
+            <Route exact path="races/create" element={<CreateRace />} />
             <Route exact path="races/:raceId" element={<RaceDetails />} />
             <Route exact path="race-settings" element={<RaceSettings />} />
 
