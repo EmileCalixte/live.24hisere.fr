@@ -6,6 +6,7 @@ import CircularLoader from "../../../misc/CircularLoader";
 import ApiUtil from "../../../../util/ApiUtil";
 import {app} from "../../../App";
 import Util from "../../../../util/Util";
+import ToastUtil from "../../../../util/ToastUtil";
 
 const RaceDetails = () => {
     const {raceId: urlRaceId} = useParams();
@@ -87,11 +88,32 @@ const RaceDetails = () => {
         e.preventDefault();
         setSubmitButtonDisabled(true);
 
-        // TODO
+        const body = {
+            name: raceName,
+            isPublic,
+            startTime: Util.formatDateForApi(startTime),
+            initialDistance,
+            lapDistance,
+        };
 
+        const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/races/${race.id}`, app.state.accessToken, {
+            method: 'PATCH',
+            body: JSON.stringify(body),
+        });
+
+        const responseJson = await response.json();
+
+        if (!response.ok) {
+            ToastUtil.getToastr().error("Une erreur est survenue");
+            console.error(responseJson);
+            setSubmitButtonDisabled(false);
+            return;
+        }
+
+        ToastUtil.getToastr().success('Paramètres de la course enregistrés');
+
+        await fetchRace();
         setSubmitButtonDisabled(false);
-
-        fetchRace();
     }
 
     if (race === null) {
