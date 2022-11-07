@@ -47,6 +47,8 @@ const RaceDetailsForm = ({
                     Nom
                     <input className="input"
                            type="text"
+                           maxLength={50}
+                           required={true}
                            value={name}
                            name="name"
                            onChange={e => setName(e.target.value)}
@@ -60,6 +62,8 @@ const RaceDetailsForm = ({
                     <input className="input"
                            type="number"
                            step={0.001}
+                           min={0}
+                           required={true}
                            value={initialDistance}
                            name="initial-distance"
                            onChange={e => setInitialDistance(e.target.value)}
@@ -73,6 +77,8 @@ const RaceDetailsForm = ({
                     <input className="input"
                            type="number"
                            step={0.001}
+                           min={0}
+                           required={true}
                            value={lapDistance}
                            name="initial-distance"
                            onChange={e => setLapDistance(e.target.value)}
@@ -85,6 +91,7 @@ const RaceDetailsForm = ({
                     Départ
                     <input className="input"
                            type="date"
+                           required={true}
                            defaultValue={startTimeDate}
                            name="start-date"
                            onChange={onStartTimeDateChange}
@@ -92,6 +99,7 @@ const RaceDetailsForm = ({
                     <input className="input"
                            type="time"
                            step={1}
+                           required={true}
                            defaultValue={startTimeTime}
                            name="start-time"
                            onChange={onStartTimeTimeChange}
