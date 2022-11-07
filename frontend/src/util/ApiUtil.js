@@ -7,7 +7,7 @@ class ApiUtil {
     /**
      * Fetch minimal wrapper with verbose
      * @param url
-     * @param init
+     * @param {RequestInit} init
      * @returns {Promise<Response>}
      */
     static fetch = async (url, init) => {
@@ -35,7 +35,7 @@ class ApiUtil {
 
     /**
      * @param url
-     * @param init
+     * @param {RequestInit} init
      * @return {Promise<Response>}
      */
     static performAPIRequest = async (url, init = {}) => {
@@ -49,7 +49,7 @@ class ApiUtil {
     /**
      * @param url
      * @param accessToken
-     * @param init
+     * @param {RequestInit} init
      * @return {Promise<Response>}
      */
     static performAuthenticatedAPIRequest = async (url, accessToken, init = {}) => {
