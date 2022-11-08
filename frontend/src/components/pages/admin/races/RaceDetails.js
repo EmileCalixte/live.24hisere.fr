@@ -95,7 +95,7 @@ const RaceDetails = () => {
     }
 
     const deleteRace = async () => {
-        if (!confirm("Êtes-vous sûr de vouloir supprimer cette course ?")) {
+        if (!window.confirm("Êtes-vous sûr de vouloir supprimer cette course ?")) {
             return;
         }
 
