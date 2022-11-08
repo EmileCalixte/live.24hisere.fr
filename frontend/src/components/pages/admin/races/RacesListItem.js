@@ -2,7 +2,7 @@ import {Link} from "react-router-dom";
 
 const RacesListItem = ({id, name, runnerCount, isPublic}) => {
     return (
-        <li key={id}>
+        <li>
             <Link to={`/admin/races/${id}`}>
                 <div className="admin-list-link-label">
                     {name}

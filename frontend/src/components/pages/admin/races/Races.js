@@ -55,7 +55,8 @@ const Races = () => {
                     <ul className="admin-list">
                         {races.map(race => {
                             return (
-                                <RacesListItem id={race.id}
+                                <RacesListItem key={race.id}
+                                               id={race.id}
                                                name={race.name}
                                                runnerCount={race.runnerCount}
                                                isPublic={race.isPublic}
