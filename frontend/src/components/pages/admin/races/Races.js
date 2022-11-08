@@ -72,7 +72,19 @@ const Races = () => {
     const saveSort = useCallback(async () => {
         setIsSaving(true);
 
-        // TODO send API request
+        const raceIds = sortingRaces.map(race => race.id);
+
+        const response = await ApiUtil.performAuthenticatedAPIRequest("/admin/races-order", app.state.accessToken, {
+            method: "PUT",
+            body: JSON.stringify(raceIds)
+        });
+
+        if (!response.ok) {
+            ToastUtil.getToastr().error("Une erreur est survenue");
+            console.error(await response.text());
+            setIsSaving(false);
+            return;
+        }
 
         setRaces([...sortingRaces]);
 
