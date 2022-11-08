@@ -10,6 +10,7 @@ use App\Responder\Admin\Races\DeleteRaceResponder;
 use App\Responder\Admin\Races\RaceResponder;
 use App\Responder\Admin\Races\RacesResponder;
 use App\Responder\Admin\Races\UpdateRaceResponder;
+use App\Responder\Admin\Races\UpdateRacesOrderResponder;
 use App\Responder\Admin\RaceSettings\UpdateRaceSettingsResponder;
 use App\Responder\Admin\RaceSettings\RaceSettingsResponder;
 use App\Responder\Admin\UsersResponder;
@@ -62,6 +63,7 @@ class Router
         $this->registerRoute('/admin/races/{id}', RaceResponder::class, 'GET');
         $this->registerRoute('/admin/races/{id}', UpdateRaceResponder::class, 'PATCH');
         $this->registerRoute('/admin/races/{id}', DeleteRaceResponder::class, 'DELETE');
+        $this->registerRoute('/admin/races-order', UpdateRacesOrderResponder::class, 'PUT');
 
         $this->registerRoute('/admin/users', UsersResponder::class, 'GET');
         $this->registerRoute('/admin/users/{id}/access-tokens', DeleteUserAccessTokensResponder::class, 'DELETE');
