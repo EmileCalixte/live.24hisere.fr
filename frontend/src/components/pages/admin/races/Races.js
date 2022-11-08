@@ -1,6 +1,6 @@
 import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
-import {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import {useCallback, useEffect, useMemo, useState} from "react";
 import ApiUtil from "../../../../util/ApiUtil";
 import {app} from "../../../App";
 import CircularLoader from "../../../misc/CircularLoader";
@@ -37,37 +37,37 @@ const Races = () => {
 
         // When user enables/disables sorting mode, reset sortingRaces array with current races order
         setSortingRaces([...races]);
-    }, [isSorting]);
+    }, [isSorting, races]);
 
     const onDragStart = (e, index) => {
-        dragItem.current = index;
+        setDragItemIndex(index);
     }
 
     const onDragEnter = (e, index) => {
-        dragOverItem.current = index;
+        setDragOverIndex(index);
     }
 
     const onDragEnd = () => {
         handleSort();
     }
 
-    const dragItem = useRef(null);
-    const dragOverItem = useRef(null);
+    const [dragItemIndex, setDragItemIndex] = useState(null);
+    const [dragOverItemIndex, setDragOverIndex] = useState(null);
 
     const handleSort = useCallback(() => {
         const _races = [...sortingRaces];
 
         // Remove dragged race for temporary races array
-        const draggedRace = _races.splice(dragItem.current, 1)[0];
+        const draggedRace = _races.splice(dragItemIndex, 1)[0];
 
         // Insert dragged race in temporary races array at new index
-        _races.splice(dragOverItem.current, 0, draggedRace);
+        _races.splice(dragOverItemIndex, 0, draggedRace);
 
-        dragItem.current = null;
-        dragOverItem.current = null;
+        setDragItemIndex(null);
+        setDragOverIndex(null);
 
         setSortingRaces(_races);
-    }, [sortingRaces]);
+    }, [sortingRaces, dragItemIndex, dragOverItemIndex]);
 
     const saveSort = useCallback(async () => {
         setIsSaving(true);
@@ -161,6 +161,8 @@ const Races = () => {
                                                            runnerCount={race.runnerCount}
                                                            isPublic={race.isPublic}
                                                            isSorting={isSorting}
+                                                           isDragged={index === dragItemIndex}
+                                                           isDraggedOver={index === dragOverItemIndex}
                                             />
                                         </li>
                                     )

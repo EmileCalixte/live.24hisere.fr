@@ -1,7 +1,7 @@
 import {Link} from "react-router-dom";
 import {useCallback} from "react";
 
-const RacesListItem = ({id, name, runnerCount, isPublic, isSorting}) => {
+const RacesListItem = ({id, name, runnerCount, isPublic, isSorting, isDragged, isDraggedOver}) => {
     const onClick = useCallback((e) => {
         // Prevent navigation to the clicked race if sorting mode is enabled
         if (isSorting) {
@@ -10,7 +10,10 @@ const RacesListItem = ({id, name, runnerCount, isPublic, isSorting}) => {
     }, [isSorting])
 
     return (
-        <Link to={`/admin/races/${id}`} onClick={onClick}>
+        <Link to={`/admin/races/${id}`}
+              onClick={onClick}
+              className={`${isDragged ? "dragged" : ""} ${isDraggedOver ? "dragged-over" : ""}`}
+        >
             {isSorting &&
             <div className="admin-list-link-drag-icon">
                 <i className="fa-solid fa-grip"/>
