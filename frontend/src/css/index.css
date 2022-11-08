@@ -406,6 +406,15 @@ table.table tbody tr:hover {
     box-shadow: 0 1px 3px rgb(180 180 180);
 }
 
+.admin-list li.draggable a:hover {
+    cursor: grab;
+}
+
+.admin-list-link-drag-icon {
+    margin-right: 15px;
+    color: #99cc99;
+}
+
 .admin-list-link-icon {
     width: 1.75em;
 }

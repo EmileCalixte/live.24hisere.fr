@@ -1,26 +1,89 @@
 import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
-import {useCallback, useEffect, useState} from "react";
+import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import ApiUtil from "../../../../util/ApiUtil";
 import {app} from "../../../App";
 import CircularLoader from "../../../misc/CircularLoader";
 import {Link} from "react-router-dom";
 import RacesListItem from "./RacesListItem";
+import ToastUtil from "../../../../util/ToastUtil";
 
 const Races = () => {
     // false = not fetched yet. Once fetched, it's an array
     const [races, setRaces] = useState(false);
+
+    // Used when user is reordering the list
+    const [sortingRaces, setSortingRaces] = useState(false);
+    const [isSorting, setIsSorting] = useState(false);
+
+    const [isSaving, setIsSaving] = useState(false);
 
     const fetchRaces = useCallback(async () => {
         const response = await ApiUtil.performAuthenticatedAPIRequest('/admin/races', app.state.accessToken);
         const responseJson = await response.json();
 
         setRaces(responseJson.races);
+        setSortingRaces(responseJson.races);
     }, []);
 
     useEffect(() => {
         fetchRaces();
     }, [fetchRaces]);
+
+    useEffect(() => {
+        if (races === false) {
+            return;
+        }
+
+        // When user enables/disables sorting mode, reset sortingRaces array with current races order
+        setSortingRaces([...races]);
+    }, [isSorting]);
+
+    const onDragStart = (e, index) => {
+        dragItem.current = index;
+    }
+
+    const onDragEnter = (e, index) => {
+        dragOverItem.current = index;
+    }
+
+    const onDragEnd = () => {
+        handleSort();
+    }
+
+    const dragItem = useRef(null);
+    const dragOverItem = useRef(null);
+
+    const handleSort = useCallback(() => {
+        const _races = [...sortingRaces];
+
+        // Remove dragged race for temporary races array
+        const draggedRace = _races.splice(dragItem.current, 1)[0];
+
+        // Insert dragged race in temporary races array at new index
+        _races.splice(dragOverItem.current, 0, draggedRace);
+
+        dragItem.current = null;
+        dragOverItem.current = null;
+
+        setSortingRaces(_races);
+    }, [sortingRaces]);
+
+    const saveSort = useCallback(async () => {
+        setIsSaving(true);
+
+        // TODO send API request
+
+        setRaces([...sortingRaces]);
+
+        ToastUtil.getToastr().success("L'ordre des courses a été modifié");
+        setIsSorting(false);
+        setIsSaving(false);
+    }, [sortingRaces]);
+
+    const displayedRaces = useMemo(() => {
+        return isSorting ? sortingRaces : races;
+    }, [isSorting, races, sortingRaces]);
 
     return (
         <div id="page-admin-races">
@@ -52,18 +115,60 @@ const Races = () => {
                     }
 
                     {races.length > 0 &&
-                    <ul className="admin-list">
-                        {races.map(race => {
-                            return (
-                                <RacesListItem key={race.id}
-                                               id={race.id}
-                                               name={race.name}
-                                               runnerCount={race.runnerCount}
-                                               isPublic={race.isPublic}
-                                />
-                            )
-                        })}
-                    </ul>
+                    <div className="row mt-4">
+                        <div className="col-12">
+                            {isSorting === false &&
+                            <button className="button" onClick={() => setIsSorting(true)}>
+                                <i className="fa-solid fa-arrows-up-down mr-2"/>
+                                Changer l'ordre
+                            </button>
+                            }
+
+                            {isSorting === true &&
+                            <>
+                                <button className="button red mr-2"
+                                        onClick={() => setIsSorting(false)}
+                                        disabled={isSaving}
+                                >
+                                    Annuler
+                                </button>
+                                <button className="button"
+                                        onClick={saveSort}
+                                        disabled={isSaving}>
+                                    <i className="fa-solid fa-check mr-2"/>
+                                    Enregistrer
+                                </button>
+                            </>
+                            }
+
+                        </div>
+
+                        <div className="col-12">
+                            <ul className="admin-list">
+                                {displayedRaces.map((race, index) => {
+                                    return (
+                                        <li key={race.id}
+                                            className={isSorting ? "draggable" : ""}
+                                            draggable={isSorting}
+                                            onDragStart={isSorting ? e => onDragStart(e, index) : null}
+                                            onDragEnter={isSorting ? e => onDragEnter(e, index) : null}
+                                            onDragOver={isSorting ? e => e.preventDefault() : null}
+                                            onDragEnd={isSorting ? onDragEnd : null}
+                                        >
+                                            <RacesListItem key={race.id}
+                                                           id={race.id}
+                                                           name={race.name}
+                                                           runnerCount={race.runnerCount}
+                                                           isPublic={race.isPublic}
+                                                           isSorting={isSorting}
+                                            />
+                                        </li>
+                                    )
+                                })}
+                            </ul>
+                        </div>
+                    </div>
+
                     }
                 </div>
             </div>
