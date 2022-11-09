@@ -30,6 +30,9 @@ class RunnerDetailsResponder extends AbstractResponder
             throw new HttpNotFoundException($request);
         }
 
+        // TODO optimize
+        $runner['raceId'] = $runnerRepository->findById($runnerId)->getRace()->getId();
+
         /** @var PassageRepository $passageRepository */
         $passageRepository = RepositoryProvider::getRepository(Passage::class);
 
