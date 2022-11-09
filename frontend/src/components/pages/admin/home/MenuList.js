@@ -12,11 +12,6 @@ const menuItems = [
         label: "Gestion des courses",
     },
     {
-        url: "/admin/race-settings",
-        icon: "fa-solid fa-gear",
-        label: "Paramètres de course",
-    },
-    {
         url: "/admin/users",
         icon: "fa-solid fa-user-shield",
         label: "Gestion des administrateurs",
