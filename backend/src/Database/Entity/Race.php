@@ -35,6 +35,9 @@ class Race
     #[Column(name: "start_time", type: "datetime")]
     private \DateTime $startTime;
 
+    #[Column(type: "integer", options: ["unsigned" => true])]
+    private int $duration;
+
     /** @var float The distance covered by the runners before their first passage at the checkpoint */
     #[Column(name: "initial_distance", type: "decimal", precision: 10, scale: 3)]
     private float $initialDistance;
@@ -93,6 +96,25 @@ class Race
     public function setStartTime(\DateTime $startTime): void
     {
         $this->startTime = $startTime;
+    }
+
+    public function getDuration(): int
+    {
+        return $this->duration;
+    }
+
+    public function setDuration(int $duration): void
+    {
+        if ($duration < 0) {
+            throw new \InvalidArgumentException("Duration cannot be negative");
+        }
+
+        $this->duration = $duration;
+    }
+
+    public function getEndTime(): \DateTime
+    {
+        return (clone $this->getStartTime())->modify("+{$this->getDuration()} seconds");
     }
 
     public function getInitialDistance(): float
