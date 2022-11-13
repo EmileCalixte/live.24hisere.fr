@@ -14,6 +14,7 @@ use App\Validator\PropertyValidator\CustomValidator\RaceNameIsNotUsed;
 use App\Validator\PropertyValidator\TypeValidator\IsBool;
 use App\Validator\PropertyValidator\TypeValidator\IsDateString;
 use App\Validator\PropertyValidator\TypeValidator\IsFloat;
+use App\Validator\PropertyValidator\TypeValidator\IsInt;
 use App\Validator\PropertyValidator\TypeValidator\IsString;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -43,6 +44,7 @@ class UpdateRaceResponder extends AbstractResponder
         $bodyValidator->addValidator('name', new RaceNameIsNotUsed(existingRaceId: $raceId));
         $bodyValidator->addValidator('isPublic', new IsBool());
         $bodyValidator->addValidator('startTime', new IsDateString());
+        $bodyValidator->addValidator('duration', new IsInt(minValue: 0));
         $bodyValidator->addValidator('initialDistance', new IsFloat());
         $bodyValidator->addValidator('lapDistance', new IsFloat());
 
@@ -90,6 +92,10 @@ class UpdateRaceResponder extends AbstractResponder
         if (isset($bodyParams['startTime'])) {
             $startTime = DateUtil::convertJavascriptDateToDate($bodyParams['startTime'], false, false);
             $race->setStartTime($startTime);
+        }
+
+        if (isset($bodyParams['duration'])) {
+            $race->setDuration($bodyParams['duration']);
         }
 
         if (isset($bodyParams['initialDistance'])) {
