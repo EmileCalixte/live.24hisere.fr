@@ -32,7 +32,7 @@ class Race
     #[Column(name:"`order`")] // "order" is a reserved keyword in SQL (https://stackoverflow.com/a/41166639/13208770)
     private int $order;
 
-    #[Column(type: "datetime")]
+    #[Column(name: "start_time", type: "datetime")]
     private \DateTime $startTime;
 
     /** @var float The distance covered by the runners before their first passage at the checkpoint */
