@@ -7,9 +7,9 @@ const menuItems = [
         label: "Gestion des coureurs",
     },
     {
-        url: "/admin/race-settings",
-        icon: "fa-solid fa-gear",
-        label: "Paramètres de course",
+        url: "/admin/races",
+        icon: "fa-sharp fa-solid fa-flag-checkered",
+        label: "Gestion des courses",
     },
     {
         url: "/admin/users",
@@ -20,7 +20,7 @@ const menuItems = [
 
 const MenuList = () => {
     return (
-        <ul className="admin-home-menu-list">
+        <ul className="admin-list">
             {menuItems.map(({url, icon, label}, key) => <MenuItem key={key} url={url} icon={icon} label={label} />)}
         </ul>
     )

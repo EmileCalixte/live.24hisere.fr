@@ -2,6 +2,7 @@
 
 namespace App\Database\Repository;
 
+use App\Database\Entity\Race;
 use App\Database\Entity\Runner;
 use App\Misc\Util\DateUtil;
 use Doctrine\ORM\EntityRepository;
@@ -16,11 +17,47 @@ class RunnerRepository extends EntityRepository
      */
     public function findAll(bool $asArray = false): array
     {
-        $query = $this->createQueryBuilder('r')
-            ->orderBy('r.id', 'ASC')
-            ->getQuery();
+        $queryBuilder = $this->createQueryBuilder('r')
+            ->orderBy('r.id', 'ASC');
 
-        return $query->getResult($asArray ? Query::HYDRATE_ARRAY : Query::HYDRATE_OBJECT);
+        if ($asArray) {
+            $queryBuilder->select('r, ra.id as race_id')
+                ->leftJoin('r.race', 'ra');
+        }
+
+        $query = $queryBuilder->getQuery();
+
+        if (!$asArray) {
+            return $query->getResult(Query::HYDRATE_OBJECT);
+        }
+
+        $dbResult = $query->getResult(Query::HYDRATE_ARRAY);
+
+        // There is surely an easier way to do that...
+
+        $result = [];
+
+        array_walk($dbResult, function (array $row) use (&$result) {
+            $resultRow = [];
+
+            foreach ($row[0] as $key => $value) {
+                $resultRow[$key] = $value;
+            }
+
+            unset($row[0]);
+
+            foreach ($row as $key => $value) {
+                if (isset($resultRow[$key])) {
+                    throw new \Exception("Key already exists in result array");
+                }
+
+                $resultRow[$key] = $value;
+            }
+
+            array_push($result, $resultRow);
+        });
+
+        return $result;
     }
 
     /**
@@ -40,6 +77,17 @@ class RunnerRepository extends EntityRepository
         } catch (NoResultException) {
             return null;
         }
+    }
+
+    public function countByRace(int $raceId): int
+    {
+        $query = $this->createQueryBuilder('r')
+            ->select('COUNT(r.id)')
+            ->andWhere("r.race = :raceId")
+            ->setParameter('raceId', $raceId)
+            ->getQuery();
+
+        return $query->getSingleResult(Query::HYDRATE_SINGLE_SCALAR);
     }
 
     /**

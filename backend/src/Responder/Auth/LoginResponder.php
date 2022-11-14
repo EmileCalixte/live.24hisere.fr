@@ -12,7 +12,7 @@ use App\Misc\Util\PasswordUtil;
 use App\Responder\ResponderInterface;
 use App\Validator\ArrayValidator;
 use App\Validator\PropertyValidator\IsRequired;
-use App\Validator\PropertyValidator\IsString;
+use App\Validator\PropertyValidator\TypeValidator\IsString;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\HttpBadRequestException;

@@ -5,8 +5,12 @@ namespace App\Router;
 
 
 use App\Responder\Admin\DeleteUserAccessTokensResponder;
-use App\Responder\Admin\RaceSettings\UpdateRaceSettingsResponder;
-use App\Responder\Admin\RaceSettings\RaceSettingsResponder;
+use App\Responder\Admin\Races\CreateRaceResponder;
+use App\Responder\Admin\Races\DeleteRaceResponder;
+use App\Responder\Admin\Races\RaceResponder;
+use App\Responder\Admin\Races\RacesResponder;
+use App\Responder\Admin\Races\UpdateRaceResponder;
+use App\Responder\Admin\Races\UpdateRacesOrderResponder;
 use App\Responder\Admin\UsersResponder;
 use App\Responder\Auth\CurrentUserInfoResponder;
 use App\Responder\Auth\LoginResponder;
@@ -49,8 +53,13 @@ class Router
         $this->registerRoute('/auth/logout', LogoutResponder::class, 'POST');
         $this->registerRoute('/auth/current-user-info', CurrentUserInfoResponder::class, 'GET');
 
-        $this->registerRoute('/admin/race-settings', RaceSettingsResponder::class, 'GET');
-        $this->registerRoute('/admin/race-settings', UpdateRaceSettingsResponder::class, 'PATCH');
+        $this->registerRoute('/admin/races', RacesResponder::class, 'GET');
+        $this->registerRoute('/admin/races', CreateRaceResponder::class, 'POST');
+        $this->registerRoute('/admin/races/{id}', RaceResponder::class, 'GET');
+        $this->registerRoute('/admin/races/{id}', UpdateRaceResponder::class, 'PATCH');
+        $this->registerRoute('/admin/races/{id}', DeleteRaceResponder::class, 'DELETE');
+        $this->registerRoute('/admin/races-order', UpdateRacesOrderResponder::class, 'PUT');
+
         $this->registerRoute('/admin/users', UsersResponder::class, 'GET');
         $this->registerRoute('/admin/users/{id}/access-tokens', DeleteUserAccessTokensResponder::class, 'DELETE');
     }

@@ -4,7 +4,6 @@ import RankingSettings from "./RankingSettings";
 import ApiUtil from "../../../util/ApiUtil";
 import RankingTable from "./RankingTable";
 import RankingUtil from "../../../util/RankingUtil";
-import {getMaxTime as getMaxRankingTime} from "./RankingSettingsTime";
 import {app} from "../../App";
 import Util from "../../../util/Util";
 
@@ -27,7 +26,7 @@ const Ranking = () => {
     const [selectedCategory, setSelectedCategory] = useState(CATEGORY_ALL);
     const [selectedGender, setSelectedGender] = useState(GENDER_MIXED);
     const [selectedTimeMode, setSelectedTimeMode] = useState(TIME_MODE_NOW);
-    const [selectedRankingTime, setSelectedRankingTime] = useState(getMaxRankingTime());
+    const [selectedRankingTime, setSelectedRankingTime] = useState(86400 * 1000); // TODO USE RACE DURATION
 
     const fetchCategories = useCallback(async () => {
         const response = await ApiUtil.performAPIRequest('/categories');
@@ -81,7 +80,7 @@ const Ranking = () => {
     /**
      * @param time The new ranking time from race start in ms
      */
-    const onRankingTimeSelect = async (time) => {
+    const onRankingTimeSave = async (time) => {
         setSelectedRankingTime(time);
     }
 
@@ -111,7 +110,9 @@ const Ranking = () => {
                         onGenderSelect={onGenderSelect}
                         selectedTimeMode={selectedTimeMode}
                         onTimeModeSelect={onTimeModeSelect}
-                        onRankingTimeSelect={onRankingTimeSelect}
+                        onRankingTimeSave={onRankingTimeSave}
+                        currentRankingTime={selectedRankingTime}
+                        maxRankingTime={86400 * 1000 /* TODO USE RACE DURATION */}
                     />
                 </div>
             </div>

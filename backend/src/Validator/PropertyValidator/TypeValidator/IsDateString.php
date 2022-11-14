@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Validator\PropertyValidator;
+namespace App\Validator\PropertyValidator\TypeValidator;
+
+use App\Validator\PropertyValidator\AbstractPropertyValidator;
 
 class IsDateString extends AbstractPropertyValidator
 {
@@ -25,7 +27,7 @@ class IsDateString extends AbstractPropertyValidator
         $date = \DateTime::createFromFormat($this->dateFormat, $value);
 
         if (!$date) {
-            $this->addError('This value must be a date ' + $value);
+            $this->addError('This value must be a date');
         }
 
         return !$this->hasErrors();
