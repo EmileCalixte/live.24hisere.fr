@@ -2,7 +2,18 @@ import OptionWithLoadingDots from "../../misc/OptionWithLoadingDots";
 import {CATEGORY_ALL, CATEGORY_TEAM, GENDER_F, GENDER_M, GENDER_MIXED, TIME_MODE_AT, TIME_MODE_NOW} from "./Ranking";
 import RankingSettingsTime from "./RankingSettingsTime";
 
-const RankingSettings = ({categories, onCategorySelect, onGenderSelect, onTimeModeSelect, onRankingTimeSelect, selectedCategory, selectedGender, selectedTimeMode}) => {
+const RankingSettings = ({
+    categories,
+    onCategorySelect,
+    onGenderSelect,
+    onTimeModeSelect,
+    onRankingTimeSave,
+    selectedCategory,
+    selectedGender,
+    selectedTimeMode,
+    currentRankingTime,
+    maxRankingTime,
+}) => {
     return (
         <section id="ranking-settings-section">
             <div id="ranking-settings-container">
@@ -53,7 +64,8 @@ const RankingSettings = ({categories, onCategorySelect, onGenderSelect, onTimeMo
                                    defaultChecked={selectedGender === GENDER_MIXED}
                                    onChange={onGenderSelect}
                                    name="gender"
-                                   value={GENDER_MIXED}/>
+                                   value={GENDER_MIXED}
+                            />
                             <span/>
                             Mixte
                         </label>
@@ -65,7 +77,8 @@ const RankingSettings = ({categories, onCategorySelect, onGenderSelect, onTimeMo
                                    defaultChecked={selectedGender === GENDER_M}
                                    onChange={onGenderSelect}
                                    name="gender"
-                                   value={GENDER_M}/>
+                                   value={GENDER_M}
+                            />
                             <span/>
                             Hommes
                         </label>
@@ -77,7 +90,8 @@ const RankingSettings = ({categories, onCategorySelect, onGenderSelect, onTimeMo
                                    defaultChecked={selectedGender === GENDER_F}
                                    onChange={onGenderSelect}
                                    name="gender"
-                                   value={GENDER_F}/>
+                                   value={GENDER_F}
+                            />
                             <span/>
                             Femmes
                         </label>
@@ -93,7 +107,8 @@ const RankingSettings = ({categories, onCategorySelect, onGenderSelect, onTimeMo
                                    defaultChecked={selectedTimeMode === TIME_MODE_NOW}
                                    onChange={onTimeModeSelect}
                                    name="time"
-                                   value={TIME_MODE_NOW}/>
+                                   value={TIME_MODE_NOW}
+                            />
                             <span/>
                             Classement actuel
                         </label>
@@ -105,14 +120,18 @@ const RankingSettings = ({categories, onCategorySelect, onGenderSelect, onTimeMo
                                    defaultChecked={selectedTimeMode === TIME_MODE_AT}
                                    onChange={onTimeModeSelect}
                                    name="time"
-                                   value={TIME_MODE_AT}/>
+                                   value={TIME_MODE_AT}
+                            />
                             <span/>
                             Au temps de course
                         </label>
                     </div>
 
                     <RankingSettingsTime isVisible={selectedTimeMode === TIME_MODE_AT}
-                                         onRankingTimeSelect={onRankingTimeSelect}/>
+                                         currentRankingTime={currentRankingTime}
+                                         onRankingTimeSave={onRankingTimeSave}
+                                         maxRankingTime={maxRankingTime}
+                    />
                 </div>
 
             </div>

@@ -122,7 +122,9 @@ const RaceDetailsForm = ({
                 <legend>
                     Durée
                 </legend>
-                <DurationInputs duration={duration} setDuration={setDuration}/>
+                <div className="inline-input-group">
+                    <DurationInputs duration={duration} setDuration={setDuration}/>
+                </div>
             </div>
 
             <div className="inline-input-group mt-3">

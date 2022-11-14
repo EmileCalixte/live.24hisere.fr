@@ -103,7 +103,7 @@ const DurationInputs = ({
     }, [setDuration, minDuration, maxDuration, hours, minutes]);
 
     return (
-        <div className="inline-input-group">
+        <>
             <label style={{marginLeft: -5}}>
                 <input className="input race-time-input"
                        type="number"
@@ -128,7 +128,7 @@ const DurationInputs = ({
                 />
                 s
             </label>
-        </div>
+        </>
     );
 }
 
