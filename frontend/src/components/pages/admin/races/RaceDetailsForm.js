@@ -11,6 +11,8 @@ const RaceDetailsForm = ({
     setLapDistance,
     startTime,
     setStartTime,
+    duration,
+    setDuration,
     isPublic,
     setIsPublic,
     submitButtonDisabled,
@@ -64,7 +66,7 @@ const RaceDetailsForm = ({
                 </label>
             </div>
 
-            <div className="input-group">
+            <div className="input-group mt-3">
                 <label>
                     Distance avant premier passage (m)
                     <input className="input"
@@ -79,7 +81,7 @@ const RaceDetailsForm = ({
                 </label>
             </div>
 
-            <div className="input-group">
+            <div className="input-group mt-3">
                 <label>
                     Distance du tour (m)
                     <input className="input"
@@ -94,9 +96,9 @@ const RaceDetailsForm = ({
                 </label>
             </div>
 
-            <div className="input-group">
+            <div className="input-group mt-3">
                 <label>
-                    Départ
+                    Date et heure de départ
                     <input className="input"
                            type="date"
                            required={true}
@@ -113,6 +115,13 @@ const RaceDetailsForm = ({
                            onChange={onStartTimeTimeChange}
                     />
                 </label>
+            </div>
+
+            <div className="input-group mt-3">
+                <label>
+                    Durée
+                </label>
+                TODO
             </div>
 
             <div className="inline-input-group mt-3">
