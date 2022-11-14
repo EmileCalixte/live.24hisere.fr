@@ -10,8 +10,10 @@ const RunnerSelector = ({runners, onSelectRunner, selectedRunnerId}) => {
             return false;
         }
 
+        const searchedRunnerId = parseInt(selectedRunnerId);
+
         const runner = runners.find(runner => {
-            return runner.id === selectedRunnerId;
+            return runner.id === searchedRunnerId;
         })
 
         return runner !== undefined;
