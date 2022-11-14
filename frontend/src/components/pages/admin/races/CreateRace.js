@@ -13,6 +13,7 @@ const CreateRace = () => {
     const [initialDistance, setInitialDistance] = useState(0);
     const [lapDistance, setLapDistance] = useState(0);
     const [startTime, setStartTime] = useState(new Date());
+    const [duration, setDuration] = useState(60 * 60 * 24 * 1000);
     const [isPublic, setIsPublic] = useState(false);
 
     const [isSaving, setIsSaving] = useState(false);
@@ -27,6 +28,7 @@ const CreateRace = () => {
             name: raceName,
             isPublic,
             startTime: Util.formatDateForApi(startTime),
+            duration: Math.floor(duration / 1000),
             initialDistance,
             lapDistance,
         };
@@ -80,6 +82,8 @@ const CreateRace = () => {
                                      setLapDistance={setLapDistance}
                                      startTime={startTime}
                                      setStartTime={setStartTime}
+                                     duration={duration}
+                                     setDuration={setDuration}
                                      isPublic={isPublic}
                                      setIsPublic={setIsPublic}
                                      submitButtonDisabled={isSaving}

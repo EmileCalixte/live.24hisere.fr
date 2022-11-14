@@ -1,5 +1,6 @@
 import {useMemo} from "react";
 import Util from "../../../../util/Util";
+import DurationInputs from "../../../misc/DurationInputs";
 
 const RaceDetailsForm = ({
     onSubmit,
@@ -117,11 +118,11 @@ const RaceDetailsForm = ({
                 </label>
             </div>
 
-            <div className="input-group mt-3">
-                <label>
+            <div className="mt-3">
+                <legend>
                     Durée
-                </label>
-                TODO
+                </legend>
+                <DurationInputs duration={duration} setDuration={setDuration}/>
             </div>
 
             <div className="inline-input-group mt-3">

@@ -18,6 +18,7 @@ const RaceDetails = () => {
     const [initialDistance, setInitialDistance] = useState(null);
     const [lapDistance, setLapDistance] = useState(null);
     const [startTime, setStartTime] = useState(null);
+    const [duration, setDuration] = useState(0);
     const [isPublic, setIsPublic] = useState(null);
 
     const [isSaving, setIsSaving] = useState(false);
@@ -34,9 +35,10 @@ const RaceDetails = () => {
             initialDistance.toString() === race.initialDistance.toString(),
             lapDistance.toString() === race.lapDistance.toString(),
             startTime.getTime() === new Date(race.startTime).getTime(),
+            duration === race.duration * 1000,
             isPublic === race.isPublic,
         ].includes(false);
-    }, [race, raceName, initialDistance, lapDistance, startTime, isPublic]);
+    }, [race, raceName, initialDistance, lapDistance, startTime, duration, isPublic]);
 
     const fetchRace = useCallback(async () => {
         const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/races/${urlRaceId}`, app.state.accessToken);
@@ -55,6 +57,7 @@ const RaceDetails = () => {
         setInitialDistance(responseJson.race.initialDistance);
         setLapDistance(responseJson.race.lapDistance);
         setStartTime(new Date(responseJson.race.startTime));
+        setDuration(responseJson.race.duration * 1000);
         setIsPublic(responseJson.race.isPublic);
     }, [urlRaceId]);
 
@@ -70,6 +73,7 @@ const RaceDetails = () => {
             name: raceName,
             isPublic,
             startTime: Util.formatDateForApi(startTime),
+            duration: Math.floor(duration / 1000),
             initialDistance,
             lapDistance,
         };
@@ -169,6 +173,8 @@ const RaceDetails = () => {
                                              setLapDistance={setLapDistance}
                                              startTime={startTime}
                                              setStartTime={setStartTime}
+                                             duration={duration}
+                                             setDuration={setDuration}
                                              isPublic={isPublic}
                                              setIsPublic={setIsPublic}
                                              submitButtonDisabled={isSaving || !unsavedChanges}
