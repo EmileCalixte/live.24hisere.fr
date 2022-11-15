@@ -22,6 +22,10 @@ class RaceResponder extends AbstractResponder
 
         $raceId = $args['id'];
 
+        if (!is_numeric($raceId)) {
+            throw new HttpNotFoundException($request);
+        }
+
         /** @var RaceRepository $raceRepository */
         $raceRepository = RepositoryProvider::getRepository(Race::class);
 

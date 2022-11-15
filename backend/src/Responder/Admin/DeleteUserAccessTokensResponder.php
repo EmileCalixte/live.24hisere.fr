@@ -20,6 +20,10 @@ class DeleteUserAccessTokensResponder extends AbstractResponder
 
         $userId = $args['id'];
 
+        if (!is_numeric($userId)) {
+            throw new HttpNotFoundException($request, "User not found");
+        }
+
         /** @var UserRepository $userRepository */
         $userRepository = RepositoryProvider::getRepository(User::class);
 

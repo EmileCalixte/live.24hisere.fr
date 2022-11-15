@@ -21,6 +21,10 @@ class RunnerDetailsResponder extends AbstractResponder
     {
         $runnerId = $args['id'];
 
+        if (!is_numeric($runnerId)) {
+            throw new HttpNotFoundException($request);
+        }
+
         /** @var RunnerRepository $runnerRepository */
         $runnerRepository = RepositoryProvider::getRepository(Runner::class);
 
