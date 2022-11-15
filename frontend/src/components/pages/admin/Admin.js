@@ -6,6 +6,7 @@ import Runners from "./runners/Runners";
 import CreateRace from "./races/CreateRace";
 import RaceDetails from "./races/RaceDetails";
 import CircularLoader from "../../misc/CircularLoader";
+import RunnerDetails from "./runners/RunnerDetails";
 
 const Admin = () => {
     if (app.state.user === null) {
@@ -24,6 +25,7 @@ const Admin = () => {
         <Routes>
             <Route exact path="/" element={<AdminHome />} />
             <Route exact path="runners" element={<Runners />} />
+            <Route exact path="runners/:runnerId" element={<RunnerDetails />} />
             <Route exact path="races" element={<Races />} />
             <Route exact path="races/create" element={<CreateRace />} />
             <Route exact path="races/:raceId" element={<RaceDetails />} />
