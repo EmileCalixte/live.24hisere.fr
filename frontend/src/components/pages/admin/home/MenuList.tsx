@@ -1,6 +1,12 @@
 import MenuItem from "./MenuItem";
 
-const menuItems = [
+interface MenuItem {
+    url: string,
+    icon: string,
+    label: string,
+}
+
+const menuItems: MenuItem[] = [
     {
         url: "/admin/runners",
         icon: "fa-solid fa-person-running",
