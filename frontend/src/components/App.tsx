@@ -10,7 +10,7 @@ import Admin from "./pages/admin/Admin";
 import Util from "../util/Util";
 import ToastUtil from "../util/ToastUtil";
 
-let instance;
+let instance: App;
 
 export const RACE_DURATION = 24 * 60 * 60 * 1000 - 1; // in ms
 
@@ -30,11 +30,14 @@ class App extends React.Component {
         redirect: null, // Used to redirect the user to a specified location, for example when user logs out
     }
 
+    private fetchRaceDataInterval: NodeJS.Timer | undefined;
+
     constructor() {
         if (instance) {
             throw new Error('App has already been instanciated');
         }
 
+        // @ts-ignore
         super();
 
         instance = this;
@@ -60,6 +63,7 @@ class App extends React.Component {
         }
     }
 
+    // @ts-ignore
     componentDidUpdate = (prevProps, prevState) => {
         if (prevState.accessToken !== this.state.accessToken) {
             this.onAccessTokenUpdate();
@@ -70,7 +74,7 @@ class App extends React.Component {
         clearInterval(this.fetchRaceDataInterval);
     }
 
-    saveAccessToken = (accessToken) => {
+    saveAccessToken = (accessToken: string) => {
         localStorage.setItem('accessToken', accessToken);
         this.setState({accessToken});
     }
@@ -107,11 +111,11 @@ class App extends React.Component {
         this.fetchCurrentUserInfo();
     }
 
-    computeServerTimeOffset = (serverTimeString) => {
+    computeServerTimeOffset = (serverTimeString: string) => {
         const serverTime = new Date(serverTimeString);
         const clientTime = new Date();
 
-        const timeOffsetMs = serverTime - clientTime;
+        const timeOffsetMs = serverTime.getTime() - clientTime.getTime();
 
         this.setState({
             serverTimeOffset: Math.round(timeOffsetMs / 1000),
@@ -133,12 +137,13 @@ class App extends React.Component {
     }
 
     fetchRaceData = async () => {
-        const response = await ApiUtil.performAPIRequest('/race-data', {}, false);
+        const response = await ApiUtil.performAPIRequest('/race-data', {});
         const responseJson = await response.json();
 
         this.saveRaceData(responseJson);
     }
 
+    // @ts-ignore
     saveRaceData = async (raceData) => {
         this.computeServerTimeOffset(raceData.currentTime);
 
@@ -173,11 +178,11 @@ class App extends React.Component {
                         <div id="app-content">
                             <div id="page-content" className="container-fluid">
                                 <Routes>
-                                    <Route exact path="/ranking" element={<Ranking />} />
-                                    <Route exact path="/runner-details" element={<RunnerDetails />} />
-                                    <Route exact path="/runner-details/:runnerId" element={<RunnerDetails />} />
+                                    <Route path="/ranking" element={<Ranking />} />
+                                    <Route path="/runner-details" element={<RunnerDetails />} />
+                                    <Route path="/runner-details/:runnerId" element={<RunnerDetails />} />
 
-                                    <Route exact path="/login" element={<Login />} />
+                                    <Route path="/login" element={<Login />} />
 
                                     <Route path="/admin/*" element={<Admin />} />
 
