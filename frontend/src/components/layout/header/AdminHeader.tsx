@@ -9,6 +9,10 @@ const AdminHeader = () => {
         setUserDropdownShown(false);
     }
 
+    if (!app.state.user) {
+        throw new Error("User is not defined");
+    }
+
     return(
         <div id="app-header-admin-section">
             <span>
@@ -18,6 +22,7 @@ const AdminHeader = () => {
                 <button className="admin-header-user-button"
                         onClick={() => setUserDropdownShown(!userDropdownShown)}
                 >
+                    {/* @ts-ignore */}
                     {app.state.user.username}
                     &nbsp;
                     {userDropdownShown &&

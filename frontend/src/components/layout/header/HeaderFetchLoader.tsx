@@ -1,4 +1,3 @@
-import React from "react";
 import CircularLoader from "../../misc/CircularLoader";
 
 const HeaderFetchLoader = () => {

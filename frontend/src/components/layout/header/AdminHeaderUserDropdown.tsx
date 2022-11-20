@@ -1,14 +1,18 @@
 import {app} from "../../App";
 import {useCallback, useEffect, useRef} from "react";
 
-const AdminHeaderUserDropdown = ({hideDropdown}) => {
-    const dropdownNode = useRef();
+const AdminHeaderUserDropdown: React.FunctionComponent<{hideDropdown: () => any}> = ({hideDropdown}) => {
+    const dropdownNode = useRef<HTMLDivElement>(null);
 
-    const onClickOutside = useCallback((e) => {
-        if (!dropdownNode.current.contains(e.target)) {
+    const onClickOutside = useCallback((e: MouseEvent) => {
+        if (!dropdownNode || !dropdownNode.current) {
+            return;
+        }
+
+        if (!dropdownNode.current.contains(e.target as Node)) {
             hideDropdown();
         }
-    }, [hideDropdown]);
+    }, [dropdownNode, hideDropdown]);
 
     useEffect(() => {
         setTimeout(() => {
