@@ -1,40 +1,50 @@
 import '../../../css/print-ranking-table.css';
-import {useState, useEffect, useCallback} from "react";
+import React, {useState, useEffect, useCallback} from "react";
 import RankingSettings from "./RankingSettings";
 import ApiUtil from "../../../util/ApiUtil";
 import RankingTable from "./RankingTable";
 import RankingUtil from "../../../util/RankingUtil";
 import {app} from "../../App";
 import Util from "../../../util/Util";
+import CategoryType, {CategoriesDict} from "../../../types/Category";
+import {ProcessedRanking, Ranking as RankingType} from "../../../types/Ranking";
+import {GenderWithMixed} from "../../../types/Runner";
 
 export const CATEGORY_ALL = 'all';
 export const CATEGORY_TEAM = 'team';
+
+export enum Category {
+    All = 'all',
+    Team = 'team',
+}
 
 export const GENDER_MIXED = 'mixed';
 export const GENDER_M = 'm';
 export const GENDER_F = 'f';
 
-export const TIME_MODE_NOW = 'now';
-export const TIME_MODE_AT = 'at';
+export enum TimeMode {
+    Now = 'now',
+    At = 'at',
+}
 
 export const RANKING_UPDATE_INTERVAL_TIME = 30000;
 
 const Ranking = () => {
 
-    const [categories, setCategories] = useState(false);
-    const [processedRanking, setProcessedRanking] = useState([]);
-    const [selectedCategory, setSelectedCategory] = useState(CATEGORY_ALL);
-    const [selectedGender, setSelectedGender] = useState(GENDER_MIXED);
-    const [selectedTimeMode, setSelectedTimeMode] = useState(TIME_MODE_NOW);
+    const [categories, setCategories] = useState<CategoriesDict | false>(false);
+    const [processedRanking, setProcessedRanking] = useState<ProcessedRanking>([]);
+    const [selectedCategory, setSelectedCategory] = useState<string>(Category.All);
+    const [selectedGender, setSelectedGender] = useState<GenderWithMixed>("mixed");
+    const [selectedTimeMode, setSelectedTimeMode] = useState(TimeMode.Now);
     const [selectedRankingTime, setSelectedRankingTime] = useState(86400 * 1000); // TODO USE RACE DURATION
 
     const fetchCategories = useCallback(async () => {
         const response = await ApiUtil.performAPIRequest('/categories');
         const responseJson = await response.json();
 
-        const responseCategories = {};
+        const responseCategories: CategoriesDict = {};
 
-        responseJson.categories.forEach((category) => {
+        responseJson.categories.forEach((category: CategoryType) => {
             responseCategories[category.code] = category.name;
         });
 
@@ -44,7 +54,7 @@ const Ranking = () => {
     const fetchRanking = useCallback(async (rankingTime = selectedRankingTime) => {
         let requestUrl = '/ranking';
 
-        if (selectedTimeMode === TIME_MODE_AT) {
+        if (selectedTimeMode === TimeMode.At) {
             const rankingDate = new Date();
             rankingDate.setTime(app.state.raceStartTime.getTime() + rankingTime);
             const rankingDateString = Util.formatDateForApi(rankingDate);
@@ -62,25 +72,25 @@ const Ranking = () => {
             isFetching: false,
         });
 
-        setProcessedRanking(RankingUtil.getProcessedRanking(responseJson.ranking));
+        setProcessedRanking(RankingUtil.getProcessedRanking(responseJson.ranking as RankingType));
     }, [selectedRankingTime, selectedTimeMode]);
 
-    const onCategorySelect = (e) => {
+    const onCategorySelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedCategory(e.target.value);
     }
 
-    const onGenderSelect = (e) => {
-        setSelectedGender(e.target.value);
+    const onGenderSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSelectedGender(e.target.value as GenderWithMixed);
     }
 
-    const onTimeModeSelect = (e) => {
-        setSelectedTimeMode(e.target.value);
+    const onTimeModeSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSelectedTimeMode(e.target.value as TimeMode);
     }
 
     /**
      * @param time The new ranking time from race start in ms
      */
-    const onRankingTimeSave = async (time) => {
+    const onRankingTimeSave = async (time: number) => {
         setSelectedRankingTime(time);
     }
 
@@ -102,15 +112,14 @@ const Ranking = () => {
             <div className="row hide-on-print">
                 <div className="col-12">
                     <RankingSettings
-                        rankingComponent={this}
                         categories={categories}
-                        selectedCategory={selectedCategory}
                         onCategorySelect={onCategorySelect}
-                        selectedGender={selectedGender}
                         onGenderSelect={onGenderSelect}
-                        selectedTimeMode={selectedTimeMode}
                         onTimeModeSelect={onTimeModeSelect}
                         onRankingTimeSave={onRankingTimeSave}
+                        selectedCategory={selectedCategory}
+                        selectedGender={selectedGender}
+                        selectedTimeMode={selectedTimeMode}
                         currentRankingTime={selectedRankingTime}
                         maxRankingTime={86400 * 1000 /* TODO USE RACE DURATION */}
                     />
@@ -122,7 +131,7 @@ const Ranking = () => {
                         ranking={processedRanking}
                         tableCategory={selectedCategory}
                         tableGender={selectedGender}
-                        tableRaceDuration={selectedTimeMode === TIME_MODE_AT ? selectedRankingTime : null}
+                        tableRaceDuration={selectedTimeMode === TimeMode.At ? selectedRankingTime : null}
                     />
                 </div>
             </div>

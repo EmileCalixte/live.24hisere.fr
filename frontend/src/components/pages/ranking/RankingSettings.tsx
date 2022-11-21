@@ -1,8 +1,22 @@
 import OptionWithLoadingDots from "../../misc/OptionWithLoadingDots";
-import {CATEGORY_ALL, CATEGORY_TEAM, GENDER_F, GENDER_M, GENDER_MIXED, TIME_MODE_AT, TIME_MODE_NOW} from "./Ranking";
+import {Category, TimeMode} from "./Ranking";
 import RankingSettingsTime from "./RankingSettingsTime";
+import React from "react";
+import {CategoriesDict} from "../../../types/Category";
+import {Gender, GenderWithMixed} from "../../../types/Runner";
 
-const RankingSettings = ({
+const RankingSettings: React.FunctionComponent<{
+    categories: CategoriesDict | false,
+    onCategorySelect: (e: React.ChangeEvent<HTMLSelectElement>) => any,
+    onGenderSelect: (e: React.ChangeEvent<HTMLInputElement>) => any,
+    onTimeModeSelect: (e: React.ChangeEvent<HTMLInputElement>) => any,
+    onRankingTimeSave: (time: number) => any,
+    selectedCategory: string,
+    selectedGender: GenderWithMixed
+    selectedTimeMode: TimeMode
+    currentRankingTime: number,
+    maxRankingTime: number,
+}> = ({
     categories,
     onCategorySelect,
     onGenderSelect,
@@ -28,7 +42,7 @@ const RankingSettings = ({
                                 onChange={onCategorySelect}
                                 className="input-select"
                         >
-                            <option value={CATEGORY_ALL}>Scratch (toutes catégories)</option>
+                            <option value={Category.All}>Scratch (toutes catégories)</option>
                             {(() => {
                                 if (categories === false) {
                                     return (
@@ -50,7 +64,7 @@ const RankingSettings = ({
                                     </>
                                 );
                             })()}
-                            <option value={CATEGORY_TEAM}>Équipes</option>
+                            <option value={Category.Team}>Équipes</option>
                         </select>
                     </div>
                 </div>
@@ -61,10 +75,10 @@ const RankingSettings = ({
                     <div className="inline-input-group">
                         <label className="input-radio">
                             <input type="radio"
-                                   defaultChecked={selectedGender === GENDER_MIXED}
+                                   defaultChecked={selectedGender === "mixed"}
                                    onChange={onGenderSelect}
                                    name="gender"
-                                   value={GENDER_MIXED}
+                                   value={"mixed"}
                             />
                             <span/>
                             Mixte
@@ -74,10 +88,10 @@ const RankingSettings = ({
                     <div className="inline-input-group">
                         <label className="input-radio">
                             <input type="radio"
-                                   defaultChecked={selectedGender === GENDER_M}
+                                   defaultChecked={selectedGender === Gender.M}
                                    onChange={onGenderSelect}
                                    name="gender"
-                                   value={GENDER_M}
+                                   value={Gender.M}
                             />
                             <span/>
                             Hommes
@@ -87,10 +101,10 @@ const RankingSettings = ({
                     <div className="inline-input-group">
                         <label className="input-radio">
                             <input type="radio"
-                                   defaultChecked={selectedGender === GENDER_F}
+                                   defaultChecked={selectedGender === Gender.F}
                                    onChange={onGenderSelect}
                                    name="gender"
-                                   value={GENDER_F}
+                                   value={Gender.F}
                             />
                             <span/>
                             Femmes
@@ -104,10 +118,10 @@ const RankingSettings = ({
                     <div className="inline-input-group">
                         <label className="input-radio">
                             <input type="radio"
-                                   defaultChecked={selectedTimeMode === TIME_MODE_NOW}
+                                   defaultChecked={selectedTimeMode === TimeMode.Now}
                                    onChange={onTimeModeSelect}
                                    name="time"
-                                   value={TIME_MODE_NOW}
+                                   value={TimeMode.Now}
                             />
                             <span/>
                             Classement actuel
@@ -117,17 +131,17 @@ const RankingSettings = ({
                     <div className="inline-input-group">
                         <label className="input-radio">
                             <input type="radio"
-                                   defaultChecked={selectedTimeMode === TIME_MODE_AT}
+                                   defaultChecked={selectedTimeMode === TimeMode.At}
                                    onChange={onTimeModeSelect}
                                    name="time"
-                                   value={TIME_MODE_AT}
+                                   value={TimeMode.At}
                             />
                             <span/>
                             Au temps de course
                         </label>
                     </div>
 
-                    <RankingSettingsTime isVisible={selectedTimeMode === TIME_MODE_AT}
+                    <RankingSettingsTime isVisible={selectedTimeMode === TimeMode.At}
                                          currentRankingTime={currentRankingTime}
                                          onRankingTimeSave={onRankingTimeSave}
                                          maxRankingTime={maxRankingTime}
