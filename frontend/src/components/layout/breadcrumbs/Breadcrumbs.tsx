@@ -1,4 +1,14 @@
-const Breadcrumbs = ({children}) => {
+import React from "react";
+
+const Breadcrumbs: React.FunctionComponent<{children: React.ReactNode[] | React.ReactNode}> = ({children}) => {
+    if (!Array.isArray(children)) {
+        return (
+            <ul className="breadcrumbs">
+                <span>{children}</span>
+            </ul>
+        )
+    }
+
     return (
         <ul className="breadcrumbs">
             {children.map((child, key) => {
