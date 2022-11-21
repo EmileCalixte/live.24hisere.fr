@@ -1,8 +1,16 @@
 import {Link} from "react-router-dom";
-import {useCallback} from "react";
+import React, {useCallback} from "react";
 
-const RacesListItem = ({id, name, runnerCount, isPublic, isSorting, isDragged, isDraggedOver}) => {
-    const onClick = useCallback((e) => {
+const RacesListItem: React.FunctionComponent<{
+    id: number,
+    name: string,
+    runnerCount: number,
+    isPublic: boolean,
+    isSorting: boolean,
+    isDragged: boolean,
+    isDraggedOver: boolean,
+}> = ({id, name, runnerCount, isPublic, isSorting, isDragged, isDraggedOver}) => {
+    const onClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
         // Prevent navigation to the clicked race if sorting mode is enabled
         if (isSorting) {
             e.preventDefault();
