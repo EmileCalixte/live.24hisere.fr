@@ -1,9 +1,16 @@
 import {Link} from "react-router-dom";
-import {CATEGORY_TEAM} from "./Ranking";
+import {Category} from "./Ranking";
 import Util from "../../../util/Util";
 import RankingTableRowNCells from "./RankingTableRowNCells";
+import React from "react";
+import {ProcessedRankingRunner} from "../../../types/Ranking";
+import {GenderWithMixed} from "../../../types/Runner";
 
-const RankingTableRow = ({runner, tableCategory, tableGender}) => {
+const RankingTableRow: React.FunctionComponent<{
+    runner: ProcessedRankingRunner,
+    tableCategory: string,
+    tableGender: GenderWithMixed,
+}> = ({runner, tableCategory, tableGender}) => {
     return (
         <tr>
             <RankingTableRowNCells runner={runner} tableCategory={tableCategory} tableGender={tableGender} />
@@ -11,7 +18,7 @@ const RankingTableRow = ({runner, tableCategory, tableGender}) => {
             <td>{runner.id}</td>
 
             {(() => {
-                if (tableCategory === CATEGORY_TEAM) {
+                if (tableCategory === Category.Team) {
                     return (
                         <td>{runner.firstname}</td>
                     )

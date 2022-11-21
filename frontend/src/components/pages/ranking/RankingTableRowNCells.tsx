@@ -1,14 +1,21 @@
-import {CATEGORY_ALL, CATEGORY_TEAM, GENDER_MIXED} from "./Ranking";
+import {Category} from "./Ranking";
+import React from "react";
+import {ProcessedRankingRunner} from "../../../types/Ranking";
+import {GenderWithMixed} from "../../../types/Runner";
 
-const RankingTableRowNCells = ({runner, tableCategory, tableGender}) => {
-    if (tableCategory === CATEGORY_TEAM) {
+const RankingTableRowNCells: React.FunctionComponent<{
+    runner: ProcessedRankingRunner,
+    tableCategory: string,
+    tableGender: GenderWithMixed,
+}> = ({runner, tableCategory, tableGender}) => {
+    if (tableCategory === Category.Team) {
         return (
             <td>
                 {runner.rankings.displayed.scratchMixed}
             </td>
         );
-    } else if (tableCategory === CATEGORY_ALL) {
-        if (tableGender === GENDER_MIXED) {
+    } else if (tableCategory === Category.All) {
+        if (tableGender === "mixed") {
             return (
                 <>
                     <td>
@@ -44,7 +51,7 @@ const RankingTableRowNCells = ({runner, tableCategory, tableGender}) => {
             );
         }
     } else {
-        if (tableGender === GENDER_MIXED) {
+        if (tableGender === "mixed") {
             return (
                 <>
                     <td>

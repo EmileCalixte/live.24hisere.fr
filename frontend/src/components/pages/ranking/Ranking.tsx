@@ -10,22 +10,17 @@ import CategoryType, {CategoriesDict} from "../../../types/Category";
 import {ProcessedRanking, Ranking as RankingType} from "../../../types/Ranking";
 import {GenderWithMixed} from "../../../types/Runner";
 
-export const CATEGORY_ALL = 'all';
-export const CATEGORY_TEAM = 'team';
-
 export enum Category {
     All = 'all',
     Team = 'team',
 }
-
-export const GENDER_MIXED = 'mixed';
 
 export enum TimeMode {
     Now = 'now',
     At = 'at',
 }
 
-export const RANKING_UPDATE_INTERVAL_TIME = 30000;
+const RANKING_UPDATE_INTERVAL_TIME = 30000;
 
 const Ranking = () => {
 
