@@ -5,7 +5,7 @@ interface RankingRunner extends Runner {
     lastPassageTime: string,
 }
 
-interface ProcessedRankingRunner extends RankingRunner {
+export interface ProcessedRankingRunner extends RankingRunner {
     distance: number,
     lastPassageRaceTime: number,
     averageSpeed: number,

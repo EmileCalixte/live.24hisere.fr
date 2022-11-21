@@ -19,8 +19,6 @@ export enum Category {
 }
 
 export const GENDER_MIXED = 'mixed';
-export const GENDER_M = 'm';
-export const GENDER_F = 'f';
 
 export enum TimeMode {
     Now = 'now',
