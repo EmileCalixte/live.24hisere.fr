@@ -1,19 +1,20 @@
 import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
-import {useCallback, useEffect, useMemo, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import ApiUtil from "../../../../util/ApiUtil";
 import {app} from "../../../App";
 import CircularLoader from "../../../misc/CircularLoader";
 import {Link} from "react-router-dom";
 import RacesListItem from "./RacesListItem";
 import ToastUtil from "../../../../util/ToastUtil";
+import Race from "../../../../types/Race";
 
 const Races = () => {
-    // false = not fetched yet. Once fetched, it's an array
-    const [races, setRaces] = useState(false);
+    // false = not fetched yet
+    const [races, setRaces] = useState<Race[] | false>(false);
 
     // Used when user is reordering the list
-    const [sortingRaces, setSortingRaces] = useState(false);
+    const [sortingRaces, setSortingRaces] = useState<Race[] | false>(false);
     const [isSorting, setIsSorting] = useState(false);
 
     const [isSaving, setIsSaving] = useState(false);
@@ -39,11 +40,11 @@ const Races = () => {
         setSortingRaces([...races]);
     }, [isSorting, races]);
 
-    const onDragStart = (e, index) => {
+    const onDragStart = (e: React.DragEvent, index: number) => {
         setDragItemIndex(index);
     }
 
-    const onDragEnter = (e, index) => {
+    const onDragEnter = (e: React.DragEvent, index: number) => {
         setDragOverIndex(index);
     }
 
@@ -51,10 +52,18 @@ const Races = () => {
         handleSort();
     }
 
-    const [dragItemIndex, setDragItemIndex] = useState(null);
-    const [dragOverItemIndex, setDragOverIndex] = useState(null);
+    const [dragItemIndex, setDragItemIndex] = useState<number | null>(null);
+    const [dragOverItemIndex, setDragOverIndex] = useState<number | null>(null);
 
     const handleSort = useCallback(() => {
+        if (sortingRaces === false) {
+            return;
+        }
+
+        if (dragItemIndex === null || dragOverItemIndex === null) {
+            return;
+        }
+
         const _races = [...sortingRaces];
 
         // Remove dragged race for temporary races array
@@ -72,7 +81,7 @@ const Races = () => {
     const saveSort = useCallback(async () => {
         setIsSaving(true);
 
-        const raceIds = sortingRaces.map(race => race.id);
+        const raceIds = (sortingRaces as Race[]).map(race => race.id);
 
         const response = await ApiUtil.performAuthenticatedAPIRequest("/admin/races-order", app.state.accessToken, {
             method: "PUT",
@@ -86,7 +95,7 @@ const Races = () => {
             return;
         }
 
-        setRaces([...sortingRaces]);
+        setRaces([...(sortingRaces as Race[])]);
 
         ToastUtil.getToastr().success("L'ordre des courses a été modifié");
         setIsSorting(false);
@@ -129,14 +138,14 @@ const Races = () => {
                     {races.length > 0 &&
                     <div className="row mt-4">
                         <div className="col-12">
-                            {isSorting === false &&
+                            {!isSorting &&
                             <button className="button" onClick={() => setIsSorting(true)}>
                                 <i className="fa-solid fa-arrows-up-down mr-2"/>
                                 Changer l'ordre
                             </button>
                             }
 
-                            {isSorting === true &&
+                            {isSorting &&
                             <>
                                 <button className="button red mr-2"
                                         onClick={() => setIsSorting(false)}
@@ -157,15 +166,15 @@ const Races = () => {
 
                         <div className="col-12">
                             <ul className="admin-list">
-                                {displayedRaces.map((race, index) => {
+                                {(displayedRaces as Race[]).map((race, index) => {
                                     return (
                                         <li key={race.id}
                                             className={isSorting ? "draggable" : ""}
                                             draggable={isSorting}
-                                            onDragStart={isSorting ? e => onDragStart(e, index) : null}
-                                            onDragEnter={isSorting ? e => onDragEnter(e, index) : null}
-                                            onDragOver={isSorting ? e => e.preventDefault() : null}
-                                            onDragEnd={isSorting ? onDragEnd : null}
+                                            onDragStart={isSorting ? e => onDragStart(e, index) : undefined}
+                                            onDragEnter={isSorting ? e => onDragEnter(e, index) : undefined}
+                                            onDragOver={isSorting ? e => e.preventDefault() : undefined}
+                                            onDragEnd={isSorting ? onDragEnd : undefined}
                                         >
                                             <RacesListItem key={race.id}
                                                            id={race.id}
