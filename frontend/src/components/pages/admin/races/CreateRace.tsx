@@ -1,7 +1,7 @@
 import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
 import RaceDetailsForm from "./RaceDetailsForm";
-import {useState} from "react";
+import React, {useState} from "react";
 import ApiUtil from "../../../../util/ApiUtil";
 import {app} from "../../../App";
 import ToastUtil from "../../../../util/ToastUtil";
@@ -10,8 +10,8 @@ import Util from "../../../../util/Util";
 
 const CreateRace = () => {
     const [raceName, setRaceName] = useState('');
-    const [initialDistance, setInitialDistance] = useState(0);
-    const [lapDistance, setLapDistance] = useState(0);
+    const [initialDistance, setInitialDistance] = useState<number | string>(0);
+    const [lapDistance, setLapDistance] = useState<number | string>(0);
     const [startTime, setStartTime] = useState(new Date());
     const [duration, setDuration] = useState(60 * 60 * 24 * 1000);
     const [isPublic, setIsPublic] = useState(false);
@@ -20,7 +20,7 @@ const CreateRace = () => {
 
     const [redirectToId, setRedirectToId] = useState(null);
 
-    const onSubmit = async (e) => {
+    const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSaving(true);
 

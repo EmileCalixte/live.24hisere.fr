@@ -1,8 +1,23 @@
-import {useMemo} from "react";
+import React, {useMemo} from "react";
 import Util from "../../../../util/Util";
 import DurationInputs from "../../../misc/DurationInputs";
 
-const RaceDetailsForm = ({
+const RaceDetailsForm: React.FunctionComponent<{
+    onSubmit: (e: React.FormEvent) => any,
+    name: string,
+    setName: (name: string) => any,
+    initialDistance: number | string,
+    setInitialDistance: (initialDistance: number | string) => any,
+    lapDistance: number | string,
+    setLapDistance: (lapDistance: number | string) => any,
+    startTime: Date,
+    setStartTime: (startTime: Date) => any,
+    duration: number,
+    setDuration: (duration: number) => any,
+    isPublic: boolean,
+    setIsPublic: (isPublic: boolean) => any,
+    submitButtonDisabled: boolean,
+}> = ({
     onSubmit,
     name,
     setName,
@@ -35,7 +50,7 @@ const RaceDetailsForm = ({
         return Util.getTimeStringFromDate(startTime);
     }, [startTime]);
 
-    const onStartTimeDateChange = (e) => {
+    const onStartTimeDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.value) {
             return;
         }
@@ -43,7 +58,7 @@ const RaceDetailsForm = ({
         setStartTime(new Date(`${e.target.value}T${startTimeTime}`));
     }
 
-    const onStartTimeTimeChange = (e) => {
+    const onStartTimeTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.value) {
             return;
         }
