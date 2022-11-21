@@ -1,7 +1,12 @@
-import {useState} from "react";
+import React, {useState} from "react";
 import DurationInputs from "../../misc/DurationInputs";
 
-const RankingSettingsTime = ({
+const RankingSettingsTime: React.FunctionComponent<{
+    isVisible: boolean,
+    currentRankingTime: number,
+    onRankingTimeSave: (time: number) => any,
+    maxRankingTime: number,
+}> = ({
     isVisible,
     currentRankingTime,
     onRankingTimeSave,
@@ -10,7 +15,7 @@ const RankingSettingsTime = ({
     // The current value from the inputs in ms, saved or not
     const [time, setTime] = useState(currentRankingTime);
 
-    const onSubmit = (e) => {
+    const onSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setTime(time);
         onRankingTimeSave(time);
