@@ -1,25 +1,26 @@
 import {Navigate, useParams} from "react-router-dom";
 import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
-import {useCallback, useEffect, useMemo, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import CircularLoader from "../../../misc/CircularLoader";
 import ApiUtil from "../../../../util/ApiUtil";
 import {app} from "../../../App";
 import Util from "../../../../util/Util";
 import ToastUtil from "../../../../util/ToastUtil";
 import RaceDetailsForm from "./RaceDetailsForm";
+import Race from "../../../../types/Race";
 
 const RaceDetails = () => {
     const {raceId: urlRaceId} = useParams();
 
-    const [race, setRace] = useState(undefined);
+    const [race, setRace] = useState<Race | undefined | null>(undefined);
 
-    const [raceName, setRaceName] = useState(null);
-    const [initialDistance, setInitialDistance] = useState(null);
-    const [lapDistance, setLapDistance] = useState(null);
-    const [startTime, setStartTime] = useState(null);
+    const [raceName, setRaceName] = useState("");
+    const [initialDistance, setInitialDistance] = useState<number | string>(0);
+    const [lapDistance, setLapDistance] = useState<number | string>(0);
+    const [startTime, setStartTime] = useState(new Date(0));
     const [duration, setDuration] = useState(0);
-    const [isPublic, setIsPublic] = useState(null);
+    const [isPublic, setIsPublic] = useState(false);
 
     const [isSaving, setIsSaving] = useState(false);
 
@@ -65,8 +66,13 @@ const RaceDetails = () => {
         fetchRace();
     }, [fetchRace]);
 
-    const onSubmit = async (e) => {
+    const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (!race) {
+            return;
+        }
+
         setIsSaving(true);
 
         const body = {
@@ -99,6 +105,10 @@ const RaceDetails = () => {
     }
 
     const deleteRace = async () => {
+        if (!race) {
+            return;
+        }
+
         if (!window.confirm("Êtes-vous sûr de vouloir supprimer cette course ?")) {
             return;
         }
