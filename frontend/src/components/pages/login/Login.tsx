@@ -1,4 +1,4 @@
-import {useState} from "react";
+import React, {useState} from "react";
 import ApiUtil from "../../../util/ApiUtil";
 import {app} from "../../App";
 import {Navigate} from "react-router-dom";
@@ -10,7 +10,7 @@ const Login = () => {
     const [submitButtonDisabled, setSubmitButtonDisabled] = useState(false);
     const [loggedIn, setLoggedIn] = useState(app.state.accessToken !== null);
 
-    const onSubmit = async (e) => {
+    const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setSubmitButtonDisabled(true);
 

@@ -22,11 +22,11 @@ const Admin = () => {
 
     return (
         <Routes>
-            <Route exact path="/" element={<AdminHome />} />
-            <Route exact path="runners" element={<Runners />} />
-            <Route exact path="races" element={<Races />} />
-            <Route exact path="races/create" element={<CreateRace />} />
-            <Route exact path="races/:raceId" element={<RaceDetails />} />
+            <Route path="/" element={<AdminHome />} />
+            <Route path="runners" element={<Runners />} />
+            <Route path="races" element={<Races />} />
+            <Route path="races/create" element={<CreateRace />} />
+            <Route path="races/:raceId" element={<RaceDetails />} />
 
             <Route path="*" element={<Navigate to="/admin" replace />} />
         </Routes>
