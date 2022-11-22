@@ -1,11 +1,7 @@
-import * as XLSX from 'xlsx/xlsx.mjs';
+const XLSX = require('xlsx/xlsx');
 
 class ExcelUtil {
-    static generateXlsxFromData = (data, filename = "Data") => {
-        if (!Array.isArray(data)) {
-            throw new Error('data must be an array of objects');
-        }
-
+    static generateXlsxFromData = (data: object[], filename = "Data") => {
         const workSheet = XLSX.utils.json_to_sheet(data);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, workSheet, 'Data');
