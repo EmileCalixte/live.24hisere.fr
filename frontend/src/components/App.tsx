@@ -137,7 +137,7 @@ class App extends React.Component {
     }
 
     fetchRaceData = async () => {
-        const response = await ApiUtil.performAPIRequest('/race-data', {});
+        const response = await ApiUtil.performAPIRequest('/race-data');
         const responseJson = await response.json();
 
         this.saveRaceData(responseJson);

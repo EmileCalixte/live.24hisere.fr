@@ -6,13 +6,13 @@ class ApiUtil {
 
     /**
      * Fetch minimal wrapper with verbose
-     * @param url
+     * @param {string} url
      * @param {RequestInit} init
      * @returns {Promise<Response>}
      */
-    static fetch = async (url, init) => {
+    static fetch = async (url: string, init: RequestInit) => {
         let method = 'GET';
-        if (init.hasOwnProperty('method')) {
+        if (init.hasOwnProperty('method') && typeof init.method === 'string') {
             method = init.method.toUpperCase();
         }
 
@@ -25,7 +25,7 @@ class ApiUtil {
         return response;
     }
 
-    static getBackendFullUrl = (shortUrl) => {
+    static getBackendFullUrl = (shortUrl: string) => {
         if (!shortUrl.startsWith('/')) {
             shortUrl = '/' + shortUrl;
         }
@@ -34,11 +34,11 @@ class ApiUtil {
     }
 
     /**
-     * @param url
+     * @param {string} url
      * @param {RequestInit} init
      * @return {Promise<Response>}
      */
-    static performAPIRequest = async (url, init = {}) => {
+    static performAPIRequest = async (url: string, init: RequestInit = {}) => {
         if (!url.startsWith(ApiUtil.APP_BACKEND_URL)) {
             url = ApiUtil.getBackendFullUrl(url);
         }
@@ -47,17 +47,19 @@ class ApiUtil {
     }
 
     /**
-     * @param url
-     * @param accessToken
+     * @param {string} url
+     * @param {string|null} accessToken
      * @param {RequestInit} init
      * @return {Promise<Response>}
      */
-    static performAuthenticatedAPIRequest = async (url, accessToken, init = {}) => {
+    static performAuthenticatedAPIRequest = async (url: string, accessToken: string | null, init: RequestInit = {}) => {
         if (!init.hasOwnProperty('headers') || !(init.headers instanceof Headers)) {
             init.headers = new Headers();
         }
 
-        init.headers.append('Authorization', accessToken);
+        if (accessToken) {
+            init.headers.append('Authorization', accessToken);
+        }
 
         return ApiUtil.performAPIRequest(url, init);
     }
