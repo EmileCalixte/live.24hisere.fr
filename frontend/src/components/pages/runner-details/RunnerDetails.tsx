@@ -7,7 +7,7 @@ import RunnerDetailsLaps from "./RunnerDetailsLaps";
 import RunnerDetailsUtil from "../../../util/RunnerDetailsUtil";
 import ExcelUtil from "../../../util/ExcelUtil";
 import {app} from "../../App";
-import Runner, {RunnerWithPassages, RunnerWithProcessedPassages} from "../../../types/Runner";
+import Runner, {RunnerWithPassages, RunnerWithProcessedHours, RunnerWithProcessedPassages} from "../../../types/Runner";
 
 enum Tab {
     Stats = 'stats',
@@ -20,7 +20,7 @@ const RunnerDetails = () => {
     const {runnerId: urlRunnerId} = useParams();
 
     const [selectedRunnerId, setSelectedRunnerId] = useState(urlRunnerId);
-    const [selectedRunner, setSelectedRunner] = useState<RunnerWithProcessedPassages | null>(null);
+    const [selectedRunner, setSelectedRunner] = useState<RunnerWithProcessedPassages & RunnerWithProcessedHours | null>(null);
 
     const [runners, setRunners] = useState<Runner[] | false>(false);
 
@@ -75,7 +75,7 @@ const RunnerDetails = () => {
         RunnerDetailsUtil.processRunnerData(runner);
 
         // TODO Remove "as" by fixing types of processRunnerdata
-        setSelectedRunner(runner as RunnerWithProcessedPassages);
+        setSelectedRunner(runner as RunnerWithProcessedPassages & RunnerWithProcessedHours);
     }, [selectedRunnerId]);
 
     const onSelectRunner = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {

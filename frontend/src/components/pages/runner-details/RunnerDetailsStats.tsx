@@ -1,23 +1,20 @@
 import {app} from "../../App";
-import {useMemo} from "react";
+import React, {useMemo} from "react";
 import SpeedChart from "./charts/SpeedChart";
 import Util from "../../../util/Util";
 import RunnerDetailsUtil from "../../../util/RunnerDetailsUtil";
+import {RunnerWithProcessedHours, RunnerWithProcessedPassages} from "../../../types/Runner";
+import {ProcessedPassage} from "../../../types/Passage";
 
-const RunnerDetailsStats = ({runner}) => {
-    /**
-     * Number of complete laps
-     * @type {number}
-     */
-    const completeLapCount = useMemo(() => {
+const RunnerDetailsStats: React.FunctionComponent<{
+    runner: RunnerWithProcessedPassages & RunnerWithProcessedHours,
+}> = ({runner}) => {
+    const completeLapCount = useMemo<number>(() => {
         return Math.max(0, runner.passages.length - 1);
     }, [runner]);
 
-    /**
-     * Total runner distance in meters
-     * @type {number}
-     */
-    const totalDistance = useMemo(() => {
+    /** Total distance in meters */
+    const totalDistance = useMemo<number>(() => {
         if (runner.passages.length >= 1) {
             return app.state.firstLapDistance + app.state.lapDistance * (runner.passages.length - 1);
         }
@@ -25,11 +22,7 @@ const RunnerDetailsStats = ({runner}) => {
         return 0;
     }, [runner]);
 
-    /**
-     * Last runner passage date
-     * @type {Date|null}
-     */
-    const lastPassageDate = useMemo(() => {
+    const lastPassageDate = useMemo<Date | null>(() => {
         if (runner.passages.length <= 0) {
             return null;
         }
@@ -37,12 +30,8 @@ const RunnerDetailsStats = ({runner}) => {
         return new Date(runner.passages[runner.passages.length - 1].time);
     }, [runner]);
 
-    /**
-     * Fastest lap passage of the runner
-     * @type {object|null}
-     */
-    const fastestLapPassage = useMemo(() => {
-        let fastestLapPassage = null;
+    const fastestLapPassage = useMemo<ProcessedPassage | null>(() => {
+        let fastestLapPassage: ProcessedPassage | null = null;
 
         runner.passages.forEach(passage => {
             if (passage.processed.lapNumber === null) {
@@ -62,12 +51,8 @@ const RunnerDetailsStats = ({runner}) => {
         return fastestLapPassage;
     }, [runner]);
 
-    /**
-     * Slowest lap passage of the runner
-     * @type {object|null}
-     */
-    const slowestLapPassage = useMemo(() => {
-        let slowestLapPassage = null;
+    const slowestLapPassage = useMemo<ProcessedPassage | null>(() => {
+        let slowestLapPassage: ProcessedPassage | null = null;
 
         runner.passages.forEach(passage => {
             if (passage.processed.lapNumber === null) {
@@ -87,11 +72,8 @@ const RunnerDetailsStats = ({runner}) => {
         return slowestLapPassage;
     }, [runner, fastestLapPassage]);
 
-    /**
-     * Last runner passage race time in ms
-     * @type {number|null}
-     */
-    const lastPassageRaceTime = useMemo(() => {
+    /** Last runner passage race time in ms */
+    const lastPassageRaceTime = useMemo<number | null>(() => {
         if (lastPassageDate === null) {
             return null;
         }
@@ -99,11 +81,8 @@ const RunnerDetailsStats = ({runner}) => {
         return lastPassageDate.getTime() - app.state.raceStartTime.getTime();
     }, [lastPassageDate]);
 
-    /**
-     * Total runner average speed
-     * @type {number|null}
-     */
-    const averageSpeed = useMemo(() => {
+    /** Total runner average speed in km/h */
+    const averageSpeed = useMemo<number | null>(() => {
         if (lastPassageRaceTime === null) {
             return null;
         }
@@ -112,11 +91,8 @@ const RunnerDetailsStats = ({runner}) => {
         return totalDistance / lastPassageRaceTime * 1000 * 3.6;
     }, [totalDistance, lastPassageRaceTime]);
 
-    /**
-     * Total runner average pace in ms/km
-     * @type {number|null}
-     */
-    const averagePace = useMemo(() => {
+    /** Total runner average pace in ms/km */
+    const averagePace = useMemo<number | null>(() => {
         if (averageSpeed === null) {
             return null;
         }
@@ -176,11 +152,13 @@ const RunnerDetailsStats = ({runner}) => {
                 </p>
             </div>
 
+            {averageSpeed !== null &&
             <div className="col-12">
                 <h2>Vitesse</h2>
 
                 <SpeedChart runner={runner} averageSpeed={averageSpeed} />
             </div>
+            }
         </div>
     )
 }
