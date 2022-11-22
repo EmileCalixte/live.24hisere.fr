@@ -1,18 +1,23 @@
-import {useCallback, useMemo, useState} from "react";
+import React, {useCallback, useMemo, useState} from "react";
 import Util, {SORT_ASC} from "../../../util/Util";
+import {RunnerWithProcessedPassages} from "../../../types/Runner";
 
-const SORT_BY_RACE_TIME = 'raceTime';
-const SORT_BY_LAP_SPEED = 'lapSpeed';
+enum SortBy {
+    RaceTime = "raceTime",
+    LapSpeed = "lapSpeed",
+}
 
-const RunnerDetailsLaps = ({runner}) => {
-    const [sortColumn, setSortColumn] = useState(SORT_BY_RACE_TIME);
+const RunnerDetailsLaps: React.FunctionComponent<{
+    runner: RunnerWithProcessedPassages
+}> = ({runner}) => {
+    const [sortColumn, setSortColumn] = useState(SortBy.RaceTime);
     const [sortDirection, setSortDirection] = useState(SORT_ASC);
 
     const passagesToDisplay = useMemo(() => {
         const passagesToDisplay = [...runner.passages];
 
         switch (sortColumn) {
-            case SORT_BY_RACE_TIME:
+            case SortBy.RaceTime:
                 passagesToDisplay.sort((passageA, passageB) => {
                     if (passageA.processed.lapEndRaceTime < passageB.processed.lapEndRaceTime) {
                         return sortDirection === SORT_ASC ? -1 : 1;
@@ -25,7 +30,7 @@ const RunnerDetailsLaps = ({runner}) => {
                     return 0;
                 });
                 break;
-            case SORT_BY_LAP_SPEED:
+            case SortBy.LapSpeed:
                 passagesToDisplay.sort((passageA, passageB) => {
                     if (passageA.processed.lapSpeed < passageB.processed.lapSpeed) {
                         return sortDirection === SORT_ASC ? -1 : 1;
@@ -45,11 +50,11 @@ const RunnerDetailsLaps = ({runner}) => {
         return passagesToDisplay;
     }, [runner, sortColumn, sortDirection]);
 
-    const updateSort = useCallback((e, clickedColumn) => {
+    const updateSort = useCallback((e: React.MouseEvent<HTMLButtonElement>, clickedSortColumn: SortBy) => {
         e.preventDefault();
 
-        if (clickedColumn !== sortColumn) {
-            setSortColumn(clickedColumn);
+        if (clickedSortColumn !== sortColumn) {
+            setSortColumn(clickedSortColumn);
             setSortDirection(SORT_ASC);
             return;
         }
@@ -70,10 +75,10 @@ const RunnerDetailsLaps = ({runner}) => {
                             <th>Distance</th>
                             <th>
                                 <button className="a"
-                                        onClick={e => updateSort(e, SORT_BY_RACE_TIME)}
+                                        onClick={e => updateSort(e, SortBy.RaceTime)}
                                 >
                                     Temps de course
-                                    {sortColumn === SORT_BY_RACE_TIME &&
+                                    {sortColumn === SortBy.RaceTime &&
                                     <i className={`table-column-sort-icon fa-solid fa-sort-${sortDirection === SORT_ASC ? 'down' : 'up'}`} />
                                     }
                                 </button>
@@ -81,10 +86,10 @@ const RunnerDetailsLaps = ({runner}) => {
                             <th>Temps au tour</th>
                             <th>
                                 <button className="a"
-                                        onClick={e => updateSort(e, SORT_BY_LAP_SPEED)}
+                                        onClick={e => updateSort(e, SortBy.LapSpeed)}
                                 >
                                     Vitesse
-                                    {sortColumn === SORT_BY_LAP_SPEED &&
+                                    {sortColumn === SortBy.LapSpeed &&
                                     <i className={`table-column-sort-icon fa-solid fa-sort-${sortDirection === SORT_ASC ? 'down' : 'up'}`} />
                                     }
                                 </button>
