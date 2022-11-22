@@ -4,7 +4,7 @@ export const SORT_ASC = 1;
 export const SORT_DESC = -1;
 
 class Util {
-    static VERBOSE_ENABLED = !!config.devMode;
+    static VERBOSE_ENABLED = config.devMode;
 
     static verbose = (...items) => {
         if (!Util.VERBOSE_ENABLED) {
