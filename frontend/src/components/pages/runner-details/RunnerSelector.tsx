@@ -1,9 +1,14 @@
 import OptionWithLoadingDots from "../../misc/OptionWithLoadingDots";
-import {useCallback, useEffect, useMemo, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
+import Runner from "../../../types/Runner";
 
-const RunnerSelector = ({runners, onSelectRunner, selectedRunnerId}) => {
-    const [idSortedRunners, setIdSortedRunners] = useState(false);
-    const [nameSortedRunners, setNameSortedRunners] = useState(false);
+const RunnerSelector: React.FunctionComponent<{
+    runners: Runner[] | false,
+    onSelectRunner: (e: React.ChangeEvent<HTMLSelectElement>) => any,
+    selectedRunnerId: string,
+}> = ({runners, onSelectRunner, selectedRunnerId}) => {
+    const [idSortedRunners, setIdSortedRunners] = useState<Runner[] | false>(false);
+    const [nameSortedRunners, setNameSortedRunners] = useState<Runner[] | false>(false);
 
     const selectedRunnerExists = useMemo(() => {
         if (!runners) {
@@ -25,14 +30,11 @@ const RunnerSelector = ({runners, onSelectRunner, selectedRunnerId}) => {
         }
 
         setIdSortedRunners([...runners].sort((a, b) => {
-            const aId = parseInt(a.id);
-            const bId = parseInt(b.id);
-
-            if (aId < bId) {
+            if (a.id < b.id) {
                 return -1;
             }
 
-            if (aId > bId) {
+            if (a.id > b.id) {
                 return 1;
             }
 
@@ -40,16 +42,14 @@ const RunnerSelector = ({runners, onSelectRunner, selectedRunnerId}) => {
         }));
 
         setNameSortedRunners([...runners].sort((a, b) => {
-            const aIsTeam = a.isTeam === '1';
-            const bIsTeam = b.isTeam === '1';
             const aName = a.lastname + a.firstname;
             const bName = b.lastname + b.firstname;
 
-            if (aIsTeam && !bIsTeam) {
+            if (a.isTeam && !b.isTeam) {
                 return -1;
             }
 
-            if (!aIsTeam && bIsTeam) {
+            if (!a.isTeam && b.isTeam) {
                 return 1;
             }
 
