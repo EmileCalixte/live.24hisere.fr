@@ -5,13 +5,17 @@ import Runner from "../../../types/Runner";
 const RunnerSelector: React.FunctionComponent<{
     runners: Runner[] | false,
     onSelectRunner: (e: React.ChangeEvent<HTMLSelectElement>) => any,
-    selectedRunnerId: string,
+    selectedRunnerId: string | undefined,
 }> = ({runners, onSelectRunner, selectedRunnerId}) => {
     const [idSortedRunners, setIdSortedRunners] = useState<Runner[] | false>(false);
     const [nameSortedRunners, setNameSortedRunners] = useState<Runner[] | false>(false);
 
     const selectedRunnerExists = useMemo(() => {
         if (!runners) {
+            return false;
+        }
+
+        if (selectedRunnerId === undefined) {
             return false;
         }
 

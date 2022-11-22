@@ -1,15 +1,18 @@
 import {useParams} from "react-router-dom";
 import RunnerSelector from "./RunnerSelector";
-import {useCallback, useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import ApiUtil from "../../../util/ApiUtil";
 import RunnerDetailsStats from "./RunnerDetailsStats";
 import RunnerDetailsLaps from "./RunnerDetailsLaps";
 import RunnerDetailsUtil from "../../../util/RunnerDetailsUtil";
 import ExcelUtil from "../../../util/ExcelUtil";
 import {app} from "../../App";
+import Runner, {RunnerWithPassages} from "../../../types/Runner";
 
-const TAB_STATS = 'stats';
-const TAB_LAPS = 'laps';
+enum Tab {
+    Stats = 'stats',
+    Laps = 'laps',
+}
 
 export const RUNNER_UPDATE_INTERVAL_TIME = 30000;
 
@@ -17,11 +20,11 @@ const RunnerDetails = () => {
     const {runnerId: urlRunnerId} = useParams();
 
     const [selectedRunnerId, setSelectedRunnerId] = useState(urlRunnerId);
-    const [selectedRunner, setSelectedRunner] = useState(null);
+    const [selectedRunner, setSelectedRunner] = useState<RunnerWithPassages | null>(null);
 
-    const [runners, setRunners] = useState(false);
+    const [runners, setRunners] = useState<Runner[] | false>(false);
 
-    const [selectedTab, setSelectedTab] = useState(TAB_STATS);
+    const [selectedTab, setSelectedTab] = useState(Tab.Stats);
 
     const fetchRunners = useCallback(async () => {
         const response = await ApiUtil.performAPIRequest('/runners');
@@ -52,7 +55,7 @@ const RunnerDetails = () => {
         }
 
         const responseJson = await response.json();
-        const runner = responseJson.runner;
+        const runner = responseJson.runner as RunnerWithPassages;
 
         runner.passages.sort((passageA, passageB) => {
             const passageADate = new Date(passageA.time);
@@ -74,19 +77,19 @@ const RunnerDetails = () => {
         setSelectedRunner(runner);
     }, [selectedRunnerId]);
 
-    const onSelectRunner = useCallback((e) => {
+    const onSelectRunner = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedRunnerId(e.target.value);
     }, []);
 
     const exportRunnerToXlsx = useCallback(() => {
+        if (selectedRunner === null) {
+            return;
+        }
+
         const filename = `${selectedRunner.firstname} ${selectedRunner.lastname}`.trim();
 
         ExcelUtil.generateXlsxFromData(RunnerDetailsUtil.getDataForExcelExport(selectedRunner), filename);
     }, [selectedRunner]);
-
-    const onTabButtonClick = useCallback((e) => {
-        setSelectedTab(e.target.value);
-    }, []);
 
     useEffect(() => {
         fetchRunners();
@@ -146,20 +149,20 @@ const RunnerDetails = () => {
                 <div className="col-12">
                     <div className="runner-details-data-container">
                         <ul className="tabs-container">
-                            <li className={selectedTab === TAB_STATS ? 'active' : ''}>
-                                <button value={TAB_STATS} onClick={onTabButtonClick}>Statistiques</button>
+                            <li className={selectedTab === Tab.Stats ? 'active' : ''}>
+                                <button onClick={() => setSelectedTab(Tab.Stats)}>Statistiques</button>
                             </li>
-                            <li className={selectedTab === TAB_LAPS ? 'active' : ''}>
-                                <button value={TAB_LAPS} onClick={onTabButtonClick}>Détails des tours</button>
+                            <li className={selectedTab === Tab.Laps ? 'active' : ''}>
+                                <button onClick={() => setSelectedTab(Tab.Laps)}>Détails des tours</button>
                             </li>
                         </ul>
 
                         <div className="runner-details-data">
                             {(() => {
                                 switch (selectedTab) {
-                                    case TAB_STATS:
+                                    case Tab.Stats:
                                         return <RunnerDetailsStats runner={selectedRunner} />
-                                    case TAB_LAPS:
+                                    case Tab.Laps:
                                         return <RunnerDetailsLaps runner={selectedRunner} />
                                     default:
                                         return null;
