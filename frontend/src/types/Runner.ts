@@ -1,4 +1,4 @@
-import Passage from "./Passage";
+import Passage, {ProcessedPassage} from "./Passage";
 
 export enum Gender {
     M = "M",
@@ -20,4 +20,20 @@ export default interface Runner {
 
 export interface RunnerWithPassages extends Runner {
     passages: Passage[],
+}
+
+export interface RunnerWithProcessedPassages extends Runner {
+    passages: ProcessedPassage[],
+}
+
+export interface RunnerWithProcessedHours extends Runner {
+    hours: {
+        averagePace: number,
+        averageSpeed: number,
+        startTime: Date,
+        startRaceTime: number,
+        endTime: Date,
+        endRaceTime: number,
+        passages: ProcessedPassage[],
+    }[],
 }

@@ -1,22 +1,28 @@
 import CanvasJSReact from "../../../../lib/canvasjs/canvasjs.react";
-import {useCallback, useMemo, useState} from "react";
+import React, {useCallback, useMemo, useState} from "react";
 import ReactDOMServer from 'react-dom/server';
 import {app, RACE_DURATION} from "../../../App";
 import Util from "../../../../util/Util";
+import {RunnerWithProcessedHours, RunnerWithProcessedPassages} from "../../../../types/Runner";
 
 const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
-const SpeedChart = ({runner, averageSpeed}) => {
+const SpeedChart: React.FunctionComponent<{
+    runner: RunnerWithProcessedPassages & RunnerWithProcessedHours,
+    averageSpeed: number,
+}> = ({runner, averageSpeed}) => {
+    console.log(runner);
+
     const [displayEachLapSpeed, setDisplayEachLapSpeed] = useState(true);
     const [displayEachHourSpeed, setDisplayEachHourSpeed] = useState(true);
     const [displayAverageSpeed, setDisplayAverageSpeed] = useState(true);
     const [displayAverageSpeedEvolution, setDisplayAverageSpeedEvolution] = useState(true);
 
-    const getXAxisLabelValue = useCallback(e => {
+    const getXAxisLabelValue = useCallback((e: any) => {
         return Util.formatMsAsDuration(e.value.getTime());
     }, []);
 
-    const getTooltipContent = useCallback(e => {
+    const getTooltipContent = useCallback((e: any) => {
         // const dataPoint = e.entries[0].dataPoint;
         const dataSeriesIndex = e.entries[0].dataSeries.index;
 
@@ -105,7 +111,7 @@ const SpeedChart = ({runner, averageSpeed}) => {
             axisX: {
                 crosshair: {
                     enabled: true,
-                    labelFormatter: e => null,
+                    labelFormatter: () => null,
                 },
                 labelFormatter: getXAxisLabelValue,
                 minimum: 0,
@@ -227,19 +233,21 @@ const SpeedChart = ({runner, averageSpeed}) => {
             });
         }
 
-        options.data[0].dataPoints = lapSpeedDataPoints;
-        options.data[1].dataPoints = lapHourSpeedDataPoints;
+        options.data[0].dataPoints = lapSpeedDataPoints as any;
+        options.data[1].dataPoints = lapHourSpeedDataPoints as any;
         options.data[2].dataPoints = [
             {
+                // @ts-ignore
                 x: options.axisX.minimum,
                 y: averageSpeed,
             },
             {
-                x:options.axisX.maximum,
+                // @ts-ignore
+                x: options.axisX.maximum,
                 y: averageSpeed,
             }
         ];
-        options.data[3].dataPoints = averageSpeedEvolutionDataPoints;
+        options.data[3].dataPoints = averageSpeedEvolutionDataPoints as any;
 
         return options;
     }, [
