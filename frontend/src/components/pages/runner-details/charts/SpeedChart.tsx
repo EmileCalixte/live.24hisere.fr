@@ -11,8 +11,6 @@ const SpeedChart: React.FunctionComponent<{
     runner: RunnerWithProcessedPassages & RunnerWithProcessedHours,
     averageSpeed: number,
 }> = ({runner, averageSpeed}) => {
-    console.log(runner);
-
     const [displayEachLapSpeed, setDisplayEachLapSpeed] = useState(true);
     const [displayEachHourSpeed, setDisplayEachHourSpeed] = useState(true);
     const [displayAverageSpeed, setDisplayAverageSpeed] = useState(true);
