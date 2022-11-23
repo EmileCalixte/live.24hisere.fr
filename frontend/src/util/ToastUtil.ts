@@ -1,17 +1,14 @@
 import Toastr from "toastr2";
 
 class ToastUtil {
-    static toastr = null;
+    static toastr: Toastr | null = null;
 
-    /**
-     * @return {Toastr}
-     */
-    static getToastr = () => {
+    static getToastr = (): Toastr => {
         if (ToastUtil.toastr === null) {
             ToastUtil.toastr = new Toastr();
         }
 
-        return this.toastr;
+        return ToastUtil.toastr;
     }
 }
 
