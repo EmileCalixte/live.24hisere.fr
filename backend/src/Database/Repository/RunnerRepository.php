@@ -164,6 +164,7 @@ class RunnerRepository extends EntityRepository
         while($row = $result->fetchAssociative()) {
             $row['race_id'] = (int) $row['race_id'];
             $row['passage_count'] = (int) $row['passage_count'];
+            $row['is_team'] = (bool) $row['is_team'];
 
             $ranking[] = $row;
         }

@@ -33,7 +33,6 @@ class RankingResponder extends AbstractResponder
             }
 
             $ranking[$i]['last_passage_time'] = DateUtil::convertDatabaseDateToJavascriptDate($ranking[$i]['last_passage_time'], false);
-            $ranking[$i]['is_team'] = (bool) $ranking[$i]['is_team'];
         }
 
         $responseData = [
