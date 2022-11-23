@@ -3,7 +3,7 @@ import React, {useState, useEffect, useCallback} from "react";
 import RankingSettings from "./RankingSettings";
 import ApiUtil from "../../../util/ApiUtil";
 import RankingTable from "./RankingTable";
-import RankingUtil from "../../../util/RankingUtil";
+import {RankingProcesser} from "../../../util/RankingUtil";
 import {app} from "../../App";
 import Util from "../../../util/Util";
 import CategoryType, {CategoriesDict} from "../../../types/Category";
@@ -65,7 +65,7 @@ const Ranking = () => {
             isFetching: false,
         });
 
-        setProcessedRanking(RankingUtil.getProcessedRanking(responseJson.ranking as RankingType));
+        setProcessedRanking(new RankingProcesser(responseJson.ranking as RankingType).getProcessedRanking());
     }, [selectedRankingTime, selectedTimeMode]);
 
     const onCategorySelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
