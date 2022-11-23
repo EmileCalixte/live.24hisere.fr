@@ -6,18 +6,14 @@ export const SORT_DESC = -1;
 class Util {
     static VERBOSE_ENABLED = config.devMode;
 
-    static verbose = (...items) => {
+    static verbose = (...items: any[]) => {
         if (!Util.VERBOSE_ENABLED) {
             return;
         }
         console.log('%c[v]', 'color: orange', ...items);
     };
 
-    static formatDateForApi = (date) => {
-        if (!(date instanceof Date)) {
-            throw new Error('date must be a Date');
-        }
-
+    static formatDateForApi = (date: Date): string => {
         const year = date.getFullYear();
         const month = Util.prefixNumber(date.getMonth() + 1, 2);
         const day = Util.prefixNumber(date.getDate(), 2);
@@ -28,22 +24,14 @@ class Util {
         return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
     }
 
-    static formatDateAsString = (date, dateAndTimeSeparator = ', ', dateSeparator = '/', timeSeparator = ':') => {
-        if (!(date instanceof Date)) {
-            throw new Error('date must be a Date');
-        }
-
+    static formatDateAsString = (date: Date, dateAndTimeSeparator = ', ', dateSeparator = '/', timeSeparator = ':'): string => {
         const dateString = Util.getDateStringFromDate(date, dateSeparator);
         const timeString = Util.getTimeStringFromDate(date, timeSeparator);
 
         return `${dateString}${dateAndTimeSeparator}${timeString}`;
     }
 
-    static getDateStringFromDate = (date, separator = '/') => {
-        if (!(date instanceof Date)) {
-            throw new Error('date must be a Date');
-        }
-
+    static getDateStringFromDate = (date: Date, separator = '/'): string => {
         const year = date.getFullYear();
         const month = Util.prefixNumber(date.getMonth() + 1, 2);
         const day = Util.prefixNumber(date.getDate(), 2);
@@ -51,11 +39,7 @@ class Util {
         return `${day}${separator}${month}${separator}${year}`;
     }
 
-    static getTimeStringFromDate = (date, separator = ':') => {
-        if (!(date instanceof Date)) {
-            throw new Error('date must be a Date');
-        }
-
+    static getTimeStringFromDate = (date: Date, separator = ':'): string => {
         const hours = Util.prefixNumber(date.getHours(), 2);
         const minutes = Util.prefixNumber(date.getMinutes(), 2);
         const seconds = Util.prefixNumber(date.getSeconds(), 2);
@@ -63,11 +47,11 @@ class Util {
         return `${hours}${separator}${minutes}${separator}${seconds}`;
     }
 
-    static formatFloatNumber = (number, decimalsCount) => {
-        return Number.parseFloat(number).toFixed(decimalsCount);
+    static formatFloatNumber = (number: number, decimalsCount: number): string => {
+        return number.toFixed(decimalsCount);
     }
 
-    static formatMsAsDuration = (ms, forceDisplayHours = true) => {
+    static formatMsAsDuration = (ms: number, forceDisplayHours = true): string => {
         if (ms < 0) {
             return '−' + Util.formatMsAsDuration((ms - 1000) * -1);
         }
@@ -93,7 +77,7 @@ class Util {
      * @param minDigits
      * @return {string|NaN}
      */
-    static prefixNumber = (number, minDigits = 2) => {
+    static prefixNumber = (number: number, minDigits = 2): string | typeof NaN => {
         if (isNaN(number)) {
             return NaN;
         }
