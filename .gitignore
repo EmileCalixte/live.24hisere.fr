@@ -2,7 +2,7 @@
 backend/config/config.php
 backend/logs
 frontend/build/
-frontend/src/config/config.js
+frontend/src/config/config.ts
 import-passages/config.json
 node_modules/
 vendor/

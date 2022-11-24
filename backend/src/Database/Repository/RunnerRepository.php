@@ -157,6 +157,18 @@ class RunnerRepository extends EntityRepository
             $stmt->bindParam($param, $value);
         }
 
-        return $stmt->executeQuery()->fetchAllAssociative();
+        $result = $stmt->executeQuery();
+
+        $ranking = [];
+
+        while($row = $result->fetchAssociative()) {
+            $row['race_id'] = (int) $row['race_id'];
+            $row['passage_count'] = (int) $row['passage_count'];
+            $row['is_team'] = (bool) $row['is_team'];
+
+            $ranking[] = $row;
+        }
+
+        return $ranking;
     }
 }

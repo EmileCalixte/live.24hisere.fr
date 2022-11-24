@@ -24,7 +24,7 @@ Créez le fichier `backend/config/config.php` à partir du modèle `backend/conf
 
 #### Frontend
 
-Créez le fichier `frontend/src/config/config.js` à partir du modèle `frontend/src/config/config.default.js` et renseignez-y les paramètres relatifs à l'environnement d'exécution.
+Créez le fichier `frontend/src/config/config.ts` à partir du modèle `frontend/src/config/config.default.ts` et renseignez-y les paramètres relatifs à l'environnement d'exécution.
 
 ### Accès
 
