@@ -9,13 +9,13 @@ const OptionWithLoadingDots: React.FunctionComponent<{children: React.ReactNode}
 
     const updateDotCount = useCallback(() => {
         setDotCount(dotCount => dotCount >= MAX_DOTS ? MIN_DOTS : dotCount + 1)
-    }, [dotCount]);
+    }, []);
 
     useEffect(() => {
         const dotsInterval = setInterval(() => updateDotCount(), UPDATE_DOT_COUNT_INTERVAL_TIME);
 
         return (() => clearInterval(dotsInterval));
-    }, []);
+    }, [updateDotCount]);
 
     const dots = useMemo<string>(() => {
         const dots = [];

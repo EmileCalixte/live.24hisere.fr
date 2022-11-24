@@ -1,12 +1,10 @@
 import MenuItem from "./MenuItem";
 
-interface MenuItem {
+const menuItems: {
     url: string,
     icon: string,
     label: string,
-}
-
-const menuItems: MenuItem[] = [
+}[] = [
     {
         url: "/admin/runners",
         icon: "fa-solid fa-person-running",
