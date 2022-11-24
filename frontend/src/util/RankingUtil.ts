@@ -5,7 +5,7 @@ import {
     ProcessedRankingRunner,
     Ranking,
     RankingRunner,
-    RankingRunnerRankings
+    RankingRunnerRanks
 } from "../types/Ranking";
 import {Gender, GenderWithMixed} from "../types/Runner";
 
@@ -61,8 +61,8 @@ export class RankingProcesser {
         const processedRanking: ProcessedRanking = [];
 
         for (const runner of this.ranking) {
-            const rankings: RankingRunnerRankings = {
-                real: {
+            const rankings: RankingRunnerRanks = {
+                actual: {
                     scratchMixed: 0,
                     scratchGender: 0,
                     categoryMixed: 0,
@@ -81,12 +81,12 @@ export class RankingProcesser {
             }
 
             if (runner.isTeam) {
-                rankings.real.scratchMixed = this.currentRanksByCategory.team.mixed.rank + 1;
+                rankings.actual.scratchMixed = this.currentRanksByCategory.team.mixed.rank + 1;
             } else {
-                rankings.real.scratchMixed = this.currentRanksByCategory.scratch.mixed.rank + 1;
-                rankings.real.scratchGender = this.currentRanksByCategory.scratch[runner.gender].rank + 1;
-                rankings.real.categoryMixed = this.currentRanksByCategory[runner.category].mixed.rank + 1;
-                rankings.real.categoryGender = this.currentRanksByCategory[runner.category][runner.gender].rank + 1;
+                rankings.actual.scratchMixed = this.currentRanksByCategory.scratch.mixed.rank + 1;
+                rankings.actual.scratchGender = this.currentRanksByCategory.scratch[runner.gender].rank + 1;
+                rankings.actual.categoryMixed = this.currentRanksByCategory[runner.category].mixed.rank + 1;
+                rankings.actual.categoryGender = this.currentRanksByCategory[runner.category][runner.gender].rank + 1;
             }
 
             let scratchMixedPreviousRunner = null;
@@ -111,26 +111,26 @@ export class RankingProcesser {
             if (scratchMixedPreviousRunner && scratchMixedPreviousRunnerEquality) {
                 rankings.displayed.scratchMixed = scratchMixedPreviousRunner.rankings.displayed.scratchMixed;
             } else {
-                rankings.displayed.scratchMixed = rankings.real.scratchMixed;
+                rankings.displayed.scratchMixed = rankings.actual.scratchMixed;
             }
 
             if (!runner.isTeam) {
                 if (scratchGenderPreviousRunner && scratchGenderPreviousRunnerEquality) {
                     rankings.displayed.scratchGender = scratchGenderPreviousRunner.rankings.displayed.scratchGender;
                 } else {
-                    rankings.displayed.scratchGender = rankings.real.scratchGender;
+                    rankings.displayed.scratchGender = rankings.actual.scratchGender;
                 }
 
                 if (categoryMixedPreviousRunner && categoryMixedPreviousRunnerEquality) {
                     rankings.displayed.categoryMixed = categoryMixedPreviousRunner.rankings.displayed.categoryMixed;
                 } else {
-                    rankings.displayed.categoryMixed = rankings.real.categoryMixed;
+                    rankings.displayed.categoryMixed = rankings.actual.categoryMixed;
                 }
 
                 if (categoryGenderPreviousRunner && categoryGenderPreviousRunnerEquality) {
                     rankings.displayed.categoryGender = categoryGenderPreviousRunner.rankings.displayed.categoryGender;
                 } else {
-                    rankings.displayed.categoryGender = rankings.real.categoryGender;
+                    rankings.displayed.categoryGender = rankings.actual.categoryGender;
                 }
             }
 

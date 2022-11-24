@@ -1,8 +1,23 @@
-export default interface Category {
-    code: string,
-    name: string,
+/**
+ * An object representing an FFA category
+ */
+type Category = {
+    /**
+     * The short code of the category
+     */
+    code: string;
+
+    /**
+     * The name of the category
+     */
+    name: string;
 }
 
-export interface CategoriesDict {
-    [key: string]: string
+/**
+ * An object whose key is a category short code and value is the corresponding name
+ */
+export type CategoriesDict = {
+    [key: string]: string;
 }
+
+export default Category;
