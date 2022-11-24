@@ -72,10 +72,9 @@ const RunnerDetails = () => {
             return 0;
         });
 
-        RunnerDetailsUtil.processRunnerData(runner);
+        RunnerDetailsUtil.getProcessedRunner(runner);
 
-        // TODO Remove "as" by fixing types of processRunnerdata
-        setSelectedRunner(runner as RunnerWithProcessedPassages & RunnerWithProcessedHours);
+        setSelectedRunner(RunnerDetailsUtil.getProcessedRunner(runner));
     }, [selectedRunnerId]);
 
     const onSelectRunner = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -109,7 +108,7 @@ const RunnerDetails = () => {
         }
 
         const runner = selectedRunner;
-        RunnerDetailsUtil.processRunnerData(runner);
+        RunnerDetailsUtil.getProcessedRunner(runner);
         setSelectedRunner(runner);
     }, [selectedRunner]);
 

@@ -7,6 +7,16 @@ export enum Gender {
 
 export type GenderWithMixed = Gender | "mixed";
 
+export interface RunnerProcessedHour {
+    averagePace: number | null,
+    averageSpeed: number | null,
+    startTime: Date,
+    startRaceTime: number,
+    endTime: Date,
+    endRaceTime: number,
+    passages: ProcessedPassage[],
+}
+
 export default interface Runner {
     id: number,
     isTeam: boolean,
@@ -27,13 +37,5 @@ export interface RunnerWithProcessedPassages extends Runner {
 }
 
 export interface RunnerWithProcessedHours extends Runner {
-    hours: {
-        averagePace: number,
-        averageSpeed: number,
-        startTime: Date,
-        startRaceTime: number,
-        endTime: Date,
-        endRaceTime: number,
-        passages: ProcessedPassage[],
-    }[],
+    hours: RunnerProcessedHour[],
 }
