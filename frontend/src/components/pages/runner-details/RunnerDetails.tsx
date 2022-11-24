@@ -103,16 +103,6 @@ const RunnerDetails = () => {
     }, [fetchSelectedRunner]);
 
     useEffect(() => {
-        if (selectedRunner === null) {
-            return;
-        }
-
-        const runner = selectedRunner;
-        RunnerDetailsUtil.getProcessedRunner(runner);
-        setSelectedRunner(runner);
-    }, [selectedRunner]);
-
-    useEffect(() => {
         if (selectedRunnerId === urlRunnerId) {
             return;
         }
