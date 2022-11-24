@@ -68,6 +68,7 @@ jobs:
           rm -f frontend/.gitignore
           rm -f frontend/package.json
           rm -f frontend/package-lock.json
+          rm -f frontend/tsconfig.json
           rm -rf import-passages
           rm -rf import
           rm -rf sql
