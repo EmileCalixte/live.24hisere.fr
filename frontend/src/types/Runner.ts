@@ -1,0 +1,132 @@
+import Passage, {ProcessedPassage} from "./Passage";
+
+/**
+ * Represents the gender of a runner
+ */
+export enum Gender {
+    M = "M",
+    F = "F",
+}
+
+/**
+ * Represents the gender of a runner with an additionnal "mixed" option
+ */
+export type GenderWithMixed = Gender | "mixed";
+
+/**
+ * An object containing the information of a runner's race hour
+ */
+export type RunnerProcessedHour = {
+    /**
+     * The start time of the hour
+     */
+    startTime: Date;
+
+    /**
+     * The race time at the start of the hour, in milliseconds
+     */
+    startRaceTime: number;
+
+    /**
+     * The end time of the hour
+     */
+    endTime: Date;
+
+    /**
+     * The race time at the end of the hour, in milliseconds
+     */
+    endRaceTime: number;
+
+    /**
+     * The average speed of the runner during the hour, in km/h
+     */
+    averageSpeed: number | null;
+
+    /**
+     * The average pace of the runner during the hour, in ms/km
+     */
+    averagePace: number | null;
+
+    /**
+     * The passages included in the hour
+     */
+    passages: ProcessedPassage[];
+}
+
+/**
+ * An object representing a runner
+ */
+type Runner = {
+    /**
+     * The runner ID
+     */
+    id: number;
+
+    /**
+     * Whether the runner is a team or not
+     * @deprecated
+     */
+    isTeam: boolean;
+
+    /**
+     * The firstname of the runner
+     */
+    firstname: string;
+
+    /**
+     * The lastname of the runner
+     */
+    lastname: string;
+
+    /**
+     * The gender of the runner
+     */
+    gender: Gender;
+
+    /**
+     * The birth year of the runner
+     */
+    birthYear: string;
+
+    /**
+     * The category short code of the runner
+     */
+    category: string;
+
+    /**
+     * The ID of the race which the runner takes part
+     */
+    raceId: number;
+}
+
+/**
+ * An object representing a runner with his passages
+ */
+export type RunnerWithPassages = Runner & {
+    /**
+     * The list of the runner's passages
+     */
+    passages: Passage[];
+}
+
+/**
+ * An object representing a runner with his passages and with additional data on the passages
+ */
+export type RunnerWithProcessedPassages = Runner & {
+    /**
+     * The list of the runner's passages with additional data
+     */
+    passages: ProcessedPassage[];
+}
+
+/**
+ * An object representing a runner with the information of his race hours
+ */
+export type RunnerWithProcessedHours = Runner & {
+    /**
+     * The race hours of the runner
+     */
+    hours: RunnerProcessedHour[];
+}
+
+export default Runner;

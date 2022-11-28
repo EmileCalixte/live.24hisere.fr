@@ -36,7 +36,7 @@ jobs:
           apt-get install -y nodejs
 
       - name: Check out repository code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install PHP dependencies
         run: composer install --no-cache
@@ -49,7 +49,7 @@ jobs:
       - name: Create frontend config file
         env:
           FRONTEND_CONFIG_FILE_CONTENT: ${{ secrets.FRONTEND_CONFIG }}
-        run: echo ${FRONTEND_CONFIG_FILE_CONTENT} > frontend/src/config/config.js
+        run: echo ${FRONTEND_CONFIG_FILE_CONTENT} > frontend/src/config/config.ts
 
       - name: Create frontend production builds
         run: npm run build
@@ -68,6 +68,7 @@ jobs:
           rm -f frontend/.gitignore
           rm -f frontend/package.json
           rm -f frontend/package-lock.json
+          rm -f frontend/tsconfig.json
           rm -rf import-passages
           rm -rf import
           rm -rf sql
