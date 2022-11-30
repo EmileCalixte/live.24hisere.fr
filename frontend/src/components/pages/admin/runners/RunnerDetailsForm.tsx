@@ -2,6 +2,7 @@ import React from "react";
 import {Gender} from "../../../../types/Runner";
 import {RaceWithRunnerCount} from "../../../../types/Race";
 import OptionWithLoadingDots from "../../../misc/OptionWithLoadingDots";
+import {getCategoryNameFromBirthYear} from "../../../../util/FfaUtil";
 
 const RunnerDetailsForm: React.FunctionComponent<{
     onSubmit: (e: React.FormEvent) => any,
@@ -106,6 +107,10 @@ const RunnerDetailsForm: React.FunctionComponent<{
                            onChange={e => setBirthYear(e.target.value)}
                     />
                 </label>
+            </div>
+
+            <div className="mt-1">
+                <span>Catégorie : {getCategoryNameFromBirthYear(parseInt(birthYear))}</span>
             </div>
 
             <div className="mt-3">
