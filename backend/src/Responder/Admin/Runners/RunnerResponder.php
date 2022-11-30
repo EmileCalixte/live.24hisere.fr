@@ -38,6 +38,8 @@ class RunnerResponder extends AbstractResponder
         // TODO optimize
         $runner['raceId'] = $runnerRepository->findById($runnerId)->getRace()->getId();
 
+        $runner['category'] = CommonUtil::getFfaCategoryFromBirthYear($runner['birthYear']);
+
         /** @var PassageRepository $passageRepository */
         $passageRepository = RepositoryProvider::getRepository(Passage::class);
 

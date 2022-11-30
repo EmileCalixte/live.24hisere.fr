@@ -2,8 +2,8 @@
 
 namespace App\Database\Repository;
 
-use App\Database\Entity\Race;
 use App\Database\Entity\Runner;
+use App\Misc\Util\CommonUtil;
 use App\Misc\Util\DateUtil;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
@@ -53,6 +53,8 @@ class RunnerRepository extends EntityRepository
 
                 $resultRow[$key] = $value;
             }
+
+            $resultRow['category'] = CommonUtil::getFfaCategoryFromBirthYear($resultRow['birthYear']);
 
             array_push($result, $resultRow);
         });

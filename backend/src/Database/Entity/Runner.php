@@ -3,6 +3,7 @@
 namespace App\Database\Entity;
 
 use App\Database\Repository\RunnerRepository;
+use App\Misc\Util\CommonUtil;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
@@ -30,14 +31,11 @@ class Runner
     #[Column]
     private string $lastname;
 
-    #[Column(length: 1, nullable: true)]
+    #[Column(length: 1)]
     private string $gender;
 
-    #[Column(name: 'birth_year', nullable: true)]
+    #[Column(name: 'birth_year')]
     private string $birthYear;
-
-    #[Column(length: 15)]
-    private string $category;
 
     #[ManyToOne(targetEntity: Race::class)]
     #[JoinColumn(nullable: false)]
@@ -106,14 +104,16 @@ class Runner
         $this->birthYear = $birthYear;
     }
 
-    public function getCategory(): string
+    /**
+     * @return string The category code, or "INV" if category cannot be determined because of invalid birth year
+     */
+    public function getCategoryCode(): string
     {
-        return $this->category;
-    }
-
-    public function setCategory(string $category): void
-    {
-        $this->category = $category;
+        try {
+            return CommonUtil::getFfaCategoryFromBirthYear($this->birthYear);
+        } catch (\Exception) {
+            return "INV";
+        }
     }
 
     public function getRace(): Race
