@@ -34,85 +34,85 @@ class CommonUtil
     }
 
     /**
-     * Returns the category code from a birth year (valid until october 31st, 2022) {@see https://www.athle.fr/asp.net/main.html/html.aspx?htmlid=25}
+     * Returns the category code from a birth year (valid until August 31st, 2023) {@see https://www.athle.fr/asp.net/main.html/html.aspx?htmlid=25}
      * @param int $birthYear
      * @return string the category code
      */
     public static function getFfaCategoryFromBirthYear(int $birthYear): string
     {
-        if ($birthYear >= 2016) {
+        if ($birthYear >= 2017) {
             return 'BB';
         }
 
-        if ($birthYear >= 2013) {
+        if ($birthYear >= 2014) {
             return 'EA';
         }
 
-        if ($birthYear >= 2011) {
+        if ($birthYear >= 2012) {
             return 'PO';
         }
 
-        if ($birthYear >= 2009) {
+        if ($birthYear >= 2010) {
             return 'BE';
         }
 
-        if ($birthYear >= 2007) {
+        if ($birthYear >= 2008) {
             return 'MI';
         }
 
-        if ($birthYear >= 2005) {
+        if ($birthYear >= 2006) {
             return 'CA';
         }
 
-        if ($birthYear >= 2003) {
+        if ($birthYear >= 2004) {
             return 'JU';
         }
 
-        if ($birthYear >= 2000) {
+        if ($birthYear >= 2001) {
             return 'ES';
         }
 
-        if ($birthYear >= 1988) {
+        if ($birthYear >= 1989) {
             return 'SE';
         }
 
-        if ($birthYear >= 1983) {
+        if ($birthYear >= 1984) {
             return 'M0';
         }
 
-        if ($birthYear >= 1978) {
+        if ($birthYear >= 1979) {
             return 'M1';
         }
 
-        if ($birthYear >= 1973) {
+        if ($birthYear >= 1974) {
             return 'M2';
         }
 
-        if ($birthYear >= 1968) {
+        if ($birthYear >= 1969) {
             return 'M3';
         }
 
-        if ($birthYear >= 1963) {
+        if ($birthYear >= 1964) {
             return 'M4';
         }
 
-        if ($birthYear >= 1958) {
+        if ($birthYear >= 1959) {
             return 'M5';
         }
 
-        if ($birthYear >= 1953) {
+        if ($birthYear >= 1954) {
             return 'M6';
         }
 
-        if ($birthYear >= 1948) {
+        if ($birthYear >= 1949) {
             return 'M7';
         }
 
-        if ($birthYear >= 1943) {
+        if ($birthYear >= 1944) {
             return 'M8';
         }
 
-        if ($birthYear >= 1938) {
+        if ($birthYear >= 1939) {
             return 'M9';
         }
 
