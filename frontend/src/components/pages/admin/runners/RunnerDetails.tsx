@@ -8,6 +8,7 @@ import {app} from "../../../App";
 import Runner, {Gender} from "../../../../types/Runner";
 import RunnerDetailsForm from "./RunnerDetailsForm";
 import {RaceWithRunnerCount} from "../../../../types/Race";
+import ToastUtil from "../../../../util/ToastUtil";
 
 const RunnerDetails = () => {
     const {runnerId: urlRunnerId} = useParams();
@@ -25,19 +26,22 @@ const RunnerDetails = () => {
 
     const [isSaving, setIsSaving] = useState(false);
 
+    const [redirectAfterIdUpdate, setRedirectAfterIdUpdate] = useState<number | null>(null)
+
     const unsavedChanges = useMemo(() => {
         if (!runner) {
             return false;
         }
 
         return [
+            runnerId === runner.id,
             runnerFirstname === runner.firstname,
             runnerLastname === runner.lastname,
             runnerGender === runner.gender,
             runnerBirthYear === runner.birthYear,
             runnerRaceId === runner.raceId,
         ].includes(false);
-    }, [runner, runnerFirstname, runnerLastname, runnerGender, runnerBirthYear, runnerRaceId]);
+    }, [runner, runnerId, runnerFirstname, runnerLastname, runnerGender, runnerBirthYear, runnerRaceId]);
 
     const fetchRaces = useCallback(async () => {
         const response = await ApiUtil.performAuthenticatedAPIRequest('/admin/races', app.state.accessToken);
@@ -58,8 +62,6 @@ const RunnerDetails = () => {
         const responseJson = await response.json();
 
         const responseRunner = responseJson.runner as Runner
-
-        console.log(responseRunner);
 
         setRunner(responseRunner);
 
@@ -88,15 +90,41 @@ const RunnerDetails = () => {
 
         setIsSaving(true);
 
-        console.log("TODO");
+        const idHasChanged = runnerId !== runner.id;
 
-        // const body = {
-        //     firstname: runnerFirstname,
-        //     lastname: runnerLastname,
-        //     // ...
-        // };
+        const body = {
+            id: runnerId,
+            firstname: runnerFirstname,
+            lastname: runnerLastname,
+            birthYear: runnerBirthYear,
+            gender: runnerGender,
+            raceId: runnerRaceId,
+        };
 
-        // const response = TODO
+        const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/runners/${runner.id}`, app.state.accessToken, {
+            method: "PATCH",
+            body: JSON.stringify(body),
+        });
+
+        const responseJson = await response.json();
+
+        if (!response.ok) {
+            ToastUtil.getToastr().error("Une erreur est survenue");
+            console.error(responseJson);
+            setIsSaving(false);
+            return;
+        }
+
+        ToastUtil.getToastr().success("Détails du coureur enregistrés");
+
+        console.log("ID HAS CHANGED", idHasChanged);
+
+        if (idHasChanged) {
+            setRedirectAfterIdUpdate(runnerId);
+            return;
+        } else {
+            await fetchRunner();
+        }
 
         setIsSaving(false);
     }
@@ -105,6 +133,10 @@ const RunnerDetails = () => {
         return (
             <Navigate to="/admin/runners" />
         );
+    }
+
+    if (redirectAfterIdUpdate !== null) {
+        window.location.replace(`/admin/runners/${redirectAfterIdUpdate}`);
     }
 
     return (
