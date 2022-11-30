@@ -1,5 +1,10 @@
 import {CategoriesDict} from "../types/Category";
 
+/**
+ * Returns the category code from a birth year (valid until August 31st, 2023)
+ * @see https://www.athle.fr/asp.net/main.html/html.aspx?htmlid=25
+ * @param {number} birthYear
+ */
 export const getCategoryCodeFromBirthYear = (birthYear: number): string => {
     if (birthYear >= 2017) {
         return "BB";
