@@ -8,7 +8,7 @@ import {app} from "../../../App";
 import Util from "../../../../util/Util";
 import ToastUtil from "../../../../util/ToastUtil";
 import RaceDetailsForm from "./RaceDetailsForm";
-import {RaceWithRunnerCount} from "../../../../types/RaceWithRunnerCount";
+import {RaceWithRunnerCount} from "../../../../types/Race";
 
 const RaceDetails = () => {
     const {raceId: urlRaceId} = useParams();

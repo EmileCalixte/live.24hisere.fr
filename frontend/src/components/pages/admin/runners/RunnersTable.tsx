@@ -2,7 +2,7 @@ import {Link} from "react-router-dom";
 import CircularLoader from "../../../misc/CircularLoader";
 import React from "react";
 import Runner from "../../../../types/Runner";
-import Race from "../../../../types/RaceWithRunnerCount";
+import Race from "../../../../types/Race";
 
 const RunnersTable: React.FunctionComponent<{
     runners: Runner[],

@@ -7,7 +7,7 @@ import CircularLoader from "../../../misc/CircularLoader";
 import {Link} from "react-router-dom";
 import RacesListItem from "./RacesListItem";
 import ToastUtil from "../../../../util/ToastUtil";
-import {RaceWithRunnerCount} from "../../../../types/RaceWithRunnerCount";
+import {RaceWithRunnerCount} from "../../../../types/Race";
 
 const Races = () => {
     // false = not fetched yet

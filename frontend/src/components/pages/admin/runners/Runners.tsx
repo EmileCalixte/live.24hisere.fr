@@ -7,7 +7,7 @@ import CircularLoader from "../../../misc/CircularLoader";
 import {Link} from "react-router-dom";
 import RunnersTable from "./RunnersTable";
 import Runner from "../../../../types/Runner";
-import Race from "../../../../types/RaceWithRunnerCount";
+import Race from "../../../../types/Race";
 
 const Runners = () => {
     // false = not fetched yet
