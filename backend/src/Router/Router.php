@@ -13,6 +13,7 @@ use App\Responder\Admin\Races\UpdateRaceResponder;
 use App\Responder\Admin\Races\UpdateRacesOrderResponder;
 use App\Responder\Admin\Runners\RunnerResponder as AdminRunnerResponder;
 use App\Responder\Admin\Runners\RunnersResponder as AdminRunnersResponder;
+use App\Responder\Admin\Runners\UpdateRunnerResponder;
 use App\Responder\Admin\UsersResponder;
 use App\Responder\Auth\CurrentUserInfoResponder;
 use App\Responder\Auth\LoginResponder;
@@ -64,6 +65,7 @@ class Router
 
         $this->registerRoute('/admin/runners', AdminRunnersResponder::class, 'GET');
         $this->registerRoute('/admin/runners/{id}', AdminRunnerResponder::class, 'GET');
+        $this->registerRoute('/admin/runners/{id}', UpdateRunnerResponder::class, 'PATCH');
 
         $this->registerRoute('/admin/users', UsersResponder::class, 'GET');
         $this->registerRoute('/admin/users/{id}/access-tokens', DeleteUserAccessTokensResponder::class, 'DELETE');
