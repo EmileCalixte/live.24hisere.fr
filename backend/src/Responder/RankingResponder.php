@@ -28,6 +28,8 @@ class RankingResponder extends AbstractResponder
         $ranking = $runnerRepository->getRanking($date);
 
         for ($i = 0; $i < count($ranking); ++$i) {
+            $ranking[$i]['category'] = CommonUtil::getFfaCategoryFromBirthYear($ranking[$i]['birth_year']);
+
             if (is_null($ranking[$i]['last_passage_time'])) {
                 continue;
             }
