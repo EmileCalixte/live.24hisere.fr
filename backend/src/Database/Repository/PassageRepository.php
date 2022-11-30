@@ -24,6 +24,19 @@ class PassageRepository extends EntityRepository
         return $query->getResult($asArray ? Query::HYDRATE_ARRAY : Query::HYDRATE_OBJECT);
     }
 
+    public function updateAllOfRunner(int $oldRunnerId, int $newRunnerId)
+    {
+        $query = $this->createQueryBuilder('p')
+            ->update()
+            ->set('p.runner', ':newRunnerId')
+            ->andWhere('p.runner = :oldRunnerId')
+            ->setParameter('newRunnerId', $newRunnerId)
+            ->setParameter('oldRunnerId', $oldRunnerId)
+            ->getQuery();
+
+        return $query->execute();
+    }
+
     /**
      * @return int The number of deleted passages
      */

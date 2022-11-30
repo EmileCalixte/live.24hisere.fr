@@ -2,8 +2,10 @@
 
 namespace App\Responder\Admin\Runners;
 
+use App\Database\Entity\Passage;
 use App\Database\Entity\Race;
 use App\Database\Entity\Runner;
+use App\Database\Repository\PassageRepository;
 use App\Database\Repository\RaceRepository;
 use App\Database\Repository\RepositoryProvider;
 use App\Database\Repository\RunnerRepository;
@@ -64,12 +66,16 @@ class UpdateRunnerResponder extends AbstractResponder
             return $response->withStatus(422);
         }
 
+        if (isset($bodyParams['id'])) {
+            $runner = $this->updateRunnerId($runner, $bodyParams['id']);
+        }
+
         $this->updateRunner($runner, $bodyParams);
 
         $runnerAsArray = $runnerRepository->findById($runner->getId(), asArray: true);
 
         // TODO optimize
-        $runnerAsArray['raceId'] = $runnerRepository->findById($runnerId)->getRace()->getId();
+        $runnerAsArray['raceId'] = $runnerRepository->findById($runner->getId())->getRace()->getId();
 
         $runnerAsArray['category'] = CommonUtil::getFfaCategoryFromBirthYear($runnerAsArray['birthYear']);
 
@@ -82,14 +88,49 @@ class UpdateRunnerResponder extends AbstractResponder
         return $response;
     }
 
+    private function updateRunnerId(Runner $runner, int $newId): Runner
+    {
+        if ($newId === $runner->getId()) {
+            return $runner;
+        }
+
+        $entityManager = MainApp::getInstance()->getEntityManager();
+
+        $entityManager->beginTransaction();
+
+        // We need to create a new runner with the new ID in order to transfer its passages
+        // without violating foreign key contraint
+
+        $newRunner = new Runner();
+
+        $newRunner->setId($newId);
+        $newRunner->setIsTeam($runner->isTeam());
+        $newRunner->setFirstname($runner->getFirstname());
+        $newRunner->setLastname($runner->getLastname());
+        $newRunner->setGender($runner->getGender());
+        $newRunner->setBirthYear($runner->getBirthYear());
+        $newRunner->setRace($runner->getRace());
+
+        $entityManager->persist($newRunner);
+        $entityManager->flush();
+
+        /** @var PassageRepository $passageRepository */
+        $passageRepository = RepositoryProvider::getRepository(Passage::class);
+
+        $passageRepository->updateAllOfRunner($runner->getId(), $newRunner->getId());
+
+        $entityManager->remove($runner);
+        $entityManager->flush();
+
+        $entityManager->commit();
+
+        return $newRunner;
+    }
+
     private function updateRunner(Runner $runner, array $bodyParams)
     {
         if (empty($bodyParams)) {
             return;
-        }
-
-        if (isset($bodyParams['id'])) {
-            $runner->setId($bodyParams['id']);
         }
 
         if (isset($bodyParams['firstname'])) {
