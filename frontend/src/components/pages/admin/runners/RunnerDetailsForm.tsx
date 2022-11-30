@@ -45,6 +45,7 @@ const RunnerDetailsForm: React.FunctionComponent<{
                     <input className="input"
                            type="number"
                            min={1}
+                           max={999999}
                            required={true}
                            value={id}
                            name="id"

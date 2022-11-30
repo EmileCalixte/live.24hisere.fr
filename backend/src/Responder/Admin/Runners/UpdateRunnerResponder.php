@@ -46,7 +46,7 @@ class UpdateRunnerResponder extends AbstractResponder
         $bodyParams = $this->getBodyJsonAsArray($request);
 
         $bodyValidator = new ArrayValidator($bodyParams);
-        $bodyValidator->addValidator('id', new IsInt());
+        $bodyValidator->addValidator('id', new IsInt(minValue: 1, maxValue: 999999));
         $bodyValidator->addValidator('id', new RunnerIdIsNotUsed(existingRunnerId: $runnerId));
         $bodyValidator->addValidator('firstname', new IsString(maxLength: Runner::FIRSTNAME_MAX_LENGTH));
         $bodyValidator->addValidator('lastname', new IsString(maxLength: Runner::LASTNAME_MAX_LENGTH));
