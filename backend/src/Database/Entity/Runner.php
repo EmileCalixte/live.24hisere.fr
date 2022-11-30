@@ -18,6 +18,9 @@ use Doctrine\ORM\PersistentCollection;
 #[Table('runner')]
 class Runner
 {
+    public const FIRSTNAME_MAX_LENGTH = 255;
+    public const LASTNAME_MAX_LENGTH = 255;
+
     #[Id, GeneratedValue("NONE")]
     #[Column(options: ['comment' => 'Bib number'])]
     private int $id;
@@ -25,10 +28,10 @@ class Runner
     #[Column(name: 'is_team')]
     private bool $isTeam;
 
-    #[Column]
+    #[Column(length: self::FIRSTNAME_MAX_LENGTH)]
     private string $firstname;
 
-    #[Column]
+    #[Column(length: self::LASTNAME_MAX_LENGTH)]
     private string $lastname;
 
     #[Column(length: 1)]
