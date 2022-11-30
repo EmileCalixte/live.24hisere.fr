@@ -59,7 +59,7 @@ class IsInt extends AbstractPropertyValidator
         }
 
         if ($value > $this->maxValue) {
-            $this->addError("This value must not be less than $this->maxValue");
+            $this->addError("This value must not be more than $this->maxValue");
         }
     }
 }
