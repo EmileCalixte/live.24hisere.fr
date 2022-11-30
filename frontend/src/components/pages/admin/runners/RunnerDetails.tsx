@@ -117,10 +117,9 @@ const RunnerDetails = () => {
 
         ToastUtil.getToastr().success("Détails du coureur enregistrés");
 
-        console.log("ID HAS CHANGED", idHasChanged);
-
         if (idHasChanged) {
             setRedirectAfterIdUpdate(runnerId);
+            setIsSaving(false);
             return;
         } else {
             await fetchRunner();
@@ -136,7 +135,10 @@ const RunnerDetails = () => {
     }
 
     if (redirectAfterIdUpdate !== null) {
-        window.location.replace(`/admin/runners/${redirectAfterIdUpdate}`);
+        setTimeout(() => setRedirectAfterIdUpdate(null), 0)
+        return (
+            <Navigate to={`/admin/runners/${redirectAfterIdUpdate}`} replace={true}/>
+        )
     }
 
     return (
