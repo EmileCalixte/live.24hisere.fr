@@ -161,10 +161,23 @@ label.input-checkbox input[type=checkbox]:focus + span:before {
     transition: background-color 0.2s ease-out, color 0.2s ease-out;
 }
 
+.button.small {
+    padding: 4px 8px;
+    font-size: 0.8em;
+}
+
 .button:hover {
     cursor: pointer;
 
     background-color: #33cc33;
+}
+
+.button.orange {
+    background-color: #d79a1d;
+}
+
+.button.orange:hover {
+    background-color: #edb138;
 }
 
 .button.red {

@@ -273,9 +273,11 @@ a, button.a {
 }
 
 table.table {
-    width: 100%;
-
     border-collapse: collapse;
+}
+
+table.table:not(.no-full-width) {
+    width: 100%;
 }
 
 table.table,
@@ -284,9 +286,16 @@ table.table th {
     border: 1px solid #aaa;
 }
 
-table.table td,
-table.table th {
-    padding: 7px;
+table.table td:not(.no-padding-vertical),
+table.table th:not(.no-padding-vertical) {
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+
+table.table td:not(.no-padding-horizontal),
+table.table th:not(.no-padding-horizontal) {
+    padding-left: 7px;
+    padding-right: 7px;
 }
 
 table.table th {
@@ -301,6 +310,12 @@ table.table tbody tr:nth-child(2n) {
 
 table.table tbody tr:hover {
     background-color: #e8e8e8;
+}
+
+table.table td .buttons-container,
+table.table th .buttons-container {
+    display: flex;
+    gap: 0.5em;
 }
 
 .table-column-sort-icon {

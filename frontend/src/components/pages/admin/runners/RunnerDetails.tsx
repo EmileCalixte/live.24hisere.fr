@@ -5,17 +5,19 @@ import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
 import CircularLoader from "../../../misc/CircularLoader";
 import {app} from "../../../App";
-import Runner, {Gender} from "../../../../types/Runner";
+import {Gender, RunnerWithPassages, RunnerWithProcessedPassages} from "../../../../types/Runner";
 import RunnerDetailsForm from "./RunnerDetailsForm";
 import {RaceWithRunnerCount} from "../../../../types/Race";
 import ToastUtil from "../../../../util/ToastUtil";
+import RunnerDetailsPassages from "./RunnerDetailsPassages";
+import RunnerDetailsUtil from "../../../../util/RunnerDetailsUtil";
 
 const RunnerDetails = () => {
     const {runnerId: urlRunnerId} = useParams();
 
     const [races, setRaces] = useState<RaceWithRunnerCount[] | false>(false);
 
-    const [runner, setRunner] = useState<Runner | undefined | null>(undefined);
+    const [runner, setRunner] = useState<RunnerWithProcessedPassages | undefined | null>(undefined);
 
     const [runnerId, setRunnerId] = useState(0);
     const [runnerFirstname, setRunnerFirstname] = useState("");
@@ -61,7 +63,7 @@ const RunnerDetails = () => {
 
         const responseJson = await response.json();
 
-        const responseRunner = responseJson.runner as Runner
+        const responseRunner = RunnerDetailsUtil.getRunnerWithProcessedPassages(responseJson.runner as RunnerWithPassages);
 
         setRunner(responseRunner);
 
@@ -162,36 +164,47 @@ const RunnerDetails = () => {
                     </Breadcrumbs>
                 </div>
             </div>
+            {runner === undefined &&
+            <div className="row">
+                <div className="col-12">
+                    <CircularLoader />
+                </div>
+            </div>
+            }
+
+            {runner !== undefined &&
             <div className="row">
                 <div className="col-xl-4 col-lg-6 col-md-9 col-12">
-                    {runner === undefined &&
-                    <CircularLoader />
+                    <RunnerDetailsForm onSubmit={onSubmit}
+                                       id={runnerId}
+                                       setId={setRunnerId}
+                                       firstname={runnerFirstname}
+                                       setFirstname={setRunnerFirstname}
+                                       lastname={runnerLastname}
+                                       setLastname={setRunnerLastname}
+                                       gender={runnerGender}
+                                       setGender={setRunnerGender}
+                                       birthYear={runnerBirthYear}
+                                       setBirthYear={setRunnerBirthYear}
+                                       races={races}
+                                       raceId={runnerRaceId}
+                                       setRaceId={setRunnerRaceId}
+                                       submitButtonDisabled={isSaving || !unsavedChanges}
+                    />
+                </div>
+                <div className="col-12 mt-3">
+                    <h3>Passages</h3>
+
+                    {runner.passages.length === 0 &&
+                    <p><i>Aucun passage</i></p>
                     }
 
-                    {runner !== undefined &&
-                    <div className="row">
-                        <div className="col-12">
-                            <RunnerDetailsForm onSubmit={onSubmit}
-                                               id={runnerId}
-                                               setId={setRunnerId}
-                                               firstname={runnerFirstname}
-                                               setFirstname={setRunnerFirstname}
-                                               lastname={runnerLastname}
-                                               setLastname={setRunnerLastname}
-                                               gender={runnerGender}
-                                               setGender={setRunnerGender}
-                                               birthYear={runnerBirthYear}
-                                               setBirthYear={setRunnerBirthYear}
-                                               races={races}
-                                               raceId={runnerRaceId}
-                                               setRaceId={setRunnerRaceId}
-                                               submitButtonDisabled={isSaving || !unsavedChanges}
-                            />
-                        </div>
-                    </div>
+                    {runner.passages.length > 0 &&
+                    <RunnerDetailsPassages passages={runner.passages}/>
                     }
                 </div>
             </div>
+            }
         </div>
     )
 }
