@@ -5,7 +5,6 @@ namespace App\Database\Entity;
 use App\Database\Repository\PassageRepository;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
@@ -15,9 +14,14 @@ use Doctrine\ORM\Mapping\Table;
 #[Table('passage')]
 class Passage
 {
-    #[Id, GeneratedValue("NONE")]
+    #[Id]
     #[Column]
     private int $id;
+
+    #[Column(name: "detection_id",type: "integer", nullable: true, options: [
+        'comment' => 'Not null if the passage comes from a detection of the timing system'
+    ])]
+    private int $detectionId;
 
     #[ManyToOne(targetEntity: Runner::class, fetch: "EAGER")]
     #[JoinColumn(nullable: false)]
@@ -25,6 +29,9 @@ class Passage
 
     #[Column(type: "datetime")]
     private \DateTime $time;
+
+    #[Column(name: "is_hidden")]
+    private bool $isHidden;
 
     public function getId(): int
     {
@@ -34,6 +41,16 @@ class Passage
     public function setId(int $id): void
     {
         $this->id = $id;
+    }
+
+    public function getDetectionId(): int
+    {
+        return $this->detectionId;
+    }
+
+    public function setDetectionId(int $detectionId): void
+    {
+        $this->detectionId = $detectionId;
     }
 
     public function getRunner(): Runner
@@ -54,5 +71,15 @@ class Passage
     public function setTime(\DateTime $time): void
     {
         $this->time = $time;
+    }
+
+    public function isHidden(): bool
+    {
+        return $this->isHidden;
+    }
+
+    public function setIsHidden(bool $isHidden): void
+    {
+        $this->isHidden = $isHidden;
     }
 }
