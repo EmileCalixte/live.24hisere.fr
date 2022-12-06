@@ -106,6 +106,15 @@ Un utilisateur est inclut dans les données chargées par défaut depuis le rép
 docker compose exec backend ./bin/console app:create-user
 ```
 
+## Tâches CRON
+
+Les tâches CRON ne sont pas configurées automatiquement dans l'environnement de développement, elles doivent être exécutées à la main. Pour les exécuter dans l'environnement Docker :
+
+```sh
+# Import des passages
+docker compose exec backend /app/bin/console cron:import-passages
+```
+
 ## Tests
 
 ### Backend

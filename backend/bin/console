@@ -14,5 +14,6 @@ $application = new Application();
 // Register commands
 $application->add(new \App\Command\CreateUser\CreateUserCommand());
 $application->add(new \App\Command\ImportRunners\ImportRunnersCommand());
+$application->add(new \App\Command\Cron\ImportPassagesCronCommand());
 
 $application->run();
