@@ -30,6 +30,7 @@ Créez le fichier `frontend/src/config/config.ts` à partir du modèle `frontend
 
 - Application frontend : [http://127.0.0.1](http://127.0.0.1)
 - API : [http://127.0.0.1:8000](http://127.0.0.1:8000)
+- Fichiers statiques : [http://127.0.0.1:9000](http://127.0.0.1:9000)
 - PHPMyAdmin : [http://127.0.0.1:8080](http://127.0.0.1:8080)
 
 > Si vous utilisez Docker Toolbox, changez l'adresse locale par celle de votre machine virtuelle
