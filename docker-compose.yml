@@ -37,6 +37,13 @@ services:
       - 80:3000
     command: sh -c "./scripts/start.sh"
 
+  static:
+    image: halverneus/static-file-server
+    volumes:
+      - ./static:/web
+    ports:
+      - 9000:8080
+
   phpmyadmin:
     image: phpmyadmin
     restart: always
