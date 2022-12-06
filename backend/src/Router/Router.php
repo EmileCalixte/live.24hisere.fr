@@ -37,7 +37,7 @@ class Router
     public function registerRoutes()
     {
         // When request is OPTIONS, always return 200 with CORS headers
-        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+        if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
             $this->registerRoute($_SERVER['REQUEST_URI'], OptionsResponder::class, 'OPTIONS');
             return;
         }
