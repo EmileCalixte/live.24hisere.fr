@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : database
--- Généré le : jeu. 01 déc. 2022 à 21:29
+-- Généré le : lun. 19 déc. 2022 à 09:33
 -- Version du serveur : 10.3.35-MariaDB-1:10.3.35+maria~focal
 -- Version de PHP : 8.0.19
 
@@ -32,6 +32,17 @@ CREATE TABLE `access_token` (
   `user_id` int(11) NOT NULL,
   `expiration_date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `config`
+--
+
+CREATE TABLE `config` (
+  `key` varchar(255) NOT NULL,
+  `value` varchar(5000) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -6151,6 +6162,12 @@ INSERT INTO `user` (`id`, `username`, `password_hash`) VALUES
 ALTER TABLE `access_token`
   ADD PRIMARY KEY (`token`),
   ADD KEY `IDX_B6A2DD68A76ED395` (`user_id`);
+
+--
+-- Index pour la table `config`
+--
+ALTER TABLE `config`
+  ADD PRIMARY KEY (`key`);
 
 --
 -- Index pour la table `misc`
