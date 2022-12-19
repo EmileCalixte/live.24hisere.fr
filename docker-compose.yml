@@ -31,6 +31,7 @@ services:
     working_dir: /home/node/app
     environment:
       - NODE_ENV=development
+      - WDS_SOCKET_PORT=0
     volumes:
       - ./frontend:/home/node/app
     ports:
