@@ -5,6 +5,7 @@ namespace App\Database\Entity;
 use App\Database\Repository\PassageRepository;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
@@ -14,11 +15,11 @@ use Doctrine\ORM\Mapping\Table;
 #[Table('passage')]
 class Passage
 {
-    #[Id]
+    #[Id, GeneratedValue]
     #[Column]
     private int $id;
 
-    #[Column(name: "detection_id",type: "integer", nullable: true, options: [
+    #[Column(name: "detection_id", type: "integer", unique: true, nullable: true, options: [
         'comment' => 'Not null if the passage comes from a detection of the timing system'
     ])]
     private int $detectionId;
