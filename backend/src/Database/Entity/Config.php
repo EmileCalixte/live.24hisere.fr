@@ -12,6 +12,8 @@ use Doctrine\ORM\Mapping\Table;
 #[Table('config')]
 class Config
 {
+    public const KEY_IMPORT_DAG_FILE_PATH = 'import_dag_file_path';
+
     private const KEY_MAX_LENGTH = 255;
     private const VALUE_MAX_LENGTH = 5000;
 

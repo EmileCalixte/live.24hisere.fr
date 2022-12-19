@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : database
--- Généré le : lun. 19 déc. 2022 à 09:33
+-- Généré le : lun. 19 déc. 2022 à 10:48
 -- Version du serveur : 10.3.35-MariaDB-1:10.3.35+maria~focal
 -- Version de PHP : 8.0.19
 
@@ -43,6 +43,13 @@ CREATE TABLE `config` (
   `key` varchar(255) NOT NULL,
   `value` varchar(5000) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Déchargement des données de la table `config`
+--
+
+INSERT INTO `config` (`key`, `value`) VALUES
+('import_dag_file_path', 'http://static:8080/dag-file.txt');
 
 -- --------------------------------------------------------
 
