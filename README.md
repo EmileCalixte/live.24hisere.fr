@@ -84,9 +84,7 @@ chmod u+x backend/bin/console
 
 ### Import des passages
 
-Le dossier `import-passages` contient un script permettant d'importer les temps des passages des coureurs toutes les 15 secondes depuis un fichier DAG, permettant de mettre à jour les informations en direct chez les utilisateurs.
-
-[Documentation détaillée](import-passages/README.md)
+Voir [tâches CRON](#tâches-cron)
 
 ## Utilisateurs
 
