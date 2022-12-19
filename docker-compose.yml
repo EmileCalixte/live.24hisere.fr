@@ -31,11 +31,19 @@ services:
     working_dir: /home/node/app
     environment:
       - NODE_ENV=development
+      - WDS_SOCKET_PORT=0
     volumes:
       - ./frontend:/home/node/app
     ports:
       - 80:3000
     command: sh -c "./scripts/start.sh"
+
+  static:
+    image: halverneus/static-file-server
+    volumes:
+      - ./static:/web
+    ports:
+      - 9000:8080
 
   phpmyadmin:
     image: phpmyadmin

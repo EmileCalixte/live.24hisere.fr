@@ -19,7 +19,6 @@ use App\Responder\Auth\CurrentUserInfoResponder;
 use App\Responder\Auth\LoginResponder;
 use App\Responder\Auth\LogoutResponder;
 use App\Responder\CategoriesResponder;
-use App\Responder\ImportPassagesResponder;
 use App\Responder\RaceDataResponder;
 use App\Responder\OptionsResponder;
 use App\Responder\RankingResponder;
@@ -40,13 +39,12 @@ class Router
     public function registerRoutes()
     {
         // When request is OPTIONS, always return 200 with CORS headers
-        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+        if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
             $this->registerRoute($_SERVER['REQUEST_URI'], OptionsResponder::class, 'OPTIONS');
             return;
         }
 
         $this->registerRoute('/categories', CategoriesResponder::class, 'GET');
-        $this->registerRoute('/import-passages', ImportPassagesResponder::class, 'POST');
         $this->registerRoute('/race-data', RaceDataResponder::class, 'GET');
         $this->registerRoute('/ranking', RankingResponder::class, 'GET');
         $this->registerRoute('/runners', RunnersResponder::class, 'GET');
