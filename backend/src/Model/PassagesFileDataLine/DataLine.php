@@ -8,7 +8,11 @@ class DataLine
 {
     private int $passageId;
 
+    private int $lineId;
+
     private int $runnerId;
+
+    private string $detectionType;
 
     private \DateTimeImmutable $passageDateTime;
 
@@ -21,8 +25,9 @@ class DataLine
         $explodedLine = preg_split('/\s+/', trim($line));
 
         $this->passageId = intval($explodedLine[0]);
-
+        $this->lineId = intval($explodedLine[1]);
         $this->runnerId = intval($explodedLine[2]);
+        $this->detectionType = $explodedLine[5];
 
         $passageDateString = $explodedLine[6];
         $passageTimeString = explode('.', $explodedLine[4])[0]; // 'convert' hh:mm:ss.cc to hh:mm:ss (ignore hundredths)
@@ -44,6 +49,16 @@ class DataLine
     public function getRunnerId(): int
     {
         return $this->runnerId;
+    }
+
+    public function getLineId(): int
+    {
+        return $this->lineId;
+    }
+
+    public function getDetectionType(): string
+    {
+        return $this->detectionType;
     }
 
     public function getPassageDateTime(): \DateTimeImmutable
