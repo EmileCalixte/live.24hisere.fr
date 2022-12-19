@@ -30,6 +30,7 @@ Créez le fichier `frontend/src/config/config.ts` à partir du modèle `frontend
 
 - Application frontend : [http://127.0.0.1](http://127.0.0.1)
 - API : [http://127.0.0.1:8000](http://127.0.0.1:8000)
+- Fichiers statiques : [http://127.0.0.1:9000](http://127.0.0.1:9000)
 - PHPMyAdmin : [http://127.0.0.1:8080](http://127.0.0.1:8080)
 
 > Si vous utilisez Docker Toolbox, changez l'adresse locale par celle de votre machine virtuelle
@@ -83,9 +84,7 @@ chmod u+x backend/bin/console
 
 ### Import des passages
 
-Le dossier `import-passages` contient un script permettant d'importer les temps des passages des coureurs toutes les 15 secondes depuis un fichier DAG, permettant de mettre à jour les informations en direct chez les utilisateurs.
-
-[Documentation détaillée](import-passages/README.md)
+Voir [tâches CRON](#tâches-cron)
 
 ## Utilisateurs
 
@@ -103,6 +102,15 @@ Un utilisateur est inclut dans les données chargées par défaut depuis le rép
  
 # Pour exécuter la commande avec l'environnement de développement Docker Compose :
 docker compose exec backend ./bin/console app:create-user
+```
+
+## Tâches CRON
+
+Les tâches CRON ne sont pas configurées automatiquement dans l'environnement de développement, elles doivent être exécutées à la main. Pour les exécuter dans l'environnement Docker :
+
+```sh
+# Import des passages
+docker compose exec backend /app/bin/console cron:import-passages
 ```
 
 ## Tests
