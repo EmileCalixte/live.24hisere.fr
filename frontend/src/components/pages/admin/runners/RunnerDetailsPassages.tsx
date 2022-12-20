@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useMemo, useState} from "react";
 import {ProcessedPassage} from "../../../../types/Passage";
 import Util from "../../../../util/Util";
 
@@ -7,6 +7,8 @@ const RunnerDetailsPassages: React.FunctionComponent<{
 }> = ({passages}) => {
     // TODO
     const [isAdding, setIsAdding] = useState(false);
+
+    const passageCount = useMemo(() => passages.length, [passages]);
 
     return (
         <div className="row">
@@ -18,6 +20,8 @@ const RunnerDetailsPassages: React.FunctionComponent<{
 
             </div>
             <div className="col-12">
+                <p>{passageCount} passage{passageCount >= 2 ? "s" : ""}</p>
+
                 <table className="table no-full-width">
                     <thead>
                     <tr>
