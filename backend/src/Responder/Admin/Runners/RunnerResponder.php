@@ -48,7 +48,9 @@ class RunnerResponder extends AbstractResponder
         $runner['passages'] = array_map(function (Passage $passage) {
             return [
                 'id' => $passage->getId(),
+                'detectionId' => $passage->getDetectionId(),
                 'time' => DateUtil::convertDateToJavascriptDate($passage->getTime()),
+                'isHidden' => $passage->isHidden(),
             ];
         }, $passages);
 
