@@ -43,7 +43,7 @@ class RunnerResponder extends AbstractResponder
         /** @var PassageRepository $passageRepository */
         $passageRepository = RepositoryProvider::getRepository(Passage::class);
 
-        $passages = $passageRepository->findByRunnerId($runnerId);
+        $passages = $passageRepository->findByRunnerId($runnerId, includeHidden: true);
 
         $runner['passages'] = array_map(function (Passage $passage) {
             return [

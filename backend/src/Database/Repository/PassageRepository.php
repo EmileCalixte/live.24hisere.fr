@@ -48,15 +48,21 @@ class PassageRepository extends EntityRepository
     /**
      * @param int $runnerId
      * @param bool $asArray
+     * @param bool $includeHidden
      * @return Passage[]|array The list of the runner's passages, sorted by passage time
      */
-    public function findByRunnerId(int $runnerId, bool $asArray = false): array
+    public function findByRunnerId(int $runnerId, bool $asArray = false, bool $includeHidden = false): array
     {
-        $query = $this->createQueryBuilder('p')
+        $queryBuilder = $this->createQueryBuilder('p')
             ->andWhere('p.runner = :runnerId')
             ->setParameter('runnerId', $runnerId)
-            ->orderBy('p.time', 'ASC')
-            ->getQuery();
+            ->orderBy('p.time', 'ASC');
+
+        if (!$includeHidden) {
+            $queryBuilder->andWhere('p.isHidden = 0');
+        }
+
+        $query = $queryBuilder->getQuery();
 
         return $query->getResult($asArray ? Query::HYDRATE_ARRAY : Query::HYDRATE_OBJECT);
     }
