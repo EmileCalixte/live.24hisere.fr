@@ -10,6 +10,10 @@ const RunnerDetailsPassages: React.FunctionComponent<{
 
     const passageCount = useMemo(() => passages.length, [passages]);
 
+    const hiddenPassageCount = useMemo(() => {
+        return passages.filter(passage => passage.isHidden).length;
+    }, [passages]);
+
     return (
         <div className="row">
             <div className="col-12 mb-3">
@@ -20,7 +24,13 @@ const RunnerDetailsPassages: React.FunctionComponent<{
 
             </div>
             <div className="col-12">
-                <p>{passageCount} passage{passageCount >= 2 ? "s" : ""}</p>
+                <p>
+                    {passageCount} passage{passageCount >= 2 ? "s" : ""}
+
+                    {hiddenPassageCount > 0 &&
+                        `, dont ${hiddenPassageCount} masqué${hiddenPassageCount >= 2 ? "s" : ""}`
+                    }
+                </p>
 
                 <table className="table no-full-width">
                     <thead>
