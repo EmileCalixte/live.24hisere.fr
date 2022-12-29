@@ -1,9 +1,9 @@
 import React, {useMemo, useState} from "react";
-import {ProcessedPassage} from "../../../../types/Passage";
+import {AdminProcessedPassage} from "../../../../types/Passage";
 import Util from "../../../../util/Util";
 
 const RunnerDetailsPassages: React.FunctionComponent<{
-    passages: ProcessedPassage[]
+    passages: AdminProcessedPassage[]
 }> = ({passages}) => {
     // TODO
     const [isAdding, setIsAdding] = useState(false);
@@ -25,6 +25,8 @@ const RunnerDetailsPassages: React.FunctionComponent<{
                 <table className="table no-full-width">
                     <thead>
                     <tr>
+                        <th>#</th>
+                        <th>Type</th>
                         <th>Date et heure</th>
                         <th>Temps de course</th>
                         <th>Actions</th>
@@ -34,6 +36,16 @@ const RunnerDetailsPassages: React.FunctionComponent<{
                     {passages.map(passage => {
                         return (
                             <tr key={passage.id}>
+                                <td style={{fontSize: "0.85em"}}>{passage.id}</td>
+                                <td style={{fontSize: "0.85em"}}>
+                                    {(() => {
+                                        if (passage.detectionId !== null) {
+                                            return `Auto (${passage.detectionId})`;
+                                        }
+
+                                        return "Manuel";
+                                    })()}
+                                </td>
                                 <td>{Util.formatDateAsString(passage.processed.lapEndTime)}</td>
                                 <td>{Util.formatMsAsDuration(passage.processed.lapEndRaceTime)}</td>
                                 <td className="no-padding-vertical">
