@@ -14,6 +14,21 @@ type Passage = {
 }
 
 /**
+ * An object representing a passage of a runner at the timing point with additional admin info
+ */
+export type AdminPassage = Passage & {
+    /**
+     * Not null if the passage comes from a detection of the timing system
+     */
+    detectionId: number | null;
+
+    /**
+     * Whether the passage is hidden from public view (if true, the passage is ignored for rankings and statistics)
+     */
+    isHidden: boolean;
+}
+
+/**
  * An object containing computed data about a runner passage
  */
 export type PassageProcessedData = {
@@ -87,5 +102,11 @@ export type ProcessedPassage = Passage & {
      */
     processed: PassageProcessedData;
 }
+
+/**
+ * An object representing a passage of a runner at the timing point with additional admin info and additional data
+ * about the corresponding lap
+ */
+export type AdminProcessedPassage = AdminPassage & ProcessedPassage;
 
 export default Passage;
