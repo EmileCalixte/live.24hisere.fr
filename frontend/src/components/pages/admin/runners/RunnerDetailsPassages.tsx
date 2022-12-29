@@ -29,7 +29,7 @@ const RunnerDetailsPassages: React.FunctionComponent<{
                         <th>Type</th>
                         <th>Date et heure</th>
                         <th>Temps de course</th>
-                        <th>Actions</th>
+                        <th colSpan={3}>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -50,13 +50,28 @@ const RunnerDetailsPassages: React.FunctionComponent<{
                                 <td>{Util.formatMsAsDuration(passage.processed.lapEndRaceTime)}</td>
                                 <td className="no-padding-vertical">
                                     <div className="buttons-container">
+                                        {passage.isHidden &&
+                                        <button className="button small">
+                                            <i className="fa-solid fa-eye"/> Ne plus masquer
+                                        </button>
+                                        }
+
+                                        {!passage.isHidden &&
                                         <button className="button orange small">
                                             <i className="fa-solid fa-eye-slash"/> Masquer
                                         </button>
-                                        <button className="button small">
-                                            <i className="fa-solid fa-pen"/> Modifier
-                                        </button>
+                                        }
                                     </div>
+                                </td>
+                                <td>
+                                    <button className="button small">
+                                        <i className="fa-solid fa-pen"/> Modifier
+                                    </button>
+                                </td>
+                                <td>
+                                    <button className="button red small">
+                                        <i className="fa-solid fa-trash"/> Supprimer
+                                    </button>
                                 </td>
                             </tr>
                         );
