@@ -5,7 +5,11 @@ import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
 import CircularLoader from "../../../misc/CircularLoader";
 import {app} from "../../../App";
-import {Gender, RunnerWithPassages, RunnerWithProcessedPassages} from "../../../../types/Runner";
+import {
+    Gender,
+    RunnerWithAdminPassages,
+    RunnerWithAdminProcessedPassages,
+} from "../../../../types/Runner";
 import RunnerDetailsForm from "./RunnerDetailsForm";
 import {RaceWithRunnerCount} from "../../../../types/Race";
 import ToastUtil from "../../../../util/ToastUtil";
@@ -17,7 +21,7 @@ const RunnerDetails = () => {
 
     const [races, setRaces] = useState<RaceWithRunnerCount[] | false>(false);
 
-    const [runner, setRunner] = useState<RunnerWithProcessedPassages | undefined | null>(undefined);
+    const [runner, setRunner] = useState<RunnerWithAdminProcessedPassages | undefined | null>(undefined);
 
     const [runnerId, setRunnerId] = useState(0);
     const [runnerFirstname, setRunnerFirstname] = useState("");
@@ -63,7 +67,9 @@ const RunnerDetails = () => {
 
         const responseJson = await response.json();
 
-        const responseRunner = RunnerDetailsUtil.getRunnerWithProcessedPassages(responseJson.runner as RunnerWithPassages);
+        const responseRunner = RunnerDetailsUtil.getRunnerWithProcessedPassages(
+            responseJson.runner as RunnerWithAdminPassages
+        ) as RunnerWithAdminProcessedPassages;
 
         setRunner(responseRunner);
 
