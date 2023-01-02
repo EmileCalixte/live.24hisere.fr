@@ -1,6 +1,8 @@
 import {Navigate, useParams} from "react-router-dom";
 import React, {useCallback, useEffect, useMemo, useState} from "react";
+import {AdminProcessedPassage} from "../../../../types/Passage";
 import ApiUtil from "../../../../util/ApiUtil";
+import Util from "../../../../util/Util";
 import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
 import CircularLoader from "../../../misc/CircularLoader";
@@ -80,6 +82,31 @@ const RunnerDetails = () => {
         setRunnerBirthYear(responseRunner.birthYear);
         setRunnerRaceId(responseRunner.raceId);
     }, [urlRunnerId]);
+
+    const deletePassage = useCallback(async (passage: AdminProcessedPassage) => {
+        let confirmMessage = `Êtes vous sûr de vouloir supprimer le passage n°${passage.id} (${Util.formatDateAsString(passage.processed.lapEndTime)}) ?`;
+
+        if (passage.detectionId !== null) {
+            confirmMessage += "\n\nLe passage ayant été importé depuis le système de chronométrage, il sera réimporté si il y est toujours présent.";
+        }
+
+        if (!window.confirm(confirmMessage)) {
+            return;
+        }
+
+        const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/passages/${passage.id}`, app.state.accessToken, {
+            method: "DELETE"
+        });
+
+        if (!response.ok) {
+            ToastUtil.getToastr().error("Une erreur est survenue");
+            return;
+        }
+
+        ToastUtil.getToastr().success("Le passage a été supprimé");
+
+        fetchRunner();
+    }, [fetchRunner]);
 
     useEffect(() => {
         fetchRaces();
@@ -206,7 +233,7 @@ const RunnerDetails = () => {
                     }
 
                     {runner.passages.length > 0 &&
-                    <RunnerDetailsPassages passages={runner.passages}/>
+                    <RunnerDetailsPassages passages={runner.passages} deletePassage={deletePassage}/>
                     }
                 </div>
             </div>

@@ -3,8 +3,9 @@ import {AdminProcessedPassage} from "../../../../types/Passage";
 import Util from "../../../../util/Util";
 
 const RunnerDetailsPassages: React.FunctionComponent<{
-    passages: AdminProcessedPassage[]
-}> = ({passages}) => {
+    passages: AdminProcessedPassage[],
+    deletePassage: (passage: AdminProcessedPassage) => any,
+}> = ({passages, deletePassage}) => {
     // TODO
     const [isAdding, setIsAdding] = useState(false);
 
@@ -79,7 +80,9 @@ const RunnerDetailsPassages: React.FunctionComponent<{
                                     </button>
                                 </td>
                                 <td>
-                                    <button className="button red small">
+                                    <button className="button red small"
+                                            onClick={() => deletePassage(passage)}
+                                    >
                                         <i className="fa-solid fa-trash"/> Supprimer
                                     </button>
                                 </td>
