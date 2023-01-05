@@ -11,9 +11,10 @@ class PassageRepository extends EntityRepository
 {
     /**
      * @param int $id
-     * @return Passage|null
+     * @param bool $asArray
+     * @return Passage|array|null
      */
-    public function findById(int $id): Passage|null
+    public function findById(int $id, bool $asArray = false): Passage|array|null
     {
         $query = $this->createQueryBuilder('p')
             ->andWhere('p.id = :id')
@@ -21,7 +22,7 @@ class PassageRepository extends EntityRepository
             ->getQuery();
 
         try {
-            return $query->getSingleResult();
+            return $query->getSingleResult($asArray ? Query::HYDRATE_ARRAY : Query::HYDRATE_OBJECT);
         } catch (NoResultException) {
             return null;
         }
