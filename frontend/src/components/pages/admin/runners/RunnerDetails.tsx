@@ -83,6 +83,36 @@ const RunnerDetails = () => {
         setRunnerRaceId(responseRunner.raceId);
     }, [urlRunnerId]);
 
+    const updatePassageVisiblity = useCallback(async (passage: AdminProcessedPassage, hidden: boolean) => {
+        let confirmMessage: string;
+
+        if (hidden) {
+            confirmMessage = `Êtes vous sûr de vouloir masquer le passage n°${passage.id} (${Util.formatDateAsString(passage.processed.lapEndTime)}) ?`
+        } else {
+            confirmMessage = `Êtes vous sûr de vouloir rendre public le passage n°${passage.id} (${Util.formatDateAsString(passage.processed.lapEndTime)}) ?`
+        }
+
+        if (!window.confirm(confirmMessage)) {
+            return;
+        }
+
+        const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/passages/${passage.id}`, app.state.accessToken, {
+            method: "PATCH",
+            body: JSON.stringify({
+                isHidden: hidden,
+            }),
+        });
+
+        if (!response.ok) {
+            ToastUtil.getToastr().error("Une erreur est survenue");
+            return;
+        }
+
+        ToastUtil.getToastr().success(hidden ? "Le passage a été masqué" : "Le passage n'est plus masqué");
+
+        fetchRunner();
+    }, [fetchRunner]);
+
     const deletePassage = useCallback(async (passage: AdminProcessedPassage) => {
         let confirmMessage = `Êtes vous sûr de vouloir supprimer le passage n°${passage.id} (${Util.formatDateAsString(passage.processed.lapEndTime)}) ?`;
 
@@ -233,7 +263,10 @@ const RunnerDetails = () => {
                     }
 
                     {runner.passages.length > 0 &&
-                    <RunnerDetailsPassages passages={runner.passages} deletePassage={deletePassage}/>
+                    <RunnerDetailsPassages passages={runner.passages}
+                                           updatePassageVisiblity={updatePassageVisiblity}
+                                           deletePassage={deletePassage}
+                    />
                     }
                 </div>
             </div>

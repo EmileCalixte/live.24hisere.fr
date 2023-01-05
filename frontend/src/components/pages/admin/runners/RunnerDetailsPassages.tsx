@@ -4,8 +4,9 @@ import Util from "../../../../util/Util";
 
 const RunnerDetailsPassages: React.FunctionComponent<{
     passages: AdminProcessedPassage[],
+    updatePassageVisiblity: (passage: AdminProcessedPassage, hidden: boolean) => any,
     deletePassage: (passage: AdminProcessedPassage) => any,
-}> = ({passages, deletePassage}) => {
+}> = ({passages, updatePassageVisiblity, deletePassage}) => {
     // TODO
     const [isAdding, setIsAdding] = useState(false);
 
@@ -62,13 +63,17 @@ const RunnerDetailsPassages: React.FunctionComponent<{
                                 <td className="no-padding-vertical">
                                     <div className="buttons-container">
                                         {passage.isHidden &&
-                                        <button className="button small">
+                                        <button className="button small"
+                                                onClick={() => updatePassageVisiblity(passage, false)}
+                                        >
                                             <i className="fa-solid fa-eye"/> Ne plus masquer
                                         </button>
                                         }
 
                                         {!passage.isHidden &&
-                                        <button className="button orange small">
+                                        <button className="button orange small"
+                                                onClick={() => updatePassageVisiblity(passage, true)}
+                                        >
                                             <i className="fa-solid fa-eye-slash"/> Masquer
                                         </button>
                                         }
