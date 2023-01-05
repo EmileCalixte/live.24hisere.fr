@@ -6,6 +6,7 @@ namespace App\Router;
 
 use App\Responder\Admin\DeleteUserAccessTokensResponder;
 use App\Responder\Admin\Passages\DeletePassageResponder;
+use App\Responder\Admin\Passages\UpdatePassageResponder;
 use App\Responder\Admin\Races\CreateRaceResponder;
 use App\Responder\Admin\Races\DeleteRaceResponder;
 use App\Responder\Admin\Races\RaceResponder;
@@ -66,6 +67,7 @@ class Router
         $this->registerRoute('/admin/runners/{id}', AdminRunnerResponder::class, 'GET');
         $this->registerRoute('/admin/runners/{id}', UpdateRunnerResponder::class, 'PATCH');
 
+        $this->registerRoute('/admin/passages/{id}', UpdatePassageResponder::class, 'PATCH');
         $this->registerRoute('/admin/passages/{id}', DeletePassageResponder::class, 'DELETE');
 
         $this->registerRoute('/admin/users', UsersResponder::class, 'GET');
