@@ -1,6 +1,7 @@
-import React, {useMemo, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {AdminProcessedPassage} from "../../../../types/Passage";
 import Util from "../../../../util/Util";
+import RunnerDetailsPassageTimeForm from "./RunnerDetailsPassageTimeForm";
 
 const RunnerDetailsPassages: React.FunctionComponent<{
     passages: AdminProcessedPassage[],
@@ -10,14 +11,39 @@ const RunnerDetailsPassages: React.FunctionComponent<{
     // TODO
     const [isAdding, setIsAdding] = useState(false);
 
+    // The passage for which user is currently editing the time
+    const [editingPassageTime, setEditingPassageTime] = useState<AdminProcessedPassage | null>(null);
+
     const passageCount = useMemo(() => passages.length, [passages]);
 
     const hiddenPassageCount = useMemo(() => {
         return passages.filter(passage => passage.isHidden).length;
     }, [passages]);
 
+    useEffect(() => {
+        const scrollX = window.scrollX;
+        const scrollY = window.scrollY;
+
+        function onScroll() {
+            window.scrollTo(scrollX, scrollY);
+        }
+
+        if (editingPassageTime !== null) {
+            window.addEventListener("scroll", onScroll);
+        }
+
+        return (() => {
+            window.removeEventListener("scroll", onScroll);
+        })
+    }, [editingPassageTime]);
+
     return (
         <div className="row">
+            {editingPassageTime !== null &&
+            <RunnerDetailsPassageTimeForm onClose={() => setEditingPassageTime(null)}
+            />
+            }
+
             <div className="col-12 mb-3">
                 <button className="button" onClick={() => setIsAdding(true)}>
                     <i className="fa-solid fa-plus"/> Ajouter manuellement
@@ -80,7 +106,9 @@ const RunnerDetailsPassages: React.FunctionComponent<{
                                     </div>
                                 </td>
                                 <td>
-                                    <button className="button small">
+                                    <button className="button small"
+                                            onClick={() => setEditingPassageTime(passage)}
+                                    >
                                         <i className="fa-solid fa-pen"/> Modifier
                                     </button>
                                 </td>
