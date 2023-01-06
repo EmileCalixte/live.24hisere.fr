@@ -40,7 +40,8 @@ const RunnerDetailsPassages: React.FunctionComponent<{
     return (
         <div className="row">
             {editingPassageTime !== null &&
-            <RunnerDetailsPassageTimeForm onClose={() => setEditingPassageTime(null)}
+            <RunnerDetailsPassageTimeForm passage={editingPassageTime}
+                                          onClose={() => setEditingPassageTime(null)}
             />
             }
 

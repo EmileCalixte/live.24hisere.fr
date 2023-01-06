@@ -180,6 +180,42 @@ a, button.a {
     padding-bottom: 20px;
 }
 
+dialog.modal::backdrop {
+    background-color: #000;
+    transition: background-color 1s ease-out;
+    opacity: 0.5;
+}
+
+dialog.modal {
+    width: max(460px, 30vw);
+
+    border: none;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+dialog.modal .close-button {
+    font-size: 1.25em;
+    padding: 0 0.125em;
+    line-height: 1;
+    margin: 0;
+    background-color: transparent;
+    border: none;
+
+    color: #666;
+    transition: color 0.05s ease-out;
+
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1;
+}
+
+dialog.modal .close-button:hover {
+    cursor: pointer;
+
+    color: #333;
+}
+
 .breadcrumbs {
     border: 1px solid #eee;
     background-color: #fff;
