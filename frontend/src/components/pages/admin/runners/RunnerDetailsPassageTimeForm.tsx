@@ -8,6 +8,10 @@ const RunnerDetailsPassageTimeForm: React.FunctionComponent<{
     const dialogRef = useRef<HTMLDialogElement | null>(null);
 
     useEffect(() => {
+        if (dialogRef.current?.open) {
+            return;
+        }
+
         dialogRef.current?.showModal();
     }, [dialogRef]);
 
