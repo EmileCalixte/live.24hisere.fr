@@ -36,6 +36,18 @@ const RunnerDetails = () => {
 
     const [redirectAfterIdUpdate, setRedirectAfterIdUpdate] = useState<number | null>(null)
 
+    const runnerRace = useMemo<RaceWithRunnerCount | null>(() => {
+        if (!runner || !races) {
+            return null;
+        }
+
+        if (!(runner.raceId in races)) {
+            return null;
+        }
+
+        return races[runner.raceId];
+    }, [runner, races]);
+
     const unsavedChanges = useMemo(() => {
         if (!runner) {
             return false;
@@ -109,6 +121,24 @@ const RunnerDetails = () => {
         }
 
         ToastUtil.getToastr().success(hidden ? "Le passage a été masqué" : "Le passage n'est plus masqué");
+
+        fetchRunner();
+    }, [fetchRunner]);
+
+    const updatePassage = useCallback(async (passage: AdminProcessedPassage, time: Date) => {
+        const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/passages/${passage.id}`, app.state.accessToken, {
+            method: "PATCH",
+            body: JSON.stringify({
+                time: Util.formatDateForApi(time),
+            }),
+        });
+
+        if (!response.ok) {
+            ToastUtil.getToastr().error("Une erreur est survenue");
+            return;
+        }
+
+        ToastUtil.getToastr().success("Le temps de passage a bien été modifié");
 
         fetchRunner();
     }, [fetchRunner]);
@@ -264,7 +294,9 @@ const RunnerDetails = () => {
 
                     {runner.passages.length > 0 &&
                     <RunnerDetailsPassages passages={runner.passages}
+                                           runnerRace={runnerRace}
                                            updatePassageVisiblity={updatePassageVisiblity}
+                                           updatePassage={updatePassage}
                                            deletePassage={deletePassage}
                     />
                     }

@@ -188,6 +188,16 @@ label.input-checkbox input[type=checkbox]:focus + span:before {
     background-color: #f1453a;
 }
 
+.button.grey {
+    background-color: #eaeaea;
+    color: #666;
+}
+
+.button.grey:hover {
+    background-color: #d8d8d8;
+    color: #555;
+}
+
 .button[disabled],
 .button[disabled]:hover {
     background-color: #ddd;

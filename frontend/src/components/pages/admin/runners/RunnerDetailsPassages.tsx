@@ -1,18 +1,21 @@
 import React, {useEffect, useMemo, useState} from "react";
 import {AdminProcessedPassage} from "../../../../types/Passage";
+import {RaceWithRunnerCount} from "../../../../types/Race";
 import Util from "../../../../util/Util";
-import RunnerDetailsPassageTimeForm from "./RunnerDetailsPassageTimeForm";
+import RunnerDetailsPassageForm from "./RunnerDetailsPassageForm";
 
 const RunnerDetailsPassages: React.FunctionComponent<{
     passages: AdminProcessedPassage[],
+    runnerRace: RaceWithRunnerCount | null,
     updatePassageVisiblity: (passage: AdminProcessedPassage, hidden: boolean) => any,
+    updatePassage: (passage: AdminProcessedPassage, time: Date) => any,
     deletePassage: (passage: AdminProcessedPassage) => any,
-}> = ({passages, updatePassageVisiblity, deletePassage}) => {
+}> = ({passages, runnerRace, updatePassageVisiblity, updatePassage, deletePassage}) => {
     // TODO
     const [isAdding, setIsAdding] = useState(false);
 
     // The passage for which user is currently editing the time
-    const [editingPassageTime, setEditingPassageTime] = useState<AdminProcessedPassage | null>(null);
+    const [editingPassage, setEditingPassage] = useState<AdminProcessedPassage | null>(null);
 
     const passageCount = useMemo(() => passages.length, [passages]);
 
@@ -28,20 +31,22 @@ const RunnerDetailsPassages: React.FunctionComponent<{
             window.scrollTo(scrollX, scrollY);
         }
 
-        if (editingPassageTime !== null) {
+        if (editingPassage !== null) {
             window.addEventListener("scroll", onScroll);
         }
 
         return (() => {
             window.removeEventListener("scroll", onScroll);
         })
-    }, [editingPassageTime]);
+    }, [editingPassage]);
 
     return (
         <div className="row">
-            {editingPassageTime !== null &&
-            <RunnerDetailsPassageTimeForm passage={editingPassageTime}
-                                          onClose={() => setEditingPassageTime(null)}
+            {editingPassage !== null &&
+            <RunnerDetailsPassageForm runnerRace={runnerRace}
+                                      passage={editingPassage}
+                                      updatePassage={updatePassage}
+                                      onClose={() => setEditingPassage(null)}
             />
             }
 
@@ -108,7 +113,7 @@ const RunnerDetailsPassages: React.FunctionComponent<{
                                 </td>
                                 <td>
                                     <button className="button small"
-                                            onClick={() => setEditingPassageTime(passage)}
+                                            onClick={() => setEditingPassage(passage)}
                                     >
                                         <i className="fa-solid fa-pen"/> Modifier
                                     </button>
