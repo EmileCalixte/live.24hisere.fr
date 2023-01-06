@@ -2,7 +2,7 @@ import React, {useEffect, useMemo, useState} from "react";
 import {AdminProcessedPassage} from "../../../../types/Passage";
 import {RaceWithRunnerCount} from "../../../../types/Race";
 import Util from "../../../../util/Util";
-import RunnerDetailsPassageForm from "./RunnerDetailsPassageForm";
+import RunnerDetailsEditPassage from "./RunnerDetailsEditPassage";
 
 const RunnerDetailsPassages: React.FunctionComponent<{
     passages: AdminProcessedPassage[],
@@ -43,8 +43,8 @@ const RunnerDetailsPassages: React.FunctionComponent<{
     return (
         <div className="row">
             {editingPassage !== null &&
-            <RunnerDetailsPassageForm runnerRace={runnerRace}
-                                      passage={editingPassage}
+            <RunnerDetailsEditPassage passage={editingPassage}
+                                      runnerRace={runnerRace}
                                       updatePassage={updatePassage}
                                       onClose={() => setEditingPassage(null)}
             />

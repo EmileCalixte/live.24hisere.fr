@@ -1,45 +1,16 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
-import {AdminProcessedPassage} from "../../../../types/Passage";
-import {RaceWithRunnerCount} from "../../../../types/Race";
-import ToastUtil from "../../../../util/ToastUtil";
+import React, {useEffect, useRef} from "react";
 import Util from "../../../../util/Util";
 import DurationInputs from "../../../misc/DurationInputs";
 
 const RunnerDetailsPassageForm: React.FunctionComponent<{
-    runnerRace: RaceWithRunnerCount | null,
-    passage: AdminProcessedPassage,
-    updatePassage: (passage: AdminProcessedPassage, time: Date) => any,
+    raceDuration: number,
+    setRaceDuration: (raceDuration: number) => any,
+    time: Date | null,
+    modalTitle: string,
+    onSubmit: (e: React.FormEvent) => any,
     onClose: () => any,
-}> = ({runnerRace, passage, updatePassage, onClose}) => {
+}> = ({raceDuration, setRaceDuration, time, modalTitle, onSubmit, onClose}) => {
     const dialogRef = useRef<HTMLDialogElement | null>(null);
-
-    const [passageRaceDuration, setPassageRaceDuration] = useState(passage.processed.lapEndRaceTime);
-
-    const passageTime = useMemo<Date | null>(() => {
-        if (!runnerRace) {
-            return null;
-        }
-
-        const raceStartTime = new Date(runnerRace.startTime);
-
-        if (isNaN(raceStartTime.getTime())) {
-            return null;
-        }
-
-        return new Date(raceStartTime.getTime() + passageRaceDuration);
-    }, [runnerRace, passageRaceDuration]);
-
-    const onSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
-        if (!passageTime) {
-            ToastUtil.getToastr().error("Erreur : date et heure de départ de la course inconnues, impossible de calculer la date et l'heure du passage");
-            return;
-        }
-
-        await updatePassage(passage, passageTime);
-        onClose();
-    }, [updatePassage, passage, passageTime, onClose]);
 
     useEffect(() => {
         if (dialogRef.current?.open) {
@@ -57,7 +28,7 @@ const RunnerDetailsPassageForm: React.FunctionComponent<{
 
             <div className="row">
                 <div className="col-12">
-                    <h3 className="mt-0">Modification passage #{passage.id}</h3>
+                    <h3 className="mt-0">{modalTitle}</h3>
                 </div>
             </div>
 
@@ -67,13 +38,13 @@ const RunnerDetailsPassageForm: React.FunctionComponent<{
                         <div>
                             <legend>Temps de course</legend>
                             <div className="inline-input-group">
-                                <DurationInputs duration={passageRaceDuration} setDuration={setPassageRaceDuration}/>
+                                <DurationInputs duration={raceDuration} setDuration={setRaceDuration}/>
                             </div>
                         </div>
 
-                        {passageTime &&
+                        {time &&
                         <div className="mt-3">
-                            Date et heure : {Util.formatDateAsString(passageTime)}
+                            Date et heure : {Util.formatDateAsString(time)}
                         </div>
                         }
 
