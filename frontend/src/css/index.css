@@ -180,6 +180,11 @@ a, button.a {
     padding-bottom: 20px;
 }
 
+.flex-space-between-container {
+    display: flex;
+    justify-content: space-between;
+}
+
 dialog.modal::backdrop {
     background-color: #000;
     transition: background-color 1s ease-out;

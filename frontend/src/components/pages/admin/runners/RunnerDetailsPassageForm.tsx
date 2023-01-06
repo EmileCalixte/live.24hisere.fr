@@ -49,7 +49,7 @@ const RunnerDetailsPassageForm: React.FunctionComponent<{
                         </div>
                         }
 
-                        <div className="modal-bottom-buttons-container mt-3">
+                        <div className="flex-space-between-container mt-3">
                             <button className="button grey" type="button" onClick={() => onClose()}>
                                 Annuler
                             </button>
