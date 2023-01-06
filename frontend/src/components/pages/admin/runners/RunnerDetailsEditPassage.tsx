@@ -10,7 +10,9 @@ const RunnerDetailsEditPassage: React.FunctionComponent<{
     updatePassage: (passage: AdminProcessedPassage, time: Date) => any,
     onClose: () => any,
 }> = ({passage, runnerRace, updatePassage, onClose}) => {
-    const [passageRaceDuration, setPassageRaceDuration] = useState(passage.processed.lapEndRaceTime);
+    const [passageRaceTime, setPassageRaceTime] = useState(passage.processed.lapEndRaceTime);
+
+    const [isSaving, setIsSaving] = useState(false);
 
     const passageTime = useMemo<Date | null>(() => {
         if (!runnerRace) {
@@ -23,8 +25,14 @@ const RunnerDetailsEditPassage: React.FunctionComponent<{
             return null;
         }
 
-        return new Date(raceStartTime.getTime() + passageRaceDuration);
-    }, [runnerRace, passageRaceDuration]);
+        return new Date(raceStartTime.getTime() + passageRaceTime);
+    }, [runnerRace, passageRaceTime]);
+
+    const unsavedChanges = useMemo(() => {
+        return [
+            passage.processed.lapEndRaceTime === passageRaceTime
+        ].includes(false);
+    }, [passage, passageRaceTime]);
 
     const onSubmit = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
@@ -34,17 +42,22 @@ const RunnerDetailsEditPassage: React.FunctionComponent<{
             return;
         }
 
+        setIsSaving(true);
+
         await updatePassage(passage, passageTime);
+
+        setIsSaving(false);
 
         onClose();
     }, [updatePassage, passage, passageTime]);
 
     return (
-        <RunnerDetailsPassageForm raceDuration={passageRaceDuration}
-                                  setRaceDuration={setPassageRaceDuration}
+        <RunnerDetailsPassageForm raceDuration={passageRaceTime}
+                                  setRaceDuration={setPassageRaceTime}
                                   time={passageTime}
                                   modalTitle={`Modification passage #${passage.id}`}
                                   onSubmit={onSubmit}
+                                  submitButtonDisabled={isSaving || !unsavedChanges}
                                   onClose={onClose}
         />
     );

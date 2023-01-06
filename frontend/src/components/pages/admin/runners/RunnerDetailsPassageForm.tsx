@@ -8,8 +8,9 @@ const RunnerDetailsPassageForm: React.FunctionComponent<{
     time: Date | null,
     modalTitle: string,
     onSubmit: (e: React.FormEvent) => any,
+    submitButtonDisabled: boolean,
     onClose: () => any,
-}> = ({raceDuration, setRaceDuration, time, modalTitle, onSubmit, onClose}) => {
+}> = ({raceDuration, setRaceDuration, time, modalTitle, onSubmit, submitButtonDisabled, onClose}) => {
     const dialogRef = useRef<HTMLDialogElement | null>(null);
 
     useEffect(() => {
@@ -49,8 +50,13 @@ const RunnerDetailsPassageForm: React.FunctionComponent<{
                         }
 
                         <div className="modal-bottom-buttons-container mt-3">
-                            <button className="button grey" type="button" onClick={() => onClose()}>Annuler</button>
-                            <button className="button" type="submit">Enregistrer</button>
+                            <button className="button grey" type="button" onClick={() => onClose()}>
+                                Annuler
+                            </button>
+
+                            <button className="button" type="submit" disabled={submitButtonDisabled}>
+                                Enregistrer
+                            </button>
                         </div>
                     </form>
                 </div>
