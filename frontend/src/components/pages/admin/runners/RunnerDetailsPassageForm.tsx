@@ -49,8 +49,8 @@ const RunnerDetailsPassageForm: React.FunctionComponent<{
                         }
 
                         <div className="modal-bottom-buttons-container mt-3">
-                            <button className="button grey" onClick={() => onClose()}>Annuler</button>
-                            <button className="button">Enregistrer</button>
+                            <button className="button grey" type="button" onClick={() => onClose()}>Annuler</button>
+                            <button className="button" type="submit">Enregistrer</button>
                         </div>
                     </form>
                 </div>
