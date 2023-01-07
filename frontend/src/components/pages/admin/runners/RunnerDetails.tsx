@@ -151,8 +151,28 @@ const RunnerDetails = () => {
         fetchRunner();
     }, [runner, fetchRunner]);
 
+    const saveNewPassage = useCallback(async (time: Date) => {
+        if (!runner) {
+            return;
+        }
+
+        const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/runners/${runner.id}/passages`, app.state.accessToken, {
+            method: "POST",
+            body: JSON.stringify({
+                isHidden: false,
+                time: Util.formatDateForApi(time),
+            }),
+        });
+
+        if (!response.ok) {
+            ToastUtil.getToastr().error("Une erreur est survenue");
+            return;
+        }
+
+        ToastUtil.getToastr().success("Le passage a bien été créé");
+
         fetchRunner();
-    }, [fetchRunner]);
+    }, [runner, fetchRunner]);
 
     const deletePassage = useCallback(async (passage: AdminProcessedPassage) => {
         if (!runner) {
@@ -312,6 +332,7 @@ const RunnerDetails = () => {
                                            runnerRace={runnerRace}
                                            updatePassageVisiblity={updatePassageVisiblity}
                                            updatePassage={updatePassage}
+                                           saveNewPassage={saveNewPassage}
                                            deletePassage={deletePassage}
                     />
                     }

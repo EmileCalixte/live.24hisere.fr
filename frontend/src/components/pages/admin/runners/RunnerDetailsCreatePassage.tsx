@@ -1,16 +1,14 @@
 import React, {useCallback, useMemo, useState} from "react";
-import {AdminProcessedPassage} from "../../../../types/Passage";
 import {RaceWithRunnerCount} from "../../../../types/Race";
 import ToastUtil from "../../../../util/ToastUtil";
 import RunnerDetailsPassageForm from "./RunnerDetailsPassageForm";
 
-const RunnerDetailsEditPassage: React.FunctionComponent<{
-    passage: AdminProcessedPassage,
+const RunnerDetailsCreatePassage: React.FunctionComponent<{
     runnerRace: RaceWithRunnerCount | null,
-    updatePassage: (passage: AdminProcessedPassage, time: Date) => any,
+    savePassage: (time: Date) => any,
     onClose: () => any,
-}> = ({passage, runnerRace, updatePassage, onClose}) => {
-    const [passageRaceTime, setPassageRaceTime] = useState(passage.processed.lapEndRaceTime);
+}> = ({runnerRace, savePassage, onClose}) => {
+    const [passageRaceTime, setPassageRaceTime] = useState(0);
 
     const [isSaving, setIsSaving] = useState(false);
 
@@ -28,12 +26,6 @@ const RunnerDetailsEditPassage: React.FunctionComponent<{
         return new Date(raceStartTime.getTime() + passageRaceTime);
     }, [runnerRace, passageRaceTime]);
 
-    const unsavedChanges = useMemo(() => {
-        return [
-            passage.processed.lapEndRaceTime === passageRaceTime
-        ].includes(false);
-    }, [passage, passageRaceTime]);
-
     const onSubmit = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -44,23 +36,23 @@ const RunnerDetailsEditPassage: React.FunctionComponent<{
 
         setIsSaving(true);
 
-        await updatePassage(passage, passageTime);
+        await savePassage(passageTime);
 
         setIsSaving(false);
 
         onClose();
-    }, [updatePassage, passage, passageTime]);
+    }, [savePassage, passageTime]);
 
     return (
         <RunnerDetailsPassageForm raceTime={passageRaceTime}
                                   setRaceTime={setPassageRaceTime}
                                   time={passageTime}
-                                  modalTitle={`Modification passage #${passage.id}`}
+                                  modalTitle="Ajouter un passage"
                                   onSubmit={onSubmit}
-                                  submitButtonDisabled={isSaving || !unsavedChanges}
+                                  submitButtonDisabled={isSaving}
                                   onClose={onClose}
         />
     );
 }
 
-export default RunnerDetailsEditPassage;
+export default RunnerDetailsCreatePassage;

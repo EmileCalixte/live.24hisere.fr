@@ -3,14 +3,14 @@ import Util from "../../../../util/Util";
 import DurationInputs from "../../../misc/DurationInputs";
 
 const RunnerDetailsPassageForm: React.FunctionComponent<{
-    raceDuration: number,
-    setRaceDuration: (raceDuration: number) => any,
+    raceTime: number,
+    setRaceTime: (raceTime: number) => any,
     time: Date | null,
     modalTitle: string,
     onSubmit: (e: React.FormEvent) => any,
     submitButtonDisabled: boolean,
     onClose: () => any,
-}> = ({raceDuration, setRaceDuration, time, modalTitle, onSubmit, submitButtonDisabled, onClose}) => {
+}> = ({raceTime, setRaceTime, time, modalTitle, onSubmit, submitButtonDisabled, onClose}) => {
     const dialogRef = useRef<HTMLDialogElement | null>(null);
 
     useEffect(() => {
@@ -39,7 +39,7 @@ const RunnerDetailsPassageForm: React.FunctionComponent<{
                         <div>
                             <legend>Temps de course</legend>
                             <div className="inline-input-group">
-                                <DurationInputs duration={raceDuration} setDuration={setRaceDuration}/>
+                                <DurationInputs duration={raceTime} setDuration={setRaceTime}/>
                             </div>
                         </div>
 

@@ -2,6 +2,7 @@ import React, {useEffect, useMemo, useState} from "react";
 import {AdminProcessedPassage} from "../../../../types/Passage";
 import {RaceWithRunnerCount} from "../../../../types/Race";
 import Util from "../../../../util/Util";
+import RunnerDetailsCreatePassage from "./RunnerDetailsCreatePassage";
 import RunnerDetailsEditPassage from "./RunnerDetailsEditPassage";
 
 const RunnerDetailsPassages: React.FunctionComponent<{
@@ -9,8 +10,9 @@ const RunnerDetailsPassages: React.FunctionComponent<{
     runnerRace: RaceWithRunnerCount | null,
     updatePassageVisiblity: (passage: AdminProcessedPassage, hidden: boolean) => any,
     updatePassage: (passage: AdminProcessedPassage, time: Date) => any,
+    saveNewPassage: (time: Date) => any,
     deletePassage: (passage: AdminProcessedPassage) => any,
-}> = ({passages, runnerRace, updatePassageVisiblity, updatePassage, deletePassage}) => {
+}> = ({passages, runnerRace, updatePassageVisiblity, updatePassage, saveNewPassage, deletePassage}) => {
     // TODO
     const [isAdding, setIsAdding] = useState(false);
 
@@ -31,17 +33,24 @@ const RunnerDetailsPassages: React.FunctionComponent<{
             window.scrollTo(scrollX, scrollY);
         }
 
-        if (editingPassage !== null) {
+        if (editingPassage !== null || isAdding) {
             window.addEventListener("scroll", onScroll);
         }
 
         return (() => {
             window.removeEventListener("scroll", onScroll);
         })
-    }, [editingPassage]);
+    }, [editingPassage, isAdding]);
 
     return (
         <div className="row">
+            {isAdding &&
+            <RunnerDetailsCreatePassage runnerRace={runnerRace}
+                                        savePassage={saveNewPassage}
+                                        onClose={() => setIsAdding(false)}
+            />
+            }
+
             {editingPassage !== null &&
             <RunnerDetailsEditPassage passage={editingPassage}
                                       runnerRace={runnerRace}
