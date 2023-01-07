@@ -34,7 +34,9 @@ const RunnerDetails = () => {
 
     const [isSaving, setIsSaving] = useState(false);
 
-    const [redirectAfterIdUpdate, setRedirectAfterIdUpdate] = useState<number | null>(null)
+    const [redirectAfterIdUpdate, setRedirectAfterIdUpdate] = useState<number | null>(null);
+
+    const [redirectAfterDelete, setRedirectAfterDelete] = useState(false);
 
     const runnerRace = useMemo<RaceWithRunnerCount | null>(() => {
         if (!runner || !races) {
@@ -258,6 +260,36 @@ const RunnerDetails = () => {
         setIsSaving(false);
     }, [fetchRunner, runner, runnerBirthYear, runnerFirstname, runnerLastname, runnerGender, runnerId, runnerRaceId]);
 
+    const deleteRunner = useCallback(async () => {
+        if (!runner) {
+            return;
+        }
+
+        if (!window.confirm("Êtes-vous sûr de vouloir supprimer ce coureur ?")) {
+            return;
+        }
+
+        const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/runners/${runner.id}`, app.state.accessToken, {
+            method: "DELETE",
+        });
+
+        if (!response.ok) {
+            ToastUtil.getToastr().error("Une erreur est survenue");
+            const responseJson = await response.json();
+            console.error(responseJson);
+            return;
+        }
+
+        ToastUtil.getToastr().success("Coureur supprimé");
+        setRedirectAfterDelete(true);
+    }, [runner]);
+
+    if (redirectAfterDelete) {
+        return (
+            <Navigate to="/admin/runners" />
+        )
+    }
+
     if (runner === null) {
         return (
             <Navigate to="/admin/runners" />
@@ -320,6 +352,7 @@ const RunnerDetails = () => {
                                        submitButtonDisabled={isSaving || !unsavedChanges}
                     />
                 </div>
+
                 <div className="col-12 mt-3">
                     <h3>Passages</h3>
 
@@ -336,6 +369,18 @@ const RunnerDetails = () => {
                                            deletePassage={deletePassage}
                     />
                     }
+                </div>
+
+                <div className="col-12 mt-3">
+                    <h3>Supprimer le coureur</h3>
+
+                    <p>Cette action est irréversible.</p>
+
+                    <button className="button red mt-3"
+                            onClick={deleteRunner}
+                    >
+                        Supprimer le coureur
+                    </button>
                 </div>
             </div>
             }
