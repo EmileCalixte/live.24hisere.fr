@@ -96,6 +96,10 @@ const RunnerDetails = () => {
     }, [urlRunnerId]);
 
     const updatePassageVisiblity = useCallback(async (passage: AdminProcessedPassage, hidden: boolean) => {
+        if (!runner) {
+            return;
+        }
+
         let confirmMessage: string;
 
         if (hidden) {
@@ -108,7 +112,7 @@ const RunnerDetails = () => {
             return;
         }
 
-        const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/passages/${passage.id}`, app.state.accessToken, {
+        const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/runners/${runner.id}/passages/${passage.id}`, app.state.accessToken, {
             method: "PATCH",
             body: JSON.stringify({
                 isHidden: hidden,
@@ -123,10 +127,14 @@ const RunnerDetails = () => {
         ToastUtil.getToastr().success(hidden ? "Le passage a été masqué" : "Le passage n'est plus masqué");
 
         fetchRunner();
-    }, [fetchRunner]);
+    }, [runner, fetchRunner]);
 
     const updatePassage = useCallback(async (passage: AdminProcessedPassage, time: Date) => {
-        const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/passages/${passage.id}`, app.state.accessToken, {
+        if (!runner) {
+            return;
+        }
+
+        const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/runners/${runner.id}/passages/${passage.id}`, app.state.accessToken, {
             method: "PATCH",
             body: JSON.stringify({
                 time: Util.formatDateForApi(time),
@@ -139,6 +147,9 @@ const RunnerDetails = () => {
         }
 
         ToastUtil.getToastr().success("Le temps de passage a bien été modifié");
+
+        fetchRunner();
+    }, [runner, fetchRunner]);
 
         fetchRunner();
     }, [fetchRunner]);
