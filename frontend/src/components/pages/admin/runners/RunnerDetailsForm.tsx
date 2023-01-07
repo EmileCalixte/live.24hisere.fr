@@ -1,4 +1,5 @@
 import React from "react";
+import {Link} from "react-router-dom";
 import {Gender} from "../../../../types/Runner";
 import {RaceWithRunnerCount} from "../../../../types/Race";
 import OptionWithLoadingDots from "../../../misc/OptionWithLoadingDots";
@@ -164,6 +165,10 @@ const RunnerDetailsForm: React.FunctionComponent<{
                             );
                         })}
                     </select>
+                    }
+
+                    {(races && races.length < 1) &&
+                    <p>Vous devez <Link to="/admin/races/create">créer une course</Link> pour pouvoir enregistrer un coureur.</p>
                     }
                 </label>
             </div>
