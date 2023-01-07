@@ -41,7 +41,7 @@ const RunnerDetailsCreatePassage: React.FunctionComponent<{
         setIsSaving(false);
 
         onClose();
-    }, [savePassage, passageTime]);
+    }, [savePassage, passageTime, onClose]);
 
     return (
         <RunnerDetailsPassageForm raceTime={passageRaceTime}

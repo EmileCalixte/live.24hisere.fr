@@ -49,7 +49,7 @@ const RunnerDetailsEditPassage: React.FunctionComponent<{
         setIsSaving(false);
 
         onClose();
-    }, [updatePassage, passage, passageTime]);
+    }, [updatePassage, passage, passageTime, onClose]);
 
     return (
         <RunnerDetailsPassageForm raceTime={passageRaceTime}
