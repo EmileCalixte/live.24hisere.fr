@@ -5,7 +5,6 @@ namespace App\Router;
 
 
 use App\Responder\Admin\DeleteUserAccessTokensResponder;
-use App\Responder\Admin\Passages\DeletePassageResponder;
 use App\Responder\Admin\Passages\UpdatePassageResponder;
 use App\Responder\Admin\Races\CreateRaceResponder;
 use App\Responder\Admin\Races\DeleteRaceResponder;
@@ -14,6 +13,7 @@ use App\Responder\Admin\Races\RacesResponder;
 use App\Responder\Admin\Races\UpdateRaceResponder;
 use App\Responder\Admin\Races\UpdateRacesOrderResponder;
 use App\Responder\Admin\Runners\Passages\CreatePassageResponder;
+use App\Responder\Admin\Runners\Passages\DeletePassageResponder;
 use App\Responder\Admin\Runners\RunnerResponder as AdminRunnerResponder;
 use App\Responder\Admin\Runners\RunnersResponder as AdminRunnersResponder;
 use App\Responder\Admin\Runners\UpdateRunnerResponder;
@@ -69,9 +69,9 @@ class Router
         $this->registerRoute('/admin/runners/{id}', UpdateRunnerResponder::class, 'PATCH');
 
         $this->registerRoute('/admin/runners/{runnerId}/passages', CreatePassageResponder::class, 'POST');
+        $this->registerRoute('/admin/runners/{runnerId}/passages/{id}', DeletePassageResponder::class, 'DELETE');
 
         $this->registerRoute('/admin/passages/{id}', UpdatePassageResponder::class, 'PATCH');
-        $this->registerRoute('/admin/passages/{id}', DeletePassageResponder::class, 'DELETE');
 
         $this->registerRoute('/admin/users', UsersResponder::class, 'GET');
         $this->registerRoute('/admin/users/{id}/access-tokens', DeleteUserAccessTokensResponder::class, 'DELETE');

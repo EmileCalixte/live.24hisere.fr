@@ -144,6 +144,10 @@ const RunnerDetails = () => {
     }, [fetchRunner]);
 
     const deletePassage = useCallback(async (passage: AdminProcessedPassage) => {
+        if (!runner) {
+            return;
+        }
+
         let confirmMessage = `Êtes vous sûr de vouloir supprimer le passage n°${passage.id} (${Util.formatDateAsString(passage.processed.lapEndTime)}) ?`;
 
         if (passage.detectionId !== null) {
@@ -154,7 +158,7 @@ const RunnerDetails = () => {
             return;
         }
 
-        const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/passages/${passage.id}`, app.state.accessToken, {
+        const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/runners/${runner.id}/passages/${passage.id}`, app.state.accessToken, {
             method: "DELETE"
         });
 
@@ -166,7 +170,7 @@ const RunnerDetails = () => {
         ToastUtil.getToastr().success("Le passage a été supprimé");
 
         fetchRunner();
-    }, [fetchRunner]);
+    }, [runner, fetchRunner]);
 
     useEffect(() => {
         fetchRaces();
