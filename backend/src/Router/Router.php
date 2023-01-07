@@ -12,6 +12,7 @@ use App\Responder\Admin\Races\RacesResponder;
 use App\Responder\Admin\Races\UpdateRaceResponder;
 use App\Responder\Admin\Races\UpdateRacesOrderResponder;
 use App\Responder\Admin\Runners\CreateRunnerResponder;
+use App\Responder\Admin\Runners\DeleteRunnerResponder;
 use App\Responder\Admin\Runners\Passages\CreatePassageResponder;
 use App\Responder\Admin\Runners\Passages\DeletePassageResponder;
 use App\Responder\Admin\Runners\Passages\UpdatePassageResponder;
@@ -69,6 +70,7 @@ class Router
         $this->registerRoute('/admin/runners', CreateRunnerResponder::class, 'POST');
         $this->registerRoute('/admin/runners/{id}', AdminRunnerResponder::class, 'GET');
         $this->registerRoute('/admin/runners/{id}', UpdateRunnerResponder::class, 'PATCH');
+        $this->registerRoute('/admin/runners/{id}', DeleteRunnerResponder::class, 'DELETE');
 
         $this->registerRoute('/admin/runners/{runnerId}/passages', CreatePassageResponder::class, 'POST');
         $this->registerRoute('/admin/runners/{runnerId}/passages/{id}', UpdatePassageResponder::class, 'PATCH');

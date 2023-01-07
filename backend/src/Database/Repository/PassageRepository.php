@@ -81,6 +81,17 @@ class PassageRepository extends EntityRepository
         return $query->execute();
     }
 
+    public function deleteAllOfRunner(int $runnerId)
+    {
+        $query = $this->createQueryBuilder('p')
+            ->delete()
+            ->andWhere('p.runner = :runnerId')
+            ->setParameter('runnerId', $runnerId)
+            ->getQuery();
+
+        return $query->execute();
+    }
+
     /**
      * @return int The number of deleted passages
      */
