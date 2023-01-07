@@ -211,7 +211,7 @@ const RunnerDetails = () => {
         fetchRunner();
     }, [fetchRunner]);
 
-    const onSubmit = async (e: React.FormEvent) => {
+    const onSubmit = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
 
         if (!runner) {
@@ -256,7 +256,7 @@ const RunnerDetails = () => {
         }
 
         setIsSaving(false);
-    }
+    }, [fetchRunner, runner, runnerBirthYear, runnerFirstname, runnerLastname, runnerGender, runnerId, runnerRaceId]);
 
     if (runner === null) {
         return (
