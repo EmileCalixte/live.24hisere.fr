@@ -6,7 +6,7 @@ import RankingTable from "./RankingTable";
 import {RankingProcesser} from "../../../util/RankingUtil";
 import {app} from "../../App";
 import Util from "../../../util/Util";
-import CategoryType, {CategoriesDict} from "../../../types/Category";
+import {CategoriesDict} from "../../../types/Category";
 import {ProcessedRanking, Ranking as RankingType} from "../../../types/Ranking";
 import {GenderWithMixed} from "../../../types/Runner";
 
