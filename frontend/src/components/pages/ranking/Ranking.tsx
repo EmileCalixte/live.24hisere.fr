@@ -31,17 +31,10 @@ const Ranking = () => {
     const [selectedTimeMode, setSelectedTimeMode] = useState(TimeMode.Now);
     const [selectedRankingTime, setSelectedRankingTime] = useState(86400 * 1000); // TODO USE RACE DURATION
 
-    const fetchCategories = useCallback(async () => { // TODO use FfaUtil instead of fetching category names
-        const response = await ApiUtil.performAPIRequest('/categories');
-        const responseJson = await response.json();
+    const fetchCategories = useCallback(async () => {
+        // TODO use FfaUtil to compute category list from runners
 
-        const responseCategories: CategoriesDict = {};
-
-        responseJson.categories.forEach((category: CategoryType) => {
-            responseCategories[category.code] = category.name;
-        });
-
-        setCategories(responseCategories);
+        setCategories({});
     }, []);
 
     const fetchRanking = useCallback(async (rankingTime = selectedRankingTime) => {
