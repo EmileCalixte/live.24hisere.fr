@@ -2,7 +2,7 @@ name: CI/CD
 
 on:
   push:
-    branches: [ master ]
+    branches: [ php81 ]
 
 jobs:
   build:
@@ -19,11 +19,11 @@ jobs:
       - name: Install misc tools
         run: apt-get install -y curl git zip unzip
 
-      - name: Install PHP 8.0
+      - name: Install PHP 8.1
         run: |
           apt-get install -y software-properties-common
           add-apt-repository ppa:ondrej/php
-          apt-get install -y php8.0 php8.0-mbstring php8.0-dom php8.0-curl
+          apt-get install -y php8.1 php8.1-mbstring php8.1-dom php8.1-curl
 
       - name: Install Composer
         run: |
@@ -90,7 +90,7 @@ jobs:
 
   test:
     runs-on: ubuntu-20.04
-    container: php:8.0-cli-alpine3.15
+    container: php:8.1-cli-alpine3.15
     needs: build
 
     steps:
