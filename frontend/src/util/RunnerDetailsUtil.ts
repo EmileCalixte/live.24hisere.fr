@@ -87,8 +87,7 @@ class RunnerDetailsUtil {
             }
 
             const processedPassage: ProcessedPassage = {
-                id: passage.id,
-                time: passage.time,
+                ...structuredClone(passage),
                 processed: passageProcessedData,
             }
 

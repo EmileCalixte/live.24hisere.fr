@@ -11,9 +11,10 @@ class PassageRepository extends EntityRepository
 {
     /**
      * @param int $id
-     * @return Passage|null
+     * @param bool $asArray
+     * @return Passage|array|null
      */
-    public function findById(int $id): Passage|null
+    public function findById(int $id, bool $asArray = false): Passage|array|null
     {
         $query = $this->createQueryBuilder('p')
             ->andWhere('p.id = :id')
@@ -21,7 +22,7 @@ class PassageRepository extends EntityRepository
             ->getQuery();
 
         try {
-            return $query->getSingleResult();
+            return $query->getSingleResult($asArray ? Query::HYDRATE_ARRAY : Query::HYDRATE_OBJECT);
         } catch (NoResultException) {
             return null;
         }
@@ -48,17 +49,47 @@ class PassageRepository extends EntityRepository
     /**
      * @param int $runnerId
      * @param bool $asArray
+     * @param bool $includeHidden
      * @return Passage[]|array The list of the runner's passages, sorted by passage time
      */
-    public function findByRunnerId(int $runnerId, bool $asArray = false): array
+    public function findByRunnerId(int $runnerId, bool $asArray = false, bool $includeHidden = false): array
     {
-        $query = $this->createQueryBuilder('p')
+        $queryBuilder = $this->createQueryBuilder('p')
             ->andWhere('p.runner = :runnerId')
             ->setParameter('runnerId', $runnerId)
-            ->orderBy('p.time', 'ASC')
-            ->getQuery();
+            ->orderBy('p.time', 'ASC');
+
+        if (!$includeHidden) {
+            $queryBuilder->andWhere('p.isHidden = 0');
+        }
+
+        $query = $queryBuilder->getQuery();
 
         return $query->getResult($asArray ? Query::HYDRATE_ARRAY : Query::HYDRATE_OBJECT);
+    }
+
+    public function updateAllOfRunner(int $oldRunnerId, int $newRunnerId)
+    {
+        $query = $this->createQueryBuilder('p')
+            ->update()
+            ->set('p.runner', ':newRunnerId')
+            ->andWhere('p.runner = :oldRunnerId')
+            ->setParameter('newRunnerId', $newRunnerId)
+            ->setParameter('oldRunnerId', $oldRunnerId)
+            ->getQuery();
+
+        return $query->execute();
+    }
+
+    public function deleteAllOfRunner(int $runnerId)
+    {
+        $query = $this->createQueryBuilder('p')
+            ->delete()
+            ->andWhere('p.runner = :runnerId')
+            ->setParameter('runnerId', $runnerId)
+            ->getQuery();
+
+        return $query->execute();
     }
 
     /**

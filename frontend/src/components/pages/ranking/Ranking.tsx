@@ -31,7 +31,7 @@ const Ranking = () => {
     const [selectedTimeMode, setSelectedTimeMode] = useState(TimeMode.Now);
     const [selectedRankingTime, setSelectedRankingTime] = useState(86400 * 1000); // TODO USE RACE DURATION
 
-    const fetchCategories = useCallback(async () => {
+    const fetchCategories = useCallback(async () => { // TODO use FfaUtil instead of fetching category names
         const response = await ApiUtil.performAPIRequest('/categories');
         const responseJson = await response.json();
 

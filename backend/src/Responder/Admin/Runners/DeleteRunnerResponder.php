@@ -1,24 +1,24 @@
 <?php
 
-
-namespace App\Responder;
-
+namespace App\Responder\Admin\Runners;
 
 use App\Database\Entity\Passage;
 use App\Database\Entity\Runner;
 use App\Database\Repository\PassageRepository;
 use App\Database\Repository\RepositoryProvider;
 use App\Database\Repository\RunnerRepository;
-use App\Misc\Util\CommonUtil;
-use App\Misc\Util\DateUtil;
+use App\MainApp;
+use App\Responder\AbstractResponder;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\HttpNotFoundException;
 
-class RunnerDetailsResponder extends AbstractResponder
+class DeleteRunnerResponder extends AbstractResponder
 {
     public function respond(ServerRequestInterface $request, ResponseInterface $response, $args): ResponseInterface
     {
+        $this->requireAuthentication($request);
+
         $runnerId = $args['id'];
 
         if (!is_numeric($runnerId)) {
@@ -28,37 +28,22 @@ class RunnerDetailsResponder extends AbstractResponder
         /** @var RunnerRepository $runnerRepository */
         $runnerRepository = RepositoryProvider::getRepository(Runner::class);
 
-        $runner = $runnerRepository->findById($runnerId, asArray: true);
+        $runner = $runnerRepository->findById($runnerId);
 
         if (is_null($runner)) {
             throw new HttpNotFoundException($request);
         }
 
-        // TODO optimize
-        $runner['raceId'] = $runnerRepository->findById($runnerId)->getRace()->getId();
-
-        $runner['category'] = CommonUtil::getFfaCategoryFromBirthYear($runner['birthYear']);
-
         /** @var PassageRepository $passageRepository */
         $passageRepository = RepositoryProvider::getRepository(Passage::class);
 
-        $passages = $passageRepository->findByRunnerId($runnerId);
+        $passageRepository->deleteAllOfRunner($runner->getId());
 
-        $runner['passages'] = array_map(function (Passage $passage) {
-            return [
-                'id' => $passage->getId(),
-                'time' => DateUtil::convertDateToJavascriptDate($passage->getTime()),
-            ];
-        }, $passages);
+        $entityManager = MainApp::getInstance()->getEntityManager();
 
-        $responseData = [
-            'runner' => $runner,
-        ];
+        $entityManager->remove($runner);
+        $entityManager->flush();
 
-        CommonUtil::camelizeArrayKeysRecursively($responseData);
-
-        $response->getBody()->write(CommonUtil::jsonEncode($responseData));
-
-        return $response;
+        return $response->withStatus(204);
     }
 }

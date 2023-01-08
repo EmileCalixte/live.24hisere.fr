@@ -36,7 +36,9 @@ type Race = {
      * The distance of a lap, in meters
      */
     lapDistance: number;
+}
 
+export type RaceWithRunnerCount = Race & {
     /**
      * The number of runners participating in the race
      */

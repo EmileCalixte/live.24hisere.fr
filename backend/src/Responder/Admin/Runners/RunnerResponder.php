@@ -1,8 +1,6 @@
 <?php
 
-
-namespace App\Responder;
-
+namespace App\Responder\Admin\Runners;
 
 use App\Database\Entity\Passage;
 use App\Database\Entity\Runner;
@@ -11,14 +9,17 @@ use App\Database\Repository\RepositoryProvider;
 use App\Database\Repository\RunnerRepository;
 use App\Misc\Util\CommonUtil;
 use App\Misc\Util\DateUtil;
+use App\Responder\AbstractResponder;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\HttpNotFoundException;
 
-class RunnerDetailsResponder extends AbstractResponder
+class RunnerResponder extends AbstractResponder
 {
     public function respond(ServerRequestInterface $request, ResponseInterface $response, $args): ResponseInterface
     {
+        $this->requireAuthentication($request);
+
         $runnerId = $args['id'];
 
         if (!is_numeric($runnerId)) {
@@ -42,12 +43,14 @@ class RunnerDetailsResponder extends AbstractResponder
         /** @var PassageRepository $passageRepository */
         $passageRepository = RepositoryProvider::getRepository(Passage::class);
 
-        $passages = $passageRepository->findByRunnerId($runnerId);
+        $passages = $passageRepository->findByRunnerId($runnerId, includeHidden: true);
 
         $runner['passages'] = array_map(function (Passage $passage) {
             return [
                 'id' => $passage->getId(),
+                'detectionId' => $passage->getDetectionId(),
                 'time' => DateUtil::convertDateToJavascriptDate($passage->getTime()),
+                'isHidden' => $passage->isHidden(),
             ];
         }, $passages);
 

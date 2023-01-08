@@ -1,4 +1,4 @@
-import Passage, {ProcessedPassage} from "./Passage";
+import Passage, {AdminPassage, AdminProcessedPassage, ProcessedPassage} from "./Passage";
 
 /**
  * Represents the gender of a runner
@@ -110,6 +110,16 @@ export type RunnerWithPassages = Runner & {
 }
 
 /**
+ * An object representing a runner with passages and with additional admin info
+ */
+export type RunnerWithAdminPassages = Runner & {
+    /**
+     * The list of the runner's passages with additional admin info
+     */
+    passages: AdminPassage[];
+}
+
+/**
  * An object representing a runner with his passages and with additional data on the passages
  */
 export type RunnerWithProcessedPassages = Runner & {
@@ -117,6 +127,16 @@ export type RunnerWithProcessedPassages = Runner & {
      * The list of the runner's passages with additional data
      */
     passages: ProcessedPassage[];
+}
+
+/**
+ * An object representing a runner with passages and with additional admin info and additional data on the passages
+ */
+export type RunnerWithAdminProcessedPassages = Runner & {
+    /**
+     * The list of the runner's passages with additional admin info and additional data
+     */
+    passages: AdminProcessedPassage[];
 }
 
 /**

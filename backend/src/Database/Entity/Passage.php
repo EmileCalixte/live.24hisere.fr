@@ -22,7 +22,7 @@ class Passage
     #[Column(name: "detection_id", type: "integer", unique: true, nullable: true, options: [
         'comment' => 'Not null if the passage comes from a detection of the timing system'
     ])]
-    private int $detectionId;
+    private int|null $detectionId;
 
     #[ManyToOne(targetEntity: Runner::class, fetch: "EAGER")]
     #[JoinColumn(nullable: false)]
@@ -44,12 +44,12 @@ class Passage
         $this->id = $id;
     }
 
-    public function getDetectionId(): int
+    public function getDetectionId(): int|null
     {
         return $this->detectionId;
     }
 
-    public function setDetectionId(int $detectionId): void
+    public function setDetectionId(int|null $detectionId): void
     {
         $this->detectionId = $detectionId;
     }

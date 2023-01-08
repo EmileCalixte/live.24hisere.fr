@@ -8,12 +8,12 @@ import {app} from "../../../App";
 import Util from "../../../../util/Util";
 import ToastUtil from "../../../../util/ToastUtil";
 import RaceDetailsForm from "./RaceDetailsForm";
-import Race from "../../../../types/Race";
+import {RaceWithRunnerCount} from "../../../../types/Race";
 
 const RaceDetails = () => {
     const {raceId: urlRaceId} = useParams();
 
-    const [race, setRace] = useState<Race | undefined | null>(undefined);
+    const [race, setRace] = useState<RaceWithRunnerCount | undefined | null>(undefined);
 
     const [raceName, setRaceName] = useState("");
     const [initialDistance, setInitialDistance] = useState<number | string>(0);

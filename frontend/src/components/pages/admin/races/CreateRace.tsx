@@ -1,7 +1,7 @@
 import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
 import RaceDetailsForm from "./RaceDetailsForm";
-import React, {useState} from "react";
+import React, {useCallback, useState} from "react";
 import ApiUtil from "../../../../util/ApiUtil";
 import {app} from "../../../App";
 import ToastUtil from "../../../../util/ToastUtil";
@@ -20,8 +20,9 @@ const CreateRace = () => {
 
     const [redirectToId, setRedirectToId] = useState(null);
 
-    const onSubmit = async (e: React.FormEvent) => {
+    const onSubmit = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
+
         setIsSaving(true);
 
         const body = {
@@ -49,7 +50,7 @@ const CreateRace = () => {
 
         ToastUtil.getToastr().success("Course créée");
         setRedirectToId(responseJson.id);
-    }
+    }, [raceName, isPublic, initialDistance, lapDistance, startTime, duration]);
 
     if (redirectToId) {
         return (

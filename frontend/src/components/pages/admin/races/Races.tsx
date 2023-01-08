@@ -7,14 +7,14 @@ import CircularLoader from "../../../misc/CircularLoader";
 import {Link} from "react-router-dom";
 import RacesListItem from "./RacesListItem";
 import ToastUtil from "../../../../util/ToastUtil";
-import Race from "../../../../types/Race";
+import {RaceWithRunnerCount} from "../../../../types/Race";
 
 const Races = () => {
     // false = not fetched yet
-    const [races, setRaces] = useState<Race[] | false>(false);
+    const [races, setRaces] = useState<RaceWithRunnerCount[] | false>(false);
 
     // Used when user is reordering the list
-    const [sortingRaces, setSortingRaces] = useState<Race[] | false>(false);
+    const [sortingRaces, setSortingRaces] = useState<RaceWithRunnerCount[] | false>(false);
     const [isSorting, setIsSorting] = useState(false);
 
     const [isSaving, setIsSaving] = useState(false);
@@ -81,7 +81,7 @@ const Races = () => {
     const saveSort = useCallback(async () => {
         setIsSaving(true);
 
-        const raceIds = (sortingRaces as Race[]).map(race => race.id);
+        const raceIds = (sortingRaces as RaceWithRunnerCount[]).map(race => race.id);
 
         const response = await ApiUtil.performAuthenticatedAPIRequest("/admin/races-order", app.state.accessToken, {
             method: "PUT",
@@ -95,7 +95,7 @@ const Races = () => {
             return;
         }
 
-        setRaces([...(sortingRaces as Race[])]);
+        setRaces([...(sortingRaces as RaceWithRunnerCount[])]);
 
         ToastUtil.getToastr().success("L'ordre des courses a été modifié");
         setIsSorting(false);
@@ -166,7 +166,7 @@ const Races = () => {
 
                         <div className="col-12">
                             <ul className="admin-list">
-                                {(displayedRaces as Race[]).map((race, index) => {
+                                {(displayedRaces as RaceWithRunnerCount[]).map((race, index) => {
                                     return (
                                         <li key={race.id}
                                             className={isSorting ? "draggable" : ""}

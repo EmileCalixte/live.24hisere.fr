@@ -2,8 +2,8 @@
 
 namespace App\Database\Repository;
 
-use App\Database\Entity\Race;
 use App\Database\Entity\Runner;
+use App\Misc\Util\CommonUtil;
 use App\Misc\Util\DateUtil;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
@@ -53,6 +53,8 @@ class RunnerRepository extends EntityRepository
 
                 $resultRow[$key] = $value;
             }
+
+            $resultRow['category'] = CommonUtil::getFfaCategoryFromBirthYear($resultRow['birthYear']);
 
             array_push($result, $resultRow);
         });
@@ -120,13 +122,14 @@ class RunnerRepository extends EntityRepository
                     SELECT p1.time
                     FROM $passageTableName p1
                     WHERE p1.runner_id = r.id
+                    AND p1.is_hidden = 0
         EOF;
 
         if (!is_null($atDate)) {
             $sql .= ' AND p1.time <= :atDate';
         }
 
-        $sql .= " AND p1.id = (SELECT p2.id FROM $passageTableName p2 WHERE p2.runner_id = p1.runner_id";
+        $sql .= " AND p1.id = (SELECT p2.id FROM $passageTableName p2 WHERE p2.runner_id = p1.runner_id AND p2.is_hidden = 0";
 
         if (!is_null($atDate)) {
             $sql .= ' AND p2.time <= :atDate';
@@ -147,6 +150,7 @@ class RunnerRepository extends EntityRepository
         }
 
         $sql .= <<<EOF
+            AND p.is_hidden = 0
             GROUP BY r.id
             ORDER BY passage_count DESC, last_passage_time ASC, lastname ASC, firstname ASC
         EOF;

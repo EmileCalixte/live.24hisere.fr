@@ -180,6 +180,47 @@ a, button.a {
     padding-bottom: 20px;
 }
 
+.flex-space-between-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+dialog.modal::backdrop {
+    background-color: #000;
+    transition: background-color 1s ease-out;
+    opacity: 0.5;
+}
+
+dialog.modal {
+    width: max(460px, 30vw);
+
+    border: none;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+dialog.modal .close-button {
+    font-size: 1.25em;
+    padding: 0 0.125em;
+    line-height: 1;
+    margin: 0;
+    background-color: transparent;
+    border: none;
+
+    color: #666;
+    transition: color 0.05s ease-out;
+
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1;
+}
+
+dialog.modal .close-button:hover {
+    cursor: pointer;
+
+    color: #333;
+}
+
 .breadcrumbs {
     border: 1px solid #eee;
     background-color: #fff;
@@ -273,9 +314,11 @@ a, button.a {
 }
 
 table.table {
-    width: 100%;
-
     border-collapse: collapse;
+}
+
+table.table:not(.no-full-width) {
+    width: 100%;
 }
 
 table.table,
@@ -284,9 +327,16 @@ table.table th {
     border: 1px solid #aaa;
 }
 
-table.table td,
-table.table th {
-    padding: 7px;
+table.table td:not(.no-padding-vertical),
+table.table th:not(.no-padding-vertical) {
+    padding-top: 7px;
+    padding-bottom: 7px;
+}
+
+table.table td:not(.no-padding-horizontal),
+table.table th:not(.no-padding-horizontal) {
+    padding-left: 7px;
+    padding-right: 7px;
 }
 
 table.table th {
@@ -301,6 +351,12 @@ table.table tbody tr:nth-child(2n) {
 
 table.table tbody tr:hover {
     background-color: #e8e8e8;
+}
+
+table.table td .buttons-container,
+table.table th .buttons-container {
+    display: flex;
+    gap: 0.5em;
 }
 
 .table-column-sort-icon {
