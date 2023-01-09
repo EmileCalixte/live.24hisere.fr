@@ -2,7 +2,7 @@ name: CI/CD
 
 on:
   push:
-    branches: [ php82 ]
+    branches: [ master ]
 
 jobs:
   build:
