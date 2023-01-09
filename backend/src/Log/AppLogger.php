@@ -7,6 +7,7 @@ use App\MainApp;
 use Monolog\Formatter\JsonFormatter;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use Monolog\LogRecord;
 use Stringable;
 
 class AppLogger extends Singleton
@@ -23,11 +24,11 @@ class AppLogger extends Singleton
 
         $this->logger->pushHandler($streamHandler);
 
-        $this->logger->pushProcessor(function (array $entry): array {
-            $entry['extra']['_GET'] = $_GET;
-            $entry['extra']['_POST'] = $_POST;
-            $entry['extra']['_FILES'] = $_FILES;
-            $entry['extra']['request'] = [
+        $this->logger->pushProcessor(function (LogRecord $entry): LogRecord {
+            $entry->extra['_GET'] = $_GET;
+            $entry->extra['_POST'] = $_POST;
+            $entry->extra['_FILES'] = $_FILES;
+            $entry->extra['request'] = [
                 'url' => $_SERVER['REQUEST_URI'],
                 'method' => $_SERVER['REQUEST_METHOD'],
                 'headers' => getallheaders(),
