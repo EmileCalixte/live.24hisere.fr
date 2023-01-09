@@ -24,6 +24,8 @@
 *.scss          eol=lf
 *.sh            eol=lf
 *.tld           eol=lf
+*.ts            eol=lf
+*.tsx           eol=lf
 *.txt           eol=lf
 *.tag           eol=lf
 *.tagx          eol=lf
