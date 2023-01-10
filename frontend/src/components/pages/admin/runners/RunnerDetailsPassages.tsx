@@ -1,13 +1,13 @@
 import React, {useEffect, useMemo, useState} from "react";
 import {AdminProcessedPassage} from "../../../../types/Passage";
-import {RaceWithRunnerCount} from "../../../../types/Race";
+import {AdminRaceWithRunnerCount} from "../../../../types/Race";
 import Util from "../../../../util/Util";
 import RunnerDetailsCreatePassage from "./RunnerDetailsCreatePassage";
 import RunnerDetailsEditPassage from "./RunnerDetailsEditPassage";
 
 const RunnerDetailsPassages: React.FunctionComponent<{
     passages: AdminProcessedPassage[],
-    runnerRace: RaceWithRunnerCount | null,
+    runnerRace: AdminRaceWithRunnerCount | null,
     updatePassageVisiblity: (passage: AdminProcessedPassage, hidden: boolean) => any,
     updatePassage: (passage: AdminProcessedPassage, time: Date) => any,
     saveNewPassage: (time: Date) => any,

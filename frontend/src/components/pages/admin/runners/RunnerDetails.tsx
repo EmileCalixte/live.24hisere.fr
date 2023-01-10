@@ -13,7 +13,7 @@ import {
     RunnerWithAdminProcessedPassages,
 } from "../../../../types/Runner";
 import RunnerDetailsForm from "./RunnerDetailsForm";
-import {RaceWithRunnerCount} from "../../../../types/Race";
+import {AdminRaceWithRunnerCount} from "../../../../types/Race";
 import ToastUtil from "../../../../util/ToastUtil";
 import RunnerDetailsPassages from "./RunnerDetailsPassages";
 import RunnerDetailsUtil from "../../../../util/RunnerDetailsUtil";
@@ -21,7 +21,7 @@ import RunnerDetailsUtil from "../../../../util/RunnerDetailsUtil";
 const RunnerDetails = () => {
     const {runnerId: urlRunnerId} = useParams();
 
-    const [races, setRaces] = useState<RaceWithRunnerCount[] | false>(false);
+    const [races, setRaces] = useState<AdminRaceWithRunnerCount[] | false>(false);
 
     const [runner, setRunner] = useState<RunnerWithAdminProcessedPassages | undefined | null>(undefined);
 
@@ -38,7 +38,7 @@ const RunnerDetails = () => {
 
     const [redirectAfterDelete, setRedirectAfterDelete] = useState(false);
 
-    const runnerRace = useMemo<RaceWithRunnerCount | null>(() => {
+    const runnerRace = useMemo<AdminRaceWithRunnerCount | null>(() => {
         if (!runner || !races) {
             return null;
         }

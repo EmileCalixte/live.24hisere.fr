@@ -1,7 +1,7 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import {Gender} from "../../../../types/Runner";
-import {RaceWithRunnerCount} from "../../../../types/Race";
+import {AdminRaceWithRunnerCount} from "../../../../types/Race";
 import OptionWithLoadingDots from "../../../misc/OptionWithLoadingDots";
 import {getCategoryNameFromBirthYear} from "../../../../util/FfaUtil";
 
@@ -17,7 +17,7 @@ const RunnerDetailsForm: React.FunctionComponent<{
     setGender: (gender: Gender) => any,
     birthYear: string,
     setBirthYear: (birthYear: string) => any,
-    races: RaceWithRunnerCount[] | false,
+    races: AdminRaceWithRunnerCount[] | false,
     raceId: number,
     setRaceId: (raceId: number) => any,
     submitButtonDisabled: boolean,

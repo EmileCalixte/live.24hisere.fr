@@ -1,10 +1,10 @@
 import React, {useCallback, useMemo, useState} from "react";
-import {RaceWithRunnerCount} from "../../../../types/Race";
+import {AdminRaceWithRunnerCount} from "../../../../types/Race";
 import ToastUtil from "../../../../util/ToastUtil";
 import RunnerDetailsPassageForm from "./RunnerDetailsPassageForm";
 
 const RunnerDetailsCreatePassage: React.FunctionComponent<{
-    runnerRace: RaceWithRunnerCount | null,
+    runnerRace: AdminRaceWithRunnerCount | null,
     savePassage: (time: Date) => any,
     onClose: () => any,
 }> = ({runnerRace, savePassage, onClose}) => {
