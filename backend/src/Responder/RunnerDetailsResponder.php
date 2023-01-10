@@ -34,13 +34,23 @@ class RunnerDetailsResponder extends AbstractResponder
             throw new HttpNotFoundException($request);
         }
 
-        // TODO optimize
+        $race = $runnerRepository->findById($runnerId)->getRace();
+
         $runner['raceId'] = $runnerRepository->findById($runnerId)->getRace()->getId();
 
         $runner['category'] = CommonUtil::getFfaCategoryFromBirthYear($runner['birthYear']);
 
         /** @var PassageRepository $passageRepository */
         $passageRepository = RepositoryProvider::getRepository(Passage::class);
+
+        $runner['race'] = [
+            'id' => $race->getId(),
+            'name' => $race->getName(),
+            'startTime' => DateUtil::convertDateToJavascriptDate($race->getStartTime()),
+            'duration' => $race->getDuration(),
+            'initialDistance' => $race->getInitialDistance(),
+            'lapDistance' => $race->getLapDistance(),
+        ];
 
         $passages = $passageRepository->findByRunnerId($runnerId);
 
