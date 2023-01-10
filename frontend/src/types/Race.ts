@@ -1,7 +1,7 @@
 /**
  * An object representing a race
  */
-type Race = {
+export type Race = {
     /**
      * The race ID
      */

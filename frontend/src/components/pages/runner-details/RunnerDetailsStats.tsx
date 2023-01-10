@@ -106,10 +106,6 @@ const RunnerDetailsStats: React.FunctionComponent<{
                 <h2>Données générales</h2>
 
                 <p>
-                    Distance tour : <strong>{app.state.lapDistance} m</strong> (premier tour : {app.state.firstLapDistance} m)
-                </p>
-
-                <p>
                     Nombre de tours complets : <strong>{completeLapCount}</strong>, distance totale : <strong>{(totalDistance / 1000).toFixed(3)} km</strong>
                 </p>
 

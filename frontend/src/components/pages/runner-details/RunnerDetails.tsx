@@ -1,4 +1,5 @@
 import {useParams} from "react-router-dom";
+import RunnerDetailsRaceDetails from "./RunnerDetailsRaceDetails";
 import RunnerSelector from "./RunnerSelector";
 import React, {useCallback, useEffect, useState} from "react";
 import ApiUtil from "../../../util/ApiUtil";
@@ -7,7 +8,12 @@ import RunnerDetailsLaps from "./RunnerDetailsLaps";
 import RunnerDetailsUtil from "../../../util/RunnerDetailsUtil";
 import ExcelUtil from "../../../util/ExcelUtil";
 import {app} from "../../App";
-import Runner, {RunnerWithPassages, RunnerWithProcessedHours, RunnerWithProcessedPassages} from "../../../types/Runner";
+import Runner, {
+    RunnerWithPassages,
+    RunnerWithProcessedHours,
+    RunnerWithProcessedPassages,
+    RunnerWithRace
+} from "../../../types/Runner";
 
 enum Tab {
     Stats = 'stats',
@@ -20,7 +26,7 @@ const RunnerDetails = () => {
     const {runnerId: urlRunnerId} = useParams();
 
     const [selectedRunnerId, setSelectedRunnerId] = useState(urlRunnerId);
-    const [selectedRunner, setSelectedRunner] = useState<RunnerWithProcessedPassages & RunnerWithProcessedHours | null>(null);
+    const [selectedRunner, setSelectedRunner] = useState<RunnerWithRace & RunnerWithProcessedPassages & RunnerWithProcessedHours | null>(null);
 
     const [runners, setRunners] = useState<Runner[] | false>(false);
 
@@ -55,7 +61,7 @@ const RunnerDetails = () => {
         }
 
         const responseJson = await response.json();
-        const runner = responseJson.runner as RunnerWithPassages;
+        const runner = responseJson.runner as RunnerWithRace & RunnerWithPassages;
 
         runner.passages.sort((passageA, passageB) => {
             const passageADate = new Date(passageA.time);
@@ -74,7 +80,7 @@ const RunnerDetails = () => {
 
         RunnerDetailsUtil.getProcessedRunner(runner);
 
-        setSelectedRunner(RunnerDetailsUtil.getProcessedRunner(runner));
+        setSelectedRunner(RunnerDetailsUtil.getProcessedRunner(runner) as RunnerWithRace & RunnerWithProcessedPassages & RunnerWithProcessedHours);
     }, [selectedRunnerId]);
 
     const onSelectRunner = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -151,7 +157,12 @@ const RunnerDetails = () => {
                             {(() => {
                                 switch (selectedTab) {
                                     case Tab.Stats:
-                                        return <RunnerDetailsStats runner={selectedRunner} />
+                                        return (
+                                            <>
+                                                <RunnerDetailsRaceDetails race={selectedRunner!.race} />
+                                                <RunnerDetailsStats runner={selectedRunner} />
+                                            </>
+                                        );
                                     case Tab.Laps:
                                         return <RunnerDetailsLaps runner={selectedRunner} />
                                     default:
