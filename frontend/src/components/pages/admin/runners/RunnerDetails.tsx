@@ -83,18 +83,19 @@ const RunnerDetails = () => {
 
         const responseJson = await response.json();
 
-        const responseRunner = RunnerDetailsUtil.getRunnerWithProcessedPassages(
-            responseJson.runner as RunnerWithAdminPassages
-        ) as RunnerWithAdminProcessedPassages;
+        const runner = responseJson.runner as RunnerWithAdminPassages;
 
-        setRunner(responseRunner);
+        setRunner({
+            ...runner,
+            passages: RunnerDetailsUtil.getRunnerProcessedPassages(runner.passages),
+        });
 
-        setRunnerId(responseRunner.id);
-        setRunnerFirstname(responseRunner.firstname);
-        setRunnerLastname(responseRunner.lastname);
-        setRunnerGender(responseRunner.gender);
-        setRunnerBirthYear(responseRunner.birthYear);
-        setRunnerRaceId(responseRunner.raceId);
+        setRunnerId(runner.id);
+        setRunnerFirstname(runner.firstname);
+        setRunnerLastname(runner.lastname);
+        setRunnerGender(runner.gender);
+        setRunnerBirthYear(runner.birthYear);
+        setRunnerRaceId(runner.raceId);
     }, [urlRunnerId]);
 
     const updatePassageVisiblity = useCallback(async (passage: AdminProcessedPassage, hidden: boolean) => {

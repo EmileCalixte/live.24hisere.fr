@@ -2,48 +2,19 @@ import Util from "./Util";
 import {app, RACE_DURATION} from "../components/App";
 import {
     RunnerProcessedHour,
-    RunnerWithPassages,
-    RunnerWithProcessedHours,
     RunnerWithProcessedPassages
 } from "../types/Runner";
 import Passage, {PassageProcessedData, ProcessedPassage} from "../types/Passage";
 
 class RunnerDetailsUtil {
-    static getProcessedRunner = (runner: RunnerWithPassages): RunnerWithProcessedPassages & RunnerWithProcessedHours => {
-        Util.verbose("Processing runner data");
-
-        const runnerWithProcessedPassages = RunnerDetailsUtil.getRunnerWithProcessedPassages(runner);
-        const processedRunner = RunnerDetailsUtil.getRunnerWithProcessedHours(runnerWithProcessedPassages);
-
-        Util.verbose("Runner data processed");
-
-        return processedRunner;
-    }
-
-    /**
-     * Adds a `processed` object to each runner.passages entry, with following keys :
-     * - `lapNumber`: the lap number (null if it's the first and incomplete lap)
-     * - `lapDistance`: the lap distance in meters
-     * - `totalDistance`: the total distance travelled at the time of passage in meters
-     * - `lapStartTime`: a Date object representing the beginning of the lap
-     * - `lapEndTime`: a Date object representing the end of the lap (it's the passage time)
-     * - `lapStartRaceTime`: the elapsed race time since the beginning of the lap in ms
-     * - `lapEndRaceTime`: the elapsed race time since the end of the lap in ms
-     * - `lapDuration`: the duration of the lap in ms
-     * - `lapSpeed`: the average speed of the lap in km/h
-     * - `lapPace`: the average pace of the lap in ms/km
-     * - `averageSpeedSinceRaceStart`: the average speed between the race start and the passage time in km/h
-     * - `averagePaceSinceRaceStart`: the average pace between the race start and the passage time in ms/km
-     * @param {object} runner
-     */
-    static getRunnerWithProcessedPassages = (runner: RunnerWithPassages): RunnerWithProcessedPassages => {
+    static getRunnerProcessedPassages = <T extends Passage>(passages: T[]): (T & {processed: PassageProcessedData})[] => {
         let totalDistance = 0;
 
-        const processedPassages: ProcessedPassage[] = [];
+        const processedPassages: (T & {processed: PassageProcessedData})[] = [];
 
-        for (let i = 0; i < runner.passages.length; ++i) {
-            const previousPassage = i > 0 ? runner.passages[i-1] : null
-            const passage = runner.passages[i];
+        for (let i = 0; i < passages.length; ++i) {
+            const previousPassage = i > 0 ? passages[i-1] : null
+            const passage = passages[i];
 
             const lapNumber = i === 0 ? null : i; // The first passage is an incomplete lap, so it's not counted
 
@@ -54,11 +25,11 @@ class RunnerDetailsUtil {
             totalDistance += lapDistance;
 
             if (isNaN(lapStartTime.getTime())) {
-                throw new Error('Invalid passage start time');
+                throw new Error("Invalid passage start time");
             }
 
             if (isNaN(lapEndTime.getTime())) {
-                throw new Error('Invalid passage end time');
+                throw new Error("Invalid passage end time");
             }
 
             const lapStartRaceTime = lapStartTime.getTime() - app.state.raceStartTime.getTime();
@@ -86,22 +57,16 @@ class RunnerDetailsUtil {
                 averageSpeedSinceRaceStart,
             }
 
-            const processedPassage: ProcessedPassage = {
+            processedPassages.push({
                 ...structuredClone(passage),
                 processed: passageProcessedData,
-            }
-
-            processedPassages.push(processedPassage);
+            });
         }
 
-        return {
-            ...structuredClone(runner),
-            passages: processedPassages,
-        };
+        return processedPassages;
     }
 
-    static getRunnerWithProcessedHours = (runner: RunnerWithProcessedPassages): RunnerWithProcessedPassages & RunnerWithProcessedHours => {
-
+    static getRunnerProcessedHours = (runner: RunnerWithProcessedPassages): RunnerProcessedHour[] => {
         const hourDuration = 60 * 60 * 1000; // in ms
 
         const hours: RunnerProcessedHour[] = [];
@@ -140,60 +105,7 @@ class RunnerDetailsUtil {
             hours.push(hour);
         }
 
-        return {
-            ...structuredClone(runner),
-            hours: hours,
-        };
-    }
-
-    static getLapsInRaceTimeInterval = (passages: ProcessedPassage[], intervalStartRaceTime: number, intervalEndRaceTime: number) => {
-        return passages.filter(passage => {
-
-            // lap END time is BEFORE interval
-            if (passage.processed.lapEndRaceTime < intervalStartRaceTime) {
-                return false;
-            }
-
-            // lap START time is AFTER interval
-            if (passage.processed.lapStartRaceTime > intervalEndRaceTime) {
-                return false;
-            }
-
-            return true;
-        });
-    }
-
-    static getSpeedAndPaceInHour = (
-        passages: ProcessedPassage[],
-        hourStartRaceTime: number,
-        hourEndRaceTime: number): {speed: number, pace: number} => {
-        let speedSum = 0;
-        let durationSum = 0;
-
-        passages.forEach(passage => {
-            const lapStartsInHour = passage.processed.lapStartRaceTime >= hourStartRaceTime;
-            const lapEndsInHour = passage.processed.lapEndRaceTime <= hourEndRaceTime;
-
-            let lapDurationOutsideHour = 0;
-
-            if (!lapStartsInHour) { // If lap starts before hour
-                lapDurationOutsideHour += hourStartRaceTime - passage.processed.lapStartRaceTime;
-            }
-
-            if (!lapEndsInHour) { // If lap ends after hour
-                lapDurationOutsideHour += passage.processed.lapEndRaceTime - hourEndRaceTime;
-            }
-
-            const lapDurationInHour = passage.processed.lapDuration - lapDurationOutsideHour;
-
-            speedSum += passage.processed.lapSpeed * lapDurationInHour;
-            durationSum += lapDurationInHour;
-        });
-
-        const speed = speedSum / durationSum;
-        const pace = RunnerDetailsUtil.getPaceFromSpeed(speed);
-
-        return {speed, pace};
+        return hours;
     }
 
     /**
@@ -228,6 +140,61 @@ class RunnerDetailsUtil {
         });
 
         return excelData;
+    }
+
+    private static getLapsInRaceTimeInterval = (
+        passages: ProcessedPassage[],
+        intervalStartRaceTime: number,
+        intervalEndRaceTime: number
+    ): ProcessedPassage[] => {
+        return passages.filter(passage => {
+
+            // lap END time is BEFORE interval
+            if (passage.processed.lapEndRaceTime < intervalStartRaceTime) {
+                return false;
+            }
+
+            // lap START time is AFTER interval
+            if (passage.processed.lapStartRaceTime > intervalEndRaceTime) {
+                return false;
+            }
+
+            return true;
+        });
+    }
+
+    private static getSpeedAndPaceInHour = (
+        passages: ProcessedPassage[],
+        hourStartRaceTime: number,
+        hourEndRaceTime: number
+    ): {speed: number, pace: number} => {
+        let speedSum = 0;
+        let durationSum = 0;
+
+        passages.forEach(passage => {
+            const lapStartsInHour = passage.processed.lapStartRaceTime >= hourStartRaceTime;
+            const lapEndsInHour = passage.processed.lapEndRaceTime <= hourEndRaceTime;
+
+            let lapDurationOutsideHour = 0;
+
+            if (!lapStartsInHour) { // If lap starts before hour
+                lapDurationOutsideHour += hourStartRaceTime - passage.processed.lapStartRaceTime;
+            }
+
+            if (!lapEndsInHour) { // If lap ends after hour
+                lapDurationOutsideHour += passage.processed.lapEndRaceTime - hourEndRaceTime;
+            }
+
+            const lapDurationInHour = passage.processed.lapDuration - lapDurationOutsideHour;
+
+            speedSum += passage.processed.lapSpeed * lapDurationInHour;
+            durationSum += lapDurationInHour;
+        });
+
+        const speed = speedSum / durationSum;
+        const pace = RunnerDetailsUtil.getPaceFromSpeed(speed);
+
+        return {speed, pace};
     }
 }
 

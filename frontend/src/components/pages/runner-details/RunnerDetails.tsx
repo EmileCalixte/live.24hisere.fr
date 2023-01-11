@@ -78,9 +78,17 @@ const RunnerDetails = () => {
             return 0;
         });
 
-        RunnerDetailsUtil.getProcessedRunner(runner);
+        const processedPassages = RunnerDetailsUtil.getRunnerProcessedPassages(runner.passages);
 
-        setSelectedRunner(RunnerDetailsUtil.getProcessedRunner(runner) as RunnerWithRace & RunnerWithProcessedPassages & RunnerWithProcessedHours);
+        const runnerWithProcessedPassages = {
+            ...runner,
+            passages: processedPassages,
+        };
+
+        setSelectedRunner({
+            ...runnerWithProcessedPassages,
+            hours: RunnerDetailsUtil.getRunnerProcessedHours(runnerWithProcessedPassages),
+        });
     }, [selectedRunnerId]);
 
     const onSelectRunner = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
