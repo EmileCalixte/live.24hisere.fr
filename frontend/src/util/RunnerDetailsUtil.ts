@@ -1,5 +1,5 @@
+import {Race} from "../types/Race";
 import Util from "./Util";
-import {app, RACE_DURATION} from "../components/App";
 import {
     RunnerProcessedHour,
     RunnerWithProcessedPassages
@@ -7,7 +7,7 @@ import {
 import Passage, {PassageProcessedData, ProcessedPassage} from "../types/Passage";
 
 class RunnerDetailsUtil {
-    static getRunnerProcessedPassages = <T extends Passage>(passages: T[]): (T & {processed: PassageProcessedData})[] => {
+    static getRunnerProcessedPassages = <T extends Passage>(passages: T[], race: Race): (T & {processed: PassageProcessedData})[] => {
         let totalDistance = 0;
 
         const processedPassages: (T & {processed: PassageProcessedData})[] = [];
@@ -18,8 +18,8 @@ class RunnerDetailsUtil {
 
             const lapNumber = i === 0 ? null : i; // The first passage is an incomplete lap, so it's not counted
 
-            const lapDistance = i === 0 ? app.state.firstLapDistance : app.state.lapDistance;
-            const lapStartTime = i === 0 ? app.state.raceStartTime : new Date((previousPassage as Passage).time);
+            const lapDistance = i === 0 ? race.initialDistance : race.lapDistance;
+            const lapStartTime = i === 0 ? new Date(race.startTime) : new Date((previousPassage as Passage).time);
             const lapEndTime = new Date(passage.time);
 
             totalDistance += lapDistance;
@@ -32,8 +32,10 @@ class RunnerDetailsUtil {
                 throw new Error("Invalid passage end time");
             }
 
-            const lapStartRaceTime = lapStartTime.getTime() - app.state.raceStartTime.getTime();
-            const lapEndRaceTime = lapEndTime.getTime() - app.state.raceStartTime.getTime();
+            const raceStartTime = new Date(race.startTime);
+
+            const lapStartRaceTime = lapStartTime.getTime() - raceStartTime.getTime();
+            const lapEndRaceTime = lapEndTime.getTime() - raceStartTime.getTime();
             const lapDuration = lapEndRaceTime - lapStartRaceTime;
 
             const lapSpeed = lapDistance / lapDuration * 1000 * 3.6;
@@ -66,15 +68,18 @@ class RunnerDetailsUtil {
         return processedPassages;
     }
 
-    static getRunnerProcessedHours = (runner: RunnerWithProcessedPassages): RunnerProcessedHour[] => {
+    static getRunnerProcessedHours = (runner: RunnerWithProcessedPassages, race: Race): RunnerProcessedHour[] => {
         const hourDuration = 60 * 60 * 1000; // in ms
 
         const hours: RunnerProcessedHour[] = [];
 
-        for (let hourStartRaceTime = 0; hourStartRaceTime <= RACE_DURATION; hourStartRaceTime += hourDuration) {
-            const hourEndRaceTime = Math.min(hourStartRaceTime + hourDuration - 1, RACE_DURATION);
-            const hourStartTime = new Date(app.state.raceStartTime.getTime() + hourStartRaceTime);
-            const hourEndTime = new Date(app.state.raceStartTime.getTime() + hourEndRaceTime);
+        const raceStartTime = new Date(race.startTime);
+        const raceDurationMs = race.duration * 1000 - 1; // - 1 to not create an hour of 1 ms
+
+        for (let hourStartRaceTime = 0; hourStartRaceTime <= raceDurationMs; hourStartRaceTime += hourDuration) {
+            const hourEndRaceTime = Math.min(hourStartRaceTime + hourDuration - 1, raceDurationMs);
+            const hourStartTime = new Date(raceStartTime.getTime() + hourStartRaceTime);
+            const hourEndTime = new Date(raceStartTime.getTime() + hourEndRaceTime);
 
             const passages = RunnerDetailsUtil.getLapsInRaceTimeInterval(runner.passages, hourStartRaceTime, hourEndRaceTime);
 

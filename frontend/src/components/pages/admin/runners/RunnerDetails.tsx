@@ -10,7 +10,7 @@ import {app} from "../../../App";
 import {
     Gender,
     RunnerWithAdminPassages,
-    RunnerWithAdminProcessedPassages,
+    RunnerWithAdminProcessedPassages, RunnerWithRace,
 } from "../../../../types/Runner";
 import RunnerDetailsForm from "./RunnerDetailsForm";
 import {AdminRaceWithRunnerCount} from "../../../../types/Race";
@@ -23,7 +23,7 @@ const RunnerDetails = () => {
 
     const [races, setRaces] = useState<AdminRaceWithRunnerCount[] | false>(false);
 
-    const [runner, setRunner] = useState<RunnerWithAdminProcessedPassages | undefined | null>(undefined);
+    const [runner, setRunner] = useState<RunnerWithRace & RunnerWithAdminProcessedPassages | undefined | null>(undefined);
 
     const [runnerId, setRunnerId] = useState(0);
     const [runnerFirstname, setRunnerFirstname] = useState("");
@@ -73,6 +73,10 @@ const RunnerDetails = () => {
     }, []);
 
     const fetchRunner = useCallback(async () => {
+        if (!races) {
+            return;
+        }
+
         const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/runners/${urlRunnerId}`, app.state.accessToken);
 
         if (!response.ok) {
@@ -85,9 +89,16 @@ const RunnerDetails = () => {
 
         const runner = responseJson.runner as RunnerWithAdminPassages;
 
+        const race = races.find(race => race.id === runner.raceId);
+
+        if (!race) {
+            throw new Error("Runner race not found");
+        }
+
         setRunner({
             ...runner,
-            passages: RunnerDetailsUtil.getRunnerProcessedPassages(runner.passages),
+            race,
+            passages: RunnerDetailsUtil.getRunnerProcessedPassages(runner.passages, race),
         });
 
         setRunnerId(runner.id);
@@ -96,7 +107,7 @@ const RunnerDetails = () => {
         setRunnerGender(runner.gender);
         setRunnerBirthYear(runner.birthYear);
         setRunnerRaceId(runner.raceId);
-    }, [urlRunnerId]);
+    }, [urlRunnerId, races]);
 
     const updatePassageVisiblity = useCallback(async (passage: AdminProcessedPassage, hidden: boolean) => {
         if (!runner) {

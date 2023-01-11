@@ -78,7 +78,7 @@ const RunnerDetails = () => {
             return 0;
         });
 
-        const processedPassages = RunnerDetailsUtil.getRunnerProcessedPassages(runner.passages);
+        const processedPassages = RunnerDetailsUtil.getRunnerProcessedPassages(runner.passages, runner.race);
 
         const runnerWithProcessedPassages = {
             ...runner,
@@ -87,7 +87,7 @@ const RunnerDetails = () => {
 
         setSelectedRunner({
             ...runnerWithProcessedPassages,
-            hours: RunnerDetailsUtil.getRunnerProcessedHours(runnerWithProcessedPassages),
+            hours: RunnerDetailsUtil.getRunnerProcessedHours(runnerWithProcessedPassages, runner.race),
         });
     }, [selectedRunnerId]);
 
