@@ -7,6 +7,10 @@ import {
 import Passage, {PassageProcessedData, ProcessedPassage} from "../types/Passage";
 
 class RunnerDetailsUtil {
+    /**
+     * @param passages Passages sorted by ascending time
+     * @param race
+     */
     static getRunnerProcessedPassages = <T extends Passage>(passages: T[], race: Race): (T & {processed: PassageProcessedData})[] => {
         let totalDistance = 0;
 
