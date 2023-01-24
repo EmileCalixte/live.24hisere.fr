@@ -150,7 +150,7 @@ class RunnerRepository extends EntityRepository
         }
 
         $sql .= <<<EOF
-            AND p.is_hidden = 0
+            AND (p.is_hidden = 0 OR p.is_hidden IS NULL)
             GROUP BY r.id
             ORDER BY passage_count DESC, last_passage_time ASC, lastname ASC, firstname ASC
         EOF;
