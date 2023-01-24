@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import DurationInputs from "../../misc/DurationInputs";
 
 const RankingSettingsTime: React.FunctionComponent<{
@@ -20,6 +20,11 @@ const RankingSettingsTime: React.FunctionComponent<{
         setTime(time);
         onRankingTimeSave(time);
     }
+
+    // Reset inputs when ranking time in settings is changed, for example when selected race changes
+    useEffect(() => {
+        setTime(currentRankingTime);
+    }, [currentRankingTime]);
 
     return (
         <form className="inline-input-group"

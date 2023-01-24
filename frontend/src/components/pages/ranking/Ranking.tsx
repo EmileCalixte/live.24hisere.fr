@@ -86,7 +86,10 @@ const Ranking = () => {
         }
 
         setSelectedRace(race);
-    }, [races]);
+        if (selectedRankingTime > race.duration * 1000) {
+            setSelectedRankingTime(race.duration * 1000);
+        }
+    }, [races, selectedRankingTime]);
 
     const onCategorySelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedCategory(e.target.value);
@@ -150,7 +153,7 @@ const Ranking = () => {
                             selectedGender={selectedGender}
                             selectedTimeMode={selectedTimeMode}
                             currentRankingTime={selectedRankingTime}
-                            maxRankingTime={86400 * 1000 /* TODO USE RACE DURATION */}
+                            maxRankingTime={selectedRace.duration * 1000}
                         />
                     </div>
                 </div>
