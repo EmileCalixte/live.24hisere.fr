@@ -33,7 +33,7 @@ const Ranking = () => {
     const [selectedCategory, setSelectedCategory] = useState<string>(Category.All);
     const [selectedGender, setSelectedGender] = useState<GenderWithMixed>("mixed");
     const [selectedTimeMode, setSelectedTimeMode] = useState(TimeMode.Now);
-    const [selectedRankingTime, setSelectedRankingTime] = useState(86400 * 1000); // TODO USE RACE DURATION
+    const [selectedRankingTime, setSelectedRankingTime] = useState(-1); // Set when a race is selected
 
     const fetchCategories = useCallback(async () => {
         // TODO use FfaUtil to compute category list from runners
@@ -72,6 +72,24 @@ const Ranking = () => {
         setProcessedRanking(new RankingProcesser(responseJson.ranking as RankingType).getProcessedRanking());
     }, [selectedRankingTime, selectedTimeMode]);
 
+    const shouldResetRankingTime = useCallback((newRaceDuration: number) => {
+        if (selectedRankingTime < 0) {
+            return true;
+        }
+
+        if (selectedRace && selectedRankingTime > newRaceDuration * 1000) {
+            return true;
+        }
+
+        // For better UX, if the user looks at the current time rankings, we want to reset the time inputs to the
+        // duration of the newly selected race
+        if (selectedTimeMode === TimeMode.Now) {
+            return true;
+        }
+
+        return false;
+    }, [selectedRankingTime, selectedRace, selectedTimeMode]);
+
     const onSelectRace = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
         if (!races) {
             return;
@@ -86,10 +104,11 @@ const Ranking = () => {
         }
 
         setSelectedRace(race);
-        if (selectedRankingTime > race.duration * 1000) {
+
+        if (shouldResetRankingTime(race.duration)) {
             setSelectedRankingTime(race.duration * 1000);
         }
-    }, [races, selectedRankingTime]);
+    }, [races, shouldResetRankingTime]);
 
     const onCategorySelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedCategory(e.target.value);
