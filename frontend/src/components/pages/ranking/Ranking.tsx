@@ -1,5 +1,6 @@
 import '../../../css/print-ranking-table.css';
 import React, {useState, useEffect, useCallback} from "react";
+import {Race} from "../../../types/Race";
 import RankingRaceSelector from "./RankingRaceSelector";
 import RankingSettings from "./RankingSettings";
 import ApiUtil from "../../../util/ApiUtil";
@@ -24,6 +25,8 @@ export enum TimeMode {
 const RANKING_UPDATE_INTERVAL_TIME = 30000;
 
 const Ranking = () => {
+    const [races, setRaces] = useState<Race[] | false>(false);
+    const [selectedRace, setSelectedRace] = useState<Race | null>(null);
 
     const [categories, setCategories] = useState<CategoriesDict | false>(false);
     const [processedRanking, setProcessedRanking] = useState<ProcessedRanking>([]);
@@ -36,6 +39,13 @@ const Ranking = () => {
         // TODO use FfaUtil to compute category list from runners
 
         setCategories({});
+    }, []);
+
+    const fetchRaces = useCallback(async () => {
+        const response = await ApiUtil.performAPIRequest('/races');
+        const responseJson = await response.json();
+
+        setRaces(responseJson.races as Race[]);
     }, []);
 
     const fetchRanking = useCallback(async (rankingTime = selectedRankingTime) => {
@@ -62,6 +72,22 @@ const Ranking = () => {
         setProcessedRanking(new RankingProcesser(responseJson.ranking as RankingType).getProcessedRanking());
     }, [selectedRankingTime, selectedTimeMode]);
 
+    const onSelectRace = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+        if (!races) {
+            return;
+        }
+
+        const raceId = parseInt(e.target.value);
+
+        const race = races.find(race => race.id === raceId);
+
+        if (!race) {
+            return;
+        }
+
+        setSelectedRace(race);
+    }, [races]);
+
     const onCategorySelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedCategory(e.target.value);
     }
@@ -82,6 +108,10 @@ const Ranking = () => {
     }
 
     useEffect(() => {
+        fetchRaces();
+    }, [fetchRaces]);
+
+    useEffect(() => {
         fetchCategories();
         fetchRanking();
 
@@ -99,37 +129,44 @@ const Ranking = () => {
 
             <div className="row hide-on-print mb-3">
                 <div className="col-12">
-                    <RankingRaceSelector/>
-                </div>
-            </div>
-
-            <div className="row hide-on-print mb-3">
-                <div className="col-12">
-                    <RankingSettings
-                        categories={categories}
-                        onCategorySelect={onCategorySelect}
-                        onGenderSelect={onGenderSelect}
-                        onTimeModeSelect={onTimeModeSelect}
-                        onRankingTimeSave={onRankingTimeSave}
-                        selectedCategory={selectedCategory}
-                        selectedGender={selectedGender}
-                        selectedTimeMode={selectedTimeMode}
-                        currentRankingTime={selectedRankingTime}
-                        maxRankingTime={86400 * 1000 /* TODO USE RACE DURATION */}
+                    <RankingRaceSelector races={races}
+                                         onSelectRace={onSelectRace}
+                                         selectedRaceId={selectedRace ? selectedRace.id : undefined}
                     />
                 </div>
             </div>
 
-            <div className="row">
-                <div className="col-12">
-                    <RankingTable
-                        ranking={processedRanking}
-                        tableCategory={selectedCategory}
-                        tableGender={selectedGender}
-                        tableRaceDuration={selectedTimeMode === TimeMode.At ? selectedRankingTime : null}
-                    />
+            {selectedRace &&
+            <>
+                <div className="row hide-on-print mb-3">
+                    <div className="col-12">
+                        <RankingSettings
+                            categories={categories}
+                            onCategorySelect={onCategorySelect}
+                            onGenderSelect={onGenderSelect}
+                            onTimeModeSelect={onTimeModeSelect}
+                            onRankingTimeSave={onRankingTimeSave}
+                            selectedCategory={selectedCategory}
+                            selectedGender={selectedGender}
+                            selectedTimeMode={selectedTimeMode}
+                            currentRankingTime={selectedRankingTime}
+                            maxRankingTime={86400 * 1000 /* TODO USE RACE DURATION */}
+                        />
+                    </div>
                 </div>
-            </div>
+
+                <div className="row">
+                    <div className="col-12">
+                        <RankingTable
+                            ranking={processedRanking}
+                            tableCategory={selectedCategory}
+                            tableGender={selectedGender}
+                            tableRaceDuration={selectedTimeMode === TimeMode.At ? selectedRankingTime : null}
+                        />
+                    </div>
+                </div>
+            </>
+            }
         </div>
     );
 }
