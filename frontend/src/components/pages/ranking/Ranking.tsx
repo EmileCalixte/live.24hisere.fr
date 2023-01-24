@@ -1,5 +1,6 @@
 import '../../../css/print-ranking-table.css';
 import React, {useState, useEffect, useCallback} from "react";
+import RankingRaceSelector from "./RankingRaceSelector";
 import RankingSettings from "./RankingSettings";
 import ApiUtil from "../../../util/ApiUtil";
 import RankingTable from "./RankingTable";
@@ -95,7 +96,14 @@ const Ranking = () => {
                     <h1>Classements</h1>
                 </div>
             </div>
-            <div className="row hide-on-print">
+
+            <div className="row hide-on-print mb-3">
+                <div className="col-12">
+                    <RankingRaceSelector/>
+                </div>
+            </div>
+
+            <div className="row hide-on-print mb-3">
                 <div className="col-12">
                     <RankingSettings
                         categories={categories}
@@ -111,6 +119,7 @@ const Ranking = () => {
                     />
                 </div>
             </div>
+
             <div className="row">
                 <div className="col-12">
                     <RankingTable
