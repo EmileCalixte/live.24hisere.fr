@@ -18,6 +18,16 @@ class RaceRepository extends EntityRepository
         return $query->getResult($asArray ? Query::HYDRATE_ARRAY : Query::HYDRATE_OBJECT);
     }
 
+    public function findAllPublic(bool $asArray = false): array
+    {
+        $query = $this->createQueryBuilder('r')
+            ->andWhere('r.isPublic != 0')
+            ->orderBy('r.order', 'ASC')
+            ->getQuery();
+
+        return $query->getResult($asArray ? Query::HYDRATE_ARRAY : Query::HYDRATE_OBJECT);
+    }
+
     public function findById(int $id, bool $asArray = false): Race|array|null
     {
         $query = $this->createQueryBuilder('r')
