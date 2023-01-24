@@ -23,10 +23,10 @@ use App\Responder\Admin\UsersResponder;
 use App\Responder\Auth\CurrentUserInfoResponder;
 use App\Responder\Auth\LoginResponder;
 use App\Responder\Auth\LogoutResponder;
-use App\Responder\RaceDataResponder;
 use App\Responder\OptionsResponder;
+use App\Responder\RaceDataResponder;
 use App\Responder\Races\RacesResponder;
-use App\Responder\RankingResponder;
+use App\Responder\Ranking\RankingResponder;
 use App\Responder\ResponderInterface;
 use App\Responder\RunnerDetailsResponder;
 use App\Responder\RunnersResponder;
@@ -50,11 +50,13 @@ class Router
         }
 
         $this->registerRoute('/race-data', RaceDataResponder::class, 'GET');
-        $this->registerRoute('/ranking', RankingResponder::class, 'GET');
+
         $this->registerRoute('/runners', RunnersResponder::class, 'GET');
         $this->registerRoute('/runners/{id}', RunnerDetailsResponder::class, 'GET');
 
         $this->registerRoute('/races', RacesResponder::class, 'GET');
+
+        $this->registerRoute('/ranking/{raceId}', RankingResponder::class, 'GET');
 
         $this->registerRoute('/auth/login', LoginResponder::class, 'POST');
         $this->registerRoute('/auth/logout', LogoutResponder::class, 'POST');

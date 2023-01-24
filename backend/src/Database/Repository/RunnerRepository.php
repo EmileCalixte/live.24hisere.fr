@@ -105,14 +105,16 @@ class RunnerRepository extends EntityRepository
         return $stmt->executeQuery()->fetchFirstColumn();
     }
 
-    public function getRanking(\DateTimeInterface $atDate = null): array
+    public function getRanking(int $raceId, \DateTimeInterface $atDate = null): array
     {
         $connection = $this->getEntityManager()->getConnection();
 
         $passageTableName = 'passage';
         $runnerTableName = 'runner';
 
-        $paramsToBind = [];
+        $paramsToBind = [
+            ':raceId' => $raceId,
+        ];
 
         $sql = <<<EOF
             SELECT
@@ -142,6 +144,7 @@ class RunnerRepository extends EntityRepository
                 $runnerTableName r 
             LEFT JOIN 
                 $passageTableName p ON p.runner_id = r.id 
+            WHERE r.race_id = :raceId
         EOF;
 
         if (!is_null($atDate)) {
