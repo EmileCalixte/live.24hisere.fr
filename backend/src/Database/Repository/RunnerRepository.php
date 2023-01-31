@@ -92,19 +92,6 @@ class RunnerRepository extends EntityRepository
         return $query->getSingleResult(Query::HYDRATE_SINGLE_SCALAR);
     }
 
-    /**
-     * @return string[] The list of category codes for which there is at least one runner
-     * @throws \Doctrine\DBAL\Exception
-     */
-    public function getCategories(): array
-    {
-        $connection = $this->getEntityManager()->getConnection();
-        $sql = "SELECT DISTINCT category FROM runner";
-
-        $stmt = $connection->prepare($sql);
-        return $stmt->executeQuery()->fetchFirstColumn();
-    }
-
     public function getRanking(int $raceId, \DateTimeInterface $atDate = null): array
     {
         $connection = $this->getEntityManager()->getConnection();
