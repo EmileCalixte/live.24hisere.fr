@@ -1,6 +1,5 @@
 import {CategoryShortCode} from "../../../types/Category";
 import {Race} from "../../../types/Race";
-import RaceTimer from "../../misc/RaceTimer";
 import RankingTableRow from "./RankingTableRow";
 import Util from "../../../util/Util";
 import React from "react";
