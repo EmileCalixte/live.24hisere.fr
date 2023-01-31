@@ -49,7 +49,11 @@ const Ranking = () => {
     }, []);
 
     const fetchRanking = useCallback(async (rankingTime = selectedRankingTime) => {
-        let requestUrl = '/ranking';
+        if (selectedRace === null) {
+            return;
+        }
+
+        let requestUrl = `/ranking/${selectedRace.id}`;
 
         if (selectedTimeMode === TimeMode.At) {
             const rankingDate = new Date();
@@ -70,7 +74,7 @@ const Ranking = () => {
         });
 
         setProcessedRanking(new RankingProcesser(responseJson.ranking as RankingType).getProcessedRanking());
-    }, [selectedRankingTime, selectedTimeMode]);
+    }, [selectedRace, selectedRankingTime, selectedTimeMode]);
 
     const shouldResetRankingTime = useCallback((newRaceDuration: number) => {
         if (selectedRankingTime < 0) {
