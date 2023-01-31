@@ -1,6 +1,6 @@
+import {CategoryShortCode} from "../../../types/Category";
 import {Race} from "../../../types/Race";
 import RankingTableRow from "./RankingTableRow";
-import {Category} from "./Ranking";
 import Util from "../../../util/Util";
 import React from "react";
 import {ProcessedRanking, ProcessedRankingRunner} from "../../../types/Ranking";
@@ -9,12 +9,12 @@ import {Gender, GenderWithMixed} from "../../../types/Runner";
 const RankingTable: React.FunctionComponent<{
     race: Race
     ranking: ProcessedRanking,
-    tableCategory: string,
+    tableCategory: CategoryShortCode | null,
     tableGender: GenderWithMixed,
     tableRaceDuration: number | null,
 }> = ({race, ranking, tableCategory, tableGender, tableRaceDuration}) => {
     const getRankingTableRow = (rankingRunner: ProcessedRankingRunner) => {
-        if (tableCategory !== Category.All) {
+        if (tableCategory !== null) {
             if (tableCategory.toUpperCase() !== rankingRunner.category.toUpperCase()) {
                 return null;
             }
@@ -41,7 +41,7 @@ const RankingTable: React.FunctionComponent<{
             <tr>
                 <td colSpan={42} className="ranking-table-info-header">
                     {race.name} : Classement {(() => {
-                        if (tableCategory === Category.All) {
+                        if (tableCategory === null) {
                             return 'scratch';
                         } else {
                             return tableCategory.toUpperCase();

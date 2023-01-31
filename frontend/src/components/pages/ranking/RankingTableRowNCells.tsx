@@ -1,14 +1,14 @@
-import {Category} from "./Ranking";
+import {CategoryShortCode} from "../../../types/Category";
 import React from "react";
 import {ProcessedRankingRunner} from "../../../types/Ranking";
 import {GenderWithMixed} from "../../../types/Runner";
 
 const RankingTableRowNCells: React.FunctionComponent<{
     runner: ProcessedRankingRunner,
-    tableCategory: string,
+    tableCategory: CategoryShortCode | null,
     tableGender: GenderWithMixed,
 }> = ({runner, tableCategory, tableGender}) => {
-     if (tableCategory === Category.All) {
+     if (tableCategory === null) {
         if (tableGender === "mixed") {
             return (
                 <>

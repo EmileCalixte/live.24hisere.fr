@@ -13,10 +13,6 @@ import {CategoriesDict, CategoryShortCode} from "../../../types/Category";
 import {ProcessedRanking, Ranking as RankingType} from "../../../types/Ranking";
 import {GenderWithMixed} from "../../../types/Runner";
 
-export enum Category {
-    All = 'all', // TODO remove this
-}
-
 export enum TimeMode {
     Now = 'now',
     At = 'at',
@@ -29,7 +25,7 @@ const Ranking = () => {
     const [selectedRace, setSelectedRace] = useState<Race | null>(null);
 
     const [processedRanking, setProcessedRanking] = useState<ProcessedRanking>([]);
-    const [selectedCategory, setSelectedCategory] = useState<string>(Category.All);
+    const [selectedCategory, setSelectedCategory] = useState<CategoryShortCode | null>(null);
     const [selectedGender, setSelectedGender] = useState<GenderWithMixed>("mixed");
     const [selectedTimeMode, setSelectedTimeMode] = useState(TimeMode.Now);
     const [selectedRankingTime, setSelectedRankingTime] = useState(-1); // Set when a race is selected
@@ -108,6 +104,11 @@ const Ranking = () => {
     }, [races, shouldResetRankingTime]);
 
     const onCategorySelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        if (e.target.value === "scratch") {
+            setSelectedCategory(null);
+            return;
+        }
+
         setSelectedCategory(e.target.value);
     }
 
