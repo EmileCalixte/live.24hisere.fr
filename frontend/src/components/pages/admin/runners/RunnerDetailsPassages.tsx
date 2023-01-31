@@ -13,7 +13,6 @@ const RunnerDetailsPassages: React.FunctionComponent<{
     saveNewPassage: (time: Date) => any,
     deletePassage: (passage: AdminProcessedPassage) => any,
 }> = ({passages, runnerRace, updatePassageVisiblity, updatePassage, saveNewPassage, deletePassage}) => {
-    // TODO
     const [isAdding, setIsAdding] = useState(false);
 
     // The passage for which user is currently editing the time
