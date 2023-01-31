@@ -177,10 +177,7 @@ const Races = () => {
                                             onDragEnd={isSorting ? onDragEnd : undefined}
                                         >
                                             <RacesListItem key={race.id}
-                                                           id={race.id}
-                                                           name={race.name}
-                                                           runnerCount={race.runnerCount}
-                                                           isPublic={race.isPublic}
+                                                           race={race}
                                                            isSorting={isSorting}
                                                            isDragged={index === dragItemIndex}
                                                            isDraggedOver={index === dragOverItemIndex}
