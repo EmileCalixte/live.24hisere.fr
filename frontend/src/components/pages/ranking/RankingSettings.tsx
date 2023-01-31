@@ -64,7 +64,6 @@ const RankingSettings: React.FunctionComponent<{
                                     </>
                                 );
                             })()}
-                            <option value={Category.Team}>Équipes</option>
                         </select>
                     </div>
                 </div>
