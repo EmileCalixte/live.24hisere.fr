@@ -1,6 +1,7 @@
 import React from "react";
 import {Race} from "../../../types/Race";
 import OptionWithLoadingDots from "../../misc/OptionWithLoadingDots";
+import RaceTimer from "../../misc/RaceTimer";
 
 const RankingRaceSelector: React.FunctionComponent<{
     races: Race[] | false,
@@ -34,7 +35,7 @@ const RankingRaceSelector: React.FunctionComponent<{
                                 {races.map(race => {
                                     return (
                                         <option key={race.id} value={race.id}>
-                                            {race.name}
+                                            {race.name} | <RaceTimer race={race}/>
                                         </option>
                                     )
                                 })}
