@@ -14,8 +14,7 @@ import {ProcessedRanking, Ranking as RankingType} from "../../../types/Ranking";
 import {GenderWithMixed} from "../../../types/Runner";
 
 export enum Category {
-    All = 'all',
-    Team = 'team',
+    All = 'all', // TODO remove this
 }
 
 export enum TimeMode {

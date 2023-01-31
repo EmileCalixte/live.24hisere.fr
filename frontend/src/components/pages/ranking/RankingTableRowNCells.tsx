@@ -8,13 +8,7 @@ const RankingTableRowNCells: React.FunctionComponent<{
     tableCategory: string,
     tableGender: GenderWithMixed,
 }> = ({runner, tableCategory, tableGender}) => {
-    if (tableCategory === Category.Team) {
-        return (
-            <td>
-                {runner.rankings.displayed.scratchMixed}
-            </td>
-        );
-    } else if (tableCategory === Category.All) {
+     if (tableCategory === Category.All) {
         if (tableGender === "mixed") {
             return (
                 <>

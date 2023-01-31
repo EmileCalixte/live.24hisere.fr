@@ -17,17 +17,7 @@ const RankingTableRow: React.FunctionComponent<{
 
             <td>{runner.id}</td>
 
-            {(() => {
-                if (tableCategory === Category.Team) {
-                    return (
-                        <td>{runner.firstname}</td>
-                    )
-                }
-
-                return (
-                    <td>{runner.lastname.toUpperCase()} {runner.firstname}</td>
-                )
-            })()}
+            <td>{runner.lastname.toUpperCase()} {runner.firstname}</td>
 
             <td>{Math.max(0, runner.passageCount - 1)}</td>
             <td>{Util.formatFloatNumber(runner.distance / 1000, 2)} km</td>
