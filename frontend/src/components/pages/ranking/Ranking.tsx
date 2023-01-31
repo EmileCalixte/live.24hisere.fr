@@ -2,6 +2,7 @@ import '../../../css/print-ranking-table.css';
 import React, {useState, useEffect, useCallback, useMemo} from "react";
 import {Race} from "../../../types/Race";
 import {existingCategories} from "../../../util/FfaUtil";
+import CircularLoader from "../../misc/CircularLoader";
 import RankingRaceSelector from "./RankingRaceSelector";
 import RankingSettings from "./RankingSettings";
 import ApiUtil from "../../../util/ApiUtil";
@@ -24,7 +25,7 @@ const Ranking = () => {
     const [races, setRaces] = useState<Race[] | false>(false);
     const [selectedRace, setSelectedRace] = useState<Race | null>(null);
 
-    const [processedRanking, setProcessedRanking] = useState<ProcessedRanking>([]);
+    const [processedRanking, setProcessedRanking] = useState<ProcessedRanking | false>(false);
     const [selectedCategory, setSelectedCategory] = useState<CategoryShortCode | null>(null);
     const [selectedGender, setSelectedGender] = useState<GenderWithMixed>("mixed");
     const [selectedTimeMode, setSelectedTimeMode] = useState(TimeMode.Now);
@@ -97,6 +98,7 @@ const Ranking = () => {
         }
 
         setSelectedRace(race);
+        setProcessedRanking(false);
 
         if (shouldResetRankingTime(race.duration)) {
             setSelectedRankingTime(race.duration * 1000);
@@ -139,6 +141,10 @@ const Ranking = () => {
     }, [fetchRanking]);
 
     const categories = useMemo<CategoriesDict | false>(() => {
+        if (!processedRanking) {
+            return false;
+        }
+
         const categoriesInRanking = new Set<CategoryShortCode>();
 
         for (const runner of processedRanking) {
@@ -192,6 +198,11 @@ const Ranking = () => {
                     </div>
                 </div>
 
+                {!processedRanking &&
+                <CircularLoader/>
+                }
+
+                {processedRanking &&
                 <div className="row">
                     <div className="col-12">
                         <RankingTable
@@ -203,6 +214,7 @@ const Ranking = () => {
                         />
                     </div>
                 </div>
+                }
             </>
             }
         </div>
