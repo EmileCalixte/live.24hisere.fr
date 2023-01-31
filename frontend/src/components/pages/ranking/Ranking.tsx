@@ -1,6 +1,7 @@
 import '../../../css/print-ranking-table.css';
-import React, {useState, useEffect, useCallback} from "react";
+import React, {useState, useEffect, useCallback, useMemo} from "react";
 import {Race} from "../../../types/Race";
+import {existingCategories} from "../../../util/FfaUtil";
 import RankingRaceSelector from "./RankingRaceSelector";
 import RankingSettings from "./RankingSettings";
 import ApiUtil from "../../../util/ApiUtil";
@@ -8,7 +9,7 @@ import RankingTable from "./RankingTable";
 import {RankingProcesser} from "../../../util/RankingUtil";
 import {app} from "../../App";
 import Util from "../../../util/Util";
-import {CategoriesDict} from "../../../types/Category";
+import {CategoriesDict, CategoryShortCode} from "../../../types/Category";
 import {ProcessedRanking, Ranking as RankingType} from "../../../types/Ranking";
 import {GenderWithMixed} from "../../../types/Runner";
 
@@ -28,18 +29,11 @@ const Ranking = () => {
     const [races, setRaces] = useState<Race[] | false>(false);
     const [selectedRace, setSelectedRace] = useState<Race | null>(null);
 
-    const [categories, setCategories] = useState<CategoriesDict | false>(false);
     const [processedRanking, setProcessedRanking] = useState<ProcessedRanking>([]);
     const [selectedCategory, setSelectedCategory] = useState<string>(Category.All);
     const [selectedGender, setSelectedGender] = useState<GenderWithMixed>("mixed");
     const [selectedTimeMode, setSelectedTimeMode] = useState(TimeMode.Now);
     const [selectedRankingTime, setSelectedRankingTime] = useState(-1); // Set when a race is selected
-
-    const fetchCategories = useCallback(async () => {
-        // TODO use FfaUtil to compute category list from runners
-
-        setCategories({});
-    }, []);
 
     const fetchRaces = useCallback(async () => {
         const response = await ApiUtil.performAPIRequest('/races');
@@ -138,12 +132,29 @@ const Ranking = () => {
     }, [fetchRaces]);
 
     useEffect(() => {
-        fetchCategories();
         fetchRanking();
 
         const refreshRankingInterval = setInterval(fetchRanking, RANKING_UPDATE_INTERVAL_TIME);
         return (() => clearInterval(refreshRankingInterval));
-    }, [fetchCategories, fetchRanking]);
+    }, [fetchRanking]);
+
+    const categories = useMemo<CategoriesDict | false>(() => {
+        const categoriesInRanking = new Set<CategoryShortCode>();
+
+        for (const runner of processedRanking) {
+            categoriesInRanking.add(runner.category);
+        }
+
+        const categories = {...existingCategories};
+
+        for (const categoryCode in categories) {
+            if (!categoriesInRanking.has(categoryCode)) {
+                delete categories[categoryCode];
+            }
+        }
+
+        return categories;
+    }, [processedRanking]);
 
     return(
         <div id="page-ranking">
