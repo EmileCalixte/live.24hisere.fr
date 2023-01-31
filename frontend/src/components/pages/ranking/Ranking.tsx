@@ -195,6 +195,7 @@ const Ranking = () => {
                 <div className="row">
                     <div className="col-12">
                         <RankingTable
+                            race={selectedRace}
                             ranking={processedRanking}
                             tableCategory={selectedCategory}
                             tableGender={selectedGender}

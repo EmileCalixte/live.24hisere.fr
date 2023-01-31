@@ -1,3 +1,4 @@
+import {Race} from "../../../types/Race";
 import RankingTableRow from "./RankingTableRow";
 import {Category} from "./Ranking";
 import Util from "../../../util/Util";
@@ -6,11 +7,12 @@ import {ProcessedRanking, ProcessedRankingRunner} from "../../../types/Ranking";
 import {Gender, GenderWithMixed} from "../../../types/Runner";
 
 const RankingTable: React.FunctionComponent<{
+    race: Race
     ranking: ProcessedRanking,
     tableCategory: string,
     tableGender: GenderWithMixed,
     tableRaceDuration: number | null,
-}> = ({ranking, tableCategory, tableGender, tableRaceDuration}) => {
+}> = ({race, ranking, tableCategory, tableGender, tableRaceDuration}) => {
     const getRankingTableRow = (rankingRunner: ProcessedRankingRunner) => {
         if (tableCategory !== Category.Team && rankingRunner.isTeam) {
             return null;
@@ -44,7 +46,7 @@ const RankingTable: React.FunctionComponent<{
             <thead>
             <tr>
                 <td colSpan={42} className="ranking-table-info-header">
-                    Classement {(() => {
+                    {race.name} : Classement {(() => {
                         if (tableCategory === Category.Team) {
                             return 'équipes';
                         } else if (tableCategory === Category.All) {
