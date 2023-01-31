@@ -143,8 +143,8 @@ class RunnerRepository extends EntityRepository
             FROM 
                 $runnerTableName r 
             LEFT JOIN 
-                $passageTableName p ON p.runner_id = r.id 
-            WHERE r.race_id = :raceId
+                $passageTableName p ON p.runner_id = r.id
+            AND p.is_hidden = 0
         EOF;
 
         if (!is_null($atDate)) {
@@ -153,7 +153,7 @@ class RunnerRepository extends EntityRepository
         }
 
         $sql .= <<<EOF
-            AND (p.is_hidden = 0 OR p.is_hidden IS NULL)
+            WHERE r.race_id = :raceId
             GROUP BY r.id
             ORDER BY passage_count DESC, last_passage_time ASC, lastname ASC, firstname ASC
         EOF;
@@ -161,7 +161,7 @@ class RunnerRepository extends EntityRepository
         $stmt = $connection->prepare($sql);
 
         foreach ($paramsToBind as $param => $value) {
-            $stmt->bindParam($param, $value);
+            $stmt->bindValue($param, $value);
         }
 
         $result = $stmt->executeQuery();
