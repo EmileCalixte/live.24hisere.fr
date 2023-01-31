@@ -16,8 +16,6 @@ type Category = {
 /**
  * An object whose key is a category short code and value is the corresponding name
  */
-export type CategoriesDict = {
-    [key: string]: string;
-}
+export type CategoriesDict = Record<string, string>;
 
 export default Category;
