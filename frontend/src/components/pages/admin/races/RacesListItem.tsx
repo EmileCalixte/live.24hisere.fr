@@ -44,7 +44,7 @@ const RacesListItem: React.FunctionComponent<{
                     }
                 </div>
                 <div className="admin-list-link-secondary-icon-group">
-                    <RaceTimer race={race}/>
+                    <RaceTimer race={race} allowNegative={true}/>
                 </div>
             </div>
         </Link>

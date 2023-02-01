@@ -4,8 +4,9 @@ import Util from "../../util/Util";
 import {app} from "../App";
 
 const RaceTimer: React.FunctionComponent<{
-    race: Race
-}> = ({race}) => {
+    race: Race,
+    allowNegative?: boolean
+}> = ({race, allowNegative = false}) => {
     // The current race time
     const [raceTime, setRaceTime] = useState(0);
 
@@ -20,7 +21,7 @@ const RaceTimer: React.FunctionComponent<{
 
             const raceTime = nowMs - raceStartMs;
 
-            if (raceTime < 0) {
+            if (raceTime < 0 && !allowNegative) {
                 setRaceTime(0);
                 return;
             }
@@ -40,7 +41,7 @@ const RaceTimer: React.FunctionComponent<{
         return () => {
             window.clearInterval(interval);
         }
-    }, [race]);
+    }, [race, allowNegative]);
 
     return (
         <>{formattedRaceTime}</>
