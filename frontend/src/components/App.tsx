@@ -12,8 +12,6 @@ import ToastUtil from "../util/ToastUtil";
 
 let instance: App;
 
-export const RACE_DURATION = 24 * 60 * 60 * 1000 - 1; // in ms
-
 const FETCH_RACE_DATA_INTERVAL_TIME = 60 * 1000;
 
 class App extends React.Component {

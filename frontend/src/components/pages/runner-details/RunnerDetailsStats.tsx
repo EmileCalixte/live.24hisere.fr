@@ -1,5 +1,8 @@
+import {Race} from "../../../types/Race";
+import {RankingRunnerRanks} from "../../../types/Ranking";
 import {app} from "../../App";
 import React, {useMemo} from "react";
+import CircularLoader from "../../misc/CircularLoader";
 import SpeedChart from "./charts/SpeedChart";
 import Util from "../../../util/Util";
 import RunnerDetailsUtil from "../../../util/RunnerDetailsUtil";
@@ -8,7 +11,9 @@ import {ProcessedPassage} from "../../../types/Passage";
 
 const RunnerDetailsStats: React.FunctionComponent<{
     runner: RunnerWithProcessedPassages & RunnerWithProcessedHours,
-}> = ({runner}) => {
+    race: Race,
+    ranks: RankingRunnerRanks | null
+}> = ({runner, race, ranks}) => {
     const completeLapCount = useMemo<number>(() => {
         return Math.max(0, runner.passages.length - 1);
     }, [runner]);
@@ -106,7 +111,19 @@ const RunnerDetailsStats: React.FunctionComponent<{
                 <h2>Données générales</h2>
 
                 <p>
-                    Distance tour : <strong>{app.state.lapDistance} m</strong> (premier tour : {app.state.firstLapDistance} m)
+                    Classement : {!ranks && <CircularLoader/>}
+
+                    {ranks &&
+                    <span>
+                        <b>{ranks.displayed.scratchMixed}</b>
+                        &nbsp;|&nbsp;
+                        {ranks.displayed.scratchGender} {runner.gender.toUpperCase()}
+                        &nbsp;|&nbsp;
+                        {ranks.displayed.categoryMixed} {runner.category.toUpperCase()}
+                        &nbsp;|&nbsp;
+                        {ranks.displayed.categoryGender} {runner.category.toUpperCase()}-{runner.gender.toUpperCase()}
+                    </span>
+                    }
                 </p>
 
                 <p>
@@ -156,7 +173,7 @@ const RunnerDetailsStats: React.FunctionComponent<{
             <div className="col-12">
                 <h2>Vitesse</h2>
 
-                <SpeedChart runner={runner} averageSpeed={averageSpeed} />
+                <SpeedChart runner={runner} race={race} averageSpeed={averageSpeed} />
             </div>
             }
         </div>

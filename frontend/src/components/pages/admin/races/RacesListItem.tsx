@@ -1,15 +1,14 @@
 import {Link} from "react-router-dom";
 import React, {useCallback} from "react";
+import {AdminRaceWithRunnerCount} from "../../../../types/Race";
+import RaceTimer from "../../../misc/RaceTimer";
 
 const RacesListItem: React.FunctionComponent<{
-    id: number,
-    name: string,
-    runnerCount: number,
-    isPublic: boolean,
+    race: AdminRaceWithRunnerCount
     isSorting: boolean,
     isDragged: boolean,
     isDraggedOver: boolean,
-}> = ({id, name, runnerCount, isPublic, isSorting, isDragged, isDraggedOver}) => {
+}> = ({race, isSorting, isDragged, isDraggedOver}) => {
     const onClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
         // Prevent navigation to the clicked race if sorting mode is enabled
         if (isSorting) {
@@ -18,7 +17,7 @@ const RacesListItem: React.FunctionComponent<{
     }, [isSorting])
 
     return (
-        <Link to={`/admin/races/${id}`}
+        <Link to={`/admin/races/${race.id}`}
               onClick={onClick}
               className={`${isDragged ? "dragged" : ""} ${isDraggedOver ? "dragged-over" : ""}`}
         >
@@ -28,21 +27,24 @@ const RacesListItem: React.FunctionComponent<{
             </div>
             }
             <div className="admin-list-link-label">
-                {name}
+                {race.name}
             </div>
             <div className="admin-list-link-secondary-icons">
                 <div className="admin-list-link-secondary-icon-group">
                     <i className="fa-solid fa-person-running"/>
-                    {runnerCount}
+                    {race.runnerCount}
                 </div>
                 <div className="admin-list-link-secondary-icon-group">
-                    {isPublic &&
+                    {race.isPublic &&
                     <i className="fa-solid fa-eye"/>
                     }
 
-                    {!isPublic &&
+                    {!race.isPublic &&
                     <i className="fa-solid fa-eye-slash" style={{color: "#999"}}/>
                     }
+                </div>
+                <div className="admin-list-link-secondary-icon-group">
+                    <RaceTimer race={race}/>
                 </div>
             </div>
         </Link>

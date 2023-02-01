@@ -10,10 +10,10 @@ import {app} from "../../../App";
 import {
     Gender,
     RunnerWithAdminPassages,
-    RunnerWithAdminProcessedPassages,
+    RunnerWithAdminProcessedPassages, RunnerWithRace,
 } from "../../../../types/Runner";
 import RunnerDetailsForm from "./RunnerDetailsForm";
-import {RaceWithRunnerCount} from "../../../../types/Race";
+import {AdminRaceWithRunnerCount} from "../../../../types/Race";
 import ToastUtil from "../../../../util/ToastUtil";
 import RunnerDetailsPassages from "./RunnerDetailsPassages";
 import RunnerDetailsUtil from "../../../../util/RunnerDetailsUtil";
@@ -21,9 +21,9 @@ import RunnerDetailsUtil from "../../../../util/RunnerDetailsUtil";
 const RunnerDetails = () => {
     const {runnerId: urlRunnerId} = useParams();
 
-    const [races, setRaces] = useState<RaceWithRunnerCount[] | false>(false);
+    const [races, setRaces] = useState<AdminRaceWithRunnerCount[] | false>(false);
 
-    const [runner, setRunner] = useState<RunnerWithAdminProcessedPassages | undefined | null>(undefined);
+    const [runner, setRunner] = useState<RunnerWithRace & RunnerWithAdminProcessedPassages | undefined | null>(undefined);
 
     const [runnerId, setRunnerId] = useState(0);
     const [runnerFirstname, setRunnerFirstname] = useState("");
@@ -38,7 +38,7 @@ const RunnerDetails = () => {
 
     const [redirectAfterDelete, setRedirectAfterDelete] = useState(false);
 
-    const runnerRace = useMemo<RaceWithRunnerCount | null>(() => {
+    const runnerRace = useMemo<AdminRaceWithRunnerCount | null>(() => {
         if (!runner || !races) {
             return null;
         }
@@ -73,6 +73,10 @@ const RunnerDetails = () => {
     }, []);
 
     const fetchRunner = useCallback(async () => {
+        if (!races) {
+            return;
+        }
+
         const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/runners/${urlRunnerId}`, app.state.accessToken);
 
         if (!response.ok) {
@@ -83,19 +87,27 @@ const RunnerDetails = () => {
 
         const responseJson = await response.json();
 
-        const responseRunner = RunnerDetailsUtil.getRunnerWithProcessedPassages(
-            responseJson.runner as RunnerWithAdminPassages
-        ) as RunnerWithAdminProcessedPassages;
+        const runner = responseJson.runner as RunnerWithAdminPassages;
 
-        setRunner(responseRunner);
+        const race = races.find(race => race.id === runner.raceId);
 
-        setRunnerId(responseRunner.id);
-        setRunnerFirstname(responseRunner.firstname);
-        setRunnerLastname(responseRunner.lastname);
-        setRunnerGender(responseRunner.gender);
-        setRunnerBirthYear(responseRunner.birthYear);
-        setRunnerRaceId(responseRunner.raceId);
-    }, [urlRunnerId]);
+        if (!race) {
+            throw new Error("Runner race not found");
+        }
+
+        setRunner({
+            ...runner,
+            race,
+            passages: RunnerDetailsUtil.getRunnerProcessedPassages(runner.passages, race),
+        });
+
+        setRunnerId(runner.id);
+        setRunnerFirstname(runner.firstname);
+        setRunnerLastname(runner.lastname);
+        setRunnerGender(runner.gender);
+        setRunnerBirthYear(runner.birthYear);
+        setRunnerRaceId(runner.raceId);
+    }, [urlRunnerId, races]);
 
     const updatePassageVisiblity = useCallback(async (passage: AdminProcessedPassage, hidden: boolean) => {
         if (!runner) {

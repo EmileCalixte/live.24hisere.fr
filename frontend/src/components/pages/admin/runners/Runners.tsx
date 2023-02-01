@@ -7,14 +7,14 @@ import CircularLoader from "../../../misc/CircularLoader";
 import {Link} from "react-router-dom";
 import RunnersTable from "./RunnersTable";
 import Runner from "../../../../types/Runner";
-import Race from "../../../../types/Race";
+import AdminRace from "../../../../types/Race";
 
 const Runners = () => {
     // false = not fetched yet
     const [runners, setRunners] = useState<Runner[] | false>(false);
 
     // false = not fetched yet
-    const [races, setRaces] = useState<Race[] | false>(false);
+    const [races, setRaces] = useState<AdminRace[] | false>(false);
 
     const fetchRunnersAndRaces = useCallback(async () => {
         const response = await ApiUtil.performAuthenticatedAPIRequest('/admin/runners', app.state.accessToken);

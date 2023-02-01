@@ -292,8 +292,6 @@ dialog.modal .close-button:hover {
 
     margin-left: -15px;
     margin-right: -15px;
-
-    margin-bottom: 20px;
 }
 
 .ranking-settings {
@@ -301,6 +299,7 @@ dialog.modal .close-button:hover {
     margin-right: 15px;
 }
 
+#ranking-race-select,
 #ranking-settings-category-select {
     width: 360px;
     max-width: calc(100vw - 32px);

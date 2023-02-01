@@ -1,7 +1,7 @@
 /**
  * An object representing a race
  */
-type Race = {
+export type Race = {
     /**
      * The race ID
      */
@@ -11,11 +11,6 @@ type Race = {
      * The name of the race
      */
     name: string;
-
-    /**
-     * Whether the race is publicly displayed or not
-     */
-    isPublic: boolean;
 
     /**
      * A string representing the start time of the race, format `${YYYY}-${MM}-${DD}T{hh}:${ii}:${ss}`
@@ -38,11 +33,23 @@ type Race = {
     lapDistance: number;
 }
 
-export type RaceWithRunnerCount = Race & {
+type RaceWithRunnerCount = Race & {
     /**
      * The number of runners participating in the race
      */
     runnerCount: number;
 }
 
-export default Race;
+/**
+ * An object representing a race with additional admin properties
+ */
+type AdminRace = Race & {
+    /**
+     * Whether the race is publicly displayed or not
+     */
+    isPublic: boolean;
+}
+
+export type AdminRaceWithRunnerCount = AdminRace & RaceWithRunnerCount;
+
+export default AdminRace;

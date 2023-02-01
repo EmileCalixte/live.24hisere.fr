@@ -92,27 +92,16 @@ class RunnerRepository extends EntityRepository
         return $query->getSingleResult(Query::HYDRATE_SINGLE_SCALAR);
     }
 
-    /**
-     * @return string[] The list of category codes for which there is at least one runner
-     * @throws \Doctrine\DBAL\Exception
-     */
-    public function getCategories(): array
-    {
-        $connection = $this->getEntityManager()->getConnection();
-        $sql = "SELECT DISTINCT category FROM runner";
-
-        $stmt = $connection->prepare($sql);
-        return $stmt->executeQuery()->fetchFirstColumn();
-    }
-
-    public function getRanking(\DateTimeInterface $atDate = null): array
+    public function getRanking(int $raceId, \DateTimeInterface $atDate = null): array
     {
         $connection = $this->getEntityManager()->getConnection();
 
         $passageTableName = 'passage';
         $runnerTableName = 'runner';
 
-        $paramsToBind = [];
+        $paramsToBind = [
+            ':raceId' => $raceId,
+        ];
 
         $sql = <<<EOF
             SELECT
@@ -141,7 +130,8 @@ class RunnerRepository extends EntityRepository
             FROM 
                 $runnerTableName r 
             LEFT JOIN 
-                $passageTableName p ON p.runner_id = r.id 
+                $passageTableName p ON p.runner_id = r.id
+            AND p.is_hidden = 0
         EOF;
 
         if (!is_null($atDate)) {
@@ -150,7 +140,7 @@ class RunnerRepository extends EntityRepository
         }
 
         $sql .= <<<EOF
-            AND p.is_hidden = 0
+            WHERE r.race_id = :raceId
             GROUP BY r.id
             ORDER BY passage_count DESC, last_passage_time ASC, lastname ASC, firstname ASC
         EOF;
@@ -158,7 +148,7 @@ class RunnerRepository extends EntityRepository
         $stmt = $connection->prepare($sql);
 
         foreach ($paramsToBind as $param => $value) {
-            $stmt->bindParam($param, $value);
+            $stmt->bindValue($param, $value);
         }
 
         $result = $stmt->executeQuery();

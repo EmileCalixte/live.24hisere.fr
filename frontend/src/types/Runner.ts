@@ -1,4 +1,5 @@
 import Passage, {AdminPassage, AdminProcessedPassage, ProcessedPassage} from "./Passage";
+import {Race} from "./Race";
 
 /**
  * Represents the gender of a runner
@@ -147,6 +148,16 @@ export type RunnerWithProcessedHours = Runner & {
      * The race hours of the runner
      */
     hours: RunnerProcessedHour[];
+}
+
+/**
+ * An object representing a runner with additional data about his race
+ */
+export type RunnerWithRace = Runner & {
+    /**
+     * The race in which the runner takes part
+     */
+    race: Race
 }
 
 export default Runner;

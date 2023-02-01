@@ -7,14 +7,14 @@ import CircularLoader from "../../../misc/CircularLoader";
 import {Link} from "react-router-dom";
 import RacesListItem from "./RacesListItem";
 import ToastUtil from "../../../../util/ToastUtil";
-import {RaceWithRunnerCount} from "../../../../types/Race";
+import {AdminRaceWithRunnerCount} from "../../../../types/Race";
 
 const Races = () => {
     // false = not fetched yet
-    const [races, setRaces] = useState<RaceWithRunnerCount[] | false>(false);
+    const [races, setRaces] = useState<AdminRaceWithRunnerCount[] | false>(false);
 
     // Used when user is reordering the list
-    const [sortingRaces, setSortingRaces] = useState<RaceWithRunnerCount[] | false>(false);
+    const [sortingRaces, setSortingRaces] = useState<AdminRaceWithRunnerCount[] | false>(false);
     const [isSorting, setIsSorting] = useState(false);
 
     const [isSaving, setIsSaving] = useState(false);
@@ -81,7 +81,7 @@ const Races = () => {
     const saveSort = useCallback(async () => {
         setIsSaving(true);
 
-        const raceIds = (sortingRaces as RaceWithRunnerCount[]).map(race => race.id);
+        const raceIds = (sortingRaces as AdminRaceWithRunnerCount[]).map(race => race.id);
 
         const response = await ApiUtil.performAuthenticatedAPIRequest("/admin/races-order", app.state.accessToken, {
             method: "PUT",
@@ -95,7 +95,7 @@ const Races = () => {
             return;
         }
 
-        setRaces([...(sortingRaces as RaceWithRunnerCount[])]);
+        setRaces([...(sortingRaces as AdminRaceWithRunnerCount[])]);
 
         ToastUtil.getToastr().success("L'ordre des courses a été modifié");
         setIsSorting(false);
@@ -166,7 +166,7 @@ const Races = () => {
 
                         <div className="col-12">
                             <ul className="admin-list">
-                                {(displayedRaces as RaceWithRunnerCount[]).map((race, index) => {
+                                {(displayedRaces as AdminRaceWithRunnerCount[]).map((race, index) => {
                                     return (
                                         <li key={race.id}
                                             className={isSorting ? "draggable" : ""}
@@ -177,10 +177,7 @@ const Races = () => {
                                             onDragEnd={isSorting ? onDragEnd : undefined}
                                         >
                                             <RacesListItem key={race.id}
-                                                           id={race.id}
-                                                           name={race.name}
-                                                           runnerCount={race.runnerCount}
-                                                           isPublic={race.isPublic}
+                                                           race={race}
                                                            isSorting={isSorting}
                                                            isDragged={index === dragItemIndex}
                                                            isDraggedOver={index === dragOverItemIndex}

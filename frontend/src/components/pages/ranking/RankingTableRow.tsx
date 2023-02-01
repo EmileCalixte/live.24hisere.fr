@@ -1,5 +1,5 @@
 import {Link} from "react-router-dom";
-import {Category} from "./Ranking";
+import {CategoryShortCode} from "../../../types/Category";
 import Util from "../../../util/Util";
 import RankingTableRowNCells from "./RankingTableRowNCells";
 import React from "react";
@@ -8,7 +8,7 @@ import {GenderWithMixed} from "../../../types/Runner";
 
 const RankingTableRow: React.FunctionComponent<{
     runner: ProcessedRankingRunner,
-    tableCategory: string,
+    tableCategory: CategoryShortCode | null,
     tableGender: GenderWithMixed,
 }> = ({runner, tableCategory, tableGender}) => {
     return (
@@ -17,17 +17,7 @@ const RankingTableRow: React.FunctionComponent<{
 
             <td>{runner.id}</td>
 
-            {(() => {
-                if (tableCategory === Category.Team) {
-                    return (
-                        <td>{runner.firstname}</td>
-                    )
-                }
-
-                return (
-                    <td>{runner.lastname.toUpperCase()} {runner.firstname}</td>
-                )
-            })()}
+            <td>{runner.lastname.toUpperCase()} {runner.firstname}</td>
 
             <td>{Math.max(0, runner.passageCount - 1)}</td>
             <td>{Util.formatFloatNumber(runner.distance / 1000, 2)} km</td>

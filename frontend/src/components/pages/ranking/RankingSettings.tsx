@@ -1,8 +1,8 @@
 import OptionWithLoadingDots from "../../misc/OptionWithLoadingDots";
-import {Category, TimeMode} from "./Ranking";
+import {TimeMode} from "./Ranking";
 import RankingSettingsTime from "./RankingSettingsTime";
 import React from "react";
-import {CategoriesDict} from "../../../types/Category";
+import {CategoriesDict, CategoryShortCode} from "../../../types/Category";
 import {Gender, GenderWithMixed} from "../../../types/Runner";
 
 const RankingSettings: React.FunctionComponent<{
@@ -11,7 +11,7 @@ const RankingSettings: React.FunctionComponent<{
     onGenderSelect: (e: React.ChangeEvent<HTMLInputElement>) => any,
     onTimeModeSelect: (e: React.ChangeEvent<HTMLInputElement>) => any,
     onRankingTimeSave: (time: number) => any,
-    selectedCategory: string,
+    selectedCategory: CategoryShortCode | null,
     selectedGender: GenderWithMixed
     selectedTimeMode: TimeMode
     currentRankingTime: number,
@@ -38,11 +38,11 @@ const RankingSettings: React.FunctionComponent<{
                             Catégorie
                         </label>
                         <select id="ranking-settings-category-select"
-                                value={selectedCategory}
+                                value={selectedCategory ?? "scratch"}
                                 onChange={onCategorySelect}
                                 className="input-select"
                         >
-                            <option value={Category.All}>Scratch (toutes catégories)</option>
+                            <option value="scratch">Scratch (toutes catégories)</option>
                             {(() => {
                                 if (categories === false) {
                                     return (
@@ -64,7 +64,6 @@ const RankingSettings: React.FunctionComponent<{
                                     </>
                                 );
                             })()}
-                            <option value={Category.Team}>Équipes</option>
                         </select>
                     </div>
                 </div>

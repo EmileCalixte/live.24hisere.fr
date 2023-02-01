@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {Navigate} from "react-router-dom";
-import {RaceWithRunnerCount} from "../../../../types/Race";
+import {AdminRaceWithRunnerCount} from "../../../../types/Race";
 import {Gender} from "../../../../types/Runner";
 import ApiUtil from "../../../../util/ApiUtil";
 import ToastUtil from "../../../../util/ToastUtil";
@@ -10,7 +10,7 @@ import Crumb from "../../../layout/breadcrumbs/Crumb";
 import RunnerDetailsForm from "./RunnerDetailsForm";
 
 const CreateRunner = () => {
-    const [races, setRaces] = useState<RaceWithRunnerCount[] | false>(false);
+    const [races, setRaces] = useState<AdminRaceWithRunnerCount[] | false>(false);
 
     const [id, setId] = useState(1);
     const [firstname, setFirstname] = useState('');
@@ -27,7 +27,7 @@ const CreateRunner = () => {
         const response = await ApiUtil.performAuthenticatedAPIRequest('/admin/races', app.state.accessToken);
         const responseJson = await response.json();
 
-        const responseRaces = responseJson.races as RaceWithRunnerCount[];
+        const responseRaces = responseJson.races as AdminRaceWithRunnerCount[];
 
         if (responseRaces.length < 1) {
             ToastUtil.getToastr().warning("Aucune course n'a été créée. Au moins une course doit exister pour enregistrer un coureur.");

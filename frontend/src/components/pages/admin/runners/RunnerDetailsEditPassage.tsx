@@ -1,12 +1,12 @@
 import React, {useCallback, useMemo, useState} from "react";
 import {AdminProcessedPassage} from "../../../../types/Passage";
-import {RaceWithRunnerCount} from "../../../../types/Race";
+import {AdminRaceWithRunnerCount} from "../../../../types/Race";
 import ToastUtil from "../../../../util/ToastUtil";
 import RunnerDetailsPassageForm from "./RunnerDetailsPassageForm";
 
 const RunnerDetailsEditPassage: React.FunctionComponent<{
     passage: AdminProcessedPassage,
-    runnerRace: RaceWithRunnerCount | null,
+    runnerRace: AdminRaceWithRunnerCount | null,
     updatePassage: (passage: AdminProcessedPassage, time: Date) => any,
     onClose: () => any,
 }> = ({passage, runnerRace, updatePassage, onClose}) => {
