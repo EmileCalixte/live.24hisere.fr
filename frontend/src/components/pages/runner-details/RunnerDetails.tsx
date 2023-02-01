@@ -1,7 +1,9 @@
 import {useParams} from "react-router-dom";
+import {ProcessedRanking, Ranking as RankingType, RankingRunnerRanks} from "../../../types/Ranking";
+import {RankingProcesser} from "../../../util/RankingUtil";
 import RunnerDetailsRaceDetails from "./RunnerDetailsRaceDetails";
 import RunnerSelector from "./RunnerSelector";
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import ApiUtil from "../../../util/ApiUtil";
 import RunnerDetailsStats from "./RunnerDetailsStats";
 import RunnerDetailsLaps from "./RunnerDetailsLaps";
@@ -21,6 +23,7 @@ enum Tab {
 }
 
 export const RUNNER_UPDATE_INTERVAL_TIME = 30000;
+export const RANKING_UPDATE_INTERVAL_TIME = 30000;
 
 const RunnerDetails = () => {
     const {runnerId: urlRunnerId} = useParams();
@@ -30,6 +33,8 @@ const RunnerDetails = () => {
 
     const [runners, setRunners] = useState<Runner[] | false>(false);
 
+    const [processedRanking, setProcessedRanking] = useState<ProcessedRanking | false>(false);
+
     const [selectedTab, setSelectedTab] = useState(Tab.Stats);
 
     const fetchRunners = useCallback(async () => {
@@ -38,6 +43,26 @@ const RunnerDetails = () => {
 
         setRunners(responseJson.runners);
     }, []);
+
+    const fetchRanking = useCallback(async () => {
+        if (!selectedRunner) {
+            setProcessedRanking(false);
+            return;
+        }
+
+        app.setState({
+            isFetching: true,
+        });
+
+        const response = await ApiUtil.performAPIRequest(`/ranking/${selectedRunner.raceId}`);
+        const responseJson = await response.json();
+
+        app.setState({
+            isFetching: false,
+        });
+
+        setProcessedRanking(new RankingProcesser(responseJson.ranking as RankingType).getProcessedRanking());
+    }, [selectedRunner]);
 
     const fetchSelectedRunner = useCallback(async () => {
         if (!selectedRunnerId) {
@@ -117,6 +142,13 @@ const RunnerDetails = () => {
     }, [fetchSelectedRunner]);
 
     useEffect(() => {
+        fetchRanking();
+
+        const refreshRankingInterval = setInterval(fetchRanking, RANKING_UPDATE_INTERVAL_TIME);
+        return (() => clearInterval(refreshRankingInterval));
+    }, [fetchRanking]);
+
+    useEffect(() => {
         if (selectedRunnerId === urlRunnerId) {
             return;
         }
@@ -124,6 +156,22 @@ const RunnerDetails = () => {
         // TODO better UX: use pushState instead of replaceState & handle popState event
         window.history.replaceState(window.history.state, '', `/runner-details/${selectedRunnerId}`);
     }, [selectedRunnerId, urlRunnerId]);
+
+    const ranks = useMemo<RankingRunnerRanks | null>(() => {
+        if (!selectedRunner || !processedRanking) {
+            return null;
+        }
+
+        const rankingRunner = processedRanking.find(runner => {
+            return runner.id === selectedRunner.id;
+        });
+
+        if (!rankingRunner) {
+            return null;
+        }
+
+        return rankingRunner.rankings;
+    }, [processedRanking, selectedRunner]);
 
     return(
         <div id="page-runner-details">
@@ -167,8 +215,8 @@ const RunnerDetails = () => {
                                     case Tab.Stats:
                                         return (
                                             <>
-                                                <RunnerDetailsRaceDetails race={selectedRunner!.race} />
-                                                <RunnerDetailsStats runner={selectedRunner} />
+                                                <RunnerDetailsRaceDetails race={selectedRunner.race} />
+                                                <RunnerDetailsStats runner={selectedRunner} ranks={ranks} />
                                             </>
                                         );
                                     case Tab.Laps:

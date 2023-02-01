@@ -1,5 +1,7 @@
+import {RankingRunnerRanks} from "../../../types/Ranking";
 import {app} from "../../App";
 import React, {useMemo} from "react";
+import CircularLoader from "../../misc/CircularLoader";
 import SpeedChart from "./charts/SpeedChart";
 import Util from "../../../util/Util";
 import RunnerDetailsUtil from "../../../util/RunnerDetailsUtil";
@@ -8,7 +10,8 @@ import {ProcessedPassage} from "../../../types/Passage";
 
 const RunnerDetailsStats: React.FunctionComponent<{
     runner: RunnerWithProcessedPassages & RunnerWithProcessedHours,
-}> = ({runner}) => {
+    ranks: RankingRunnerRanks | null
+}> = ({runner, ranks}) => {
     const completeLapCount = useMemo<number>(() => {
         return Math.max(0, runner.passages.length - 1);
     }, [runner]);
@@ -104,6 +107,22 @@ const RunnerDetailsStats: React.FunctionComponent<{
         <div className="row">
             <div className="col-12">
                 <h2>Données générales</h2>
+
+                <p>
+                    Classement : {!ranks && <CircularLoader/>}
+
+                    {ranks &&
+                    <span>
+                        <b>{ranks.displayed.scratchMixed}</b>
+                        &nbsp;|&nbsp;
+                        {ranks.displayed.scratchGender} {runner.gender.toUpperCase()}
+                        &nbsp;|&nbsp;
+                        {ranks.displayed.categoryMixed} {runner.category.toUpperCase()}
+                        &nbsp;|&nbsp;
+                        {ranks.displayed.categoryGender} {runner.category.toUpperCase()}-{runner.gender.toUpperCase()}
+                    </span>
+                    }
+                </p>
 
                 <p>
                     Nombre de tours complets : <strong>{completeLapCount}</strong>, distance totale : <strong>{(totalDistance / 1000).toFixed(3)} km</strong>
