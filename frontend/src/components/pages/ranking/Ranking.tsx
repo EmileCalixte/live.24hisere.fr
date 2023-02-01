@@ -63,7 +63,7 @@ const Ranking = () => {
             isFetching: false,
         });
 
-        setProcessedRanking(new RankingProcesser(responseJson.ranking as RankingType).getProcessedRanking());
+        setProcessedRanking(new RankingProcesser(selectedRace, responseJson.ranking as RankingType).getProcessedRanking());
     }, [selectedRace, selectedRankingTime, selectedTimeMode]);
 
     const shouldResetRankingTime = useCallback((newRaceDuration: number) => {

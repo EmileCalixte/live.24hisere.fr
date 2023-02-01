@@ -1,5 +1,5 @@
+import {Race} from "../types/Race";
 import Util from "./Util";
-import {app} from "../components/App";
 import {
     ProcessedRanking,
     ProcessedRankingRunner,
@@ -23,6 +23,8 @@ type CurrentRanksByCategory = {
 }
 
 export class RankingProcesser {
+    private race: Race;
+
     private ranking: Ranking;
 
     private processedRanking: ProcessedRanking | undefined;
@@ -43,7 +45,8 @@ export class RankingProcesser {
         // Other categories will be appended here
     };
 
-    constructor(ranking: Ranking) {
+    constructor(race: Race, ranking: Ranking) {
+        this.race = race;
         this.ranking = ranking;
     }
 
@@ -139,13 +142,13 @@ export class RankingProcesser {
             let averageSpeed = null;
 
             if (runner.passageCount > 0) {
-                distance = app.state.firstLapDistance + app.state.lapDistance * (runner.passageCount - 1);
+                distance = this.race.initialDistance + this.race.lapDistance * (runner.passageCount - 1);
             }
 
             if (runner.lastPassageTime !== null) {
                 const lastPassageTime = new Date(runner.lastPassageTime);
 
-                lastPassageRaceTime = lastPassageTime.getTime() - app.state.raceStartTime.getTime();
+                lastPassageRaceTime = lastPassageTime.getTime() - new Date(this.race.startTime).getTime();
 
                 averageSpeed = (distance / (lastPassageRaceTime / 1000)) * 3.6;
             }

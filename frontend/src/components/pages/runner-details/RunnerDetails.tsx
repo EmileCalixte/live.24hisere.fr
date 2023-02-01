@@ -61,7 +61,7 @@ const RunnerDetails = () => {
             isFetching: false,
         });
 
-        setProcessedRanking(new RankingProcesser(responseJson.ranking as RankingType).getProcessedRanking());
+        setProcessedRanking(new RankingProcesser(selectedRunner.race, responseJson.ranking as RankingType).getProcessedRanking());
     }, [selectedRunner]);
 
     const fetchSelectedRunner = useCallback(async () => {
