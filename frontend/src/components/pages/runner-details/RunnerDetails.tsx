@@ -216,7 +216,7 @@ const RunnerDetails = () => {
                                         return (
                                             <>
                                                 <RunnerDetailsRaceDetails race={selectedRunner.race} />
-                                                <RunnerDetailsStats runner={selectedRunner} ranks={ranks} />
+                                                <RunnerDetailsStats runner={selectedRunner} race={selectedRunner.race} ranks={ranks} />
                                             </>
                                         );
                                     case Tab.Laps:

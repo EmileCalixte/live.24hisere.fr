@@ -1,3 +1,4 @@
+import {Race} from "../../../types/Race";
 import {RankingRunnerRanks} from "../../../types/Ranking";
 import {app} from "../../App";
 import React, {useMemo} from "react";
@@ -10,8 +11,9 @@ import {ProcessedPassage} from "../../../types/Passage";
 
 const RunnerDetailsStats: React.FunctionComponent<{
     runner: RunnerWithProcessedPassages & RunnerWithProcessedHours,
+    race: Race,
     ranks: RankingRunnerRanks | null
-}> = ({runner, ranks}) => {
+}> = ({runner, race, ranks}) => {
     const completeLapCount = useMemo<number>(() => {
         return Math.max(0, runner.passages.length - 1);
     }, [runner]);
@@ -171,7 +173,7 @@ const RunnerDetailsStats: React.FunctionComponent<{
             <div className="col-12">
                 <h2>Vitesse</h2>
 
-                <SpeedChart runner={runner} averageSpeed={averageSpeed} />
+                <SpeedChart runner={runner} race={race} averageSpeed={averageSpeed} />
             </div>
             }
         </div>

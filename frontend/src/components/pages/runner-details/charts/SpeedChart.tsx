@@ -1,16 +1,38 @@
 import CanvasJSReact from "../../../../lib/canvasjs/canvasjs.react";
 import React, {useCallback, useMemo, useState} from "react";
 import ReactDOMServer from 'react-dom/server';
-import {app, RACE_DURATION} from "../../../App";
+import {Race} from "../../../../types/Race";
+import {app} from "../../../App";
 import Util from "../../../../util/Util";
 import {RunnerWithProcessedHours, RunnerWithProcessedPassages} from "../../../../types/Runner";
 
 const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
+const getInterval = (raceDuration: number): number => {
+    if (raceDuration <= 14400) { // up to 4h
+        return Math.ceil(raceDuration / 60 / 24 / 10) * 10;
+    }
+
+    if (raceDuration <= 21600) { // up to 6h
+        return Math.ceil(raceDuration / 60 / 24 / 15) * 15;
+    }
+
+    if (raceDuration <= 28800) { // up to 8h
+        return Math.ceil(raceDuration / 60 / 24 / 20) * 20;
+    }
+
+    if (raceDuration <= 43200) { // up to 12h
+        return Math.ceil(raceDuration / 60 / 24 / 30) * 30;
+    }
+
+    return Math.ceil(raceDuration / 60 / 24 / 60) * 60;
+}
+
 const SpeedChart: React.FunctionComponent<{
     runner: RunnerWithProcessedPassages & RunnerWithProcessedHours,
+    race: Race,
     averageSpeed: number,
-}> = ({runner, averageSpeed}) => {
+}> = ({runner, race, averageSpeed}) => {
     const [displayEachLapSpeed, setDisplayEachLapSpeed] = useState(true);
     const [displayEachHourSpeed, setDisplayEachHourSpeed] = useState(true);
     const [displayAverageSpeed, setDisplayAverageSpeed] = useState(true);
@@ -113,9 +135,9 @@ const SpeedChart: React.FunctionComponent<{
                 },
                 labelFormatter: getXAxisLabelValue,
                 minimum: 0,
-                maximum: RACE_DURATION + 1, // "+ 1" to display the "24h" label on X axis
+                maximum: race.duration * 1000,
                 intervalType: "minute",
-                interval: 60,
+                interval: getInterval(race.duration),
                 labelAngle: -25,
             },
             axisY: {
@@ -250,6 +272,7 @@ const SpeedChart: React.FunctionComponent<{
         return options;
     }, [
         runner,
+        race,
         averageSpeed,
         getXAxisLabelValue,
         getTooltipContent,
