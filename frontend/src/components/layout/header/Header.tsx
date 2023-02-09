@@ -1,6 +1,5 @@
 import AdminHeader from "./AdminHeader";
 import Navbar from "./Navbar";
-import HeaderTimer from "./HeaderTimer";
 import {app} from "../../App";
 import HeaderFetchLoader from "./HeaderFetchLoader";
 
@@ -18,10 +17,6 @@ const Header = () => {
 
                 {app.state.isFetching &&
                 <HeaderFetchLoader />
-                }
-
-                {!app.state.isLoading &&
-                <HeaderTimer />
                 }
             </div>
         </header>
