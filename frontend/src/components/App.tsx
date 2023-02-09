@@ -1,5 +1,6 @@
-import React from "react";
+import React, {createContext} from "react";
 import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
+import {User} from "../types/User";
 import Header from "./layout/header/Header";
 import Footer from "./layout/footer/Footer";
 import Ranking from "./pages/ranking/Ranking";
@@ -9,6 +10,14 @@ import Login from "./pages/login/Login";
 import Admin from "./pages/admin/Admin";
 import Util from "../util/Util";
 import ToastUtil from "../util/ToastUtil";
+
+type UserContext = {
+    user: User | null | undefined;
+}
+
+export const userContext = createContext<UserContext>({
+    user: undefined,
+});
 
 let instance: App;
 
@@ -171,26 +180,28 @@ class App extends React.Component {
         return (
             <BrowserRouter>
                 <div id="app">
-                    <div id="app-content-wrapper">
-                        <Header />
-                        <div id="app-content">
-                            <div id="page-content" className="container-fluid">
-                                <Routes>
-                                    <Route path="/ranking" element={<Ranking />} />
-                                    <Route path="/runner-details" element={<RunnerDetails />} />
-                                    <Route path="/runner-details/:runnerId" element={<RunnerDetails />} />
+                    <userContext.Provider value={{user: this.state.user}}>
+                        <div id="app-content-wrapper">
+                            <Header />
+                            <div id="app-content">
+                                <div id="page-content" className="container-fluid">
+                                    <Routes>
+                                        <Route path="/ranking" element={<Ranking />} />
+                                        <Route path="/runner-details" element={<RunnerDetails />} />
+                                        <Route path="/runner-details/:runnerId" element={<RunnerDetails />} />
 
-                                    <Route path="/login" element={<Login />} />
+                                        <Route path="/login" element={<Login />} />
 
-                                    <Route path="/admin/*" element={<Admin />} />
+                                        <Route path="/admin/*" element={<Admin />} />
 
-                                    {/* Redirect any unresolved route to /ranking */}
-                                    <Route path="*" element={<Navigate to="/ranking" replace />} />
-                                </Routes>
+                                        {/* Redirect any unresolved route to /ranking */}
+                                        <Route path="*" element={<Navigate to="/ranking" replace />} />
+                                    </Routes>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <Footer />
+                        <Footer />
+                    </userContext.Provider>
                 </div>
             </BrowserRouter>
         );

@@ -1,9 +1,12 @@
-import {app} from "../../App";
+import {useContext} from "react";
+import {app, userContext} from "../../App";
 import Util from "../../../util/Util";
 import {Link} from "react-router-dom";
 
 const Footer = () => {
-    return(
+    const {user} = useContext(userContext);
+
+    return (
         <footer id="app-footer">
             <div className="container-fluid">
                 <div className="row">
@@ -18,7 +21,7 @@ const Footer = () => {
                             <a href="https://github.com/EmileCalixte/live.24hisere.fr" target="_blank" rel="noopener noreferrer">Code source</a> – <a href="https://www.24hisere.fr/" target="_blank" rel="noopener noreferrer">Les 24 Heures de l'Isère</a>
                         </p>
 
-                        {app.state.user === null &&
+                        {!user &&
                         <p>
                             <Link to="/login">Connexion admin</Link>
                         </p>

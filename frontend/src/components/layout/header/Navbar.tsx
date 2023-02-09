@@ -1,7 +1,10 @@
+import {useContext} from "react";
 import {NavLink} from "react-router-dom";
-import {app} from "../../App";
+import {userContext} from "../../App";
 
 const Navbar = () => {
+    const {user} = useContext(userContext);
+
     return(
         <nav>
             <ul>
@@ -11,7 +14,7 @@ const Navbar = () => {
                 <li>
                     <NavLink to="/runner-details">Détails coureur</NavLink>
                 </li>
-                {app.state.user &&
+                {user &&
                 <li>
                     <NavLink to="/admin">Admin</NavLink>
                 </li>

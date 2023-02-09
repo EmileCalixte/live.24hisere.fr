@@ -1,12 +1,15 @@
+import {useContext} from "react";
 import AdminHeader from "./AdminHeader";
 import Navbar from "./Navbar";
-import {app} from "../../App";
+import {app, userContext} from "../../App";
 import HeaderFetchLoader from "./HeaderFetchLoader";
 
 const Header = () => {
-    return(
+    const {user} = useContext(userContext);
+
+    return (
         <header id="app-header">
-            {app.state.user &&
+            {user &&
             <AdminHeader />
             }
             <div id="app-header-main-section">

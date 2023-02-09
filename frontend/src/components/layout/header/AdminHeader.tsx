@@ -1,15 +1,17 @@
-import {app} from "../../App";
-import {useState} from "react";
+import {userContext} from "../../App";
+import {useContext, useState} from "react";
 import AdminHeaderUserDropdown from "./AdminHeaderUserDropdown";
 
 const AdminHeader = () => {
+    const {user} = useContext(userContext);
+
     const [userDropdownShown, setUserDropdownShown] = useState(false);
 
     const hideUserDropdown = () => {
         setUserDropdownShown(false);
     }
 
-    if (!app.state.user) {
+    if (!user) {
         throw new Error("User is not defined");
     }
 
@@ -22,8 +24,7 @@ const AdminHeader = () => {
                 <button className="admin-header-user-button"
                         onClick={() => setUserDropdownShown(!userDropdownShown)}
                 >
-                    {/* @ts-ignore */}
-                    {app.state.user.username}
+                    {user.username}
                     &nbsp;
                     {userDropdownShown &&
                     <i className="fa-solid fa-angle-up"/>
