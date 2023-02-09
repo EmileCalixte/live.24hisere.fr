@@ -1,12 +1,14 @@
-import React, {useEffect, useMemo, useState} from "react";
+import React, {useContext, useEffect, useMemo, useState} from "react";
 import {Race} from "../../types/Race";
 import Util from "../../util/Util";
-import {app} from "../App";
+import {serverTimeOffsetContext} from "../App";
 
 const RaceTimer: React.FunctionComponent<{
     race: Race,
     allowNegative?: boolean
 }> = ({race, allowNegative = false}) => {
+    const {serverTimeOffset} = useContext(serverTimeOffsetContext);
+
     // The current race time
     const [raceTime, setRaceTime] = useState(0);
 
@@ -17,7 +19,7 @@ const RaceTimer: React.FunctionComponent<{
     useEffect(() => {
         const updateRaceTime = () => {
             const raceStartMs = new Date(race.startTime).getTime();
-            const nowMs = (new Date()).getTime() + (app.state.serverTimeOffset * 1000);
+            const nowMs = (new Date()).getTime() + (serverTimeOffset * 1000);
 
             const raceTime = nowMs - raceStartMs;
 
