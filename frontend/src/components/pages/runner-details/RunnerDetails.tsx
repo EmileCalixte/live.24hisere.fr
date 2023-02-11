@@ -9,7 +9,6 @@ import RunnerDetailsStats from "./RunnerDetailsStats";
 import RunnerDetailsLaps from "./RunnerDetailsLaps";
 import RunnerDetailsUtil from "../../../util/RunnerDetailsUtil";
 import ExcelUtil from "../../../util/ExcelUtil";
-import {app} from "../../App";
 import Runner, {
     RunnerWithPassages,
     RunnerWithProcessedHours,
@@ -50,16 +49,8 @@ const RunnerDetails = () => {
             return;
         }
 
-        app.setState({
-            isFetching: true,
-        });
-
         const response = await ApiUtil.performAPIRequest(`/ranking/${selectedRunner.raceId}`);
         const responseJson = await response.json();
-
-        app.setState({
-            isFetching: false,
-        });
 
         setProcessedRanking(new RankingProcesser(selectedRunner.race, responseJson.ranking as RankingType).getProcessedRanking());
     }, [selectedRunner]);
@@ -69,15 +60,7 @@ const RunnerDetails = () => {
             return;
         }
 
-        app.setState({
-            isFetching: true,
-        });
-
         const response = await ApiUtil.performAPIRequest(`/runners/${selectedRunnerId}`);
-
-        app.setState({
-            isFetching: false,
-        });
 
         if (!response.ok) {
             console.error('Failed to fetch runner', await response.json());

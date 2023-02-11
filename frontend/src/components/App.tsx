@@ -5,11 +5,22 @@ import Header from "./layout/header/Header";
 import Footer from "./layout/footer/Footer";
 import Ranking from "./pages/ranking/Ranking";
 import RunnerDetails from "./pages/runner-details/RunnerDetails";
-import ApiUtil from "../util/ApiUtil";
+import ApiUtil, {EVENT_API_REQUEST_ENDED, EVENT_API_REQUEST_STARTED} from "../util/ApiUtil";
 import Login from "./pages/login/Login";
 import Admin from "./pages/admin/Admin";
 import Util from "../util/Util";
 import ToastUtil from "../util/ToastUtil";
+
+type HeaderFetchLoaderContext = {
+    /**
+     * A value incremented when a request is in progress, decremented when a request is completed.
+     * The header loader should be displayed if this value is > 0.
+     */
+    fetchLevel: number;
+
+    incrementFetchLevel: () => any;
+    decrementFetchLevel: () => any;
+}
 
 type ServerTimeOffsetContext = {
     /**
@@ -25,6 +36,12 @@ type UserContext = {
     user: User | null | undefined;
 }
 
+export const headerFetchLoaderContext = createContext<HeaderFetchLoaderContext>({
+    fetchLevel: 0,
+    incrementFetchLevel: () => {},
+    decrementFetchLevel: () => {},
+});
+
 export const serverTimeOffsetContext = createContext<ServerTimeOffsetContext>({
     serverTimeOffset: 0,
 });
@@ -39,8 +56,8 @@ const FETCH_RACE_DATA_INTERVAL_TIME = 60 * 1000;
 
 class App extends React.Component {
     state = {
+        fetchLevel: 0,
         isLoading: true,
-        isFetching: false,
         firstLapDistance: 0,
         lapDistance: 0,
         raceStartTime: new Date(),
@@ -65,6 +82,9 @@ class App extends React.Component {
     }
 
     componentDidMount = async () => {
+        window.addEventListener(EVENT_API_REQUEST_STARTED, () => this.incrementFetchLevel());
+        window.addEventListener(EVENT_API_REQUEST_ENDED, () => this.decrementFetchLevel());
+
         await this.fetchRaceData();
 
         this.fetchRaceDataInterval = setInterval(this.fetchRaceData, FETCH_RACE_DATA_INTERVAL_TIME);
@@ -93,6 +113,14 @@ class App extends React.Component {
 
     componentWillUnmount() {
         clearInterval(this.fetchRaceDataInterval);
+    }
+
+    incrementFetchLevel() {
+        this.setState({fetchLevel: this.state.fetchLevel + 1});
+    }
+
+    decrementFetchLevel() {
+        this.setState({fetchLevel: Math.max(0, this.state.fetchLevel - 1)});
     }
 
     saveAccessToken = (accessToken: string) => {
@@ -194,30 +222,36 @@ class App extends React.Component {
         return (
             <BrowserRouter>
                 <div id="app">
-                    <serverTimeOffsetContext.Provider value={{serverTimeOffset: this.state.serverTimeOffset}}>
-                        <userContext.Provider value={{user: this.state.user}}>
-                            <div id="app-content-wrapper">
-                                <Header />
-                                <div id="app-content">
-                                    <div id="page-content" className="container-fluid">
-                                        <Routes>
-                                            <Route path="/ranking" element={<Ranking />} />
-                                            <Route path="/runner-details" element={<RunnerDetails />} />
-                                            <Route path="/runner-details/:runnerId" element={<RunnerDetails />} />
+                    <headerFetchLoaderContext.Provider value={{
+                        fetchLevel: this.state.fetchLevel,
+                        incrementFetchLevel: this.incrementFetchLevel,
+                        decrementFetchLevel: this.decrementFetchLevel,
+                    }}>
+                        <serverTimeOffsetContext.Provider value={{serverTimeOffset: this.state.serverTimeOffset}}>
+                            <userContext.Provider value={{user: this.state.user}}>
+                                <div id="app-content-wrapper">
+                                    <Header />
+                                    <div id="app-content">
+                                        <div id="page-content" className="container-fluid">
+                                            <Routes>
+                                                <Route path="/ranking" element={<Ranking />} />
+                                                <Route path="/runner-details" element={<RunnerDetails />} />
+                                                <Route path="/runner-details/:runnerId" element={<RunnerDetails />} />
 
-                                            <Route path="/login" element={<Login />} />
+                                                <Route path="/login" element={<Login />} />
 
-                                            <Route path="/admin/*" element={<Admin />} />
+                                                <Route path="/admin/*" element={<Admin />} />
 
-                                            {/* Redirect any unresolved route to /ranking */}
-                                            <Route path="*" element={<Navigate to="/ranking" replace />} />
-                                        </Routes>
+                                                {/* Redirect any unresolved route to /ranking */}
+                                                <Route path="*" element={<Navigate to="/ranking" replace />} />
+                                            </Routes>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <Footer />
-                        </userContext.Provider>
-                    </serverTimeOffsetContext.Provider>
+                                <Footer />
+                            </userContext.Provider>
+                        </serverTimeOffsetContext.Provider>
+                    </headerFetchLoaderContext.Provider>
                 </div>
             </BrowserRouter>
         );

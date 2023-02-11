@@ -52,16 +52,8 @@ const Ranking = () => {
             requestUrl += `?at=${rankingDateString}`;
         }
 
-        app.setState({
-            isFetching: true,
-        });
-
         const response = await ApiUtil.performAPIRequest(requestUrl);
         const responseJson = await response.json();
-
-        app.setState({
-            isFetching: false,
-        });
 
         setProcessedRanking(new RankingProcesser(selectedRace, responseJson.ranking as RankingType).getProcessedRanking());
     }, [selectedRace, selectedRankingTime, selectedTimeMode]);

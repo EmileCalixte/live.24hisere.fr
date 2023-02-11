@@ -1,11 +1,13 @@
 import {useContext} from "react";
 import AdminHeader from "./AdminHeader";
 import Navbar from "./Navbar";
-import {app, userContext} from "../../App";
+import {headerFetchLoaderContext, userContext} from "../../App";
 import HeaderFetchLoader from "./HeaderFetchLoader";
 
 const Header = () => {
     const {user} = useContext(userContext);
+
+    const {fetchLevel} = useContext(headerFetchLoaderContext);
 
     return (
         <header id="app-header">
@@ -18,7 +20,7 @@ const Header = () => {
                 </div>
                 <Navbar />
 
-                {app.state.isFetching &&
+                {fetchLevel > 0 &&
                 <HeaderFetchLoader />
                 }
             </div>
