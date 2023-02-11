@@ -19,12 +19,15 @@ type ServerTimeOffsetContext = {
 }
 
 type UserContext = {
+    /**
+     * The user logged in. If undefined, user info was not fetched yet.
+     */
     user: User | null | undefined;
 }
 
 export const serverTimeOffsetContext = createContext<ServerTimeOffsetContext>({
     serverTimeOffset: 0,
-})
+});
 
 export const userContext = createContext<UserContext>({
     user: undefined,
