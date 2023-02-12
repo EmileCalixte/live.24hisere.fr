@@ -116,11 +116,27 @@ class App extends React.Component {
     }
 
     incrementFetchLevel() {
-        this.setState({fetchLevel: this.state.fetchLevel + 1});
+        console.log("INCREMENT", this.state.fetchLevel);
+
+        this.setState((prevState => {
+            return {
+                ...prevState,
+                // @ts-ignore
+                fetchLevel: prevState.fetchLevel + 1,
+            };
+        }));
     }
 
     decrementFetchLevel() {
-        this.setState({fetchLevel: Math.max(0, this.state.fetchLevel - 1)});
+        console.log("DECREMENT", this.state.fetchLevel);
+
+        this.setState((prevState => {
+            return {
+                ...prevState,
+                // @ts-ignore
+                fetchLevel: Math.max(0, prevState.fetchLevel - 1),
+            };
+        }));
     }
 
     saveAccessToken = (accessToken: string) => {
