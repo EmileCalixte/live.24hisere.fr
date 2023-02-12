@@ -31,9 +31,18 @@ type ServerTimeOffsetContext = {
 
 type UserContext = {
     /**
+     * The access token used for authenticated API requests
+     */
+    accessToken: string | null;
+
+    saveAccessToken: (accessToken: string) => any;
+
+    /**
      * The user logged in. If undefined, user info was not fetched yet.
      */
     user: User | null | undefined;
+
+    setUser: (user: User | null | undefined) => any;
 }
 
 export const headerFetchLoaderContext = createContext<HeaderFetchLoaderContext>({
@@ -47,7 +56,10 @@ export const serverTimeOffsetContext = createContext<ServerTimeOffsetContext>({
 });
 
 export const userContext = createContext<UserContext>({
+    accessToken: null,
+    saveAccessToken: () => {},
     user: undefined,
+    setUser: () => {},
 });
 
 let instance: App;
@@ -149,6 +161,10 @@ class App extends React.Component {
         this.setState({accessToken: null});
     }
 
+    setUser = (user: User | null | undefined) => {
+        this.setState({user});
+    }
+
     logout = () => {
         ApiUtil.performAuthenticatedAPIRequest('/auth/logout', this.state.accessToken, {
             method: 'POST',
@@ -244,7 +260,12 @@ class App extends React.Component {
                         decrementFetchLevel: this.decrementFetchLevel,
                     }}>
                         <serverTimeOffsetContext.Provider value={{serverTimeOffset: this.state.serverTimeOffset}}>
-                            <userContext.Provider value={{user: this.state.user}}>
+                            <userContext.Provider value={{
+                                accessToken: this.state.accessToken,
+                                saveAccessToken: this.saveAccessToken,
+                                user: this.state.user,
+                                setUser: this.setUser,
+                            }}>
                                 <div id="app-content-wrapper">
                                     <Header />
                                     <div id="app-content">

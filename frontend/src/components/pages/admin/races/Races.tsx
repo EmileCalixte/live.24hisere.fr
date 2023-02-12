@@ -1,8 +1,8 @@
 import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
-import React, {useCallback, useEffect, useMemo, useState} from "react";
+import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
 import ApiUtil from "../../../../util/ApiUtil";
-import {app} from "../../../App";
+import {userContext} from "../../../App";
 import CircularLoader from "../../../misc/CircularLoader";
 import {Link} from "react-router-dom";
 import RacesListItem from "./RacesListItem";
@@ -10,6 +10,8 @@ import ToastUtil from "../../../../util/ToastUtil";
 import {AdminRaceWithRunnerCount} from "../../../../types/Race";
 
 const Races = () => {
+    const {accessToken} = useContext(userContext);
+
     // false = not fetched yet
     const [races, setRaces] = useState<AdminRaceWithRunnerCount[] | false>(false);
 
@@ -20,12 +22,12 @@ const Races = () => {
     const [isSaving, setIsSaving] = useState(false);
 
     const fetchRaces = useCallback(async () => {
-        const response = await ApiUtil.performAuthenticatedAPIRequest('/admin/races', app.state.accessToken);
+        const response = await ApiUtil.performAuthenticatedAPIRequest('/admin/races', accessToken);
         const responseJson = await response.json();
 
         setRaces(responseJson.races);
         setSortingRaces(responseJson.races);
-    }, []);
+    }, [accessToken]);
 
     useEffect(() => {
         fetchRaces();
@@ -83,7 +85,7 @@ const Races = () => {
 
         const raceIds = (sortingRaces as AdminRaceWithRunnerCount[]).map(race => race.id);
 
-        const response = await ApiUtil.performAuthenticatedAPIRequest("/admin/races-order", app.state.accessToken, {
+        const response = await ApiUtil.performAuthenticatedAPIRequest("/admin/races-order", accessToken, {
             method: "PUT",
             body: JSON.stringify(raceIds)
         });
@@ -100,7 +102,7 @@ const Races = () => {
         ToastUtil.getToastr().success("L'ordre des courses a été modifié");
         setIsSorting(false);
         setIsSaving(false);
-    }, [sortingRaces]);
+    }, [accessToken, sortingRaces]);
 
     const displayedRaces = useMemo(() => {
         return isSorting ? sortingRaces : races;

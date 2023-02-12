@@ -1,12 +1,12 @@
 import {Navigate, useParams} from "react-router-dom";
-import React, {useCallback, useEffect, useMemo, useState} from "react";
+import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {AdminProcessedPassage} from "../../../../types/Passage";
 import ApiUtil from "../../../../util/ApiUtil";
 import Util from "../../../../util/Util";
 import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
 import CircularLoader from "../../../misc/CircularLoader";
-import {app} from "../../../App";
+import {userContext} from "../../../App";
 import {
     Gender,
     RunnerWithAdminPassages,
@@ -19,6 +19,8 @@ import RunnerDetailsPassages from "./RunnerDetailsPassages";
 import RunnerDetailsUtil from "../../../../util/RunnerDetailsUtil";
 
 const RunnerDetails = () => {
+    const {accessToken} = useContext(userContext);
+
     const {runnerId: urlRunnerId} = useParams();
 
     const [races, setRaces] = useState<AdminRaceWithRunnerCount[] | false>(false);
@@ -66,18 +68,18 @@ const RunnerDetails = () => {
     }, [runner, runnerId, runnerFirstname, runnerLastname, runnerGender, runnerBirthYear, runnerRaceId]);
 
     const fetchRaces = useCallback(async () => {
-        const response = await ApiUtil.performAuthenticatedAPIRequest('/admin/races', app.state.accessToken);
+        const response = await ApiUtil.performAuthenticatedAPIRequest('/admin/races', accessToken);
         const responseJson = await response.json();
 
         setRaces(responseJson.races);
-    }, []);
+    }, [accessToken]);
 
     const fetchRunner = useCallback(async () => {
         if (!races) {
             return;
         }
 
-        const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/runners/${urlRunnerId}`, app.state.accessToken);
+        const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/runners/${urlRunnerId}`, accessToken);
 
         if (!response.ok) {
             console.error('Failed to fetch runner', await response.json());
@@ -107,7 +109,7 @@ const RunnerDetails = () => {
         setRunnerGender(runner.gender);
         setRunnerBirthYear(runner.birthYear);
         setRunnerRaceId(runner.raceId);
-    }, [urlRunnerId, races]);
+    }, [accessToken, urlRunnerId, races]);
 
     const updatePassageVisiblity = useCallback(async (passage: AdminProcessedPassage, hidden: boolean) => {
         if (!runner) {
@@ -126,7 +128,7 @@ const RunnerDetails = () => {
             return;
         }
 
-        const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/runners/${runner.id}/passages/${passage.id}`, app.state.accessToken, {
+        const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/runners/${runner.id}/passages/${passage.id}`, accessToken, {
             method: "PATCH",
             body: JSON.stringify({
                 isHidden: hidden,
@@ -141,14 +143,14 @@ const RunnerDetails = () => {
         ToastUtil.getToastr().success(hidden ? "Le passage a été masqué" : "Le passage n'est plus masqué");
 
         fetchRunner();
-    }, [runner, fetchRunner]);
+    }, [accessToken, runner, fetchRunner]);
 
     const updatePassage = useCallback(async (passage: AdminProcessedPassage, time: Date) => {
         if (!runner) {
             return;
         }
 
-        const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/runners/${runner.id}/passages/${passage.id}`, app.state.accessToken, {
+        const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/runners/${runner.id}/passages/${passage.id}`, accessToken, {
             method: "PATCH",
             body: JSON.stringify({
                 time: Util.formatDateForApi(time),
@@ -163,14 +165,14 @@ const RunnerDetails = () => {
         ToastUtil.getToastr().success("Le temps de passage a bien été modifié");
 
         fetchRunner();
-    }, [runner, fetchRunner]);
+    }, [accessToken, runner, fetchRunner]);
 
     const saveNewPassage = useCallback(async (time: Date) => {
         if (!runner) {
             return;
         }
 
-        const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/runners/${runner.id}/passages`, app.state.accessToken, {
+        const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/runners/${runner.id}/passages`, accessToken, {
             method: "POST",
             body: JSON.stringify({
                 isHidden: false,
@@ -186,7 +188,7 @@ const RunnerDetails = () => {
         ToastUtil.getToastr().success("Le passage a bien été créé");
 
         fetchRunner();
-    }, [runner, fetchRunner]);
+    }, [accessToken, runner, fetchRunner]);
 
     const deletePassage = useCallback(async (passage: AdminProcessedPassage) => {
         if (!runner) {
@@ -203,7 +205,7 @@ const RunnerDetails = () => {
             return;
         }
 
-        const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/runners/${runner.id}/passages/${passage.id}`, app.state.accessToken, {
+        const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/runners/${runner.id}/passages/${passage.id}`, accessToken, {
             method: "DELETE"
         });
 
@@ -215,7 +217,7 @@ const RunnerDetails = () => {
         ToastUtil.getToastr().success("Le passage a été supprimé");
 
         fetchRunner();
-    }, [runner, fetchRunner]);
+    }, [accessToken, runner, fetchRunner]);
 
     useEffect(() => {
         fetchRaces();
@@ -245,7 +247,7 @@ const RunnerDetails = () => {
             raceId: runnerRaceId,
         };
 
-        const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/runners/${runner.id}`, app.state.accessToken, {
+        const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/runners/${runner.id}`, accessToken, {
             method: "PATCH",
             body: JSON.stringify(body),
         });
@@ -270,7 +272,7 @@ const RunnerDetails = () => {
         }
 
         setIsSaving(false);
-    }, [fetchRunner, runner, runnerBirthYear, runnerFirstname, runnerLastname, runnerGender, runnerId, runnerRaceId]);
+    }, [accessToken, fetchRunner, runner, runnerBirthYear, runnerFirstname, runnerLastname, runnerGender, runnerId, runnerRaceId]);
 
     const deleteRunner = useCallback(async () => {
         if (!runner) {
@@ -281,7 +283,7 @@ const RunnerDetails = () => {
             return;
         }
 
-        const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/runners/${runner.id}`, app.state.accessToken, {
+        const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/runners/${runner.id}`, accessToken, {
             method: "DELETE",
         });
 
@@ -294,7 +296,7 @@ const RunnerDetails = () => {
 
         ToastUtil.getToastr().success("Coureur supprimé");
         setRedirectAfterDelete(true);
-    }, [runner]);
+    }, [accessToken, runner]);
 
     if (redirectAfterDelete) {
         return (

@@ -1,14 +1,16 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import ApiUtil from "../../../util/ApiUtil";
-import {app} from "../../App";
+import {userContext} from "../../App";
 import {Navigate} from "react-router-dom";
 import ToastUtil from "../../../util/ToastUtil";
 
 const Login = () => {
+    const {accessToken, saveAccessToken, setUser} = useContext(userContext);
+
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [submitButtonDisabled, setSubmitButtonDisabled] = useState(false);
-    const [loggedIn, setLoggedIn] = useState(app.state.accessToken !== null);
+    const [loggedIn, setLoggedIn] = useState(accessToken !== null);
 
     const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -37,8 +39,8 @@ const Login = () => {
 
         const accessToken = responseJson.accessToken;
 
-        app.saveAccessToken(accessToken);
-        app.setState({user: undefined}); // Will be defined when the application has fetched user info
+        saveAccessToken(accessToken);
+        setUser(undefined); // Will be defined when the application has fetched user info
         setLoggedIn(true);
     }
 

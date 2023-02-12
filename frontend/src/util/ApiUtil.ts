@@ -46,10 +46,12 @@ class ApiUtil {
             url = ApiUtil.getBackendFullUrl(url);
         }
 
+        console.log("DISPATCH STARTED EVENT");
         window.dispatchEvent(new CustomEvent(EVENT_API_REQUEST_STARTED));
 
         const response = await ApiUtil.fetch(url, init);
 
+        console.log("DISPATCH ENDED EVENT");
         window.dispatchEvent(new CustomEvent(EVENT_API_REQUEST_ENDED));
 
         return response;

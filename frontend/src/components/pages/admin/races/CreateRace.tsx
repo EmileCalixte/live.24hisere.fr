@@ -1,14 +1,16 @@
 import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
 import RaceDetailsForm from "./RaceDetailsForm";
-import React, {useCallback, useState} from "react";
+import React, {useCallback, useContext, useState} from "react";
 import ApiUtil from "../../../../util/ApiUtil";
-import {app} from "../../../App";
+import {userContext} from "../../../App";
 import ToastUtil from "../../../../util/ToastUtil";
 import {Navigate} from "react-router-dom";
 import Util from "../../../../util/Util";
 
 const CreateRace = () => {
+    const {accessToken} = useContext(userContext);
+
     const [raceName, setRaceName] = useState('');
     const [initialDistance, setInitialDistance] = useState<number | string>(0);
     const [lapDistance, setLapDistance] = useState<number | string>(0);
@@ -34,7 +36,7 @@ const CreateRace = () => {
             lapDistance,
         };
 
-        const response = await ApiUtil.performAuthenticatedAPIRequest("/admin/races", app.state.accessToken, {
+        const response = await ApiUtil.performAuthenticatedAPIRequest("/admin/races", accessToken, {
             method: 'POST',
             body: JSON.stringify(body),
         });
@@ -50,7 +52,7 @@ const CreateRace = () => {
 
         ToastUtil.getToastr().success("Course créée");
         setRedirectToId(responseJson.id);
-    }, [raceName, isPublic, initialDistance, lapDistance, startTime, duration]);
+    }, [accessToken, raceName, isPublic, initialDistance, lapDistance, startTime, duration]);
 
     if (redirectToId) {
         return (
