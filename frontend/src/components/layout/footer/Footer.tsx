@@ -1,10 +1,10 @@
 import {useContext} from "react";
-import {lastUpdateTimeContext, userContext} from "../../App";
+import {appDataContext, userContext} from "../../App";
 import Util from "../../../util/Util";
 import {Link} from "react-router-dom";
 
 const Footer = () => {
-    const {lastUpdateTime} = useContext(lastUpdateTimeContext);
+    const {lastUpdateTime} = useContext(appDataContext);
     const {user} = useContext(userContext);
 
     return (

@@ -11,6 +11,18 @@ import Admin from "./pages/admin/Admin";
 import Util from "../util/Util";
 import ToastUtil from "../util/ToastUtil";
 
+type AppDataContext = {
+    /**
+     * Date and time the runners' data was exported from the timing system
+     */
+    lastUpdateTime: Date;
+
+    /**
+     * Difference between server time and client time in seconds. > 0 if the server is ahead, < 0 otherwise.
+     */
+    serverTimeOffset: number;
+}
+
 type HeaderFetchLoaderContext = {
     /**
      * A value incremented when a request is in progress, decremented when a request is completed.
@@ -20,20 +32,6 @@ type HeaderFetchLoaderContext = {
 
     incrementFetchLevel: () => any;
     decrementFetchLevel: () => any;
-}
-
-type LastUpdateTimeContext = {
-    /**
-     * Date and time the runners' data was exported from the timing system
-     */
-    lastUpdateTime: Date;
-}
-
-type ServerTimeOffsetContext = {
-    /**
-     * Difference between server time and client time in seconds. > 0 if the server is ahead, < 0 otherwise.
-     */
-    serverTimeOffset: number;
 }
 
 type UserContext = {
@@ -54,18 +52,15 @@ type UserContext = {
     logout: () => any;
 }
 
+export const appDataContext = createContext<AppDataContext>({
+    lastUpdateTime: new Date(),
+    serverTimeOffset: 0,
+});
+
 export const headerFetchLoaderContext = createContext<HeaderFetchLoaderContext>({
     fetchLevel: 0,
     incrementFetchLevel: () => {},
     decrementFetchLevel: () => {},
-});
-
-export const lastUpdateTimeContext = createContext<LastUpdateTimeContext>({
-    lastUpdateTime: new Date(),
-});
-
-export const serverTimeOffsetContext = createContext<ServerTimeOffsetContext>({
-    serverTimeOffset: 0,
 });
 
 export const userContext = createContext<UserContext>({
@@ -239,44 +234,45 @@ class App extends React.Component {
         return (
             <BrowserRouter>
                 <div id="app">
-                    <headerFetchLoaderContext.Provider value={{
-                        fetchLevel: this.state.fetchLevel,
-                        incrementFetchLevel: this.incrementFetchLevel,
-                        decrementFetchLevel: this.decrementFetchLevel,
+                    <appDataContext.Provider value={{
+                        lastUpdateTime: this.state.lastUpdateTime,
+                        serverTimeOffset: this.state.serverTimeOffset,
                     }}>
-                        <lastUpdateTimeContext.Provider value={{lastUpdateTime: this.state.lastUpdateTime}}>
-                            <serverTimeOffsetContext.Provider value={{serverTimeOffset: this.state.serverTimeOffset}}>
-                                <userContext.Provider value={{
-                                    accessToken: this.state.accessToken,
-                                    saveAccessToken: this.saveAccessToken,
-                                    user: this.state.user,
-                                    setUser: this.setUser,
-                                    logout: this.logout,
-                                }}>
-                                    <div id="app-content-wrapper">
-                                        <Header />
-                                        <div id="app-content">
-                                            <div id="page-content" className="container-fluid">
-                                                <Routes>
-                                                    <Route path="/ranking" element={<Ranking />} />
-                                                    <Route path="/runner-details" element={<RunnerDetails />} />
-                                                    <Route path="/runner-details/:runnerId" element={<RunnerDetails />} />
+                        <headerFetchLoaderContext.Provider value={{
+                            fetchLevel: this.state.fetchLevel,
+                            incrementFetchLevel: this.incrementFetchLevel,
+                            decrementFetchLevel: this.decrementFetchLevel,
+                        }}>
+                            <userContext.Provider value={{
+                                accessToken: this.state.accessToken,
+                                saveAccessToken: this.saveAccessToken,
+                                user: this.state.user,
+                                setUser: this.setUser,
+                                logout: this.logout,
+                            }}>
+                                <div id="app-content-wrapper">
+                                    <Header />
+                                    <div id="app-content">
+                                        <div id="page-content" className="container-fluid">
+                                            <Routes>
+                                                <Route path="/ranking" element={<Ranking />} />
+                                                <Route path="/runner-details" element={<RunnerDetails />} />
+                                                <Route path="/runner-details/:runnerId" element={<RunnerDetails />} />
 
-                                                    <Route path="/login" element={<Login />} />
+                                                <Route path="/login" element={<Login />} />
 
-                                                    <Route path="/admin/*" element={<Admin />} />
+                                                <Route path="/admin/*" element={<Admin />} />
 
-                                                    {/* Redirect any unresolved route to /ranking */}
-                                                    <Route path="*" element={<Navigate to="/ranking" replace />} />
-                                                </Routes>
-                                            </div>
+                                                {/* Redirect any unresolved route to /ranking */}
+                                                <Route path="*" element={<Navigate to="/ranking" replace />} />
+                                            </Routes>
                                         </div>
                                     </div>
-                                    <Footer />
-                                </userContext.Provider>
-                            </serverTimeOffsetContext.Provider>
-                        </lastUpdateTimeContext.Provider>
-                    </headerFetchLoaderContext.Provider>
+                                </div>
+                                <Footer />
+                            </userContext.Provider>
+                        </headerFetchLoaderContext.Provider>
+                    </appDataContext.Provider>
                 </div>
             </BrowserRouter>
         );

@@ -1,13 +1,13 @@
 import React, {useContext, useEffect, useMemo, useState} from "react";
 import {Race} from "../../types/Race";
 import Util from "../../util/Util";
-import {serverTimeOffsetContext} from "../App";
+import {appDataContext} from "../App";
 
 const RaceTimer: React.FunctionComponent<{
     race: Race,
     allowNegative?: boolean
 }> = ({race, allowNegative = false}) => {
-    const {serverTimeOffset} = useContext(serverTimeOffsetContext);
+    const {serverTimeOffset} = useContext(appDataContext);
 
     // The current race time
     const [raceTime, setRaceTime] = useState(0);
@@ -43,7 +43,7 @@ const RaceTimer: React.FunctionComponent<{
         return () => {
             window.clearInterval(interval);
         }
-    }, [race, allowNegative]);
+    }, [serverTimeOffset, race, allowNegative]);
 
     return (
         <>{formattedRaceTime}</>
