@@ -1,8 +1,8 @@
 import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
-import {useCallback, useEffect, useState} from "react";
+import {useCallback, useContext, useEffect, useState} from "react";
 import ApiUtil from "../../../../util/ApiUtil";
-import {app} from "../../../App";
+import {userContext} from "../../../App";
 import CircularLoader from "../../../misc/CircularLoader";
 import {Link} from "react-router-dom";
 import RunnersTable from "./RunnersTable";
@@ -10,6 +10,8 @@ import Runner from "../../../../types/Runner";
 import AdminRace from "../../../../types/Race";
 
 const Runners = () => {
+    const {accessToken} = useContext(userContext);
+
     // false = not fetched yet
     const [runners, setRunners] = useState<Runner[] | false>(false);
 
@@ -17,12 +19,12 @@ const Runners = () => {
     const [races, setRaces] = useState<AdminRace[] | false>(false);
 
     const fetchRunnersAndRaces = useCallback(async () => {
-        const response = await ApiUtil.performAuthenticatedAPIRequest('/admin/runners', app.state.accessToken);
+        const response = await ApiUtil.performAuthenticatedAPIRequest('/admin/runners', accessToken);
         const responseJson = await response.json();
 
         setRunners(responseJson.runners);
         setRaces(responseJson.races);
-    }, []);
+    }, [accessToken]);
 
     useEffect(() => {
         fetchRunnersAndRaces();

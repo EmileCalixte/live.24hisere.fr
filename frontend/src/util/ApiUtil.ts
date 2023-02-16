@@ -1,6 +1,9 @@
 import config from '../config/config';
 import Util from "./Util";
 
+export const EVENT_API_REQUEST_STARTED = "apiRequestStarted";
+export const EVENT_API_REQUEST_ENDED = "apiRequestEnded";
+
 class ApiUtil {
     static APP_BACKEND_URL = config.apiUrl
 
@@ -43,7 +46,13 @@ class ApiUtil {
             url = ApiUtil.getBackendFullUrl(url);
         }
 
-        return await ApiUtil.fetch(url, init);
+        window.dispatchEvent(new CustomEvent(EVENT_API_REQUEST_STARTED));
+
+        const response = await ApiUtil.fetch(url, init);
+
+        window.dispatchEvent(new CustomEvent(EVENT_API_REQUEST_ENDED));
+
+        return response;
     }
 
     /**

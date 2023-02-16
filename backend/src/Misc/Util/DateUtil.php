@@ -4,7 +4,7 @@ namespace App\Misc\Util;
 
 class DateUtil
 {
-    public static function convertDatabaseDateToJavascriptDate(string $dbDate, bool $withMilliseconds = true): ?string
+    public static function convertDatabaseDateToDate(string $dbDate, bool $withMilliseconds = true, bool $immutable = true): \DateTime|\DateTimeImmutable|null
     {
         $dbFormat = 'Y-m-d H:i:s';
 
@@ -12,7 +12,22 @@ class DateUtil
             $dbFormat .= '.v';
         }
 
-        $date = \DateTimeImmutable::createFromFormat($dbFormat, $dbDate);
+        if ($immutable) {
+            $date = \DateTimeImmutable::createFromFormat($dbFormat, $dbDate);
+        } else {
+            $date = \DateTime::createFromFormat($dbFormat, $dbDate);
+        }
+
+        if ($date === false) {
+            return null;
+        }
+
+        return $date;
+    }
+
+    public static function convertDatabaseDateToJavascriptDate(string $dbDate, bool $withMilliseconds = true): ?string
+    {
+        $date = self::convertDatabaseDateToDate($dbDate, $withMilliseconds);
 
         if (!$date) {
             return null;

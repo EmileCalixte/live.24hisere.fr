@@ -1,15 +1,17 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useCallback, useContext, useEffect, useState} from "react";
 import {Navigate} from "react-router-dom";
 import {AdminRaceWithRunnerCount} from "../../../../types/Race";
 import {Gender} from "../../../../types/Runner";
 import ApiUtil from "../../../../util/ApiUtil";
 import ToastUtil from "../../../../util/ToastUtil";
-import {app} from "../../../App";
+import {userContext} from "../../../App";
 import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
 import RunnerDetailsForm from "./RunnerDetailsForm";
 
 const CreateRunner = () => {
+    const {accessToken} = useContext(userContext);
+
     const [races, setRaces] = useState<AdminRaceWithRunnerCount[] | false>(false);
 
     const [id, setId] = useState(1);
@@ -24,7 +26,7 @@ const CreateRunner = () => {
     const [redirectToId, setRedirectToId] = useState(null);
 
     const fetchRaces = useCallback(async () => {
-        const response = await ApiUtil.performAuthenticatedAPIRequest('/admin/races', app.state.accessToken);
+        const response = await ApiUtil.performAuthenticatedAPIRequest('/admin/races', accessToken);
         const responseJson = await response.json();
 
         const responseRaces = responseJson.races as AdminRaceWithRunnerCount[];
@@ -38,7 +40,7 @@ const CreateRunner = () => {
         if (raceId === null && responseRaces.length > 0) {
             setRaceId(responseRaces[0].id);
         }
-    }, [raceId]);
+    }, [accessToken, raceId]);
 
     const onSubmit = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
@@ -54,7 +56,7 @@ const CreateRunner = () => {
             raceId,
         }
 
-        const response = await ApiUtil.performAuthenticatedAPIRequest("/admin/runners", app.state.accessToken, {
+        const response = await ApiUtil.performAuthenticatedAPIRequest("/admin/runners", accessToken, {
             method: "POST",
             body: JSON.stringify(body),
         });
@@ -70,7 +72,7 @@ const CreateRunner = () => {
 
         ToastUtil.getToastr().success("Coureur créé");
         setRedirectToId(responseJson.id);
-    }, [id, firstname, lastname, gender, birthYear, raceId]);
+    }, [accessToken, id, firstname, lastname, gender, birthYear, raceId]);
 
     useEffect(() => {
         fetchRaces();

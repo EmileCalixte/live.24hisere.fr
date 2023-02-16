@@ -1,4 +1,5 @@
-import {app} from "../../App";
+import {useContext} from "react";
+import {userContext} from "../../App";
 import {Navigate, Route, Routes} from "react-router-dom";
 import AdminHome from "./home/AdminHome";
 import Races from "./races/Races";
@@ -10,13 +11,15 @@ import CircularLoader from "../../misc/CircularLoader";
 import RunnerDetails from "./runners/RunnerDetails";
 
 const Admin = () => {
-    if (app.state.user === null) {
+    const {user} = useContext(userContext);
+
+    if (user === null) {
         return (
             <Navigate to="/"/>
         );
     }
 
-    if (app.state.user === undefined) {
+    if (user === undefined) {
         return (
             <CircularLoader/>
         )

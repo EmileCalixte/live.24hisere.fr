@@ -119,15 +119,6 @@ class CommonUtil
         return 'M10';
     }
 
-    public static function getRaceData(bool $includeLastUpdateTime = true): array
-    {
-        $data = DAO::getInstance()->getRaceData($includeLastUpdateTime);
-
-        CommonUtil::camelizeArrayKeysRecursively($data);
-
-        return $data;
-    }
-
     /**
      * @param string $json
      * @param bool $associative

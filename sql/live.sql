@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : database
--- Généré le : lun. 19 déc. 2022 à 20:50
--- Version du serveur : 10.3.35-MariaDB-1:10.3.35+maria~focal
--- Version de PHP : 8.0.19
+-- Généré le : jeu. 16 fév. 2023 à 10:06
+-- Version du serveur : 10.3.37-MariaDB-1:10.3.37+maria~ubu2004
+-- Version de PHP : 8.0.27
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -28,7 +28,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `access_token` (
-  `token` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(32) NOT NULL,
   `user_id` int(11) NOT NULL,
   `expiration_date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -42,7 +42,7 @@ CREATE TABLE `access_token` (
 CREATE TABLE `config` (
   `key` varchar(255) NOT NULL,
   `value` varchar(5000) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `config`
@@ -58,8 +58,8 @@ INSERT INTO `config` (`key`, `value`) VALUES
 --
 
 CREATE TABLE `misc` (
-  `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `value` varchar(5000) COLLATE utf8mb4_unicode_ci NOT NULL
+  `key` varchar(255) NOT NULL,
+  `value` varchar(5000) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -67,10 +67,7 @@ CREATE TABLE `misc` (
 --
 
 INSERT INTO `misc` (`key`, `value`) VALUES
-('first_lap_distance', '297'),
-('lap_distance', '1015.54'),
-('last_update_time', '2022-04-03 14:12:59'),
-('race_start_time', '2022-04-02 09:00:00');
+('last_update_time', '2022-04-03 14:12:59');
 
 -- --------------------------------------------------------
 
@@ -5881,7 +5878,7 @@ INSERT INTO `passage` (`id`, `detection_id`, `runner_id`, `time`, `is_hidden`) V
 
 CREATE TABLE `race` (
   `id` int(11) NOT NULL,
-  `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(50) NOT NULL,
   `start_time` datetime NOT NULL,
   `duration` int(10) UNSIGNED NOT NULL,
   `initial_distance` decimal(10,3) NOT NULL,
@@ -5907,10 +5904,10 @@ INSERT INTO `race` (`id`, `name`, `start_time`, `duration`, `initial_distance`, 
 CREATE TABLE `runner` (
   `id` int(11) NOT NULL COMMENT 'Bib number',
   `is_team` tinyint(1) NOT NULL,
-  `firstname` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `lastname` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `gender` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `birth_year` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `firstname` varchar(255) NOT NULL,
+  `lastname` varchar(255) NOT NULL,
+  `gender` varchar(1) NOT NULL,
+  `birth_year` varchar(255) NOT NULL,
   `race_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -5981,8 +5978,8 @@ INSERT INTO `runner` (`id`, `is_team`, `firstname`, `lastname`, `gender`, `birth
 
 CREATE TABLE `user` (
   `id` int(11) NOT NULL,
-  `username` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `password_hash` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
+  `username` varchar(32) NOT NULL,
+  `password_hash` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --

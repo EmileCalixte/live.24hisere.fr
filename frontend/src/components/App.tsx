@@ -1,202 +1,233 @@
-import React from "react";
+import React, {createContext, useCallback, useEffect, useState} from "react";
 import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
+import {User} from "../types/User";
 import Header from "./layout/header/Header";
 import Footer from "./layout/footer/Footer";
 import Ranking from "./pages/ranking/Ranking";
 import RunnerDetails from "./pages/runner-details/RunnerDetails";
-import ApiUtil from "../util/ApiUtil";
+import ApiUtil, {EVENT_API_REQUEST_ENDED, EVENT_API_REQUEST_STARTED} from "../util/ApiUtil";
 import Login from "./pages/login/Login";
 import Admin from "./pages/admin/Admin";
 import Util from "../util/Util";
 import ToastUtil from "../util/ToastUtil";
 
-let instance: App;
+type AppDataContext = {
+    /**
+     * Date and time the runners' data was exported from the timing system
+     */
+    lastUpdateTime: Date;
 
-const FETCH_RACE_DATA_INTERVAL_TIME = 60 * 1000;
+    /**
+     * Difference between server time and client time in seconds. > 0 if the server is ahead, < 0 otherwise.
+     */
+    serverTimeOffset: number;
+}
 
-class App extends React.Component {
-    state = {
-        isLoading: true,
-        isFetching: false,
-        firstLapDistance: 0,
-        lapDistance: 0,
-        raceStartTime: new Date(),
-        lastUpdateTime: new Date(),
-        serverTimeOffset: 0, // Difference between server time and client time in seconds. > 0 if the server is ahead, < 0 otherwise.
-        accessToken: localStorage.getItem('accessToken'),
-        user: undefined, // If null, user is not logged in. If undefined, user info was not fetched yet
-        redirect: null, // Used to redirect the user to a specified location, for example when user logs out
-    }
+type HeaderFetchLoaderContext = {
+    /**
+     * A value incremented when a request is in progress, decremented when a request is completed.
+     * The header loader should be displayed if this value is > 0.
+     */
+    fetchLevel: number;
 
-    private fetchRaceDataInterval: NodeJS.Timer | undefined;
+    incrementFetchLevel: () => any;
+    decrementFetchLevel: () => any;
+}
 
-    constructor() {
-        if (instance) {
-            throw new Error('App has already been instanciated');
-        }
+type UserContext = {
+    /**
+     * The access token used for authenticated API requests
+     */
+    accessToken: string | null;
 
-        // @ts-ignore
-        super();
+    saveAccessToken: (accessToken: string) => any;
 
-        instance = this;
-    }
+    /**
+     * The user logged in. If undefined, user info was not fetched yet.
+     */
+    user: User | null | undefined;
 
-    componentDidMount = async () => {
-        await this.fetchRaceData();
+    setUser: (user: User | null | undefined) => any;
 
-        this.fetchRaceDataInterval = setInterval(this.fetchRaceData, FETCH_RACE_DATA_INTERVAL_TIME);
+    logout: () => any;
+}
 
-        this.setState({
-            isLoading: false,
-        });
+export const appDataContext = createContext<AppDataContext>({
+    lastUpdateTime: new Date(),
+    serverTimeOffset: 0,
+});
 
-        if (this.state.accessToken !== null) {
-            if (await this.fetchCurrentUserInfo() === false) {
-                this.forgetAccessToken();
-                this.setState({user: null});
-                ToastUtil.getToastr().error('Vous avez été déconnecté');
-            }
-        } else {
-            this.setState({user: null});
-        }
-    }
+export const headerFetchLoaderContext = createContext<HeaderFetchLoaderContext>({
+    fetchLevel: 0,
+    incrementFetchLevel: () => {},
+    decrementFetchLevel: () => {},
+});
 
-    // @ts-ignore
-    componentDidUpdate = (prevProps, prevState) => {
-        if (prevState.accessToken !== this.state.accessToken) {
-            this.onAccessTokenUpdate();
-        }
-    }
+export const userContext = createContext<UserContext>({
+    accessToken: null,
+    saveAccessToken: () => {},
+    user: undefined,
+    setUser: () => {},
+    logout: () => {},
+});
 
-    componentWillUnmount() {
-        clearInterval(this.fetchRaceDataInterval);
-    }
+const FETCH_APP_DATA_INTERVAL_TIME = 60 * 1000;
 
-    saveAccessToken = (accessToken: string) => {
-        localStorage.setItem('accessToken', accessToken);
-        this.setState({accessToken});
-    }
+const App: React.FunctionComponent = () => {
+    const [fetchLevel, setFetchLevel] = useState(0);
+    const [lastUpdateTime, setLastUpdateTime] = useState(new Date());
+    const [serverTimeOffset, setServerTimeOffset] = useState(0);
+    const [accessToken, setAccessToken] = useState<string | null>(localStorage.getItem("accessToken"));
+    const [user, setUser] = useState<User | null | undefined>(undefined); // If null, user is not logged in. If undefined, user info was not fetched yet
+    const [redirect, setRedirect] = useState<string | null>(null); // Used to redirect the user to a specified location, for example when user logs out
 
-    forgetAccessToken = () => {
-        localStorage.removeItem('accessToken');
-        this.setState({accessToken: null});
-    }
+    const incrementFetchLevel = useCallback(() => {
+        setFetchLevel(level => level + 1);
+    }, []);
 
-    logout = () => {
-        ApiUtil.performAuthenticatedAPIRequest('/auth/logout', this.state.accessToken, {
-            method: 'POST',
-        });
+    const decrementFetchLevel = useCallback(() => {
+        setFetchLevel(level => Math.max(0, level - 1));
+    }, []);
 
-        this.forgetAccessToken();
+    const saveAccessToken = useCallback((token: string) => {
+        localStorage.setItem("accessToken", token);
+        setAccessToken(token);
+    }, []);
 
-        this.setState({
-            user: null,
-            redirect: '/',
-        });
+    const forgetAccessToken = useCallback(() => {
+        localStorage.removeItem("accessToken");
+        setAccessToken(null);
+    }, []);
 
-        ToastUtil.getToastr().success('Vous avez été déconnecté');
-    }
+    const fetchAppData = useCallback(async () => {
+        const response = await ApiUtil.performAPIRequest("/app-data");
+        const responseJson = await response.json();
 
-    onAccessTokenUpdate = () => {
-        Util.verbose('Access token updated');
-        if (this.state.accessToken === null) {
-            this.setState({
-                username: null,
-            });
-            return;
-        }
+        setLastUpdateTime(new Date(responseJson.lastUpdateTime));
 
-        this.fetchCurrentUserInfo();
-    }
-
-    computeServerTimeOffset = (serverTimeString: string) => {
-        const serverTime = new Date(serverTimeString);
+        const serverTime = new Date(responseJson.currentTime);
         const clientTime = new Date();
 
         const timeOffsetMs = serverTime.getTime() - clientTime.getTime();
 
-        this.setState({
-            serverTimeOffset: Math.round(timeOffsetMs / 1000),
-        });
-    }
+        setServerTimeOffset(Math.round(timeOffsetMs / 1000));
+    }, []);
 
-    fetchCurrentUserInfo = async () => {
+    const fetchUserInfo = useCallback(async () => {
         Util.verbose('Fetching user info');
-        const response = await ApiUtil.performAuthenticatedAPIRequest('/auth/current-user-info', this.state.accessToken);
+
+        const response = await ApiUtil.performAuthenticatedAPIRequest("/auth/current-user-info", accessToken);
+
+        if (!response.ok) {
+            forgetAccessToken();
+            setUser(null);
+            ToastUtil.getToastr().error("Vous avez été déconecté");
+        }
+
         const responseJson = await response.json();
 
         Util.verbose('User info', responseJson);
 
-        this.setState({
-            user: responseJson.user
+        setUser(responseJson.user);
+    }, [accessToken, forgetAccessToken]);
+
+    const logout = useCallback(() => {
+        ApiUtil.performAuthenticatedAPIRequest('/auth/logout', accessToken, {
+            method: 'POST',
         });
 
-        return response.ok;
-    }
+        forgetAccessToken();
 
-    fetchRaceData = async () => {
-        const response = await ApiUtil.performAPIRequest('/race-data');
-        const responseJson = await response.json();
+        setUser(null);
+        setRedirect("/");
 
-        this.saveRaceData(responseJson);
-    }
+        ToastUtil.getToastr().success('Vous avez été déconnecté');
+    }, [accessToken, forgetAccessToken]);
 
-    // @ts-ignore
-    saveRaceData = async (raceData) => {
-        this.computeServerTimeOffset(raceData.currentTime);
+    useEffect(() => {
+        window.addEventListener(EVENT_API_REQUEST_STARTED, incrementFetchLevel);
+        window.addEventListener(EVENT_API_REQUEST_ENDED, decrementFetchLevel);
 
-        this.setState({
-            firstLapDistance: raceData.firstLapDistance,
-            lapDistance: raceData.lapDistance,
-            raceStartTime: new Date(raceData.raceStartTime),
-            lastUpdateTime: new Date(raceData.lastUpdateTime),
+        return (() => {
+            window.removeEventListener(EVENT_API_REQUEST_STARTED, incrementFetchLevel);
+            window.removeEventListener(EVENT_API_REQUEST_ENDED, decrementFetchLevel);
         });
-    }
+    }, [incrementFetchLevel, decrementFetchLevel]);
 
-    render = () => {
-        if (this.state.redirect !== null) {
-            const url = this.state.redirect;
+    useEffect(() => {
+        fetchAppData();
 
-            setTimeout(() => {
-                this.setState({redirect: null});
-            }, 0);
+        const interval = setInterval(fetchAppData, FETCH_APP_DATA_INTERVAL_TIME);
 
-            return (
-                <BrowserRouter>
-                    <Navigate to={url} />
-                </BrowserRouter>
-            );
+        return (() => {
+            clearInterval(interval);
+        })
+    }, [fetchAppData]);
+
+    useEffect(() => {
+        if (!accessToken) {
+            setUser(null);
+            return;
         }
+
+        fetchUserInfo();
+    }, [accessToken, fetchUserInfo]);
+
+    if (redirect) {
+        setRedirect(null);
 
         return (
             <BrowserRouter>
-                <div id="app">
-                    <div id="app-content-wrapper">
-                        <Header />
-                        <div id="app-content">
-                            <div id="page-content" className="container-fluid">
-                                <Routes>
-                                    <Route path="/ranking" element={<Ranking />} />
-                                    <Route path="/runner-details" element={<RunnerDetails />} />
-                                    <Route path="/runner-details/:runnerId" element={<RunnerDetails />} />
-
-                                    <Route path="/login" element={<Login />} />
-
-                                    <Route path="/admin/*" element={<Admin />} />
-
-                                    {/* Redirect any unresolved route to /ranking */}
-                                    <Route path="*" element={<Navigate to="/ranking" replace />} />
-                                </Routes>
-                            </div>
-                        </div>
-                    </div>
-                    <Footer />
-                </div>
+                <Navigate to={redirect} />
             </BrowserRouter>
         );
     }
-}
 
-export { instance as app };
+    return (
+        <BrowserRouter>
+            <div id="app">
+                <appDataContext.Provider value={{
+                    lastUpdateTime,
+                    serverTimeOffset,
+                }}>
+                    <headerFetchLoaderContext.Provider value={{
+                        fetchLevel,
+                        incrementFetchLevel,
+                        decrementFetchLevel,
+                    }}>
+                        <userContext.Provider value={{
+                            accessToken,
+                            saveAccessToken,
+                            user,
+                            setUser,
+                            logout,
+                        }}>
+                            <div id="app-content-wrapper">
+                                <Header />
+                                <div id="app-content">
+                                    <div id="page-content" className="container-fluid">
+                                        <Routes>
+                                            <Route path="/ranking" element={<Ranking />} />
+                                            <Route path="/runner-details" element={<RunnerDetails />} />
+                                            <Route path="/runner-details/:runnerId" element={<RunnerDetails />} />
+
+                                            <Route path="/login" element={<Login />} />
+
+                                            <Route path="/admin/*" element={<Admin />} />
+
+                                            {/* Redirect any unresolved route to /ranking */}
+                                            <Route path="*" element={<Navigate to="/ranking" replace />} />
+                                        </Routes>
+                                    </div>
+                                </div>
+                            </div>
+                            <Footer />
+                        </userContext.Provider>
+                    </headerFetchLoaderContext.Provider>
+                </appDataContext.Provider>
+            </div>
+        </BrowserRouter>
+    );
+}
 
 export default App;

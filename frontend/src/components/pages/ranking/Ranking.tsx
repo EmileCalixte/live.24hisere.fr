@@ -8,7 +8,6 @@ import RankingSettings from "./RankingSettings";
 import ApiUtil from "../../../util/ApiUtil";
 import RankingTable from "./RankingTable";
 import {RankingProcesser} from "../../../util/RankingUtil";
-import {app} from "../../App";
 import Util from "../../../util/Util";
 import {CategoriesDict, CategoryShortCode} from "../../../types/Category";
 import {ProcessedRanking, Ranking as RankingType} from "../../../types/Ranking";
@@ -47,21 +46,13 @@ const Ranking = () => {
 
         if (selectedTimeMode === TimeMode.At) {
             const rankingDate = new Date();
-            rankingDate.setTime(app.state.raceStartTime.getTime() + rankingTime);
+            rankingDate.setTime(new Date(selectedRace.startTime).getTime() + rankingTime);
             const rankingDateString = Util.formatDateForApi(rankingDate);
             requestUrl += `?at=${rankingDateString}`;
         }
 
-        app.setState({
-            isFetching: true,
-        });
-
         const response = await ApiUtil.performAPIRequest(requestUrl);
         const responseJson = await response.json();
-
-        app.setState({
-            isFetching: false,
-        });
 
         setProcessedRanking(new RankingProcesser(selectedRace, responseJson.ranking as RankingType).getProcessedRanking());
     }, [selectedRace, selectedRankingTime, selectedTimeMode]);

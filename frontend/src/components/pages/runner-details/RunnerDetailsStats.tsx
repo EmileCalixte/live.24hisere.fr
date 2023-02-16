@@ -1,6 +1,5 @@
 import {Race} from "../../../types/Race";
 import {RankingRunnerRanks} from "../../../types/Ranking";
-import {app} from "../../App";
 import React, {useMemo} from "react";
 import CircularLoader from "../../misc/CircularLoader";
 import SpeedChart from "./charts/SpeedChart";
@@ -21,11 +20,11 @@ const RunnerDetailsStats: React.FunctionComponent<{
     /** Total distance in meters */
     const totalDistance = useMemo<number>(() => {
         if (runner.passages.length >= 1) {
-            return app.state.firstLapDistance + app.state.lapDistance * (runner.passages.length - 1);
+            return race.initialDistance + race.lapDistance * (runner.passages.length - 1);
         }
 
         return 0;
-    }, [runner]);
+    }, [race, runner]);
 
     const lastPassageDate = useMemo<Date | null>(() => {
         if (runner.passages.length <= 0) {
@@ -83,8 +82,8 @@ const RunnerDetailsStats: React.FunctionComponent<{
             return null;
         }
 
-        return lastPassageDate.getTime() - app.state.raceStartTime.getTime();
-    }, [lastPassageDate]);
+        return lastPassageDate.getTime() - new Date(race.startTime).getTime();
+    }, [race, lastPassageDate]);
 
     /** Total runner average speed in km/h */
     const averageSpeed = useMemo<number | null>(() => {
