@@ -22,6 +22,13 @@ type HeaderFetchLoaderContext = {
     decrementFetchLevel: () => any;
 }
 
+type LastUpdateTimeContext = {
+    /**
+     * Date and time the runners' data was exported from the timing system
+     */
+    lastUpdateTime: Date;
+}
+
 type ServerTimeOffsetContext = {
     /**
      * Difference between server time and client time in seconds. > 0 if the server is ahead, < 0 otherwise.
@@ -49,6 +56,10 @@ export const headerFetchLoaderContext = createContext<HeaderFetchLoaderContext>(
     fetchLevel: 0,
     incrementFetchLevel: () => {},
     decrementFetchLevel: () => {},
+});
+
+export const lastUpdateTimeContext = createContext<LastUpdateTimeContext>({
+    lastUpdateTime: new Date(),
 });
 
 export const serverTimeOffsetContext = createContext<ServerTimeOffsetContext>({
@@ -259,35 +270,37 @@ class App extends React.Component {
                         incrementFetchLevel: this.incrementFetchLevel,
                         decrementFetchLevel: this.decrementFetchLevel,
                     }}>
-                        <serverTimeOffsetContext.Provider value={{serverTimeOffset: this.state.serverTimeOffset}}>
-                            <userContext.Provider value={{
-                                accessToken: this.state.accessToken,
-                                saveAccessToken: this.saveAccessToken,
-                                user: this.state.user,
-                                setUser: this.setUser,
-                            }}>
-                                <div id="app-content-wrapper">
-                                    <Header />
-                                    <div id="app-content">
-                                        <div id="page-content" className="container-fluid">
-                                            <Routes>
-                                                <Route path="/ranking" element={<Ranking />} />
-                                                <Route path="/runner-details" element={<RunnerDetails />} />
-                                                <Route path="/runner-details/:runnerId" element={<RunnerDetails />} />
+                        <lastUpdateTimeContext.Provider value={{lastUpdateTime: this.state.lastUpdateTime}}>
+                            <serverTimeOffsetContext.Provider value={{serverTimeOffset: this.state.serverTimeOffset}}>
+                                <userContext.Provider value={{
+                                    accessToken: this.state.accessToken,
+                                    saveAccessToken: this.saveAccessToken,
+                                    user: this.state.user,
+                                    setUser: this.setUser,
+                                }}>
+                                    <div id="app-content-wrapper">
+                                        <Header />
+                                        <div id="app-content">
+                                            <div id="page-content" className="container-fluid">
+                                                <Routes>
+                                                    <Route path="/ranking" element={<Ranking />} />
+                                                    <Route path="/runner-details" element={<RunnerDetails />} />
+                                                    <Route path="/runner-details/:runnerId" element={<RunnerDetails />} />
 
-                                                <Route path="/login" element={<Login />} />
+                                                    <Route path="/login" element={<Login />} />
 
-                                                <Route path="/admin/*" element={<Admin />} />
+                                                    <Route path="/admin/*" element={<Admin />} />
 
-                                                {/* Redirect any unresolved route to /ranking */}
-                                                <Route path="*" element={<Navigate to="/ranking" replace />} />
-                                            </Routes>
+                                                    {/* Redirect any unresolved route to /ranking */}
+                                                    <Route path="*" element={<Navigate to="/ranking" replace />} />
+                                                </Routes>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <Footer />
-                            </userContext.Provider>
-                        </serverTimeOffsetContext.Provider>
+                                    <Footer />
+                                </userContext.Provider>
+                            </serverTimeOffsetContext.Provider>
+                        </lastUpdateTimeContext.Provider>
                     </headerFetchLoaderContext.Provider>
                 </div>
             </BrowserRouter>
