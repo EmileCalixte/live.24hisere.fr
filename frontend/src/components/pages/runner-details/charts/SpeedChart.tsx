@@ -2,7 +2,6 @@ import CanvasJSReact from "../../../../lib/canvasjs/canvasjs.react";
 import React, {useCallback, useMemo, useState} from "react";
 import ReactDOMServer from 'react-dom/server';
 import {Race} from "../../../../types/Race";
-import {app} from "../../../App";
 import Util from "../../../../util/Util";
 import {RunnerWithProcessedHours, RunnerWithProcessedPassages} from "../../../../types/Runner";
 
@@ -193,7 +192,7 @@ const SpeedChart: React.FunctionComponent<{
                     name: "Antifreeze",
                     dataPoints: [
                         {
-                            x: app.state.raceStartTime,
+                            x: new Date(race.startTime),
                             y: 0,
                         },
                     ]
