@@ -76,6 +76,8 @@ export const userContext = createContext<UserContext>({
     logout: () => {},
 });
 
+const FETCH_APP_DATA_INTERVAL_TIME = 60 * 1000;
+
 class App extends React.Component {
     state = {
         fetchLevel: 0,
@@ -86,9 +88,15 @@ class App extends React.Component {
         redirect: null, // Used to redirect the user to a specified location, for example when user logs out
     }
 
+    private fetchAppDataInterval: NodeJS.Timer | undefined;
+
     componentDidMount = async () => {
         window.addEventListener(EVENT_API_REQUEST_STARTED, () => this.incrementFetchLevel());
         window.addEventListener(EVENT_API_REQUEST_ENDED, () => this.decrementFetchLevel());
+
+        await this.fetchAppData();
+
+        this.fetchAppDataInterval = setInterval(this.fetchAppData, FETCH_APP_DATA_INTERVAL_TIME);
 
         if (this.state.accessToken !== null) {
             if (await this.fetchCurrentUserInfo() === false) {
@@ -106,6 +114,10 @@ class App extends React.Component {
         if (prevState.accessToken !== this.state.accessToken) {
             this.onAccessTokenUpdate();
         }
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.fetchAppDataInterval);
     }
 
     incrementFetchLevel() {
@@ -173,7 +185,7 @@ class App extends React.Component {
         this.fetchCurrentUserInfo();
     }
 
-    computeServerTimeOffset = (serverTimeString: string) => {
+    saveServerTimeOffset = (serverTimeString: string) => {
         const serverTime = new Date(serverTimeString);
         const clientTime = new Date();
 
@@ -196,6 +208,13 @@ class App extends React.Component {
         });
 
         return response.ok;
+    }
+
+    fetchAppData = async () => {
+        const response = await ApiUtil.performAPIRequest("/app-data");
+        const responseJson = await response.json();
+
+        this.saveServerTimeOffset(responseJson.currentTime);
     }
 
     render = () => {
