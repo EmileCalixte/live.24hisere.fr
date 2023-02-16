@@ -76,8 +76,6 @@ export const userContext = createContext<UserContext>({
     logout: () => {},
 });
 
-let instance: App;
-
 const FETCH_RACE_DATA_INTERVAL_TIME = 60 * 1000;
 
 class App extends React.Component {
@@ -95,17 +93,6 @@ class App extends React.Component {
     }
 
     private fetchRaceDataInterval: NodeJS.Timer | undefined;
-
-    constructor() {
-        if (instance) {
-            throw new Error('App has already been instanciated');
-        }
-
-        // @ts-ignore
-        super();
-
-        instance = this;
-    }
 
     componentDidMount = async () => {
         window.addEventListener(EVENT_API_REQUEST_STARTED, () => this.incrementFetchLevel());
@@ -311,7 +298,5 @@ class App extends React.Component {
         );
     }
 }
-
-export { instance as app };
 
 export default App;
