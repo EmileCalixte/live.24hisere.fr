@@ -12,6 +12,7 @@ import Util from "../../../util/Util";
 import {CategoriesDict, CategoryShortCode} from "../../../types/Category";
 import {ProcessedRanking, Ranking as RankingType} from "../../../types/Ranking";
 import {GenderWithMixed} from "../../../types/Runner";
+import ResponsiveRankingTable from "./ResponsiveRankingTable";
 
 export enum TimeMode {
     Now = 'now',
@@ -19,6 +20,8 @@ export enum TimeMode {
 }
 
 const RANKING_UPDATE_INTERVAL_TIME = 30000;
+
+const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
 
 const Ranking = () => {
     const [races, setRaces] = useState<Race[] | false>(false);
@@ -29,6 +32,8 @@ const Ranking = () => {
     const [selectedGender, setSelectedGender] = useState<GenderWithMixed>("mixed");
     const [selectedTimeMode, setSelectedTimeMode] = useState(TimeMode.Now);
     const [selectedRankingTime, setSelectedRankingTime] = useState(-1); // Set when a race is selected
+
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
     const fetchRaces = useCallback(async () => {
         const response = await ApiUtil.performAPIRequest('/races');
@@ -121,6 +126,18 @@ const Ranking = () => {
     }
 
     useEffect(() => {
+        const onResize = (e: UIEvent) => {
+            setWindowWidth((e.target as Window).innerWidth);
+        }
+
+        window.addEventListener("resize", onResize);
+
+        return (() => {
+            window.removeEventListener("resize", onResize);
+        })
+    }, []);
+
+    useEffect(() => {
         fetchRaces();
     }, [fetchRaces]);
 
@@ -196,6 +213,7 @@ const Ranking = () => {
                 {processedRanking &&
                 <div className="row">
                     <div className="col-12">
+                        {windowWidth > RESPONSIVE_TABLE_MAX_WINDOW_WIDTH &&
                         <RankingTable
                             race={selectedRace}
                             ranking={processedRanking}
@@ -203,6 +221,17 @@ const Ranking = () => {
                             tableGender={selectedGender}
                             tableRaceDuration={selectedTimeMode === TimeMode.At ? selectedRankingTime : null}
                         />
+                        }
+
+                        {windowWidth <= RESPONSIVE_TABLE_MAX_WINDOW_WIDTH &&
+                        <ResponsiveRankingTable
+                            race={selectedRace}
+                            ranking={processedRanking}
+                            tableCategory={selectedCategory}
+                            tableGender={selectedGender}
+                            tableRaceDuration={selectedTimeMode === TimeMode.At ? selectedRankingTime : null}
+                        />
+                        }
                     </div>
                 </div>
                 }
