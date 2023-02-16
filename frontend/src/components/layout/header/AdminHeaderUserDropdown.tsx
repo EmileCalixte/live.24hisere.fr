@@ -1,7 +1,9 @@
-import {app} from "../../App";
-import {useCallback, useEffect, useRef} from "react";
+import {userContext} from "../../App";
+import {useCallback, useContext, useEffect, useRef} from "react";
 
 const AdminHeaderUserDropdown: React.FunctionComponent<{hideDropdown: () => any}> = ({hideDropdown}) => {
+    const {logout} = useContext(userContext);
+
     const dropdownNode = useRef<HTMLDivElement>(null);
 
     const onClickOutside = useCallback((e: MouseEvent) => {
@@ -28,7 +30,7 @@ const AdminHeaderUserDropdown: React.FunctionComponent<{hideDropdown: () => any}
         <div className="options-dropdown" ref={dropdownNode}>
             <ul>
                 <li>
-                    <button onClick={app.logout}>Déconnexion</button>
+                    <button onClick={logout}>Déconnexion</button>
                 </li>
             </ul>
         </div>

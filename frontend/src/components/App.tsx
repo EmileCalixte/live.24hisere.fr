@@ -50,6 +50,8 @@ type UserContext = {
     user: User | null | undefined;
 
     setUser: (user: User | null | undefined) => any;
+
+    logout: () => any;
 }
 
 export const headerFetchLoaderContext = createContext<HeaderFetchLoaderContext>({
@@ -71,6 +73,7 @@ export const userContext = createContext<UserContext>({
     saveAccessToken: () => {},
     user: undefined,
     setUser: () => {},
+    logout: () => {},
 });
 
 let instance: App;
@@ -277,6 +280,7 @@ class App extends React.Component {
                                     saveAccessToken: this.saveAccessToken,
                                     user: this.state.user,
                                     setUser: this.setUser,
+                                    logout: this.logout,
                                 }}>
                                     <div id="app-content-wrapper">
                                         <Header />
