@@ -81,7 +81,6 @@ const FETCH_RACE_DATA_INTERVAL_TIME = 60 * 1000;
 class App extends React.Component {
     state = {
         fetchLevel: 0,
-        isLoading: true,
         firstLapDistance: 0,
         lapDistance: 0,
         raceStartTime: new Date(),
@@ -101,10 +100,6 @@ class App extends React.Component {
         await this.fetchRaceData();
 
         this.fetchRaceDataInterval = setInterval(this.fetchRaceData, FETCH_RACE_DATA_INTERVAL_TIME);
-
-        this.setState({
-            isLoading: false,
-        });
 
         if (this.state.accessToken !== null) {
             if (await this.fetchCurrentUserInfo() === false) {
