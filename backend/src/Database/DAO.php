@@ -50,43 +50,6 @@ class DAO extends Singleton
         return $this->database->rollBack();
     }
 
-    public function getRaceData(bool $includeLastUpdateTime): array
-    {
-        $query = $this->getDatabase()->prepare('SELECT * FROM ' . self::TABLE_MISC);
-        $query->execute();
-        $result = $query->fetchAll(PDO::FETCH_ASSOC);
-
-        $raceData = [];
-
-        foreach ($result as $row) {
-            $key = $row['key'];
-            $value = $row['value'];
-            $raceData[$key] = $value;
-        }
-
-        if (!$includeLastUpdateTime) {
-            unset($raceData['last_update_time']);
-        }
-
-        if (isset($raceData['first_lap_distance'])) {
-            $raceData['first_lap_distance'] = (float) $raceData['first_lap_distance'];
-        }
-
-        if (isset($raceData['lap_distance'])) {
-            $raceData['lap_distance'] = (float) $raceData['lap_distance'];
-        }
-
-        if (isset($raceData['last_update_time'])) {
-            $raceData['last_update_time'] = DateUtil::convertDatabaseDateToJavascriptDate($raceData['last_update_time'], false);
-        }
-
-        if (isset($raceData['race_start_time'])) {
-            $raceData['race_start_time'] = DateUtil::convertDatabaseDateToJavascriptDate($raceData['race_start_time'], false);
-        }
-
-        return $raceData;
-    }
-
     public function setLastUpdateTime(\DateTimeInterface $dateTime): false|int
     {
         $dateTimeString = $dateTime->format('Y-m-d H:i:s');

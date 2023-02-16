@@ -9,11 +9,11 @@ use App\Misc\Util\DateUtil;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class RaceDataResponder extends AbstractResponder
+class AppDataResponder extends AbstractResponder
 {
     public function respond(ServerRequestInterface $request, ResponseInterface $response, $args): ResponseInterface
     {
-        $data = CommonUtil::getRaceData();
+        // TODO add last update time
 
         $currentDate = (new \DateTimeImmutable())->setTimezone(new \DateTimeZone('Europe/Paris'));
 
