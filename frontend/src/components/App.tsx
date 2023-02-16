@@ -76,14 +76,9 @@ export const userContext = createContext<UserContext>({
     logout: () => {},
 });
 
-const FETCH_RACE_DATA_INTERVAL_TIME = 60 * 1000;
-
 class App extends React.Component {
     state = {
         fetchLevel: 0,
-        firstLapDistance: 0,
-        lapDistance: 0,
-        raceStartTime: new Date(),
         lastUpdateTime: new Date(),
         serverTimeOffset: 0, // Difference between server time and client time in seconds. > 0 if the server is ahead, < 0 otherwise.
         accessToken: localStorage.getItem('accessToken'),
@@ -91,15 +86,9 @@ class App extends React.Component {
         redirect: null, // Used to redirect the user to a specified location, for example when user logs out
     }
 
-    private fetchRaceDataInterval: NodeJS.Timer | undefined;
-
     componentDidMount = async () => {
         window.addEventListener(EVENT_API_REQUEST_STARTED, () => this.incrementFetchLevel());
         window.addEventListener(EVENT_API_REQUEST_ENDED, () => this.decrementFetchLevel());
-
-        await this.fetchRaceData();
-
-        this.fetchRaceDataInterval = setInterval(this.fetchRaceData, FETCH_RACE_DATA_INTERVAL_TIME);
 
         if (this.state.accessToken !== null) {
             if (await this.fetchCurrentUserInfo() === false) {
@@ -117,10 +106,6 @@ class App extends React.Component {
         if (prevState.accessToken !== this.state.accessToken) {
             this.onAccessTokenUpdate();
         }
-    }
-
-    componentWillUnmount() {
-        clearInterval(this.fetchRaceDataInterval);
     }
 
     incrementFetchLevel() {
@@ -211,25 +196,6 @@ class App extends React.Component {
         });
 
         return response.ok;
-    }
-
-    fetchRaceData = async () => {
-        const response = await ApiUtil.performAPIRequest('/race-data');
-        const responseJson = await response.json();
-
-        this.saveRaceData(responseJson);
-    }
-
-    // @ts-ignore
-    saveRaceData = async (raceData) => {
-        this.computeServerTimeOffset(raceData.currentTime);
-
-        this.setState({
-            firstLapDistance: raceData.firstLapDistance,
-            lapDistance: raceData.lapDistance,
-            raceStartTime: new Date(raceData.raceStartTime),
-            lastUpdateTime: new Date(raceData.lastUpdateTime),
-        });
     }
 
     render = () => {
