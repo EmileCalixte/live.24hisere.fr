@@ -214,6 +214,10 @@ class App extends React.Component {
         const response = await ApiUtil.performAPIRequest("/app-data");
         const responseJson = await response.json();
 
+        this.setState({
+            lastUpdateTime: new Date(responseJson.lastUpdateTime),
+        });
+
         this.saveServerTimeOffset(responseJson.currentTime);
     }
 
