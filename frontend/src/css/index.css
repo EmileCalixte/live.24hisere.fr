@@ -416,6 +416,28 @@ table.table th .buttons-container {
     background-color: #fff;
 }
 
+.responsive-ranking-table tbody td:nth-child(2) {
+    padding: 0;
+}
+
+.responsive-ranking-table tbody td:nth-child(2) > a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    padding: 7px;
+}
+
+@media (max-width: 460px) {
+    .responsive-ranking-table {
+        font-size: 0.90em;
+    }
+}
+
+.responsive-ranking-table-row-secondary-rankings,
+.responsive-ranking-table-row-stats {
+    font-size: 0.9em;
+}
+
 .runner-details-runner-selector-container {
     max-width: 500px;
 }
