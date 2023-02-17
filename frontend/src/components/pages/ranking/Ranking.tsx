@@ -224,13 +224,19 @@ const Ranking = () => {
                         }
 
                         {windowWidth <= RESPONSIVE_TABLE_MAX_WINDOW_WIDTH &&
-                        <ResponsiveRankingTable
-                            race={selectedRace}
-                            ranking={processedRanking}
-                            tableCategory={selectedCategory}
-                            tableGender={selectedGender}
-                            tableRaceDuration={selectedTimeMode === TimeMode.At ? selectedRankingTime : null}
-                        />
+                        <div>
+                            <div className="mb-3">
+                                Cliquez sur un coureur pour consulter ses données de course
+                            </div>
+
+                            <ResponsiveRankingTable
+                                race={selectedRace}
+                                ranking={processedRanking}
+                                tableCategory={selectedCategory}
+                                tableGender={selectedGender}
+                                tableRaceDuration={selectedTimeMode === TimeMode.At ? selectedRankingTime : null}
+                            />
+                        </div>
                         }
                     </div>
                 </div>
