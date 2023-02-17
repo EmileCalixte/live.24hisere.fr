@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useState} from "react";
-import Util, {SORT_ASC} from "../../../util/Util";
+import Util, {SORT_ASC, SORT_DESC} from "../../../util/Util";
 import {RunnerWithProcessedPassages} from "../../../types/Runner";
 
 enum SortBy {
@@ -65,6 +65,18 @@ const RunnerDetailsLaps: React.FunctionComponent<{
 
         setSortDirection(sortDirection * -1);
     }, [sortColumn, sortDirection, setSortColumn, setSortDirection]);
+
+    const onResponsiveSortButtonClick = useCallback(() => {
+        setSortColumn(currentSortColumn => {
+            if (currentSortColumn === SortBy.RaceTime) {
+                setSortDirection(SORT_DESC);
+                return SortBy.LapSpeed;
+            }
+
+            setSortDirection(SORT_ASC);
+            return SortBy.RaceTime;
+        });
+    }, []);
 
     useEffect(() => {
         const onResize = (e: UIEvent) => {
@@ -151,45 +163,59 @@ const RunnerDetailsLaps: React.FunctionComponent<{
                 }
 
                 {windowWidth <= RESPONSIVE_TABLE_MAX_WINDOW_WIDTH &&
-                <table id="runner-laps-table" className="table responsive-runner-laps-table">
-                    <tbody>
-                    {passagesToDisplay.map((passage, index) => (
-                        <tr key={index}>
-                            <td>
-                                <div>
-                                    <strong>
-                                        {passage.processed.lapNumber === null &&
-                                            <>Premier passage</>
-                                        }
+                <div>
+                    <div className="mb-3">
+                        <button className="button" onClick={onResponsiveSortButtonClick}>
+                            {sortColumn === SortBy.RaceTime &&
+                            <>Trier par vitesse</>
+                            }
 
-                                        {passage.processed.lapNumber !== null &&
-                                            <>Tour {passage.processed.lapNumber}</>
-                                        }
-                                    </strong>
+                            {sortColumn === SortBy.LapSpeed &&
+                            <>Trier par temps de passage</>
+                            }
+                        </button>
+                    </div>
 
-                                    &nbsp;–&nbsp;
+                    <table id="runner-laps-table" className="table responsive-runner-laps-table">
+                        <tbody>
+                        {passagesToDisplay.map((passage, index) => (
+                            <tr key={index}>
+                                <td>
+                                    <div>
+                                        <strong>
+                                            {passage.processed.lapNumber === null &&
+                                                <>Premier passage</>
+                                            }
 
-                                    {Util.formatMsAsDuration(passage.processed.lapEndRaceTime)}
-                                </div>
+                                            {passage.processed.lapNumber !== null &&
+                                                <>Tour {passage.processed.lapNumber}</>
+                                            }
+                                        </strong>
 
-                                <div className="responsive-runner-laps-table-row-secondary-data">
-                                    Durée&nbsp;:&nbsp;{Util.formatMsAsDuration(passage.processed.lapDuration)}
-                                    <> </>|<> </>
-                                    {passage.processed.lapSpeed.toFixed(2)} km/h
-                                    <> </>|<> </>
-                                    {Util.formatMsAsDuration(passage.processed.lapPace, false)}/km
-                                </div>
+                                        &nbsp;–&nbsp;
 
-                                <div className="responsive-runner-laps-table-row-secondary-data">
-                                    Depuis départ&nbsp;:&nbsp; {passage.processed.averageSpeedSinceRaceStart.toFixed(2)} km/h
-                                    <> </>|<> </>
-                                    {Util.formatMsAsDuration(passage.processed.averagePaceSinceRaceStart, false)}/km
-                                </div>
-                            </td>
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
+                                        {Util.formatMsAsDuration(passage.processed.lapEndRaceTime)}
+                                    </div>
+
+                                    <div className="responsive-runner-laps-table-row-secondary-data">
+                                        Durée&nbsp;:&nbsp;{Util.formatMsAsDuration(passage.processed.lapDuration)}
+                                        <> </>|<> </>
+                                        {passage.processed.lapSpeed.toFixed(2)} km/h
+                                        <> </>|<> </>
+                                        {Util.formatMsAsDuration(passage.processed.lapPace, false)}/km
+                                    </div>
+
+                                    <div className="responsive-runner-laps-table-row-secondary-data">
+                                        Depuis départ&nbsp;:&nbsp; {passage.processed.averageSpeedSinceRaceStart.toFixed(2)} km/h
+                                        <> </>|<> </>
+                                        {Util.formatMsAsDuration(passage.processed.averagePaceSinceRaceStart, false)}/km
+                                    </div>
+                                </td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
+                </div>
                 }
 
             </div>
