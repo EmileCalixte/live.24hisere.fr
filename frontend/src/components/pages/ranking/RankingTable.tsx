@@ -1,10 +1,10 @@
 import {CategoryShortCode} from "../../../types/Category";
 import {Race} from "../../../types/Race";
+import RankingTableInfoHeader from "./RankingTableInfoHeader";
 import RankingTableRow from "./RankingTableRow";
-import Util from "../../../util/Util";
 import React from "react";
 import {ProcessedRanking, ProcessedRankingRunner} from "../../../types/Ranking";
-import {Gender, GenderWithMixed} from "../../../types/Runner";
+import {GenderWithMixed} from "../../../types/Runner";
 
 const RankingTable: React.FunctionComponent<{
     race: Race
@@ -39,29 +39,12 @@ const RankingTable: React.FunctionComponent<{
         <table id="ranking-table" className="table">
             <thead>
             <tr>
-                <td colSpan={42} className="ranking-table-info-header">
-                    {race.name} : Classement {(() => {
-                        if (tableCategory === null) {
-                            return 'scratch';
-                        } else {
-                            return tableCategory.toUpperCase();
-                        }
-                    })()} {(() => {
-                        if (tableGender === "mixed") {
-                            return 'mixte';
-                        } else if (tableGender === Gender.M) {
-                            return 'hommes';
-                        } else if (tableGender === Gender.F) {
-                            return 'femmes';
-                        } else {
-                            return tableGender;
-                        }
-                    })()} {(() => {
-                        if (tableRaceDuration !== null) {
-                            return `à ${Util.formatMsAsDuration(tableRaceDuration)} de course`;
-                        }
-                    })()}
-                </td>
+                <RankingTableInfoHeader
+                    race={race}
+                    tableCategory={tableCategory}
+                    tableGender={tableGender}
+                    tableRaceDuration={tableRaceDuration}
+                />
             </tr>
             <tr>
                 <th colSpan={4}>N°</th>
