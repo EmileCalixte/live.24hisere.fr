@@ -198,9 +198,9 @@ const RunnerDetailsLaps: React.FunctionComponent<{
                                     </div>
 
                                     <div className="responsive-runner-laps-table-row-secondary-data">
-                                        Durée&nbsp;:&nbsp;{Util.formatMsAsDuration(passage.processed.lapDuration)}
+                                        Durée&nbsp;:&nbsp;<strong>{Util.formatMsAsDuration(passage.processed.lapDuration)}</strong>
                                         <> </>|<> </>
-                                        {passage.processed.lapSpeed.toFixed(2)} km/h
+                                        <strong>{passage.processed.lapSpeed.toFixed(2)} km/h</strong>
                                         <> </>|<> </>
                                         {Util.formatMsAsDuration(passage.processed.lapPace, false)}/km
                                     </div>
