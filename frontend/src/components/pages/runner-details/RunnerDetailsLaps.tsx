@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import Util, {SORT_ASC} from "../../../util/Util";
 import {RunnerWithProcessedPassages} from "../../../types/Runner";
 
@@ -7,11 +7,15 @@ enum SortBy {
     LapSpeed = "lapSpeed",
 }
 
+const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
+
 const RunnerDetailsLaps: React.FunctionComponent<{
     runner: RunnerWithProcessedPassages
 }> = ({runner}) => {
     const [sortColumn, setSortColumn] = useState(SortBy.RaceTime);
     const [sortDirection, setSortDirection] = useState(SORT_ASC);
+
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
     const passagesToDisplay = useMemo(() => {
         const passagesToDisplay = [...runner.passages];
@@ -62,11 +66,24 @@ const RunnerDetailsLaps: React.FunctionComponent<{
         setSortDirection(sortDirection * -1);
     }, [sortColumn, sortDirection, setSortColumn, setSortDirection]);
 
+    useEffect(() => {
+        const onResize = (e: UIEvent) => {
+            setWindowWidth((e.target as Window).innerWidth);
+        }
+
+        window.addEventListener("resize", onResize);
+
+        return (() => {
+            window.removeEventListener("resize", onResize);
+        })
+    }, []);
+
     return (
         <div className="row">
             <div className="col-12">
                 <h2>Détails des tours</h2>
 
+                {windowWidth > RESPONSIVE_TABLE_MAX_WINDOW_WIDTH &&
                 <div style={{maxWidth: 1400}}>
                     <table id="runner-laps-table" className="table">
                         <thead>
@@ -131,6 +148,49 @@ const RunnerDetailsLaps: React.FunctionComponent<{
                         </tbody>
                     </table>
                 </div>
+                }
+
+                {windowWidth <= RESPONSIVE_TABLE_MAX_WINDOW_WIDTH &&
+                <table id="runner-laps-table" className="table responsive-runner-laps-table">
+                    <tbody>
+                    {passagesToDisplay.map((passage, index) => (
+                        <tr key={index}>
+                            <td>
+                                <div>
+                                    <strong>
+                                        {passage.processed.lapNumber === null &&
+                                            <>Premier passage</>
+                                        }
+
+                                        {passage.processed.lapNumber !== null &&
+                                            <>Tour {passage.processed.lapNumber}</>
+                                        }
+                                    </strong>
+
+                                    &nbsp;–&nbsp;
+
+                                    {Util.formatMsAsDuration(passage.processed.lapEndRaceTime)}
+                                </div>
+
+                                <div className="responsive-runner-laps-table-row-secondary-data">
+                                    Durée&nbsp;:&nbsp;{Util.formatMsAsDuration(passage.processed.lapDuration)}
+                                    <> </>|<> </>
+                                    {passage.processed.lapSpeed.toFixed(2)} km/h
+                                    <> </>|<> </>
+                                    {Util.formatMsAsDuration(passage.processed.lapPace, false)}/km
+                                </div>
+
+                                <div className="responsive-runner-laps-table-row-secondary-data">
+                                    Depuis départ&nbsp;:&nbsp; {passage.processed.averageSpeedSinceRaceStart.toFixed(2)} km/h
+                                    <> </>|<> </>
+                                    {Util.formatMsAsDuration(passage.processed.averagePaceSinceRaceStart, false)}/km
+                                </div>
+                            </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+                }
 
             </div>
         </div>
