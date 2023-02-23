@@ -1,6 +1,7 @@
 import {useContext} from "react";
 import {userContext} from "../../App";
 import {Navigate, Route, Routes} from "react-router-dom";
+import FastestLaps from "./fastestLaps/FastestLaps";
 import AdminHome from "./home/AdminHome";
 import Races from "./races/Races";
 import CreateRunner from "./runners/CreateRunner";
@@ -34,6 +35,7 @@ const Admin = () => {
             <Route path="races" element={<Races/>}/>
             <Route path="races/create" element={<CreateRace/>}/>
             <Route path="races/:raceId" element={<RaceDetails/>}/>
+            <Route path="fastest-laps" element={<FastestLaps/>}/>
 
             <Route path="*" element={<Navigate to="/admin" replace/>}/>
         </Routes>
