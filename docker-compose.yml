@@ -7,6 +7,7 @@ services:
     restart: always
     environment:
       WEB_DOCUMENT_ROOT: /app/www
+      PHP_DATE_TIMEZONE: Europe/Paris
     volumes:
       - ./backend:/app
       - ./backend/init/init.sh:/opt/docker/provision/entrypoint.d/30-init.sh
