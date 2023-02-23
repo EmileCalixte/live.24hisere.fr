@@ -47,6 +47,25 @@ class PassageRepository extends EntityRepository
     }
 
     /**
+     * @param bool $asArray
+     * @param bool $includeHidden
+     * @return Passage[]|array The list of all passages, sorted by passage time and runner ID
+     */
+    public function findAll(bool $asArray = false, bool $includeHidden = false): array
+    {
+        $queryBuilder = $this->createQueryBuilder('p')
+            ->orderBy('p.time, p.runner', 'ASC');
+
+        if (!$includeHidden) {
+            $queryBuilder->andWhere('p.isHidden = 0');
+        }
+
+        $query = $queryBuilder->getQuery();
+
+        return $query->getResult($asArray ? Query::HYDRATE_ARRAY : Query::HYDRATE_OBJECT);
+    }
+
+    /**
      * @param int $runnerId
      * @param bool $asArray
      * @param bool $includeHidden
