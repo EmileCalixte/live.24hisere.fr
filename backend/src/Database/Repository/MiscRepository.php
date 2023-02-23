@@ -3,6 +3,7 @@
 namespace App\Database\Repository;
 
 use App\Database\Entity\Misc;
+use App\MainApp;
 use App\Misc\Util\DateUtil;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
@@ -26,6 +27,14 @@ class MiscRepository extends EntityRepository
         return $lastUpdateTime;
     }
 
+    public function setLastUpdateTime(\DateTimeInterface $lastUpdateTime)
+    {
+        $lastUpdateTimeString = DateUtil::convertDateToDatabaseDate($lastUpdateTime);
+
+        $this->setKeyValue(Misc::KEY_LAST_UPDATE_TIME, $lastUpdateTimeString);
+        $this->setKeyValue("toto", "titi");
+    }
+
     private function findByKey(string $key): ?Misc
     {
         $query = $this->createQueryBuilder('c')
@@ -42,12 +51,27 @@ class MiscRepository extends EntityRepository
 
     private function getKeyValue(string $key): ?string
     {
-        $config = $this->findByKey($key);
+        $misc = $this->findByKey($key);
 
-        if (is_null($config)) {
+        if (is_null($misc)) {
             return null;
         }
 
-        return $config->getValue();
+        return $misc->getValue();
+    }
+
+    private function setKeyValue(string $key, string $value)
+    {
+        $misc = $this->findByKey($key);
+
+        if (is_null($misc)) {
+            $misc = new Misc();
+            $misc->setKey($key);
+        }
+
+        $misc->setValue($value);
+
+        MainApp::getInstance()->getEntityManager()->persist($misc);
+        MainApp::getInstance()->getEntityManager()->flush();
     }
 }

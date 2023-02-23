@@ -3,9 +3,11 @@
 namespace App\Command\Cron;
 
 use App\Database\Entity\Config;
+use App\Database\Entity\Misc;
 use App\Database\Entity\Passage;
 use App\Database\Entity\Runner;
 use App\Database\Repository\ConfigRepository;
+use App\Database\Repository\MiscRepository;
 use App\Database\Repository\PassageRepository;
 use App\Database\Repository\RepositoryProvider;
 use App\Database\Repository\RunnerRepository;
@@ -80,6 +82,11 @@ class ImportPassagesCronCommand extends Command
             $connection->rollBack();
             throw $e;
         }
+
+        /** @var MiscRepository $miscRepository */
+        $miscRepository = RepositoryProvider::getRepository(Misc::class);
+
+        $miscRepository->setLastUpdateTime(new \DateTime());
 
         $connection->commit();
 
