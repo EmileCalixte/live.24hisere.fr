@@ -18,7 +18,7 @@ class Config
     private const VALUE_MAX_LENGTH = 5000;
 
     #[Id]
-    #[Column(length: self::KEY_MAX_LENGTH)]
+    #[Column(name:"`key`", length: self::KEY_MAX_LENGTH)]
     private string $key;
 
     #[Column(length: self::VALUE_MAX_LENGTH)]
