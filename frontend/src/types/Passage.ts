@@ -28,6 +28,13 @@ export type AdminPassage = Passage & {
     isHidden: boolean;
 }
 
+export type AdminPassageWithRunnerId = AdminPassage & {
+    /**
+     * The ID of the runner of the passage
+     */
+    runnerId: number;
+}
+
 /**
  * An object containing computed data about a runner passage
  */
