@@ -7,6 +7,7 @@ import RunnerDetailsUtil from "../../../../util/RunnerDetailsUtil";
 import {userContext} from "../../../App";
 import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
+import Pagination from "../../../layout/pagination/Pagination";
 
 type RunnerSortedPassages = {
     [runnerId: number]: AdminPassageWithRunnerId[];
@@ -15,6 +16,8 @@ type RunnerSortedPassages = {
 type RunnerSortedProcessedPassages = {
     [runnerId: number]: (AdminPassageWithRunnerId & ProcessedPassage)[];
 }
+
+const ITEMS_PER_PAGE = 100;
 
 const FastestLaps = () => {
     const {accessToken} = useContext(userContext);
@@ -27,6 +30,8 @@ const FastestLaps = () => {
 
     // false = not fetched yet
     const [runners, setRunners] = useState<Runner[] | false>(false);
+
+    const [page, setPage] = useState(1);
 
     const fetchRunnersAndRaces = useCallback(async () => {
         const response = await ApiUtil.performAuthenticatedAPIRequest('/admin/runners', accessToken);
@@ -131,6 +136,18 @@ const FastestLaps = () => {
             });
     }, [runnerSortedProcessedPassages]);
 
+    const passagesToDisplay = useMemo<(AdminPassageWithRunnerId & ProcessedPassage)[] | false>(() => {
+        return speedSortedProcessedPassages;
+    }, [speedSortedProcessedPassages]);
+
+    const pageNumber = useMemo<number>(() => {
+        if (!passagesToDisplay) {
+            return 1;
+        }
+
+        return Math.ceil(passagesToDisplay.length / ITEMS_PER_PAGE);
+    }, [passagesToDisplay]);
+
     useEffect(() => {
         console.log('Speed sorted processed passages', speedSortedProcessedPassages);
     }, [speedSortedProcessedPassages]);
@@ -143,6 +160,16 @@ const FastestLaps = () => {
                         <Crumb url="/admin" label="Administration" />
                         <Crumb label="Tours les plus rapides" />
                     </Breadcrumbs>
+                </div>
+            </div>
+
+            <div className="row">
+                <div className="col-12">
+                    Table
+                </div>
+
+                <div className="col-12 pagination-container">
+                    <Pagination minPage={1} maxPage={pageNumber} currentPage={page} setPage={setPage}/>
                 </div>
             </div>
         </div>
