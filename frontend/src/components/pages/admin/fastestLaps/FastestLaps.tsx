@@ -85,7 +85,7 @@ const FastestLaps = () => {
 
         for (const runnerId in runnerSortedPassages) {
             // Typecast to Number because object keys are always stringified even if they are inserted as numbers
-            const runner = runners.find((ru => ru.id === Number(runnerId)));
+            const runner = runners.find(ru => ru.id === Number(runnerId));
 
             if (!runner) {
                 console.warn(`Runner ${runnerId} not found in runners array, ignoring its passages`, runners);
@@ -107,9 +107,33 @@ const FastestLaps = () => {
         return sortedProcessedPassages;
     }, [runnerSortedPassages, races, runners]);
 
-    useEffect(() => {
-        console.log('Runner sorted processed passages', runnerSortedProcessedPassages);
+    const speedSortedProcessedPassages = useMemo<(AdminPassageWithRunnerId & ProcessedPassage)[] | false>(() => {
+        if (!runnerSortedProcessedPassages) {
+            return false;
+        }
+
+        const sortedProcessedPassages: (AdminPassageWithRunnerId & ProcessedPassage)[] = [];
+
+        for (const runnerId in runnerSortedProcessedPassages) {
+            const runnerProcessedPassages = runnerSortedProcessedPassages[runnerId];
+
+            sortedProcessedPassages.push(...runnerProcessedPassages);
+        }
+
+        return sortedProcessedPassages
+            .filter(p => p.processed.lapNumber !== null)
+            .sort((p1, p2) => {
+                if (p2.processed.lapSpeed >= p1.processed.lapSpeed) {
+                    return 1;
+                }
+
+                return -1;
+            });
     }, [runnerSortedProcessedPassages]);
+
+    useEffect(() => {
+        console.log('Speed sorted processed passages', speedSortedProcessedPassages);
+    }, [speedSortedProcessedPassages]);
 
     return (
         <div id="page-admin-fastest-laps">
