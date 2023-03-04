@@ -1,6 +1,9 @@
 import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
-import {AdminPassageWithRunnerId} from "../../../../types/Passage";
+import {AdminPassageWithRunnerId, ProcessedPassage} from "../../../../types/Passage";
+import {AdminRaceDict} from "../../../../types/Race";
+import Runner from "../../../../types/Runner";
 import ApiUtil from "../../../../util/ApiUtil";
+import RunnerDetailsUtil from "../../../../util/RunnerDetailsUtil";
 import {userContext} from "../../../App";
 import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
@@ -9,10 +12,29 @@ type RunnerSortedPassages = {
     [runnerId: number]: AdminPassageWithRunnerId[];
 }
 
+type RunnerSortedProcessedPassages = {
+    [runnerId: number]: (AdminPassageWithRunnerId & ProcessedPassage)[];
+}
+
 const FastestLaps = () => {
     const {accessToken} = useContext(userContext);
 
+    // false = not fetched yet
     const [passages, setPassages] = useState<AdminPassageWithRunnerId[] | false>(false);
+
+    // false = not fetched yet
+    const [races, setRaces] = useState<AdminRaceDict | false>(false);
+
+    // false = not fetched yet
+    const [runners, setRunners] = useState<Runner[] | false>(false);
+
+    const fetchRunnersAndRaces = useCallback(async () => {
+        const response = await ApiUtil.performAuthenticatedAPIRequest('/admin/runners', accessToken);
+        const responseJson = await response.json();
+
+        setRunners(responseJson.runners);
+        setRaces(responseJson.races);
+    }, [accessToken]);
 
     const fetchPassages = useCallback(async () => {
         const response = await ApiUtil.performAuthenticatedAPIRequest('/admin/passages', accessToken);
@@ -21,6 +43,10 @@ const FastestLaps = () => {
         // The passages are already ordered by time
         setPassages(responseJson.passages);
     }, [accessToken]);
+
+    useEffect(() => {
+        fetchRunnersAndRaces();
+    }, [fetchRunnersAndRaces]);
 
     useEffect(() => {
         fetchPassages();
@@ -50,9 +76,40 @@ const FastestLaps = () => {
         return sortedPassages;
     }, [passages]);
 
+    const runnerSortedProcessedPassages = useMemo<RunnerSortedProcessedPassages | false>(() => {
+        if (!runnerSortedPassages || !races || !runners) {
+            return false;
+        }
+
+        const sortedProcessedPassages: RunnerSortedProcessedPassages = {};
+
+        for (const runnerId in runnerSortedPassages) {
+            // Typecast to Number because object keys are always stringified even if they are inserted as numbers
+            const runner = runners.find((ru => ru.id === Number(runnerId)));
+
+            if (!runner) {
+                console.warn(`Runner ${runnerId} not found in runners array, ignoring its passages`, runners);
+                continue;
+            }
+
+            const race = races[runner.raceId];
+
+            if (!race) {
+                console.warn(`Race ${runner.raceId} not found in races object, ignoring passages of runner ${runner.id}`, races);
+                continue;
+            }
+
+            const runnerPassages = runnerSortedPassages[runnerId];
+
+            sortedProcessedPassages[runnerId] = RunnerDetailsUtil.getRunnerProcessedPassages(runnerPassages, race);
+        }
+
+        return sortedProcessedPassages;
+    }, [runnerSortedPassages, races, runners]);
+
     useEffect(() => {
-        console.log(runnerSortedPassages);
-    }, [runnerSortedPassages]);
+        console.log('Runner sorted processed passages', runnerSortedProcessedPassages);
+    }, [runnerSortedProcessedPassages]);
 
     return (
         <div id="page-admin-fastest-laps">

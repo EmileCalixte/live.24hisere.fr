@@ -50,6 +50,10 @@ type AdminRace = Race & {
     isPublic: boolean;
 }
 
+export type AdminRaceDict = {
+    [raceId: number]: AdminRace;
+}
+
 export type AdminRaceWithRunnerCount = AdminRace & RaceWithRunnerCount;
 
 export default AdminRace;
