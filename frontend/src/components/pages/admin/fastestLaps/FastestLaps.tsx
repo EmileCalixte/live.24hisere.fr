@@ -137,6 +137,12 @@ const FastestLaps = () => {
     }, [runnerSortedProcessedPassages]);
 
     const passagesToDisplay = useMemo<(AdminPassageWithRunnerId & ProcessedPassage)[] | false>(() => {
+        if (!speedSortedProcessedPassages) {
+            return false;
+        }
+
+        // TODO filters
+
         return speedSortedProcessedPassages;
     }, [speedSortedProcessedPassages]);
 
@@ -145,12 +151,26 @@ const FastestLaps = () => {
             return 1;
         }
 
-        return Math.ceil(passagesToDisplay.length / ITEMS_PER_PAGE);
+        return Math.floor(passagesToDisplay.length / ITEMS_PER_PAGE);
     }, [passagesToDisplay]);
 
+    const passagesInPage = useMemo<(AdminPassageWithRunnerId & ProcessedPassage)[] | false>(() => {
+        if (!passagesToDisplay) {
+            return false;
+        }
+
+        const passages: (AdminPassageWithRunnerId & ProcessedPassage)[] = [];
+
+        for (let i = ITEMS_PER_PAGE * page; i < Math.min(ITEMS_PER_PAGE * page + ITEMS_PER_PAGE, passagesToDisplay.length); ++i) {
+            passages.push(passagesToDisplay[i]);
+        }
+
+        return passages;
+    }, [passagesToDisplay, page]);
+
     useEffect(() => {
-        console.log('Speed sorted processed passages', speedSortedProcessedPassages);
-    }, [speedSortedProcessedPassages]);
+        console.log('Passages in page', passagesInPage);
+    }, [passagesInPage]);
 
     return (
         <div id="page-admin-fastest-laps">
