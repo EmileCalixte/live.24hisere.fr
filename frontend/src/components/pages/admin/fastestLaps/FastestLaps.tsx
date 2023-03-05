@@ -33,6 +33,8 @@ const FastestLaps = () => {
     // false = not fetched yet
     const [runners, setRunners] = useState<Runner[] | false>(false);
 
+    const [displayOnlyOneFastestLapPerRunner, setDisplayOnlyOneFastestLapPerRunner] = useState(false);
+
     const [page, setPage] = useState(1);
 
     const fetchRunnersAndRaces = useCallback(async () => {
@@ -58,6 +60,10 @@ const FastestLaps = () => {
     useEffect(() => {
         fetchPassages();
     }, [fetchPassages]);
+
+    useEffect(() => {
+        setPage(1);
+    }, [displayOnlyOneFastestLapPerRunner]);
 
     const runnerSortedPassages = useMemo<RunnerSortedPassages | false>(() => {
         if (!passages) {
@@ -209,6 +215,19 @@ const FastestLaps = () => {
 
                 {passagesInPage !== false &&
                     <>
+                        <div className="col-12 mb-3">
+                            <div className="inline-input-group">
+                                <label className="input-checkbox">
+                                    <input type="checkbox"
+                                           checked={displayOnlyOneFastestLapPerRunner}
+                                           onChange={e => setDisplayOnlyOneFastestLapPerRunner(e.target.checked)}
+                                    />
+                                    <span/>
+                                    N'afficher que le tour le plus rapide de chaque coureur
+                                </label>
+                            </div>
+                        </div>
+
                         <div className="col-12">
                             <FastestLapsTable passages={passagesInPage}
                                               races={races as AdminRaceDict}
