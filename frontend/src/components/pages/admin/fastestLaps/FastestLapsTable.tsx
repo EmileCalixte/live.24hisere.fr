@@ -1,4 +1,5 @@
 import React from "react";
+import {Link} from "react-router-dom";
 import {AdminPassageWithRunnerId, ProcessedPassage} from "../../../../types/Passage";
 import {AdminRaceDict} from "../../../../types/Race";
 import Runner from "../../../../types/Runner";
@@ -34,7 +35,9 @@ const FastestLapsTable: React.FunctionComponent<{
                     <tr key={passage.id}>
                         <td style={{fontSize: "0.85em"}}>{passage.id}</td>
                         <td>
-                            {`${runner?.id} – ${runner?.firstname} ${runner?.lastname}`}
+                            <Link to={`/runner-details/${runner?.id}`}>
+                                {`${runner?.id} – ${runner?.firstname} ${runner?.lastname}`}
+                            </Link>
                         </td>
                         <td>
                             {`${race?.name}`}
