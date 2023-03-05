@@ -8,6 +8,8 @@ import {userContext} from "../../../App";
 import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
 import Pagination from "../../../layout/pagination/Pagination";
+import CircularLoader from "../../../misc/CircularLoader";
+import FastestLapsTable from "./FastestLapsTable";
 
 type RunnerSortedPassages = {
     [runnerId: number]: AdminPassageWithRunnerId[];
@@ -146,7 +148,7 @@ const FastestLaps = () => {
         return speedSortedProcessedPassages;
     }, [speedSortedProcessedPassages]);
 
-    const pageNumber = useMemo<number>(() => {
+    const pageCount = useMemo<number>(() => {
         if (!passagesToDisplay) {
             return 1;
         }
@@ -168,10 +170,6 @@ const FastestLaps = () => {
         return passages;
     }, [passagesToDisplay, page]);
 
-    useEffect(() => {
-        console.log('Passages in page', passagesInPage);
-    }, [passagesInPage]);
-
     return (
         <div id="page-admin-fastest-laps">
             <div className="row">
@@ -184,13 +182,29 @@ const FastestLaps = () => {
             </div>
 
             <div className="row">
-                <div className="col-12">
-                    Table
-                </div>
 
-                <div className="col-12 pagination-container">
-                    <Pagination minPage={1} maxPage={pageNumber} currentPage={page} setPage={setPage}/>
-                </div>
+                {passagesInPage === false &&
+                    <div className="col-12">
+                        <CircularLoader/>
+                    </div>
+                }
+
+                {passagesInPage !== false &&
+                    <>
+                        <div className="col-12">
+                            <FastestLapsTable passages={passagesInPage}
+                                              races={races as AdminRaceDict}
+                                              runners={runners as Runner[]}
+                            />
+                        </div>
+
+                        {pageCount > 1 &&
+                            <div className="col-12 mt-3 pagination-container">
+                                <Pagination minPage={1} maxPage={pageCount} currentPage={page} setPage={setPage}/>
+                            </div>
+                        }
+                    </>
+                }
             </div>
         </div>
     )
