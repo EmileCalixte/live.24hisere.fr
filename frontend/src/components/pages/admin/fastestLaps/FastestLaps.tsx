@@ -147,17 +147,31 @@ const FastestLaps = () => {
             return false;
         }
 
-        // TODO filters
+        let passages = [...speedSortedProcessedPassages];
 
-        return speedSortedProcessedPassages;
-    }, [speedSortedProcessedPassages]);
+        if (displayOnlyOneFastestLapPerRunner) {
+            const alreadyDisplayedRunnerIds: number[] = [];
+
+            passages = passages.filter(passage => {
+                if (alreadyDisplayedRunnerIds.includes(passage.runnerId)) {
+                    return false;
+                }
+
+                alreadyDisplayedRunnerIds.push(passage.runnerId);
+
+                return true;
+            });
+        }
+
+        return passages;
+    }, [speedSortedProcessedPassages, displayOnlyOneFastestLapPerRunner]);
 
     const pageCount = useMemo<number>(() => {
         if (!passagesToDisplay) {
             return 1;
         }
 
-        return Math.floor(passagesToDisplay.length / ITEMS_PER_PAGE);
+        return Math.ceil(passagesToDisplay.length / ITEMS_PER_PAGE);
     }, [passagesToDisplay]);
 
     const passagesInPage = useMemo<(AdminPassageWithRunnerId & ProcessedPassage)[] | false>(() => {
@@ -167,7 +181,7 @@ const FastestLaps = () => {
 
         const passages: (AdminPassageWithRunnerId & ProcessedPassage)[] = [];
 
-        for (let i = ITEMS_PER_PAGE * page; i < Math.min(ITEMS_PER_PAGE * page + ITEMS_PER_PAGE, passagesToDisplay.length); ++i) {
+        for (let i = ITEMS_PER_PAGE * (page - 1); i < Math.min(ITEMS_PER_PAGE * (page - 1) + ITEMS_PER_PAGE, passagesToDisplay.length); ++i) {
             passages.push(passagesToDisplay[i]);
         }
 
