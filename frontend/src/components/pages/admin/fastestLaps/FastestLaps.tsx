@@ -130,8 +130,12 @@ const FastestLaps = () => {
         return sortedProcessedPassages
             .filter(p => p.processed.lapNumber !== null)
             .sort((p1, p2) => {
-                if (p2.processed.lapSpeed >= p1.processed.lapSpeed) {
+                if (p2.processed.lapSpeed > p1.processed.lapSpeed) {
                     return 1;
+                }
+
+                if (p2.processed.lapSpeed === p1.processed.lapSpeed && p2.processed.lapStartRaceTime >= p1.processed.lapStartRaceTime) {
+                    return 1
                 }
 
                 return -1;
