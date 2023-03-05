@@ -16,9 +16,9 @@ const menuItems: {
         label: "Gestion des courses",
     },
     {
-        url: "/admin/users",
-        icon: "fa-solid fa-user-shield",
-        label: "Gestion des administrateurs",
+        url: "/admin/fastest-laps",
+        icon: "fa-solid fa-stopwatch",
+        label: "Tours les plus rapides",
     },
 ];
 

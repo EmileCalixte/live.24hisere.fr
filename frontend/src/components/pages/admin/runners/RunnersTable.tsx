@@ -2,11 +2,11 @@ import {Link} from "react-router-dom";
 import CircularLoader from "../../../misc/CircularLoader";
 import React from "react";
 import Runner from "../../../../types/Runner";
-import AdminRace from "../../../../types/Race";
+import {AdminRaceDict} from "../../../../types/Race";
 
 const RunnersTable: React.FunctionComponent<{
     runners: Runner[],
-    races: AdminRace[] | false,
+    races: AdminRaceDict | false,
 }> = ({runners, races}) => {
     return (
         <table className="table">
