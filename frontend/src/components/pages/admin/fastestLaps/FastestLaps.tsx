@@ -21,6 +21,9 @@ type RunnerSortedProcessedPassages = {
 
 const ITEMS_PER_PAGE = 100;
 
+const RUNNERS_AND_RACES_FETCH_INTERVAL = 60000;
+const PASSAGES_FETCH_INTERVAL = 15000;
+
 const FastestLaps = () => {
     const {accessToken} = useContext(userContext);
 
@@ -55,10 +58,22 @@ const FastestLaps = () => {
 
     useEffect(() => {
         fetchRunnersAndRaces();
+
+        const interval = setInterval(fetchRunnersAndRaces, RUNNERS_AND_RACES_FETCH_INTERVAL);
+
+        return (() => {
+            clearInterval(interval);
+        })
     }, [fetchRunnersAndRaces]);
 
     useEffect(() => {
         fetchPassages();
+
+        const interval = setInterval(fetchPassages, PASSAGES_FETCH_INTERVAL);
+
+        return (() => {
+            clearInterval(interval);
+        })
     }, [fetchPassages]);
 
     useEffect(() => {
