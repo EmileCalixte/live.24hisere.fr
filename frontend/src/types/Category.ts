@@ -8,7 +8,7 @@ export type CategoryShortCode = string;
 /**
  * An object representing an FFA category
  */
-type Category = {
+interface Category {
     /**
      * The short code of the category
      */

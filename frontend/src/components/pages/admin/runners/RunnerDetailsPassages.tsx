@@ -1,18 +1,27 @@
-import React, {useEffect, useMemo, useState} from "react";
-import {AdminProcessedPassage} from "../../../../types/Passage";
-import {AdminRaceWithRunnerCount} from "../../../../types/Race";
+import {type FunctionComponent, useEffect, useMemo, useState} from "react";
+import {type AdminProcessedPassage} from "../../../../types/Passage";
+import {type AdminRaceWithRunnerCount} from "../../../../types/Race";
 import Util from "../../../../util/Util";
 import RunnerDetailsCreatePassage from "./RunnerDetailsCreatePassage";
 import RunnerDetailsEditPassage from "./RunnerDetailsEditPassage";
 
-const RunnerDetailsPassages: React.FunctionComponent<{
-    passages: AdminProcessedPassage[],
-    runnerRace: AdminRaceWithRunnerCount | null,
-    updatePassageVisiblity: (passage: AdminProcessedPassage, hidden: boolean) => any,
-    updatePassage: (passage: AdminProcessedPassage, time: Date) => any,
-    saveNewPassage: (time: Date) => any,
-    deletePassage: (passage: AdminProcessedPassage) => any,
-}> = ({passages, runnerRace, updatePassageVisiblity, updatePassage, saveNewPassage, deletePassage}) => {
+interface RunnerDetailsPassagesProps {
+    passages: AdminProcessedPassage[];
+    runnerRace: AdminRaceWithRunnerCount | null;
+    updatePassageVisiblity: (passage: AdminProcessedPassage, hidden: boolean) => any;
+    updatePassage: (passage: AdminProcessedPassage, time: Date) => any;
+    saveNewPassage: (time: Date) => any;
+    deletePassage: (passage: AdminProcessedPassage) => any;
+}
+
+const RunnerDetailsPassages: FunctionComponent<RunnerDetailsPassagesProps> = ({
+    passages,
+    runnerRace,
+    updatePassageVisiblity,
+    updatePassage,
+    saveNewPassage,
+    deletePassage,
+}) => {
     const [isAdding, setIsAdding] = useState(false);
 
     // The passage for which user is currently editing the time
@@ -36,33 +45,32 @@ const RunnerDetailsPassages: React.FunctionComponent<{
             window.addEventListener("scroll", onScroll);
         }
 
-        return (() => {
+        return () => {
             window.removeEventListener("scroll", onScroll);
-        })
+        };
     }, [editingPassage, isAdding]);
 
     return (
         <div className="row">
             {isAdding &&
-            <RunnerDetailsCreatePassage runnerRace={runnerRace}
-                                        savePassage={saveNewPassage}
-                                        onClose={() => setIsAdding(false)}
-            />
+                <RunnerDetailsCreatePassage runnerRace={runnerRace}
+                                            savePassage={saveNewPassage}
+                                            onClose={() => setIsAdding(false)}
+                />
             }
 
             {editingPassage !== null &&
-            <RunnerDetailsEditPassage passage={editingPassage}
-                                      runnerRace={runnerRace}
-                                      updatePassage={updatePassage}
-                                      onClose={() => setEditingPassage(null)}
-            />
+                <RunnerDetailsEditPassage passage={editingPassage}
+                                          runnerRace={runnerRace}
+                                          updatePassage={updatePassage}
+                                          onClose={() => setEditingPassage(null)}
+                />
             }
 
             <div className="col-12 mb-3">
                 <button className="button" onClick={() => setIsAdding(true)}>
                     <i className="fa-solid fa-plus"/> Ajouter manuellement
                 </button>
-
 
             </div>
             <div className="col-12">
@@ -76,71 +84,71 @@ const RunnerDetailsPassages: React.FunctionComponent<{
 
                 <table className="table no-full-width">
                     <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Type</th>
-                        <th>Date et heure</th>
-                        <th>Temps de course</th>
-                        <th colSpan={3}>Actions</th>
-                    </tr>
+                        <tr>
+                            <th>#</th>
+                            <th>Type</th>
+                            <th>Date et heure</th>
+                            <th>Temps de course</th>
+                            <th colSpan={3}>Actions</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    {passages.map(passage => {
-                        return (
-                            <tr key={passage.id}>
-                                <td style={{fontSize: "0.85em"}}>{passage.id}</td>
-                                <td style={{fontSize: "0.85em"}}>
-                                    {(() => {
-                                        if (passage.detectionId !== null) {
-                                            return `Auto (${passage.detectionId})`;
-                                        }
+                        {passages.map(passage => {
+                            return (
+                                <tr key={passage.id}>
+                                    <td style={{fontSize: "0.85em"}}>{passage.id}</td>
+                                    <td style={{fontSize: "0.85em"}}>
+                                        {(() => {
+                                            if (passage.detectionId !== null) {
+                                                return `Auto (${passage.detectionId})`;
+                                            }
 
-                                        return "Manuel";
-                                    })()}
-                                </td>
-                                <td>{Util.formatDateAsString(passage.processed.lapEndTime)}</td>
-                                <td>{Util.formatMsAsDuration(passage.processed.lapEndRaceTime)}</td>
-                                <td className="no-padding-vertical">
-                                    <div className="buttons-container">
-                                        {passage.isHidden &&
+                                            return "Manuel";
+                                        })()}
+                                    </td>
+                                    <td>{Util.formatDateAsString(passage.processed.lapEndTime)}</td>
+                                    <td>{Util.formatMsAsDuration(passage.processed.lapEndRaceTime)}</td>
+                                    <td className="no-padding-vertical">
+                                        <div className="buttons-container">
+                                            {passage.isHidden &&
+                                                <button className="button small"
+                                                        onClick={() => updatePassageVisiblity(passage, false)}
+                                                >
+                                                    <i className="fa-solid fa-eye"/> Ne plus masquer
+                                                </button>
+                                            }
+
+                                            {!passage.isHidden &&
+                                                <button className="button orange small"
+                                                        onClick={() => updatePassageVisiblity(passage, true)}
+                                                >
+                                                    <i className="fa-solid fa-eye-slash"/> Masquer
+                                                </button>
+                                            }
+                                        </div>
+                                    </td>
+                                    <td>
                                         <button className="button small"
-                                                onClick={() => updatePassageVisiblity(passage, false)}
+                                                onClick={() => setEditingPassage(passage)}
                                         >
-                                            <i className="fa-solid fa-eye"/> Ne plus masquer
+                                            <i className="fa-solid fa-pen"/> Modifier
                                         </button>
-                                        }
-
-                                        {!passage.isHidden &&
-                                        <button className="button orange small"
-                                                onClick={() => updatePassageVisiblity(passage, true)}
+                                    </td>
+                                    <td>
+                                        <button className="button red small"
+                                                onClick={() => deletePassage(passage)}
                                         >
-                                            <i className="fa-solid fa-eye-slash"/> Masquer
+                                            <i className="fa-solid fa-trash"/> Supprimer
                                         </button>
-                                        }
-                                    </div>
-                                </td>
-                                <td>
-                                    <button className="button small"
-                                            onClick={() => setEditingPassage(passage)}
-                                    >
-                                        <i className="fa-solid fa-pen"/> Modifier
-                                    </button>
-                                </td>
-                                <td>
-                                    <button className="button red small"
-                                            onClick={() => deletePassage(passage)}
-                                    >
-                                        <i className="fa-solid fa-trash"/> Supprimer
-                                    </button>
-                                </td>
-                            </tr>
-                        );
-                    })}
+                                    </td>
+                                </tr>
+                            );
+                        })}
                     </tbody>
                 </table>
             </div>
         </div>
     );
-}
+};
 
 export default RunnerDetailsPassages;

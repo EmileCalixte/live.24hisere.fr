@@ -1,6 +1,6 @@
 import {Navigate, useParams} from "react-router-dom";
 import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
-import {AdminProcessedPassage} from "../../../../types/Passage";
+import {type AdminProcessedPassage} from "../../../../types/Passage";
 import ApiUtil from "../../../../util/ApiUtil";
 import Util from "../../../../util/Util";
 import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
@@ -9,11 +9,11 @@ import CircularLoader from "../../../misc/CircularLoader";
 import {userContext} from "../../../App";
 import {
     Gender,
-    RunnerWithAdminPassages,
-    RunnerWithAdminProcessedPassages, RunnerWithRace,
+    type RunnerWithAdminPassages,
+    type RunnerWithAdminProcessedPassages, type RunnerWithRace,
 } from "../../../../types/Runner";
 import RunnerDetailsForm from "./RunnerDetailsForm";
-import {AdminRaceWithRunnerCount} from "../../../../types/Race";
+import {type AdminRaceWithRunnerCount} from "../../../../types/Race";
 import ToastUtil from "../../../../util/ToastUtil";
 import RunnerDetailsPassages from "./RunnerDetailsPassages";
 import RunnerDetailsUtil from "../../../../util/RunnerDetailsUtil";
@@ -68,7 +68,7 @@ const RunnerDetails = () => {
     }, [runner, runnerId, runnerFirstname, runnerLastname, runnerGender, runnerBirthYear, runnerRaceId]);
 
     const fetchRaces = useCallback(async () => {
-        const response = await ApiUtil.performAuthenticatedAPIRequest('/admin/races', accessToken);
+        const response = await ApiUtil.performAuthenticatedAPIRequest("/admin/races", accessToken);
         const responseJson = await response.json();
 
         setRaces(responseJson.races);
@@ -82,7 +82,7 @@ const RunnerDetails = () => {
         const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/runners/${urlRunnerId}`, accessToken);
 
         if (!response.ok) {
-            console.error('Failed to fetch runner', await response.json());
+            console.error("Failed to fetch runner", await response.json());
             setRunner(null);
             return;
         }
@@ -119,9 +119,9 @@ const RunnerDetails = () => {
         let confirmMessage: string;
 
         if (hidden) {
-            confirmMessage = `Êtes vous sûr de vouloir masquer le passage n°${passage.id} (${Util.formatDateAsString(passage.processed.lapEndTime)}) ?`
+            confirmMessage = `Êtes vous sûr de vouloir masquer le passage n°${passage.id} (${Util.formatDateAsString(passage.processed.lapEndTime)}) ?`;
         } else {
-            confirmMessage = `Êtes vous sûr de vouloir rendre public le passage n°${passage.id} (${Util.formatDateAsString(passage.processed.lapEndTime)}) ?`
+            confirmMessage = `Êtes vous sûr de vouloir rendre public le passage n°${passage.id} (${Util.formatDateAsString(passage.processed.lapEndTime)}) ?`;
         }
 
         if (!window.confirm(confirmMessage)) {
@@ -206,7 +206,7 @@ const RunnerDetails = () => {
         }
 
         const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/runners/${runner.id}/passages/${passage.id}`, accessToken, {
-            method: "DELETE"
+            method: "DELETE",
         });
 
         if (!response.ok) {
@@ -301,7 +301,7 @@ const RunnerDetails = () => {
     if (redirectAfterDelete) {
         return (
             <Navigate to="/admin/runners" />
-        )
+        );
     }
 
     if (runner === null) {
@@ -311,10 +311,11 @@ const RunnerDetails = () => {
     }
 
     if (redirectAfterIdUpdate !== null) {
-        setTimeout(() => setRedirectAfterIdUpdate(null), 0)
+        setTimeout(() => setRedirectAfterIdUpdate(null), 0);
+
         return (
             <Navigate to={`/admin/runners/${redirectAfterIdUpdate}`} replace={true}/>
-        )
+        );
     }
 
     return (
@@ -339,67 +340,67 @@ const RunnerDetails = () => {
                 </div>
             </div>
             {runner === undefined &&
-            <div className="row">
-                <div className="col-12">
-                    <CircularLoader />
+                <div className="row">
+                    <div className="col-12">
+                        <CircularLoader />
+                    </div>
                 </div>
-            </div>
             }
 
             {runner !== undefined &&
-            <div className="row">
-                <div className="col-xl-4 col-lg-6 col-md-9 col-12">
-                    <RunnerDetailsForm onSubmit={onSubmit}
-                                       id={runnerId}
-                                       setId={setRunnerId}
-                                       firstname={runnerFirstname}
-                                       setFirstname={setRunnerFirstname}
-                                       lastname={runnerLastname}
-                                       setLastname={setRunnerLastname}
-                                       gender={runnerGender}
-                                       setGender={setRunnerGender}
-                                       birthYear={runnerBirthYear}
-                                       setBirthYear={setRunnerBirthYear}
-                                       races={races}
-                                       raceId={runnerRaceId}
-                                       setRaceId={setRunnerRaceId}
-                                       submitButtonDisabled={isSaving || !unsavedChanges}
-                    />
+                <div className="row">
+                    <div className="col-xl-4 col-lg-6 col-md-9 col-12">
+                        <RunnerDetailsForm onSubmit={onSubmit}
+                                           id={runnerId}
+                                           setId={setRunnerId}
+                                           firstname={runnerFirstname}
+                                           setFirstname={setRunnerFirstname}
+                                           lastname={runnerLastname}
+                                           setLastname={setRunnerLastname}
+                                           gender={runnerGender}
+                                           setGender={setRunnerGender}
+                                           birthYear={runnerBirthYear}
+                                           setBirthYear={setRunnerBirthYear}
+                                           races={races}
+                                           raceId={runnerRaceId}
+                                           setRaceId={setRunnerRaceId}
+                                           submitButtonDisabled={isSaving || !unsavedChanges}
+                        />
+                    </div>
+
+                    <div className="col-12 mt-3">
+                        <h3>Passages</h3>
+
+                        {runner.passages.length === 0 &&
+                            <p><i>Aucun passage</i></p>
+                        }
+
+                        {runner.passages.length > 0 &&
+                            <RunnerDetailsPassages passages={runner.passages}
+                                                   runnerRace={runnerRace}
+                                                   updatePassageVisiblity={updatePassageVisiblity}
+                                                   updatePassage={updatePassage}
+                                                   saveNewPassage={saveNewPassage}
+                                                   deletePassage={deletePassage}
+                            />
+                        }
+                    </div>
+
+                    <div className="col-12 mt-3">
+                        <h3>Supprimer le coureur</h3>
+
+                        <p>Cette action est irréversible.</p>
+
+                        <button className="button red mt-3"
+                                onClick={deleteRunner}
+                        >
+                            Supprimer le coureur
+                        </button>
+                    </div>
                 </div>
-
-                <div className="col-12 mt-3">
-                    <h3>Passages</h3>
-
-                    {runner.passages.length === 0 &&
-                    <p><i>Aucun passage</i></p>
-                    }
-
-                    {runner.passages.length > 0 &&
-                    <RunnerDetailsPassages passages={runner.passages}
-                                           runnerRace={runnerRace}
-                                           updatePassageVisiblity={updatePassageVisiblity}
-                                           updatePassage={updatePassage}
-                                           saveNewPassage={saveNewPassage}
-                                           deletePassage={deletePassage}
-                    />
-                    }
-                </div>
-
-                <div className="col-12 mt-3">
-                    <h3>Supprimer le coureur</h3>
-
-                    <p>Cette action est irréversible.</p>
-
-                    <button className="button red mt-3"
-                            onClick={deleteRunner}
-                    >
-                        Supprimer le coureur
-                    </button>
-                </div>
-            </div>
             }
         </div>
-    )
-}
+    );
+};
 
 export default RunnerDetails;

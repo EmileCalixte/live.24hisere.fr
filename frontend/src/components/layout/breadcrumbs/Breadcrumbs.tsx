@@ -1,12 +1,16 @@
-import React from "react";
+import {type FunctionComponent} from "react";
 
-const Breadcrumbs: React.FunctionComponent<{children: React.ReactNode[] | React.ReactNode}> = ({children}) => {
+interface BreadcrumbsProps {
+    children: React.ReactNode[] | React.ReactNode;
+}
+
+const Breadcrumbs: FunctionComponent<BreadcrumbsProps> = ({children}) => {
     if (!Array.isArray(children)) {
         return (
             <ul className="breadcrumbs">
                 <span>{children}</span>
             </ul>
-        )
+        );
     }
 
     return (
@@ -18,15 +22,15 @@ const Breadcrumbs: React.FunctionComponent<{children: React.ReactNode[] | React.
                         {child}
 
                         {renderSeparator &&
-                        <span className="crumb-separator">
-                            <i className="fa-solid fa-chevron-right"/>
-                        </span>
+                            <span className="crumb-separator">
+                                <i className="fa-solid fa-chevron-right"/>
+                            </span>
                         }
                     </span>
-                )
+                );
             })}
         </ul>
-    )
-}
+    );
+};
 
 export default Breadcrumbs;

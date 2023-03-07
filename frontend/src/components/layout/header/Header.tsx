@@ -12,7 +12,7 @@ const Header = () => {
     return (
         <header id="app-header">
             {user &&
-            <AdminHeader />
+                <AdminHeader />
             }
             <div id="app-header-main-section">
                 <div id="app-header-logo-container">
@@ -21,11 +21,11 @@ const Header = () => {
                 <Navbar />
 
                 {fetchLevel > 0 &&
-                <HeaderFetchLoader />
+                    <HeaderFetchLoader />
                 }
             </div>
         </header>
-    )
-}
+    );
+};
 
 export default Header;

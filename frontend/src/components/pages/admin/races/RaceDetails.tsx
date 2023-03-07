@@ -8,7 +8,7 @@ import {userContext} from "../../../App";
 import Util from "../../../../util/Util";
 import ToastUtil from "../../../../util/ToastUtil";
 import RaceDetailsForm from "./RaceDetailsForm";
-import {AdminRaceWithRunnerCount} from "../../../../types/Race";
+import {type AdminRaceWithRunnerCount} from "../../../../types/Race";
 
 const RaceDetails = () => {
     const {accessToken} = useContext(userContext);
@@ -33,7 +33,7 @@ const RaceDetails = () => {
             return false;
         }
 
-        return[
+        return [
             raceName === race.name,
             initialDistance.toString() === race.initialDistance.toString(),
             lapDistance.toString() === race.lapDistance.toString(),
@@ -47,7 +47,7 @@ const RaceDetails = () => {
         const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/races/${urlRaceId}`, accessToken);
 
         if (!response.ok) {
-            console.error('Failed to fetch race', await response.json());
+            console.error("Failed to fetch race", await response.json());
             setRace(null);
             return;
         }
@@ -87,7 +87,7 @@ const RaceDetails = () => {
         };
 
         const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/races/${race.id}`, accessToken, {
-            method: 'PATCH',
+            method: "PATCH",
             body: JSON.stringify(body),
         });
 
@@ -104,9 +104,9 @@ const RaceDetails = () => {
 
         await fetchRace();
         setIsSaving(false);
-    }
+    };
 
-    const deleteRace = async () => {
+    const deleteRace = useCallback(async () => {
         if (!race) {
             return;
         }
@@ -120,7 +120,7 @@ const RaceDetails = () => {
         }
 
         const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/races/${race.id}`, accessToken, {
-            method: 'DELETE',
+            method: "DELETE",
         });
 
         if (!response.ok) {
@@ -132,12 +132,12 @@ const RaceDetails = () => {
 
         ToastUtil.getToastr().success("Course supprimée");
         setRedirectAfterDelete(true);
-    }
+    }, [race]);
 
     if (redirectAfterDelete) {
         return (
             <Navigate to="/admin/races" />
-        )
+        );
     }
 
     if (race === null) {
@@ -157,12 +157,12 @@ const RaceDetails = () => {
                             if (race === undefined) {
                                 return (
                                     <CircularLoader />
-                                )
+                                );
                             }
 
                             return (
                                 <Crumb label={race.name}/>
-                            )
+                            );
                         })()}
                     </Breadcrumbs>
                 </div>
@@ -170,53 +170,53 @@ const RaceDetails = () => {
             <div className="row">
                 <div className="col-xl-4 col-lg-6 col-md-9 col-12">
                     {race === undefined &&
-                    <CircularLoader />
+                        <CircularLoader />
                     }
 
                     {race !== undefined &&
-                    <div className="row">
-                        <div className="col-12">
-                            <RaceDetailsForm onSubmit={onSubmit}
-                                             name={raceName}
-                                             setName={setRaceName}
-                                             initialDistance={initialDistance}
-                                             setInitialDistance={setInitialDistance}
-                                             lapDistance={lapDistance}
-                                             setLapDistance={setLapDistance}
-                                             startTime={startTime}
-                                             setStartTime={setStartTime}
-                                             duration={duration}
-                                             setDuration={setDuration}
-                                             isPublic={isPublic}
-                                             setIsPublic={setIsPublic}
-                                             submitButtonDisabled={isSaving || !unsavedChanges}
-                            />
+                        <div className="row">
+                            <div className="col-12">
+                                <RaceDetailsForm onSubmit={onSubmit}
+                                                 name={raceName}
+                                                 setName={setRaceName}
+                                                 initialDistance={initialDistance}
+                                                 setInitialDistance={setInitialDistance}
+                                                 lapDistance={lapDistance}
+                                                 setLapDistance={setLapDistance}
+                                                 startTime={startTime}
+                                                 setStartTime={setStartTime}
+                                                 duration={duration}
+                                                 setDuration={setDuration}
+                                                 isPublic={isPublic}
+                                                 setIsPublic={setIsPublic}
+                                                 submitButtonDisabled={isSaving || !unsavedChanges}
+                                />
+                            </div>
+
+                            <div className="col-12">
+                                <h3>Supprimer la course</h3>
+
+                                {race.runnerCount > 0 &&
+                                    <p>La course ne peut pas être supprimée tant qu'elle contient des coureurs.</p>
+                                }
+
+                                {race.runnerCount === 0 &&
+                                    <p>Cette action est irréversible.</p>
+                                }
+
+                                <button className="button red mt-3"
+                                        disabled={race.runnerCount > 0}
+                                        onClick={deleteRace}
+                                >
+                                    Supprimer la course
+                                </button>
+                            </div>
                         </div>
-
-                        <div className="col-12">
-                            <h3>Supprimer la course</h3>
-
-                            {race.runnerCount > 0 &&
-                            <p>La course ne peut pas être supprimée tant qu'elle contient des coureurs.</p>
-                            }
-
-                            {race.runnerCount === 0 &&
-                            <p>Cette action est irréversible.</p>
-                            }
-
-                            <button className="button red mt-3"
-                                    disabled={race.runnerCount > 0}
-                                    onClick={deleteRace}
-                            >
-                                Supprimer la course
-                            </button>
-                        </div>
-                    </div>
                     }
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default RaceDetails;

@@ -1,4 +1,4 @@
-import config from '../config/config';
+import config from "../config/config";
 
 export const SORT_ASC = 1;
 export const SORT_DESC = -1;
@@ -10,7 +10,7 @@ class Util {
         if (!Util.VERBOSE_ENABLED) {
             return;
         }
-        console.log('%c[v]', 'color: orange', ...items);
+        console.log("%c[v]", "color: orange", ...items);
     };
 
     static formatDateForApi = (date: Date): string => {
@@ -22,38 +22,38 @@ class Util {
         const seconds = Util.prefixNumber(date.getSeconds(), 2);
 
         return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
-    }
+    };
 
-    static formatDateAsString = (date: Date, dateAndTimeSeparator = ', ', dateSeparator = '/', timeSeparator = ':'): string => {
+    static formatDateAsString = (date: Date, dateAndTimeSeparator = ", ", dateSeparator = "/", timeSeparator = ":"): string => {
         const dateString = Util.getDateStringFromDate(date, dateSeparator);
         const timeString = Util.getTimeStringFromDate(date, timeSeparator);
 
         return `${dateString}${dateAndTimeSeparator}${timeString}`;
-    }
+    };
 
-    static getDateStringFromDate = (date: Date, separator = '/'): string => {
+    static getDateStringFromDate = (date: Date, separator = "/"): string => {
         const year = date.getFullYear();
         const month = Util.prefixNumber(date.getMonth() + 1, 2);
         const day = Util.prefixNumber(date.getDate(), 2);
 
         return `${day}${separator}${month}${separator}${year}`;
-    }
+    };
 
-    static getTimeStringFromDate = (date: Date, separator = ':'): string => {
+    static getTimeStringFromDate = (date: Date, separator = ":"): string => {
         const hours = Util.prefixNumber(date.getHours(), 2);
         const minutes = Util.prefixNumber(date.getMinutes(), 2);
         const seconds = Util.prefixNumber(date.getSeconds(), 2);
 
         return `${hours}${separator}${minutes}${separator}${seconds}`;
-    }
+    };
 
     static formatFloatNumber = (number: number, decimalsCount: number): string => {
         return number.toFixed(decimalsCount);
-    }
+    };
 
     static formatMsAsDuration = (ms: number, forceDisplayHours = true): string => {
         if (ms < 0) {
-            return '−' + Util.formatMsAsDuration((ms - 1000) * -1);
+            return "−" + Util.formatMsAsDuration((ms - 1000) * -1);
         }
 
         const seconds = Math.floor((ms / 1000) % 60);
@@ -65,11 +65,11 @@ class Util {
         const stringHours = (hours < 10) ? "0" + hours.toString() : hours.toString();
 
         if (!forceDisplayHours && hours === 0) {
-            return stringMinutes + ':' + stringSeconds;
+            return stringMinutes + ":" + stringSeconds;
         }
 
-        return stringHours + ':' + stringMinutes + ':' + stringSeconds;
-    }
+        return stringHours + ":" + stringMinutes + ":" + stringSeconds;
+    };
 
     /**
      * Prefix a number with 0's so that the integer part of the number has at least minDigits digits
@@ -84,13 +84,13 @@ class Util {
 
         let stringNumber = number.toString();
 
-        const numberIsNegative = stringNumber.charAt(0) === '-';
+        const numberIsNegative = stringNumber.charAt(0) === "-";
 
         if (numberIsNegative) {
             stringNumber = stringNumber.substring(1);
         }
 
-        const splittedStringNumber = stringNumber.split('.');
+        const splittedStringNumber = stringNumber.split(".");
 
         let stringNumberIntPart = splittedStringNumber[0];
         const stringNumberDecimalPart = splittedStringNumber[1] ?? null;
@@ -99,15 +99,15 @@ class Util {
             stringNumberIntPart = "0" + stringNumberIntPart;
         }
 
-        let formattedString = numberIsNegative ? '-' : '';
+        let formattedString = numberIsNegative ? "-" : "";
         formattedString += stringNumberIntPart;
 
         if (stringNumberDecimalPart !== null) {
-            formattedString += '.' + stringNumberDecimalPart;
+            formattedString += "." + stringNumberDecimalPart;
         }
 
         return formattedString;
-    }
+    };
 }
 
 export default Util;

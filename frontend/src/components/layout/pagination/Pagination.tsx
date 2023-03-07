@@ -1,11 +1,13 @@
-import React from "react";
+import {type FunctionComponent} from "react";
 
-const Pagination: React.FunctionComponent<{
-    minPage: number
-    maxPage: number
-    currentPage: number
-    setPage: (page: number) => any
-}> = ({
+interface PaginationProps {
+    minPage: number;
+    maxPage: number;
+    currentPage: number;
+    setPage: (page: number) => any;
+}
+
+const Pagination: FunctionComponent<PaginationProps> = ({
     minPage = 1,
     maxPage,
     currentPage,
@@ -16,7 +18,7 @@ const Pagination: React.FunctionComponent<{
             <button onClick={() => setPage(minPage)} disabled={currentPage <= minPage}>
                 <i className="fa-solid fa-angles-left"/>
             </button>
-            <button onClick={() => setPage(Math.max(minPage, currentPage - 1))}  disabled={currentPage <= minPage}>
+            <button onClick={() => setPage(Math.max(minPage, currentPage - 1))} disabled={currentPage <= minPage}>
                 <i className="fa-solid fa-angle-left"/>
             </button>
 
@@ -75,11 +77,11 @@ const Pagination: React.FunctionComponent<{
             <button onClick={() => setPage(Math.min(maxPage, currentPage + 1))} disabled={currentPage >= maxPage}>
                 <i className="fa-solid fa-angle-right"/>
             </button>
-            <button onClick={() => setPage(maxPage)}  disabled={currentPage >= maxPage}>
+            <button onClick={() => setPage(maxPage)} disabled={currentPage >= maxPage}>
                 <i className="fa-solid fa-angles-right"/>
             </button>
         </div>
     );
-}
+};
 
 export default Pagination;

@@ -1,22 +1,24 @@
 import OptionWithLoadingDots from "../../misc/OptionWithLoadingDots";
 import {TimeMode} from "./Ranking";
 import RankingSettingsTime from "./RankingSettingsTime";
-import React from "react";
-import {CategoriesDict, CategoryShortCode} from "../../../types/Category";
-import {Gender, GenderWithMixed} from "../../../types/Runner";
+import React, {type FunctionComponent} from "react";
+import {type CategoriesDict, type CategoryShortCode} from "../../../types/Category";
+import {Gender, type GenderWithMixed} from "../../../types/Runner";
 
-const RankingSettings: React.FunctionComponent<{
-    categories: CategoriesDict | false,
-    onCategorySelect: (e: React.ChangeEvent<HTMLSelectElement>) => any,
-    onGenderSelect: (e: React.ChangeEvent<HTMLInputElement>) => any,
-    onTimeModeSelect: (e: React.ChangeEvent<HTMLInputElement>) => any,
-    onRankingTimeSave: (time: number) => any,
-    selectedCategory: CategoryShortCode | null,
-    selectedGender: GenderWithMixed
-    selectedTimeMode: TimeMode
-    currentRankingTime: number,
-    maxRankingTime: number,
-}> = ({
+interface RankingSettingsProps {
+    categories: CategoriesDict | false;
+    onCategorySelect: (e: React.ChangeEvent<HTMLSelectElement>) => any;
+    onGenderSelect: (e: React.ChangeEvent<HTMLInputElement>) => any;
+    onTimeModeSelect: (e: React.ChangeEvent<HTMLInputElement>) => any;
+    onRankingTimeSave: (time: number) => any;
+    selectedCategory: CategoryShortCode | null;
+    selectedGender: GenderWithMixed;
+    selectedTimeMode: TimeMode;
+    currentRankingTime: number;
+    maxRankingTime: number;
+}
+
+const RankingSettings: FunctionComponent<RankingSettingsProps> = ({
     categories,
     onCategorySelect,
     onGenderSelect,
@@ -55,7 +57,7 @@ const RankingSettings: React.FunctionComponent<{
                                 const items = [];
 
                                 for (const [key, name] of Object.entries(categories)) {
-                                    items.push(<option key={key} value={key}>{name}</option>)
+                                    items.push(<option key={key} value={key}>{name}</option>);
                                 }
 
                                 return (
@@ -150,6 +152,6 @@ const RankingSettings: React.FunctionComponent<{
             </div>
         </section>
     );
-}
+};
 
 export default RankingSettings;

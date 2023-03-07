@@ -1,7 +1,7 @@
-import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
-import {AdminPassageWithRunnerId, ProcessedPassage} from "../../../../types/Passage";
-import {AdminRaceDict} from "../../../../types/Race";
-import Runner from "../../../../types/Runner";
+import {useCallback, useContext, useEffect, useMemo, useState} from "react";
+import {type AdminPassageWithRunnerId, type ProcessedPassage} from "../../../../types/Passage";
+import {type AdminRaceDict} from "../../../../types/Race";
+import type Runner from "../../../../types/Runner";
 import ApiUtil from "../../../../util/ApiUtil";
 import RunnerDetailsUtil from "../../../../util/RunnerDetailsUtil";
 import {userContext} from "../../../App";
@@ -11,13 +11,9 @@ import Pagination from "../../../layout/pagination/Pagination";
 import CircularLoader from "../../../misc/CircularLoader";
 import FastestLapsTable from "./FastestLapsTable";
 
-type RunnerSortedPassages = {
-    [runnerId: number]: AdminPassageWithRunnerId[];
-}
+type RunnerSortedPassages = Record<number, AdminPassageWithRunnerId[]>;
 
-type RunnerSortedProcessedPassages = {
-    [runnerId: number]: (AdminPassageWithRunnerId & ProcessedPassage)[];
-}
+type RunnerSortedProcessedPassages = Record<number, (AdminPassageWithRunnerId & ProcessedPassage)[]>;
 
 const ITEMS_PER_PAGE = 100;
 
@@ -41,7 +37,7 @@ const FastestLaps = () => {
     const [page, setPage] = useState(1);
 
     const fetchRunnersAndRaces = useCallback(async () => {
-        const response = await ApiUtil.performAuthenticatedAPIRequest('/admin/runners', accessToken);
+        const response = await ApiUtil.performAuthenticatedAPIRequest("/admin/runners", accessToken);
         const responseJson = await response.json();
 
         setRunners(responseJson.runners);
@@ -49,7 +45,7 @@ const FastestLaps = () => {
     }, [accessToken]);
 
     const fetchPassages = useCallback(async () => {
-        const response = await ApiUtil.performAuthenticatedAPIRequest('/admin/passages', accessToken);
+        const response = await ApiUtil.performAuthenticatedAPIRequest("/admin/passages", accessToken);
         const responseJson = await response.json();
 
         // The passages are already ordered by time
@@ -61,9 +57,7 @@ const FastestLaps = () => {
 
         const interval = setInterval(fetchRunnersAndRaces, RUNNERS_AND_RACES_FETCH_INTERVAL);
 
-        return (() => {
-            clearInterval(interval);
-        })
+        return () => clearInterval(interval);
     }, [fetchRunnersAndRaces]);
 
     useEffect(() => {
@@ -71,9 +65,7 @@ const FastestLaps = () => {
 
         const interval = setInterval(fetchPassages, PASSAGES_FETCH_INTERVAL);
 
-        return (() => {
-            clearInterval(interval);
-        })
+        return () => clearInterval(interval);
     }, [fetchPassages]);
 
     useEffect(() => {
@@ -156,7 +148,7 @@ const FastestLaps = () => {
                 }
 
                 if (p2.processed.lapSpeed === p1.processed.lapSpeed && p2.processed.lapStartRaceTime >= p1.processed.lapStartRaceTime) {
-                    return 1
+                    return 1;
                 }
 
                 return -1;
@@ -259,7 +251,7 @@ const FastestLaps = () => {
                 }
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default FastestLaps;

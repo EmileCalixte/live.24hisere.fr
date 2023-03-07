@@ -1,11 +1,11 @@
-import config from '../config/config';
+import config from "../config/config";
 import Util from "./Util";
 
 export const EVENT_API_REQUEST_STARTED = "apiRequestStarted";
 export const EVENT_API_REQUEST_ENDED = "apiRequestEnded";
 
 class ApiUtil {
-    static APP_BACKEND_URL = config.apiUrl
+    static APP_BACKEND_URL = config.apiUrl;
 
     /**
      * Fetch minimal wrapper with verbose
@@ -14,8 +14,8 @@ class ApiUtil {
      * @returns {Promise<Response>}
      */
     static fetch = async (url: string, init: RequestInit) => {
-        let method = 'GET';
-        if (init.hasOwnProperty('method') && typeof init.method === 'string') {
+        let method = "GET";
+        if (init.method !== undefined) {
             method = init.method.toUpperCase();
         }
 
@@ -26,15 +26,15 @@ class ApiUtil {
         Util.verbose(`${method} ${url} response code:`, response.status);
 
         return response;
-    }
+    };
 
     static getBackendFullUrl = (shortUrl: string) => {
-        if (!shortUrl.startsWith('/')) {
-            shortUrl = '/' + shortUrl;
+        if (!shortUrl.startsWith("/")) {
+            shortUrl = "/" + shortUrl;
         }
 
         return ApiUtil.APP_BACKEND_URL + shortUrl;
-    }
+    };
 
     /**
      * @param {string} url
@@ -53,7 +53,7 @@ class ApiUtil {
         window.dispatchEvent(new CustomEvent(EVENT_API_REQUEST_ENDED));
 
         return response;
-    }
+    };
 
     /**
      * @param {string} url
@@ -62,16 +62,16 @@ class ApiUtil {
      * @return {Promise<Response>}
      */
     static performAuthenticatedAPIRequest = async (url: string, accessToken: string | null, init: RequestInit = {}) => {
-        if (!init.hasOwnProperty('headers') || !(init.headers instanceof Headers)) {
+        if ("headers" in init || !(init.headers instanceof Headers)) {
             init.headers = new Headers();
         }
 
         if (accessToken) {
-            init.headers.append('Authorization', accessToken);
+            init.headers.append("Authorization", accessToken);
         }
 
-        return ApiUtil.performAPIRequest(url, init);
-    }
+        return await ApiUtil.performAPIRequest(url, init);
+    };
 }
 
 export default ApiUtil;

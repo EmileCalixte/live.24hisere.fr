@@ -1,15 +1,22 @@
-import React, {useCallback, useMemo, useState} from "react";
-import {AdminProcessedPassage} from "../../../../types/Passage";
-import {AdminRaceWithRunnerCount} from "../../../../types/Race";
+import React, {type FunctionComponent, useCallback, useMemo, useState} from "react";
+import {type AdminProcessedPassage} from "../../../../types/Passage";
+import {type AdminRaceWithRunnerCount} from "../../../../types/Race";
 import ToastUtil from "../../../../util/ToastUtil";
 import RunnerDetailsPassageForm from "./RunnerDetailsPassageForm";
 
-const RunnerDetailsEditPassage: React.FunctionComponent<{
-    passage: AdminProcessedPassage,
-    runnerRace: AdminRaceWithRunnerCount | null,
-    updatePassage: (passage: AdminProcessedPassage, time: Date) => any,
-    onClose: () => any,
-}> = ({passage, runnerRace, updatePassage, onClose}) => {
+interface RunnerDetailsEditPassageProps {
+    passage: AdminProcessedPassage;
+    runnerRace: AdminRaceWithRunnerCount | null;
+    updatePassage: (passage: AdminProcessedPassage, time: Date) => any;
+    onClose: () => any;
+}
+
+const RunnerDetailsEditPassage: FunctionComponent<RunnerDetailsEditPassageProps> = ({
+    passage,
+    runnerRace,
+    updatePassage,
+    onClose,
+}) => {
     const [passageRaceTime, setPassageRaceTime] = useState(passage.processed.lapEndRaceTime);
 
     const [isSaving, setIsSaving] = useState(false);
@@ -30,7 +37,7 @@ const RunnerDetailsEditPassage: React.FunctionComponent<{
 
     const unsavedChanges = useMemo(() => {
         return [
-            passage.processed.lapEndRaceTime === passageRaceTime
+            passage.processed.lapEndRaceTime === passageRaceTime,
         ].includes(false);
     }, [passage, passageRaceTime]);
 
@@ -61,6 +68,6 @@ const RunnerDetailsEditPassage: React.FunctionComponent<{
                                   onClose={onClose}
         />
     );
-}
+};
 
 export default RunnerDetailsEditPassage;

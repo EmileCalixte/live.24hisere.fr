@@ -1,13 +1,19 @@
-import React, {useCallback, useMemo, useState} from "react";
-import {AdminRaceWithRunnerCount} from "../../../../types/Race";
+import React, {type FunctionComponent, useCallback, useMemo, useState} from "react";
+import {type AdminRaceWithRunnerCount} from "../../../../types/Race";
 import ToastUtil from "../../../../util/ToastUtil";
 import RunnerDetailsPassageForm from "./RunnerDetailsPassageForm";
 
-const RunnerDetailsCreatePassage: React.FunctionComponent<{
-    runnerRace: AdminRaceWithRunnerCount | null,
-    savePassage: (time: Date) => any,
-    onClose: () => any,
-}> = ({runnerRace, savePassage, onClose}) => {
+interface RunnerDetailsCreatePassageProps {
+    runnerRace: AdminRaceWithRunnerCount | null;
+    savePassage: (time: Date) => any;
+    onClose: () => any;
+}
+
+const RunnerDetailsCreatePassage: FunctionComponent<RunnerDetailsCreatePassageProps> = ({
+    runnerRace,
+    savePassage,
+    onClose,
+}) => {
     const [passageRaceTime, setPassageRaceTime] = useState(0);
 
     const [isSaving, setIsSaving] = useState(false);
@@ -53,6 +59,6 @@ const RunnerDetailsCreatePassage: React.FunctionComponent<{
                                   onClose={onClose}
         />
     );
-}
+};
 
 export default RunnerDetailsCreatePassage;

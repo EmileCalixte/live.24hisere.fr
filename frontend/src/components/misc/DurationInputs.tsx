@@ -1,22 +1,33 @@
-import React, {FunctionComponent, useCallback, useMemo} from "react";
+import React, {type FunctionComponent, useCallback, useMemo} from "react";
 import Util from "../../util/Util";
 
 export const getDurationAsMs = (hours: number, minutes: number, seconds: number) => {
     return (seconds * 1000) + (minutes * 60 * 1000) + (hours * 60 * 60 * 1000);
+};
+
+interface DurationInputsProps {
+    /**
+     * The duration, in ms
+     */
+    duration: number;
+
+    /**
+     * Minimum duration, in ms
+     */
+    minDuration?: number;
+
+    /**
+     * Maximum duration, in ms
+     */
+    maxDuration?: number;
+
+    /**
+     * @param duration The new duration, in ms
+     */
+    setDuration: (duration: number) => any;
 }
 
-/**
- * @param duration in ms
- * @param minDuration in ms, must be >= 0
- * @param maxDuration in ms
- * @param setDuration
- */
-const DurationInputs: FunctionComponent<{
-    duration: number,
-    minDuration?: number,
-    maxDuration?: number,
-    setDuration: (duration: number) => any,
-}> = ({
+const DurationInputs: FunctionComponent<DurationInputsProps> = ({
     duration,
     minDuration = 0,
     maxDuration,
@@ -132,6 +143,6 @@ const DurationInputs: FunctionComponent<{
             </label>
         </>
     );
-}
+};
 
 export default DurationInputs;

@@ -1,15 +1,21 @@
-import React, {useMemo} from "react";
+import {type FunctionComponent, useMemo} from "react";
 import {Link} from "react-router-dom";
-import {CategoryShortCode} from "../../../types/Category";
-import {ProcessedRankingRunner} from "../../../types/Ranking";
-import {GenderWithMixed} from "../../../types/Runner";
+import {type CategoryShortCode} from "../../../types/Category";
+import {type ProcessedRankingRunner} from "../../../types/Ranking";
+import {type GenderWithMixed} from "../../../types/Runner";
 import Util from "../../../util/Util";
 
-const ResponsiveRankingTableRow: React.FunctionComponent<{
-    runner: ProcessedRankingRunner,
-    tableCategory: CategoryShortCode | null,
-    tableGender: GenderWithMixed,
-}> = ({runner, tableCategory, tableGender}) => {
+interface ResponsiveRankingTableRowProps {
+    runner: ProcessedRankingRunner;
+    tableCategory: CategoryShortCode | null;
+    tableGender: GenderWithMixed;
+}
+
+const ResponsiveRankingTableRow: FunctionComponent<ResponsiveRankingTableRowProps> = ({
+    runner,
+    tableCategory,
+    tableGender,
+}) => {
     const rowRanking = useMemo(() => {
         if (tableCategory === null) {
             if (tableGender === "mixed") {
@@ -120,6 +126,6 @@ const ResponsiveRankingTableRow: React.FunctionComponent<{
             </td>
         </tr>
     );
-}
+};
 
 export default ResponsiveRankingTableRow;

@@ -9,7 +9,7 @@ class ToastUtil {
         }
 
         return ToastUtil.toastr;
-    }
+    };
 }
 
 export default ToastUtil;

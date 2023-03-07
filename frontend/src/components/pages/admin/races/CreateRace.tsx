@@ -11,7 +11,7 @@ import Util from "../../../../util/Util";
 const CreateRace = () => {
     const {accessToken} = useContext(userContext);
 
-    const [raceName, setRaceName] = useState('');
+    const [raceName, setRaceName] = useState("");
     const [initialDistance, setInitialDistance] = useState<number | string>(0);
     const [lapDistance, setLapDistance] = useState<number | string>(0);
     const [startTime, setStartTime] = useState(new Date());
@@ -37,7 +37,7 @@ const CreateRace = () => {
         };
 
         const response = await ApiUtil.performAuthenticatedAPIRequest("/admin/races", accessToken, {
-            method: 'POST',
+            method: "POST",
             body: JSON.stringify(body),
         });
 
@@ -57,7 +57,7 @@ const CreateRace = () => {
     if (redirectToId) {
         return (
             <Navigate to={`/admin/races/${redirectToId}`} />
-        )
+        );
     }
 
     return (
@@ -95,6 +95,6 @@ const CreateRace = () => {
             </div>
         </div>
     );
-}
+};
 
 export default CreateRace;

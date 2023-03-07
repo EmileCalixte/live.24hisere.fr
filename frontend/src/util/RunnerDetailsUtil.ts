@@ -1,10 +1,11 @@
-import {Race} from "../types/Race";
+import {type Race} from "../types/Race";
 import Util from "./Util";
 import {
-    RunnerProcessedHour,
-    RunnerWithProcessedPassages
+    type RunnerProcessedHour,
+    type RunnerWithProcessedPassages,
 } from "../types/Runner";
-import Passage, {PassageProcessedData, ProcessedPassage} from "../types/Passage";
+import {type PassageProcessedData, type ProcessedPassage} from "../types/Passage";
+import type Passage from "../types/Passage";
 
 class RunnerDetailsUtil {
     /**
@@ -17,7 +18,7 @@ class RunnerDetailsUtil {
         const processedPassages: (T & {processed: PassageProcessedData})[] = [];
 
         for (let i = 0; i < passages.length; ++i) {
-            const previousPassage = i > 0 ? passages[i-1] : null
+            const previousPassage = i > 0 ? passages[i - 1] : null;
             const passage = passages[i];
 
             const lapNumber = i === 0 ? null : i; // The first passage is an incomplete lap, so it's not counted
@@ -61,7 +62,7 @@ class RunnerDetailsUtil {
                 totalDistance,
                 averagePaceSinceRaceStart,
                 averageSpeedSinceRaceStart,
-            }
+            };
 
             processedPassages.push({
                 ...structuredClone(passage),
@@ -70,7 +71,7 @@ class RunnerDetailsUtil {
         }
 
         return processedPassages;
-    }
+    };
 
     static getRunnerProcessedHours = (runner: RunnerWithProcessedPassages, race: Race): RunnerProcessedHour[] => {
         const hourDuration = 60 * 60 * 1000; // in ms
@@ -115,7 +116,7 @@ class RunnerDetailsUtil {
         }
 
         return hours;
-    }
+    };
 
     /**
      * Calculates a pace from a speed
@@ -124,7 +125,7 @@ class RunnerDetailsUtil {
      */
     static getPaceFromSpeed = (speed: number): number => {
         return (1 / (speed / 60)) * 60 * 1000;
-    }
+    };
 
     /**
      * Returns runner data ready for excel export
@@ -134,7 +135,7 @@ class RunnerDetailsUtil {
 
         runner.passages.forEach(passage => {
             excelData.push({
-                "Tours": passage.processed.lapNumber,
+                Tours: passage.processed.lapNumber,
                 "Temps total": Util.formatMsAsDuration(passage.processed.lapEndRaceTime),
                 "Temps total (s)": Math.round(passage.processed.lapEndRaceTime / 1000),
                 "Distance totale (m)": passage.processed.totalDistance,
@@ -149,15 +150,14 @@ class RunnerDetailsUtil {
         });
 
         return excelData;
-    }
+    };
 
-    private static getLapsInRaceTimeInterval = (
+    private static readonly getLapsInRaceTimeInterval = (
         passages: ProcessedPassage[],
         intervalStartRaceTime: number,
-        intervalEndRaceTime: number
+        intervalEndRaceTime: number,
     ): ProcessedPassage[] => {
         return passages.filter(passage => {
-
             // lap END time is BEFORE interval
             if (passage.processed.lapEndRaceTime < intervalStartRaceTime) {
                 return false;
@@ -170,13 +170,13 @@ class RunnerDetailsUtil {
 
             return true;
         });
-    }
+    };
 
-    private static getSpeedAndPaceInHour = (
+    private static readonly getSpeedAndPaceInHour = (
         passages: ProcessedPassage[],
         hourStartRaceTime: number,
-        hourEndRaceTime: number
-    ): {speed: number, pace: number} => {
+        hourEndRaceTime: number,
+    ): {speed: number; pace: number} => {
         let speedSum = 0;
         let durationSum = 0;
 
@@ -204,7 +204,7 @@ class RunnerDetailsUtil {
         const pace = RunnerDetailsUtil.getPaceFromSpeed(speed);
 
         return {speed, pace};
-    }
+    };
 }
 
 export default RunnerDetailsUtil;

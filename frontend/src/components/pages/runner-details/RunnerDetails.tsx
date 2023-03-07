@@ -1,5 +1,5 @@
 import {useParams} from "react-router-dom";
-import {ProcessedRanking, Ranking as RankingType, RankingRunnerRanks} from "../../../types/Ranking";
+import {type ProcessedRanking, type Ranking as RankingType, type RankingRunnerRanks} from "../../../types/Ranking";
 import {RankingProcesser} from "../../../util/RankingUtil";
 import RunnerDetailsRaceDetails from "./RunnerDetailsRaceDetails";
 import RunnerSelector from "./RunnerSelector";
@@ -9,16 +9,17 @@ import RunnerDetailsStats from "./RunnerDetailsStats";
 import RunnerDetailsLaps from "./RunnerDetailsLaps";
 import RunnerDetailsUtil from "../../../util/RunnerDetailsUtil";
 import ExcelUtil from "../../../util/ExcelUtil";
-import Runner, {
-    RunnerWithPassages,
-    RunnerWithProcessedHours,
-    RunnerWithProcessedPassages,
-    RunnerWithRace
+import type Runner from "../../../types/Runner";
+import {
+    type RunnerWithPassages,
+    type RunnerWithProcessedHours,
+    type RunnerWithProcessedPassages,
+    type RunnerWithRace,
 } from "../../../types/Runner";
 
 enum Tab {
-    Stats = 'stats',
-    Laps = 'laps',
+    Stats = "stats",
+    Laps = "laps",
 }
 
 export const RUNNER_UPDATE_INTERVAL_TIME = 30000;
@@ -37,7 +38,7 @@ const RunnerDetails = () => {
     const [selectedTab, setSelectedTab] = useState(Tab.Stats);
 
     const fetchRunners = useCallback(async () => {
-        const response = await ApiUtil.performAPIRequest('/runners');
+        const response = await ApiUtil.performAPIRequest("/runners");
         const responseJson = await response.json();
 
         setRunners(responseJson.runners);
@@ -63,7 +64,7 @@ const RunnerDetails = () => {
         const response = await ApiUtil.performAPIRequest(`/runners/${selectedRunnerId}`);
 
         if (!response.ok) {
-            console.error('Failed to fetch runner', await response.json());
+            console.error("Failed to fetch runner", await response.json());
             setSelectedRunner(null);
             return;
         }
@@ -121,14 +122,14 @@ const RunnerDetails = () => {
         fetchSelectedRunner();
 
         const refreshRunnerInterval = setInterval(fetchSelectedRunner, RUNNER_UPDATE_INTERVAL_TIME);
-        return (() => clearInterval(refreshRunnerInterval));
+        return () => clearInterval(refreshRunnerInterval);
     }, [fetchSelectedRunner]);
 
     useEffect(() => {
         fetchRanking();
 
         const refreshRankingInterval = setInterval(fetchRanking, RANKING_UPDATE_INTERVAL_TIME);
-        return (() => clearInterval(refreshRankingInterval));
+        return () => clearInterval(refreshRankingInterval);
     }, [fetchRanking]);
 
     useEffect(() => {
@@ -137,7 +138,7 @@ const RunnerDetails = () => {
         }
 
         // TODO better UX: use pushState instead of replaceState & handle popState event
-        window.history.replaceState(window.history.state, '', `/runner-details/${selectedRunnerId}`);
+        window.history.replaceState(window.history.state, "", `/runner-details/${selectedRunnerId}`);
     }, [selectedRunnerId, urlRunnerId]);
 
     const ranks = useMemo<RankingRunnerRanks | null>(() => {
@@ -156,7 +157,7 @@ const RunnerDetails = () => {
         return rankingRunner.rankings;
     }, [processedRanking, selectedRunner]);
 
-    return(
+    return (
         <div id="page-runner-details">
             <div className="row hide-on-print">
                 <div className="col-12">
@@ -174,48 +175,48 @@ const RunnerDetails = () => {
             </div>
 
             {selectedRunner !== null &&
-            <div className="row mt-3">
-                <div className="col-12 mb-3">
-                    <button className="a" onClick={exportRunnerToXlsx}>
-                        <i className="fa-solid fa-file-excel"/> Générer un fichier Excel
-                    </button>
-                </div>
+                <div className="row mt-3">
+                    <div className="col-12 mb-3">
+                        <button className="a" onClick={exportRunnerToXlsx}>
+                            <i className="fa-solid fa-file-excel"/> Générer un fichier Excel
+                        </button>
+                    </div>
 
-                <div className="col-12">
-                    <div className="runner-details-data-container">
-                        <ul className="tabs-container">
-                            <li className={selectedTab === Tab.Stats ? 'active' : ''}>
-                                <button onClick={() => setSelectedTab(Tab.Stats)}>Statistiques</button>
-                            </li>
-                            <li className={selectedTab === Tab.Laps ? 'active' : ''}>
-                                <button onClick={() => setSelectedTab(Tab.Laps)}>Détails des tours</button>
-                            </li>
-                        </ul>
+                    <div className="col-12">
+                        <div className="runner-details-data-container">
+                            <ul className="tabs-container">
+                                <li className={selectedTab === Tab.Stats ? "active" : ""}>
+                                    <button onClick={() => setSelectedTab(Tab.Stats)}>Statistiques</button>
+                                </li>
+                                <li className={selectedTab === Tab.Laps ? "active" : ""}>
+                                    <button onClick={() => setSelectedTab(Tab.Laps)}>Détails des tours</button>
+                                </li>
+                            </ul>
 
-                        <div className="runner-details-data">
-                            {(() => {
-                                switch (selectedTab) {
-                                    case Tab.Stats:
-                                        return (
-                                            <>
-                                                <RunnerDetailsRaceDetails race={selectedRunner.race} />
-                                                <RunnerDetailsStats runner={selectedRunner} race={selectedRunner.race} ranks={ranks} />
-                                            </>
-                                        );
-                                    case Tab.Laps:
-                                        return <RunnerDetailsLaps runner={selectedRunner} />
-                                    default:
-                                        return null;
-                                }
-                            })()}
+                            <div className="runner-details-data">
+                                {(() => {
+                                    switch (selectedTab) {
+                                        case Tab.Stats:
+                                            return (
+                                                <>
+                                                    <RunnerDetailsRaceDetails race={selectedRunner.race} />
+                                                    <RunnerDetailsStats runner={selectedRunner} race={selectedRunner.race} ranks={ranks} />
+                                                </>
+                                            );
+                                        case Tab.Laps:
+                                            return <RunnerDetailsLaps runner={selectedRunner} />;
+                                        default:
+                                            return null;
+                                    }
+                                })()}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
             }
 
         </div>
-    )
-}
+    );
+};
 
 export default RunnerDetails;

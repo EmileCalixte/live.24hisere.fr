@@ -1,23 +1,25 @@
-import React, {useMemo} from "react";
+import React, {type FunctionComponent, useMemo} from "react";
 import Util from "../../../../util/Util";
 import DurationInputs from "../../../misc/DurationInputs";
 
-const RaceDetailsForm: React.FunctionComponent<{
-    onSubmit: (e: React.FormEvent) => any,
-    name: string,
-    setName: (name: string) => any,
-    initialDistance: number | string,
-    setInitialDistance: (initialDistance: number | string) => any,
-    lapDistance: number | string,
-    setLapDistance: (lapDistance: number | string) => any,
-    startTime: Date,
-    setStartTime: (startTime: Date) => any,
-    duration: number,
-    setDuration: (duration: number) => any,
-    isPublic: boolean,
-    setIsPublic: (isPublic: boolean) => any,
-    submitButtonDisabled: boolean,
-}> = ({
+interface RaceDetailsFormProps {
+    onSubmit: (e: React.FormEvent) => any;
+    name: string;
+    setName: (name: string) => any;
+    initialDistance: number | string;
+    setInitialDistance: (initialDistance: number | string) => any;
+    lapDistance: number | string;
+    setLapDistance: (lapDistance: number | string) => any;
+    startTime: Date;
+    setStartTime: (startTime: Date) => any;
+    duration: number;
+    setDuration: (duration: number) => any;
+    isPublic: boolean;
+    setIsPublic: (isPublic: boolean) => any;
+    submitButtonDisabled: boolean;
+}
+
+const RaceDetailsForm: FunctionComponent<RaceDetailsFormProps> = ({
     onSubmit,
     name,
     setName,
@@ -39,12 +41,12 @@ const RaceDetailsForm: React.FunctionComponent<{
         }
 
         // Date input value requires YYYY-MM-DD format
-        return Util.getDateStringFromDate(startTime, '-').split('-').reverse().join('-');
+        return Util.getDateStringFromDate(startTime, "-").split("-").reverse().join("-");
     }, [startTime]);
 
     const startTimeTime = useMemo(() => {
         if (!startTime) {
-            return '';
+            return "";
         }
 
         return Util.getTimeStringFromDate(startTime);
@@ -56,7 +58,7 @@ const RaceDetailsForm: React.FunctionComponent<{
         }
 
         setStartTime(new Date(`${e.target.value}T${startTimeTime}`));
-    }
+    };
 
     const onStartTimeTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.value) {
@@ -64,7 +66,7 @@ const RaceDetailsForm: React.FunctionComponent<{
         }
 
         setStartTime(new Date(`${startTimeDate}T${e.target.value}`));
-    }
+    };
 
     return (
         <form onSubmit={onSubmit}>
@@ -161,6 +163,6 @@ const RaceDetailsForm: React.FunctionComponent<{
             </button>
         </form>
     );
-}
+};
 
 export default RaceDetailsForm;

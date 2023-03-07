@@ -6,8 +6,8 @@ import {userContext} from "../../../App";
 import CircularLoader from "../../../misc/CircularLoader";
 import {Link} from "react-router-dom";
 import RunnersTable from "./RunnersTable";
-import Runner from "../../../../types/Runner";
-import {AdminRaceDict} from "../../../../types/Race";
+import type Runner from "../../../../types/Runner";
+import {type AdminRaceDict} from "../../../../types/Race";
 
 const Runners = () => {
     const {accessToken} = useContext(userContext);
@@ -19,7 +19,7 @@ const Runners = () => {
     const [races, setRaces] = useState<AdminRaceDict | false>(false);
 
     const fetchRunnersAndRaces = useCallback(async () => {
-        const response = await ApiUtil.performAuthenticatedAPIRequest('/admin/runners', accessToken);
+        const response = await ApiUtil.performAuthenticatedAPIRequest("/admin/runners", accessToken);
         const responseJson = await response.json();
 
         setRunners(responseJson.runners);
@@ -42,31 +42,31 @@ const Runners = () => {
             </div>
 
             {runners === false &&
-            <CircularLoader />
+                <CircularLoader />
             }
 
             {runners !== false &&
-            <div className="row">
-                <div className="col-12">
-                    <Link to="/admin/runners/create" className="button">
-                        <i className="fa-solid fa-plus mr-2"/>
-                        Ajouter un coureur
-                    </Link>
-                </div>
+                <div className="row">
+                    <div className="col-12">
+                        <Link to="/admin/runners/create" className="button">
+                            <i className="fa-solid fa-plus mr-2"/>
+                            Ajouter un coureur
+                        </Link>
+                    </div>
 
-                <div className="col-12 mt-3">
-                    {runners.length === 0 &&
-                    <p>Aucun coureur</p>
-                    }
+                    <div className="col-12 mt-3">
+                        {runners.length === 0 &&
+                            <p>Aucun coureur</p>
+                        }
 
-                    {runners.length > 0 &&
-                    <RunnersTable runners={runners} races={races}/>
-                    }
+                        {runners.length > 0 &&
+                            <RunnersTable runners={runners} races={races}/>
+                        }
+                    </div>
                 </div>
-            </div>
             }
         </div>
-    )
-}
+    );
+};
 
 export default Runners;
