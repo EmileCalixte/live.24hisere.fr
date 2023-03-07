@@ -23,6 +23,8 @@ module.exports = {
         "**/lib/**",
     ],
     rules: {
+        "react/react-in-jsx-scope": "off",
+
         indent: "off",
         "@typescript-eslint/indent": ["error", 4, {
             SwitchCase: 1,
