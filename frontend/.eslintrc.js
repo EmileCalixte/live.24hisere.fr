@@ -24,6 +24,8 @@ module.exports = {
     ],
     rules: {
         "react/react-in-jsx-scope": "off",
+        "react/no-unescaped-entities": "off",
+        "react/prop-types": "off",
 
         indent: "off",
         "@typescript-eslint/indent": ["error", 4, {
@@ -62,7 +64,25 @@ module.exports = {
             multilineDetection: "brackets",
         }],
 
+        "@typescript-eslint/space-before-function-paren": ["error", {
+            anonymous: "always",
+            named: "never",
+            asyncArrow: "always",
+        }],
+
+        "@typescript-eslint/array-type": "off",
         "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/no-confusing-void-expression": "off",
+        "@typescript-eslint/no-dynamic-delete": "off",
+        "@typescript-eslint/no-floating-promises": "off",
+        "@typescript-eslint/no-misused-promises": "off",
+        "@typescript-eslint/restrict-template-expressions": "off",
+        "@typescript-eslint/strict-boolean-expressions": "off",
+
+        "@typescript-eslint/ban-ts-comment": "off",
+        "@typescript-eslint/prefer-ts-expect-error": "off",
+
+        eqeqeq: ["error", "always"],
 
         "prefer-arrow-callback": "error",
         "brace-style": ["error", "1tbs", {allowSingleLine: true}],
