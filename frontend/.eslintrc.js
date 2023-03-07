@@ -63,5 +63,7 @@ module.exports = {
         }],
 
         "@typescript-eslint/explicit-function-return-type": "off",
+
+        "prefer-arrow-callback": "error",
     },
 };
