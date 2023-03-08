@@ -132,7 +132,7 @@ const RaceDetails = () => {
 
         ToastUtil.getToastr().success("Course supprimée");
         setRedirectAfterDelete(true);
-    }, [race]);
+    }, [accessToken, race]);
 
     if (redirectAfterDelete) {
         return (

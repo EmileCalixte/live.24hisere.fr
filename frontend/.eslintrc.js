@@ -6,6 +6,7 @@ module.exports = {
     extends: [
         "plugin:react/recommended",
         "standard-with-typescript",
+        "plugin:react-hooks/recommended",
     ],
     overrides: [
     ],
@@ -26,6 +27,9 @@ module.exports = {
         "react/react-in-jsx-scope": "off",
         "react/no-unescaped-entities": "off",
         "react/prop-types": "off",
+
+        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/exhaustive-deps": "warn",
 
         indent: "off",
         "@typescript-eslint/indent": ["error", 4, {
