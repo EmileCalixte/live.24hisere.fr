@@ -2,11 +2,11 @@ import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
 import RaceDetailsForm from "./RaceDetailsForm";
 import React, {useCallback, useContext, useState} from "react";
-import ApiUtil from "../../../../util/ApiUtil";
+import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
 import {userContext} from "../../../App";
 import ToastUtil from "../../../../util/ToastUtil";
 import {Navigate} from "react-router-dom";
-import Util from "../../../../util/Util";
+import {formatDateForApi} from "../../../../util/utils";
 
 const CreateRace = () => {
     const {accessToken} = useContext(userContext);
@@ -30,13 +30,13 @@ const CreateRace = () => {
         const body = {
             name: raceName,
             isPublic,
-            startTime: Util.formatDateForApi(startTime),
+            startTime: formatDateForApi(startTime),
             duration: Math.floor(duration / 1000),
             initialDistance,
             lapDistance,
         };
 
-        const response = await ApiUtil.performAuthenticatedAPIRequest("/admin/races", accessToken, {
+        const response = await performAuthenticatedAPIRequest("/admin/races", accessToken, {
             method: "POST",
             body: JSON.stringify(body),
         });

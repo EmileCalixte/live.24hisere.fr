@@ -1,6 +1,6 @@
 import {Link} from "react-router-dom";
 import {type CategoryShortCode} from "../../../types/Category";
-import Util from "../../../util/Util";
+import {formatFloatNumber, formatMsAsDuration} from "../../../util/utils";
 import RankingTableRowNCells from "./RankingTableRowNCells";
 import {type FunctionComponent} from "react";
 import {type ProcessedRankingRunner} from "../../../types/Ranking";
@@ -23,13 +23,13 @@ const RankingTableRow: FunctionComponent<RankingTableRowProps> = ({
             <td>{runner.id}</td>
             <td>{runner.lastname.toUpperCase()} {runner.firstname}</td>
             <td>{Math.max(0, runner.passageCount - 1)}</td>
-            <td>{Util.formatFloatNumber(runner.distance / 1000, 2)} km</td>
+            <td>{formatFloatNumber(runner.distance / 1000, 2)} km</td>
             <td>
                 {(() => {
                     if (runner.lastPassageRaceTime === null) {
                         return "n/a";
                     } else {
-                        return Util.formatMsAsDuration(runner.lastPassageRaceTime);
+                        return formatMsAsDuration(runner.lastPassageRaceTime);
                     }
                 })()}
             </td>
@@ -40,7 +40,7 @@ const RankingTableRow: FunctionComponent<RankingTableRowProps> = ({
                     } else {
                         return (
                             <>
-                                {Util.formatFloatNumber(runner.averageSpeed, 2)} km/h
+                                {formatFloatNumber(runner.averageSpeed, 2)} km/h
                             </>
                         );
                     }

@@ -1,5 +1,5 @@
 import {type Race} from "../types/Race";
-import Util from "./Util";
+import {verbose} from "./utils";
 import {
     type ProcessedRanking,
     type ProcessedRankingRunner,
@@ -59,7 +59,7 @@ export class RankingProcesser {
     };
 
     private readonly processRanking = (): ProcessedRanking => {
-        Util.verbose("Processing ranking");
+        verbose("Processing ranking");
 
         const processedRanking: ProcessedRanking = [];
 
@@ -168,7 +168,7 @@ export class RankingProcesser {
 
         this.processedRanking = processedRanking;
 
-        Util.verbose("Ranking processed");
+        verbose("Ranking processed");
 
         return this.processedRanking;
     };

@@ -2,7 +2,7 @@ import CanvasJSReact from "../../../../lib/canvasjs/canvasjs.react";
 import {type FunctionComponent, useCallback, useMemo, useState} from "react";
 import ReactDOMServer from "react-dom/server";
 import {type Race} from "../../../../types/Race";
-import Util from "../../../../util/Util";
+import {formatMsAsDuration} from "../../../../util/utils";
 import {type RunnerWithProcessedHours, type RunnerWithProcessedPassages} from "../../../../types/Runner";
 
 const CanvasJSChart = CanvasJSReact.CanvasJSChart;
@@ -44,7 +44,7 @@ const SpeedChart: FunctionComponent<SpeedChartProps> = ({
     const [displayAverageSpeedEvolution, setDisplayAverageSpeedEvolution] = useState(true);
 
     const getXAxisLabelValue = useCallback((e: any) => {
-        return Util.formatMsAsDuration(e.value.getTime());
+        return formatMsAsDuration(e.value.getTime());
     }, []);
 
     const getTooltipContent = useCallback((e: any) => {
@@ -63,11 +63,11 @@ const SpeedChart: FunctionComponent<SpeedChartProps> = ({
                     }
 
                     <div>
-                        De <strong>{Util.formatMsAsDuration(passage.processed.lapStartRaceTime)}</strong> à <strong>{Util.formatMsAsDuration(passage.processed.lapEndRaceTime)}</strong> :
+                        De <strong>{formatMsAsDuration(passage.processed.lapStartRaceTime)}</strong> à <strong>{formatMsAsDuration(passage.processed.lapEndRaceTime)}</strong> :
                     </div>
 
                     <div>
-                        Durée : <strong>{Util.formatMsAsDuration(passage.processed.lapDuration, false)}</strong>
+                        Durée : <strong>{formatMsAsDuration(passage.processed.lapDuration, false)}</strong>
                     </div>
 
                     <div>
@@ -75,11 +75,11 @@ const SpeedChart: FunctionComponent<SpeedChartProps> = ({
                     </div>
 
                     <div>
-                        Allure : <strong>{Util.formatMsAsDuration(passage.processed.lapPace, false)}/km</strong>
+                        Allure : <strong>{formatMsAsDuration(passage.processed.lapPace, false)}/km</strong>
                     </div>
 
                     <div style={{marginTop: "0.75em"}}>
-                        De <strong>{Util.formatMsAsDuration(0)}</strong> à <strong>{Util.formatMsAsDuration(passage.processed.lapEndRaceTime)}</strong> :
+                        De <strong>{formatMsAsDuration(0)}</strong> à <strong>{formatMsAsDuration(passage.processed.lapEndRaceTime)}</strong> :
                     </div>
 
                     <div>
@@ -87,7 +87,7 @@ const SpeedChart: FunctionComponent<SpeedChartProps> = ({
                     </div>
 
                     <div>
-                        Allure moyenne : <strong>{Util.formatMsAsDuration(passage.processed.averagePaceSinceRaceStart, false)}/km</strong>
+                        Allure moyenne : <strong>{formatMsAsDuration(passage.processed.averagePaceSinceRaceStart, false)}/km</strong>
                     </div>
                 </div>,
             );
@@ -100,13 +100,13 @@ const SpeedChart: FunctionComponent<SpeedChartProps> = ({
             return ReactDOMServer.renderToString(
                 <div>
                     <div>
-                        De <strong>{Util.formatMsAsDuration(hour.startRaceTime)}</strong> à <strong>{Util.formatMsAsDuration(hour.endRaceTime)}</strong> :
+                        De <strong>{formatMsAsDuration(hour.startRaceTime)}</strong> à <strong>{formatMsAsDuration(hour.endRaceTime)}</strong> :
                     </div>
                     <div>
                         Vitesse moyenne : <strong>{hour.averageSpeed !== null ? hour.averageSpeed.toFixed(2) + " km/h" : "–"}</strong>
                     </div>
                     <div>
-                        Allure : <strong>{hour.averagePace !== null ? Util.formatMsAsDuration(hour.averagePace, false) + "/km" : "–"}</strong>
+                        Allure : <strong>{hour.averagePace !== null ? formatMsAsDuration(hour.averagePace, false) + "/km" : "–"}</strong>
                     </div>
                 </div>,
             );

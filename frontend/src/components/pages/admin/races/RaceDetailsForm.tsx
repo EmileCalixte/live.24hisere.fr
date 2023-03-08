@@ -1,5 +1,5 @@
 import React, {type FunctionComponent, useMemo} from "react";
-import Util from "../../../../util/Util";
+import {getDateStringFromDate, getTimeStringFromDate} from "../../../../util/utils";
 import DurationInputs from "../../../misc/DurationInputs";
 
 interface RaceDetailsFormProps {
@@ -41,7 +41,7 @@ const RaceDetailsForm: FunctionComponent<RaceDetailsFormProps> = ({
         }
 
         // Date input value requires YYYY-MM-DD format
-        return Util.getDateStringFromDate(startTime, "-").split("-").reverse().join("-");
+        return getDateStringFromDate(startTime, "-").split("-").reverse().join("-");
     }, [startTime]);
 
     const startTimeTime = useMemo(() => {
@@ -49,7 +49,7 @@ const RaceDetailsForm: FunctionComponent<RaceDetailsFormProps> = ({
             return "";
         }
 
-        return Util.getTimeStringFromDate(startTime);
+        return getTimeStringFromDate(startTime);
     }, [startTime]);
 
     const onStartTimeDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {

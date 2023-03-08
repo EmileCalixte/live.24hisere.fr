@@ -2,8 +2,8 @@ import {useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {type AdminPassageWithRunnerId, type ProcessedPassage} from "../../../../types/Passage";
 import {type AdminRaceDict} from "../../../../types/Race";
 import type Runner from "../../../../types/Runner";
-import ApiUtil from "../../../../util/ApiUtil";
-import RunnerDetailsUtil from "../../../../util/RunnerDetailsUtil";
+import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
+import {getRunnerProcessedPassages} from "../../../../util/RunnerDetailsUtil";
 import {userContext} from "../../../App";
 import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
@@ -37,7 +37,7 @@ const FastestLaps = () => {
     const [page, setPage] = useState(1);
 
     const fetchRunnersAndRaces = useCallback(async () => {
-        const response = await ApiUtil.performAuthenticatedAPIRequest("/admin/runners", accessToken);
+        const response = await performAuthenticatedAPIRequest("/admin/runners", accessToken);
         const responseJson = await response.json();
 
         setRunners(responseJson.runners);
@@ -45,7 +45,7 @@ const FastestLaps = () => {
     }, [accessToken]);
 
     const fetchPassages = useCallback(async () => {
-        const response = await ApiUtil.performAuthenticatedAPIRequest("/admin/passages", accessToken);
+        const response = await performAuthenticatedAPIRequest("/admin/passages", accessToken);
         const responseJson = await response.json();
 
         // The passages are already ordered by time
@@ -121,7 +121,7 @@ const FastestLaps = () => {
 
             const runnerPassages = runnerSortedPassages[runnerId];
 
-            sortedProcessedPassages[runnerId] = RunnerDetailsUtil.getRunnerProcessedPassages(runnerPassages, race);
+            sortedProcessedPassages[runnerId] = getRunnerProcessedPassages(runnerPassages, race);
         }
 
         return sortedProcessedPassages;

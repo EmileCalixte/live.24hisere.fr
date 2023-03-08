@@ -1,7 +1,7 @@
 import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
 import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
-import ApiUtil from "../../../../util/ApiUtil";
+import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
 import {userContext} from "../../../App";
 import CircularLoader from "../../../misc/CircularLoader";
 import {Link} from "react-router-dom";
@@ -22,7 +22,7 @@ const Races = () => {
     const [isSaving, setIsSaving] = useState(false);
 
     const fetchRaces = useCallback(async () => {
-        const response = await ApiUtil.performAuthenticatedAPIRequest("/admin/races", accessToken);
+        const response = await performAuthenticatedAPIRequest("/admin/races", accessToken);
         const responseJson = await response.json();
 
         setRaces(responseJson.races);
@@ -60,7 +60,7 @@ const Races = () => {
 
         const raceIds = (sortingRaces as AdminRaceWithRunnerCount[]).map(race => race.id);
 
-        const response = await ApiUtil.performAuthenticatedAPIRequest("/admin/races-order", accessToken, {
+        const response = await performAuthenticatedAPIRequest("/admin/races-order", accessToken, {
             method: "PUT",
             body: JSON.stringify(raceIds),
         });

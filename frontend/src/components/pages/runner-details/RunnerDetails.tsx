@@ -1,14 +1,18 @@
 import {useParams} from "react-router-dom";
 import {type ProcessedRanking, type Ranking as RankingType, type RankingRunnerRanks} from "../../../types/Ranking";
-import {RankingProcesser} from "../../../util/RankingUtil";
+import {RankingProcesser} from "../../../util/RankingProcesser";
 import RunnerDetailsRaceDetails from "./RunnerDetailsRaceDetails";
 import RunnerSelector from "./RunnerSelector";
 import React, {useCallback, useEffect, useMemo, useState} from "react";
-import ApiUtil from "../../../util/ApiUtil";
+import {performAPIRequest} from "../../../util/apiUtils";
 import RunnerDetailsStats from "./RunnerDetailsStats";
 import RunnerDetailsLaps from "./RunnerDetailsLaps";
-import RunnerDetailsUtil from "../../../util/RunnerDetailsUtil";
-import ExcelUtil from "../../../util/ExcelUtil";
+import {
+    getDataForExcelExport,
+    getRunnerProcessedHours,
+    getRunnerProcessedPassages,
+} from "../../../util/RunnerDetailsUtil";
+import {generateXlsxFromData} from "../../../util/excelUtils";
 import type Runner from "../../../types/Runner";
 import {
     type RunnerWithPassages,
@@ -38,7 +42,7 @@ const RunnerDetails = () => {
     const [selectedTab, setSelectedTab] = useState(Tab.Stats);
 
     const fetchRunners = useCallback(async () => {
-        const response = await ApiUtil.performAPIRequest("/runners");
+        const response = await performAPIRequest("/runners");
         const responseJson = await response.json();
 
         setRunners(responseJson.runners);
@@ -50,7 +54,7 @@ const RunnerDetails = () => {
             return;
         }
 
-        const response = await ApiUtil.performAPIRequest(`/ranking/${selectedRunner.raceId}`);
+        const response = await performAPIRequest(`/ranking/${selectedRunner.raceId}`);
         const responseJson = await response.json();
 
         setProcessedRanking(new RankingProcesser(selectedRunner.race, responseJson.ranking as RankingType).getProcessedRanking());
@@ -61,7 +65,7 @@ const RunnerDetails = () => {
             return;
         }
 
-        const response = await ApiUtil.performAPIRequest(`/runners/${selectedRunnerId}`);
+        const response = await performAPIRequest(`/runners/${selectedRunnerId}`);
 
         if (!response.ok) {
             console.error("Failed to fetch runner", await response.json());
@@ -87,7 +91,7 @@ const RunnerDetails = () => {
             return 0;
         });
 
-        const processedPassages = RunnerDetailsUtil.getRunnerProcessedPassages(runner.passages, runner.race);
+        const processedPassages = getRunnerProcessedPassages(runner.passages, runner.race);
 
         const runnerWithProcessedPassages = {
             ...runner,
@@ -96,7 +100,7 @@ const RunnerDetails = () => {
 
         setSelectedRunner({
             ...runnerWithProcessedPassages,
-            hours: RunnerDetailsUtil.getRunnerProcessedHours(runnerWithProcessedPassages, runner.race),
+            hours: getRunnerProcessedHours(runnerWithProcessedPassages, runner.race),
         });
     }, [selectedRunnerId]);
 
@@ -111,7 +115,7 @@ const RunnerDetails = () => {
 
         const filename = `${selectedRunner.firstname} ${selectedRunner.lastname}`.trim();
 
-        ExcelUtil.generateXlsxFromData(RunnerDetailsUtil.getDataForExcelExport(selectedRunner), filename);
+        generateXlsxFromData(getDataForExcelExport(selectedRunner), filename);
     }, [selectedRunner]);
 
     useEffect(() => {

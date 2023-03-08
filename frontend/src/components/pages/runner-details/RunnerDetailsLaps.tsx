@@ -1,5 +1,5 @@
 import React, {type FunctionComponent, useCallback, useEffect, useMemo, useState} from "react";
-import Util, {SORT_ASC, SORT_DESC} from "../../../util/Util";
+import {formatMsAsDuration, SORT_ASC, SORT_DESC} from "../../../util/utils";
 import {type RunnerWithProcessedPassages} from "../../../types/Runner";
 
 enum SortBy {
@@ -140,22 +140,22 @@ const RunnerDetailsLaps: FunctionComponent<RunnerDetailsLapsProps> = ({runner}) 
                                             {(passage.processed.totalDistance / 1000).toFixed(2)} km
                                         </td>
                                         <td>
-                                            {Util.formatMsAsDuration(passage.processed.lapEndRaceTime)}
+                                            {formatMsAsDuration(passage.processed.lapEndRaceTime)}
                                         </td>
                                         <td>
-                                            {Util.formatMsAsDuration(passage.processed.lapDuration)}
+                                            {formatMsAsDuration(passage.processed.lapDuration)}
                                         </td>
                                         <td>
                                             {passage.processed.lapSpeed.toFixed(2)} km/h
                                         </td>
                                         <td>
-                                            {Util.formatMsAsDuration(passage.processed.lapPace, false)}/km
+                                            {formatMsAsDuration(passage.processed.lapPace, false)}/km
                                         </td>
                                         <td>
                                             {passage.processed.averageSpeedSinceRaceStart.toFixed(2)} km/h
                                         </td>
                                         <td>
-                                            {Util.formatMsAsDuration(passage.processed.averagePaceSinceRaceStart, false)}/km
+                                            {formatMsAsDuration(passage.processed.averagePaceSinceRaceStart, false)}/km
                                         </td>
                                     </tr>
                                 ))}
@@ -196,25 +196,25 @@ const RunnerDetailsLaps: FunctionComponent<RunnerDetailsLapsProps> = ({runner}) 
 
                                                 &nbsp;–&nbsp;
 
-                                                {Util.formatMsAsDuration(passage.processed.lapEndRaceTime)}
+                                                {formatMsAsDuration(passage.processed.lapEndRaceTime)}
                                             </div>
 
                                             <div className="responsive-runner-laps-table-row-secondary-data">
                                                 Durée&nbsp;:&nbsp;
-                                                <strong>{Util.formatMsAsDuration(passage.processed.lapDuration)}</strong>
+                                                <strong>{formatMsAsDuration(passage.processed.lapDuration)}</strong>
                                                 <> </>
                                                 |<> </>
                                                 <strong>{passage.processed.lapSpeed.toFixed(2)} km/h</strong>
                                                 <> </>
                                                 |<> </>
-                                                {Util.formatMsAsDuration(passage.processed.lapPace, false)}/km
+                                                {formatMsAsDuration(passage.processed.lapPace, false)}/km
                                             </div>
 
                                             <div className="responsive-runner-laps-table-row-secondary-data">
                                                 Depuis
                                                 départ&nbsp;:&nbsp; {passage.processed.averageSpeedSinceRaceStart.toFixed(2)} km/h
                                                 <> </>|<> </>
-                                                {Util.formatMsAsDuration(passage.processed.averagePaceSinceRaceStart, false)}/km
+                                                {formatMsAsDuration(passage.processed.averagePaceSinceRaceStart, false)}/km
                                             </div>
                                         </td>
                                     </tr>

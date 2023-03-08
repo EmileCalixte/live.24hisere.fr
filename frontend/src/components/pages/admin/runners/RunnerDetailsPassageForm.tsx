@@ -1,5 +1,5 @@
 import React, {type FunctionComponent, useEffect, useRef} from "react";
-import Util from "../../../../util/Util";
+import {formatDateAsString} from "../../../../util/utils";
 import DurationInputs from "../../../misc/DurationInputs";
 
 interface RunnerDetailsPassageFormProps {
@@ -55,7 +55,7 @@ const RunnerDetailsPassageForm: FunctionComponent<RunnerDetailsPassageFormProps>
 
                         {time &&
                             <div className="mt-3">
-                                Date et heure : {Util.formatDateAsString(time)}
+                                Date et heure : {formatDateAsString(time)}
                             </div>
                         }
 

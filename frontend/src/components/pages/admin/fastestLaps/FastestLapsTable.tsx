@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 import {type AdminPassageWithRunnerId, type ProcessedPassage} from "../../../../types/Passage";
 import {type AdminRaceDict} from "../../../../types/Race";
 import type Runner from "../../../../types/Runner";
-import Util from "../../../../util/Util";
+import {formatFloatNumber, formatMsAsDuration} from "../../../../util/utils";
 
 interface FastestLapsTableProps {
     passages: (AdminPassageWithRunnerId & ProcessedPassage)[];
@@ -45,13 +45,13 @@ const FastestLapsTable: FunctionComponent<FastestLapsTableProps> = ({
                                 {`${race?.name}`}
                             </td>
                             <td>
-                                {Util.formatMsAsDuration(passage.processed.lapDuration, false)}
+                                {formatMsAsDuration(passage.processed.lapDuration, false)}
                             </td>
                             <td>
-                                {`${Util.formatFloatNumber(passage.processed.lapSpeed, 2)} km/h`}
+                                {`${formatFloatNumber(passage.processed.lapSpeed, 2)} km/h`}
                             </td>
                             <td>
-                                {`${Util.formatMsAsDuration(passage.processed.lapStartRaceTime)} – ${Util.formatMsAsDuration(passage.processed.lapEndRaceTime)}`}
+                                {`${formatMsAsDuration(passage.processed.lapStartRaceTime)} – ${formatMsAsDuration(passage.processed.lapEndRaceTime)}`}
                             </td>
                         </tr>
                     );

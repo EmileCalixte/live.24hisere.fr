@@ -5,10 +5,15 @@ import Header from "./layout/header/Header";
 import Footer from "./layout/footer/Footer";
 import Ranking from "./pages/ranking/Ranking";
 import RunnerDetails from "./pages/runner-details/RunnerDetails";
-import ApiUtil, {EVENT_API_REQUEST_ENDED, EVENT_API_REQUEST_STARTED} from "../util/ApiUtil";
+import {
+    EVENT_API_REQUEST_ENDED,
+    EVENT_API_REQUEST_STARTED,
+    performAPIRequest,
+    performAuthenticatedAPIRequest,
+} from "../util/apiUtils";
 import Login from "./pages/login/Login";
 import Admin from "./pages/admin/Admin";
-import Util from "../util/Util";
+import {verbose} from "../util/utils";
 import ToastUtil from "../util/ToastUtil";
 
 interface AppDataContext {
@@ -100,7 +105,7 @@ const App: FunctionComponent = () => {
     }, []);
 
     const fetchAppData = useCallback(async () => {
-        const response = await ApiUtil.performAPIRequest("/app-data");
+        const response = await performAPIRequest("/app-data");
         const responseJson = await response.json();
 
         setLastUpdateTime(new Date(responseJson.lastUpdateTime));
@@ -114,9 +119,9 @@ const App: FunctionComponent = () => {
     }, []);
 
     const fetchUserInfo = useCallback(async () => {
-        Util.verbose("Fetching user info");
+        verbose("Fetching user info");
 
-        const response = await ApiUtil.performAuthenticatedAPIRequest("/auth/current-user-info", accessToken);
+        const response = await performAuthenticatedAPIRequest("/auth/current-user-info", accessToken);
 
         if (!response.ok) {
             forgetAccessToken();
@@ -126,13 +131,13 @@ const App: FunctionComponent = () => {
 
         const responseJson = await response.json();
 
-        Util.verbose("User info", responseJson);
+        verbose("User info", responseJson);
 
         setUser(responseJson.user);
     }, [accessToken, forgetAccessToken]);
 
     const logout = useCallback(() => {
-        ApiUtil.performAuthenticatedAPIRequest("/auth/logout", accessToken, {
+        performAuthenticatedAPIRequest("/auth/logout", accessToken, {
             method: "POST",
         });
 

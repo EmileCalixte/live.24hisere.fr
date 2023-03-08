@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 import {type CategoryShortCode} from "../../../types/Category";
 import {type ProcessedRankingRunner} from "../../../types/Ranking";
 import {type GenderWithMixed} from "../../../types/Runner";
-import Util from "../../../util/Util";
+import {formatFloatNumber, formatMsAsDuration} from "../../../util/utils";
 
 interface ResponsiveRankingTableRowProps {
     runner: ProcessedRankingRunner;
@@ -94,7 +94,7 @@ const ResponsiveRankingTableRow: FunctionComponent<ResponsiveRankingTableRowProp
                     </div>
 
                     <div className="responsive-ranking-table-row-stats">
-                        {Util.formatFloatNumber(runner.distance / 1000, 2)} km
+                        {formatFloatNumber(runner.distance / 1000, 2)} km
 
                         {(() => {
                             if (runner.averageSpeed === null) {
@@ -103,7 +103,7 @@ const ResponsiveRankingTableRow: FunctionComponent<ResponsiveRankingTableRowProp
                                 return (
                                     <>
                                         &nbsp;–&nbsp;
-                                        {Util.formatFloatNumber(runner.averageSpeed, 2)} km/h moy.
+                                        {formatFloatNumber(runner.averageSpeed, 2)} km/h moy.
                                     </>
                                 );
                             }
@@ -116,7 +116,7 @@ const ResponsiveRankingTableRow: FunctionComponent<ResponsiveRankingTableRowProp
                                 return (
                                     <>
                                         &nbsp;–&nbsp;
-                                        Dernier passage {Util.formatMsAsDuration(runner.lastPassageRaceTime)}
+                                        Dernier passage {formatMsAsDuration(runner.lastPassageRaceTime)}
                                     </>
                                 );
                             }

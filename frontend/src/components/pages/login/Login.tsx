@@ -1,5 +1,5 @@
 import React, {useContext, useState} from "react";
-import ApiUtil from "../../../util/ApiUtil";
+import {performAPIRequest} from "../../../util/apiUtils";
 import {userContext} from "../../App";
 import {Navigate} from "react-router-dom";
 import ToastUtil from "../../../util/ToastUtil";
@@ -20,7 +20,7 @@ const Login = () => {
         formData.append("username", username);
         formData.append("password", password);
 
-        const response = await ApiUtil.performAPIRequest("/auth/login", {
+        const response = await performAPIRequest("/auth/login", {
             method: "POST",
             body: formData,
         });

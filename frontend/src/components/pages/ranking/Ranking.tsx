@@ -1,14 +1,14 @@
 import "../../../css/print-ranking-table.css";
 import React, {useState, useEffect, useCallback, useMemo} from "react";
 import {type Race} from "../../../types/Race";
-import {existingCategories} from "../../../util/FfaUtil";
+import {existingCategories} from "../../../util/ffaUtils";
 import CircularLoader from "../../misc/CircularLoader";
 import RankingRaceSelector from "./RankingRaceSelector";
 import RankingSettings from "./RankingSettings";
-import ApiUtil from "../../../util/ApiUtil";
+import {performAPIRequest} from "../../../util/apiUtils";
 import RankingTable from "./RankingTable";
-import {RankingProcesser} from "../../../util/RankingUtil";
-import Util from "../../../util/Util";
+import {RankingProcesser} from "../../../util/RankingProcesser";
+import {formatDateForApi} from "../../../util/utils";
 import {type CategoriesDict, type CategoryShortCode} from "../../../types/Category";
 import {type ProcessedRanking, type Ranking as RankingType} from "../../../types/Ranking";
 import {type GenderWithMixed} from "../../../types/Runner";
@@ -36,7 +36,7 @@ const Ranking = () => {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
     const fetchRaces = useCallback(async () => {
-        const response = await ApiUtil.performAPIRequest("/races");
+        const response = await performAPIRequest("/races");
         const responseJson = await response.json();
 
         setRaces(responseJson.races as Race[]);
@@ -52,11 +52,11 @@ const Ranking = () => {
         if (selectedTimeMode === TimeMode.At) {
             const rankingDate = new Date();
             rankingDate.setTime(new Date(selectedRace.startTime).getTime() + rankingTime);
-            const rankingDateString = Util.formatDateForApi(rankingDate);
+            const rankingDateString = formatDateForApi(rankingDate);
             requestUrl += `?at=${rankingDateString}`;
         }
 
-        const response = await ApiUtil.performAPIRequest(requestUrl);
+        const response = await performAPIRequest(requestUrl);
         const responseJson = await response.json();
 
         setProcessedRanking(new RankingProcesser(selectedRace, responseJson.ranking as RankingType).getProcessedRanking());

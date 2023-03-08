@@ -1,6 +1,6 @@
 import {type FunctionComponent, useContext, useEffect, useMemo, useState} from "react";
 import {type Race} from "../../types/Race";
-import Util from "../../util/Util";
+import {formatMsAsDuration} from "../../util/utils";
 import {appDataContext} from "../App";
 
 interface RaceTimerProps {
@@ -15,7 +15,7 @@ const RaceTimer: FunctionComponent<RaceTimerProps> = ({race, allowNegative = fal
     const [raceTime, setRaceTime] = useState(0);
 
     const formattedRaceTime = useMemo(() => {
-        return Util.formatMsAsDuration(raceTime);
+        return formatMsAsDuration(raceTime);
     }, [raceTime]);
 
     useEffect(() => {

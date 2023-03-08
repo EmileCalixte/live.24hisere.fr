@@ -2,7 +2,7 @@ import React, {useCallback, useContext, useEffect, useState} from "react";
 import {Navigate} from "react-router-dom";
 import {type AdminRaceWithRunnerCount} from "../../../../types/Race";
 import {Gender} from "../../../../types/Runner";
-import ApiUtil from "../../../../util/ApiUtil";
+import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
 import ToastUtil from "../../../../util/ToastUtil";
 import {userContext} from "../../../App";
 import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
@@ -26,7 +26,7 @@ const CreateRunner = () => {
     const [redirectToId, setRedirectToId] = useState(null);
 
     const fetchRaces = useCallback(async () => {
-        const response = await ApiUtil.performAuthenticatedAPIRequest("/admin/races", accessToken);
+        const response = await performAuthenticatedAPIRequest("/admin/races", accessToken);
         const responseJson = await response.json();
 
         const responseRaces = responseJson.races as AdminRaceWithRunnerCount[];
@@ -56,7 +56,7 @@ const CreateRunner = () => {
             raceId,
         };
 
-        const response = await ApiUtil.performAuthenticatedAPIRequest("/admin/runners", accessToken, {
+        const response = await performAuthenticatedAPIRequest("/admin/runners", accessToken, {
             method: "POST",
             body: JSON.stringify(body),
         });

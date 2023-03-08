@@ -3,8 +3,8 @@ import {type RankingRunnerRanks} from "../../../types/Ranking";
 import React, {type FunctionComponent, useMemo} from "react";
 import CircularLoader from "../../misc/CircularLoader";
 import SpeedChart from "./charts/SpeedChart";
-import Util from "../../../util/Util";
-import RunnerDetailsUtil from "../../../util/RunnerDetailsUtil";
+import {formatMsAsDuration} from "../../../util/utils";
+import {getPaceFromSpeed} from "../../../util/RunnerDetailsUtil";
 import {type RunnerWithProcessedHours, type RunnerWithProcessedPassages} from "../../../types/Runner";
 import {type ProcessedPassage} from "../../../types/Passage";
 
@@ -107,7 +107,7 @@ const RunnerDetailsStats: FunctionComponent<RunnerDetailsStatsProps> = ({
             return null;
         }
 
-        return RunnerDetailsUtil.getPaceFromSpeed(averageSpeed);
+        return getPaceFromSpeed(averageSpeed);
     }, [averageSpeed]);
 
     return (
@@ -143,10 +143,10 @@ const RunnerDetailsStats: FunctionComponent<RunnerDetailsStatsProps> = ({
 
                         return (
                             <>
-                                Tour {fastestLapPassage.processed.lapNumber} à <strong>{Util.formatMsAsDuration(fastestLapPassage.processed.lapEndRaceTime)}</strong> de course,
-                                durée : <strong>{Util.formatMsAsDuration(fastestLapPassage.processed.lapDuration)}</strong>,
+                                Tour {fastestLapPassage.processed.lapNumber} à <strong>{formatMsAsDuration(fastestLapPassage.processed.lapEndRaceTime)}</strong> de course,
+                                durée : <strong>{formatMsAsDuration(fastestLapPassage.processed.lapDuration)}</strong>,
                                 vitesse : <strong>{fastestLapPassage.processed.lapSpeed.toFixed(2)} km/h</strong>,
-                                allure : <strong>{Util.formatMsAsDuration(fastestLapPassage.processed.lapPace, false)}/km</strong>
+                                allure : <strong>{formatMsAsDuration(fastestLapPassage.processed.lapPace, false)}/km</strong>
                             </>
                         );
                     })()}
@@ -160,17 +160,17 @@ const RunnerDetailsStats: FunctionComponent<RunnerDetailsStatsProps> = ({
 
                         return (
                             <>
-                                Tour {slowestLapPassage.processed.lapNumber} à <strong>{Util.formatMsAsDuration(slowestLapPassage.processed.lapEndRaceTime)}</strong> de course,
-                                durée : <strong>{Util.formatMsAsDuration(slowestLapPassage.processed.lapDuration)}</strong>,
+                                Tour {slowestLapPassage.processed.lapNumber} à <strong>{formatMsAsDuration(slowestLapPassage.processed.lapEndRaceTime)}</strong> de course,
+                                durée : <strong>{formatMsAsDuration(slowestLapPassage.processed.lapDuration)}</strong>,
                                 vitesse : <strong>{slowestLapPassage.processed.lapSpeed.toFixed(2)} km/h</strong>,
-                                allure : <strong>{Util.formatMsAsDuration(slowestLapPassage.processed.lapPace, false)}/km</strong>
+                                allure : <strong>{formatMsAsDuration(slowestLapPassage.processed.lapPace, false)}/km</strong>
                             </>
                         );
                     })()}
                 </p>
 
                 <p>
-                    Vitesse moyenne de 00:00:00 à {lastPassageRaceTime !== null ? Util.formatMsAsDuration(lastPassageRaceTime) : "--:--:--"} : <strong>{averageSpeed !== null ? averageSpeed.toFixed(2) + " km/h" : "n/a"}</strong> (allure moyenne : <strong>{averagePace !== null ? Util.formatMsAsDuration(averagePace, false) + "/km" : "n/a"})</strong>
+                    Vitesse moyenne de 00:00:00 à {lastPassageRaceTime !== null ? formatMsAsDuration(lastPassageRaceTime) : "--:--:--"} : <strong>{averageSpeed !== null ? averageSpeed.toFixed(2) + " km/h" : "n/a"}</strong> (allure moyenne : <strong>{averagePace !== null ? formatMsAsDuration(averagePace, false) + "/km" : "n/a"})</strong>
                 </p>
             </div>
 

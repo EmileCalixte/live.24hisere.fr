@@ -1,7 +1,7 @@
 import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
 import {useCallback, useContext, useEffect, useState} from "react";
-import ApiUtil from "../../../../util/ApiUtil";
+import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
 import {userContext} from "../../../App";
 import CircularLoader from "../../../misc/CircularLoader";
 import {Link} from "react-router-dom";
@@ -19,7 +19,7 @@ const Runners = () => {
     const [races, setRaces] = useState<AdminRaceDict | false>(false);
 
     const fetchRunnersAndRaces = useCallback(async () => {
-        const response = await ApiUtil.performAuthenticatedAPIRequest("/admin/runners", accessToken);
+        const response = await performAuthenticatedAPIRequest("/admin/runners", accessToken);
         const responseJson = await response.json();
 
         setRunners(responseJson.runners);

@@ -3,9 +3,9 @@ import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
 import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
 import CircularLoader from "../../../misc/CircularLoader";
-import ApiUtil from "../../../../util/ApiUtil";
+import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
 import {userContext} from "../../../App";
-import Util from "../../../../util/Util";
+import {formatDateForApi} from "../../../../util/utils";
 import ToastUtil from "../../../../util/ToastUtil";
 import RaceDetailsForm from "./RaceDetailsForm";
 import {type AdminRaceWithRunnerCount} from "../../../../types/Race";
@@ -44,7 +44,7 @@ const RaceDetails = () => {
     }, [race, raceName, initialDistance, lapDistance, startTime, duration, isPublic]);
 
     const fetchRace = useCallback(async () => {
-        const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/races/${urlRaceId}`, accessToken);
+        const response = await performAuthenticatedAPIRequest(`/admin/races/${urlRaceId}`, accessToken);
 
         if (!response.ok) {
             console.error("Failed to fetch race", await response.json());
@@ -80,13 +80,13 @@ const RaceDetails = () => {
         const body = {
             name: raceName,
             isPublic,
-            startTime: Util.formatDateForApi(startTime),
+            startTime: formatDateForApi(startTime),
             duration: Math.floor(duration / 1000),
             initialDistance,
             lapDistance,
         };
 
-        const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/races/${race.id}`, accessToken, {
+        const response = await performAuthenticatedAPIRequest(`/admin/races/${race.id}`, accessToken, {
             method: "PATCH",
             body: JSON.stringify(body),
         });
@@ -119,7 +119,7 @@ const RaceDetails = () => {
             return;
         }
 
-        const response = await ApiUtil.performAuthenticatedAPIRequest(`/admin/races/${race.id}`, accessToken, {
+        const response = await performAuthenticatedAPIRequest(`/admin/races/${race.id}`, accessToken, {
             method: "DELETE",
         });
 

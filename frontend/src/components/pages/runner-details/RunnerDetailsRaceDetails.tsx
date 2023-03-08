@@ -1,6 +1,6 @@
 import {type FunctionComponent, useMemo} from "react";
 import {type Race} from "../../../types/Race";
-import Util from "../../../util/Util";
+import {formatMsAsDuration} from "../../../util/utils";
 import RaceTimer from "../../misc/RaceTimer";
 
 interface RunnerDetailsRaceDetailsProps {
@@ -10,7 +10,7 @@ interface RunnerDetailsRaceDetailsProps {
 const RunnerDetailsRaceDetails: FunctionComponent<RunnerDetailsRaceDetailsProps> = ({race}) => {
     // The race total duration formatted to be human-readable
     const formattedRaceDuration = useMemo(() => {
-        return Util.formatMsAsDuration(race.duration * 1000);
+        return formatMsAsDuration(race.duration * 1000);
     }, [race]);
 
     return (

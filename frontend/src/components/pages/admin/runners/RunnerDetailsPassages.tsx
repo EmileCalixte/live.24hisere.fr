@@ -1,7 +1,7 @@
 import {type FunctionComponent, useEffect, useMemo, useState} from "react";
 import {type AdminProcessedPassage} from "../../../../types/Passage";
 import {type AdminRaceWithRunnerCount} from "../../../../types/Race";
-import Util from "../../../../util/Util";
+import {formatDateAsString, formatMsAsDuration} from "../../../../util/utils";
 import RunnerDetailsCreatePassage from "./RunnerDetailsCreatePassage";
 import RunnerDetailsEditPassage from "./RunnerDetailsEditPassage";
 
@@ -106,8 +106,8 @@ const RunnerDetailsPassages: FunctionComponent<RunnerDetailsPassagesProps> = ({
                                             return "Manuel";
                                         })()}
                                     </td>
-                                    <td>{Util.formatDateAsString(passage.processed.lapEndTime)}</td>
-                                    <td>{Util.formatMsAsDuration(passage.processed.lapEndRaceTime)}</td>
+                                    <td>{formatDateAsString(passage.processed.lapEndTime)}</td>
+                                    <td>{formatMsAsDuration(passage.processed.lapEndRaceTime)}</td>
                                     <td className="no-padding-vertical">
                                         <div className="buttons-container">
                                             {passage.isHidden &&

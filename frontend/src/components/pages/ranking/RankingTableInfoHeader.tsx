@@ -2,7 +2,7 @@ import {type FunctionComponent} from "react";
 import {type CategoryShortCode} from "../../../types/Category";
 import {type Race} from "../../../types/Race";
 import {Gender, type GenderWithMixed} from "../../../types/Runner";
-import Util from "../../../util/Util";
+import {formatMsAsDuration} from "../../../util/utils";
 
 interface RankingTableInfoHeaderProps {
     race: Race;
@@ -37,7 +37,7 @@ const RankingTableInfoHeader: FunctionComponent<RankingTableInfoHeaderProps> = (
                 }
             })()} {(() => {
                 if (tableRaceDuration !== null) {
-                    return `à ${Util.formatMsAsDuration(tableRaceDuration)} de course`;
+                    return `à ${formatMsAsDuration(tableRaceDuration)} de course`;
                 }
             })()}
         </td>

@@ -1,6 +1,6 @@
 import {useContext} from "react";
 import {appDataContext, userContext} from "../../App";
-import Util from "../../../util/Util";
+import {formatDateAsString} from "../../../util/utils";
 import {Link} from "react-router-dom";
 
 const Footer = () => {
@@ -12,7 +12,7 @@ const Footer = () => {
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-12" style={{textAlign: "center"}}>
-                        <p>Dernière mise à jour des données : {Util.formatDateAsString(lastUpdateTime)}</p>
+                        <p>Dernière mise à jour des données : {formatDateAsString(lastUpdateTime)}</p>
 
                         <p>Toutes les données disponibles sur cette page sont extraites du système de chronométrage. Toutefois, ayant un but purement indicatif, les caclculs peuvent éventuellement contenir des erreurs ou des imprécisions. Seules les données du poste de chronométrage font foi.</p>
 
