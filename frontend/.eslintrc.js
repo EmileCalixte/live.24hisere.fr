@@ -41,6 +41,7 @@ module.exports = {
         "react/jsx-indent-props": ["error", "first"],
 
         quotes: ["error", "double"],
+        "jsx-quotes": ["error", "prefer-double"],
         "@typescript-eslint/quotes": ["error", "double"],
 
         semi: ["error", "always"],
@@ -63,6 +64,8 @@ module.exports = {
             },
             multilineDetection: "brackets",
         }],
+
+        "@typescript-eslint/no-empty-function": ["error", {allow: ["arrowFunctions"]}],
 
         "@typescript-eslint/space-before-function-paren": ["error", {
             anonymous: "always",
