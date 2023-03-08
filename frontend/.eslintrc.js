@@ -21,6 +21,7 @@ module.exports = {
         "react",
     ],
     ignorePatterns: [
+        "src/config/config.ts",
         "**/lib/**",
     ],
     rules: {
