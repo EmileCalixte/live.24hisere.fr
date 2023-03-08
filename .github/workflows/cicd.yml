@@ -51,6 +51,10 @@ jobs:
           FRONTEND_CONFIG_FILE_CONTENT: ${{ secrets.FRONTEND_CONFIG }}
         run: echo ${FRONTEND_CONFIG_FILE_CONTENT} > frontend/src/config/config.ts
 
+      - name: Run JS linter
+        run: npm run lint
+        working-directory: ./frontend
+
       - name: Create frontend production builds
         run: npm run build
         working-directory: ./frontend

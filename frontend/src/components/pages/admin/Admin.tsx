@@ -23,7 +23,7 @@ const Admin = () => {
     if (user === undefined) {
         return (
             <CircularLoader/>
-        )
+        );
     }
 
     return (
@@ -40,6 +40,6 @@ const Admin = () => {
             <Route path="*" element={<Navigate to="/admin" replace/>}/>
         </Routes>
     );
-}
+};
 
 export default Admin;

@@ -1,8 +1,8 @@
 import React, {useCallback, useContext, useEffect, useState} from "react";
 import {Navigate} from "react-router-dom";
-import {AdminRaceWithRunnerCount} from "../../../../types/Race";
+import {type AdminRaceWithRunnerCount} from "../../../../types/Race";
 import {Gender} from "../../../../types/Runner";
-import ApiUtil from "../../../../util/ApiUtil";
+import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
 import ToastUtil from "../../../../util/ToastUtil";
 import {userContext} from "../../../App";
 import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
@@ -15,8 +15,8 @@ const CreateRunner = () => {
     const [races, setRaces] = useState<AdminRaceWithRunnerCount[] | false>(false);
 
     const [id, setId] = useState(1);
-    const [firstname, setFirstname] = useState('');
-    const [lastname, setLastname] = useState('');
+    const [firstname, setFirstname] = useState("");
+    const [lastname, setLastname] = useState("");
     const [gender, setGender] = useState(Gender.M);
     const [birthYear, setBirthYear] = useState(((new Date()).getFullYear() - 30).toString());
     const [raceId, setRaceId] = useState<number | null>(null);
@@ -26,7 +26,7 @@ const CreateRunner = () => {
     const [redirectToId, setRedirectToId] = useState(null);
 
     const fetchRaces = useCallback(async () => {
-        const response = await ApiUtil.performAuthenticatedAPIRequest('/admin/races', accessToken);
+        const response = await performAuthenticatedAPIRequest("/admin/races", accessToken);
         const responseJson = await response.json();
 
         const responseRaces = responseJson.races as AdminRaceWithRunnerCount[];
@@ -54,9 +54,9 @@ const CreateRunner = () => {
             gender,
             birthYear,
             raceId,
-        }
+        };
 
-        const response = await ApiUtil.performAuthenticatedAPIRequest("/admin/runners", accessToken, {
+        const response = await performAuthenticatedAPIRequest("/admin/runners", accessToken, {
             method: "POST",
             body: JSON.stringify(body),
         });
@@ -81,7 +81,7 @@ const CreateRunner = () => {
     if (redirectToId) {
         return (
             <Navigate to={`/admin/runners/${redirectToId}`} />
-        )
+        );
     }
 
     return (
@@ -119,7 +119,7 @@ const CreateRunner = () => {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default CreateRunner;

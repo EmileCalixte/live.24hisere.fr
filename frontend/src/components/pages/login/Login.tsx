@@ -1,5 +1,5 @@
 import React, {useContext, useState} from "react";
-import ApiUtil from "../../../util/ApiUtil";
+import {performAPIRequest} from "../../../util/apiUtils";
 import {userContext} from "../../App";
 import {Navigate} from "react-router-dom";
 import ToastUtil from "../../../util/ToastUtil";
@@ -7,8 +7,8 @@ import ToastUtil from "../../../util/ToastUtil";
 const Login = () => {
     const {accessToken, saveAccessToken, setUser} = useContext(userContext);
 
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
     const [submitButtonDisabled, setSubmitButtonDisabled] = useState(false);
     const [loggedIn, setLoggedIn] = useState(accessToken !== null);
 
@@ -17,11 +17,11 @@ const Login = () => {
         setSubmitButtonDisabled(true);
 
         const formData = new FormData();
-        formData.append('username', username);
-        formData.append('password', password);
+        formData.append("username", username);
+        formData.append("password", password);
 
-        const response = await ApiUtil.performAPIRequest('/auth/login', {
-            method: 'POST',
+        const response = await performAPIRequest("/auth/login", {
+            method: "POST",
             body: formData,
         });
 
@@ -42,7 +42,7 @@ const Login = () => {
         saveAccessToken(accessToken);
         setUser(undefined); // Will be defined when the application has fetched user info
         setLoggedIn(true);
-    }
+    };
 
     if (loggedIn) {
         return (
@@ -96,6 +96,6 @@ const Login = () => {
             </div>
         </div>
     );
-}
+};
 
 export default Login;

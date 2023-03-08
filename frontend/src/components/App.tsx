@@ -1,17 +1,22 @@
-import React, {createContext, useCallback, useEffect, useState} from "react";
+import {createContext, type FunctionComponent, useCallback, useEffect, useState} from "react";
 import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
-import {User} from "../types/User";
+import {type User} from "../types/User";
 import Header from "./layout/header/Header";
 import Footer from "./layout/footer/Footer";
 import Ranking from "./pages/ranking/Ranking";
 import RunnerDetails from "./pages/runner-details/RunnerDetails";
-import ApiUtil, {EVENT_API_REQUEST_ENDED, EVENT_API_REQUEST_STARTED} from "../util/ApiUtil";
+import {
+    EVENT_API_REQUEST_ENDED,
+    EVENT_API_REQUEST_STARTED,
+    performAPIRequest,
+    performAuthenticatedAPIRequest,
+} from "../util/apiUtils";
 import Login from "./pages/login/Login";
 import Admin from "./pages/admin/Admin";
-import Util from "../util/Util";
+import {verbose} from "../util/utils";
 import ToastUtil from "../util/ToastUtil";
 
-type AppDataContext = {
+interface AppDataContext {
     /**
      * Date and time the runners' data was exported from the timing system
      */
@@ -23,7 +28,7 @@ type AppDataContext = {
     serverTimeOffset: number;
 }
 
-type HeaderFetchLoaderContext = {
+interface HeaderFetchLoaderContext {
     /**
      * A value incremented when a request is in progress, decremented when a request is completed.
      * The header loader should be displayed if this value is > 0.
@@ -34,7 +39,7 @@ type HeaderFetchLoaderContext = {
     decrementFetchLevel: () => any;
 }
 
-type UserContext = {
+interface UserContext {
     /**
      * The access token used for authenticated API requests
      */
@@ -73,7 +78,7 @@ export const userContext = createContext<UserContext>({
 
 const FETCH_APP_DATA_INTERVAL_TIME = 60 * 1000;
 
-const App: React.FunctionComponent = () => {
+const App: FunctionComponent = () => {
     const [fetchLevel, setFetchLevel] = useState(0);
     const [lastUpdateTime, setLastUpdateTime] = useState(new Date());
     const [serverTimeOffset, setServerTimeOffset] = useState(0);
@@ -100,7 +105,7 @@ const App: React.FunctionComponent = () => {
     }, []);
 
     const fetchAppData = useCallback(async () => {
-        const response = await ApiUtil.performAPIRequest("/app-data");
+        const response = await performAPIRequest("/app-data");
         const responseJson = await response.json();
 
         setLastUpdateTime(new Date(responseJson.lastUpdateTime));
@@ -114,9 +119,9 @@ const App: React.FunctionComponent = () => {
     }, []);
 
     const fetchUserInfo = useCallback(async () => {
-        Util.verbose('Fetching user info');
+        verbose("Fetching user info");
 
-        const response = await ApiUtil.performAuthenticatedAPIRequest("/auth/current-user-info", accessToken);
+        const response = await performAuthenticatedAPIRequest("/auth/current-user-info", accessToken);
 
         if (!response.ok) {
             forgetAccessToken();
@@ -126,14 +131,14 @@ const App: React.FunctionComponent = () => {
 
         const responseJson = await response.json();
 
-        Util.verbose('User info', responseJson);
+        verbose("User info", responseJson);
 
         setUser(responseJson.user);
     }, [accessToken, forgetAccessToken]);
 
     const logout = useCallback(() => {
-        ApiUtil.performAuthenticatedAPIRequest('/auth/logout', accessToken, {
-            method: 'POST',
+        performAuthenticatedAPIRequest("/auth/logout", accessToken, {
+            method: "POST",
         });
 
         forgetAccessToken();
@@ -141,17 +146,17 @@ const App: React.FunctionComponent = () => {
         setUser(null);
         setRedirect("/");
 
-        ToastUtil.getToastr().success('Vous avez été déconnecté');
+        ToastUtil.getToastr().success("Vous avez été déconnecté");
     }, [accessToken, forgetAccessToken]);
 
     useEffect(() => {
         window.addEventListener(EVENT_API_REQUEST_STARTED, incrementFetchLevel);
         window.addEventListener(EVENT_API_REQUEST_ENDED, decrementFetchLevel);
 
-        return (() => {
+        return () => {
             window.removeEventListener(EVENT_API_REQUEST_STARTED, incrementFetchLevel);
             window.removeEventListener(EVENT_API_REQUEST_ENDED, decrementFetchLevel);
-        });
+        };
     }, [incrementFetchLevel, decrementFetchLevel]);
 
     useEffect(() => {
@@ -159,13 +164,13 @@ const App: React.FunctionComponent = () => {
 
         const interval = setInterval(fetchAppData, FETCH_APP_DATA_INTERVAL_TIME);
 
-        return (() => {
+        return () => {
             clearInterval(interval);
-        })
+        };
     }, [fetchAppData]);
 
     useEffect(() => {
-        if (!accessToken) {
+        if (accessToken === null) {
             setUser(null);
             return;
         }
@@ -173,7 +178,7 @@ const App: React.FunctionComponent = () => {
         fetchUserInfo();
     }, [accessToken, fetchUserInfo]);
 
-    if (redirect) {
+    if (redirect !== null) {
         setRedirect(null);
 
         return (
@@ -228,6 +233,6 @@ const App: React.FunctionComponent = () => {
             </div>
         </BrowserRouter>
     );
-}
+};
 
 export default App;

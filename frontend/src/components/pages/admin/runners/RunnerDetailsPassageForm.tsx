@@ -1,16 +1,26 @@
-import React, {useEffect, useRef} from "react";
-import Util from "../../../../util/Util";
+import React, {type FunctionComponent, useEffect, useRef} from "react";
+import {formatDateAsString} from "../../../../util/utils";
 import DurationInputs from "../../../misc/DurationInputs";
 
-const RunnerDetailsPassageForm: React.FunctionComponent<{
-    raceTime: number,
-    setRaceTime: (raceTime: number) => any,
-    time: Date | null,
-    modalTitle: string,
-    onSubmit: (e: React.FormEvent) => any,
-    submitButtonDisabled: boolean,
-    onClose: () => any,
-}> = ({raceTime, setRaceTime, time, modalTitle, onSubmit, submitButtonDisabled, onClose}) => {
+interface RunnerDetailsPassageFormProps {
+    raceTime: number;
+    setRaceTime: (raceTime: number) => any;
+    time: Date | null;
+    modalTitle: string;
+    onSubmit: (e: React.FormEvent) => any;
+    submitButtonDisabled: boolean;
+    onClose: () => any;
+}
+
+const RunnerDetailsPassageForm: FunctionComponent<RunnerDetailsPassageFormProps> = ({
+    raceTime,
+    setRaceTime,
+    time,
+    modalTitle,
+    onSubmit,
+    submitButtonDisabled,
+    onClose,
+}) => {
     const dialogRef = useRef<HTMLDialogElement | null>(null);
 
     useEffect(() => {
@@ -44,9 +54,9 @@ const RunnerDetailsPassageForm: React.FunctionComponent<{
                         </div>
 
                         {time &&
-                        <div className="mt-3">
-                            Date et heure : {Util.formatDateAsString(time)}
-                        </div>
+                            <div className="mt-3">
+                                Date et heure : {formatDateAsString(time)}
+                            </div>
                         }
 
                         <div className="flex-space-between-container mt-3">
@@ -63,6 +73,6 @@ const RunnerDetailsPassageForm: React.FunctionComponent<{
             </div>
         </dialog>
     );
-}
+};
 
 export default RunnerDetailsPassageForm;

@@ -1,23 +1,25 @@
 import {Link} from "react-router-dom";
-import React from "react";
+import {type FunctionComponent} from "react";
 
-const Crumb: React.FunctionComponent<{
-    label: string,
-    url?: string,
-}> = ({label, url}) => {
+interface CrumbProps {
+    label: string;
+    url?: string;
+}
+
+const Crumb: FunctionComponent<CrumbProps> = ({label, url}) => {
     if (url) {
         return (
             <li className="crumb">
                 <Link to={url}>{label}</Link>
             </li>
-        )
+        );
     }
 
     return (
         <li className="crumb">
             <span>{label}</span>
         </li>
-    )
-}
+    );
+};
 
 export default Crumb;

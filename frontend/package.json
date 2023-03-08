@@ -14,17 +14,26 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.8.2",
     "toastr2": "^3.0.0-alpha.18",
-    "typescript": "^4.9.5",
     "web-vitals": "^3.1.1",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
-    "react-scripts": "^5.0.1"
+    "@typescript-eslint/eslint-plugin": "^5.54.1",
+    "eslint": "^8.35.0",
+    "eslint-config-standard-with-typescript": "^34.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^15.6.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "react-scripts": "^5.0.1",
+    "typescript": "^4.9.5"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "lint": "npx eslint .",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

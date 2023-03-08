@@ -1,22 +1,33 @@
-import React, {FunctionComponent, useCallback, useMemo} from "react";
-import Util from "../../util/Util";
+import React, {type FunctionComponent, useCallback, useMemo} from "react";
+import {prefixNumber} from "../../util/utils";
 
 export const getDurationAsMs = (hours: number, minutes: number, seconds: number) => {
     return (seconds * 1000) + (minutes * 60 * 1000) + (hours * 60 * 60 * 1000);
+};
+
+interface DurationInputsProps {
+    /**
+     * The duration, in ms
+     */
+    duration: number;
+
+    /**
+     * Minimum duration, in ms
+     */
+    minDuration?: number;
+
+    /**
+     * Maximum duration, in ms
+     */
+    maxDuration?: number;
+
+    /**
+     * @param duration The new duration, in ms
+     */
+    setDuration: (duration: number) => any;
 }
 
-/**
- * @param duration in ms
- * @param minDuration in ms, must be >= 0
- * @param maxDuration in ms
- * @param setDuration
- */
-const DurationInputs: FunctionComponent<{
-    duration: number,
-    minDuration?: number,
-    maxDuration?: number,
-    setDuration: (duration: number) => any,
-}> = ({
+const DurationInputs: FunctionComponent<DurationInputsProps> = ({
     duration,
     minDuration = 0,
     maxDuration,
@@ -109,7 +120,7 @@ const DurationInputs: FunctionComponent<{
             <label style={{marginLeft: -5}}>
                 <input className="input race-time-input"
                        type="number"
-                       value={Util.prefixNumber(hours, 2)}
+                       value={prefixNumber(hours, 2)}
                        onChange={onHoursChange}
                 />
                 h
@@ -117,7 +128,7 @@ const DurationInputs: FunctionComponent<{
             <label>
                 <input className="input race-time-input"
                        type="number"
-                       value={Util.prefixNumber(minutes, 2)}
+                       value={prefixNumber(minutes, 2)}
                        onChange={onMinutesChange}
                 />
                 m
@@ -125,13 +136,13 @@ const DurationInputs: FunctionComponent<{
             <label>
                 <input className="input race-time-input"
                        type="number"
-                       value={Util.prefixNumber(seconds, 2)}
+                       value={prefixNumber(seconds, 2)}
                        onChange={onSecondsChange}
                 />
                 s
             </label>
         </>
     );
-}
+};
 
 export default DurationInputs;

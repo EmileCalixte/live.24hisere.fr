@@ -1,45 +1,48 @@
 import {Link} from "react-router-dom";
-import {CategoryShortCode} from "../../../types/Category";
-import Util from "../../../util/Util";
+import {type CategoryShortCode} from "../../../types/Category";
+import {formatFloatNumber, formatMsAsDuration} from "../../../util/utils";
 import RankingTableRowNCells from "./RankingTableRowNCells";
-import React from "react";
-import {ProcessedRankingRunner} from "../../../types/Ranking";
-import {GenderWithMixed} from "../../../types/Runner";
+import {type FunctionComponent} from "react";
+import {type ProcessedRankingRunner} from "../../../types/Ranking";
+import {type GenderWithMixed} from "../../../types/Runner";
 
-const RankingTableRow: React.FunctionComponent<{
-    runner: ProcessedRankingRunner,
-    tableCategory: CategoryShortCode | null,
-    tableGender: GenderWithMixed,
-}> = ({runner, tableCategory, tableGender}) => {
+interface RankingTableRowProps {
+    runner: ProcessedRankingRunner;
+    tableCategory: CategoryShortCode | null;
+    tableGender: GenderWithMixed;
+}
+
+const RankingTableRow: FunctionComponent<RankingTableRowProps> = ({
+    runner,
+    tableCategory,
+    tableGender,
+}) => {
     return (
         <tr>
             <RankingTableRowNCells runner={runner} tableCategory={tableCategory} tableGender={tableGender} />
-
             <td>{runner.id}</td>
-
             <td>{runner.lastname.toUpperCase()} {runner.firstname}</td>
-
             <td>{Math.max(0, runner.passageCount - 1)}</td>
-            <td>{Util.formatFloatNumber(runner.distance / 1000, 2)} km</td>
+            <td>{formatFloatNumber(runner.distance / 1000, 2)} km</td>
             <td>
                 {(() => {
                     if (runner.lastPassageRaceTime === null) {
-                        return 'n/a';
+                        return "n/a";
                     } else {
-                        return Util.formatMsAsDuration(runner.lastPassageRaceTime);
+                        return formatMsAsDuration(runner.lastPassageRaceTime);
                     }
                 })()}
             </td>
             <td>
                 {(() => {
                     if (runner.averageSpeed === null) {
-                        return 'n/a';
+                        return "n/a";
                     } else {
                         return (
                             <>
-                                {Util.formatFloatNumber(runner.averageSpeed, 2)} km/h
+                                {formatFloatNumber(runner.averageSpeed, 2)} km/h
                             </>
-                        )
+                        );
                     }
                 })()}
             </td>
@@ -49,6 +52,6 @@ const RankingTableRow: React.FunctionComponent<{
             </td>
         </tr>
     );
-}
+};
 
 export default RankingTableRow;

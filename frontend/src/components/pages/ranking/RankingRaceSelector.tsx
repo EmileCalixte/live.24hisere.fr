@@ -1,13 +1,19 @@
-import React from "react";
-import {Race} from "../../../types/Race";
+import React, {type FunctionComponent} from "react";
+import {type Race} from "../../../types/Race";
 import OptionWithLoadingDots from "../../misc/OptionWithLoadingDots";
 import RaceTimer from "../../misc/RaceTimer";
 
-const RankingRaceSelector: React.FunctionComponent<{
-    races: Race[] | false,
-    onSelectRace: (e: React.ChangeEvent<HTMLSelectElement>) => any,
-    selectedRaceId: number | undefined,
-}> = ({races, onSelectRace, selectedRaceId}) => {
+interface RankingRaceSelectorProps {
+    races: Race[] | false;
+    onSelectRace: (e: React.ChangeEvent<HTMLSelectElement>) => any;
+    selectedRaceId: number | undefined;
+}
+
+const RankingRaceSelector: FunctionComponent<RankingRaceSelectorProps> = ({
+    races,
+    onSelectRace,
+    selectedRaceId,
+}) => {
     return (
         <div className="ranking-race-selector-container">
             <div className="input-group">
@@ -37,7 +43,7 @@ const RankingRaceSelector: React.FunctionComponent<{
                                         <option key={race.id} value={race.id}>
                                             {race.name} | <RaceTimer race={race}/>
                                         </option>
-                                    )
+                                    );
                                 })}
                             </>
                         );
@@ -46,6 +52,6 @@ const RankingRaceSelector: React.FunctionComponent<{
             </div>
         </div>
     );
-}
+};
 
 export default RankingRaceSelector;

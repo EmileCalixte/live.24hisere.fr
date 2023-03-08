@@ -1,13 +1,17 @@
 import {userContext} from "../../App";
-import {useCallback, useContext, useEffect, useRef} from "react";
+import {type FunctionComponent, useCallback, useContext, useEffect, useRef} from "react";
 
-const AdminHeaderUserDropdown: React.FunctionComponent<{hideDropdown: () => any}> = ({hideDropdown}) => {
+interface AdminHeaderUserDropdownProps {
+    hideDropdown: () => any;
+}
+
+const AdminHeaderUserDropdown: FunctionComponent<AdminHeaderUserDropdownProps> = ({hideDropdown}) => {
     const {logout} = useContext(userContext);
 
     const dropdownNode = useRef<HTMLDivElement>(null);
 
     const onClickOutside = useCallback((e: MouseEvent) => {
-        if (!dropdownNode || !dropdownNode.current) {
+        if (!dropdownNode?.current) {
             return;
         }
 
@@ -18,12 +22,12 @@ const AdminHeaderUserDropdown: React.FunctionComponent<{hideDropdown: () => any}
 
     useEffect(() => {
         setTimeout(() => {
-            document.addEventListener('click', onClickOutside);
-        }, 0)
+            document.addEventListener("click", onClickOutside);
+        }, 0);
 
         return () => {
-            document.removeEventListener('click', onClickOutside);
-        }
+            document.removeEventListener("click", onClickOutside);
+        };
     }, [onClickOutside]);
 
     return (
@@ -34,7 +38,7 @@ const AdminHeaderUserDropdown: React.FunctionComponent<{hideDropdown: () => any}
                 </li>
             </ul>
         </div>
-    )
-}
+    );
+};
 
 export default AdminHeaderUserDropdown;

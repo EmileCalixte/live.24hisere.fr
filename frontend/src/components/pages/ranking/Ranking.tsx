@@ -1,22 +1,22 @@
-import '../../../css/print-ranking-table.css';
+import "../../../css/print-ranking-table.css";
 import React, {useState, useEffect, useCallback, useMemo} from "react";
-import {Race} from "../../../types/Race";
-import {existingCategories} from "../../../util/FfaUtil";
+import {type Race} from "../../../types/Race";
+import {existingCategories} from "../../../util/ffaUtils";
 import CircularLoader from "../../misc/CircularLoader";
 import RankingRaceSelector from "./RankingRaceSelector";
 import RankingSettings from "./RankingSettings";
-import ApiUtil from "../../../util/ApiUtil";
+import {performAPIRequest} from "../../../util/apiUtils";
 import RankingTable from "./RankingTable";
-import {RankingProcesser} from "../../../util/RankingUtil";
-import Util from "../../../util/Util";
-import {CategoriesDict, CategoryShortCode} from "../../../types/Category";
-import {ProcessedRanking, Ranking as RankingType} from "../../../types/Ranking";
-import {GenderWithMixed} from "../../../types/Runner";
+import {RankingProcesser} from "../../../util/RankingProcesser";
+import {formatDateForApi} from "../../../util/utils";
+import {type CategoriesDict, type CategoryShortCode} from "../../../types/Category";
+import {type ProcessedRanking, type Ranking as RankingType} from "../../../types/Ranking";
+import {type GenderWithMixed} from "../../../types/Runner";
 import ResponsiveRankingTable from "./ResponsiveRankingTable";
 
 export enum TimeMode {
-    Now = 'now',
-    At = 'at',
+    Now = "now",
+    At = "at",
 }
 
 const RANKING_UPDATE_INTERVAL_TIME = 30000;
@@ -36,7 +36,7 @@ const Ranking = () => {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
     const fetchRaces = useCallback(async () => {
-        const response = await ApiUtil.performAPIRequest('/races');
+        const response = await performAPIRequest("/races");
         const responseJson = await response.json();
 
         setRaces(responseJson.races as Race[]);
@@ -52,11 +52,11 @@ const Ranking = () => {
         if (selectedTimeMode === TimeMode.At) {
             const rankingDate = new Date();
             rankingDate.setTime(new Date(selectedRace.startTime).getTime() + rankingTime);
-            const rankingDateString = Util.formatDateForApi(rankingDate);
+            const rankingDateString = formatDateForApi(rankingDate);
             requestUrl += `?at=${rankingDateString}`;
         }
 
-        const response = await ApiUtil.performAPIRequest(requestUrl);
+        const response = await performAPIRequest(requestUrl);
         const responseJson = await response.json();
 
         setProcessedRanking(new RankingProcesser(selectedRace, responseJson.ranking as RankingType).getProcessedRanking());
@@ -108,33 +108,31 @@ const Ranking = () => {
         }
 
         setSelectedCategory(e.target.value);
-    }
+    };
 
     const onGenderSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedGender(e.target.value as GenderWithMixed);
-    }
+    };
 
     const onTimeModeSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedTimeMode(e.target.value as TimeMode);
-    }
+    };
 
     /**
      * @param time The new ranking time from race start in ms
      */
     const onRankingTimeSave = async (time: number) => {
         setSelectedRankingTime(time);
-    }
+    };
 
     useEffect(() => {
         const onResize = (e: UIEvent) => {
             setWindowWidth((e.target as Window).innerWidth);
-        }
+        };
 
         window.addEventListener("resize", onResize);
 
-        return (() => {
-            window.removeEventListener("resize", onResize);
-        })
+        return () => window.removeEventListener("resize", onResize);
     }, []);
 
     useEffect(() => {
@@ -145,7 +143,7 @@ const Ranking = () => {
         fetchRanking();
 
         const refreshRankingInterval = setInterval(fetchRanking, RANKING_UPDATE_INTERVAL_TIME);
-        return (() => clearInterval(refreshRankingInterval));
+        return () => clearInterval(refreshRankingInterval);
     }, [fetchRanking]);
 
     const categories = useMemo<CategoriesDict | false>(() => {
@@ -170,7 +168,7 @@ const Ranking = () => {
         return categories;
     }, [processedRanking]);
 
-    return(
+    return (
         <div id="page-ranking">
             <div className="row hide-on-print">
                 <div className="col-12">
@@ -188,63 +186,63 @@ const Ranking = () => {
             </div>
 
             {selectedRace &&
-            <>
-                <div className="row hide-on-print mb-3">
-                    <div className="col-12">
-                        <RankingSettings
-                            categories={categories}
-                            onCategorySelect={onCategorySelect}
-                            onGenderSelect={onGenderSelect}
-                            onTimeModeSelect={onTimeModeSelect}
-                            onRankingTimeSave={onRankingTimeSave}
-                            selectedCategory={selectedCategory}
-                            selectedGender={selectedGender}
-                            selectedTimeMode={selectedTimeMode}
-                            currentRankingTime={selectedRankingTime}
-                            maxRankingTime={selectedRace.duration * 1000}
-                        />
-                    </div>
-                </div>
-
-                {!processedRanking &&
-                <CircularLoader/>
-                }
-
-                {processedRanking &&
-                <div className="row">
-                    <div className="col-12">
-                        {windowWidth > RESPONSIVE_TABLE_MAX_WINDOW_WIDTH &&
-                        <RankingTable
-                            race={selectedRace}
-                            ranking={processedRanking}
-                            tableCategory={selectedCategory}
-                            tableGender={selectedGender}
-                            tableRaceDuration={selectedTimeMode === TimeMode.At ? selectedRankingTime : null}
-                        />
-                        }
-
-                        {windowWidth <= RESPONSIVE_TABLE_MAX_WINDOW_WIDTH &&
-                        <div>
-                            <div className="mb-3">
-                                Cliquez sur un coureur pour consulter ses données de course
-                            </div>
-
-                            <ResponsiveRankingTable
-                                race={selectedRace}
-                                ranking={processedRanking}
-                                tableCategory={selectedCategory}
-                                tableGender={selectedGender}
-                                tableRaceDuration={selectedTimeMode === TimeMode.At ? selectedRankingTime : null}
+                <>
+                    <div className="row hide-on-print mb-3">
+                        <div className="col-12">
+                            <RankingSettings
+                                categories={categories}
+                                onCategorySelect={onCategorySelect}
+                                onGenderSelect={onGenderSelect}
+                                onTimeModeSelect={onTimeModeSelect}
+                                onRankingTimeSave={onRankingTimeSave}
+                                selectedCategory={selectedCategory}
+                                selectedGender={selectedGender}
+                                selectedTimeMode={selectedTimeMode}
+                                currentRankingTime={selectedRankingTime}
+                                maxRankingTime={selectedRace.duration * 1000}
                             />
                         </div>
-                        }
                     </div>
-                </div>
-                }
-            </>
+
+                    {!processedRanking &&
+                        <CircularLoader/>
+                    }
+
+                    {processedRanking &&
+                        <div className="row">
+                            <div className="col-12">
+                                {windowWidth > RESPONSIVE_TABLE_MAX_WINDOW_WIDTH &&
+                                    <RankingTable
+                                        race={selectedRace}
+                                        ranking={processedRanking}
+                                        tableCategory={selectedCategory}
+                                        tableGender={selectedGender}
+                                        tableRaceDuration={selectedTimeMode === TimeMode.At ? selectedRankingTime : null}
+                                    />
+                                }
+
+                                {windowWidth <= RESPONSIVE_TABLE_MAX_WINDOW_WIDTH &&
+                                    <div>
+                                        <div className="mb-3">
+                                            Cliquez sur un coureur pour consulter ses données de course
+                                        </div>
+
+                                        <ResponsiveRankingTable
+                                            race={selectedRace}
+                                            ranking={processedRanking}
+                                            tableCategory={selectedCategory}
+                                            tableGender={selectedGender}
+                                            tableRaceDuration={selectedTimeMode === TimeMode.At ? selectedRankingTime : null}
+                                        />
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </>
             }
         </div>
     );
-}
+};
 
 export default Ranking;

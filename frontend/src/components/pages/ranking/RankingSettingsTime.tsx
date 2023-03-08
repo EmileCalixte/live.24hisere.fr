@@ -1,12 +1,14 @@
-import React, {useEffect, useState} from "react";
+import React, {type FunctionComponent, useEffect, useState} from "react";
 import DurationInputs from "../../misc/DurationInputs";
 
-const RankingSettingsTime: React.FunctionComponent<{
-    isVisible: boolean,
-    currentRankingTime: number,
-    onRankingTimeSave: (time: number) => any,
-    maxRankingTime: number,
-}> = ({
+interface RankingSettingsTimeProps {
+    isVisible: boolean;
+    currentRankingTime: number;
+    onRankingTimeSave: (time: number) => any;
+    maxRankingTime: number;
+}
+
+const RankingSettingsTime: FunctionComponent<RankingSettingsTimeProps> = ({
     isVisible,
     currentRankingTime,
     onRankingTimeSave,
@@ -19,7 +21,7 @@ const RankingSettingsTime: React.FunctionComponent<{
         e.preventDefault();
         setTime(time);
         onRankingTimeSave(time);
-    }
+    };
 
     // Reset inputs when ranking time in settings is changed, for example when selected race changes
     useEffect(() => {
@@ -28,7 +30,7 @@ const RankingSettingsTime: React.FunctionComponent<{
 
     return (
         <form className="inline-input-group"
-              style={{visibility: isVisible ? 'visible' : 'hidden'}}
+              style={{visibility: isVisible ? "visible" : "hidden"}}
               onSubmit={onSubmit}
         >
             <DurationInputs duration={time}
@@ -44,6 +46,6 @@ const RankingSettingsTime: React.FunctionComponent<{
             </button>
         </form>
     );
-}
+};
 
 export default RankingSettingsTime;

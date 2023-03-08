@@ -1,27 +1,29 @@
-import React from "react";
+import React, {type FunctionComponent} from "react";
 import {Link} from "react-router-dom";
 import {Gender} from "../../../../types/Runner";
-import {AdminRaceWithRunnerCount} from "../../../../types/Race";
+import {type AdminRaceWithRunnerCount} from "../../../../types/Race";
 import OptionWithLoadingDots from "../../../misc/OptionWithLoadingDots";
-import {getCategoryNameFromBirthYear} from "../../../../util/FfaUtil";
+import {getCategoryNameFromBirthYear} from "../../../../util/ffaUtils";
 
-const RunnerDetailsForm: React.FunctionComponent<{
-    onSubmit: (e: React.FormEvent) => any,
-    id: number,
-    setId: (id: number) => any,
-    firstname: string,
-    setFirstname: (firstname: string) => any,
-    lastname: string,
-    setLastname: (lastname: string) => any,
-    gender: Gender,
-    setGender: (gender: Gender) => any,
-    birthYear: string,
-    setBirthYear: (birthYear: string) => any,
-    races: AdminRaceWithRunnerCount[] | false,
-    raceId: number,
-    setRaceId: (raceId: number) => any,
-    submitButtonDisabled: boolean,
-}> = ({
+interface RunnerDetailsFormProps {
+    onSubmit: (e: React.FormEvent) => any;
+    id: number;
+    setId: (id: number) => any;
+    firstname: string;
+    setFirstname: (firstname: string) => any;
+    lastname: string;
+    setLastname: (lastname: string) => any;
+    gender: Gender;
+    setGender: (gender: Gender) => any;
+    birthYear: string;
+    setBirthYear: (birthYear: string) => any;
+    races: AdminRaceWithRunnerCount[] | false;
+    raceId: number;
+    setRaceId: (raceId: number) => any;
+    submitButtonDisabled: boolean;
+}
+
+const RunnerDetailsForm: FunctionComponent<RunnerDetailsFormProps> = ({
     onSubmit,
     id,
     setId,
@@ -62,7 +64,7 @@ const RunnerDetailsForm: React.FunctionComponent<{
                                }
                                const id = parseInt(e.target.value);
                                if (isNaN(id)) return;
-                               setId(id)
+                               setId(id);
                            }}
                     />
                 </label>
@@ -147,28 +149,28 @@ const RunnerDetailsForm: React.FunctionComponent<{
                 <label>
                     Course
                     {races === false &&
-                    <select className="input-select">
-                        <OptionWithLoadingDots>Chargement des courses</OptionWithLoadingDots>
-                    </select>
+                        <select className="input-select">
+                            <OptionWithLoadingDots>Chargement des courses</OptionWithLoadingDots>
+                        </select>
                     }
 
                     {races !== false &&
-                    <select className="input-select"
-                            onChange={e => setRaceId(parseInt(e.target.value))}
-                            value={raceId}
-                    >
-                        {races.map(race => {
-                            return (
-                                <option key={race.id} value={race.id}>
-                                    {race.name} ({race.runnerCount} {race.runnerCount >= 2 ? "coureurs" : "coureur"})
-                                </option>
-                            );
-                        })}
-                    </select>
+                        <select className="input-select"
+                                onChange={e => setRaceId(parseInt(e.target.value))}
+                                value={raceId}
+                        >
+                            {races.map(race => {
+                                return (
+                                    <option key={race.id} value={race.id}>
+                                        {race.name} ({race.runnerCount} {race.runnerCount >= 2 ? "coureurs" : "coureur"})
+                                    </option>
+                                );
+                            })}
+                        </select>
                     }
 
                     {(races && races.length < 1) &&
-                    <p>Vous devez <Link to="/admin/races/create">créer une course</Link> pour pouvoir enregistrer un coureur.</p>
+                        <p>Vous devez <Link to="/admin/races/create">créer une course</Link> pour pouvoir enregistrer un coureur.</p>
                     }
                 </label>
             </div>
@@ -181,6 +183,6 @@ const RunnerDetailsForm: React.FunctionComponent<{
             </button>
         </form>
     );
-}
+};
 
 export default RunnerDetailsForm;

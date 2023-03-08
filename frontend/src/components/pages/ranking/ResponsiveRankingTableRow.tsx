@@ -1,15 +1,21 @@
-import React, {useMemo} from "react";
+import {type FunctionComponent, useMemo} from "react";
 import {Link} from "react-router-dom";
-import {CategoryShortCode} from "../../../types/Category";
-import {ProcessedRankingRunner} from "../../../types/Ranking";
-import {GenderWithMixed} from "../../../types/Runner";
-import Util from "../../../util/Util";
+import {type CategoryShortCode} from "../../../types/Category";
+import {type ProcessedRankingRunner} from "../../../types/Ranking";
+import {type GenderWithMixed} from "../../../types/Runner";
+import {formatFloatNumber, formatMsAsDuration} from "../../../util/utils";
 
-const ResponsiveRankingTableRow: React.FunctionComponent<{
-    runner: ProcessedRankingRunner,
-    tableCategory: CategoryShortCode | null,
-    tableGender: GenderWithMixed,
-}> = ({runner, tableCategory, tableGender}) => {
+interface ResponsiveRankingTableRowProps {
+    runner: ProcessedRankingRunner;
+    tableCategory: CategoryShortCode | null;
+    tableGender: GenderWithMixed;
+}
+
+const ResponsiveRankingTableRow: FunctionComponent<ResponsiveRankingTableRowProps> = ({
+    runner,
+    tableCategory,
+    tableGender,
+}) => {
     const rowRanking = useMemo(() => {
         if (tableCategory === null) {
             if (tableGender === "mixed") {
@@ -88,7 +94,7 @@ const ResponsiveRankingTableRow: React.FunctionComponent<{
                     </div>
 
                     <div className="responsive-ranking-table-row-stats">
-                        {Util.formatFloatNumber(runner.distance / 1000, 2)} km
+                        {formatFloatNumber(runner.distance / 1000, 2)} km
 
                         {(() => {
                             if (runner.averageSpeed === null) {
@@ -97,7 +103,7 @@ const ResponsiveRankingTableRow: React.FunctionComponent<{
                                 return (
                                     <>
                                         &nbsp;–&nbsp;
-                                        {Util.formatFloatNumber(runner.averageSpeed, 2)} km/h moy.
+                                        {formatFloatNumber(runner.averageSpeed, 2)} km/h moy.
                                     </>
                                 );
                             }
@@ -110,7 +116,7 @@ const ResponsiveRankingTableRow: React.FunctionComponent<{
                                 return (
                                     <>
                                         &nbsp;–&nbsp;
-                                        Dernier passage {Util.formatMsAsDuration(runner.lastPassageRaceTime)}
+                                        Dernier passage {formatMsAsDuration(runner.lastPassageRaceTime)}
                                     </>
                                 );
                             }
@@ -120,6 +126,6 @@ const ResponsiveRankingTableRow: React.FunctionComponent<{
             </td>
         </tr>
     );
-}
+};
 
 export default ResponsiveRankingTableRow;

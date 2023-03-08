@@ -1,18 +1,24 @@
-import {Race} from "../../../types/Race";
-import {RankingRunnerRanks} from "../../../types/Ranking";
-import React, {useMemo} from "react";
+import {type Race} from "../../../types/Race";
+import {type RankingRunnerRanks} from "../../../types/Ranking";
+import React, {type FunctionComponent, useMemo} from "react";
 import CircularLoader from "../../misc/CircularLoader";
 import SpeedChart from "./charts/SpeedChart";
-import Util from "../../../util/Util";
-import RunnerDetailsUtil from "../../../util/RunnerDetailsUtil";
-import {RunnerWithProcessedHours, RunnerWithProcessedPassages} from "../../../types/Runner";
-import {ProcessedPassage} from "../../../types/Passage";
+import {formatMsAsDuration} from "../../../util/utils";
+import {getPaceFromSpeed} from "../../../util/RunnerDetailsUtil";
+import {type RunnerWithProcessedHours, type RunnerWithProcessedPassages} from "../../../types/Runner";
+import {type ProcessedPassage} from "../../../types/Passage";
 
-const RunnerDetailsStats: React.FunctionComponent<{
-    runner: RunnerWithProcessedPassages & RunnerWithProcessedHours,
-    race: Race,
-    ranks: RankingRunnerRanks | null
-}> = ({runner, race, ranks}) => {
+interface RunnerDetailsStatsProps {
+    runner: RunnerWithProcessedPassages & RunnerWithProcessedHours;
+    race: Race;
+    ranks: RankingRunnerRanks | null;
+}
+
+const RunnerDetailsStats: FunctionComponent<RunnerDetailsStatsProps> = ({
+    runner,
+    race,
+    ranks,
+}) => {
     const completeLapCount = useMemo<number>(() => {
         return Math.max(0, runner.passages.length - 1);
     }, [runner]);
@@ -101,7 +107,7 @@ const RunnerDetailsStats: React.FunctionComponent<{
             return null;
         }
 
-        return RunnerDetailsUtil.getPaceFromSpeed(averageSpeed);
+        return getPaceFromSpeed(averageSpeed);
     }, [averageSpeed]);
 
     return (
@@ -113,15 +119,15 @@ const RunnerDetailsStats: React.FunctionComponent<{
                     Classement : {!ranks && <CircularLoader/>}
 
                     {ranks &&
-                    <span>
-                        <b>{ranks.displayed.scratchMixed}</b>
-                        &nbsp;|&nbsp;
-                        {ranks.displayed.scratchGender} {runner.gender.toUpperCase()}
-                        &nbsp;|&nbsp;
-                        {ranks.displayed.categoryMixed} {runner.category.toUpperCase()}
-                        &nbsp;|&nbsp;
-                        {ranks.displayed.categoryGender} {runner.category.toUpperCase()}-{runner.gender.toUpperCase()}
-                    </span>
+                        <span>
+                            <b>{ranks.displayed.scratchMixed}</b>
+                            &nbsp;|&nbsp;
+                            {ranks.displayed.scratchGender} {runner.gender.toUpperCase()}
+                            &nbsp;|&nbsp;
+                            {ranks.displayed.categoryMixed} {runner.category.toUpperCase()}
+                            &nbsp;|&nbsp;
+                            {ranks.displayed.categoryGender} {runner.category.toUpperCase()}-{runner.gender.toUpperCase()}
+                        </span>
                     }
                 </p>
 
@@ -131,52 +137,52 @@ const RunnerDetailsStats: React.FunctionComponent<{
 
                 <p>
                     Tour le plus rapide : {(() => {
-                    if (fastestLapPassage === null) {
-                        return 'n/a';
-                    }
+                        if (fastestLapPassage === null) {
+                            return "n/a";
+                        }
 
-                    return (
-                        <>
-                            Tour {fastestLapPassage.processed.lapNumber} à <strong>{Util.formatMsAsDuration(fastestLapPassage.processed.lapEndRaceTime)}</strong> de course,
-                            durée : <strong>{Util.formatMsAsDuration(fastestLapPassage.processed.lapDuration)}</strong>,
-                            vitesse : <strong>{fastestLapPassage.processed.lapSpeed.toFixed(2)} km/h</strong>,
-                            allure : <strong>{Util.formatMsAsDuration(fastestLapPassage.processed.lapPace, false)}/km</strong>
-                        </>
-                    );
-                })()}
+                        return (
+                            <>
+                                Tour {fastestLapPassage.processed.lapNumber} à <strong>{formatMsAsDuration(fastestLapPassage.processed.lapEndRaceTime)}</strong> de course,
+                                durée : <strong>{formatMsAsDuration(fastestLapPassage.processed.lapDuration)}</strong>,
+                                vitesse : <strong>{fastestLapPassage.processed.lapSpeed.toFixed(2)} km/h</strong>,
+                                allure : <strong>{formatMsAsDuration(fastestLapPassage.processed.lapPace, false)}/km</strong>
+                            </>
+                        );
+                    })()}
                 </p>
 
                 <p>
                     Tour le plus lent : {(() => {
-                    if (slowestLapPassage === null) {
-                        return 'n/a';
-                    }
+                        if (slowestLapPassage === null) {
+                            return "n/a";
+                        }
 
-                    return (
-                        <>
-                            Tour {slowestLapPassage.processed.lapNumber} à <strong>{Util.formatMsAsDuration(slowestLapPassage.processed.lapEndRaceTime)}</strong> de course,
-                            durée : <strong>{Util.formatMsAsDuration(slowestLapPassage.processed.lapDuration)}</strong>,
-                            vitesse : <strong>{slowestLapPassage.processed.lapSpeed.toFixed(2)} km/h</strong>,
-                            allure : <strong>{Util.formatMsAsDuration(slowestLapPassage.processed.lapPace, false)}/km</strong>
-                        </>
-                    );
-                })()}
+                        return (
+                            <>
+                                Tour {slowestLapPassage.processed.lapNumber} à <strong>{formatMsAsDuration(slowestLapPassage.processed.lapEndRaceTime)}</strong> de course,
+                                durée : <strong>{formatMsAsDuration(slowestLapPassage.processed.lapDuration)}</strong>,
+                                vitesse : <strong>{slowestLapPassage.processed.lapSpeed.toFixed(2)} km/h</strong>,
+                                allure : <strong>{formatMsAsDuration(slowestLapPassage.processed.lapPace, false)}/km</strong>
+                            </>
+                        );
+                    })()}
                 </p>
 
                 <p>
-                    Vitesse moyenne de 00:00:00 à {lastPassageRaceTime !== null ? Util.formatMsAsDuration(lastPassageRaceTime) : '--:--:--'} : <strong>{averageSpeed !== null ? averageSpeed.toFixed(2) + ' km/h' : 'n/a'}</strong> (allure moyenne : <strong>{averagePace !== null ? Util.formatMsAsDuration(averagePace, false) + '/km' : 'n/a'})</strong>
+                    Vitesse moyenne de 00:00:00 à {lastPassageRaceTime !== null ? formatMsAsDuration(lastPassageRaceTime) : "--:--:--"} : <strong>{averageSpeed !== null ? averageSpeed.toFixed(2) + " km/h" : "n/a"}</strong> (allure moyenne : <strong>{averagePace !== null ? formatMsAsDuration(averagePace, false) + "/km" : "n/a"})</strong>
                 </p>
             </div>
 
             {averageSpeed !== null &&
-            <div className="col-12">
-                <h2>Vitesse</h2>
+                <div className="col-12">
+                    <h2>Vitesse</h2>
 
-                <SpeedChart runner={runner} race={race} averageSpeed={averageSpeed} />
-            </div>
+                    <SpeedChart runner={runner} race={race} averageSpeed={averageSpeed} />
+                </div>
             }
         </div>
-    )
-}
+    );
+};
 
 export default RunnerDetailsStats;

@@ -1,12 +1,18 @@
 import OptionWithLoadingDots from "../../misc/OptionWithLoadingDots";
-import React, {useCallback, useEffect, useMemo, useState} from "react";
-import Runner from "../../../types/Runner";
+import React, {type FunctionComponent, useCallback, useEffect, useMemo, useState} from "react";
+import type Runner from "../../../types/Runner";
 
-const RunnerSelector: React.FunctionComponent<{
-    runners: Runner[] | false,
-    onSelectRunner: (e: React.ChangeEvent<HTMLSelectElement>) => any,
-    selectedRunnerId: string | undefined,
-}> = ({runners, onSelectRunner, selectedRunnerId}) => {
+interface RunnerSelectorProps {
+    runners: Runner[] | false;
+    onSelectRunner: (e: React.ChangeEvent<HTMLSelectElement>) => any;
+    selectedRunnerId: string | undefined;
+}
+
+const RunnerSelector: FunctionComponent<RunnerSelectorProps> = ({
+    runners,
+    onSelectRunner,
+    selectedRunnerId,
+}) => {
     const [idSortedRunners, setIdSortedRunners] = useState<Runner[] | false>(false);
     const [nameSortedRunners, setNameSortedRunners] = useState<Runner[] | false>(false);
 
@@ -23,7 +29,7 @@ const RunnerSelector: React.FunctionComponent<{
 
         const runner = runners.find(runner => {
             return runner.id === searchedRunnerId;
-        })
+        });
 
         return runner !== undefined;
     }, [runners, selectedRunnerId]);
@@ -65,7 +71,7 @@ const RunnerSelector: React.FunctionComponent<{
         sortRunners();
     }, [sortRunners]);
 
-    return(
+    return (
         <div className="runner-details-runner-selector-container">
             <div className="input-group">
                 <label htmlFor="runner-select">
@@ -84,7 +90,7 @@ const RunnerSelector: React.FunctionComponent<{
                                 <OptionWithLoadingDots>
                                     Chargement des coureurs
                                 </OptionWithLoadingDots>
-                            )
+                            );
                         }
 
                         return (
@@ -94,7 +100,7 @@ const RunnerSelector: React.FunctionComponent<{
                                         <option key={runner.id} value={runner.id}>
                                             N° {runner.id} –  {runner.lastname} {runner.firstname}
                                         </option>
-                                    )
+                                    );
                                 })}
 
                                 <option disabled />
@@ -106,7 +112,7 @@ const RunnerSelector: React.FunctionComponent<{
                                         <option key={runner.id} value={runner.id}>
                                             {runner.lastname} {runner.firstname} – N° {runner.id}
                                         </option>
-                                    )
+                                    );
                                 })}
                             </>
                         );
@@ -115,7 +121,7 @@ const RunnerSelector: React.FunctionComponent<{
                 </select>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default RunnerSelector;

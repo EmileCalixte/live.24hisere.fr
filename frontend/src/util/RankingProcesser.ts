@@ -1,31 +1,31 @@
-import {Race} from "../types/Race";
-import Util from "./Util";
+import {type Race} from "../types/Race";
+import {verbose} from "./utils";
 import {
-    ProcessedRanking,
-    ProcessedRankingRunner,
-    Ranking,
-    RankingRunner,
-    RankingRunnerRanks
+    type ProcessedRanking,
+    type ProcessedRankingRunner,
+    type Ranking,
+    type RankingRunner,
+    type RankingRunnerRanks,
 } from "../types/Ranking";
-import {Gender, GenderWithMixed} from "../types/Runner";
+import {Gender, type GenderWithMixed} from "../types/Runner";
 
 type CategoryGenderRanks = {
     [key in GenderWithMixed]: {
-        rank: number,
-        lastRunner: ProcessedRankingRunner | null,
+        rank: number;
+        lastRunner: ProcessedRankingRunner | null;
     };
-}
+};
 
-type CurrentRanksByCategory = {
-    scratch: CategoryGenderRanks,
-    team: CategoryGenderRanks,
-    [key: string]: CategoryGenderRanks,
+interface CurrentRanksByCategory {
+    scratch: CategoryGenderRanks;
+    team: CategoryGenderRanks;
+    [key: string]: CategoryGenderRanks;
 }
 
 export class RankingProcesser {
-    private race: Race;
+    private readonly race: Race;
 
-    private ranking: Ranking;
+    private readonly ranking: Ranking;
 
     private processedRanking: ProcessedRanking | undefined;
 
@@ -41,7 +41,7 @@ export class RankingProcesser {
             // UNUSED FOR TEAMS BUT REQUIRED FOR TYPESCRIPT TYPE MATCHING (anyway we'll soon get rid of teams)
             [Gender.M]: {rank: 0, lastRunner: null},
             [Gender.F]: {rank: 0, lastRunner: null},
-        }
+        },
         // Other categories will be appended here
     };
 
@@ -56,10 +56,10 @@ export class RankingProcesser {
         }
 
         return this.processedRanking;
-    }
+    };
 
-    private processRanking = (): ProcessedRanking => {
-        Util.verbose("Processing ranking");
+    private readonly processRanking = (): ProcessedRanking => {
+        verbose("Processing ranking");
 
         const processedRanking: ProcessedRanking = [];
 
@@ -77,9 +77,9 @@ export class RankingProcesser {
                     categoryMixed: 0,
                     categoryGender: 0,
                 },
-            }
+            };
 
-            if (!this.currentRanksByCategory.hasOwnProperty(runner.category)) {
+            if (!(runner.category in this.currentRanksByCategory)) {
                 this.addCategoryToCurrentRanks(runner.category);
             }
 
@@ -106,10 +106,10 @@ export class RankingProcesser {
                 categoryGenderPreviousRunner = this.getCurrentLastRunner(runner.category, runner.gender);
             }
 
-            let scratchMixedPreviousRunnerEquality = this.areRunnersEqual(runner, scratchMixedPreviousRunner);
-            let scratchGenderPreviousRunnerEquality = this.areRunnersEqual(runner, scratchGenderPreviousRunner);
-            let categoryMixedPreviousRunnerEquality = this.areRunnersEqual(runner, categoryMixedPreviousRunner);
-            let categoryGenderPreviousRunnerEquality = this.areRunnersEqual(runner, categoryGenderPreviousRunner);
+            const scratchMixedPreviousRunnerEquality = this.areRunnersEqual(runner, scratchMixedPreviousRunner);
+            const scratchGenderPreviousRunnerEquality = this.areRunnersEqual(runner, scratchGenderPreviousRunner);
+            const categoryMixedPreviousRunnerEquality = this.areRunnersEqual(runner, categoryMixedPreviousRunner);
+            const categoryGenderPreviousRunnerEquality = this.areRunnersEqual(runner, categoryGenderPreviousRunner);
 
             if (scratchMixedPreviousRunner && scratchMixedPreviousRunnerEquality) {
                 rankings.displayed.scratchMixed = scratchMixedPreviousRunner.rankings.displayed.scratchMixed;
@@ -159,7 +159,7 @@ export class RankingProcesser {
                 lastPassageRaceTime,
                 averageSpeed,
                 rankings,
-            }
+            };
 
             this.updateCurrentRanks(processedRankingRunner);
 
@@ -168,21 +168,21 @@ export class RankingProcesser {
 
         this.processedRanking = processedRanking;
 
-        Util.verbose("Ranking processed");
+        verbose("Ranking processed");
 
         return this.processedRanking;
-    }
+    };
 
-    private getCurrentLastRunner = (category: string, gender: GenderWithMixed): ProcessedRankingRunner | null => {
-        if (!this.currentRanksByCategory.hasOwnProperty(category)) {
+    private readonly getCurrentLastRunner = (category: string, gender: GenderWithMixed): ProcessedRankingRunner | null => {
+        if (!(category in this.currentRanksByCategory)) {
             return null;
         }
 
         return this.currentRanksByCategory[category][gender].lastRunner;
-    }
+    };
 
-    private addCategoryToCurrentRanks = (category: string) => {
-        if (this.currentRanksByCategory.hasOwnProperty(category)) {
+    private readonly addCategoryToCurrentRanks = (category: string) => {
+        if (category in this.currentRanksByCategory) {
             throw new Error("Category already existing in current ranks");
         }
 
@@ -191,16 +191,16 @@ export class RankingProcesser {
             [Gender.M]: {rank: 0, lastRunner: null},
             [Gender.F]: {rank: 0, lastRunner: null},
         };
-    }
+    };
 
-    private updateCurrentRanks = (runner: ProcessedRankingRunner) => {
+    private readonly updateCurrentRanks = (runner: ProcessedRankingRunner) => {
         if (runner.isTeam) {
             ++this.currentRanksByCategory.team.mixed.rank;
             this.currentRanksByCategory.team.mixed.lastRunner = runner;
             return;
         }
 
-        if (!this.currentRanksByCategory.hasOwnProperty(runner.category)) {
+        if (!(runner.category in this.currentRanksByCategory)) {
             this.addCategoryToCurrentRanks(runner.category);
         }
 
@@ -215,9 +215,9 @@ export class RankingProcesser {
 
         ++this.currentRanksByCategory[runner.category][runner.gender].rank;
         this.currentRanksByCategory[runner.category][runner.gender].lastRunner = runner;
-    }
+    };
 
-    private areRunnersEqual = (runner1: RankingRunner | null, runner2: RankingRunner | null) => {
+    private readonly areRunnersEqual = (runner1: RankingRunner | null, runner2: RankingRunner | null) => {
         if (runner1 === null || runner2 === null) {
             return false;
         }
@@ -227,5 +227,5 @@ export class RankingProcesser {
         }
 
         return (new Date(runner1.lastPassageTime)).getTime() === (new Date(runner2.lastPassageTime)).getTime();
-    }
+    };
 }

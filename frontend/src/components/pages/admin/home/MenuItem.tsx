@@ -1,11 +1,13 @@
 import {Link} from "react-router-dom";
-import React from "react";
+import {type FunctionComponent} from "react";
 
-const MenuItem: React.FunctionComponent<{
-    url: string,
-    label: string,
-    icon: string,
-}> = ({url, label, icon}) => {
+interface MenuItemProps {
+    url: string;
+    label: string;
+    icon: string;
+}
+
+const MenuItem: FunctionComponent<MenuItemProps> = ({url, label, icon}) => {
     return (
         <li>
             <Link to={url}>
@@ -17,7 +19,7 @@ const MenuItem: React.FunctionComponent<{
                 </div>
             </Link>
         </li>
-    )
-}
+    );
+};
 
 export default MenuItem;

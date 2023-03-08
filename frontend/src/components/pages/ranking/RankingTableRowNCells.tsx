@@ -1,14 +1,20 @@
-import {CategoryShortCode} from "../../../types/Category";
-import React from "react";
-import {ProcessedRankingRunner} from "../../../types/Ranking";
-import {GenderWithMixed} from "../../../types/Runner";
+import {type CategoryShortCode} from "../../../types/Category";
+import {type FunctionComponent} from "react";
+import {type ProcessedRankingRunner} from "../../../types/Ranking";
+import {type GenderWithMixed} from "../../../types/Runner";
 
-const RankingTableRowNCells: React.FunctionComponent<{
-    runner: ProcessedRankingRunner,
-    tableCategory: CategoryShortCode | null,
-    tableGender: GenderWithMixed,
-}> = ({runner, tableCategory, tableGender}) => {
-     if (tableCategory === null) {
+interface RankingTableRowNCellsProps {
+    runner: ProcessedRankingRunner;
+    tableCategory: CategoryShortCode | null;
+    tableGender: GenderWithMixed;
+}
+
+const RankingTableRowNCells: FunctionComponent<RankingTableRowNCellsProps> = ({
+    runner,
+    tableCategory,
+    tableGender,
+}) => {
+    if (tableCategory === null) {
         if (tableGender === "mixed") {
             return (
                 <>

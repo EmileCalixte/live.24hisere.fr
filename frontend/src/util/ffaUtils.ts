@@ -1,11 +1,11 @@
-import {CategoriesDict} from "../types/Category";
+import {type CategoriesDict} from "../types/Category";
 
 /**
  * Returns the category code from a birth year (valid until August 31st, 2023)
  * @see https://www.athle.fr/asp.net/main.html/html.aspx?htmlid=25
  * @param {number} birthYear
  */
-export const getCategoryCodeFromBirthYear = (birthYear: number): string => {
+export function getCategoryCodeFromBirthYear(birthYear: number): string {
     if (birthYear >= 2017) {
         return "BB";
     }
@@ -110,16 +110,16 @@ export const existingCategories: CategoriesDict = {
     M8: "Masters 8",
     M9: "Masters 9",
     M10: "Masters 10",
-}
+};
 
-export const getCategoryNameFromCategoryCode = (categoryCode: string): string => {
-    if (existingCategories.hasOwnProperty(categoryCode)) {
+export function getCategoryNameFromCategoryCode(categoryCode: string): string {
+    if (categoryCode in existingCategories) {
         return existingCategories[categoryCode];
     }
 
     return categoryCode;
 }
 
-export const getCategoryNameFromBirthYear = (birthYear: number): string => {
+export function getCategoryNameFromBirthYear(birthYear: number): string {
     return getCategoryNameFromCategoryCode(getCategoryCodeFromBirthYear(birthYear));
 }

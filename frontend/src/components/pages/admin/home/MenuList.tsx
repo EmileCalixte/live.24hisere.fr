@@ -1,9 +1,9 @@
 import MenuItem from "./MenuItem";
 
 const menuItems: {
-    url: string,
-    icon: string,
-    label: string,
+    url: string;
+    icon: string;
+    label: string;
 }[] = [
     {
         url: "/admin/runners",
@@ -27,7 +27,7 @@ const MenuList = () => {
         <ul className="admin-list">
             {menuItems.map(({url, icon, label}, key) => <MenuItem key={key} url={url} icon={icon} label={label} />)}
         </ul>
-    )
-}
+    );
+};
 
 export default MenuList;

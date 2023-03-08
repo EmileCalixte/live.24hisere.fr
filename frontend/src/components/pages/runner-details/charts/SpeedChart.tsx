@@ -1,9 +1,9 @@
 import CanvasJSReact from "../../../../lib/canvasjs/canvasjs.react";
-import React, {useCallback, useMemo, useState} from "react";
-import ReactDOMServer from 'react-dom/server';
-import {Race} from "../../../../types/Race";
-import Util from "../../../../util/Util";
-import {RunnerWithProcessedHours, RunnerWithProcessedPassages} from "../../../../types/Runner";
+import {type FunctionComponent, useCallback, useMemo, useState} from "react";
+import ReactDOMServer from "react-dom/server";
+import {type Race} from "../../../../types/Race";
+import {formatMsAsDuration} from "../../../../util/utils";
+import {type RunnerWithProcessedHours, type RunnerWithProcessedPassages} from "../../../../types/Runner";
 
 const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
@@ -25,20 +25,26 @@ const getInterval = (raceDuration: number): number => {
     }
 
     return Math.ceil(raceDuration / 60 / 24 / 60) * 60;
+};
+
+interface SpeedChartProps {
+    runner: RunnerWithProcessedPassages & RunnerWithProcessedHours;
+    race: Race;
+    averageSpeed: number;
 }
 
-const SpeedChart: React.FunctionComponent<{
-    runner: RunnerWithProcessedPassages & RunnerWithProcessedHours,
-    race: Race,
-    averageSpeed: number,
-}> = ({runner, race, averageSpeed}) => {
+const SpeedChart: FunctionComponent<SpeedChartProps> = ({
+    runner,
+    race,
+    averageSpeed,
+}) => {
     const [displayEachLapSpeed, setDisplayEachLapSpeed] = useState(true);
     const [displayEachHourSpeed, setDisplayEachHourSpeed] = useState(true);
     const [displayAverageSpeed, setDisplayAverageSpeed] = useState(true);
     const [displayAverageSpeedEvolution, setDisplayAverageSpeedEvolution] = useState(true);
 
     const getXAxisLabelValue = useCallback((e: any) => {
-        return Util.formatMsAsDuration(e.value.getTime());
+        return formatMsAsDuration(e.value.getTime());
     }, []);
 
     const getTooltipContent = useCallback((e: any) => {
@@ -53,15 +59,15 @@ const SpeedChart: React.FunctionComponent<{
             return ReactDOMServer.renderToString(
                 <div>
                     {passage.processed.lapNumber !== null &&
-                    <div style={{marginBottom: "0.75em"}}>Tour {passage.processed.lapNumber}</div>
+                        <div style={{marginBottom: "0.75em"}}>Tour {passage.processed.lapNumber}</div>
                     }
 
                     <div>
-                        De <strong>{Util.formatMsAsDuration(passage.processed.lapStartRaceTime)}</strong> à <strong>{Util.formatMsAsDuration(passage.processed.lapEndRaceTime)}</strong> :
+                        De <strong>{formatMsAsDuration(passage.processed.lapStartRaceTime)}</strong> à <strong>{formatMsAsDuration(passage.processed.lapEndRaceTime)}</strong> :
                     </div>
 
                     <div>
-                        Durée : <strong>{Util.formatMsAsDuration(passage.processed.lapDuration, false)}</strong>
+                        Durée : <strong>{formatMsAsDuration(passage.processed.lapDuration, false)}</strong>
                     </div>
 
                     <div>
@@ -69,11 +75,11 @@ const SpeedChart: React.FunctionComponent<{
                     </div>
 
                     <div>
-                        Allure : <strong>{Util.formatMsAsDuration(passage.processed.lapPace, false)}/km</strong>
+                        Allure : <strong>{formatMsAsDuration(passage.processed.lapPace, false)}/km</strong>
                     </div>
 
                     <div style={{marginTop: "0.75em"}}>
-                        De <strong>{Util.formatMsAsDuration(0)}</strong> à <strong>{Util.formatMsAsDuration(passage.processed.lapEndRaceTime)}</strong> :
+                        De <strong>{formatMsAsDuration(0)}</strong> à <strong>{formatMsAsDuration(passage.processed.lapEndRaceTime)}</strong> :
                     </div>
 
                     <div>
@@ -81,10 +87,9 @@ const SpeedChart: React.FunctionComponent<{
                     </div>
 
                     <div>
-                        Allure moyenne : <strong>{Util.formatMsAsDuration(passage.processed.averagePaceSinceRaceStart, false)}/km</strong>
+                        Allure moyenne : <strong>{formatMsAsDuration(passage.processed.averagePaceSinceRaceStart, false)}/km</strong>
                     </div>
-
-                </div>
+                </div>,
             );
         }
 
@@ -95,15 +100,15 @@ const SpeedChart: React.FunctionComponent<{
             return ReactDOMServer.renderToString(
                 <div>
                     <div>
-                        De <strong>{Util.formatMsAsDuration(hour.startRaceTime)}</strong> à <strong>{Util.formatMsAsDuration(hour.endRaceTime)}</strong> :
+                        De <strong>{formatMsAsDuration(hour.startRaceTime)}</strong> à <strong>{formatMsAsDuration(hour.endRaceTime)}</strong> :
                     </div>
                     <div>
-                        Vitesse moyenne : <strong>{hour.averageSpeed !== null ? hour.averageSpeed.toFixed(2) + ' km/h' : '–'}</strong>
+                        Vitesse moyenne : <strong>{hour.averageSpeed !== null ? hour.averageSpeed.toFixed(2) + " km/h" : "–"}</strong>
                     </div>
                     <div>
-                        Allure : <strong>{hour.averagePace !== null ? Util.formatMsAsDuration(hour.averagePace, false) + '/km' : '–'}</strong>
+                        Allure : <strong>{hour.averagePace !== null ? formatMsAsDuration(hour.averagePace, false) + "/km" : "–"}</strong>
                     </div>
-                </div>
+                </div>,
             );
         }
 
@@ -111,7 +116,7 @@ const SpeedChart: React.FunctionComponent<{
             return ReactDOMServer.renderToString(
                 <div>
                     Vitesse moyenne générale : <strong>{averageSpeed.toFixed(2)} km/h</strong>
-                </div>
+                </div>,
             );
         }
 
@@ -140,7 +145,7 @@ const SpeedChart: React.FunctionComponent<{
                 labelAngle: -25,
             },
             axisY: {
-                suffix: ' km/h',
+                suffix: " km/h",
                 minimum: 0,
                 maximum: 10,
             },
@@ -195,9 +200,9 @@ const SpeedChart: React.FunctionComponent<{
                             x: new Date(race.startTime),
                             y: 0,
                         },
-                    ]
+                    ],
                 },
-            ]
+            ],
         };
 
         const lapSpeedDataPoints = [];
@@ -264,7 +269,7 @@ const SpeedChart: React.FunctionComponent<{
                 // @ts-ignore
                 x: options.axisX.maximum,
                 y: averageSpeed,
-            }
+            },
         ];
         options.data[3].dataPoints = averageSpeedEvolutionDataPoints as any;
 
@@ -325,6 +330,6 @@ const SpeedChart: React.FunctionComponent<{
             </div>
         </div>
     );
-}
+};
 
 export default SpeedChart;

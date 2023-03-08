@@ -1,14 +1,16 @@
-import React, {useMemo} from "react";
-import {Race} from "../../../types/Race";
-import Util from "../../../util/Util";
+import {type FunctionComponent, useMemo} from "react";
+import {type Race} from "../../../types/Race";
+import {formatMsAsDuration} from "../../../util/utils";
 import RaceTimer from "../../misc/RaceTimer";
 
-const RunnerDetailsRaceDetails: React.FunctionComponent<{
-    race: Race
-}> = ({race}) => {
+interface RunnerDetailsRaceDetailsProps {
+    race: Race;
+}
+
+const RunnerDetailsRaceDetails: FunctionComponent<RunnerDetailsRaceDetailsProps> = ({race}) => {
     // The race total duration formatted to be human-readable
     const formattedRaceDuration = useMemo(() => {
-        return Util.formatMsAsDuration(race.duration * 1000);
+        return formatMsAsDuration(race.duration * 1000);
     }, [race]);
 
     return (
@@ -21,15 +23,17 @@ const RunnerDetailsRaceDetails: React.FunctionComponent<{
                 <p><b><RaceTimer race={race}/></b> / {formattedRaceDuration}</p>
 
                 <p>
-                    Distance tour : <strong>{race.lapDistance} m</strong> {race.initialDistance > 0 &&
-                    <>
-                        (distance avant le premier tour : {race.initialDistance} m)
-                    </>
+                    Distance tour : <strong>{race.lapDistance} m</strong>
+                    <> </>
+                    {race.initialDistance > 0 &&
+                        <>
+                            (distance avant le premier tour : {race.initialDistance} m)
+                        </>
                     }
                 </p>
             </div>
         </div>
     );
-}
+};
 
 export default RunnerDetailsRaceDetails;

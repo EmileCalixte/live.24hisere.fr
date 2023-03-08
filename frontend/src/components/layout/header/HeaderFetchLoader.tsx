@@ -5,7 +5,7 @@ const HeaderFetchLoader = () => {
         <div className="header-fetch-loader-container">
             <CircularLoader />
         </div>
-    )
-}
+    );
+};
 
 export default HeaderFetchLoader;

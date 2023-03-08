@@ -1,30 +1,28 @@
-import React, {useCallback, useEffect, useMemo, useState} from "react"
+import React, {type FunctionComponent, useCallback, useEffect, useMemo, useState} from "react";
 
 export const MIN_DOTS = 0;
 export const MAX_DOTS = 3;
 export const UPDATE_DOT_COUNT_INTERVAL_TIME = 250;
 
-const OptionWithLoadingDots: React.FunctionComponent<{children: React.ReactNode}> = ({children}) => {
+interface OptionWithLoadingDotsProps {
+    children: React.ReactNode;
+}
+
+const OptionWithLoadingDots: FunctionComponent<OptionWithLoadingDotsProps> = ({children}) => {
     const [dotCount, setDotCount] = useState(MAX_DOTS);
 
     const updateDotCount = useCallback(() => {
-        setDotCount(dotCount => dotCount >= MAX_DOTS ? MIN_DOTS : dotCount + 1)
+        setDotCount(dotCount => dotCount >= MAX_DOTS ? MIN_DOTS : dotCount + 1);
     }, []);
 
     useEffect(() => {
         const dotsInterval = setInterval(() => updateDotCount(), UPDATE_DOT_COUNT_INTERVAL_TIME);
 
-        return (() => clearInterval(dotsInterval));
+        return () => clearInterval(dotsInterval);
     }, [updateDotCount]);
 
     const dots = useMemo<string>(() => {
-        const dots = [];
-
-        for (let i = 0; i < dotCount; ++i) {
-            dots.push('.');
-        }
-
-        return dots.join('');
+        return new Array(dotCount).fill(".").join("");
     }, [dotCount]);
 
     return (
@@ -32,6 +30,6 @@ const OptionWithLoadingDots: React.FunctionComponent<{children: React.ReactNode}
             {children}{dots}
         </option>
     );
-}
+};
 
-export default OptionWithLoadingDots
+export default OptionWithLoadingDots;
