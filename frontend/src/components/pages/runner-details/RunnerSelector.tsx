@@ -55,14 +55,6 @@ const RunnerSelector: FunctionComponent<RunnerSelectorProps> = ({
             const aName = a.lastname + a.firstname;
             const bName = b.lastname + b.firstname;
 
-            if (a.isTeam && !b.isTeam) {
-                return -1;
-            }
-
-            if (!a.isTeam && b.isTeam) {
-                return 1;
-            }
-
             return aName.localeCompare(bName);
         }));
     }, [runners]);

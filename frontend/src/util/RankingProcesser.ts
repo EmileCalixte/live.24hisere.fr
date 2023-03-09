@@ -18,7 +18,6 @@ type CategoryGenderRanks = {
 
 interface CurrentRanksByCategory {
     scratch: CategoryGenderRanks;
-    team: CategoryGenderRanks;
     [key: string]: CategoryGenderRanks;
 }
 
@@ -33,12 +32,6 @@ export class RankingProcesser {
     private currentRanksByCategory: CurrentRanksByCategory = {
         scratch: { // Scratch includes all solo runners regardless of their category
             mixed: {rank: 0, lastRunner: null},
-            [Gender.M]: {rank: 0, lastRunner: null},
-            [Gender.F]: {rank: 0, lastRunner: null},
-        },
-        team: {
-            mixed: {rank: 0, lastRunner: null},
-            // UNUSED FOR TEAMS BUT REQUIRED FOR TYPESCRIPT TYPE MATCHING (anyway we'll soon get rid of teams)
             [Gender.M]: {rank: 0, lastRunner: null},
             [Gender.F]: {rank: 0, lastRunner: null},
         },
@@ -83,28 +76,20 @@ export class RankingProcesser {
                 this.addCategoryToCurrentRanks(runner.category);
             }
 
-            if (runner.isTeam) {
-                rankings.actual.scratchMixed = this.currentRanksByCategory.team.mixed.rank + 1;
-            } else {
-                rankings.actual.scratchMixed = this.currentRanksByCategory.scratch.mixed.rank + 1;
-                rankings.actual.scratchGender = this.currentRanksByCategory.scratch[runner.gender].rank + 1;
-                rankings.actual.categoryMixed = this.currentRanksByCategory[runner.category].mixed.rank + 1;
-                rankings.actual.categoryGender = this.currentRanksByCategory[runner.category][runner.gender].rank + 1;
-            }
+            rankings.actual.scratchMixed = this.currentRanksByCategory.scratch.mixed.rank + 1;
+            rankings.actual.scratchGender = this.currentRanksByCategory.scratch[runner.gender].rank + 1;
+            rankings.actual.categoryMixed = this.currentRanksByCategory[runner.category].mixed.rank + 1;
+            rankings.actual.categoryGender = this.currentRanksByCategory[runner.category][runner.gender].rank + 1;
 
             let scratchMixedPreviousRunner = null;
             let scratchGenderPreviousRunner = null;
             let categoryMixedPreviousRunner = null;
             let categoryGenderPreviousRunner = null;
 
-            if (runner.isTeam) {
-                scratchMixedPreviousRunner = this.getCurrentLastRunner("team", "mixed");
-            } else {
-                scratchMixedPreviousRunner = this.getCurrentLastRunner("scratch", "mixed");
-                scratchGenderPreviousRunner = this.getCurrentLastRunner("scratch", runner.gender);
-                categoryMixedPreviousRunner = this.getCurrentLastRunner(runner.category, "mixed");
-                categoryGenderPreviousRunner = this.getCurrentLastRunner(runner.category, runner.gender);
-            }
+            scratchMixedPreviousRunner = this.getCurrentLastRunner("scratch", "mixed");
+            scratchGenderPreviousRunner = this.getCurrentLastRunner("scratch", runner.gender);
+            categoryMixedPreviousRunner = this.getCurrentLastRunner(runner.category, "mixed");
+            categoryGenderPreviousRunner = this.getCurrentLastRunner(runner.category, runner.gender);
 
             const scratchMixedPreviousRunnerEquality = this.areRunnersEqual(runner, scratchMixedPreviousRunner);
             const scratchGenderPreviousRunnerEquality = this.areRunnersEqual(runner, scratchGenderPreviousRunner);
@@ -117,24 +102,22 @@ export class RankingProcesser {
                 rankings.displayed.scratchMixed = rankings.actual.scratchMixed;
             }
 
-            if (!runner.isTeam) {
-                if (scratchGenderPreviousRunner && scratchGenderPreviousRunnerEquality) {
-                    rankings.displayed.scratchGender = scratchGenderPreviousRunner.rankings.displayed.scratchGender;
-                } else {
-                    rankings.displayed.scratchGender = rankings.actual.scratchGender;
-                }
+            if (scratchGenderPreviousRunner && scratchGenderPreviousRunnerEquality) {
+                rankings.displayed.scratchGender = scratchGenderPreviousRunner.rankings.displayed.scratchGender;
+            } else {
+                rankings.displayed.scratchGender = rankings.actual.scratchGender;
+            }
 
-                if (categoryMixedPreviousRunner && categoryMixedPreviousRunnerEquality) {
-                    rankings.displayed.categoryMixed = categoryMixedPreviousRunner.rankings.displayed.categoryMixed;
-                } else {
-                    rankings.displayed.categoryMixed = rankings.actual.categoryMixed;
-                }
+            if (categoryMixedPreviousRunner && categoryMixedPreviousRunnerEquality) {
+                rankings.displayed.categoryMixed = categoryMixedPreviousRunner.rankings.displayed.categoryMixed;
+            } else {
+                rankings.displayed.categoryMixed = rankings.actual.categoryMixed;
+            }
 
-                if (categoryGenderPreviousRunner && categoryGenderPreviousRunnerEquality) {
-                    rankings.displayed.categoryGender = categoryGenderPreviousRunner.rankings.displayed.categoryGender;
-                } else {
-                    rankings.displayed.categoryGender = rankings.actual.categoryGender;
-                }
+            if (categoryGenderPreviousRunner && categoryGenderPreviousRunnerEquality) {
+                rankings.displayed.categoryGender = categoryGenderPreviousRunner.rankings.displayed.categoryGender;
+            } else {
+                rankings.displayed.categoryGender = rankings.actual.categoryGender;
             }
 
             let distance = 0;
@@ -194,12 +177,6 @@ export class RankingProcesser {
     };
 
     private readonly updateCurrentRanks = (runner: ProcessedRankingRunner) => {
-        if (runner.isTeam) {
-            ++this.currentRanksByCategory.team.mixed.rank;
-            this.currentRanksByCategory.team.mixed.lastRunner = runner;
-            return;
-        }
-
         if (!(runner.category in this.currentRanksByCategory)) {
             this.addCategoryToCurrentRanks(runner.category);
         }

@@ -65,12 +65,6 @@ interface Runner {
     id: number;
 
     /**
-     * Whether the runner is a team or not
-     * @deprecated
-     */
-    isTeam: boolean;
-
-    /**
      * The firstname of the runner
      */
     firstname: string;
