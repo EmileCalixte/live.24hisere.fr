@@ -25,9 +25,6 @@ class Runner
     #[Column(options: ['comment' => 'Bib number'])]
     private int $id;
 
-    #[Column(name: 'is_team')]
-    private bool $isTeam;
-
     #[Column(length: self::FIRSTNAME_MAX_LENGTH)]
     private string $firstname;
 
@@ -55,16 +52,6 @@ class Runner
     public function setId(int $id): void
     {
         $this->id = $id;
-    }
-
-    public function isTeam(): bool
-    {
-        return $this->isTeam;
-    }
-
-    public function setIsTeam(bool $isTeam): void
-    {
-        $this->isTeam = $isTeam;
     }
 
     public function getFirstname(): string

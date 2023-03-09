@@ -104,7 +104,6 @@ class UpdateRunnerResponder extends AbstractResponder
         $newRunner = new Runner();
 
         $newRunner->setId($newId);
-        $newRunner->setIsTeam($runner->isTeam());
         $newRunner->setFirstname($runner->getFirstname());
         $newRunner->setLastname($runner->getLastname());
         $newRunner->setGender($runner->getGender());
