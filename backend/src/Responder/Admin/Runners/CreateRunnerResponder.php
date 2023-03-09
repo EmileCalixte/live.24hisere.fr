@@ -68,9 +68,6 @@ class CreateRunnerResponder extends AbstractResponder
         $runner->setBirthYear($bodyParams['birthYear']);
         $runner->setRace($race);
 
-        // TODO remove this
-        $runner->setIsTeam(false);
-
         $entityManager = MainApp::getInstance()->getEntityManager();
 
         $entityManager->persist($runner);

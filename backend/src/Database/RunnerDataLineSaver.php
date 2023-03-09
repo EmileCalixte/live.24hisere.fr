@@ -14,13 +14,12 @@ class RunnerDataLineSaver
     public function __construct()
     {
         $this->database = DAO::getInstance()->getDatabase();
-        $this->query = $this->getDatabase()->prepare('INSERT INTO ' . DAO::TABLE_RUNNER . ' (id, is_team, lastname, firstname, gender, birth_year, category) VALUES (:id, :isTeam, :lastname, :firstname, :gender, :birthYear, :category)' );
+        $this->query = $this->getDatabase()->prepare('INSERT INTO ' . DAO::TABLE_RUNNER . ' (id, lastname, firstname, gender, birth_year, category) VALUES (:id, :lastname, :firstname, :gender, :birthYear, :category)' );
     }
 
     public function saveDataLine(DataLine $dataLine): bool
     {
         $id = $dataLine->getRunnerId();
-        $isTeam = 0; // TODO handle teams
         $firstname = $dataLine->getRunnerFirstname();
         $lastname = $dataLine->getRunnerLastname();
         $gender = $dataLine->getRunnerGender();
@@ -28,7 +27,6 @@ class RunnerDataLineSaver
         $category = CommonUtil::getFfaCategoryFromBirthYear($birthYear);
 
         $this->getQuery()->bindParam(':id', $id);
-        $this->getQuery()->bindParam(':isTeam', $isTeam);
         $this->getQuery()->bindParam(':firstname', $firstname);
         $this->getQuery()->bindParam(':lastname', $lastname);
         $this->getQuery()->bindParam(':gender', $gender);
