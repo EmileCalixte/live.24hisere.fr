@@ -59,7 +59,7 @@ function getSpeedAndPaceInHour(
     const pace = getPaceFromSpeed(speed);
 
     return {speed, pace};
-};
+}
 
 /**
  * @param passages Passages sorted by ascending time
