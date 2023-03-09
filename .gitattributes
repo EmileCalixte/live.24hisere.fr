@@ -2,6 +2,10 @@
 # and leave all files detected as binary untouched.
 * text=auto
 
+# Github
+lib/**          linguist-vendored
+eslintrc.js     linguist-vendored
+
 #
 # The above will handle all files NOT found below
 #
