@@ -371,19 +371,13 @@ const RunnerDetails = () => {
                     <div className="col-12 mt-3">
                         <h3>Passages</h3>
 
-                        {runner.passages.length === 0 &&
-                            <p><i>Aucun passage</i></p>
-                        }
-
-                        {runner.passages.length > 0 &&
-                            <RunnerDetailsPassages passages={runner.passages}
-                                                   runnerRace={runnerRace}
-                                                   updatePassageVisiblity={updatePassageVisiblity}
-                                                   updatePassage={updatePassage}
-                                                   saveNewPassage={saveNewPassage}
-                                                   deletePassage={deletePassage}
-                            />
-                        }
+                        <RunnerDetailsPassages passages={runner.passages}
+                                               runnerRace={runnerRace}
+                                               updatePassageVisiblity={updatePassageVisiblity}
+                                               updatePassage={updatePassage}
+                                               saveNewPassage={saveNewPassage}
+                                               deletePassage={deletePassage}
+                        />
                     </div>
 
                     <div className="col-12 mt-3">

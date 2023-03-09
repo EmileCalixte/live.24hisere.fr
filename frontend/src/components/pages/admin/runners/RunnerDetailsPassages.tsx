@@ -74,78 +74,87 @@ const RunnerDetailsPassages: FunctionComponent<RunnerDetailsPassagesProps> = ({
 
             </div>
             <div className="col-12">
-                <p>
-                    {passageCount} passage{passageCount >= 2 ? "s" : ""}
 
-                    {hiddenPassageCount > 0 &&
-                        `, dont ${hiddenPassageCount} masqué${hiddenPassageCount >= 2 ? "s" : ""}`
-                    }
-                </p>
+                {passages.length === 0 &&
+                    <p><i>Aucun passage</i></p>
+                }
 
-                <table className="table no-full-width">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Type</th>
-                            <th>Date et heure</th>
-                            <th>Temps de course</th>
-                            <th colSpan={3}>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {passages.map(passage => {
-                            return (
-                                <tr key={passage.id}>
-                                    <td style={{fontSize: "0.85em"}}>{passage.id}</td>
-                                    <td style={{fontSize: "0.85em"}}>
-                                        {(() => {
-                                            if (passage.detectionId !== null) {
-                                                return `Auto (${passage.detectionId})`;
-                                            }
+                {passages.length > 0 &&
+                    <>
+                        <p>
+                            {passageCount} passage{passageCount >= 2 ? "s" : ""}
 
-                                            return "Manuel";
-                                        })()}
-                                    </td>
-                                    <td>{formatDateAsString(passage.processed.lapEndTime)}</td>
-                                    <td>{formatMsAsDuration(passage.processed.lapEndRaceTime)}</td>
-                                    <td className="no-padding-vertical">
-                                        <div className="buttons-container">
-                                            {passage.isHidden &&
-                                                <button className="button small"
-                                                        onClick={() => updatePassageVisiblity(passage, false)}
-                                                >
-                                                    <i className="fa-solid fa-eye"/> Ne plus masquer
-                                                </button>
-                                            }
+                            {hiddenPassageCount > 0 &&
+                                `, dont ${hiddenPassageCount} masqué${hiddenPassageCount >= 2 ? "s" : ""}`
+                            }
+                        </p>
 
-                                            {!passage.isHidden &&
-                                                <button className="button orange small"
-                                                        onClick={() => updatePassageVisiblity(passage, true)}
-                                                >
-                                                    <i className="fa-solid fa-eye-slash"/> Masquer
-                                                </button>
-                                            }
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <button className="button small"
-                                                onClick={() => setEditingPassage(passage)}
-                                        >
-                                            <i className="fa-solid fa-pen"/> Modifier
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button className="button red small"
-                                                onClick={() => deletePassage(passage)}
-                                        >
-                                            <i className="fa-solid fa-trash"/> Supprimer
-                                        </button>
-                                    </td>
+                        <table className="table no-full-width">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Type</th>
+                                    <th>Date et heure</th>
+                                    <th>Temps de course</th>
+                                    <th colSpan={3}>Actions</th>
                                 </tr>
-                            );
-                        })}
-                    </tbody>
-                </table>
+                            </thead>
+                            <tbody>
+                                {passages.map(passage => {
+                                    return (
+                                        <tr key={passage.id}>
+                                            <td style={{fontSize: "0.85em"}}>{passage.id}</td>
+                                            <td style={{fontSize: "0.85em"}}>
+                                                {(() => {
+                                                    if (passage.detectionId !== null) {
+                                                        return `Auto (${passage.detectionId})`;
+                                                    }
+
+                                                    return "Manuel";
+                                                })()}
+                                            </td>
+                                            <td>{formatDateAsString(passage.processed.lapEndTime)}</td>
+                                            <td>{formatMsAsDuration(passage.processed.lapEndRaceTime)}</td>
+                                            <td className="no-padding-vertical">
+                                                <div className="buttons-container">
+                                                    {passage.isHidden &&
+                                                        <button className="button small"
+                                                                onClick={() => updatePassageVisiblity(passage, false)}
+                                                        >
+                                                            <i className="fa-solid fa-eye"/> Ne plus masquer
+                                                        </button>
+                                                    }
+
+                                                    {!passage.isHidden &&
+                                                        <button className="button orange small"
+                                                                onClick={() => updatePassageVisiblity(passage, true)}
+                                                        >
+                                                            <i className="fa-solid fa-eye-slash"/> Masquer
+                                                        </button>
+                                                    }
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <button className="button small"
+                                                        onClick={() => setEditingPassage(passage)}
+                                                >
+                                                    <i className="fa-solid fa-pen"/> Modifier
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <button className="button red small"
+                                                        onClick={() => deletePassage(passage)}
+                                                >
+                                                    <i className="fa-solid fa-trash"/> Supprimer
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </>
+                }
             </div>
         </div>
     );
