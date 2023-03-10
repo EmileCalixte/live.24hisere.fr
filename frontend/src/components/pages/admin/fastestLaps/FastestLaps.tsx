@@ -79,16 +79,16 @@ const FastestLaps = () => {
 
         const sortedPassages: RunnerSortedPassages = {};
 
-        passages.reduce((accumulator, currentValue) => {
-            if (currentValue.isHidden) {
+        passages.forEach(passage => {
+            if (passage.isHidden) {
                 return sortedPassages;
             }
 
-            if (!(currentValue.runnerId in sortedPassages)) {
-                sortedPassages[currentValue.runnerId] = [];
+            if (!(passage.runnerId in sortedPassages)) {
+                sortedPassages[passage.runnerId] = [];
             }
 
-            sortedPassages[currentValue.runnerId].push(currentValue);
+            sortedPassages[passage.runnerId].push(passage);
 
             return sortedPassages;
         }, sortedPassages);
