@@ -120,7 +120,7 @@ const RaceDetailsForm: FunctionComponent<RaceDetailsFormProps> = ({
                     <input className="input"
                            type="date"
                            required={true}
-                           defaultValue={startTimeDate}
+                           value={startTimeDate}
                            name="start-date"
                            onChange={onStartTimeDateChange}
                     />
@@ -128,7 +128,7 @@ const RaceDetailsForm: FunctionComponent<RaceDetailsFormProps> = ({
                            type="time"
                            step={1}
                            required={true}
-                           defaultValue={startTimeTime}
+                           value={startTimeTime}
                            name="start-time"
                            onChange={onStartTimeTimeChange}
                     />

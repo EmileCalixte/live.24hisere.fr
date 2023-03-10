@@ -1,7 +1,9 @@
+import {type AdminRace} from "../../../../types/Race";
 import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
+import OptionWithLoadingDots from "../../../misc/OptionWithLoadingDots";
 import RaceDetailsForm from "./RaceDetailsForm";
-import React, {useCallback, useContext, useState} from "react";
+import React, {useCallback, useContext, useEffect, useState} from "react";
 import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
 import {userContext} from "../../../App";
 import ToastUtil from "../../../../util/ToastUtil";
@@ -10,6 +12,8 @@ import {formatDateForApi} from "../../../../util/utils";
 
 const CreateRace = () => {
     const {accessToken} = useContext(userContext);
+
+    const [existingRaces, setExistingRaces] = useState<AdminRace[] | false>(false);
 
     const [raceName, setRaceName] = useState("");
     const [initialDistance, setInitialDistance] = useState<number | string>(0);
@@ -21,6 +25,31 @@ const CreateRace = () => {
     const [isSaving, setIsSaving] = useState(false);
 
     const [redirectToId, setRedirectToId] = useState(null);
+
+    const onSelectRaceToCopy = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+        if (!existingRaces) {
+            return;
+        }
+
+        const raceToCopy = existingRaces.find(race => race.id.toString() === e.target.value);
+
+        if (!raceToCopy) {
+            return;
+        }
+
+        setRaceName(raceToCopy.name);
+        setInitialDistance(raceToCopy.initialDistance);
+        setLapDistance(raceToCopy.lapDistance);
+        setStartTime(new Date(raceToCopy.startTime));
+        setDuration(raceToCopy.duration * 1000);
+    }, [existingRaces]);
+
+    const fetchExistingRaces = useCallback(async () => {
+        const response = await performAuthenticatedAPIRequest("/admin/races", accessToken);
+        const responseJson = await response.json();
+
+        setExistingRaces(responseJson.races);
+    }, [accessToken]);
 
     const onSubmit = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
@@ -54,6 +83,10 @@ const CreateRace = () => {
         setRedirectToId(responseJson.id);
     }, [accessToken, raceName, isPublic, initialDistance, lapDistance, startTime, duration]);
 
+    useEffect(() => {
+        fetchExistingRaces();
+    }, [fetchExistingRaces]);
+
     if (redirectToId) {
         return (
             <Navigate to={`/admin/races/${redirectToId}`} />
@@ -69,6 +102,34 @@ const CreateRace = () => {
                         <Crumb url="/admin/races" label="Courses" />
                         <Crumb label="Créer une course" />
                     </Breadcrumbs>
+                </div>
+            </div>
+
+            <div className="row">
+                <div className="col-xl-4 col-lg-6 col-md-9 col-12">
+                    <div className="input-group">
+                        <label htmlFor="copy-race-select">
+                            Copier les paramètres d'une course existante
+                        </label>
+                        <select id="copy-race-select"
+                                className="input-select"
+                                value={"_placeholder"}
+                                onChange={onSelectRaceToCopy}
+                                disabled={Object.keys(existingRaces).length === 0}
+                        >
+                            <option disabled hidden value="_placeholder">
+                                {existingRaces && existingRaces.length === 0 ? "Aucune course à copier" : "Sélectionnez une course à copier"}
+                            </option>
+
+                            {existingRaces === false &&
+                                <OptionWithLoadingDots>Chargement des courses existantes</OptionWithLoadingDots>
+                            }
+
+                            {existingRaces !== false && existingRaces.map(race => (
+                                <option value={race.id} key={race.id}>{race.name}</option>
+                            ))}
+                        </select>
+                    </div>
                 </div>
             </div>
 

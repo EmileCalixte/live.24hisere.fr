@@ -43,7 +43,7 @@ interface RaceWithRunnerCount extends Race {
 /**
  * An object representing a race with additional admin properties
  */
-interface AdminRace extends Race {
+export interface AdminRace extends Race {
     /**
      * Whether the race is publicly displayed or not
      */
