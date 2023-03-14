@@ -41,18 +41,18 @@ const Races = () => {
             return;
         }
 
-        const _races = [...sortingRaces];
+        const races = [...sortingRaces];
 
         // Remove dragged race for temporary races array
-        const draggedRace = _races.splice(dragItemIndex, 1)[0];
+        const draggedRace = races.splice(dragItemIndex, 1)[0];
 
         // Insert dragged race in temporary races array at new index
-        _races.splice(dragOverItemIndex, 0, draggedRace);
+        races.splice(dragOverItemIndex, 0, draggedRace);
 
         setDragItemIndex(null);
         setDragOverIndex(null);
 
-        setSortingRaces(_races);
+        setSortingRaces(races);
     }, [sortingRaces, dragItemIndex, dragOverItemIndex]);
 
     const saveSort = useCallback(async () => {

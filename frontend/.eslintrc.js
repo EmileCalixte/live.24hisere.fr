@@ -10,6 +10,7 @@ module.exports = {
     ],
     overrides: [
     ],
+    parser: "@typescript-eslint/parser",
     parserOptions: {
         project: [
             "./tsconfig.json",
@@ -59,6 +60,28 @@ module.exports = {
 
         "object-curly-spacing": ["error", "never"],
         "@typescript-eslint/object-curly-spacing": ["error", "never"],
+
+        "@typescript-eslint/naming-convention": [
+            "error",
+            {
+                selector: "variable",
+                format: ["camelCase", "UPPER_CASE", "PascalCase"],
+            },
+            {
+                selector: "parameter",
+                format: ["camelCase", "PascalCase"],
+                leadingUnderscore: "allow",
+            },
+            {
+                selector: "memberLike",
+                modifiers: ["private"],
+                format: ["camelCase", "PascalCase"],
+            },
+            {
+                selector: "typeLike",
+                format: ["PascalCase"],
+            },
+        ],
 
         "@typescript-eslint/member-delimiter-style": ["error", {
             multiline: {
