@@ -1,4 +1,5 @@
 import {type FunctionComponent, useContext, useEffect, useMemo, useState} from "react";
+import {getRaceTime, isRaceFinished, isRaceStarted} from "../../helpers/raceHelper";
 import {type Race} from "../../types/Race";
 import {formatMsAsDuration} from "../../util/utils";
 import {appDataContext} from "../App";
@@ -20,22 +21,17 @@ const RaceTimer: FunctionComponent<RaceTimerProps> = ({race, allowNegative = fal
 
     useEffect(() => {
         const updateRaceTime = () => {
-            const raceStartMs = new Date(race.startTime).getTime();
-            const nowMs = (new Date()).getTime() + (serverTimeOffset * 1000);
-
-            const raceTime = nowMs - raceStartMs;
-
-            if (raceTime < 0 && !allowNegative) {
+            if (!isRaceStarted(race, serverTimeOffset) && !allowNegative) {
                 setRaceTime(0);
                 return;
             }
 
-            if (raceTime > race.duration * 1000) {
+            if (isRaceFinished(race, serverTimeOffset)) {
                 setRaceTime(race.duration * 1000);
                 return;
             }
 
-            setRaceTime(raceTime);
+            setRaceTime(getRaceTime(race, serverTimeOffset));
         };
 
         const interval = window.setInterval(updateRaceTime, 1000);

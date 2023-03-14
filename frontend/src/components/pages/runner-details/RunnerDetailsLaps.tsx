@@ -1,6 +1,8 @@
-import React, {type FunctionComponent, useCallback, useEffect, useMemo, useState} from "react";
+import React, {type FunctionComponent, useCallback, useContext, useEffect, useMemo, useState} from "react";
+import {getRaceTime, isRaceFinished, isRaceStarted} from "../../../helpers/raceHelper";
 import {formatMsAsDuration, SORT_ASC, SORT_DESC} from "../../../util/utils";
-import {type RunnerWithProcessedPassages} from "../../../types/Runner";
+import {type RunnerWithProcessedPassages, type RunnerWithRace} from "../../../types/Runner";
+import {appDataContext} from "../../App";
 
 enum SortBy {
     RaceTime = "raceTime",
@@ -10,14 +12,26 @@ enum SortBy {
 const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
 
 interface RunnerDetailsLapsProps {
-    runner: RunnerWithProcessedPassages;
+    runner: RunnerWithRace & RunnerWithProcessedPassages;
 }
 
 const RunnerDetailsLaps: FunctionComponent<RunnerDetailsLapsProps> = ({runner}) => {
+    const {serverTimeOffset} = useContext(appDataContext);
+
+    const race = runner.race;
+
+    const [raceTime, setRaceTime] = useState(getRaceTime(race, serverTimeOffset));
+
     const [sortColumn, setSortColumn] = useState(SortBy.RaceTime);
     const [sortDirection, setSortDirection] = useState(SORT_ASC);
 
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+    const currentLapTime = useMemo(() => {
+        const lastPassage = runner.passages[runner.passages.length - 1];
+
+        return raceTime - lastPassage.processed.lapEndRaceTime;
+    }, [raceTime, runner]);
 
     const passagesToDisplay = useMemo(() => {
         const passagesToDisplay = [...runner.passages];
@@ -56,6 +70,15 @@ const RunnerDetailsLaps: FunctionComponent<RunnerDetailsLapsProps> = ({runner}) 
         return passagesToDisplay;
     }, [runner, sortColumn, sortDirection]);
 
+    const currentLapTableRow = useMemo(() => (
+        <tr>
+            <td colSpan={2}>Tour en cours</td>
+            <td>{formatMsAsDuration(raceTime)}</td>
+            <td>{formatMsAsDuration(currentLapTime)}</td>
+            <td colSpan={42}/>
+        </tr>
+    ), [raceTime, currentLapTime]);
+
     const updateSort = useCallback((e: React.MouseEvent<HTMLButtonElement>, clickedSortColumn: SortBy) => {
         e.preventDefault();
 
@@ -81,6 +104,12 @@ const RunnerDetailsLaps: FunctionComponent<RunnerDetailsLapsProps> = ({runner}) 
     }, []);
 
     useEffect(() => {
+        const interval = setInterval(() => setRaceTime(getRaceTime(race, serverTimeOffset)));
+
+        return () => clearInterval(interval);
+    }, [race, serverTimeOffset]);
+
+    useEffect(() => {
         const onResize = (e: UIEvent) => {
             setWindowWidth((e.target as Window).innerWidth);
         };
@@ -91,6 +120,11 @@ const RunnerDetailsLaps: FunctionComponent<RunnerDetailsLapsProps> = ({runner}) 
             window.removeEventListener("resize", onResize);
         };
     }, []);
+
+    const showCurrentLap = isRaceStarted(race, serverTimeOffset) && !isRaceFinished(race, serverTimeOffset) && sortColumn === SortBy.RaceTime;
+
+    const showCurrentLapAtTopOfTable = showCurrentLap && sortDirection === SORT_DESC;
+    const showCurrentLapAtBottomOfTable = showCurrentLap && sortDirection === SORT_ASC;
 
     return (
         <div className="row">
@@ -131,6 +165,9 @@ const RunnerDetailsLaps: FunctionComponent<RunnerDetailsLapsProps> = ({runner}) 
                                 </tr>
                             </thead>
                             <tbody>
+                                {showCurrentLapAtTopOfTable &&
+                                    <>{currentLapTableRow}</>
+                                }
                                 {passagesToDisplay.map((passage, index) => (
                                     <tr key={index}>
                                         <td>
@@ -159,6 +196,9 @@ const RunnerDetailsLaps: FunctionComponent<RunnerDetailsLapsProps> = ({runner}) 
                                         </td>
                                     </tr>
                                 ))}
+                                {showCurrentLapAtBottomOfTable &&
+                                    <>{currentLapTableRow}</>
+                                }
                             </tbody>
                         </table>
                     </div>
