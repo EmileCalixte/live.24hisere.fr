@@ -45,11 +45,13 @@ const RunnerDetails = () => {
             return null;
         }
 
-        if (!(runner.raceId in races)) {
+        const race = races.find(race => race.id === runner.raceId);
+
+        if (!race) {
             return null;
         }
 
-        return races[runner.raceId];
+        return race;
     }, [runner, races]);
 
     const unsavedChanges = useMemo(() => {
