@@ -17,5 +17,10 @@
     "strictBindCallApply": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true
-  }
+  },
+  "include": [
+    "src",
+    "test",
+    ".eslintrc.js"
+  ]
 }
