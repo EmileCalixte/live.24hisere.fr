@@ -54,7 +54,7 @@ export default function RankingTable({
                     />
                 </tr>
                 <tr>
-                    <th colSpan={4}>N°</th>
+                    <th colSpan={4}>Classement</th>
                     <th>Doss.</th>
                     <th>Nom</th>
                     <th>Nb. tours</th>
