@@ -1,6 +1,19 @@
 version: "3.8"
 
 services:
+  backend-nest:
+    image: node:18
+    working_dir: /home/node/app
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./backend-nest:/home/node/app
+    depends_on:
+      - database
+    ports:
+      - 8001:3000
+    command: sh -c "./scripts/start.sh"
+
   backend:
     image: webdevops/php-nginx:8.2
     working_dir: /app
