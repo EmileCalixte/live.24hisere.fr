@@ -1,4 +1,4 @@
-import {type FunctionComponent, useMemo} from "react";
+import {useMemo} from "react";
 import {Link} from "react-router-dom";
 import {type CategoryShortCode} from "../../../types/Category";
 import {type ProcessedRankingRunner} from "../../../types/Ranking";
@@ -11,11 +11,11 @@ interface ResponsiveRankingTableRowProps {
     tableGender: GenderWithMixed;
 }
 
-const ResponsiveRankingTableRow: FunctionComponent<ResponsiveRankingTableRowProps> = ({
+export default function ResponsiveRankingTableRow({
     runner,
     tableCategory,
     tableGender,
-}) => {
+}: ResponsiveRankingTableRowProps) {
     const rowRanking = useMemo(() => {
         if (tableCategory === null) {
             if (tableGender === "mixed") {
@@ -126,6 +126,4 @@ const ResponsiveRankingTableRow: FunctionComponent<ResponsiveRankingTableRowProp
             </td>
         </tr>
     );
-};
-
-export default ResponsiveRankingTableRow;
+}

@@ -2,7 +2,6 @@ import {type CategoryShortCode} from "../../../types/Category";
 import {type Race} from "../../../types/Race";
 import RankingTableInfoHeader from "./RankingTableInfoHeader";
 import RankingTableRow from "./RankingTableRow";
-import {type FunctionComponent} from "react";
 import {type ProcessedRanking, type ProcessedRankingRunner} from "../../../types/Ranking";
 import {type GenderWithMixed} from "../../../types/Runner";
 
@@ -14,13 +13,13 @@ interface RankingTableProps {
     tableRaceDuration: number | null;
 }
 
-const RankingTable: FunctionComponent<RankingTableProps> = ({
+export default function RankingTable({
     race,
     ranking,
     tableCategory,
     tableGender,
     tableRaceDuration,
-}) => {
+}: RankingTableProps) {
     const getRankingTableRow = (rankingRunner: ProcessedRankingRunner) => {
         if (tableCategory !== null) {
             if (tableCategory.toUpperCase() !== rankingRunner.category.toUpperCase()) {
@@ -70,6 +69,4 @@ const RankingTable: FunctionComponent<RankingTableProps> = ({
             </tbody>
         </table>
     );
-};
-
-export default RankingTable;
+}

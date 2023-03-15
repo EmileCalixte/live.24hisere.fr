@@ -1,4 +1,4 @@
-import {createContext, type FunctionComponent, useCallback, useEffect, useState} from "react";
+import {createContext, useCallback, useEffect, useState} from "react";
 import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import {type User} from "../types/User";
 import Header from "./layout/header/Header";
@@ -78,7 +78,7 @@ export const userContext = createContext<UserContext>({
 
 const FETCH_APP_DATA_INTERVAL_TIME = 60 * 1000;
 
-const App: FunctionComponent = () => {
+export default function App() {
     const [fetchLevel, setFetchLevel] = useState(0);
     const [lastUpdateTime, setLastUpdateTime] = useState(new Date());
     const [serverTimeOffset, setServerTimeOffset] = useState(0);
@@ -233,6 +233,4 @@ const App: FunctionComponent = () => {
             </div>
         </BrowserRouter>
     );
-};
-
-export default App;
+}

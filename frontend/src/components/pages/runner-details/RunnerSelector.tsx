@@ -1,5 +1,5 @@
 import OptionWithLoadingDots from "../../misc/OptionWithLoadingDots";
-import React, {type FunctionComponent, useCallback, useEffect, useMemo, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import type Runner from "../../../types/Runner";
 
 interface RunnerSelectorProps {
@@ -8,11 +8,7 @@ interface RunnerSelectorProps {
     selectedRunnerId: string | undefined;
 }
 
-const RunnerSelector: FunctionComponent<RunnerSelectorProps> = ({
-    runners,
-    onSelectRunner,
-    selectedRunnerId,
-}) => {
+export default function RunnerSelector({runners, onSelectRunner, selectedRunnerId}: RunnerSelectorProps) {
     const [idSortedRunners, setIdSortedRunners] = useState<Runner[] | false>(false);
     const [nameSortedRunners, setNameSortedRunners] = useState<Runner[] | false>(false);
 
@@ -114,6 +110,4 @@ const RunnerSelector: FunctionComponent<RunnerSelectorProps> = ({
             </div>
         </div>
     );
-};
-
-export default RunnerSelector;
+}

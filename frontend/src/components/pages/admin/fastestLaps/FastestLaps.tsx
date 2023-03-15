@@ -20,7 +20,7 @@ const ITEMS_PER_PAGE = 100;
 const RUNNERS_AND_RACES_FETCH_INTERVAL = 60000;
 const PASSAGES_FETCH_INTERVAL = 15000;
 
-const FastestLaps = () => {
+export default function FastestLaps() {
     const {accessToken} = useContext(userContext);
 
     // false = not fetched yet
@@ -252,6 +252,4 @@ const FastestLaps = () => {
             </div>
         </div>
     );
-};
-
-export default FastestLaps;
+}

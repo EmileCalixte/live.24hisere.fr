@@ -1,14 +1,16 @@
 import {Link} from "react-router-dom";
-import React, {type FunctionComponent, useCallback} from "react";
+import React, {useCallback} from "react";
 import {type AdminRaceWithRunnerCount} from "../../../../types/Race";
 import RaceTimer from "../../../misc/RaceTimer";
 
-const RacesListItem: FunctionComponent<{
+interface RacesListItemProps {
     race: AdminRaceWithRunnerCount;
     isSorting: boolean;
     isDragged: boolean;
     isDraggedOver: boolean;
-}> = ({race, isSorting, isDragged, isDraggedOver}) => {
+}
+
+export default function RacesListItem({race, isSorting, isDragged, isDraggedOver}: RacesListItemProps) {
     const onClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
         // Prevent navigation to the clicked race if sorting mode is enabled
         if (isSorting) {
@@ -53,6 +55,4 @@ const RacesListItem: FunctionComponent<{
             </div>
         </Link>
     );
-};
-
-export default RacesListItem;
+}

@@ -4,7 +4,7 @@ import {userContext} from "../../App";
 import {Navigate} from "react-router-dom";
 import ToastUtil from "../../../util/ToastUtil";
 
-const Login = () => {
+export default function Login() {
     const {accessToken, saveAccessToken, setUser} = useContext(userContext);
 
     const [username, setUsername] = useState("");
@@ -96,6 +96,4 @@ const Login = () => {
             </div>
         </div>
     );
-};
-
-export default Login;
+}

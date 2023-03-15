@@ -1,4 +1,3 @@
-import React, {type FunctionComponent} from "react";
 import {Link} from "react-router-dom";
 import {Gender} from "../../../../types/Runner";
 import {type AdminRaceWithRunnerCount} from "../../../../types/Race";
@@ -23,7 +22,7 @@ interface RunnerDetailsFormProps {
     submitButtonDisabled: boolean;
 }
 
-const RunnerDetailsForm: FunctionComponent<RunnerDetailsFormProps> = ({
+export default function RunnerDetailsForm({
     onSubmit,
     id,
     setId,
@@ -39,7 +38,7 @@ const RunnerDetailsForm: FunctionComponent<RunnerDetailsFormProps> = ({
     raceId,
     setRaceId,
     submitButtonDisabled,
-}) => {
+}: RunnerDetailsFormProps) {
     return (
         <form onSubmit={onSubmit}>
             <div className="input-group">
@@ -183,6 +182,4 @@ const RunnerDetailsForm: FunctionComponent<RunnerDetailsFormProps> = ({
             </button>
         </form>
     );
-};
-
-export default RunnerDetailsForm;
+}

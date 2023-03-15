@@ -1,11 +1,11 @@
 import {userContext} from "../../App";
-import {type FunctionComponent, useCallback, useContext, useEffect, useRef} from "react";
+import {useCallback, useContext, useEffect, useRef} from "react";
 
 interface AdminHeaderUserDropdownProps {
     hideDropdown: () => any;
 }
 
-const AdminHeaderUserDropdown: FunctionComponent<AdminHeaderUserDropdownProps> = ({hideDropdown}) => {
+export default function AdminHeaderUserDropdown({hideDropdown}: AdminHeaderUserDropdownProps) {
     const {logout} = useContext(userContext);
 
     const dropdownNode = useRef<HTMLDivElement>(null);
@@ -39,6 +39,4 @@ const AdminHeaderUserDropdown: FunctionComponent<AdminHeaderUserDropdownProps> =
             </ul>
         </div>
     );
-};
-
-export default AdminHeaderUserDropdown;
+}

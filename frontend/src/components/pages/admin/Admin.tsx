@@ -11,7 +11,7 @@ import RaceDetails from "./races/RaceDetails";
 import CircularLoader from "../../misc/CircularLoader";
 import RunnerDetails from "./runners/RunnerDetails";
 
-const Admin = () => {
+export default function Admin() {
     const {user} = useContext(userContext);
 
     if (user === null) {
@@ -40,6 +40,4 @@ const Admin = () => {
             <Route path="*" element={<Navigate to="/admin" replace/>}/>
         </Routes>
     );
-};
-
-export default Admin;
+}

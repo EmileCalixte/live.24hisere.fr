@@ -1,5 +1,3 @@
-import {type FunctionComponent} from "react";
-
 interface PaginationProps {
     minPage: number;
     maxPage: number;
@@ -7,12 +5,7 @@ interface PaginationProps {
     setPage: (page: number) => any;
 }
 
-const Pagination: FunctionComponent<PaginationProps> = ({
-    minPage = 1,
-    maxPage,
-    currentPage,
-    setPage,
-}) => {
+export default function Pagination({minPage = 1, maxPage, currentPage, setPage}: PaginationProps) {
     return (
         <div className="pagination">
             <button onClick={() => setPage(minPage)} disabled={currentPage <= minPage}>
@@ -82,6 +75,4 @@ const Pagination: FunctionComponent<PaginationProps> = ({
             </button>
         </div>
     );
-};
-
-export default Pagination;
+}

@@ -1,4 +1,4 @@
-import React, {type FunctionComponent, useCallback, useMemo} from "react";
+import React, {useCallback, useMemo} from "react";
 import {prefixNumber} from "../../util/utils";
 
 export const getDurationAsMs = (hours: number, minutes: number, seconds: number) => {
@@ -27,12 +27,7 @@ interface DurationInputsProps {
     setDuration: (duration: number) => any;
 }
 
-const DurationInputs: FunctionComponent<DurationInputsProps> = ({
-    duration,
-    minDuration = 0,
-    maxDuration,
-    setDuration,
-}) => {
+export default function DurationInputs({duration, minDuration = 0, maxDuration, setDuration}: DurationInputsProps) {
     if (minDuration < 0) {
         throw new Error("minDuration cannot be negative");
     }
@@ -143,6 +138,4 @@ const DurationInputs: FunctionComponent<DurationInputsProps> = ({
             </label>
         </>
     );
-};
-
-export default DurationInputs;
+}

@@ -1,5 +1,4 @@
 import {type CategoryShortCode} from "../../../types/Category";
-import {type FunctionComponent} from "react";
 import {type ProcessedRankingRunner} from "../../../types/Ranking";
 import {type GenderWithMixed} from "../../../types/Runner";
 
@@ -9,11 +8,7 @@ interface RankingTableRowNCellsProps {
     tableGender: GenderWithMixed;
 }
 
-const RankingTableRowNCells: FunctionComponent<RankingTableRowNCellsProps> = ({
-    runner,
-    tableCategory,
-    tableGender,
-}) => {
+export default function RankingTableRowNCells({runner, tableCategory, tableGender}: RankingTableRowNCellsProps) {
     if (tableCategory === null) {
         if (tableGender === "mixed") {
             return (
@@ -87,6 +82,4 @@ const RankingTableRowNCells: FunctionComponent<RankingTableRowNCellsProps> = ({
             );
         }
     }
-};
-
-export default RankingTableRowNCells;
+}

@@ -1,4 +1,4 @@
-import React, {type FunctionComponent, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import DurationInputs from "../../misc/DurationInputs";
 
 interface RankingSettingsTimeProps {
@@ -8,12 +8,12 @@ interface RankingSettingsTimeProps {
     maxRankingTime: number;
 }
 
-const RankingSettingsTime: FunctionComponent<RankingSettingsTimeProps> = ({
+export default function RankingSettingsTime({
     isVisible,
     currentRankingTime,
     onRankingTimeSave,
     maxRankingTime,
-}) => {
+}: RankingSettingsTimeProps) {
     // The current value from the inputs in ms, saved or not
     const [time, setTime] = useState(currentRankingTime);
 
@@ -46,6 +46,4 @@ const RankingSettingsTime: FunctionComponent<RankingSettingsTimeProps> = ({
             </button>
         </form>
     );
-};
-
-export default RankingSettingsTime;
+}

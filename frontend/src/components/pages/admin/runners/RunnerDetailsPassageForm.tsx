@@ -1,4 +1,4 @@
-import React, {type FunctionComponent, useEffect, useRef} from "react";
+import React, {useEffect, useRef} from "react";
 import {formatDateAsString} from "../../../../util/utils";
 import DurationInputs from "../../../misc/DurationInputs";
 
@@ -12,7 +12,7 @@ interface RunnerDetailsPassageFormProps {
     onClose: () => any;
 }
 
-const RunnerDetailsPassageForm: FunctionComponent<RunnerDetailsPassageFormProps> = ({
+export default function RunnerDetailsPassageForm({
     raceTime,
     setRaceTime,
     time,
@@ -20,7 +20,7 @@ const RunnerDetailsPassageForm: FunctionComponent<RunnerDetailsPassageFormProps>
     onSubmit,
     submitButtonDisabled,
     onClose,
-}) => {
+}: RunnerDetailsPassageFormProps) {
     const dialogRef = useRef<HTMLDialogElement | null>(null);
 
     useEffect(() => {
@@ -73,6 +73,4 @@ const RunnerDetailsPassageForm: FunctionComponent<RunnerDetailsPassageFormProps>
             </div>
         </dialog>
     );
-};
-
-export default RunnerDetailsPassageForm;
+}

@@ -1,12 +1,11 @@
 import {Link} from "react-router-dom";
-import {type FunctionComponent} from "react";
 
 interface CrumbProps {
     label: string;
     url?: string;
 }
 
-const Crumb: FunctionComponent<CrumbProps> = ({label, url}) => {
+export default function Crumb({label, url}: CrumbProps) {
     if (url) {
         return (
             <li className="crumb">
@@ -20,6 +19,4 @@ const Crumb: FunctionComponent<CrumbProps> = ({label, url}) => {
             <span>{label}</span>
         </li>
     );
-};
-
-export default Crumb;
+}

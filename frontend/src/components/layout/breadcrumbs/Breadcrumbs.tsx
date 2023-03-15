@@ -1,10 +1,8 @@
-import {type FunctionComponent} from "react";
-
 interface BreadcrumbsProps {
     children: React.ReactNode[] | React.ReactNode;
 }
 
-const Breadcrumbs: FunctionComponent<BreadcrumbsProps> = ({children}) => {
+export default function Breadcrumbs({children}: BreadcrumbsProps) {
     if (!Array.isArray(children)) {
         return (
             <ul className="breadcrumbs">
@@ -31,6 +29,4 @@ const Breadcrumbs: FunctionComponent<BreadcrumbsProps> = ({children}) => {
             })}
         </ul>
     );
-};
-
-export default Breadcrumbs;
+}

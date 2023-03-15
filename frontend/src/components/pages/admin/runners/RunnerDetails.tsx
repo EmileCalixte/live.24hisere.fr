@@ -18,7 +18,7 @@ import ToastUtil from "../../../../util/ToastUtil";
 import RunnerDetailsPassages from "./RunnerDetailsPassages";
 import {getRunnerProcessedPassages} from "../../../../util/RunnerDetailsUtil";
 
-const RunnerDetails = () => {
+export default function RunnerDetails() {
     const {accessToken} = useContext(userContext);
 
     const {runnerId: urlRunnerId} = useParams();
@@ -397,6 +397,4 @@ const RunnerDetails = () => {
             }
         </div>
     );
-};
-
-export default RunnerDetails;
+}

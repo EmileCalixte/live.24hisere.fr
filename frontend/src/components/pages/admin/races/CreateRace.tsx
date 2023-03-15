@@ -10,7 +10,7 @@ import ToastUtil from "../../../../util/ToastUtil";
 import {Navigate} from "react-router-dom";
 import {formatDateForApi} from "../../../../util/utils";
 
-const CreateRace = () => {
+export default function CreateRace() {
     const {accessToken} = useContext(userContext);
 
     const [existingRaces, setExistingRaces] = useState<AdminRace[] | false>(false);
@@ -156,6 +156,4 @@ const CreateRace = () => {
             </div>
         </div>
     );
-};
-
-export default CreateRace;
+}

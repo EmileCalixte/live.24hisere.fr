@@ -1,4 +1,4 @@
-import {type FunctionComponent, useCallback} from "react";
+import {useCallback} from "react";
 import {type CategoryShortCode} from "../../../types/Category";
 import {type Race} from "../../../types/Race";
 import {type ProcessedRanking, type ProcessedRankingRunner} from "../../../types/Ranking";
@@ -14,13 +14,13 @@ interface ResponsiveRankingTableProps {
     tableRaceDuration: number | null;
 }
 
-const ResponsiveRankingTable: FunctionComponent<ResponsiveRankingTableProps> = ({
+export default function ResponsiveRankingTable({
     race,
     ranking,
     tableCategory,
     tableGender,
     tableRaceDuration,
-}) => {
+}: ResponsiveRankingTableProps) {
     const getRankingTableRow = useCallback((rankingRunner: ProcessedRankingRunner) => {
         if (tableCategory !== null) {
             if (tableCategory.toUpperCase() !== rankingRunner.category.toUpperCase()) {
@@ -59,6 +59,4 @@ const ResponsiveRankingTable: FunctionComponent<ResponsiveRankingTableProps> = (
             </tbody>
         </table>
     );
-};
-
-export default ResponsiveRankingTable;
+}

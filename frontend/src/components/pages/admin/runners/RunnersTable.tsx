@@ -1,6 +1,5 @@
 import {Link} from "react-router-dom";
 import CircularLoader from "../../../misc/CircularLoader";
-import {type FunctionComponent} from "react";
 import type Runner from "../../../../types/Runner";
 import {type AdminRaceDict} from "../../../../types/Race";
 
@@ -9,7 +8,7 @@ interface RunnersTableProps {
     races: AdminRaceDict | false;
 }
 
-const RunnersTable: FunctionComponent<RunnersTableProps> = ({runners, races}) => {
+export default function RunnersTable({runners, races}: RunnersTableProps) {
     return (
         <table className="table">
             <thead>
@@ -60,6 +59,4 @@ const RunnersTable: FunctionComponent<RunnersTableProps> = ({runners, races}) =>
             </tbody>
         </table>
     );
-};
-
-export default RunnersTable;
+}

@@ -1,4 +1,4 @@
-import React, {type FunctionComponent, useCallback, useEffect, useMemo, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 
 export const MIN_DOTS = 0;
 export const MAX_DOTS = 3;
@@ -8,7 +8,7 @@ interface OptionWithLoadingDotsProps {
     children: React.ReactNode;
 }
 
-const OptionWithLoadingDots: FunctionComponent<OptionWithLoadingDotsProps> = ({children}) => {
+export default function OptionWithLoadingDots({children}: OptionWithLoadingDotsProps) {
     const [dotCount, setDotCount] = useState(MAX_DOTS);
 
     const updateDotCount = useCallback(() => {
@@ -30,6 +30,4 @@ const OptionWithLoadingDots: FunctionComponent<OptionWithLoadingDotsProps> = ({c
             {children}{dots}
         </option>
     );
-};
-
-export default OptionWithLoadingDots;
+}

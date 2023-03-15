@@ -1,4 +1,4 @@
-import React, {type FunctionComponent} from "react";
+import React from "react";
 import {type Race} from "../../../types/Race";
 import OptionWithLoadingDots from "../../misc/OptionWithLoadingDots";
 import RaceTimer from "../../misc/RaceTimer";
@@ -9,11 +9,7 @@ interface RankingRaceSelectorProps {
     selectedRaceId: number | undefined;
 }
 
-const RankingRaceSelector: FunctionComponent<RankingRaceSelectorProps> = ({
-    races,
-    onSelectRace,
-    selectedRaceId,
-}) => {
+export default function RankingRaceSelector({races, onSelectRace, selectedRaceId}: RankingRaceSelectorProps) {
     return (
         <div className="ranking-race-selector-container">
             <div className="input-group">
@@ -52,6 +48,4 @@ const RankingRaceSelector: FunctionComponent<RankingRaceSelectorProps> = ({
             </div>
         </div>
     );
-};
-
-export default RankingRaceSelector;
+}

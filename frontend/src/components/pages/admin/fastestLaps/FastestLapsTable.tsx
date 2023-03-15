@@ -1,4 +1,3 @@
-import {type FunctionComponent} from "react";
 import {Link} from "react-router-dom";
 import {type AdminPassageWithRunnerId, type ProcessedPassage} from "../../../../types/Passage";
 import {type AdminRaceDict} from "../../../../types/Race";
@@ -11,11 +10,7 @@ interface FastestLapsTableProps {
     runners: Runner[];
 }
 
-const FastestLapsTable: FunctionComponent<FastestLapsTableProps> = ({
-    passages,
-    races,
-    runners,
-}) => {
+export default function FastestLapsTable({passages, races, runners}: FastestLapsTableProps) {
     return (
         <table className="table">
             <thead>
@@ -59,6 +54,4 @@ const FastestLapsTable: FunctionComponent<FastestLapsTableProps> = ({
             </tbody>
         </table>
     );
-};
-
-export default FastestLapsTable;
+}

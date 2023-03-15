@@ -1,11 +1,9 @@
 import CircularLoader from "../../misc/CircularLoader";
 
-const HeaderFetchLoader = () => {
+export default function HeaderFetchLoader() {
     return (
         <div className="header-fetch-loader-container">
             <CircularLoader />
         </div>
     );
-};
-
-export default HeaderFetchLoader;
+}

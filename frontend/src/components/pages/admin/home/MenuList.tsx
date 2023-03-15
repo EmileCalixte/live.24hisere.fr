@@ -22,12 +22,10 @@ const menuItems: {
     },
 ];
 
-const MenuList = () => {
+export default function MenuList() {
     return (
         <ul className="admin-list">
             {menuItems.map(({url, icon, label}, key) => <MenuItem key={key} url={url} icon={icon} label={label} />)}
         </ul>
     );
-};
-
-export default MenuList;
+}

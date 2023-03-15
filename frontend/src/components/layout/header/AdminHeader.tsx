@@ -2,7 +2,7 @@ import {userContext} from "../../App";
 import {useContext, useState} from "react";
 import AdminHeaderUserDropdown from "./AdminHeaderUserDropdown";
 
-const AdminHeader = () => {
+export default function AdminHeader() {
     const {user} = useContext(userContext);
 
     const [userDropdownShown, setUserDropdownShown] = useState(false);
@@ -40,6 +40,4 @@ const AdminHeader = () => {
             </div>
         </div>
     );
-};
-
-export default AdminHeader;
+}

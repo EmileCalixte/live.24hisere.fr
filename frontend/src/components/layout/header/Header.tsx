@@ -4,7 +4,7 @@ import Navbar from "./Navbar";
 import {headerFetchLoaderContext, userContext} from "../../App";
 import HeaderFetchLoader from "./HeaderFetchLoader";
 
-const Header = () => {
+export default function Header() {
     const {user} = useContext(userContext);
 
     const {fetchLevel} = useContext(headerFetchLoaderContext);
@@ -26,6 +26,4 @@ const Header = () => {
             </div>
         </header>
     );
-};
-
-export default Header;
+}

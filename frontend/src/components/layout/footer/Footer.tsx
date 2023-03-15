@@ -3,7 +3,7 @@ import {appDataContext, userContext} from "../../App";
 import {formatDateAsString} from "../../../util/utils";
 import {Link} from "react-router-dom";
 
-const Footer = () => {
+export default function Footer() {
     const {lastUpdateTime} = useContext(appDataContext);
     const {user} = useContext(userContext);
 
@@ -32,6 +32,4 @@ const Footer = () => {
             </div>
         </footer>
     );
-};
-
-export default Footer;
+}

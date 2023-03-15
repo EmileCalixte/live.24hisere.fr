@@ -1,4 +1,4 @@
-import {type FunctionComponent, useEffect, useMemo, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import {type AdminProcessedPassage} from "../../../../types/Passage";
 import {type AdminRaceWithRunnerCount} from "../../../../types/Race";
 import {formatDateAsString, formatMsAsDuration} from "../../../../util/utils";
@@ -14,14 +14,14 @@ interface RunnerDetailsPassagesProps {
     deletePassage: (passage: AdminProcessedPassage) => any;
 }
 
-const RunnerDetailsPassages: FunctionComponent<RunnerDetailsPassagesProps> = ({
+export default function RunnerDetailsPassages({
     passages,
     runnerRace,
     updatePassageVisiblity,
     updatePassage,
     saveNewPassage,
     deletePassage,
-}) => {
+}: RunnerDetailsPassagesProps) {
     const [isAdding, setIsAdding] = useState(false);
 
     // The passage for which user is currently editing the time
@@ -158,6 +158,4 @@ const RunnerDetailsPassages: FunctionComponent<RunnerDetailsPassagesProps> = ({
             </div>
         </div>
     );
-};
-
-export default RunnerDetailsPassages;
+}

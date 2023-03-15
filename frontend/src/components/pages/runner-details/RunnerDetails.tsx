@@ -29,7 +29,7 @@ enum Tab {
 export const RUNNER_UPDATE_INTERVAL_TIME = 30000;
 export const RANKING_UPDATE_INTERVAL_TIME = 30000;
 
-const RunnerDetails = () => {
+export default function RunnerDetails() {
     const {runnerId: urlRunnerId} = useParams();
 
     const [selectedRunnerId, setSelectedRunnerId] = useState(urlRunnerId);
@@ -218,9 +218,6 @@ const RunnerDetails = () => {
                     </div>
                 </div>
             }
-
         </div>
     );
-};
-
-export default RunnerDetails;
+}

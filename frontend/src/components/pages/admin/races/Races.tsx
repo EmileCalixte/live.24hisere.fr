@@ -9,7 +9,7 @@ import RacesListItem from "./RacesListItem";
 import ToastUtil from "../../../../util/ToastUtil";
 import {type AdminRaceWithRunnerCount} from "../../../../types/Race";
 
-const Races = () => {
+export default function Races() {
     const {accessToken} = useContext(userContext);
 
     // false = not fetched yet
@@ -195,6 +195,4 @@ const Races = () => {
             }
         </div>
     );
-};
-
-export default Races;
+}

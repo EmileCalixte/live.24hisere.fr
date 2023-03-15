@@ -9,7 +9,7 @@ import RunnersTable from "./RunnersTable";
 import type Runner from "../../../../types/Runner";
 import {type AdminRaceDict} from "../../../../types/Race";
 
-const Runners = () => {
+export default function Runners() {
     const {accessToken} = useContext(userContext);
 
     // false = not fetched yet
@@ -67,6 +67,4 @@ const Runners = () => {
             }
         </div>
     );
-};
-
-export default Runners;
+}

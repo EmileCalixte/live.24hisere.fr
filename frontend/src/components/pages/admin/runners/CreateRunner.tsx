@@ -9,7 +9,7 @@ import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
 import RunnerDetailsForm from "./RunnerDetailsForm";
 
-const CreateRunner = () => {
+export default function CreateRunner() {
     const {accessToken} = useContext(userContext);
 
     const [races, setRaces] = useState<AdminRaceWithRunnerCount[] | false>(false);
@@ -120,6 +120,4 @@ const CreateRunner = () => {
             </div>
         </div>
     );
-};
-
-export default CreateRunner;
+}

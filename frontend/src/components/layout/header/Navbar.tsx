@@ -2,7 +2,7 @@ import {useContext} from "react";
 import {NavLink} from "react-router-dom";
 import {userContext} from "../../App";
 
-const Navbar = () => {
+export default function Navbar() {
     const {user} = useContext(userContext);
 
     return (
@@ -24,6 +24,4 @@ const Navbar = () => {
             </ul>
         </nav>
     );
-};
-
-export default Navbar;
+}

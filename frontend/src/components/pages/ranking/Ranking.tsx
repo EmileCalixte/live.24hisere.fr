@@ -23,7 +23,7 @@ const RANKING_UPDATE_INTERVAL_TIME = 30000;
 
 const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
 
-const Ranking = () => {
+export default function Ranking() {
     const [races, setRaces] = useState<Race[] | false>(false);
     const [selectedRace, setSelectedRace] = useState<Race | null>(null);
 
@@ -243,6 +243,4 @@ const Ranking = () => {
             }
         </div>
     );
-};
-
-export default Ranking;
+}

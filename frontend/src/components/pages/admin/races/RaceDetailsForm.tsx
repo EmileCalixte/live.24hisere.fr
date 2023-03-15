@@ -1,4 +1,4 @@
-import React, {type FunctionComponent, useMemo} from "react";
+import React, {useMemo} from "react";
 import {getDateStringFromDate, getTimeStringFromDate} from "../../../../util/utils";
 import DurationInputs from "../../../misc/DurationInputs";
 
@@ -19,7 +19,7 @@ interface RaceDetailsFormProps {
     submitButtonDisabled: boolean;
 }
 
-const RaceDetailsForm: FunctionComponent<RaceDetailsFormProps> = ({
+export default function RaceDetailsForm({
     onSubmit,
     name,
     setName,
@@ -34,7 +34,7 @@ const RaceDetailsForm: FunctionComponent<RaceDetailsFormProps> = ({
     isPublic,
     setIsPublic,
     submitButtonDisabled,
-}) => {
+}: RaceDetailsFormProps) {
     const startTimeDate = useMemo(() => {
         if (!startTime) {
             return;
@@ -163,6 +163,4 @@ const RaceDetailsForm: FunctionComponent<RaceDetailsFormProps> = ({
             </button>
         </form>
     );
-};
-
-export default RaceDetailsForm;
+}

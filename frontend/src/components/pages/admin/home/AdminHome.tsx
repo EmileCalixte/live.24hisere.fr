@@ -1,6 +1,6 @@
 import MenuList from "./MenuList";
 
-const AdminHome = () => {
+export default function AdminHome() {
     return (
         <div id="page-admin-home">
             <div className="row">
@@ -16,6 +16,4 @@ const AdminHome = () => {
             </div>
         </div>
     );
-};
-
-export default AdminHome;
+}

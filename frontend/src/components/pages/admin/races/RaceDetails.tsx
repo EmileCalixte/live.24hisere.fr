@@ -10,7 +10,7 @@ import ToastUtil from "../../../../util/ToastUtil";
 import RaceDetailsForm from "./RaceDetailsForm";
 import {type AdminRaceWithRunnerCount} from "../../../../types/Race";
 
-const RaceDetails = () => {
+export default function RaceDetails() {
     const {accessToken} = useContext(userContext);
 
     const {raceId: urlRaceId} = useParams();
@@ -217,6 +217,4 @@ const RaceDetails = () => {
             </div>
         </div>
     );
-};
-
-export default RaceDetails;
+}

@@ -1,7 +1,7 @@
 import OptionWithLoadingDots from "../../misc/OptionWithLoadingDots";
 import {TimeMode} from "./Ranking";
 import RankingSettingsTime from "./RankingSettingsTime";
-import React, {type FunctionComponent} from "react";
+import React from "react";
 import {type CategoriesDict, type CategoryShortCode} from "../../../types/Category";
 import {Gender, type GenderWithMixed} from "../../../types/Runner";
 
@@ -18,7 +18,7 @@ interface RankingSettingsProps {
     maxRankingTime: number;
 }
 
-const RankingSettings: FunctionComponent<RankingSettingsProps> = ({
+export default function RankingSettings({
     categories,
     onCategorySelect,
     onGenderSelect,
@@ -29,7 +29,7 @@ const RankingSettings: FunctionComponent<RankingSettingsProps> = ({
     selectedTimeMode,
     currentRankingTime,
     maxRankingTime,
-}) => {
+}: RankingSettingsProps) {
     return (
         <section id="ranking-settings-section">
             <div id="ranking-settings-container">
@@ -152,6 +152,4 @@ const RankingSettings: FunctionComponent<RankingSettingsProps> = ({
             </div>
         </section>
     );
-};
-
-export default RankingSettings;
+}

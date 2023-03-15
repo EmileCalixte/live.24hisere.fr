@@ -1,4 +1,3 @@
-import {type FunctionComponent} from "react";
 import {type CategoryShortCode} from "../../../types/Category";
 import {type Race} from "../../../types/Race";
 import {Gender, type GenderWithMixed} from "../../../types/Runner";
@@ -11,12 +10,12 @@ interface RankingTableInfoHeaderProps {
     tableRaceDuration: number | null;
 }
 
-const RankingTableInfoHeader: FunctionComponent<RankingTableInfoHeaderProps> = ({
+export default function RankingTableInfoHeader({
     race,
     tableCategory,
     tableGender,
     tableRaceDuration,
-}) => {
+}: RankingTableInfoHeaderProps) {
     return (
         <td colSpan={42} className="ranking-table-info-header">
             {race.name} : Classement {(() => {
@@ -42,6 +41,4 @@ const RankingTableInfoHeader: FunctionComponent<RankingTableInfoHeaderProps> = (
             })()}
         </td>
     );
-};
-
-export default RankingTableInfoHeader;
+}

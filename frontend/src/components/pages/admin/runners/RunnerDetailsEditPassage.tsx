@@ -1,4 +1,4 @@
-import React, {type FunctionComponent, useCallback, useMemo, useState} from "react";
+import React, {useCallback, useMemo, useState} from "react";
 import {type AdminProcessedPassage} from "../../../../types/Passage";
 import {type AdminRaceWithRunnerCount} from "../../../../types/Race";
 import ToastUtil from "../../../../util/ToastUtil";
@@ -11,12 +11,12 @@ interface RunnerDetailsEditPassageProps {
     onClose: () => any;
 }
 
-const RunnerDetailsEditPassage: FunctionComponent<RunnerDetailsEditPassageProps> = ({
+export default function RunnerDetailsEditPassage({
     passage,
     runnerRace,
     updatePassage,
     onClose,
-}) => {
+}: RunnerDetailsEditPassageProps) {
     const [passageRaceTime, setPassageRaceTime] = useState(passage.processed.lapEndRaceTime);
 
     const [isSaving, setIsSaving] = useState(false);
@@ -68,6 +68,4 @@ const RunnerDetailsEditPassage: FunctionComponent<RunnerDetailsEditPassageProps>
                                   onClose={onClose}
         />
     );
-};
-
-export default RunnerDetailsEditPassage;
+}

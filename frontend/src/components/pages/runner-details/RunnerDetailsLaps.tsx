@@ -1,4 +1,4 @@
-import React, {type FunctionComponent, useCallback, useContext, useEffect, useMemo, useState} from "react";
+import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {getRaceTime, isRaceFinished, isRaceStarted} from "../../../helpers/raceHelper";
 import {formatMsAsDuration, SORT_ASC, SORT_DESC} from "../../../util/utils";
 import {type RunnerWithProcessedPassages, type RunnerWithRace} from "../../../types/Runner";
@@ -15,7 +15,7 @@ interface RunnerDetailsLapsProps {
     runner: RunnerWithRace & RunnerWithProcessedPassages;
 }
 
-const RunnerDetailsLaps: FunctionComponent<RunnerDetailsLapsProps> = ({runner}) => {
+export default function RunnerDetailsLaps({runner}: RunnerDetailsLapsProps) {
     const {serverTimeOffset} = useContext(appDataContext);
 
     const race = runner.race;
@@ -267,6 +267,4 @@ const RunnerDetailsLaps: FunctionComponent<RunnerDetailsLapsProps> = ({runner}) 
             </div>
         </div>
     );
-};
-
-export default RunnerDetailsLaps;
+}

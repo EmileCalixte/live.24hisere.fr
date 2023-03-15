@@ -1,5 +1,5 @@
 import CanvasJSReact from "../../../../lib/canvasjs/canvasjs.react";
-import {type FunctionComponent, useCallback, useMemo, useState} from "react";
+import {useCallback, useMemo, useState} from "react";
 import ReactDOMServer from "react-dom/server";
 import {type Race} from "../../../../types/Race";
 import {formatMsAsDuration} from "../../../../util/utils";
@@ -33,11 +33,7 @@ interface SpeedChartProps {
     averageSpeed: number;
 }
 
-const SpeedChart: FunctionComponent<SpeedChartProps> = ({
-    runner,
-    race,
-    averageSpeed,
-}) => {
+export default function SpeedChart({runner, race, averageSpeed}: SpeedChartProps) {
     const [displayEachLapSpeed, setDisplayEachLapSpeed] = useState(true);
     const [displayEachHourSpeed, setDisplayEachHourSpeed] = useState(true);
     const [displayAverageSpeed, setDisplayAverageSpeed] = useState(true);
@@ -330,6 +326,4 @@ const SpeedChart: FunctionComponent<SpeedChartProps> = ({
             </div>
         </div>
     );
-};
-
-export default SpeedChart;
+}

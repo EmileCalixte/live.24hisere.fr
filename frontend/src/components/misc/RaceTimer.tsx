@@ -1,4 +1,4 @@
-import {type FunctionComponent, useContext, useEffect, useMemo, useState} from "react";
+import {useContext, useEffect, useMemo, useState} from "react";
 import {getRaceTime, isRaceFinished, isRaceStarted} from "../../helpers/raceHelper";
 import {type Race} from "../../types/Race";
 import {formatMsAsDuration} from "../../util/utils";
@@ -9,7 +9,7 @@ interface RaceTimerProps {
     allowNegative?: boolean;
 }
 
-const RaceTimer: FunctionComponent<RaceTimerProps> = ({race, allowNegative = false}) => {
+export default function RaceTimer({race, allowNegative = false}: RaceTimerProps) {
     const {serverTimeOffset} = useContext(appDataContext);
 
     // The current race time
@@ -44,6 +44,4 @@ const RaceTimer: FunctionComponent<RaceTimerProps> = ({race, allowNegative = fal
     return (
         <>{formattedRaceTime}</>
     );
-};
-
-export default RaceTimer;
+}

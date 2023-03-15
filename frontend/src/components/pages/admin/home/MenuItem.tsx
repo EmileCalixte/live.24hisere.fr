@@ -1,5 +1,4 @@
 import {Link} from "react-router-dom";
-import {type FunctionComponent} from "react";
 
 interface MenuItemProps {
     url: string;
@@ -7,7 +6,7 @@ interface MenuItemProps {
     icon: string;
 }
 
-const MenuItem: FunctionComponent<MenuItemProps> = ({url, label, icon}) => {
+export default function MenuItem({url, label, icon}: MenuItemProps) {
     return (
         <li>
             <Link to={url}>
@@ -20,6 +19,4 @@ const MenuItem: FunctionComponent<MenuItemProps> = ({url, label, icon}) => {
             </Link>
         </li>
     );
-};
-
-export default MenuItem;
+}

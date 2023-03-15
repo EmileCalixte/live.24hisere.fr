@@ -1,6 +1,6 @@
 import {type Race} from "../../../types/Race";
 import {type RankingRunnerRanks} from "../../../types/Ranking";
-import React, {type FunctionComponent, useMemo} from "react";
+import React, {useMemo} from "react";
 import CircularLoader from "../../misc/CircularLoader";
 import SpeedChart from "./charts/SpeedChart";
 import {formatMsAsDuration} from "../../../util/utils";
@@ -14,11 +14,7 @@ interface RunnerDetailsStatsProps {
     ranks: RankingRunnerRanks | null;
 }
 
-const RunnerDetailsStats: FunctionComponent<RunnerDetailsStatsProps> = ({
-    runner,
-    race,
-    ranks,
-}) => {
+export default function RunnerDetailsStats({runner, race, ranks}: RunnerDetailsStatsProps) {
     const completeLapCount = useMemo<number>(() => {
         return Math.max(0, runner.passages.length - 1);
     }, [runner]);
@@ -183,6 +179,4 @@ const RunnerDetailsStats: FunctionComponent<RunnerDetailsStatsProps> = ({
             }
         </div>
     );
-};
-
-export default RunnerDetailsStats;
+}

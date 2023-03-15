@@ -2,7 +2,6 @@ import {Link} from "react-router-dom";
 import {type CategoryShortCode} from "../../../types/Category";
 import {formatFloatNumber, formatMsAsDuration} from "../../../util/utils";
 import RankingTableRowNCells from "./RankingTableRowNCells";
-import {type FunctionComponent} from "react";
 import {type ProcessedRankingRunner} from "../../../types/Ranking";
 import {type GenderWithMixed} from "../../../types/Runner";
 
@@ -12,11 +11,7 @@ interface RankingTableRowProps {
     tableGender: GenderWithMixed;
 }
 
-const RankingTableRow: FunctionComponent<RankingTableRowProps> = ({
-    runner,
-    tableCategory,
-    tableGender,
-}) => {
+export default function RankingTableRow({runner, tableCategory, tableGender}: RankingTableRowProps) {
     return (
         <tr>
             <RankingTableRowNCells runner={runner} tableCategory={tableCategory} tableGender={tableGender} />
@@ -52,6 +47,4 @@ const RankingTableRow: FunctionComponent<RankingTableRowProps> = ({
             </td>
         </tr>
     );
-};
-
-export default RankingTableRow;
+}
