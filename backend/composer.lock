@@ -1075,16 +1075,16 @@
         },
         {
             "name": "icanboogie/inflector",
-            "version": "v2.2.0",
+            "version": "v2.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ICanBoogie/Inflector.git",
-                "reference": "bd9173bf1a267f0a89a04d8a66c486bca1f13230"
+                "reference": "0288676d1cd48899386f8bbe50643d3ade5dc13b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ICanBoogie/Inflector/zipball/bd9173bf1a267f0a89a04d8a66c486bca1f13230",
-                "reference": "bd9173bf1a267f0a89a04d8a66c486bca1f13230",
+                "url": "https://api.github.com/repos/ICanBoogie/Inflector/zipball/0288676d1cd48899386f8bbe50643d3ade5dc13b",
+                "reference": "0288676d1cd48899386f8bbe50643d3ade5dc13b",
                 "shasum": ""
             },
             "require": {
@@ -1101,12 +1101,12 @@
             },
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "ICanBoogie\\": "lib/"
-                },
                 "files": [
                     "lib/helpers.php"
-                ]
+                ],
+                "psr-4": {
+                    "ICanBoogie\\": "lib/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -1135,7 +1135,7 @@
                 "issues": "https://github.com/ICanBoogie/Inflector/issues",
                 "source": "https://github.com/ICanBoogie/Inflector"
             },
-            "time": "2021-10-20T02:15:30+00:00"
+            "time": "2023-03-12T18:39:52+00:00"
         },
         {
             "name": "monolog/monolog",
