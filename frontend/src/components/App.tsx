@@ -76,7 +76,7 @@ export const userContext = createContext<UserContext>({
     logout: () => {},
 });
 
-const FETCH_APP_DATA_INTERVAL_TIME = 60 * 1000;
+const FETCH_APP_DATA_INTERVAL_TIME = 20 * 1000;
 
 export default function App() {
     const [fetchLevel, setFetchLevel] = useState(0);

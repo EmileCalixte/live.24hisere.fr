@@ -26,8 +26,8 @@ enum Tab {
     Laps = "laps",
 }
 
-export const RUNNER_UPDATE_INTERVAL_TIME = 30000;
-export const RANKING_UPDATE_INTERVAL_TIME = 30000;
+export const RUNNER_UPDATE_INTERVAL_TIME = 20 * 1000;
+export const RANKING_UPDATE_INTERVAL_TIME = 20 * 1000;
 
 export default function RunnerDetails() {
     const {runnerId: urlRunnerId} = useParams();
