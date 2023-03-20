@@ -71,13 +71,21 @@ export function getRunnerProcessedPassages<T extends Passage>(passages: T[], rac
     const processedPassages: (T & {processed: PassageProcessedData})[] = [];
 
     for (let i = 0; i < passages.length; ++i) {
+        const isFirstPassage = i === 0;
+
         const previousPassage = i > 0 ? passages[i - 1] : null;
         const passage = passages[i];
 
-        const lapNumber = i === 0 ? null : i; // The first passage is an incomplete lap, so it's not counted
+        let lapNumber: number | null;
 
-        const lapDistance = i === 0 ? race.initialDistance : race.lapDistance;
-        const lapStartTime = i === 0 ? new Date(race.startTime) : new Date((previousPassage as Passage).time);
+        if (race.initialDistance <= 0) {
+            lapNumber = i + 1;
+        } else {
+            lapNumber = isFirstPassage ? null : i; // The first passage is an incomplete lap, so it's not counted
+        }
+
+        const lapDistance = lapNumber === null ? race.initialDistance : race.lapDistance;
+        const lapStartTime = isFirstPassage ? new Date(race.startTime) : new Date((previousPassage as Passage).time);
         const lapEndTime = new Date(passage.time);
 
         totalDistance += lapDistance;

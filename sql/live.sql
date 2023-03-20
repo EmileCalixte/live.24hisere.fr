@@ -5967,7 +5967,7 @@ INSERT INTO `runner` (`id`, `firstname`, `lastname`, `gender`, `birth_year`, `ra
 (250, 'Firstname250', 'Lastname250', 'M', '1963', 1),
 (251, 'Firstname251', 'Lastname251', 'F', '1962', 1),
 (252, 'Firstname252', 'Lastname252', 'F', '1944', 1),
-(601, 'Team601', '', 'H', '1900', 2);
+(601, 'Team601', '', 'M', '1900', 2);
 
 -- --------------------------------------------------------
 

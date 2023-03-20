@@ -28,6 +28,10 @@ export default function RunnerDetailsLaps({runner}: RunnerDetailsLapsProps) {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
     const currentLapTime = useMemo(() => {
+        if (runner.passages.length === 0) {
+            return raceTime;
+        }
+
         const lastPassage = runner.passages[runner.passages.length - 1];
 
         return raceTime - lastPassage.processed.lapEndRaceTime;
@@ -70,14 +74,20 @@ export default function RunnerDetailsLaps({runner}: RunnerDetailsLapsProps) {
         return passagesToDisplay;
     }, [runner, sortColumn, sortDirection]);
 
-    const currentLapTableRow = useMemo(() => (
-        <tr>
-            <td colSpan={2}>Tour en cours</td>
-            <td>{formatMsAsDuration(raceTime)}</td>
-            <td>{formatMsAsDuration(currentLapTime)}</td>
-            <td colSpan={42}/>
-        </tr>
-    ), [raceTime, currentLapTime]);
+    const currentLapTableRow = useMemo(() => {
+        if (currentLapTime === null) {
+            return null;
+        }
+
+        return (
+            <tr>
+                <td colSpan={2}>Tour en cours</td>
+                <td>{formatMsAsDuration(raceTime)}</td>
+                <td>{formatMsAsDuration(currentLapTime)}</td>
+                <td colSpan={42}/>
+            </tr>
+        );
+    }, [raceTime, currentLapTime]);
 
     const updateSort = useCallback((e: React.MouseEvent<HTMLButtonElement>, clickedSortColumn: SortBy) => {
         e.preventDefault();
