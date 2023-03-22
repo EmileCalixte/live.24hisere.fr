@@ -17,8 +17,8 @@ type RunnerSortedProcessedPassages = Record<number, (AdminPassageWithRunnerId & 
 
 const ITEMS_PER_PAGE = 100;
 
-const RUNNERS_AND_RACES_FETCH_INTERVAL = 60000;
-const PASSAGES_FETCH_INTERVAL = 15000;
+const RUNNERS_AND_RACES_FETCH_INTERVAL = 60 * 1000;
+const PASSAGES_FETCH_INTERVAL = 20 * 1000;
 
 export default function FastestLaps() {
     const {accessToken} = useContext(userContext);

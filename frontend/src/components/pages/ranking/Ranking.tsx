@@ -19,7 +19,7 @@ export enum TimeMode {
     At = "at",
 }
 
-const RANKING_UPDATE_INTERVAL_TIME = 30000;
+const RANKING_UPDATE_INTERVAL_TIME = 20 * 1000;
 
 const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
 

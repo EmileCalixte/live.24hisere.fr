@@ -89,6 +89,31 @@ export default function RunnerDetailsLaps({runner}: RunnerDetailsLapsProps) {
         );
     }, [raceTime, currentLapTime]);
 
+    const currentLapResponsiveTableRow = useMemo(() => {
+        if (currentLapTime === null) {
+            return null;
+        }
+
+        return (
+            <tr>
+                <td>
+                    <div>
+                        <strong>Tour en cours</strong>
+
+                        &nbsp;–&nbsp;
+
+                        {formatMsAsDuration(raceTime)}
+                    </div>
+
+                    <div className="responsive-runner-laps-table-row-secondary-data">
+                        Durée&nbsp;:&nbsp;
+                        <strong>{formatMsAsDuration(currentLapTime)}</strong>
+                    </div>
+                </td>
+            </tr>
+        );
+    }, [raceTime, currentLapTime]);
+
     const updateSort = useCallback((e: React.MouseEvent<HTMLButtonElement>, clickedSortColumn: SortBy) => {
         e.preventDefault();
 
@@ -230,6 +255,9 @@ export default function RunnerDetailsLaps({runner}: RunnerDetailsLapsProps) {
 
                         <table id="runner-laps-table" className="table responsive-runner-laps-table">
                             <tbody>
+                                {showCurrentLapAtTopOfTable &&
+                                    <>{currentLapResponsiveTableRow}</>
+                                }
                                 {passagesToDisplay.map((passage, index) => (
                                     <tr key={index}>
                                         <td>
@@ -269,6 +297,10 @@ export default function RunnerDetailsLaps({runner}: RunnerDetailsLapsProps) {
                                         </td>
                                     </tr>
                                 ))}
+
+                                {showCurrentLapAtBottomOfTable &&
+                                    <>{currentLapResponsiveTableRow}</>
+                                }
                             </tbody>
                         </table>
                     </div>
