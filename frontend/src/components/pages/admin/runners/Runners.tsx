@@ -1,13 +1,16 @@
 import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
-import {useCallback, useContext, useEffect, useState} from "react";
+import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
 import {userContext} from "../../../App";
 import CircularLoader from "../../../misc/CircularLoader";
 import {Link} from "react-router-dom";
+import OptionWithLoadingDots from "../../../misc/OptionWithLoadingDots";
 import RunnersTable from "./RunnersTable";
 import type Runner from "../../../../types/Runner";
 import {type AdminRaceDict} from "../../../../types/Race";
+
+const RACE_SELECT_OPTION_ALL = "all";
 
 export default function Runners() {
     const {accessToken} = useContext(userContext);
@@ -18,6 +21,17 @@ export default function Runners() {
     // false = not fetched yet
     const [races, setRaces] = useState<AdminRaceDict | false>(false);
 
+    const [selectedRaceId, setSelectedRaceId] = useState<number | null>(null);
+
+    function onSelectRace(e: React.ChangeEvent<HTMLSelectElement>) {
+        if (e.target.value === RACE_SELECT_OPTION_ALL) {
+            setSelectedRaceId(null);
+            return;
+        }
+
+        setSelectedRaceId(parseInt(e.target.value));
+    }
+
     const fetchRunnersAndRaces = useCallback(async () => {
         const response = await performAuthenticatedAPIRequest("/admin/runners", accessToken);
         const responseJson = await response.json();
@@ -25,6 +39,18 @@ export default function Runners() {
         setRunners(responseJson.runners);
         setRaces(responseJson.races);
     }, [accessToken]);
+
+    const displayedRunners = useMemo<Runner[] | false>(() => {
+        if (!runners) {
+            return false;
+        }
+
+        if (selectedRaceId === null) {
+            return runners;
+        }
+
+        return runners.filter(runner => runner.raceId === selectedRaceId);
+    }, [runners, selectedRaceId]);
 
     useEffect(() => {
         fetchRunnersAndRaces();
@@ -41,11 +67,11 @@ export default function Runners() {
                 </div>
             </div>
 
-            {runners === false &&
+            {displayedRunners === false &&
                 <CircularLoader />
             }
 
-            {runners !== false &&
+            {displayedRunners !== false &&
                 <div className="row">
                     <div className="col-12">
                         <Link to="/admin/runners/create" className="button">
@@ -54,13 +80,49 @@ export default function Runners() {
                         </Link>
                     </div>
 
+                    <div className="col-lg-3 col-md-4 col-sm-6 col-12 mt-3">
+                        <div className="input-group">
+                            <label htmlFor="admin-runners-race-select">
+                                Course
+                            </label>
+                            <select id="admin-runners-race-select"
+                                    className="input-select"
+                                    onChange={onSelectRace}
+                            >
+                                <option value={RACE_SELECT_OPTION_ALL}>Toutes</option>
+
+                                {(() => {
+                                    if (races === false) {
+                                        return (
+                                            <OptionWithLoadingDots>
+                                                Chargement des courses
+                                            </OptionWithLoadingDots>
+                                        );
+                                    }
+
+                                    return (
+                                        <>
+                                            {Object.entries(races).map(([raceId, race]) => {
+                                                return (
+                                                    <option key={raceId} value={raceId}>
+                                                        {race.name}
+                                                    </option>
+                                                );
+                                            })}
+                                        </>
+                                    );
+                                })()}
+                            </select>
+                        </div>
+                    </div>
+
                     <div className="col-12 mt-3">
-                        {runners.length === 0 &&
+                        {displayedRunners.length === 0 &&
                             <p>Aucun coureur</p>
                         }
 
-                        {runners.length > 0 &&
-                            <RunnersTable runners={runners} races={races}/>
+                        {displayedRunners.length > 0 &&
+                            <RunnersTable runners={displayedRunners} races={races}/>
                         }
                     </div>
                 </div>
