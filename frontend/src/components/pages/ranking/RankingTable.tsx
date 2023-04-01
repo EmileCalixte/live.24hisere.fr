@@ -35,6 +35,7 @@ export default function RankingTable({
 
         return (
             <RankingTableRow key={rankingRunner.id}
+                             race={race}
                              runner={rankingRunner}
                              tableCategory={tableCategory}
                              tableGender={tableGender}
