@@ -26,7 +26,11 @@ export default function RunnerDetailsStats({runner, race, ranks}: RunnerDetailsS
     /** Total distance in meters */
     const totalDistance = useMemo<number>(() => {
         if (runner.passages.length >= 1) {
-            return race.initialDistance + race.lapDistance * (runner.passages.length - 1);
+            if (race.initialDistance > 0) {
+                return race.initialDistance + race.lapDistance * (runner.passages.length - 1);
+            }
+
+            return race.lapDistance * runner.passages.length;
         }
 
         return 0;
