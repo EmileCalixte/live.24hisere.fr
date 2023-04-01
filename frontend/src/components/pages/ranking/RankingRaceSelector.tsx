@@ -1,7 +1,6 @@
 import React from "react";
 import {type Race} from "../../../types/Race";
 import OptionWithLoadingDots from "../../misc/OptionWithLoadingDots";
-import RaceTimer from "../../misc/RaceTimer";
 
 interface RankingRaceSelectorProps {
     races: Race[] | false;
@@ -37,7 +36,7 @@ export default function RankingRaceSelector({races, onSelectRace, selectedRaceId
                                 {races.map(race => {
                                     return (
                                         <option key={race.id} value={race.id}>
-                                            {race.name} | <RaceTimer race={race}/>
+                                            {race.name}
                                         </option>
                                     );
                                 })}
