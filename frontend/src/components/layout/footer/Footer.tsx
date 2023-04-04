@@ -14,7 +14,7 @@ export default function Footer() {
                     <div className="col-12" style={{textAlign: "center"}}>
                         <p>Dernière mise à jour des données : {formatDateAsString(lastUpdateTime)}</p>
 
-                        <p>Toutes les données disponibles sur cette page sont extraites du système de chronométrage. Toutefois, ayant un but purement indicatif, les caclculs peuvent éventuellement contenir des erreurs ou des imprécisions. Seules les données du poste de chronométrage font foi.</p>
+                        <p>Toutes les données disponibles sur cette page sont extraites du système de chronométrage. Toutefois, ayant un but purement indicatif, les calculs peuvent éventuellement contenir des erreurs ou des imprécisions. Seules les données du poste de chronométrage font foi.</p>
 
                         <p>Application développée pour Les 24 Heures de l'Isère par Emile Calixte, avec l'aide de Djeson Pascal-Valette</p>
 
