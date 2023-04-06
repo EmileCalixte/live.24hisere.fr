@@ -3,8 +3,8 @@ import {ConfigModule} from "@nestjs/config";
 import {ScheduleModule} from "@nestjs/schedule";
 import {AppController} from "./app.controller";
 import {AppService} from "./app.service";
-import {PrismaService} from "./prisma.service";
-import {TasksService} from "./tasks.service";
+import {PrismaService} from "./database/prisma.service";
+import {TasksService} from "./tasks/tasks.service";
 import {UserService} from "./user.service";
 
 @Module({
