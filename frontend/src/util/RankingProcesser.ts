@@ -125,7 +125,11 @@ export class RankingProcesser {
             let averageSpeed = null;
 
             if (runner.passageCount > 0) {
-                distance = this.race.initialDistance + this.race.lapDistance * (runner.passageCount - 1);
+                if (this.race.initialDistance > 0) {
+                    distance = this.race.initialDistance + this.race.lapDistance * (runner.passageCount - 1);
+                } else {
+                    distance = this.race.lapDistance * runner.passageCount;
+                }
             }
 
             if (runner.lastPassageTime !== null) {

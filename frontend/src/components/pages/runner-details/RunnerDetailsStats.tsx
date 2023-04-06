@@ -16,13 +16,21 @@ interface RunnerDetailsStatsProps {
 
 export default function RunnerDetailsStats({runner, race, ranks}: RunnerDetailsStatsProps) {
     const completeLapCount = useMemo<number>(() => {
-        return Math.max(0, runner.passages.length - 1);
-    }, [runner]);
+        if (race.initialDistance > 0) {
+            return Math.max(0, runner.passages.length - 1);
+        }
+
+        return runner.passages.length;
+    }, [race, runner]);
 
     /** Total distance in meters */
     const totalDistance = useMemo<number>(() => {
         if (runner.passages.length >= 1) {
-            return race.initialDistance + race.lapDistance * (runner.passages.length - 1);
+            if (race.initialDistance > 0) {
+                return race.initialDistance + race.lapDistance * (runner.passages.length - 1);
+            }
+
+            return race.lapDistance * runner.passages.length;
         }
 
         return 0;

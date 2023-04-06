@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : database
--- Généré le : jeu. 16 mars 2023 à 21:15
+-- Généré le : mar. 04 avr. 2023 à 20:36
 -- Version du serveur : 10.3.37-MariaDB-1:10.3.37+maria~ubu2004
 -- Version de PHP : 8.0.27
 
@@ -77,8 +77,8 @@ INSERT INTO `misc` (`key`, `value`) VALUES
 
 CREATE TABLE `passage` (
   `id` int(11) NOT NULL,
-  `detection_id` int(11) DEFAULT NULL,
-  `runner_id` int(11) NOT NULL,
+  `detection_id` int(11) DEFAULT NULL COMMENT 'Not null if the passage comes from a detection of the timing system',
+  `runner_id` int(11) NOT NULL COMMENT 'Bib number',
   `time` datetime NOT NULL,
   `is_hidden` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -5902,7 +5902,7 @@ INSERT INTO `race` (`id`, `name`, `start_time`, `duration`, `initial_distance`, 
 --
 
 CREATE TABLE `runner` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL COMMENT 'Bib number',
   `firstname` varchar(255) NOT NULL,
   `lastname` varchar(255) NOT NULL,
   `gender` varchar(1) NOT NULL,
@@ -5988,30 +5988,6 @@ CREATE TABLE `user` (
 INSERT INTO `user` (`id`, `username`, `password_hash`) VALUES
 (1, 'Admin', '$argon2id$v=19$m=65536,t=4,p=1$VC9URFFMNVhCemJ4Rklkeg$1yyPCjFEXp7r4UW2TV7EuAtRCqwMmKbtmO/jo97amUs');
 
--- --------------------------------------------------------
-
---
--- Structure de la table `_prisma_migrations`
---
-
-CREATE TABLE `_prisma_migrations` (
-  `id` varchar(36) NOT NULL,
-  `checksum` varchar(64) NOT NULL,
-  `finished_at` datetime(3) DEFAULT NULL,
-  `migration_name` varchar(255) NOT NULL,
-  `logs` text DEFAULT NULL,
-  `rolled_back_at` datetime(3) DEFAULT NULL,
-  `started_at` datetime(3) NOT NULL DEFAULT current_timestamp(3),
-  `applied_steps_count` int(10) UNSIGNED NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Déchargement des données de la table `_prisma_migrations`
---
-
-INSERT INTO `_prisma_migrations` (`id`, `checksum`, `finished_at`, `migration_name`, `logs`, `rolled_back_at`, `started_at`, `applied_steps_count`) VALUES
-('3ba32a6b-421e-4a1e-a89b-43b3c1f8ba58', '9f53173051ebc7c88bf37d4713a7afc3ae9ba33688b4ea1d9ef779ffcd61b56b', '2023-03-16 21:17:55.584', '20230316211755_init', NULL, NULL, '2023-03-16 21:17:55.379', 1);
-
 --
 -- Index pour les tables déchargées
 --
@@ -6021,7 +5997,7 @@ INSERT INTO `_prisma_migrations` (`id`, `checksum`, `finished_at`, `migration_na
 --
 ALTER TABLE `access_token`
   ADD PRIMARY KEY (`token`),
-  ADD KEY `access_token_user_id_fkey` (`user_id`);
+  ADD KEY `IDX_B6A2DD68A76ED395` (`user_id`);
 
 --
 -- Index pour la table `config`
@@ -6040,34 +6016,29 @@ ALTER TABLE `misc`
 --
 ALTER TABLE `passage`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `passage_runner_id_detection_id_key` (`runner_id`,`detection_id`);
+  ADD UNIQUE KEY `UNIQ_2B258F67A8773B17` (`detection_id`),
+  ADD KEY `IDX_2B258F673C7FB593` (`runner_id`);
 
 --
 -- Index pour la table `race`
 --
 ALTER TABLE `race`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `race_name_key` (`name`);
+  ADD UNIQUE KEY `UNIQ_DA6FBBAF5E237E06` (`name`);
 
 --
 -- Index pour la table `runner`
 --
 ALTER TABLE `runner`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `runner_race_id_fkey` (`race_id`);
+  ADD KEY `IDX_F92B8B3E6E59D40D` (`race_id`);
 
 --
 -- Index pour la table `user`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `user_username_key` (`username`);
-
---
--- Index pour la table `_prisma_migrations`
---
-ALTER TABLE `_prisma_migrations`
-  ADD PRIMARY KEY (`id`);
+  ADD UNIQUE KEY `UNIQ_8D93D649F85E0677` (`username`);
 
 --
 -- AUTO_INCREMENT pour les tables déchargées
@@ -6099,19 +6070,19 @@ ALTER TABLE `user`
 -- Contraintes pour la table `access_token`
 --
 ALTER TABLE `access_token`
-  ADD CONSTRAINT `access_token_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
+  ADD CONSTRAINT `FK_B6A2DD68A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
 
 --
 -- Contraintes pour la table `passage`
 --
 ALTER TABLE `passage`
-  ADD CONSTRAINT `passage_runner_id_fkey` FOREIGN KEY (`runner_id`) REFERENCES `runner` (`id`);
+  ADD CONSTRAINT `FK_2B258F673C7FB593` FOREIGN KEY (`runner_id`) REFERENCES `runner` (`id`);
 
 --
 -- Contraintes pour la table `runner`
 --
 ALTER TABLE `runner`
-  ADD CONSTRAINT `runner_race_id_fkey` FOREIGN KEY (`race_id`) REFERENCES `race` (`id`);
+  ADD CONSTRAINT `FK_F92B8B3E6E59D40D` FOREIGN KEY (`race_id`) REFERENCES `race` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
