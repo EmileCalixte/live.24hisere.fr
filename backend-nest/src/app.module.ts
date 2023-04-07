@@ -1,9 +1,10 @@
-import {Module} from "@nestjs/common";
+import {MiddlewareConsumer, Module} from "@nestjs/common";
 import {ConfigModule} from "@nestjs/config";
 import {ScheduleModule} from "@nestjs/schedule";
 import {AppController} from "./app.controller";
 import {AppService} from "./app.service";
 import {AuthController} from "./controllers/auth.controller";
+import {AccessLoggerMiddleware} from "./middlewares/accessLogger.middleware";
 import {PrismaService} from "./services/database/prisma.service";
 import {AccessTokenService} from "./services/database/entities/accessToken.service";
 import {AuthService} from "./services/auth.service";
@@ -38,4 +39,8 @@ import {UserService} from "./services/database/entities/user.service";
         TasksService,
     ],
 })
-export class AppModule {}
+export class AppModule {
+    configure(consumer: MiddlewareConsumer) {
+        consumer.apply(AccessLoggerMiddleware).forRoutes("*");
+    }
+}
