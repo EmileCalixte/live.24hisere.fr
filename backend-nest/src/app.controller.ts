@@ -1,7 +1,7 @@
 import {Controller, Get} from "@nestjs/common";
 import {ConfigService} from "@nestjs/config";
 import {AppService} from "./app.service";
-import {UserService} from "./user.service";
+import {UserService} from "./services/database/entities/user.service";
 
 @Controller()
 export class AppController {
@@ -11,7 +11,7 @@ export class AppController {
         private readonly configService: ConfigService,
     ) {}
 
-    @Get()
+    @Get("/")
     async getHello(): Promise<string> {
         const testEnvVar = this.configService.get<string>("TEST");
 
