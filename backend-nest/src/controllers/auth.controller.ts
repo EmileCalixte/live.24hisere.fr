@@ -4,7 +4,7 @@ import {AuthService} from "../services/auth.service";
 
 interface LoginResponse {
     accessToken: string;
-    expirationTime: string;
+    expirationTime: DateISOString;
 }
 
 @Controller()
