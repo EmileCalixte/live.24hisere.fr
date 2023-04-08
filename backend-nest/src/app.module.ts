@@ -8,7 +8,7 @@ import {AccessTokenService} from "./services/database/entities/accessToken.servi
 import {AuthService} from "./services/auth.service";
 import {PasswordService} from "./services/password.service";
 import {RandomService} from "./services/random.service";
-import {TasksService} from "./tasks/tasks.service";
+import {ImportPassagesService} from "./tasks/importPassages.service";
 import {UserService} from "./services/database/entities/user.service";
 
 const appServices = [
@@ -24,7 +24,7 @@ const databaseServices = [
 ];
 
 const tasksServices = [
-    TasksService,
+    ImportPassagesService,
 ];
 
 @Module({
