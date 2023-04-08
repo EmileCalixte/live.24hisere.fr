@@ -35,7 +35,6 @@ export class AuthController {
     @UseGuards(AuthGuard)
     @Get("/auth/current-user-info")
     async getCurrentUserInfo(@LoggedInUser() user: User): Promise<CurrentUserInfoResponse> {
-        console.log(user);
         return {
             user: {
                 username: user.username,

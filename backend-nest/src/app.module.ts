@@ -1,8 +1,6 @@
 import {MiddlewareConsumer, Module} from "@nestjs/common";
 import {ConfigModule} from "@nestjs/config";
 import {ScheduleModule} from "@nestjs/schedule";
-import {AppController} from "./app.controller";
-import {AppService} from "./app.service";
 import {AuthController} from "./controllers/auth.controller";
 import {AccessLoggerMiddleware} from "./middlewares/accessLogger.middleware";
 import {PrismaService} from "./services/database/prisma.service";
@@ -13,6 +11,22 @@ import {RandomService} from "./services/random.service";
 import {TasksService} from "./tasks/tasks.service";
 import {UserService} from "./services/database/entities/user.service";
 
+const appServices = [
+    AuthService,
+    PasswordService,
+    RandomService,
+];
+
+const databaseServices = [
+    PrismaService,
+    AccessTokenService,
+    UserService,
+];
+
+const tasksServices = [
+    TasksService,
+];
+
 @Module({
     imports: [
         ConfigModule.forRoot({
@@ -22,21 +36,12 @@ import {UserService} from "./services/database/entities/user.service";
         ScheduleModule.forRoot(),
     ],
     controllers: [
-        AppController,
         AuthController,
     ],
     providers: [
-        AppService,
-
-        PrismaService,
-        AccessTokenService,
-        UserService,
-
-        AuthService,
-        PasswordService,
-        RandomService,
-
-        TasksService,
+        ...appServices,
+        ...databaseServices,
+        ...tasksServices,
     ],
 })
 export class AppModule {
