@@ -1,5 +1,5 @@
 import {Injectable} from "@nestjs/common";
-import {AccessToken, User} from "@prisma/client";
+import {AccessToken, Prisma, User} from "@prisma/client";
 import {HEXADECIMAL, RandomService} from "../../random.service";
 import {PrismaService} from "../prisma.service";
 
@@ -12,6 +12,12 @@ export class AccessTokenService {
         private readonly randomService: RandomService,
     ) {}
 
+    async getAccessToken(accessTokenWhereUniqueInput: Prisma.AccessTokenWhereUniqueInput): Promise<AccessToken | null> {
+        return this.prisma.accessToken.findUnique({
+            where: accessTokenWhereUniqueInput,
+        });
+    }
+
     async createAccessToken(user: User): Promise<AccessToken> {
         return this.prisma.accessToken.create({
             data: {
@@ -20,6 +26,12 @@ export class AccessTokenService {
                 expirationDate: this.getTokenExpirationDateFromNow(),
             },
         });
+    }
+
+    isAccessTokenExpired(accessToken: AccessToken): boolean {
+        const now = new Date();
+
+        return now.getTime() > accessToken.expirationDate.getTime();
     }
 
     private getTokenExpirationDateFromNow(): Date {

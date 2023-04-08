@@ -1,10 +1,13 @@
-import {HttpException, HttpStatus, Injectable} from "@nestjs/common";
-import {AccessToken} from "@prisma/client";
+import {ForbiddenException, Injectable, UnauthorizedException} from "@nestjs/common";
+import {AccessToken, User} from "@prisma/client";
 import {UserService} from "./database/entities/user.service";
 import {AccessTokenService} from "./database/entities/accessToken.service";
 import {PasswordService} from "./password.service";
 
 const INVALID_CREDENTIALS_MESSAGE = "Invalid credentials";
+const INVALID_ACCESS_TOKEN_MESSAGE = "Access token is invalid";
+const EXPIRED_ACCESS_TOKEN_MESSAGE = "Access token has expired";
+const UNABLE_TO_AUTHENTICATE_MESSAGE = "Unable to authenticate";
 
 @Injectable()
 export class AuthService {
@@ -18,15 +21,37 @@ export class AuthService {
         const user = await this.userService.getUser({username});
 
         if (!user) {
-            throw new HttpException(INVALID_CREDENTIALS_MESSAGE, HttpStatus.FORBIDDEN);
+            throw new ForbiddenException(INVALID_CREDENTIALS_MESSAGE);
         }
 
         const isPasswordVerified = await this.passwordService.verifyPassword(user.passwordHash, password);
 
         if (!isPasswordVerified) {
-            throw new HttpException(INVALID_CREDENTIALS_MESSAGE, HttpStatus.FORBIDDEN);
+            throw new ForbiddenException(INVALID_CREDENTIALS_MESSAGE);
         }
 
         return await this.accessTokenService.createAccessToken(user);
+    }
+
+    async authenticateUser(token: string): Promise<User> {
+        const accessToken = await this.accessTokenService.getAccessToken({token});
+
+        if (!accessToken) {
+            throw new UnauthorizedException(INVALID_ACCESS_TOKEN_MESSAGE);
+        }
+
+        if (this.accessTokenService.isAccessTokenExpired(accessToken)) {
+            throw new UnauthorizedException(EXPIRED_ACCESS_TOKEN_MESSAGE);
+        }
+
+        const user = await this.userService.getUser({
+            id: accessToken.userId,
+        });
+
+        if (!user) {
+            throw new UnauthorizedException(UNABLE_TO_AUTHENTICATE_MESSAGE);
+        }
+
+        return user;
     }
 }

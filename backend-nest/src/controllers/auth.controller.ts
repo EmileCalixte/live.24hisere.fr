@@ -1,10 +1,19 @@
-import {Body, Controller, Post} from "@nestjs/common";
+import {Body, Controller, Get, Post, UseGuards} from "@nestjs/common";
+import {User} from "@prisma/client";
+import {LoggedInUser} from "../decorators/loggedInUser.decorator";
 import {LoginDto} from "../dtos/login.dto";
+import {AuthGuard} from "../guards/auth.guard";
 import {AuthService} from "../services/auth.service";
 
 interface LoginResponse {
     accessToken: string;
     expirationTime: DateISOString;
+}
+
+interface CurrentUserInfoResponse {
+    user: {
+        username: string;
+    };
 }
 
 @Controller()
@@ -20,6 +29,17 @@ export class AuthController {
         return {
             accessToken: accessToken.token,
             expirationTime: accessToken.expirationDate.toISOString(),
+        };
+    }
+
+    @UseGuards(AuthGuard)
+    @Get("/auth/current-user-info")
+    async getCurrentUserInfo(@LoggedInUser() user: User): Promise<CurrentUserInfoResponse> {
+        console.log(user);
+        return {
+            user: {
+                username: user.username,
+            },
         };
     }
 }
