@@ -28,7 +28,7 @@ services:
       MYSQL_DATABASE: live
 
   frontend:
-    image: node:16
+    image: node:18
     working_dir: /home/node/app
     environment:
       - NODE_ENV=development
