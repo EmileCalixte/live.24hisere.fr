@@ -30,9 +30,9 @@ jobs:
           curl -sS https://getcomposer.org/installer -o /tmp/composer-setup.php
           php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer
 
-      - name: Install Node.js 16
+      - name: Install Node.js 18
         run: |
-          curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
+          curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
           apt-get install -y nodejs
 
       - name: Check out repository code
