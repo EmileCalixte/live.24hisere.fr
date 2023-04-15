@@ -57,9 +57,9 @@ export default function RunnerDetailsPassageForm({
                         </div>
 
                         {time &&
-                            <div className="mt-3">
+                            <p>
                                 Date et heure : {formatDateAsString(time)}
-                            </div>
+                            </p>
                         }
 
                         <div className="flex-space-between-container">

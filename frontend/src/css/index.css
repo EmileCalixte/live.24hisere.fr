@@ -220,6 +220,9 @@ dialog.modal {
 
     border: none;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 dialog.modal .close-button {
