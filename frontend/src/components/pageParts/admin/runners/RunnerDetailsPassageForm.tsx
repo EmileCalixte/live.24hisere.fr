@@ -1,9 +1,8 @@
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faXmark} from "@fortawesome/free-solid-svg-icons";
 import React, {useEffect, useRef} from "react";
 import {Col, Row} from "react-bootstrap";
 import {formatDateAsString} from "../../../../util/utils";
 import DurationInputs from "../../../forms/DurationInputs";
+import Modal from "../../../layout/Modal";
 
 interface RunnerDetailsPassageFormProps {
     raceTime: number;
@@ -35,11 +34,7 @@ export default function RunnerDetailsPassageForm({
     }, [dialogRef]);
 
     return (
-        <dialog ref={dialogRef} className="modal runner-passage-time-modal">
-            <button className="close-button" onClick={() => onClose()}>
-                <FontAwesomeIcon icon={faXmark} />
-            </button>
-
+        <Modal close={onClose} className="runner-passage-time-modal">
             <Row>
                 <Col>
                     <h3 className="mt-0">{modalTitle}</h3>
@@ -74,6 +69,6 @@ export default function RunnerDetailsPassageForm({
                     </form>
                 </Col>
             </Row>
-        </dialog>
+        </Modal>
     );
 }

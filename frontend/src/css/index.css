@@ -221,8 +221,14 @@ dialog.modal {
     border: none;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
 
+    padding: 0;
+
     top: 50%;
     transform: translateY(-50%);
+}
+
+dialog.modal .modal-content {
+    padding: 1em;
 }
 
 dialog.modal .close-button {
