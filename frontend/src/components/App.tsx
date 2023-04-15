@@ -209,22 +209,20 @@ export default function App() {
                         }}>
                             <div id="app-content-wrapper">
                                 <Header />
-                                <div id="app-content">
-                                    <div id="page-content" className="container-fluid">
-                                        <Routes>
-                                            <Route path="/ranking" element={<Ranking />} />
-                                            <Route path="/runner-details" element={<RunnerDetails />} />
-                                            <Route path="/runner-details/:runnerId" element={<RunnerDetails />} />
+                                <main id="page-content" className="container-fluid">
+                                    <Routes>
+                                        <Route path="/ranking" element={<Ranking />} />
+                                        <Route path="/runner-details" element={<RunnerDetails />} />
+                                        <Route path="/runner-details/:runnerId" element={<RunnerDetails />} />
 
-                                            <Route path="/login" element={<Login />} />
+                                        <Route path="/login" element={<Login />} />
 
-                                            <Route path="/admin/*" element={<Admin />} />
+                                        <Route path="/admin/*" element={<Admin />} />
 
-                                            {/* Redirect any unresolved route to /ranking */}
-                                            <Route path="*" element={<Navigate to="/ranking" replace />} />
-                                        </Routes>
-                                    </div>
-                                </div>
+                                        {/* Redirect any unresolved route to /ranking */}
+                                        <Route path="*" element={<Navigate to="/ranking" replace />} />
+                                    </Routes>
+                                </main>
                             </div>
                             <Footer />
                         </userContext.Provider>
