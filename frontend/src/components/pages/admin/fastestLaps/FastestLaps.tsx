@@ -1,4 +1,5 @@
 import {useCallback, useContext, useEffect, useMemo, useState} from "react";
+import {Col, Row} from "react-bootstrap";
 import {type AdminPassageWithRunnerId, type ProcessedPassage} from "../../../../types/Passage";
 import {type AdminRaceDict} from "../../../../types/Race";
 import type Runner from "../../../../types/Runner";
@@ -203,26 +204,27 @@ export default function FastestLaps() {
 
     return (
         <div id="page-admin-fastest-laps">
-            <div className="row">
-                <div className="col-12">
+            <Row>
+                <Col>
                     <Breadcrumbs>
                         <Crumb url="/admin" label="Administration" />
                         <Crumb label="Tours les plus rapides" />
                     </Breadcrumbs>
-                </div>
-            </div>
+                </Col>
+            </Row>
 
-            <div className="row">
-
-                {passagesInPage === false &&
-                    <div className="col-12">
+            {passagesInPage === false &&
+                <Row>
+                    <Col>
                         <CircularLoader/>
-                    </div>
-                }
+                    </Col>
+                </Row>
+            }
 
-                {passagesInPage !== false &&
-                    <>
-                        <div className="col-12 mb-3">
+            {passagesInPage !== false &&
+                <>
+                    <Row>
+                        <Col className="mb-3">
                             <div className="inline-input-group">
                                 <label className="input-checkbox">
                                     <input type="checkbox"
@@ -233,23 +235,27 @@ export default function FastestLaps() {
                                     N'afficher que le tour le plus rapide de chaque coureur
                                 </label>
                             </div>
-                        </div>
+                        </Col>
+                    </Row>
 
-                        <div className="col-12">
+                    <Row>
+                        <Col>
                             <FastestLapsTable passages={passagesInPage}
                                               races={races as AdminRaceDict}
                                               runners={runners as Runner[]}
                             />
-                        </div>
+                        </Col>
+                    </Row>
 
-                        {pageCount > 1 &&
-                            <div className="col-12 mt-3 pagination-container">
+                    {pageCount > 1 &&
+                        <Row>
+                            <Col className="mt-3 pagination-container">
                                 <Pagination minPage={1} maxPage={pageCount} currentPage={page} setPage={setPage}/>
-                            </div>
-                        }
-                    </>
-                }
-            </div>
+                            </Col>
+                        </Row>
+                    }
+                </>
+            }
         </div>
     );
 }
