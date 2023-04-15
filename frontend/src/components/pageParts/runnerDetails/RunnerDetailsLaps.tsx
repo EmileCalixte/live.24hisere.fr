@@ -1,3 +1,5 @@
+import {faSortDown, faSortUp} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {Col, Row} from "react-bootstrap";
 import {getRaceTime, isRaceFinished, isRaceStarted} from "../../../helpers/raceHelper";
@@ -180,7 +182,14 @@ export default function RunnerDetailsLaps({runner}: RunnerDetailsLapsProps) {
                                         >
                                             Temps de course
                                             {sortColumn === SortBy.RaceTime &&
-                                                <i className={`table-column-sort-icon fa-solid fa-sort-${sortDirection === SORT_ASC ? "down" : "up"}`}/>
+                                                <>
+                                                    {sortDirection === SORT_ASC &&
+                                                        <FontAwesomeIcon icon={faSortDown} className="ms-1" />
+                                                    }
+                                                    {sortDirection === SORT_DESC &&
+                                                        <FontAwesomeIcon icon={faSortUp} className="ms-1" />
+                                                    }
+                                                </>
                                             }
                                         </button>
                                     </th>
@@ -191,7 +200,14 @@ export default function RunnerDetailsLaps({runner}: RunnerDetailsLapsProps) {
                                         >
                                             Vitesse
                                             {sortColumn === SortBy.LapSpeed &&
-                                                <i className={`table-column-sort-icon fa-solid fa-sort-${sortDirection === SORT_ASC ? "down" : "up"}`}/>
+                                                <>
+                                                    {sortDirection === SORT_ASC &&
+                                                        <FontAwesomeIcon icon={faSortDown} className="ms-1" />
+                                                    }
+                                                    {sortDirection === SORT_DESC &&
+                                                        <FontAwesomeIcon icon={faSortUp} className="ms-1" />
+                                                    }
+                                                </>
                                             }
                                         </button>
                                     </th>

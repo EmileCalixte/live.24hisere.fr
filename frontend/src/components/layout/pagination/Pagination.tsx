@@ -1,3 +1,6 @@
+import {faAngleLeft, faAngleRight, faAnglesLeft, faAnglesRight} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+
 interface PaginationProps {
     minPage: number;
     maxPage: number;
@@ -9,10 +12,10 @@ export default function Pagination({minPage = 1, maxPage, currentPage, setPage}:
     return (
         <div className="pagination">
             <button onClick={() => setPage(minPage)} disabled={currentPage <= minPage}>
-                <i className="fa-solid fa-angles-left"/>
+                <FontAwesomeIcon icon={faAnglesLeft} />
             </button>
             <button onClick={() => setPage(Math.max(minPage, currentPage - 1))} disabled={currentPage <= minPage}>
-                <i className="fa-solid fa-angle-left"/>
+                <FontAwesomeIcon icon={faAngleLeft} />
             </button>
 
             {currentPage + 1 > maxPage && currentPage > minPage + 3 &&
@@ -68,10 +71,10 @@ export default function Pagination({minPage = 1, maxPage, currentPage, setPage}:
             }
 
             <button onClick={() => setPage(Math.min(maxPage, currentPage + 1))} disabled={currentPage >= maxPage}>
-                <i className="fa-solid fa-angle-right"/>
+                <FontAwesomeIcon icon={faAngleRight} />
             </button>
             <button onClick={() => setPage(maxPage)} disabled={currentPage >= maxPage}>
-                <i className="fa-solid fa-angles-right"/>
+                <FontAwesomeIcon icon={faAnglesRight} />
             </button>
         </div>
     );

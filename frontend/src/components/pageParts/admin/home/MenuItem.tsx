@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 interface MenuItemProps {
     url: string;
     label: string;
-    icon: string;
+    icon: JSX.Element;
 }
 
 export default function MenuItem({url, label, icon}: MenuItemProps) {
@@ -11,7 +11,7 @@ export default function MenuItem({url, label, icon}: MenuItemProps) {
         <li>
             <Link to={url}>
                 <div className="admin-list-link-icon">
-                    <i className={icon}/>
+                    {icon}
                 </div>
                 <div className="admin-list-link-label">
                     {label}

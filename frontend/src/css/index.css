@@ -376,10 +376,6 @@ table.table th .buttons-container {
     gap: 0.5em;
 }
 
-.table-column-sort-icon {
-    margin-left: 0.3em;
-}
-
 .tabs-container {
     list-style: none;
     margin: 0;

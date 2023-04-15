@@ -1,3 +1,5 @@
+import {faAngleDown, faAngleUp} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {userContext} from "../../App";
 import {useContext, useState} from "react";
 import AdminHeaderUserDropdown from "./AdminHeaderUserDropdown";
@@ -27,10 +29,10 @@ export default function AdminHeader() {
                     {user.username}
                     &nbsp;
                     {userDropdownShown &&
-                        <i className="fa-solid fa-angle-up"/>
+                        <FontAwesomeIcon icon={faAngleUp} />
                     }
                     {!userDropdownShown &&
-                        <i className="fa-solid fa-angle-down"/>
+                        <FontAwesomeIcon icon={faAngleDown} />
                     }
                 </button>
 

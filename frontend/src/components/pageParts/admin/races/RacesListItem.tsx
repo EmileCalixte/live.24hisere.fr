@@ -1,3 +1,5 @@
+import {faEye, faEyeSlash, faGrip, faPersonRunning} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {Link} from "react-router-dom";
 import React, {useCallback} from "react";
 import {type AdminRaceWithRunnerCount} from "../../../../types/Race";
@@ -25,7 +27,7 @@ export default function RacesListItem({race, isSorting, isDragged, isDraggedOver
         >
             {isSorting &&
                 <div className="admin-list-link-drag-icon">
-                    <i className="fa-solid fa-grip"/>
+                    <FontAwesomeIcon icon={faGrip} />
                 </div>
             }
 
@@ -35,17 +37,17 @@ export default function RacesListItem({race, isSorting, isDragged, isDraggedOver
 
             <div className="admin-list-link-secondary-icons">
                 <div className="admin-list-link-secondary-icon-group">
-                    <i className="fa-solid fa-person-running"/>
+                    <FontAwesomeIcon icon={faPersonRunning} />
                     {race.runnerCount}
                 </div>
 
                 <div className="admin-list-link-secondary-icon-group">
                     {race.isPublic &&
-                        <i className="fa-solid fa-eye"/>
+                        <FontAwesomeIcon icon={faEye} />
                     }
 
                     {!race.isPublic &&
-                        <i className="fa-solid fa-eye-slash" style={{color: "#999"}}/>
+                        <FontAwesomeIcon icon={faEyeSlash} />
                     }
                 </div>
 

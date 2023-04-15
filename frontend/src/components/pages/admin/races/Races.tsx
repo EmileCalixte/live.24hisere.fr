@@ -1,3 +1,5 @@
+import {faArrowsUpDown, faCheck, faPlus} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {Col, Row} from "react-bootstrap";
 import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
@@ -130,7 +132,7 @@ export default function Races() {
                     <Row>
                         <Col>
                             <Link to="/admin/races/create" className="button">
-                                <i className="fa-solid fa-plus mr-2"/>
+                                <FontAwesomeIcon icon={faPlus} className="mr-2" />
                                 Créer une course
                             </Link>
                         </Col>
@@ -148,7 +150,7 @@ export default function Races() {
                                         <Col>
                                             {!isSorting &&
                                                 <button className="button" onClick={() => setIsSorting(true)}>
-                                                    <i className="fa-solid fa-arrows-up-down mr-2"/>
+                                                    <FontAwesomeIcon icon={faArrowsUpDown} className="mr-2" />
                                                     Changer l'ordre
                                                 </button>
                                             }
@@ -164,7 +166,7 @@ export default function Races() {
                                                     <button className="button"
                                                             onClick={saveSort}
                                                             disabled={isSaving}>
-                                                        <i className="fa-solid fa-check mr-2"/>
+                                                        <FontAwesomeIcon icon={faCheck} className="mr-2" />
                                                         Enregistrer
                                                     </button>
                                                 </>
