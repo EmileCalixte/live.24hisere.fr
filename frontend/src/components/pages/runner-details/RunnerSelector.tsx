@@ -105,7 +105,6 @@ export default function RunnerSelector({runners, onSelectRunner, selectedRunnerI
                             </>
                         );
                     })()}
-
                 </select>
             </div>
         </div>

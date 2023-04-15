@@ -1,3 +1,4 @@
+import {Col, Row} from "react-bootstrap";
 import {useParams} from "react-router-dom";
 import {type ProcessedRanking, type Ranking as RankingType, type RankingRunnerRanks} from "../../../types/Ranking";
 import {RankingProcesser} from "../../../util/RankingProcesser";
@@ -163,60 +164,64 @@ export default function RunnerDetails() {
 
     return (
         <div id="page-runner-details">
-            <div className="row hide-on-print">
-                <div className="col-12">
+            <Row className="hide-on-print">
+                <Col>
                     <h1>Détails coureur</h1>
-                </div>
-            </div>
+                </Col>
+            </Row>
 
-            <div className="row hide-on-print">
-                <div className="col-12">
+            <Row className="hide-on-print">
+                <Col>
                     <RunnerSelector runners={runners}
                                     onSelectRunner={onSelectRunner}
                                     selectedRunnerId={selectedRunnerId}
                     />
-                </div>
-            </div>
+                </Col>
+            </Row>
 
             {selectedRunner !== null &&
-                <div className="row mt-3">
-                    <div className="col-12 mb-3">
-                        <button className="a" onClick={exportRunnerToXlsx}>
-                            <i className="fa-solid fa-file-excel"/> Générer un fichier Excel
-                        </button>
-                    </div>
+                <>
+                    <Row className="mt-3">
+                        <Col className="mb-3">
+                            <button className="a" onClick={exportRunnerToXlsx}>
+                                <i className="fa-solid fa-file-excel"/> Générer un fichier Excel
+                            </button>
+                        </Col>
+                    </Row>
 
-                    <div className="col-12">
-                        <div className="runner-details-data-container">
-                            <ul className="tabs-container">
-                                <li className={selectedTab === Tab.Stats ? "active" : ""}>
-                                    <button onClick={() => setSelectedTab(Tab.Stats)}>Statistiques</button>
-                                </li>
-                                <li className={selectedTab === Tab.Laps ? "active" : ""}>
-                                    <button onClick={() => setSelectedTab(Tab.Laps)}>Détails des tours</button>
-                                </li>
-                            </ul>
+                    <Row>
+                        <Col>
+                            <div className="runner-details-data-container">
+                                <ul className="tabs-container">
+                                    <li className={selectedTab === Tab.Stats ? "active" : ""}>
+                                        <button onClick={() => setSelectedTab(Tab.Stats)}>Statistiques</button>
+                                    </li>
+                                    <li className={selectedTab === Tab.Laps ? "active" : ""}>
+                                        <button onClick={() => setSelectedTab(Tab.Laps)}>Détails des tours</button>
+                                    </li>
+                                </ul>
 
-                            <div className="runner-details-data">
-                                {(() => {
-                                    switch (selectedTab) {
-                                        case Tab.Stats:
-                                            return (
-                                                <>
-                                                    <RunnerDetailsRaceDetails race={selectedRunner.race} />
-                                                    <RunnerDetailsStats runner={selectedRunner} race={selectedRunner.race} ranks={ranks} />
-                                                </>
-                                            );
-                                        case Tab.Laps:
-                                            return <RunnerDetailsLaps runner={selectedRunner} />;
-                                        default:
-                                            return null;
-                                    }
-                                })()}
+                                <div className="runner-details-data">
+                                    {(() => {
+                                        switch (selectedTab) {
+                                            case Tab.Stats:
+                                                return (
+                                                    <>
+                                                        <RunnerDetailsRaceDetails race={selectedRunner.race} />
+                                                        <RunnerDetailsStats runner={selectedRunner} race={selectedRunner.race} ranks={ranks} />
+                                                    </>
+                                                );
+                                            case Tab.Laps:
+                                                return <RunnerDetailsLaps runner={selectedRunner} />;
+                                            default:
+                                                return null;
+                                        }
+                                    })()}
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
+                        </Col>
+                    </Row>
+                </>
             }
         </div>
     );

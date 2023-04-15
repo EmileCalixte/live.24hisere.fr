@@ -1,5 +1,6 @@
 import "../../../css/print-ranking-table.css";
 import React, {useState, useEffect, useCallback, useMemo} from "react";
+import {Col, Row} from "react-bootstrap";
 import {type Race} from "../../../types/Race";
 import {existingCategories} from "../../../util/ffaUtils";
 import CircularLoader from "../../misc/CircularLoader";
@@ -170,25 +171,25 @@ export default function Ranking() {
 
     return (
         <div id="page-ranking">
-            <div className="row hide-on-print">
-                <div className="col-12">
+            <Row className="hide-on-print">
+                <Col>
                     <h1>Classements</h1>
-                </div>
-            </div>
+                </Col>
+            </Row>
 
-            <div className="row hide-on-print mb-3">
-                <div className="col-12">
+            <Row className="hide-on-print mb-3">
+                <Col>
                     <RankingRaceSelector races={races}
                                          onSelectRace={onSelectRace}
                                          selectedRaceId={selectedRace ? selectedRace.id : undefined}
                     />
-                </div>
-            </div>
+                </Col>
+            </Row>
 
             {selectedRace &&
                 <>
-                    <div className="row hide-on-print mb-3">
-                        <div className="col-12">
+                    <Row className="hide-on-print mb-3">
+                        <Col>
                             <RankingSettings
                                 categories={categories}
                                 onCategorySelect={onCategorySelect}
@@ -201,16 +202,16 @@ export default function Ranking() {
                                 currentRankingTime={selectedRankingTime}
                                 maxRankingTime={selectedRace.duration * 1000}
                             />
-                        </div>
-                    </div>
+                        </Col>
+                    </Row>
 
                     {!processedRanking &&
                         <CircularLoader/>
                     }
 
                     {processedRanking &&
-                        <div className="row">
-                            <div className="col-12">
+                        <Row>
+                            <Col>
                                 {windowWidth > RESPONSIVE_TABLE_MAX_WINDOW_WIDTH &&
                                     <RankingTable
                                         race={selectedRace}
@@ -236,8 +237,8 @@ export default function Ranking() {
                                         />
                                     </div>
                                 }
-                            </div>
-                        </div>
+                            </Col>
+                        </Row>
                     }
                 </>
             }

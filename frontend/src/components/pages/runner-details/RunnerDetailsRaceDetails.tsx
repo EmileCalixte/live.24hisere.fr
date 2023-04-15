@@ -1,4 +1,5 @@
 import {useMemo} from "react";
+import {Col, Row} from "react-bootstrap";
 import {type Race} from "../../../types/Race";
 import {formatMsAsDuration} from "../../../util/utils";
 import RaceTimer from "../../misc/RaceTimer";
@@ -14,8 +15,8 @@ export default function RunnerDetailsRaceDetails({race}: RunnerDetailsRaceDetail
     }, [race]);
 
     return (
-        <div className="row">
-            <div className="col-12">
+        <Row>
+            <Col>
                 <h2>Course</h2>
 
                 <p>{race.name}</p>
@@ -31,7 +32,7 @@ export default function RunnerDetailsRaceDetails({race}: RunnerDetailsRaceDetail
                         </>
                     }
                 </p>
-            </div>
-        </div>
+            </Col>
+        </Row>
     );
 }

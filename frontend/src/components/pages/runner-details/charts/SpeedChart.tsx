@@ -1,3 +1,4 @@
+import {Col, Row} from "react-bootstrap";
 import CanvasJSReact from "../../../../lib/canvasjs/canvasjs.react";
 import {useCallback, useMemo, useState} from "react";
 import ReactDOMServer from "react-dom/server";
@@ -284,8 +285,8 @@ export default function SpeedChart({runner, race, averageSpeed}: SpeedChartProps
 
     return (
         <div className="runner-details-chart-container speed-chart-container">
-            <div className="row">
-                <div className="col-xl-3 col-lg-12">
+            <Row>
+                <Col xxl={2} xl={3} lg={12}>
                     <p>Éléments à afficher</p>
 
                     <div className="inline-input-group">
@@ -296,7 +297,7 @@ export default function SpeedChart({runner, race, averageSpeed}: SpeedChartProps
                         </label>
                     </div>
 
-                    <div className="inline-input-group">
+                    <div className="inline-input-group mt-2">
                         <label className="input-checkbox">
                             <input type="checkbox" checked={displayEachHourSpeed} onChange={e => setDisplayEachHourSpeed(e.target.checked)} />
                             <span/>
@@ -304,7 +305,7 @@ export default function SpeedChart({runner, race, averageSpeed}: SpeedChartProps
                         </label>
                     </div>
 
-                    <div className="inline-input-group">
+                    <div className="inline-input-group mt-2">
                         <label className="input-checkbox">
                             <input type="checkbox" checked={displayAverageSpeed} onChange={e => setDisplayAverageSpeed(e.target.checked)} />
                             <span/>
@@ -312,18 +313,18 @@ export default function SpeedChart({runner, race, averageSpeed}: SpeedChartProps
                         </label>
                     </div>
 
-                    <div className="inline-input-group">
+                    <div className="inline-input-group mt-2">
                         <label className="input-checkbox">
                             <input type="checkbox" checked={displayAverageSpeedEvolution} onChange={e => setDisplayAverageSpeedEvolution(e.target.checked)} />
                             <span/>
                             Évolution de la vitesse moyenne
                         </label>
                     </div>
-                </div>
-                <div className="col-xl-9 col-lg-12">
+                </Col>
+                <Col xxl={10} xl={9} lg={12}>
                     <CanvasJSChart options={options} />
-                </div>
-            </div>
+                </Col>
+            </Row>
         </div>
     );
 }

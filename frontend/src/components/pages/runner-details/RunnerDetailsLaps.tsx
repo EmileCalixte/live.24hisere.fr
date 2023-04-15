@@ -1,4 +1,5 @@
 import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
+import {Col, Row} from "react-bootstrap";
 import {getRaceTime, isRaceFinished, isRaceStarted} from "../../../helpers/raceHelper";
 import {formatMsAsDuration, SORT_ASC, SORT_DESC} from "../../../util/utils";
 import {type RunnerWithProcessedPassages, type RunnerWithRace} from "../../../types/Runner";
@@ -162,8 +163,8 @@ export default function RunnerDetailsLaps({runner}: RunnerDetailsLapsProps) {
     const showCurrentLapAtBottomOfTable = showCurrentLap && sortDirection === SORT_ASC;
 
     return (
-        <div className="row">
-            <div className="col-12">
+        <Row>
+            <Col>
                 <h2>Détails des tours</h2>
 
                 {windowWidth > RESPONSIVE_TABLE_MAX_WINDOW_WIDTH &&
@@ -305,8 +306,7 @@ export default function RunnerDetailsLaps({runner}: RunnerDetailsLapsProps) {
                         </table>
                     </div>
                 }
-
-            </div>
-        </div>
+            </Col>
+        </Row>
     );
 }
