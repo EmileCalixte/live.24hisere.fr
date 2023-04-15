@@ -1,19 +1,20 @@
+import {Col, Row} from "react-bootstrap";
 import MenuList from "./MenuList";
 
 export default function AdminHome() {
     return (
         <div id="page-admin-home">
-            <div className="row">
-                <div className="col-12">
+            <Row>
+                <Col>
                     <h1>Administration</h1>
-                </div>
-            </div>
+                </Col>
+            </Row>
 
-            <div className="row">
-                <div className="col-12">
+            <Row>
+                <Col>
                     <MenuList />
-                </div>
-            </div>
+                </Col>
+            </Row>
         </div>
     );
 }
