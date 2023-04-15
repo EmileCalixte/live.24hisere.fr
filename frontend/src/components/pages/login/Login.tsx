@@ -1,4 +1,5 @@
 import React, {useContext, useState} from "react";
+import {Col, Row} from "react-bootstrap";
 import {performAPIRequest} from "../../../util/apiUtils";
 import {userContext} from "../../App";
 import {Navigate} from "react-router-dom";
@@ -52,13 +53,9 @@ export default function Login() {
 
     return (
         <div id="page-login">
-            <div className="row">
-                <div className="col-12">
+            <Row className="row">
+                <Col xl={3} lg={4} md={6} sm={12}>
                     <h1>Connexion</h1>
-                </div>
-            </div>
-            <div className="row">
-                <div className="col-xl-3 col-lg-4 col-md-6 col-sm-12">
                     <form onSubmit={onSubmit}>
                         <div className="input-group">
                             <label>
@@ -92,8 +89,8 @@ export default function Login() {
                             Connexion
                         </button>
                     </form>
-                </div>
-            </div>
+                </Col>
+            </Row>
         </div>
     );
 }
