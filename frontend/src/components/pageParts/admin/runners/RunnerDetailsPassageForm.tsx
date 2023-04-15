@@ -1,3 +1,5 @@
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faXmark} from "@fortawesome/free-solid-svg-icons";
 import React, {useEffect, useRef} from "react";
 import {Col, Row} from "react-bootstrap";
 import {formatDateAsString} from "../../../../util/utils";
@@ -35,7 +37,7 @@ export default function RunnerDetailsPassageForm({
     return (
         <dialog ref={dialogRef} className="modal runner-passage-time-modal">
             <button className="close-button" onClick={() => onClose()}>
-                <i className="fa-solid fa-xmark"/>
+                <FontAwesomeIcon icon={faXmark} />
             </button>
 
             <Row>

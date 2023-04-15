@@ -1,3 +1,5 @@
+import {faEye, faEyeSlash, faPen, faPlus, faTrash} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {useEffect, useMemo, useState} from "react";
 import {Col, Row} from "react-bootstrap";
 import {type AdminProcessedPassage} from "../../../../types/Passage";
@@ -71,7 +73,7 @@ export default function RunnerDetailsPassages({
 
                 <Col className="mb-3">
                     <button className="button" onClick={() => setIsAdding(true)}>
-                        <i className="fa-solid fa-plus"/> Ajouter manuellement
+                        <FontAwesomeIcon icon={faPlus} /> Ajouter manuellement
                     </button>
 
                 </Col>
@@ -125,7 +127,7 @@ export default function RunnerDetailsPassages({
                                                             <button className="button small"
                                                                     onClick={() => updatePassageVisiblity(passage, false)}
                                                             >
-                                                                <i className="fa-solid fa-eye"/> Ne plus masquer
+                                                                <FontAwesomeIcon icon={faEye} /> Ne plus masquer
                                                             </button>
                                                         }
 
@@ -133,7 +135,7 @@ export default function RunnerDetailsPassages({
                                                             <button className="button orange small"
                                                                     onClick={() => updatePassageVisiblity(passage, true)}
                                                             >
-                                                                <i className="fa-solid fa-eye-slash"/> Masquer
+                                                                <FontAwesomeIcon icon={faEyeSlash} /> Masquer
                                                             </button>
                                                         }
                                                     </div>
@@ -142,14 +144,14 @@ export default function RunnerDetailsPassages({
                                                     <button className="button small"
                                                             onClick={() => setEditingPassage(passage)}
                                                     >
-                                                        <i className="fa-solid fa-pen"/> Modifier
+                                                        <FontAwesomeIcon icon={faPen} /> Modifier
                                                     </button>
                                                 </td>
                                                 <td>
                                                     <button className="button red small"
                                                             onClick={() => deletePassage(passage)}
                                                     >
-                                                        <i className="fa-solid fa-trash"/> Supprimer
+                                                        <FontAwesomeIcon icon={faTrash} /> Supprimer
                                                     </button>
                                                 </td>
                                             </tr>

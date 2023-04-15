@@ -1,3 +1,6 @@
+import {faChevronRight} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+
 interface BreadcrumbsProps {
     children: React.ReactNode[] | React.ReactNode;
 }
@@ -21,7 +24,7 @@ export default function Breadcrumbs({children}: BreadcrumbsProps) {
 
                         {renderSeparator &&
                             <span className="crumb-separator">
-                                <i className="fa-solid fa-chevron-right"/>
+                                <FontAwesomeIcon icon={faChevronRight} />
                             </span>
                         }
                     </span>

@@ -1,24 +1,26 @@
+import {faFlagCheckered, faPersonRunning, faStopwatch} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import MenuItem from "./MenuItem";
 
 const menuItems: {
     url: string;
-    icon: string;
     label: string;
+    icon: JSX.Element;
 }[] = [
     {
         url: "/admin/runners",
-        icon: "fa-solid fa-person-running",
         label: "Gestion des coureurs",
+        icon: <FontAwesomeIcon icon={faPersonRunning} />,
     },
     {
         url: "/admin/races",
-        icon: "fa-sharp fa-solid fa-flag-checkered",
         label: "Gestion des courses",
+        icon: <FontAwesomeIcon icon={faFlagCheckered} />,
     },
     {
         url: "/admin/fastest-laps",
-        icon: "fa-solid fa-stopwatch",
         label: "Tours les plus rapides",
+        icon: <FontAwesomeIcon icon={faStopwatch} />,
     },
 ];
 

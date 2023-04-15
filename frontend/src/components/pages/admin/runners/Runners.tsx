@@ -1,3 +1,5 @@
+import {faPlus} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {Col, Row} from "react-bootstrap";
 import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
@@ -82,7 +84,7 @@ export default function Runners() {
                     <Row>
                         <Col>
                             <Link to="/admin/runners/create" className="button">
-                                <i className="fa-solid fa-plus mr-2"/>
+                                <FontAwesomeIcon icon={faPlus} className="mr-2" />
                                 Ajouter un coureur
                             </Link>
                         </Col>

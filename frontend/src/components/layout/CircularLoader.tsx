@@ -1,7 +1,10 @@
+import {faCircleNotch} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+
 export default function CircularLoader() {
     return (
         <span className="circular-loader">
-            <i className="fa-solid fa-circle-notch"/>
+            <FontAwesomeIcon icon={faCircleNotch} />
         </span>
     );
 }

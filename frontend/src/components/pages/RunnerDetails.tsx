@@ -1,3 +1,5 @@
+import {faFileExcel} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {Col, Row} from "react-bootstrap";
 import {useParams} from "react-router-dom";
 import {type ProcessedRanking, type Ranking as RankingType, type RankingRunnerRanks} from "../../types/Ranking";
@@ -185,7 +187,7 @@ export default function RunnerDetails() {
                     <Row className="mt-3">
                         <Col className="mb-3">
                             <button className="a" onClick={exportRunnerToXlsx}>
-                                <i className="fa-solid fa-file-excel"/> Générer un fichier Excel
+                                <FontAwesomeIcon icon={faFileExcel} /> Générer un fichier Excel
                             </button>
                         </Col>
                     </Row>
