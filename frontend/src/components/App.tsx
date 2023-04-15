@@ -1,4 +1,5 @@
 import {createContext, useCallback, useEffect, useState} from "react";
+import {Helmet} from "react-helmet";
 import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import {type User} from "../types/User";
 import Header from "./layout/header/Header";
@@ -191,6 +192,9 @@ export default function App() {
     return (
         <BrowserRouter>
             <div id="app">
+                <Helmet>
+                    <title>Suivi live - Les 24 Heures de l'Isère</title>
+                </Helmet>
                 <appDataContext.Provider value={{
                     lastUpdateTime,
                     serverTimeOffset,

@@ -2,6 +2,7 @@ import {Col, Row} from "react-bootstrap";
 import {type AdminRace} from "../../../../types/Race";
 import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
+import Page from "../../../layout/Page";
 import OptionWithLoadingDots from "../../../misc/OptionWithLoadingDots";
 import RaceDetailsForm from "./RaceDetailsForm";
 import React, {useCallback, useContext, useEffect, useState} from "react";
@@ -95,7 +96,7 @@ export default function CreateRace() {
     }
 
     return (
-        <div id="page-admin-create-race">
+        <Page id="admin-create-race" title="Créer une course">
             <Row>
                 <Col>
                     <Breadcrumbs>
@@ -155,6 +156,6 @@ export default function CreateRace() {
                     />
                 </Col>
             </Row>
-        </div>
+        </Page>
     );
 }

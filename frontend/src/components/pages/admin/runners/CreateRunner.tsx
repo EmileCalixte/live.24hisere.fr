@@ -8,6 +8,7 @@ import ToastUtil from "../../../../util/ToastUtil";
 import {userContext} from "../../../App";
 import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
+import Page from "../../../layout/Page";
 import RunnerDetailsForm from "./RunnerDetailsForm";
 
 export default function CreateRunner() {
@@ -86,7 +87,7 @@ export default function CreateRunner() {
     }
 
     return (
-        <div id="page-admin-create-runner">
+        <Page id="admin-create-runner" title={"Créer un coureur"}>
             <Row>
                 <Col>
                     <Breadcrumbs>
@@ -119,6 +120,6 @@ export default function CreateRunner() {
                     />
                 </Col>
             </Row>
-        </div>
+        </Page>
     );
 }

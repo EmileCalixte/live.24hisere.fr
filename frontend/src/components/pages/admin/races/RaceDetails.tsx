@@ -3,6 +3,7 @@ import {Navigate, useParams} from "react-router-dom";
 import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
 import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
+import Page from "../../../layout/Page";
 import CircularLoader from "../../../misc/CircularLoader";
 import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
 import {userContext} from "../../../App";
@@ -148,7 +149,7 @@ export default function RaceDetails() {
     }
 
     return (
-        <div id="page-admin-race-details">
+        <Page id="admin-race-details" title={race === undefined ? "Chargement" : `Détails de la course ${race.name}`}>
             <Row>
                 <Col>
                     <Breadcrumbs>
@@ -221,6 +222,6 @@ export default function RaceDetails() {
                     }
                 </Col>
             </Row>
-        </div>
+        </Page>
     );
 }

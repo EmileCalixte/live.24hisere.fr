@@ -4,6 +4,7 @@ import Crumb from "../../../layout/breadcrumbs/Crumb";
 import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
 import {userContext} from "../../../App";
+import Page from "../../../layout/Page";
 import CircularLoader from "../../../misc/CircularLoader";
 import {Link} from "react-router-dom";
 import OptionWithLoadingDots from "../../../misc/OptionWithLoadingDots";
@@ -58,7 +59,7 @@ export default function Runners() {
     }, [fetchRunnersAndRaces]);
 
     return (
-        <div id="page-admin-runners">
+        <Page id="admin-runners" title="Coureurs">
             <Row>
                 <Col>
                     <Breadcrumbs>
@@ -138,6 +139,6 @@ export default function Runners() {
                     </Row>
                 </>
             }
-        </div>
+        </Page>
     );
 }

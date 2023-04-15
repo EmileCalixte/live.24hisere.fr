@@ -4,6 +4,7 @@ import Crumb from "../../../layout/breadcrumbs/Crumb";
 import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
 import {userContext} from "../../../App";
+import Page from "../../../layout/Page";
 import CircularLoader from "../../../misc/CircularLoader";
 import {Link} from "react-router-dom";
 import RacesListItem from "./RacesListItem";
@@ -110,7 +111,7 @@ export default function Races() {
     }, [isSorting, races]);
 
     return (
-        <div id="page-admin-races">
+        <Page id="admin-races" title="Courses">
             <Row>
                 <Col>
                     <Breadcrumbs>
@@ -202,6 +203,6 @@ export default function Races() {
                     </Row>
                 </>
             }
-        </div>
+        </Page>
     );
 }

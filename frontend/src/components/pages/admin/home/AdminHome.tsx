@@ -1,9 +1,10 @@
 import {Col, Row} from "react-bootstrap";
+import Page from "../../../layout/Page";
 import MenuList from "./MenuList";
 
 export default function AdminHome() {
     return (
-        <div id="page-admin-home">
+        <Page id="admin-home" title="Administration">
             <Row>
                 <Col>
                     <h1>Administration</h1>
@@ -15,6 +16,6 @@ export default function AdminHome() {
                     <MenuList />
                 </Col>
             </Row>
-        </div>
+        </Page>
     );
 }

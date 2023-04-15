@@ -8,6 +8,7 @@ import {getRunnerProcessedPassages} from "../../../../util/RunnerDetailsUtil";
 import {userContext} from "../../../App";
 import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
+import Page from "../../../layout/Page";
 import Pagination from "../../../layout/pagination/Pagination";
 import CircularLoader from "../../../misc/CircularLoader";
 import FastestLapsTable from "./FastestLapsTable";
@@ -203,7 +204,7 @@ export default function FastestLaps() {
     }, [passagesToDisplay, page]);
 
     return (
-        <div id="page-admin-fastest-laps">
+        <Page id="admin-fastest-laps" title="Tours les plus rapides">
             <Row>
                 <Col>
                     <Breadcrumbs>
@@ -256,6 +257,6 @@ export default function FastestLaps() {
                     }
                 </>
             }
-        </div>
+        </Page>
     );
 }

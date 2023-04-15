@@ -6,6 +6,7 @@ import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
 import {formatDateAsString, formatDateForApi} from "../../../../util/utils";
 import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
+import Page from "../../../layout/Page";
 import CircularLoader from "../../../misc/CircularLoader";
 import {userContext} from "../../../App";
 import {
@@ -322,7 +323,7 @@ export default function RunnerDetails() {
     }
 
     return (
-        <div id="page-admin-runner-details">
+        <Page id="admin-runner-details" title={runner === undefined ? "Chargement" : `Détails du coureur ${runner.firstname} ${runner.lastname}`}>
             <Row>
                 <Col>
                     <Breadcrumbs>
@@ -402,6 +403,6 @@ export default function RunnerDetails() {
                     </Row>
                 </>
             }
-        </div>
+        </Page>
     );
 }

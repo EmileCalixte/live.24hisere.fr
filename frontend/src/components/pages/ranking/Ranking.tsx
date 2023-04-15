@@ -3,6 +3,7 @@ import React, {useState, useEffect, useCallback, useMemo} from "react";
 import {Col, Row} from "react-bootstrap";
 import {type Race} from "../../../types/Race";
 import {existingCategories} from "../../../util/ffaUtils";
+import Page from "../../layout/Page";
 import CircularLoader from "../../misc/CircularLoader";
 import RankingRaceSelector from "./RankingRaceSelector";
 import RankingSettings from "./RankingSettings";
@@ -170,7 +171,7 @@ export default function Ranking() {
     }, [processedRanking]);
 
     return (
-        <div id="page-ranking">
+        <Page id="ranking" title="Classements">
             <Row className="hide-on-print">
                 <Col>
                     <h1>Classements</h1>
@@ -242,6 +243,6 @@ export default function Ranking() {
                     }
                 </>
             }
-        </div>
+        </Page>
     );
 }

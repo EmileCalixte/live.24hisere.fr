@@ -4,6 +4,7 @@ import {performAPIRequest} from "../../../util/apiUtils";
 import {userContext} from "../../App";
 import {Navigate} from "react-router-dom";
 import ToastUtil from "../../../util/ToastUtil";
+import Page from "../../layout/Page";
 
 export default function Login() {
     const {accessToken, saveAccessToken, setUser} = useContext(userContext);
@@ -52,7 +53,7 @@ export default function Login() {
     }
 
     return (
-        <div id="page-login">
+        <Page id="login" title="Connexion">
             <Row>
                 <Col xl={3} lg={4} md={6} sm={12}>
                     <h1>Connexion</h1>
@@ -91,6 +92,6 @@ export default function Login() {
                     </form>
                 </Col>
             </Row>
-        </div>
+        </Page>
     );
 }

@@ -2,6 +2,7 @@ import {Col, Row} from "react-bootstrap";
 import {useParams} from "react-router-dom";
 import {type ProcessedRanking, type Ranking as RankingType, type RankingRunnerRanks} from "../../../types/Ranking";
 import {RankingProcesser} from "../../../util/RankingProcesser";
+import Page from "../../layout/Page";
 import RunnerDetailsRaceDetails from "./RunnerDetailsRaceDetails";
 import RunnerSelector from "./RunnerSelector";
 import React, {useCallback, useEffect, useMemo, useState} from "react";
@@ -163,7 +164,7 @@ export default function RunnerDetails() {
     }, [processedRanking, selectedRunner]);
 
     return (
-        <div id="page-runner-details">
+        <Page id="runner-details" title={selectedRunner === null ? "Détails coureur" : `Détails coureur ${selectedRunner.firstname} ${selectedRunner.lastname}`}>
             <Row className="hide-on-print">
                 <Col>
                     <h1>Détails coureur</h1>
@@ -223,6 +224,6 @@ export default function RunnerDetails() {
                     </Row>
                 </>
             }
-        </div>
+        </Page>
     );
 }
