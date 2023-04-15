@@ -22,6 +22,10 @@ a, button.a {
     font-family: inherit;
 }
 
+.container-fluid {
+    width: calc(100% - var(--bs-gutter-x));
+}
+
 #app {
     min-height: 100vh;
 

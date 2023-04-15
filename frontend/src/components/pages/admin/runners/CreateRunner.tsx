@@ -1,4 +1,5 @@
 import React, {useCallback, useContext, useEffect, useState} from "react";
+import {Col, Row} from "react-bootstrap";
 import {Navigate} from "react-router-dom";
 import {type AdminRaceWithRunnerCount} from "../../../../types/Race";
 import {Gender} from "../../../../types/Runner";
@@ -86,18 +87,18 @@ export default function CreateRunner() {
 
     return (
         <div id="page-admin-create-runner">
-            <div className="row">
-                <div className="col-12">
+            <Row>
+                <Col>
                     <Breadcrumbs>
                         <Crumb url="/admin" label="Administration" />
                         <Crumb url="/admin/runners" label="Coureurs" />
                         <Crumb label="Créer un coureur" />
                     </Breadcrumbs>
-                </div>
-            </div>
+                </Col>
+            </Row>
 
-            <div className="row">
-                <div className="col-xl-4 col-lg-6 col-md-9 col-12">
+            <Row>
+                <Col xxl={3} xl={4} lg={6} md={9} sm={12}>
                     <h2>Créer un coureur</h2>
 
                     <RunnerDetailsForm onSubmit={onSubmit}
@@ -116,8 +117,8 @@ export default function CreateRunner() {
                                        setRaceId={setRaceId}
                                        submitButtonDisabled={isSaving || (races && races.length < 1)}
                     />
-                </div>
-            </div>
+                </Col>
+            </Row>
         </div>
     );
 }

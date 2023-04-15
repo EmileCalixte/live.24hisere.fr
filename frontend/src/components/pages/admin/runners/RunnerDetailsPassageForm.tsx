@@ -1,4 +1,5 @@
 import React, {useEffect, useRef} from "react";
+import {Col, Row} from "react-bootstrap";
 import {formatDateAsString} from "../../../../util/utils";
 import DurationInputs from "../../../misc/DurationInputs";
 
@@ -37,14 +38,14 @@ export default function RunnerDetailsPassageForm({
                 <i className="fa-solid fa-xmark"/>
             </button>
 
-            <div className="row">
-                <div className="col-12">
+            <Row className="row">
+                <Col>
                     <h3 className="mt-0">{modalTitle}</h3>
-                </div>
-            </div>
+                </Col>
+            </Row>
 
-            <div className="row">
-                <div className="col-12">
+            <Row>
+                <Col>
                     <form onSubmit={onSubmit}>
                         <div>
                             <legend>Temps de course</legend>
@@ -59,7 +60,7 @@ export default function RunnerDetailsPassageForm({
                             </div>
                         }
 
-                        <div className="flex-space-between-container mt-3">
+                        <div className="flex-space-between-container">
                             <button className="button grey" type="button" onClick={() => onClose()}>
                                 Annuler
                             </button>
@@ -69,8 +70,8 @@ export default function RunnerDetailsPassageForm({
                             </button>
                         </div>
                     </form>
-                </div>
-            </div>
+                </Col>
+            </Row>
         </dialog>
     );
 }

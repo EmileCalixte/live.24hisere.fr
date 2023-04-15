@@ -1,3 +1,4 @@
+import {Col, Row} from "react-bootstrap";
 import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
 import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
@@ -58,74 +59,84 @@ export default function Runners() {
 
     return (
         <div id="page-admin-runners">
-            <div className="row">
-                <div className="col-12">
+            <Row>
+                <Col>
                     <Breadcrumbs>
                         <Crumb url="/admin" label="Administration" />
                         <Crumb label="Coureurs" />
                     </Breadcrumbs>
-                </div>
-            </div>
+                </Col>
+            </Row>
 
             {displayedRunners === false &&
-                <CircularLoader />
+                <Row>
+                    <Col>
+                        <CircularLoader />
+                    </Col>
+                </Row>
             }
 
             {displayedRunners !== false &&
-                <div className="row">
-                    <div className="col-12">
-                        <Link to="/admin/runners/create" className="button">
-                            <i className="fa-solid fa-plus mr-2"/>
-                            Ajouter un coureur
-                        </Link>
-                    </div>
+                <>
+                    <Row>
+                        <Col>
+                            <Link to="/admin/runners/create" className="button">
+                                <i className="fa-solid fa-plus mr-2"/>
+                                Ajouter un coureur
+                            </Link>
+                        </Col>
+                    </Row>
 
-                    <div className="col-lg-3 col-md-4 col-sm-6 col-12 mt-3">
-                        <div className="input-group">
-                            <label htmlFor="admin-runners-race-select">
-                                Course
-                            </label>
-                            <select id="admin-runners-race-select"
-                                    className="input-select"
-                                    onChange={onSelectRace}
-                            >
-                                <option value={RACE_SELECT_OPTION_ALL}>Toutes</option>
+                    <Row>
+                        <Col lg={3} md={4} sm={6} xs={12} className="mt-3">
+                            <div className="input-group">
+                                <label htmlFor="admin-runners-race-select">
+                                    Course
+                                </label>
+                                <select id="admin-runners-race-select"
+                                        className="input-select"
+                                        onChange={onSelectRace}
+                                >
+                                    <option value={RACE_SELECT_OPTION_ALL}>Toutes</option>
 
-                                {(() => {
-                                    if (races === false) {
+                                    {(() => {
+                                        if (races === false) {
+                                            return (
+                                                <OptionWithLoadingDots>
+                                                    Chargement des courses
+                                                </OptionWithLoadingDots>
+                                            );
+                                        }
+
                                         return (
-                                            <OptionWithLoadingDots>
-                                                Chargement des courses
-                                            </OptionWithLoadingDots>
+                                            <>
+                                                {Object.entries(races).map(([raceId, race]) => {
+                                                    return (
+                                                        <option key={raceId} value={raceId}>
+                                                            {race.name}
+                                                        </option>
+                                                    );
+                                                })}
+                                            </>
                                         );
-                                    }
+                                    })()}
+                                </select>
+                            </div>
+                        </Col>
+                    </Row>
 
-                                    return (
-                                        <>
-                                            {Object.entries(races).map(([raceId, race]) => {
-                                                return (
-                                                    <option key={raceId} value={raceId}>
-                                                        {race.name}
-                                                    </option>
-                                                );
-                                            })}
-                                        </>
-                                    );
-                                })()}
-                            </select>
-                        </div>
-                    </div>
+                    <Row>
+                        <Col className="mt-3">
+                            {displayedRunners.length === 0 &&
+                                <p>Aucun coureur</p>
+                            }
 
-                    <div className="col-12 mt-3">
-                        {displayedRunners.length === 0 &&
-                            <p>Aucun coureur</p>
-                        }
-
-                        {displayedRunners.length > 0 &&
-                            <RunnersTable runners={displayedRunners} races={races}/>
-                        }
-                    </div>
-                </div>
+                            {displayedRunners.length > 0 &&
+                                <RunnersTable runners={displayedRunners} races={races}/>
+                            }
+                        </Col>
+                    </Row>
+                </>
             }
         </div>
     );

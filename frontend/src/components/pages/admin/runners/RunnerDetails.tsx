@@ -1,3 +1,4 @@
+import {Col, Row} from "react-bootstrap";
 import {Navigate, useParams} from "react-router-dom";
 import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {type AdminProcessedPassage} from "../../../../types/Passage";
@@ -322,8 +323,8 @@ export default function RunnerDetails() {
 
     return (
         <div id="page-admin-runner-details">
-            <div className="row">
-                <div className="col-12">
+            <Row>
+                <Col>
                     <Breadcrumbs>
                         <Crumb url="/admin" label="Administration" />
                         <Crumb url="/admin/runners" label="Coureurs" />
@@ -339,61 +340,67 @@ export default function RunnerDetails() {
                             );
                         })()}
                     </Breadcrumbs>
-                </div>
-            </div>
+                </Col>
+            </Row>
             {runner === undefined &&
-                <div className="row">
-                    <div className="col-12">
+                <Row>
+                    <Col>
                         <CircularLoader />
-                    </div>
-                </div>
+                    </Col>
+                </Row>
             }
 
             {runner !== undefined &&
-                <div className="row">
-                    <div className="col-xl-4 col-lg-6 col-md-9 col-12">
-                        <RunnerDetailsForm onSubmit={onSubmit}
-                                           id={runnerId}
-                                           setId={setRunnerId}
-                                           firstname={runnerFirstname}
-                                           setFirstname={setRunnerFirstname}
-                                           lastname={runnerLastname}
-                                           setLastname={setRunnerLastname}
-                                           gender={runnerGender}
-                                           setGender={setRunnerGender}
-                                           birthYear={runnerBirthYear}
-                                           setBirthYear={setRunnerBirthYear}
-                                           races={races}
-                                           raceId={runnerRaceId}
-                                           setRaceId={setRunnerRaceId}
-                                           submitButtonDisabled={isSaving || !unsavedChanges}
-                        />
-                    </div>
+                <>
+                    <Row>
+                        <Col xxl={3} xl={4} lg={6} md={9} sm={12}>
+                            <RunnerDetailsForm onSubmit={onSubmit}
+                                               id={runnerId}
+                                               setId={setRunnerId}
+                                               firstname={runnerFirstname}
+                                               setFirstname={setRunnerFirstname}
+                                               lastname={runnerLastname}
+                                               setLastname={setRunnerLastname}
+                                               gender={runnerGender}
+                                               setGender={setRunnerGender}
+                                               birthYear={runnerBirthYear}
+                                               setBirthYear={setRunnerBirthYear}
+                                               races={races}
+                                               raceId={runnerRaceId}
+                                               setRaceId={setRunnerRaceId}
+                                               submitButtonDisabled={isSaving || !unsavedChanges}
+                            />
+                        </Col>
+                    </Row>
 
-                    <div className="col-12 mt-3">
-                        <h3>Passages</h3>
+                    <Row>
+                        <Col className="mt-3">
+                            <h3>Passages</h3>
 
-                        <RunnerDetailsPassages passages={runner.passages}
-                                               runnerRace={runnerRace}
-                                               updatePassageVisiblity={updatePassageVisiblity}
-                                               updatePassage={updatePassage}
-                                               saveNewPassage={saveNewPassage}
-                                               deletePassage={deletePassage}
-                        />
-                    </div>
+                            <RunnerDetailsPassages passages={runner.passages}
+                                                   runnerRace={runnerRace}
+                                                   updatePassageVisiblity={updatePassageVisiblity}
+                                                   updatePassage={updatePassage}
+                                                   saveNewPassage={saveNewPassage}
+                                                   deletePassage={deletePassage}
+                            />
+                        </Col>
+                    </Row>
 
-                    <div className="col-12 mt-3">
-                        <h3>Supprimer le coureur</h3>
+                    <Row>
+                        <Col className="mt-3">
+                            <h3>Supprimer le coureur</h3>
 
-                        <p>Cette action est irréversible.</p>
+                            <p>Cette action est irréversible.</p>
 
-                        <button className="button red mt-3"
-                                onClick={deleteRunner}
-                        >
-                            Supprimer le coureur
-                        </button>
-                    </div>
-                </div>
+                            <button className="button red mt-3"
+                                    onClick={deleteRunner}
+                            >
+                                Supprimer le coureur
+                            </button>
+                        </Col>
+                    </Row>
+                </>
             }
         </div>
     );
