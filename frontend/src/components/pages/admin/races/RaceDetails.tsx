@@ -1,3 +1,4 @@
+import {Col, Row} from "react-bootstrap";
 import {Navigate, useParams} from "react-router-dom";
 import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
@@ -148,8 +149,8 @@ export default function RaceDetails() {
 
     return (
         <div id="page-admin-race-details">
-            <div className="row">
-                <div className="col-12">
+            <Row>
+                <Col>
                     <Breadcrumbs>
                         <Crumb url="/admin" label="Administration" />
                         <Crumb url="/admin/races" label="Courses" />
@@ -165,56 +166,61 @@ export default function RaceDetails() {
                             );
                         })()}
                     </Breadcrumbs>
-                </div>
-            </div>
-            <div className="row">
-                <div className="col-xl-4 col-lg-6 col-md-9 col-12">
+                </Col>
+            </Row>
+
+            <Row>
+                <Col xxl={3} xl={4} lg={6} md={9} sm={12}>
                     {race === undefined &&
                         <CircularLoader />
                     }
 
                     {race !== undefined &&
-                        <div className="row">
-                            <div className="col-12">
-                                <RaceDetailsForm onSubmit={onSubmit}
-                                                 name={raceName}
-                                                 setName={setRaceName}
-                                                 initialDistance={initialDistance}
-                                                 setInitialDistance={setInitialDistance}
-                                                 lapDistance={lapDistance}
-                                                 setLapDistance={setLapDistance}
-                                                 startTime={startTime}
-                                                 setStartTime={setStartTime}
-                                                 duration={duration}
-                                                 setDuration={setDuration}
-                                                 isPublic={isPublic}
-                                                 setIsPublic={setIsPublic}
-                                                 submitButtonDisabled={isSaving || !unsavedChanges}
-                                />
-                            </div>
+                        <>
+                            <Row>
+                                <Col>
+                                    <RaceDetailsForm onSubmit={onSubmit}
+                                                     name={raceName}
+                                                     setName={setRaceName}
+                                                     initialDistance={initialDistance}
+                                                     setInitialDistance={setInitialDistance}
+                                                     lapDistance={lapDistance}
+                                                     setLapDistance={setLapDistance}
+                                                     startTime={startTime}
+                                                     setStartTime={setStartTime}
+                                                     duration={duration}
+                                                     setDuration={setDuration}
+                                                     isPublic={isPublic}
+                                                     setIsPublic={setIsPublic}
+                                                     submitButtonDisabled={isSaving || !unsavedChanges}
+                                    />
+                                </Col>
+                            </Row>
 
-                            <div className="col-12">
-                                <h3>Supprimer la course</h3>
+                            <Row>
+                                <Col>
+                                    <h3>Supprimer la course</h3>
 
-                                {race.runnerCount > 0 &&
-                                    <p>La course ne peut pas être supprimée tant qu'elle contient des coureurs.</p>
-                                }
+                                    {race.runnerCount > 0 &&
+                                        <p>La course ne peut pas être supprimée tant qu'elle contient des coureurs.</p>
+                                    }
 
-                                {race.runnerCount === 0 &&
-                                    <p>Cette action est irréversible.</p>
-                                }
+                                    {race.runnerCount === 0 &&
+                                        <p>Cette action est irréversible.</p>
+                                    }
 
-                                <button className="button red mt-3"
-                                        disabled={race.runnerCount > 0}
-                                        onClick={deleteRace}
-                                >
-                                    Supprimer la course
-                                </button>
-                            </div>
-                        </div>
+                                    <button className="button red mt-3"
+                                            disabled={race.runnerCount > 0}
+                                            onClick={deleteRace}
+                                    >
+                                        Supprimer la course
+                                    </button>
+                                </Col>
+                            </Row>
+                        </>
                     }
-                </div>
-            </div>
+                </Col>
+            </Row>
         </div>
     );
 }
