@@ -1,9 +1,9 @@
-import {type CategoryShortCode} from "../../../types/Category";
-import {type Race} from "../../../types/Race";
+import {type CategoryShortCode} from "../../../../types/Category";
+import {type Race} from "../../../../types/Race";
 import RankingTableInfoHeader from "./RankingTableInfoHeader";
 import RankingTableRow from "./RankingTableRow";
-import {type ProcessedRanking, type ProcessedRankingRunner} from "../../../types/Ranking";
-import {type GenderWithMixed} from "../../../types/Runner";
+import {type ProcessedRanking, type ProcessedRankingRunner} from "../../../../types/Ranking";
+import {type GenderWithMixed} from "../../../../types/Runner";
 
 interface RankingTableProps {
     race: Race;

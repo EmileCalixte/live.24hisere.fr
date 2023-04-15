@@ -9,7 +9,7 @@ import {userContext} from "../../../App";
 import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
 import Page from "../../../layout/Page";
-import RunnerDetailsForm from "./RunnerDetailsForm";
+import RunnerDetailsForm from "../../../pageParts/admin/runners/RunnerDetailsForm";
 
 export default function CreateRunner() {
     const {accessToken} = useContext(userContext);

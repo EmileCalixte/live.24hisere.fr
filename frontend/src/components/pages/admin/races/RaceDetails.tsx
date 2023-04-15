@@ -4,12 +4,12 @@ import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
 import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
 import Page from "../../../layout/Page";
-import CircularLoader from "../../../misc/CircularLoader";
+import CircularLoader from "../../../layout/CircularLoader";
 import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
 import {userContext} from "../../../App";
 import {formatDateForApi} from "../../../../util/utils";
 import ToastUtil from "../../../../util/ToastUtil";
-import RaceDetailsForm from "./RaceDetailsForm";
+import RaceDetailsForm from "../../../pageParts/admin/races/RaceDetailsForm";
 import {type AdminRaceWithRunnerCount} from "../../../../types/Race";
 
 export default function RaceDetails() {

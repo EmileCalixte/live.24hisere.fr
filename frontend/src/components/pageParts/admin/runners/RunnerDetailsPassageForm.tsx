@@ -1,7 +1,7 @@
 import React, {useEffect, useRef} from "react";
 import {Col, Row} from "react-bootstrap";
 import {formatDateAsString} from "../../../../util/utils";
-import DurationInputs from "../../../misc/DurationInputs";
+import DurationInputs from "../../../forms/DurationInputs";
 
 interface RunnerDetailsPassageFormProps {
     raceTime: number;

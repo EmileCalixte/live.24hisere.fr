@@ -1,27 +1,27 @@
 import {Col, Row} from "react-bootstrap";
 import {useParams} from "react-router-dom";
-import {type ProcessedRanking, type Ranking as RankingType, type RankingRunnerRanks} from "../../../types/Ranking";
-import {RankingProcesser} from "../../../util/RankingProcesser";
-import Page from "../../layout/Page";
-import RunnerDetailsRaceDetails from "./RunnerDetailsRaceDetails";
-import RunnerSelector from "./RunnerSelector";
+import {type ProcessedRanking, type Ranking as RankingType, type RankingRunnerRanks} from "../../types/Ranking";
+import {RankingProcesser} from "../../util/RankingProcesser";
+import Page from "../layout/Page";
+import RunnerDetailsRaceDetails from "../pageParts/runnerDetails/RunnerDetailsRaceDetails";
+import RunnerSelector from "../pageParts/runnerDetails/RunnerSelector";
 import React, {useCallback, useEffect, useMemo, useState} from "react";
-import {performAPIRequest} from "../../../util/apiUtils";
-import RunnerDetailsStats from "./RunnerDetailsStats";
-import RunnerDetailsLaps from "./RunnerDetailsLaps";
+import {performAPIRequest} from "../../util/apiUtils";
+import RunnerDetailsStats from "../pageParts/runnerDetails/RunnerDetailsStats";
+import RunnerDetailsLaps from "../pageParts/runnerDetails/RunnerDetailsLaps";
 import {
     getDataForExcelExport,
     getRunnerProcessedHours,
     getRunnerProcessedPassages,
-} from "../../../util/RunnerDetailsUtil";
-import {generateXlsxFromData} from "../../../util/excelUtils";
-import type Runner from "../../../types/Runner";
+} from "../../util/RunnerDetailsUtil";
+import {generateXlsxFromData} from "../../util/excelUtils";
+import type Runner from "../../types/Runner";
 import {
     type RunnerWithPassages,
     type RunnerWithProcessedHours,
     type RunnerWithProcessedPassages,
     type RunnerWithRace,
-} from "../../../types/Runner";
+} from "../../types/Runner";
 
 enum Tab {
     Stats = "stats",

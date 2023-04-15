@@ -1,17 +1,17 @@
 import {useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {Col, Row} from "react-bootstrap";
-import {type AdminPassageWithRunnerId, type ProcessedPassage} from "../../../../types/Passage";
-import {type AdminRaceDict} from "../../../../types/Race";
-import type Runner from "../../../../types/Runner";
-import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
-import {getRunnerProcessedPassages} from "../../../../util/RunnerDetailsUtil";
-import {userContext} from "../../../App";
-import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
-import Crumb from "../../../layout/breadcrumbs/Crumb";
-import Page from "../../../layout/Page";
-import Pagination from "../../../layout/pagination/Pagination";
-import CircularLoader from "../../../misc/CircularLoader";
-import FastestLapsTable from "./FastestLapsTable";
+import {type AdminPassageWithRunnerId, type ProcessedPassage} from "../../../types/Passage";
+import {type AdminRaceDict} from "../../../types/Race";
+import type Runner from "../../../types/Runner";
+import {performAuthenticatedAPIRequest} from "../../../util/apiUtils";
+import {getRunnerProcessedPassages} from "../../../util/RunnerDetailsUtil";
+import {userContext} from "../../App";
+import Breadcrumbs from "../../layout/breadcrumbs/Breadcrumbs";
+import Crumb from "../../layout/breadcrumbs/Crumb";
+import Page from "../../layout/Page";
+import Pagination from "../../layout/pagination/Pagination";
+import CircularLoader from "../../layout/CircularLoader";
+import FastestLapsTable from "../../pageParts/admin/fastestLaps/FastestLapsTable";
 
 type RunnerSortedPassages = Record<number, AdminPassageWithRunnerId[]>;
 

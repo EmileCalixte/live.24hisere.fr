@@ -7,17 +7,17 @@ import {formatDateAsString, formatDateForApi} from "../../../../util/utils";
 import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
 import Page from "../../../layout/Page";
-import CircularLoader from "../../../misc/CircularLoader";
+import CircularLoader from "../../../layout/CircularLoader";
 import {userContext} from "../../../App";
 import {
     Gender,
     type RunnerWithAdminPassages,
     type RunnerWithAdminProcessedPassages, type RunnerWithRace,
 } from "../../../../types/Runner";
-import RunnerDetailsForm from "./RunnerDetailsForm";
+import RunnerDetailsForm from "../../../pageParts/admin/runners/RunnerDetailsForm";
 import {type AdminRaceWithRunnerCount} from "../../../../types/Race";
 import ToastUtil from "../../../../util/ToastUtil";
-import RunnerDetailsPassages from "./RunnerDetailsPassages";
+import RunnerDetailsPassages from "../../../pageParts/admin/runners/RunnerDetailsPassages";
 import {getRunnerProcessedPassages} from "../../../../util/RunnerDetailsUtil";
 
 export default function RunnerDetails() {

@@ -1,10 +1,10 @@
 import React, {useContext, useState} from "react";
 import {Col, Row} from "react-bootstrap";
-import {performAPIRequest} from "../../../util/apiUtils";
-import {userContext} from "../../App";
+import {performAPIRequest} from "../../util/apiUtils";
+import {userContext} from "../App";
 import {Navigate} from "react-router-dom";
-import ToastUtil from "../../../util/ToastUtil";
-import Page from "../../layout/Page";
+import ToastUtil from "../../util/ToastUtil";
+import Page from "../layout/Page";
 
 export default function Login() {
     const {accessToken, saveAccessToken, setUser} = useContext(userContext);

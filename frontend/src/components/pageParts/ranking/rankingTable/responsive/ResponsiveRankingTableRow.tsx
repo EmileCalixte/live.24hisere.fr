@@ -1,9 +1,9 @@
 import {useMemo} from "react";
 import {Link} from "react-router-dom";
-import {type CategoryShortCode} from "../../../types/Category";
-import {type ProcessedRankingRunner} from "../../../types/Ranking";
-import {type GenderWithMixed} from "../../../types/Runner";
-import {formatFloatNumber, formatMsAsDuration} from "../../../util/utils";
+import {type CategoryShortCode} from "../../../../../types/Category";
+import {type ProcessedRankingRunner} from "../../../../../types/Ranking";
+import {type GenderWithMixed} from "../../../../../types/Runner";
+import {formatFloatNumber, formatMsAsDuration} from "../../../../../util/utils";
 
 interface ResponsiveRankingTableRowProps {
     runner: ProcessedRankingRunner;

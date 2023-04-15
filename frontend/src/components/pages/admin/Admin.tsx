@@ -1,14 +1,14 @@
 import {useContext} from "react";
 import {userContext} from "../../App";
 import {Navigate, Route, Routes} from "react-router-dom";
-import FastestLaps from "./fastestLaps/FastestLaps";
-import AdminHome from "./home/AdminHome";
+import FastestLaps from "./FastestLaps";
+import AdminHome from "./AdminHome";
 import Races from "./races/Races";
 import CreateRunner from "./runners/CreateRunner";
 import Runners from "./runners/Runners";
 import CreateRace from "./races/CreateRace";
 import RaceDetails from "./races/RaceDetails";
-import CircularLoader from "../../misc/CircularLoader";
+import CircularLoader from "../../layout/CircularLoader";
 import RunnerDetails from "./runners/RunnerDetails";
 
 export default function Admin() {

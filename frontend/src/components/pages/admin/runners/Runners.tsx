@@ -5,10 +5,10 @@ import React, {useCallback, useContext, useEffect, useMemo, useState} from "reac
 import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
 import {userContext} from "../../../App";
 import Page from "../../../layout/Page";
-import CircularLoader from "../../../misc/CircularLoader";
+import CircularLoader from "../../../layout/CircularLoader";
 import {Link} from "react-router-dom";
-import OptionWithLoadingDots from "../../../misc/OptionWithLoadingDots";
-import RunnersTable from "./RunnersTable";
+import OptionWithLoadingDots from "../../../forms/OptionWithLoadingDots";
+import RunnersTable from "../../../pageParts/admin/runners/RunnersTable";
 import type Runner from "../../../../types/Runner";
 import {type AdminRaceDict} from "../../../../types/Race";
 

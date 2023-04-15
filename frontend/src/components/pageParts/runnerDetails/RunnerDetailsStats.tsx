@@ -2,7 +2,7 @@ import {Col, Row} from "react-bootstrap";
 import {type Race} from "../../../types/Race";
 import {type RankingRunnerRanks} from "../../../types/Ranking";
 import React, {useMemo} from "react";
-import CircularLoader from "../../misc/CircularLoader";
+import CircularLoader from "../../layout/CircularLoader";
 import SpeedChart from "./charts/SpeedChart";
 import {formatMsAsDuration} from "../../../util/utils";
 import {getPaceFromSpeed} from "../../../util/RunnerDetailsUtil";

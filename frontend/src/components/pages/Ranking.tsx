@@ -1,20 +1,20 @@
-import "../../../css/print-ranking-table.css";
+import "../../css/print-ranking-table.css";
 import React, {useState, useEffect, useCallback, useMemo} from "react";
 import {Col, Row} from "react-bootstrap";
-import {type Race} from "../../../types/Race";
-import {existingCategories} from "../../../util/ffaUtils";
-import Page from "../../layout/Page";
-import CircularLoader from "../../misc/CircularLoader";
-import RankingRaceSelector from "./RankingRaceSelector";
-import RankingSettings from "./RankingSettings";
-import {performAPIRequest} from "../../../util/apiUtils";
-import RankingTable from "./RankingTable";
-import {RankingProcesser} from "../../../util/RankingProcesser";
-import {formatDateForApi} from "../../../util/utils";
-import {type CategoriesDict, type CategoryShortCode} from "../../../types/Category";
-import {type ProcessedRanking, type Ranking as RankingType} from "../../../types/Ranking";
-import {type GenderWithMixed} from "../../../types/Runner";
-import ResponsiveRankingTable from "./ResponsiveRankingTable";
+import {type Race} from "../../types/Race";
+import {existingCategories} from "../../util/ffaUtils";
+import Page from "../layout/Page";
+import CircularLoader from "../layout/CircularLoader";
+import RankingRaceSelector from "../pageParts/ranking/RankingRaceSelector";
+import RankingSettings from "../pageParts/ranking/RankingSettings";
+import {performAPIRequest} from "../../util/apiUtils";
+import RankingTable from "../pageParts/ranking/rankingTable/RankingTable";
+import {RankingProcesser} from "../../util/RankingProcesser";
+import {formatDateForApi} from "../../util/utils";
+import {type CategoriesDict, type CategoryShortCode} from "../../types/Category";
+import {type ProcessedRanking, type Ranking as RankingType} from "../../types/Ranking";
+import {type GenderWithMixed} from "../../types/Runner";
+import ResponsiveRankingTable from "../pageParts/ranking/rankingTable/responsive/ResponsiveRankingTable";
 
 export enum TimeMode {
     Now = "now",

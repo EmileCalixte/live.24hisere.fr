@@ -1,4 +1,4 @@
-import CircularLoader from "../../misc/CircularLoader";
+import CircularLoader from "../CircularLoader";
 
 export default function HeaderFetchLoader() {
     return (

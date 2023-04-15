@@ -1,7 +1,7 @@
 import {Link} from "react-router-dom";
 import React, {useCallback} from "react";
 import {type AdminRaceWithRunnerCount} from "../../../../types/Race";
-import RaceTimer from "../../../misc/RaceTimer";
+import RaceTimer from "../../RaceTimer";
 
 interface RacesListItemProps {
     race: AdminRaceWithRunnerCount;

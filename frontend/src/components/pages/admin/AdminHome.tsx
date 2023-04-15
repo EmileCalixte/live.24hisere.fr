@@ -1,6 +1,6 @@
 import {Col, Row} from "react-bootstrap";
-import Page from "../../../layout/Page";
-import MenuList from "./MenuList";
+import Page from "../../layout/Page";
+import MenuList from "../../pageParts/admin/home/MenuList";
 
 export default function AdminHome() {
     return (

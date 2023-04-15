@@ -1,7 +1,7 @@
 import {Link} from "react-router-dom";
 import {Gender} from "../../../../types/Runner";
 import {type AdminRaceWithRunnerCount} from "../../../../types/Race";
-import OptionWithLoadingDots from "../../../misc/OptionWithLoadingDots";
+import OptionWithLoadingDots from "../../../forms/OptionWithLoadingDots";
 import {getCategoryNameFromBirthYear} from "../../../../util/ffaUtils";
 
 interface RunnerDetailsFormProps {

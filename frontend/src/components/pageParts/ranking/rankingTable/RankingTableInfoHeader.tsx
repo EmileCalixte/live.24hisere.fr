@@ -1,7 +1,7 @@
-import {type CategoryShortCode} from "../../../types/Category";
-import {type Race} from "../../../types/Race";
-import {Gender, type GenderWithMixed} from "../../../types/Runner";
-import {formatMsAsDuration} from "../../../util/utils";
+import {type CategoryShortCode} from "../../../../types/Category";
+import {type Race} from "../../../../types/Race";
+import {Gender, type GenderWithMixed} from "../../../../types/Runner";
+import {formatMsAsDuration} from "../../../../util/utils";
 
 interface RankingTableInfoHeaderProps {
     race: Race;

@@ -1,4 +1,4 @@
-import OptionWithLoadingDots from "../../misc/OptionWithLoadingDots";
+import OptionWithLoadingDots from "../../forms/OptionWithLoadingDots";
 import React, {useCallback, useEffect, useMemo, useState} from "react";
 import type Runner from "../../../types/Runner";
 

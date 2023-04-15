@@ -4,15 +4,15 @@ import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import {type User} from "../types/User";
 import Header from "./layout/header/Header";
 import Footer from "./layout/footer/Footer";
-import Ranking from "./pages/ranking/Ranking";
-import RunnerDetails from "./pages/runner-details/RunnerDetails";
+import Ranking from "./pages/Ranking";
+import RunnerDetails from "./pages/RunnerDetails";
 import {
     EVENT_API_REQUEST_ENDED,
     EVENT_API_REQUEST_STARTED,
     performAPIRequest,
     performAuthenticatedAPIRequest,
 } from "../util/apiUtils";
-import Login from "./pages/login/Login";
+import Login from "./pages/Login";
 import Admin from "./pages/admin/Admin";
 import {verbose} from "../util/utils";
 import ToastUtil from "../util/ToastUtil";

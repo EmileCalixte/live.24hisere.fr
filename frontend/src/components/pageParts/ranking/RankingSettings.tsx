@@ -1,5 +1,5 @@
-import OptionWithLoadingDots from "../../misc/OptionWithLoadingDots";
-import {TimeMode} from "./Ranking";
+import OptionWithLoadingDots from "../../forms/OptionWithLoadingDots";
+import {TimeMode} from "../../pages/Ranking";
 import RankingSettingsTime from "./RankingSettingsTime";
 import React from "react";
 import {type CategoriesDict, type CategoryShortCode} from "../../../types/Category";
