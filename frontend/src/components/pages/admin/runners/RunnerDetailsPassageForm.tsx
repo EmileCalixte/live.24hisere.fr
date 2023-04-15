@@ -38,7 +38,7 @@ export default function RunnerDetailsPassageForm({
                 <i className="fa-solid fa-xmark"/>
             </button>
 
-            <Row className="row">
+            <Row>
                 <Col>
                     <h3 className="mt-0">{modalTitle}</h3>
                 </Col>

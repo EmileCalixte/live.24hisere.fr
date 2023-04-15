@@ -53,7 +53,7 @@ export default function Login() {
 
     return (
         <div id="page-login">
-            <Row className="row">
+            <Row>
                 <Col xl={3} lg={4} md={6} sm={12}>
                     <h1>Connexion</h1>
                     <form onSubmit={onSubmit}>

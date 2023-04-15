@@ -117,7 +117,7 @@ export default function RunnerDetailsStats({runner, race, ranks}: RunnerDetailsS
 
     return (
         <>
-            <Row className="row">
+            <Row>
                 <Col>
                     <h2>Données générales</h2>
 
