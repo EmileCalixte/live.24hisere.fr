@@ -8,6 +8,9 @@ interface OptionWithLoadingDotsProps {
     children: React.ReactNode;
 }
 
+/**
+ * @deprecated Causes blinking when select is opened on mobile
+ */
 export default function OptionWithLoadingDots({children}: OptionWithLoadingDotsProps) {
     const [dotCount, setDotCount] = useState(MAX_DOTS);
 
