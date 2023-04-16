@@ -113,7 +113,7 @@ export default function RunnerDetailsForm({
                 <Select className="mt-3"
                         label="Course"
                         options={racesOptions}
-                        displayLoadingOption={races === false}
+                        isLoading={races === false}
                         loadingOptionLabel="Chargement des courses"
                         onChange={e => setRaceId(parseInt(e.target.value))}
                         value={raceId}
