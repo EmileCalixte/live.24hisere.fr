@@ -1,9 +1,8 @@
 import React from "react";
 import {createRoot} from "react-dom/client";
-import "./css/bootstrap-grid.min.css";
+import "bootstrap/dist/css/bootstrap-grid.css";
 import "./css/index.css";
 import "./css/forms.css";
-import "./lib/fontawesome/css/all.min.css";
 import "toastr2/dist/toastr.min.css";
 import "./css/toastr-override.css";
 import App from "./components/App";

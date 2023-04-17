@@ -22,6 +22,10 @@ a, button.a {
     font-family: inherit;
 }
 
+.container-fluid {
+    width: calc(100% - var(--bs-gutter-x));
+}
+
 #app {
     min-height: 100vh;
 
@@ -196,7 +200,7 @@ a, button.a {
     }
 }
 
-#app-content {
+#page-content {
     padding-bottom: 20px;
 }
 
@@ -216,6 +220,15 @@ dialog.modal {
 
     border: none;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+
+    padding: 0;
+
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+dialog.modal .modal-content {
+    padding: 1em;
 }
 
 dialog.modal .close-button {
@@ -370,10 +383,6 @@ table.table td .buttons-container,
 table.table th .buttons-container {
     display: flex;
     gap: 0.5em;
-}
-
-.table-column-sort-icon {
-    margin-left: 0.3em;
 }
 
 .tabs-container {

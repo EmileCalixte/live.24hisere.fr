@@ -1,11 +1,15 @@
+import {faArrowsUpDown, faCheck, faPlus} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {Col, Row} from "react-bootstrap";
 import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
 import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
 import {userContext} from "../../../App";
-import CircularLoader from "../../../misc/CircularLoader";
+import Page from "../../../layout/Page";
+import CircularLoader from "../../../layout/CircularLoader";
 import {Link} from "react-router-dom";
-import RacesListItem from "./RacesListItem";
+import RacesListItem from "../../../pageParts/admin/races/RacesListItem";
 import ToastUtil from "../../../../util/ToastUtil";
 import {type AdminRaceWithRunnerCount} from "../../../../types/Race";
 
@@ -109,90 +113,98 @@ export default function Races() {
     }, [isSorting, races]);
 
     return (
-        <div id="page-admin-races">
-            <div className="row">
-                <div className="col-12">
+        <Page id="admin-races" title="Courses">
+            <Row>
+                <Col>
                     <Breadcrumbs>
                         <Crumb url="/admin" label="Administration" />
                         <Crumb label="Courses" />
                     </Breadcrumbs>
-                </div>
-            </div>
+                </Col>
+            </Row>
 
             {races === false &&
                 <CircularLoader />
             }
 
             {races !== false &&
-                <div className="row">
-                    <div className="col-12">
-                        <Link to="/admin/races/create" className="button">
-                            <i className="fa-solid fa-plus mr-2"/>
-                            Créer une course
-                        </Link>
-                    </div>
+                <>
+                    <Row>
+                        <Col>
+                            <Link to="/admin/races/create" className="button">
+                                <FontAwesomeIcon icon={faPlus} className="mr-2" />
+                                Créer une course
+                            </Link>
+                        </Col>
+                    </Row>
 
-                    <div className="col-12">
-                        {races.length === 0 &&
-                            <p>Aucune course</p>
-                        }
+                    <Row>
+                        <Col>
+                            {races.length === 0 &&
+                                <p>Aucune course</p>
+                            }
 
-                        {races.length > 0 &&
-                            <div className="row mt-4">
-                                <div className="col-12">
-                                    {!isSorting &&
-                                        <button className="button" onClick={() => setIsSorting(true)}>
-                                            <i className="fa-solid fa-arrows-up-down mr-2"/>
-                                            Changer l'ordre
-                                        </button>
-                                    }
+                            {races.length > 0 &&
+                                <>
+                                    <Row className="mt-4">
+                                        <Col>
+                                            {!isSorting &&
+                                                <button className="button" onClick={() => setIsSorting(true)}>
+                                                    <FontAwesomeIcon icon={faArrowsUpDown} className="mr-2" />
+                                                    Changer l'ordre
+                                                </button>
+                                            }
 
-                                    {isSorting &&
-                                        <>
-                                            <button className="button red mr-2"
-                                                    onClick={() => setIsSorting(false)}
-                                                    disabled={isSaving}
-                                            >
-                                                Annuler
-                                            </button>
-                                            <button className="button"
-                                                    onClick={saveSort}
-                                                    disabled={isSaving}>
-                                                <i className="fa-solid fa-check mr-2"/>
-                                                Enregistrer
-                                            </button>
-                                        </>
-                                    }
-                                </div>
+                                            {isSorting &&
+                                                <>
+                                                    <button className="button red mr-2"
+                                                            onClick={() => setIsSorting(false)}
+                                                            disabled={isSaving}
+                                                    >
+                                                        Annuler
+                                                    </button>
+                                                    <button className="button"
+                                                            onClick={saveSort}
+                                                            disabled={isSaving}>
+                                                        <FontAwesomeIcon icon={faCheck} className="mr-2" />
+                                                        Enregistrer
+                                                    </button>
+                                                </>
+                                            }
+                                        </Col>
+                                    </Row>
 
-                                <div className="col-12">
-                                    <ul className="admin-list">
-                                        {(displayedRaces as AdminRaceWithRunnerCount[]).map((race, index) => {
-                                            return (
-                                                <li key={race.id}
-                                                    className={isSorting ? "draggable" : ""}
-                                                    draggable={isSorting}
-                                                    onDragStart={isSorting ? e => onDragStart(e, index) : undefined}
-                                                    onDragEnter={isSorting ? e => onDragEnter(e, index) : undefined}
-                                                    onDragOver={isSorting ? e => e.preventDefault() : undefined}
-                                                    onDragEnd={isSorting ? onDragEnd : undefined}
-                                                >
-                                                    <RacesListItem key={race.id}
-                                                                   race={race}
-                                                                   isSorting={isSorting}
-                                                                   isDragged={index === dragItemIndex}
-                                                                   isDraggedOver={index === dragOverItemIndex}
-                                                    />
-                                                </li>
-                                            );
-                                        })}
-                                    </ul>
-                                </div>
-                            </div>
-                        }
-                    </div>
-                </div>
+                                    <Row>
+                                        <Col>
+                                            <ul className="admin-list">
+                                                {(displayedRaces as AdminRaceWithRunnerCount[]).map((race, index) => {
+                                                    return (
+                                                        <li key={race.id}
+                                                            className={isSorting ? "draggable" : ""}
+                                                            draggable={isSorting}
+                                                            onDragStart={isSorting ? e => onDragStart(e, index) : undefined}
+                                                            onDragEnter={isSorting ? e => onDragEnter(e, index) : undefined}
+                                                            onDragOver={isSorting ? e => e.preventDefault() : undefined}
+                                                            onDragEnd={isSorting ? onDragEnd : undefined}
+                                                        >
+                                                            <RacesListItem key={race.id}
+                                                                           race={race}
+                                                                           isSorting={isSorting}
+                                                                           isDragged={index === dragItemIndex}
+                                                                           isDraggedOver={index === dragOverItemIndex}
+                                                            />
+                                                        </li>
+                                                    );
+                                                })}
+                                            </ul>
+                                        </Col>
+                                    </Row>
+                                </>
+                            }
+                        </Col>
+                    </Row>
+                </>
             }
-        </div>
+        </Page>
     );
 }

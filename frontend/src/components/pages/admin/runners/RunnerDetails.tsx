@@ -1,3 +1,4 @@
+import {Col, Row} from "react-bootstrap";
 import {Navigate, useParams} from "react-router-dom";
 import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {type AdminProcessedPassage} from "../../../../types/Passage";
@@ -5,17 +6,18 @@ import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
 import {formatDateAsString, formatDateForApi} from "../../../../util/utils";
 import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
-import CircularLoader from "../../../misc/CircularLoader";
+import Page from "../../../layout/Page";
+import CircularLoader from "../../../layout/CircularLoader";
 import {userContext} from "../../../App";
 import {
     Gender,
     type RunnerWithAdminPassages,
     type RunnerWithAdminProcessedPassages, type RunnerWithRace,
 } from "../../../../types/Runner";
-import RunnerDetailsForm from "./RunnerDetailsForm";
+import RunnerDetailsForm from "../../../pageParts/admin/runners/RunnerDetailsForm";
 import {type AdminRaceWithRunnerCount} from "../../../../types/Race";
 import ToastUtil from "../../../../util/ToastUtil";
-import RunnerDetailsPassages from "./RunnerDetailsPassages";
+import RunnerDetailsPassages from "../../../pageParts/admin/runners/RunnerDetailsPassages";
 import {getRunnerProcessedPassages} from "../../../../util/RunnerDetailsUtil";
 
 export default function RunnerDetails() {
@@ -321,9 +323,9 @@ export default function RunnerDetails() {
     }
 
     return (
-        <div id="page-admin-runner-details">
-            <div className="row">
-                <div className="col-12">
+        <Page id="admin-runner-details" title={runner === undefined ? "Chargement" : `Détails du coureur ${runner.firstname} ${runner.lastname}`}>
+            <Row>
+                <Col>
                     <Breadcrumbs>
                         <Crumb url="/admin" label="Administration" />
                         <Crumb url="/admin/runners" label="Coureurs" />
@@ -339,62 +341,68 @@ export default function RunnerDetails() {
                             );
                         })()}
                     </Breadcrumbs>
-                </div>
-            </div>
+                </Col>
+            </Row>
             {runner === undefined &&
-                <div className="row">
-                    <div className="col-12">
+                <Row>
+                    <Col>
                         <CircularLoader />
-                    </div>
-                </div>
+                    </Col>
+                </Row>
             }
 
             {runner !== undefined &&
-                <div className="row">
-                    <div className="col-xl-4 col-lg-6 col-md-9 col-12">
-                        <RunnerDetailsForm onSubmit={onSubmit}
-                                           id={runnerId}
-                                           setId={setRunnerId}
-                                           firstname={runnerFirstname}
-                                           setFirstname={setRunnerFirstname}
-                                           lastname={runnerLastname}
-                                           setLastname={setRunnerLastname}
-                                           gender={runnerGender}
-                                           setGender={setRunnerGender}
-                                           birthYear={runnerBirthYear}
-                                           setBirthYear={setRunnerBirthYear}
-                                           races={races}
-                                           raceId={runnerRaceId}
-                                           setRaceId={setRunnerRaceId}
-                                           submitButtonDisabled={isSaving || !unsavedChanges}
-                        />
-                    </div>
+                <>
+                    <Row>
+                        <Col xxl={3} xl={4} lg={6} md={9} sm={12}>
+                            <RunnerDetailsForm onSubmit={onSubmit}
+                                               id={runnerId}
+                                               setId={setRunnerId}
+                                               firstname={runnerFirstname}
+                                               setFirstname={setRunnerFirstname}
+                                               lastname={runnerLastname}
+                                               setLastname={setRunnerLastname}
+                                               gender={runnerGender}
+                                               setGender={setRunnerGender}
+                                               birthYear={runnerBirthYear}
+                                               setBirthYear={setRunnerBirthYear}
+                                               races={races}
+                                               raceId={runnerRaceId}
+                                               setRaceId={setRunnerRaceId}
+                                               submitButtonDisabled={isSaving || !unsavedChanges}
+                            />
+                        </Col>
+                    </Row>
 
-                    <div className="col-12 mt-3">
-                        <h3>Passages</h3>
+                    <Row>
+                        <Col className="mt-3">
+                            <h3>Passages</h3>
 
-                        <RunnerDetailsPassages passages={runner.passages}
-                                               runnerRace={runnerRace}
-                                               updatePassageVisiblity={updatePassageVisiblity}
-                                               updatePassage={updatePassage}
-                                               saveNewPassage={saveNewPassage}
-                                               deletePassage={deletePassage}
-                        />
-                    </div>
+                            <RunnerDetailsPassages passages={runner.passages}
+                                                   runnerRace={runnerRace}
+                                                   updatePassageVisiblity={updatePassageVisiblity}
+                                                   updatePassage={updatePassage}
+                                                   saveNewPassage={saveNewPassage}
+                                                   deletePassage={deletePassage}
+                            />
+                        </Col>
+                    </Row>
 
-                    <div className="col-12 mt-3">
-                        <h3>Supprimer le coureur</h3>
+                    <Row>
+                        <Col className="mt-3">
+                            <h3>Supprimer le coureur</h3>
 
-                        <p>Cette action est irréversible.</p>
+                            <p>Cette action est irréversible.</p>
 
-                        <button className="button red mt-3"
-                                onClick={deleteRunner}
-                        >
-                            Supprimer le coureur
-                        </button>
-                    </div>
-                </div>
+                            <button className="button red mt-3"
+                                    onClick={deleteRunner}
+                            >
+                                Supprimer le coureur
+                            </button>
+                        </Col>
+                    </Row>
+                </>
             }
-        </div>
+        </Page>
     );
 }

@@ -1,17 +1,18 @@
 import {createContext, useCallback, useEffect, useState} from "react";
+import {Helmet} from "react-helmet";
 import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import {type User} from "../types/User";
 import Header from "./layout/header/Header";
 import Footer from "./layout/footer/Footer";
-import Ranking from "./pages/ranking/Ranking";
-import RunnerDetails from "./pages/runner-details/RunnerDetails";
+import Ranking from "./pages/Ranking";
+import RunnerDetails from "./pages/RunnerDetails";
 import {
     EVENT_API_REQUEST_ENDED,
     EVENT_API_REQUEST_STARTED,
     performAPIRequest,
     performAuthenticatedAPIRequest,
 } from "../util/apiUtils";
-import Login from "./pages/login/Login";
+import Login from "./pages/Login";
 import Admin from "./pages/admin/Admin";
 import {verbose} from "../util/utils";
 import ToastUtil from "../util/ToastUtil";
@@ -191,6 +192,9 @@ export default function App() {
     return (
         <BrowserRouter>
             <div id="app">
+                <Helmet>
+                    <title>Suivi live - Les 24 Heures de l'Isère</title>
+                </Helmet>
                 <appDataContext.Provider value={{
                     lastUpdateTime,
                     serverTimeOffset,
@@ -209,22 +213,20 @@ export default function App() {
                         }}>
                             <div id="app-content-wrapper">
                                 <Header />
-                                <div id="app-content">
-                                    <div id="page-content" className="container-fluid">
-                                        <Routes>
-                                            <Route path="/ranking" element={<Ranking />} />
-                                            <Route path="/runner-details" element={<RunnerDetails />} />
-                                            <Route path="/runner-details/:runnerId" element={<RunnerDetails />} />
+                                <main id="page-content" className="container-fluid">
+                                    <Routes>
+                                        <Route path="/ranking" element={<Ranking />} />
+                                        <Route path="/runner-details" element={<RunnerDetails />} />
+                                        <Route path="/runner-details/:runnerId" element={<RunnerDetails />} />
 
-                                            <Route path="/login" element={<Login />} />
+                                        <Route path="/login" element={<Login />} />
 
-                                            <Route path="/admin/*" element={<Admin />} />
+                                        <Route path="/admin/*" element={<Admin />} />
 
-                                            {/* Redirect any unresolved route to /ranking */}
-                                            <Route path="*" element={<Navigate to="/ranking" replace />} />
-                                        </Routes>
-                                    </div>
-                                </div>
+                                        {/* Redirect any unresolved route to /ranking */}
+                                        <Route path="*" element={<Navigate to="/ranking" replace />} />
+                                    </Routes>
+                                </main>
                             </div>
                             <Footer />
                         </userContext.Provider>

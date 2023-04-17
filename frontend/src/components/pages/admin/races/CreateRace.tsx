@@ -1,8 +1,10 @@
+import {Col, Row} from "react-bootstrap";
 import {type AdminRace} from "../../../../types/Race";
 import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../layout/breadcrumbs/Crumb";
-import OptionWithLoadingDots from "../../../misc/OptionWithLoadingDots";
-import RaceDetailsForm from "./RaceDetailsForm";
+import Page from "../../../layout/Page";
+import OptionWithLoadingDots from "../../../forms/OptionWithLoadingDots";
+import RaceDetailsForm from "../../../pageParts/admin/races/RaceDetailsForm";
 import React, {useCallback, useContext, useEffect, useState} from "react";
 import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
 import {userContext} from "../../../App";
@@ -94,19 +96,19 @@ export default function CreateRace() {
     }
 
     return (
-        <div id="page-admin-create-race">
-            <div className="row">
-                <div className="col-12">
+        <Page id="admin-create-race" title="Créer une course">
+            <Row>
+                <Col>
                     <Breadcrumbs>
                         <Crumb url="/admin" label="Administration" />
                         <Crumb url="/admin/races" label="Courses" />
                         <Crumb label="Créer une course" />
                     </Breadcrumbs>
-                </div>
-            </div>
+                </Col>
+            </Row>
 
-            <div className="row">
-                <div className="col-xl-4 col-lg-6 col-md-9 col-12">
+            <Row>
+                <Col xxl={3} xl={4} lg={6} md={9} sm={12}>
                     <div className="input-group">
                         <label htmlFor="copy-race-select">
                             Copier les paramètres d'une course existante
@@ -130,11 +132,11 @@ export default function CreateRace() {
                             ))}
                         </select>
                     </div>
-                </div>
-            </div>
+                </Col>
+            </Row>
 
-            <div className="row">
-                <div className="col-xl-4 col-lg-6 col-md-9 col-12">
+            <Row>
+                <Col xxl={3} xl={4} lg={6} md={9} sm={12}>
                     <h2>Créer une course</h2>
 
                     <RaceDetailsForm onSubmit={onSubmit}
@@ -152,8 +154,8 @@ export default function CreateRace() {
                                      setIsPublic={setIsPublic}
                                      submitButtonDisabled={isSaving}
                     />
-                </div>
-            </div>
-        </div>
+                </Col>
+            </Row>
+        </Page>
     );
 }
