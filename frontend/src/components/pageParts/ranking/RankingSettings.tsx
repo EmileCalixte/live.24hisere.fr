@@ -1,4 +1,4 @@
-import OptionWithLoadingDots from "../../forms/OptionWithLoadingDots";
+import OptionWithLoadingDots from "../../ui/forms/OptionWithLoadingDots";
 import {TimeMode} from "../../pages/Ranking";
 import RankingSettingsTime from "./RankingSettingsTime";
 import React from "react";

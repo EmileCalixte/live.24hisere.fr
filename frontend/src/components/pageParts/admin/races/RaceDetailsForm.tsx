@@ -1,6 +1,6 @@
 import React, {useMemo} from "react";
 import {getDateStringFromDate, getTimeStringFromDate} from "../../../../util/utils";
-import DurationInputs from "../../../forms/DurationInputs";
+import DurationInputs from "../../../ui/forms/DurationInputs";
 
 interface RaceDetailsFormProps {
     onSubmit: (e: React.FormEvent) => any;

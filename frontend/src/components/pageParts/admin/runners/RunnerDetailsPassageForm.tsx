@@ -1,8 +1,8 @@
 import React, {useEffect, useRef} from "react";
 import {Col, Row} from "react-bootstrap";
 import {formatDateAsString} from "../../../../util/utils";
-import DurationInputs from "../../../forms/DurationInputs";
-import Modal from "../../../layout/Modal";
+import DurationInputs from "../../../ui/forms/DurationInputs";
+import Modal from "../../../ui/Modal";
 
 interface RunnerDetailsPassageFormProps {
     raceTime: number;

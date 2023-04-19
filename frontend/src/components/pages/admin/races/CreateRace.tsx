@@ -1,9 +1,9 @@
 import {Col, Row} from "react-bootstrap";
 import {type AdminRace} from "../../../../types/Race";
-import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
-import Crumb from "../../../layout/breadcrumbs/Crumb";
-import Page from "../../../layout/Page";
-import OptionWithLoadingDots from "../../../forms/OptionWithLoadingDots";
+import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
+import Crumb from "../../../ui/breadcrumbs/Crumb";
+import Page from "../../../ui/Page";
+import OptionWithLoadingDots from "../../../ui/forms/OptionWithLoadingDots";
 import RaceDetailsForm from "../../../pageParts/admin/races/RaceDetailsForm";
 import React, {useCallback, useContext, useEffect, useState} from "react";
 import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";

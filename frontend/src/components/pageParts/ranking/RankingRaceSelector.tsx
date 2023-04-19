@@ -1,7 +1,7 @@
 import React, {useMemo} from "react";
 import {isRaceFinished, isRaceStarted} from "../../../helpers/raceHelper";
 import {type Race} from "../../../types/Race";
-import OptionWithLoadingDots from "../../forms/OptionWithLoadingDots";
+import OptionWithLoadingDots from "../../ui/forms/OptionWithLoadingDots";
 import RaceTimer from "../RaceTimer";
 
 interface RankingRaceSelectorProps {

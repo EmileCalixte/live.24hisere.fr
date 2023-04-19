@@ -4,7 +4,7 @@ import {Col, Row} from "react-bootstrap";
 import {useParams} from "react-router-dom";
 import {type ProcessedRanking, type Ranking as RankingType, type RankingRunnerRanks} from "../../types/Ranking";
 import {RankingProcesser} from "../../util/RankingProcesser";
-import Page from "../layout/Page";
+import Page from "../ui/Page";
 import RunnerDetailsRaceDetails from "../pageParts/runnerDetails/RunnerDetailsRaceDetails";
 import RunnerSelector from "../pageParts/runnerDetails/RunnerSelector";
 import React, {useCallback, useEffect, useMemo, useState} from "react";

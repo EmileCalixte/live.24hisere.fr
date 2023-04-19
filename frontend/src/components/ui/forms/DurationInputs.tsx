@@ -1,5 +1,5 @@
 import React, {useCallback, useMemo} from "react";
-import {prefixNumber} from "../../util/utils";
+import {prefixNumber} from "../../../util/utils";
 
 export const getDurationAsMs = (hours: number, minutes: number, seconds: number) => {
     return (seconds * 1000) + (minutes * 60 * 1000) + (hours * 60 * 60 * 1000);

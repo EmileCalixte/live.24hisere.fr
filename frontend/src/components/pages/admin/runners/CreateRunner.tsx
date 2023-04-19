@@ -6,9 +6,9 @@ import {Gender} from "../../../../types/Runner";
 import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
 import ToastUtil from "../../../../util/ToastUtil";
 import {userContext} from "../../../App";
-import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
-import Crumb from "../../../layout/breadcrumbs/Crumb";
-import Page from "../../../layout/Page";
+import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
+import Crumb from "../../../ui/breadcrumbs/Crumb";
+import Page from "../../../ui/Page";
 import RunnerDetailsForm from "../../../pageParts/admin/runners/RunnerDetailsForm";
 
 export default function CreateRunner() {

@@ -6,11 +6,11 @@ import type Runner from "../../../types/Runner";
 import {performAuthenticatedAPIRequest} from "../../../util/apiUtils";
 import {getRunnerProcessedPassages} from "../../../util/RunnerDetailsUtil";
 import {userContext} from "../../App";
-import Breadcrumbs from "../../layout/breadcrumbs/Breadcrumbs";
-import Crumb from "../../layout/breadcrumbs/Crumb";
-import Page from "../../layout/Page";
-import Pagination from "../../layout/pagination/Pagination";
-import CircularLoader from "../../layout/CircularLoader";
+import Breadcrumbs from "../../ui/breadcrumbs/Breadcrumbs";
+import Crumb from "../../ui/breadcrumbs/Crumb";
+import Page from "../../ui/Page";
+import Pagination from "../../ui/pagination/Pagination";
+import CircularLoader from "../../ui/CircularLoader";
 import FastestLapsTable from "../../pageParts/admin/fastestLaps/FastestLapsTable";
 
 type RunnerSortedPassages = Record<number, AdminPassageWithRunnerId[]>;

@@ -4,7 +4,7 @@ import {performAPIRequest} from "../../util/apiUtils";
 import {userContext} from "../App";
 import {Navigate} from "react-router-dom";
 import ToastUtil from "../../util/ToastUtil";
-import Page from "../layout/Page";
+import Page from "../ui/Page";
 
 export default function Login() {
     const {accessToken, saveAccessToken, setUser} = useContext(userContext);

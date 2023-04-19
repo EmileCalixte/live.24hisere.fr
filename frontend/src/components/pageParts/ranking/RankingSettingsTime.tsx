@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import DurationInputs from "../../forms/DurationInputs";
+import DurationInputs from "../../ui/forms/DurationInputs";
 
 interface RankingSettingsTimeProps {
     isVisible: boolean;

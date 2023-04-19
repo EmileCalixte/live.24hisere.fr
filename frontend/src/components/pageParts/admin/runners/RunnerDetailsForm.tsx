@@ -4,10 +4,10 @@ import {GENDER_OPTIONS} from "../../../../constants/Forms";
 import {type SelectOption} from "../../../../types/Forms";
 import {type Gender} from "../../../../types/Runner";
 import {type AdminRaceWithRunnerCount} from "../../../../types/Race";
-import {Input} from "../../../forms/Input";
+import {Input} from "../../../ui/forms/Input";
 import {getCategoryNameFromBirthYear} from "../../../../util/ffaUtils";
-import RadioGroup from "../../../forms/RadioGroup";
-import Select from "../../../forms/Select";
+import RadioGroup from "../../../ui/forms/RadioGroup";
+import Select from "../../../ui/forms/Select";
 
 interface RunnerDetailsFormProps {
     onSubmit: (e: React.FormEvent) => any;

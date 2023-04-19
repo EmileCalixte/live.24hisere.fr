@@ -8,7 +8,7 @@ import CreateRunner from "./runners/CreateRunner";
 import Runners from "./runners/Runners";
 import CreateRace from "./races/CreateRace";
 import RaceDetails from "./races/RaceDetails";
-import CircularLoader from "../../layout/CircularLoader";
+import CircularLoader from "../../ui/CircularLoader";
 import RunnerDetails from "./runners/RunnerDetails";
 
 export default function Admin() {
