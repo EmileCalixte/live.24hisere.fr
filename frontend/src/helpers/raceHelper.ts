@@ -1,3 +1,4 @@
+import {type SelectOption} from "../types/Forms";
 import {type Race} from "../types/Race";
 
 /**
@@ -28,4 +29,15 @@ export function isRaceStarted(race: Race, serverTimeOffset = 0): boolean {
  */
 export function isRaceFinished(race: Race, serverTimeOffset = 0): boolean {
     return getRaceTime(race, serverTimeOffset) > race.duration * 1000;
+}
+
+export function getRacesSelectOptions<T extends Race>(races: T[] | false, label?: (race: T) => string): SelectOption[] {
+    if (!races) {
+        return [];
+    }
+
+    return races.map(race => ({
+        label: label ? label(race) : race.name,
+        value: race.id,
+    }));
 }

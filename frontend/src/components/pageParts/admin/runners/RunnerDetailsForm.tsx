@@ -1,7 +1,7 @@
 import {useMemo} from "react";
 import {Link} from "react-router-dom";
 import {GENDER_OPTIONS} from "../../../../constants/Forms";
-import {type SelectOption} from "../../../../types/Forms";
+import {getRacesSelectOptions} from "../../../../helpers/raceHelper";
 import {type Gender} from "../../../../types/Runner";
 import {type AdminRaceWithRunnerCount} from "../../../../types/Race";
 import {Input} from "../../../ui/forms/Input";
@@ -44,15 +44,8 @@ export default function RunnerDetailsForm({
     setRaceId,
     submitButtonDisabled,
 }: RunnerDetailsFormProps) {
-    const racesOptions = useMemo<SelectOption[]>(() => {
-        if (!races) {
-            return [];
-        }
-
-        return races.map(race => ({
-            label: `${race.name} (${race.runnerCount} ${race.runnerCount >= 2 ? "coureurs" : "coureur"})`,
-            value: race.id,
-        }));
+    const racesOptions = useMemo(() => {
+        return getRacesSelectOptions(races, race => `${race.name} (${race.runnerCount} ${race.runnerCount >= 2 ? "coureurs" : "coureur"})`);
     }, [races]);
 
     return (
