@@ -1,11 +1,12 @@
 import "../../css/print-ranking-table.css";
 import React, {useState, useEffect, useCallback, useMemo} from "react";
 import {Col, Row} from "react-bootstrap";
+import {getRacesSelectOptions} from "../../helpers/raceHelper";
 import {type Race} from "../../types/Race";
 import {existingCategories} from "../../util/ffaUtils";
+import Select from "../ui/forms/Select";
 import Page from "../ui/Page";
 import CircularLoader from "../ui/CircularLoader";
-import RankingRaceSelector from "../pageParts/ranking/RankingRaceSelector";
 import RankingSettings from "../pageParts/ranking/RankingSettings";
 import {performAPIRequest} from "../../util/apiUtils";
 import RankingTable from "../pageParts/ranking/rankingTable/RankingTable";
@@ -36,6 +37,10 @@ export default function Ranking() {
     const [selectedRankingTime, setSelectedRankingTime] = useState(-1); // Set when a race is selected
 
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+    const racesOptions = useMemo(() => {
+        return getRacesSelectOptions(races);
+    }, [races]);
 
     const fetchRaces = useCallback(async () => {
         const response = await performAPIRequest("/races");
@@ -179,10 +184,12 @@ export default function Ranking() {
             </Row>
 
             <Row className="hide-on-print mb-3">
-                <Col>
-                    <RankingRaceSelector races={races}
-                                         onSelectRace={onSelectRace}
-                                         selectedRaceId={selectedRace ? selectedRace.id : undefined}
+                <Col xxl={2} xl={3} lg={4} md={6} sm={9} xs={12}>
+                    <Select label="Course"
+                            options={racesOptions}
+                            onChange={onSelectRace}
+                            value={selectedRace ? selectedRace.id : undefined}
+                            placeholderLabel="Sélectionnez une course"
                     />
                 </Col>
             </Row>
