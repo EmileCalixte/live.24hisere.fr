@@ -11,8 +11,6 @@ import CircularLoader from "../../../ui/CircularLoader";
 import {Link} from "react-router-dom";
 import OptionWithLoadingDots from "../../../ui/forms/OptionWithLoadingDots";
 import RunnersTable from "../../../pageParts/admin/runners/RunnersTable";
-import type Runner from "../../../../types/Runner";
-import {type AdminRaceDict} from "../../../../types/Race";
 
 const RACE_SELECT_OPTION_ALL = "all";
 

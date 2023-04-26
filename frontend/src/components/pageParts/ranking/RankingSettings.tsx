@@ -2,8 +2,6 @@ import OptionWithLoadingDots from "../../ui/forms/OptionWithLoadingDots";
 import {TimeMode} from "../../pages/Ranking";
 import RankingSettingsTime from "./RankingSettingsTime";
 import React from "react";
-import {type CategoriesDict, type CategoryShortCode} from "../../../types/Category";
-import {Gender, type GenderWithMixed} from "../../../types/Runner";
 
 interface RankingSettingsProps {
     categories: CategoriesDict | false;

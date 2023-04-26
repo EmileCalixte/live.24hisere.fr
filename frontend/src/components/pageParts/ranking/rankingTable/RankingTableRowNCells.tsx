@@ -1,7 +1,3 @@
-import {type CategoryShortCode} from "../../../../types/Category";
-import {type ProcessedRankingRunner} from "../../../../types/Ranking";
-import {type GenderWithMixed} from "../../../../types/Runner";
-
 interface RankingTableRowNCellsProps {
     runner: ProcessedRankingRunner;
     tableCategory: CategoryShortCode | null;

@@ -2,7 +2,6 @@ import {faFileExcel} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {Col, Row} from "react-bootstrap";
 import {useParams} from "react-router-dom";
-import {type ProcessedRanking, type Ranking as RankingType, type RankingRunnerRanks} from "../../types/Ranking";
 import {RankingProcesser} from "../../util/RankingProcesser";
 import Page from "../ui/Page";
 import RunnerDetailsRaceDetails from "../pageParts/runnerDetails/RunnerDetailsRaceDetails";
@@ -17,13 +16,6 @@ import {
     getRunnerProcessedPassages,
 } from "../../util/RunnerDetailsUtil";
 import {generateXlsxFromData} from "../../util/excelUtils";
-import type Runner from "../../types/Runner";
-import {
-    type RunnerWithPassages,
-    type RunnerWithProcessedHours,
-    type RunnerWithProcessedPassages,
-    type RunnerWithRace,
-} from "../../types/Runner";
 
 enum Tab {
     Stats = "stats",
@@ -61,7 +53,7 @@ export default function RunnerDetails() {
         const response = await performAPIRequest(`/ranking/${selectedRunner.raceId}`);
         const responseJson = await response.json();
 
-        setProcessedRanking(new RankingProcesser(selectedRunner.race, responseJson.ranking as RankingType).getProcessedRanking());
+        setProcessedRanking(new RankingProcesser(selectedRunner.race, responseJson.ranking as Ranking).getProcessedRanking());
     }, [selectedRunner]);
 
     const fetchSelectedRunner = useCallback(async () => {

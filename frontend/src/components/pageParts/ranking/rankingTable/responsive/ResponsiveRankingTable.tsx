@@ -1,8 +1,4 @@
 import {useCallback} from "react";
-import {type CategoryShortCode} from "../../../../../types/Category";
-import {type Race} from "../../../../../types/Race";
-import {type ProcessedRanking, type ProcessedRankingRunner} from "../../../../../types/Ranking";
-import {type GenderWithMixed} from "../../../../../types/Runner";
 import RankingTableInfoHeader from "../RankingTableInfoHeader";
 import ResponsiveRankingTableRow from "./ResponsiveRankingTableRow";
 

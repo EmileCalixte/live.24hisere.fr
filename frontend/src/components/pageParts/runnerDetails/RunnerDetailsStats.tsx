@@ -1,13 +1,9 @@
 import {Col, Row} from "react-bootstrap";
-import {type Race} from "../../../types/Race";
-import {type RankingRunnerRanks} from "../../../types/Ranking";
 import React, {useMemo} from "react";
 import CircularLoader from "../../ui/CircularLoader";
 import SpeedChart from "./charts/SpeedChart";
 import {formatMsAsDuration} from "../../../util/utils";
 import {getPaceFromSpeed} from "../../../util/RunnerDetailsUtil";
-import {type RunnerWithProcessedHours, type RunnerWithProcessedPassages} from "../../../types/Runner";
-import {type ProcessedPassage} from "../../../types/Passage";
 
 interface RunnerDetailsStatsProps {
     runner: RunnerWithProcessedPassages & RunnerWithProcessedHours;

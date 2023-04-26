@@ -2,9 +2,7 @@ import {Col, Row} from "react-bootstrap";
 import CanvasJSReact from "../../../../lib/canvasjs/canvasjs.react";
 import {useCallback, useMemo, useState} from "react";
 import ReactDOMServer from "react-dom/server";
-import {type Race} from "../../../../types/Race";
 import {formatMsAsDuration} from "../../../../util/utils";
-import {type RunnerWithProcessedHours, type RunnerWithProcessedPassages} from "../../../../types/Runner";
 
 const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 

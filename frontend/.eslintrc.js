@@ -103,6 +103,10 @@ module.exports = {
             asyncArrow: "always",
         }],
 
+        "@typescript-eslint/consistent-type-imports": ["error", {
+            disallowTypeAnnotations: false,
+        }],
+
         "multiline-ternary": "off",
 
         "@typescript-eslint/array-type": "off",

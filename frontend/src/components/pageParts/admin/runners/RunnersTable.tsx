@@ -1,7 +1,5 @@
 import {Link} from "react-router-dom";
 import CircularLoader from "../../../ui/CircularLoader";
-import type Runner from "../../../../types/Runner";
-import {type AdminRaceDict} from "../../../../types/Race";
 
 interface RunnersTableProps {
     runners: Runner[];

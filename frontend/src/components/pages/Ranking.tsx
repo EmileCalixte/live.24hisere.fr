@@ -2,7 +2,6 @@ import "../../css/print-ranking-table.css";
 import React, {useState, useEffect, useCallback, useMemo} from "react";
 import {Col, Row} from "react-bootstrap";
 import {getRacesSelectOptions} from "../../helpers/raceHelper";
-import {type Race} from "../../types/Race";
 import {existingCategories} from "../../util/ffaUtils";
 import Select from "../ui/forms/Select";
 import Page from "../ui/Page";
@@ -12,9 +11,6 @@ import {performAPIRequest} from "../../util/apiUtils";
 import RankingTable from "../pageParts/ranking/rankingTable/RankingTable";
 import {RankingProcesser} from "../../util/RankingProcesser";
 import {formatDateForApi} from "../../util/utils";
-import {type CategoriesDict, type CategoryShortCode} from "../../types/Category";
-import {type ProcessedRanking, type Ranking as RankingType} from "../../types/Ranking";
-import {type GenderWithMixed} from "../../types/Runner";
 import ResponsiveRankingTable from "../pageParts/ranking/rankingTable/responsive/ResponsiveRankingTable";
 
 export enum TimeMode {
@@ -66,7 +62,7 @@ export default function Ranking() {
         const response = await performAPIRequest(requestUrl);
         const responseJson = await response.json();
 
-        setProcessedRanking(new RankingProcesser(selectedRace, responseJson.ranking as RankingType).getProcessedRanking());
+        setProcessedRanking(new RankingProcesser(selectedRace, responseJson.ranking as Ranking).getProcessedRanking());
     }, [selectedRace, selectedRankingTime, selectedTimeMode]);
 
     const shouldResetRankingTime = useCallback((newRaceDuration: number) => {

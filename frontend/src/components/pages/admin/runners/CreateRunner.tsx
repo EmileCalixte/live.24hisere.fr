@@ -1,8 +1,6 @@
 import React, {useCallback, useContext, useEffect, useState} from "react";
 import {Col, Row} from "react-bootstrap";
 import {Navigate} from "react-router-dom";
-import {type AdminRaceWithRunnerCount} from "../../../../types/Race";
-import {Gender} from "../../../../types/Runner";
 import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
 import ToastUtil from "../../../../util/ToastUtil";
 import {userContext} from "../../../App";

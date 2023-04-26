@@ -1,6 +1,5 @@
 import {useContext, useEffect, useMemo, useState} from "react";
 import {getRaceTime, isRaceFinished, isRaceStarted} from "../../helpers/raceHelper";
-import {type Race} from "../../types/Race";
 import {formatMsAsDuration} from "../../util/utils";
 import {appDataContext} from "../App";
 

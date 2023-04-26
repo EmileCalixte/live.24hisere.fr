@@ -1,8 +1,5 @@
 import {useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {Col, Row} from "react-bootstrap";
-import {type AdminPassageWithRunnerId, type ProcessedPassage} from "../../../types/Passage";
-import {type AdminRaceDict} from "../../../types/Race";
-import type Runner from "../../../types/Runner";
 import {performAuthenticatedAPIRequest} from "../../../util/apiUtils";
 import {getRunnerProcessedPassages} from "../../../util/RunnerDetailsUtil";
 import {userContext} from "../../App";

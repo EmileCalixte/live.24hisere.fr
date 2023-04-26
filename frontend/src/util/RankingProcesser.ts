@@ -1,13 +1,4 @@
-import {type Race} from "../types/Race";
 import {verbose} from "./utils";
-import {
-    type ProcessedRanking,
-    type ProcessedRankingRunner,
-    type Ranking,
-    type RankingRunner,
-    type RankingRunnerRanks,
-} from "../types/Ranking";
-import {Gender, type GenderWithMixed} from "../types/Runner";
 
 type CategoryGenderRanks = {
     [key in GenderWithMixed]: {

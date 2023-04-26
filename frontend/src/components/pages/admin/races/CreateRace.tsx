@@ -1,6 +1,5 @@
 import {Col, Row} from "react-bootstrap";
 import {getRacesSelectOptions} from "../../../../helpers/raceHelper";
-import {type AdminRace} from "../../../../types/Race";
 import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../ui/breadcrumbs/Crumb";
 import Select from "../../../ui/forms/Select";

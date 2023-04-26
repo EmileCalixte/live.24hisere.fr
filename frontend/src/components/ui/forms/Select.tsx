@@ -1,6 +1,5 @@
 import clsx from "clsx";
 import React from "react";
-import {type SelectOption} from "../../../types/Forms";
 
 interface SelectProps<T extends SelectOption["value"]> {
     label: string;

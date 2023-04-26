@@ -1,7 +1,6 @@
 import {Col, Row} from "react-bootstrap";
 import {Navigate, useParams} from "react-router-dom";
 import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
-import {type AdminProcessedPassage} from "../../../../types/Passage";
 import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
 import {formatDateAsString, formatDateForApi} from "../../../../util/utils";
 import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
@@ -9,13 +8,7 @@ import Crumb from "../../../ui/breadcrumbs/Crumb";
 import Page from "../../../ui/Page";
 import CircularLoader from "../../../ui/CircularLoader";
 import {userContext} from "../../../App";
-import {
-    Gender,
-    type RunnerWithAdminPassages,
-    type RunnerWithAdminProcessedPassages, type RunnerWithRace,
-} from "../../../../types/Runner";
 import RunnerDetailsForm from "../../../pageParts/admin/runners/RunnerDetailsForm";
-import {type AdminRaceWithRunnerCount} from "../../../../types/Race";
 import ToastUtil from "../../../../util/ToastUtil";
 import RunnerDetailsPassages from "../../../pageParts/admin/runners/RunnerDetailsPassages";
 import {getRunnerProcessedPassages} from "../../../../util/RunnerDetailsUtil";

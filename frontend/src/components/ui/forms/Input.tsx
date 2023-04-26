@@ -1,6 +1,5 @@
 import clsx from "clsx";
 import React from "react";
-import {type InputType} from "../../../types/Forms";
 
 interface InputProps {
     label: string;

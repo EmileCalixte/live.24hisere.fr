@@ -1,10 +1,6 @@
 import {Link} from "react-router-dom";
-import {type CategoryShortCode} from "../../../../types/Category";
-import {type Race} from "../../../../types/Race";
 import {formatFloatNumber, formatMsAsDuration} from "../../../../util/utils";
 import RankingTableRowNCells from "./RankingTableRowNCells";
-import {type ProcessedRankingRunner} from "../../../../types/Ranking";
-import {type GenderWithMixed} from "../../../../types/Runner";
 
 interface RankingTableRowProps {
     race: Race;

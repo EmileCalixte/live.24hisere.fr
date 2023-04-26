@@ -4,7 +4,6 @@ import React, {useCallback, useContext, useEffect, useMemo, useState} from "reac
 import {Col, Row} from "react-bootstrap";
 import {getRaceTime, isRaceFinished, isRaceStarted} from "../../../helpers/raceHelper";
 import {formatMsAsDuration, SORT_ASC, SORT_DESC} from "../../../util/utils";
-import {type RunnerWithProcessedPassages, type RunnerWithRace} from "../../../types/Runner";
 import {appDataContext} from "../../App";
 
 enum SortBy {

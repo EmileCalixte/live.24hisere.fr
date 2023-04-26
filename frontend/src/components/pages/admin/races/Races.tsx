@@ -11,7 +11,6 @@ import CircularLoader from "../../../ui/CircularLoader";
 import {Link} from "react-router-dom";
 import RacesListItem from "../../../pageParts/admin/races/RacesListItem";
 import ToastUtil from "../../../../util/ToastUtil";
-import {type AdminRaceWithRunnerCount} from "../../../../types/Race";
 
 export default function Races() {
     const {accessToken} = useContext(userContext);
