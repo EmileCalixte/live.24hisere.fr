@@ -1,3 +1,5 @@
+import {GENDER_MIXED} from "../../../../constants/Gender";
+
 interface RankingTableRowNCellsProps {
     runner: ProcessedRankingRunner;
     tableCategory: CategoryShortCode | null;
@@ -6,7 +8,7 @@ interface RankingTableRowNCellsProps {
 
 export default function RankingTableRowNCells({runner, tableCategory, tableGender}: RankingTableRowNCellsProps) {
     if (tableCategory === null) {
-        if (tableGender === "mixed") {
+        if (tableGender === GENDER_MIXED) {
             return (
                 <>
                     <td>
@@ -42,7 +44,7 @@ export default function RankingTableRowNCells({runner, tableCategory, tableGende
             );
         }
     } else {
-        if (tableGender === "mixed") {
+        if (tableGender === GENDER_MIXED) {
             return (
                 <>
                     <td>

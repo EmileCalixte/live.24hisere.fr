@@ -1,3 +1,4 @@
+import {GENDER_MIXED} from "../constants/Gender";
 import {verbose} from "./utils";
 
 type CategoryGenderRanks = {
@@ -23,8 +24,8 @@ export class RankingProcesser {
     private currentRanksByCategory: CurrentRanksByCategory = {
         scratch: { // Scratch includes all solo runners regardless of their category
             mixed: {rank: 0, lastRunner: null},
-            [Gender.M]: {rank: 0, lastRunner: null},
-            [Gender.F]: {rank: 0, lastRunner: null},
+            M: {rank: 0, lastRunner: null},
+            F: {rank: 0, lastRunner: null},
         },
         // Other categories will be appended here
     };
@@ -77,9 +78,9 @@ export class RankingProcesser {
             let categoryMixedPreviousRunner = null;
             let categoryGenderPreviousRunner = null;
 
-            scratchMixedPreviousRunner = this.getCurrentLastRunner("scratch", "mixed");
+            scratchMixedPreviousRunner = this.getCurrentLastRunner("scratch", GENDER_MIXED);
             scratchGenderPreviousRunner = this.getCurrentLastRunner("scratch", runner.gender);
-            categoryMixedPreviousRunner = this.getCurrentLastRunner(runner.category, "mixed");
+            categoryMixedPreviousRunner = this.getCurrentLastRunner(runner.category, GENDER_MIXED);
             categoryGenderPreviousRunner = this.getCurrentLastRunner(runner.category, runner.gender);
 
             const scratchMixedPreviousRunnerEquality = this.areRunnersEqual(runner, scratchMixedPreviousRunner);
@@ -166,8 +167,8 @@ export class RankingProcesser {
 
         this.currentRanksByCategory[category] = {
             mixed: {rank: 0, lastRunner: null},
-            [Gender.M]: {rank: 0, lastRunner: null},
-            [Gender.F]: {rank: 0, lastRunner: null},
+            M: {rank: 0, lastRunner: null},
+            F: {rank: 0, lastRunner: null},
         };
     };
 

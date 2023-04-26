@@ -1,4 +1,5 @@
 import {useCallback} from "react";
+import {GENDER_MIXED} from "../../../../../constants/Gender";
 import RankingTableInfoHeader from "../RankingTableInfoHeader";
 import ResponsiveRankingTableRow from "./ResponsiveRankingTableRow";
 
@@ -24,7 +25,7 @@ export default function ResponsiveRankingTable({
             }
         }
 
-        if (tableGender !== "mixed") {
+        if (tableGender !== GENDER_MIXED) {
             if (tableGender.toUpperCase() !== rankingRunner.gender.toUpperCase()) {
                 return null;
             }

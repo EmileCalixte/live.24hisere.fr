@@ -1,6 +1,7 @@
 import React, {useCallback, useContext, useEffect, useState} from "react";
 import {Col, Row} from "react-bootstrap";
 import {Navigate} from "react-router-dom";
+import {GENDER} from "../../../../constants/Gender";
 import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
 import ToastUtil from "../../../../util/ToastUtil";
 import {userContext} from "../../../App";
@@ -17,7 +18,7 @@ export default function CreateRunner() {
     const [id, setId] = useState(1);
     const [firstname, setFirstname] = useState("");
     const [lastname, setLastname] = useState("");
-    const [gender, setGender] = useState(Gender.M);
+    const [gender, setGender] = useState(GENDER.M);
     const [birthYear, setBirthYear] = useState(((new Date()).getFullYear() - 30).toString());
     const [raceId, setRaceId] = useState<number | null>(null);
 

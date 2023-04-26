@@ -1,3 +1,4 @@
+import {GENDER_MIXED} from "../../../../constants/Gender";
 import RankingTableInfoHeader from "./RankingTableInfoHeader";
 import RankingTableRow from "./RankingTableRow";
 
@@ -23,7 +24,7 @@ export default function RankingTable({
             }
         }
 
-        if (tableGender !== "mixed") {
+        if (tableGender !== GENDER_MIXED) {
             if (tableGender.toUpperCase() !== rankingRunner.gender.toUpperCase()) {
                 return null;
             }

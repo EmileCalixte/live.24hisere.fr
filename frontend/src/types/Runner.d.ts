@@ -1,17 +1,4 @@
 /**
- * Represents the gender of a runner
- */
-enum Gender {
-    M = "M",
-    F = "F",
-}
-
-/**
- * Represents the gender of a runner with an additionnal "mixed" option
- */
-type GenderWithMixed = Gender | "mixed";
-
-/**
  * An object containing the information of a runner's race hour
  */
 interface RunnerProcessedHour {

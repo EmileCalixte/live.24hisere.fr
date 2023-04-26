@@ -1,3 +1,4 @@
+import {GENDER, GENDER_MIXED} from "../../../constants/Gender";
 import OptionWithLoadingDots from "../../ui/forms/OptionWithLoadingDots";
 import {TimeMode} from "../../pages/Ranking";
 import RankingSettingsTime from "./RankingSettingsTime";
@@ -74,10 +75,10 @@ export default function RankingSettings({
                     <div className="inline-input-group">
                         <label className="input-radio">
                             <input type="radio"
-                                   defaultChecked={selectedGender === "mixed"}
+                                   defaultChecked={selectedGender === GENDER_MIXED}
                                    onChange={onGenderSelect}
                                    name="gender"
-                                   value={"mixed"}
+                                   value={GENDER_MIXED}
                             />
                             <span/>
                             Mixte
@@ -87,10 +88,10 @@ export default function RankingSettings({
                     <div className="inline-input-group">
                         <label className="input-radio">
                             <input type="radio"
-                                   defaultChecked={selectedGender === Gender.M}
+                                   defaultChecked={selectedGender === GENDER.M}
                                    onChange={onGenderSelect}
                                    name="gender"
-                                   value={Gender.M}
+                                   value={GENDER.M}
                             />
                             <span/>
                             Hommes
@@ -100,10 +101,10 @@ export default function RankingSettings({
                     <div className="inline-input-group">
                         <label className="input-radio">
                             <input type="radio"
-                                   defaultChecked={selectedGender === Gender.F}
+                                   defaultChecked={selectedGender === GENDER.F}
                                    onChange={onGenderSelect}
                                    name="gender"
-                                   value={Gender.F}
+                                   value={GENDER.F}
                             />
                             <span/>
                             Femmes

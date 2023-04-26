@@ -1,6 +1,7 @@
 import "../../css/print-ranking-table.css";
 import React, {useState, useEffect, useCallback, useMemo} from "react";
 import {Col, Row} from "react-bootstrap";
+import {GENDER_MIXED} from "../../constants/Gender";
 import {getRacesSelectOptions} from "../../helpers/raceHelper";
 import {existingCategories} from "../../util/ffaUtils";
 import Select from "../ui/forms/Select";
@@ -28,7 +29,7 @@ export default function Ranking() {
 
     const [processedRanking, setProcessedRanking] = useState<ProcessedRanking | false>(false);
     const [selectedCategory, setSelectedCategory] = useState<CategoryShortCode | null>(null);
-    const [selectedGender, setSelectedGender] = useState<GenderWithMixed>("mixed");
+    const [selectedGender, setSelectedGender] = useState<GenderWithMixed>(GENDER_MIXED);
     const [selectedTimeMode, setSelectedTimeMode] = useState(TimeMode.Now);
     const [selectedRankingTime, setSelectedRankingTime] = useState(-1); // Set when a race is selected
 

@@ -1,6 +1,7 @@
 import {Col, Row} from "react-bootstrap";
 import {Navigate, useParams} from "react-router-dom";
 import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
+import {GENDER} from "../../../../constants/Gender";
 import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
 import {formatDateAsString, formatDateForApi} from "../../../../util/utils";
 import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
@@ -25,7 +26,7 @@ export default function RunnerDetails() {
     const [runnerId, setRunnerId] = useState(0);
     const [runnerFirstname, setRunnerFirstname] = useState("");
     const [runnerLastname, setRunnerLastname] = useState("");
-    const [runnerGender, setRunnerGender] = useState(Gender.M);
+    const [runnerGender, setRunnerGender] = useState(GENDER.M);
     const [runnerBirthYear, setRunnerBirthYear] = useState("0");
     const [runnerRaceId, setRunnerRaceId] = useState(0);
 
