@@ -2,6 +2,7 @@ import "../../css/print-ranking-table.css";
 import React, {useState, useEffect, useCallback, useMemo} from "react";
 import {Col, Row} from "react-bootstrap";
 import {GENDER_MIXED} from "../../constants/Gender";
+import {RANKING_TIME_MODE} from "../../constants/RankingTimeMode";
 import {getRacesSelectOptions} from "../../helpers/raceHelper";
 import {existingCategories} from "../../util/ffaUtils";
 import Select from "../ui/forms/Select";
@@ -14,11 +15,6 @@ import {RankingProcesser} from "../../util/RankingProcesser";
 import {formatDateForApi} from "../../util/utils";
 import ResponsiveRankingTable from "../pageParts/ranking/rankingTable/responsive/ResponsiveRankingTable";
 
-export enum TimeMode {
-    Now = "now",
-    At = "at",
-}
-
 const RANKING_UPDATE_INTERVAL_TIME = 20 * 1000;
 
 const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
@@ -30,7 +26,7 @@ export default function Ranking() {
     const [processedRanking, setProcessedRanking] = useState<ProcessedRanking | false>(false);
     const [selectedCategory, setSelectedCategory] = useState<CategoryShortCode | null>(null);
     const [selectedGender, setSelectedGender] = useState<GenderWithMixed>(GENDER_MIXED);
-    const [selectedTimeMode, setSelectedTimeMode] = useState(TimeMode.Now);
+    const [selectedTimeMode, setSelectedTimeMode] = useState(RANKING_TIME_MODE.now);
     const [selectedRankingTime, setSelectedRankingTime] = useState(-1); // Set when a race is selected
 
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -53,7 +49,7 @@ export default function Ranking() {
 
         let requestUrl = `/ranking/${selectedRace.id}`;
 
-        if (selectedTimeMode === TimeMode.At) {
+        if (selectedTimeMode === RANKING_TIME_MODE.at) {
             const rankingDate = new Date();
             rankingDate.setTime(new Date(selectedRace.startTime).getTime() + rankingTime);
             const rankingDateString = formatDateForApi(rankingDate);
@@ -77,7 +73,7 @@ export default function Ranking() {
 
         // For better UX, if the user looks at the current time rankings, we want to reset the time inputs to the
         // duration of the newly selected race
-        if (selectedTimeMode === TimeMode.Now) {
+        if (selectedTimeMode === RANKING_TIME_MODE.now) {
             return true;
         }
 
@@ -112,14 +108,6 @@ export default function Ranking() {
         }
 
         setSelectedCategory(e.target.value);
-    };
-
-    const onGenderSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectedGender(e.target.value as GenderWithMixed);
-    };
-
-    const onTimeModeSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectedTimeMode(e.target.value as TimeMode);
     };
 
     /**
@@ -193,21 +181,19 @@ export default function Ranking() {
 
             {selectedRace &&
                 <>
-                    <Row className="hide-on-print mb-3">
-                        <Col>
-                            <RankingSettings
-                                categories={categories}
-                                onCategorySelect={onCategorySelect}
-                                onGenderSelect={onGenderSelect}
-                                onTimeModeSelect={onTimeModeSelect}
-                                onRankingTimeSave={onRankingTimeSave}
-                                selectedCategory={selectedCategory}
-                                selectedGender={selectedGender}
-                                selectedTimeMode={selectedTimeMode}
-                                currentRankingTime={selectedRankingTime}
-                                maxRankingTime={selectedRace.duration * 1000}
-                            />
-                        </Col>
+                    <Row className="hide-on-print mb-3 row-cols-auto">
+                        <RankingSettings
+                            categories={categories}
+                            onCategorySelect={onCategorySelect}
+                            setGender={setSelectedGender}
+                            setTimeMode={setSelectedTimeMode}
+                            onRankingTimeSave={onRankingTimeSave}
+                            selectedCategory={selectedCategory}
+                            selectedGender={selectedGender}
+                            selectedTimeMode={selectedTimeMode}
+                            currentRankingTime={selectedRankingTime}
+                            maxRankingTime={selectedRace.duration * 1000}
+                        />
                     </Row>
 
                     {!processedRanking &&
@@ -223,7 +209,7 @@ export default function Ranking() {
                                         ranking={processedRanking}
                                         tableCategory={selectedCategory}
                                         tableGender={selectedGender}
-                                        tableRaceDuration={selectedTimeMode === TimeMode.At ? selectedRankingTime : null}
+                                        tableRaceDuration={selectedTimeMode === RANKING_TIME_MODE.at ? selectedRankingTime : null}
                                     />
                                 }
 
@@ -238,7 +224,7 @@ export default function Ranking() {
                                             ranking={processedRanking}
                                             tableCategory={selectedCategory}
                                             tableGender={selectedGender}
-                                            tableRaceDuration={selectedTimeMode === TimeMode.At ? selectedRankingTime : null}
+                                            tableRaceDuration={selectedTimeMode === RANKING_TIME_MODE.at ? selectedRankingTime : null}
                                         />
                                     </div>
                                 }

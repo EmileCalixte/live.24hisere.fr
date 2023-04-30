@@ -1,18 +1,26 @@
-import {GENDER, GENDER_MIXED} from "../../../constants/Gender";
-import OptionWithLoadingDots from "../../ui/forms/OptionWithLoadingDots";
-import {TimeMode} from "../../pages/Ranking";
+import {Col} from "react-bootstrap";
+import {CATEGORY_SCRATCH} from "../../../constants/Category";
+import {
+    CATEGORY_SCRATCH_SELECT_OPTION,
+    GENDER_WITH_MIXED_OPTIONS,
+    RANKING_TIME_MODE_OPTIONS,
+} from "../../../constants/Forms";
+import {RANKING_TIME_MODE} from "../../../constants/RankingTimeMode";
+import {getCategoriesDictSelectOptions} from "../../../helpers/categoryHelper";
+import RadioGroup from "../../ui/forms/RadioGroup";
+import Select from "../../ui/forms/Select";
 import RankingSettingsTime from "./RankingSettingsTime";
-import React from "react";
+import React, {useMemo} from "react";
 
 interface RankingSettingsProps {
     categories: CategoriesDict | false;
     onCategorySelect: (e: React.ChangeEvent<HTMLSelectElement>) => any;
-    onGenderSelect: (e: React.ChangeEvent<HTMLInputElement>) => any;
-    onTimeModeSelect: (e: React.ChangeEvent<HTMLInputElement>) => any;
+    setGender: (gender: GenderWithMixed) => any;
+    setTimeMode: (timeMode: RankingTimeMode) => any;
     onRankingTimeSave: (time: number) => any;
     selectedCategory: CategoryShortCode | null;
     selectedGender: GenderWithMixed;
-    selectedTimeMode: TimeMode;
+    selectedTimeMode: RankingTimeMode;
     currentRankingTime: number;
     maxRankingTime: number;
 }
@@ -20,8 +28,8 @@ interface RankingSettingsProps {
 export default function RankingSettings({
     categories,
     onCategorySelect,
-    onGenderSelect,
-    onTimeModeSelect,
+    setGender,
+    setTimeMode,
     onRankingTimeSave,
     selectedCategory,
     selectedGender,
@@ -29,126 +37,43 @@ export default function RankingSettings({
     currentRankingTime,
     maxRankingTime,
 }: RankingSettingsProps) {
+    const categoriesOptions = useMemo<SelectOption[]>(() => {
+        return [CATEGORY_SCRATCH_SELECT_OPTION, ...getCategoriesDictSelectOptions(categories)];
+    }, [categories]);
+
+    console.log(selectedTimeMode);
+
     return (
-        <section id="ranking-settings-section">
-            <div id="ranking-settings-container">
+        <>
+            <Col xxl={2} xl={3} lg={3} md={4} sm={6} xs={12}>
+                <Select label="Catégorie"
+                        options={categoriesOptions}
+                        value={selectedCategory ?? CATEGORY_SCRATCH}
+                        onChange={onCategorySelect}
+                />
+            </Col>
 
-                <div className="ranking-settings">
-                    <div className="input-group">
-                        <label htmlFor="ranking-settings-category-select">
-                            Catégorie
-                        </label>
-                        <select id="ranking-settings-category-select"
-                                value={selectedCategory ?? "scratch"}
-                                onChange={onCategorySelect}
-                                className="input-select"
-                        >
-                            <option value="scratch">Scratch (toutes catégories)</option>
-                            {(() => {
-                                if (categories === false) {
-                                    return (
-                                        <OptionWithLoadingDots>
-                                            Chargement des catégories
-                                        </OptionWithLoadingDots>
-                                    );
-                                }
+            <Col>
+                <RadioGroup legend="Genre"
+                            options={GENDER_WITH_MIXED_OPTIONS}
+                            value={selectedGender}
+                            onSelectOption={option => setGender(option.value)}
+                />
+            </Col>
 
-                                const items = [];
+            <Col>
+                <RadioGroup legend="Heure"
+                            options={RANKING_TIME_MODE_OPTIONS}
+                            value={selectedTimeMode}
+                            onSelectOption={option => setTimeMode(option.value)}
+                />
 
-                                for (const [key, name] of Object.entries(categories)) {
-                                    items.push(<option key={key} value={key}>{name}</option>);
-                                }
-
-                                return (
-                                    <>
-                                        {items}
-                                    </>
-                                );
-                            })()}
-                        </select>
-                    </div>
-                </div>
-
-                <div className="ranking-settings">
-                    <legend>Genre</legend>
-
-                    <div className="inline-input-group">
-                        <label className="input-radio">
-                            <input type="radio"
-                                   defaultChecked={selectedGender === GENDER_MIXED}
-                                   onChange={onGenderSelect}
-                                   name="gender"
-                                   value={GENDER_MIXED}
-                            />
-                            <span/>
-                            Mixte
-                        </label>
-                    </div>
-
-                    <div className="inline-input-group">
-                        <label className="input-radio">
-                            <input type="radio"
-                                   defaultChecked={selectedGender === GENDER.M}
-                                   onChange={onGenderSelect}
-                                   name="gender"
-                                   value={GENDER.M}
-                            />
-                            <span/>
-                            Hommes
-                        </label>
-                    </div>
-
-                    <div className="inline-input-group">
-                        <label className="input-radio">
-                            <input type="radio"
-                                   defaultChecked={selectedGender === GENDER.F}
-                                   onChange={onGenderSelect}
-                                   name="gender"
-                                   value={GENDER.F}
-                            />
-                            <span/>
-                            Femmes
-                        </label>
-                    </div>
-                </div>
-
-                <div className="ranking-settings">
-                    <legend>Heure</legend>
-
-                    <div className="inline-input-group">
-                        <label className="input-radio">
-                            <input type="radio"
-                                   defaultChecked={selectedTimeMode === TimeMode.Now}
-                                   onChange={onTimeModeSelect}
-                                   name="time"
-                                   value={TimeMode.Now}
-                            />
-                            <span/>
-                            Classement actuel
-                        </label>
-                    </div>
-
-                    <div className="inline-input-group">
-                        <label className="input-radio">
-                            <input type="radio"
-                                   defaultChecked={selectedTimeMode === TimeMode.At}
-                                   onChange={onTimeModeSelect}
-                                   name="time"
-                                   value={TimeMode.At}
-                            />
-                            <span/>
-                            Au temps de course
-                        </label>
-                    </div>
-
-                    <RankingSettingsTime isVisible={selectedTimeMode === TimeMode.At}
-                                         currentRankingTime={currentRankingTime}
-                                         onRankingTimeSave={onRankingTimeSave}
-                                         maxRankingTime={maxRankingTime}
-                    />
-                </div>
-
-            </div>
-        </section>
+                <RankingSettingsTime isVisible={selectedTimeMode === RANKING_TIME_MODE.at}
+                                     currentRankingTime={currentRankingTime}
+                                     onRankingTimeSave={onRankingTimeSave}
+                                     maxRankingTime={maxRankingTime}
+                />
+            </Col>
+        </>
     );
 }
