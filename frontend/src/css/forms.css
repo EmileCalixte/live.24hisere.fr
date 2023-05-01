@@ -4,6 +4,10 @@ fieldset {
     border: 0;
 }
 
+fieldset legend {
+    padding: 0;
+}
+
 .input-group label {
     display: block;
     width: 100%;

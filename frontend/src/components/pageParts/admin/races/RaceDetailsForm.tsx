@@ -135,14 +135,11 @@ export default function RaceDetailsForm({
                 </label>
             </div>
 
-            <div className="mt-3">
-                <legend>
-                    Durée
-                </legend>
-                <div className="inline-input-group">
-                    <DurationInputs duration={duration} setDuration={setDuration}/>
-                </div>
-            </div>
+            <DurationInputs legend="Durée"
+                            className="mt-3"
+                            duration={duration}
+                            setDuration={setDuration}
+            />
 
             <div className="inline-input-group mt-3">
                 <label className="input-checkbox">

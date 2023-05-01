@@ -44,12 +44,10 @@ export default function RunnerDetailsPassageForm({
             <Row>
                 <Col>
                     <form onSubmit={onSubmit}>
-                        <div>
-                            <legend>Temps de course</legend>
-                            <div className="inline-input-group">
-                                <DurationInputs duration={raceTime} setDuration={setRaceTime}/>
-                            </div>
-                        </div>
+                        <DurationInputs legend="Temps de course"
+                                        duration={raceTime}
+                                        setDuration={setRaceTime}
+                        />
 
                         {time &&
                             <p>
