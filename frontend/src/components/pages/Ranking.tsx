@@ -197,7 +197,7 @@ export default function Ranking() {
                     </Row>
 
                     {!processedRanking &&
-                        <CircularLoader/>
+                        <CircularLoader />
                     }
 
                     {processedRanking &&

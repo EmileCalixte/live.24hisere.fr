@@ -312,7 +312,7 @@ export default function RunnerDetails() {
         setTimeout(() => setRedirectAfterIdUpdate(null), 0);
 
         return (
-            <Navigate to={`/admin/runners/${redirectAfterIdUpdate}`} replace={true}/>
+            <Navigate to={`/admin/runners/${redirectAfterIdUpdate}`} replace={true} />
         );
     }
 

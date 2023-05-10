@@ -162,7 +162,7 @@ export default function RaceDetails() {
                             }
 
                             return (
-                                <Crumb label={race.name}/>
+                                <Crumb label={race.name} />
                             );
                         })()}
                     </Breadcrumbs>

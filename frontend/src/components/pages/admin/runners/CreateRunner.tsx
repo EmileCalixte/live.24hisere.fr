@@ -86,7 +86,7 @@ export default function CreateRunner() {
     }
 
     return (
-        <Page id="admin-create-runner" title={"Créer un coureur"}>
+        <Page id="admin-create-runner" title="Créer un coureur">
             <Row>
                 <Col>
                     <Breadcrumbs>

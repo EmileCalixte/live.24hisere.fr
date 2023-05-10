@@ -118,7 +118,7 @@ export default function RunnerDetailsStats({runner, race, ranks}: RunnerDetailsS
                     <h2>Données générales</h2>
 
                     <p>
-                        Classement : {!ranks && <CircularLoader/>}
+                        Classement : {!ranks && <CircularLoader />}
 
                         {ranks &&
                             <span>

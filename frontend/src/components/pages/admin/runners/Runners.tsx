@@ -133,7 +133,7 @@ export default function Runners() {
                             }
 
                             {displayedRunners.length > 0 &&
-                                <RunnersTable runners={displayedRunners} races={races}/>
+                                <RunnersTable runners={displayedRunners} races={races} />
                             }
                         </Col>
                     </Row>

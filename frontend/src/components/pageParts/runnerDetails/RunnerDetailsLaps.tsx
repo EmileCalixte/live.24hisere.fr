@@ -86,7 +86,7 @@ export default function RunnerDetailsLaps({runner}: RunnerDetailsLapsProps) {
                 <td colSpan={2}>Tour en cours</td>
                 <td>{formatMsAsDuration(raceTime)}</td>
                 <td>{formatMsAsDuration(currentLapTime)}</td>
-                <td colSpan={42}/>
+                <td colSpan={42} />
             </tr>
         );
     }, [raceTime, currentLapTime]);

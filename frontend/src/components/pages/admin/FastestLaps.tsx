@@ -214,7 +214,7 @@ export default function FastestLaps() {
             {passagesInPage === false &&
                 <Row>
                     <Col>
-                        <CircularLoader/>
+                        <CircularLoader />
                     </Col>
                 </Row>
             }
@@ -229,7 +229,7 @@ export default function FastestLaps() {
                                            checked={displayOnlyOneFastestLapPerRunner}
                                            onChange={e => setDisplayOnlyOneFastestLapPerRunner(e.target.checked)}
                                     />
-                                    <span/>
+                                    <span />
                                     N'afficher que le tour le plus rapide de chaque coureur
                                 </label>
                             </div>
@@ -248,7 +248,7 @@ export default function FastestLaps() {
                     {pageCount > 1 &&
                         <Row>
                             <Col className="mt-3 pagination-container">
-                                <Pagination minPage={1} maxPage={pageCount} currentPage={page} setPage={setPage}/>
+                                <Pagination minPage={1} maxPage={pageCount} currentPage={page} setPage={setPage} />
                             </Col>
                         </Row>
                     }

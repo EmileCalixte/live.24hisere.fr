@@ -46,6 +46,19 @@ module.exports = {
         }],
         "react/jsx-indent-props": ["error", "first"],
 
+        "react/jsx-curly-brace-presence": ["error", {
+            props: "never",
+            children: "never",
+            propElementValues: "always",
+        }],
+
+        "react/jsx-tag-spacing": ["error", {
+            closingSlash: "never",
+            beforeSelfClosing: "always",
+            afterOpening: "never",
+            beforeClosing: "never",
+        }],
+
         quotes: ["error", "double"],
         "jsx-quotes": ["error", "prefer-double"],
         "@typescript-eslint/quotes": ["error", "double"],

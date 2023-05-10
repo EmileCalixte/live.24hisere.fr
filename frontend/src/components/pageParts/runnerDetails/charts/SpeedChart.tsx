@@ -290,7 +290,7 @@ export default function SpeedChart({runner, race, averageSpeed}: SpeedChartProps
                     <div className="inline-input-group">
                         <label className="input-checkbox">
                             <input type="checkbox" checked={displayEachLapSpeed} onChange={e => setDisplayEachLapSpeed(e.target.checked)} />
-                            <span/>
+                            <span />
                             Vitesse à chaque tour
                         </label>
                     </div>
@@ -298,7 +298,7 @@ export default function SpeedChart({runner, race, averageSpeed}: SpeedChartProps
                     <div className="inline-input-group mt-2">
                         <label className="input-checkbox">
                             <input type="checkbox" checked={displayEachHourSpeed} onChange={e => setDisplayEachHourSpeed(e.target.checked)} />
-                            <span/>
+                            <span />
                             Vitesse moyenne à chaque heure
                         </label>
                     </div>
@@ -306,7 +306,7 @@ export default function SpeedChart({runner, race, averageSpeed}: SpeedChartProps
                     <div className="inline-input-group mt-2">
                         <label className="input-checkbox">
                             <input type="checkbox" checked={displayAverageSpeed} onChange={e => setDisplayAverageSpeed(e.target.checked)} />
-                            <span/>
+                            <span />
                             Vitesse moyenne générale
                         </label>
                     </div>
@@ -314,7 +314,7 @@ export default function SpeedChart({runner, race, averageSpeed}: SpeedChartProps
                     <div className="inline-input-group mt-2">
                         <label className="input-checkbox">
                             <input type="checkbox" checked={displayAverageSpeedEvolution} onChange={e => setDisplayAverageSpeedEvolution(e.target.checked)} />
-                            <span/>
+                            <span />
                             Évolution de la vitesse moyenne
                         </label>
                     </div>

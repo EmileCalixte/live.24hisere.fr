@@ -51,7 +51,7 @@ export default function RacesListItem({race, isSorting, isDragged, isDraggedOver
                 </div>
 
                 <div className="admin-list-link-secondary-icon-group">
-                    <RaceTimer race={race} allowNegative={true}/>
+                    <RaceTimer race={race} allowNegative={true} />
                 </div>
             </div>
         </Link>
