@@ -1,6 +1,7 @@
 import React, {useMemo} from "react";
 import {getDateStringFromDate, getTimeStringFromDate} from "../../../../util/utils";
 import DurationInputs from "../../../ui/forms/DurationInputs";
+import {Input} from "../../../ui/forms/Input";
 
 interface RaceDetailsFormProps {
     onSubmit: (e: React.FormEvent) => any;
@@ -70,49 +71,35 @@ export default function RaceDetailsForm({
 
     return (
         <form onSubmit={onSubmit}>
-            <div className="input-group">
-                <label>
-                    Nom
-                    <input className="input"
-                           type="text"
-                           maxLength={50}
-                           required={true}
-                           value={name}
-                           name="name"
-                           onChange={e => setName(e.target.value)}
-                    />
-                </label>
-            </div>
+            <Input label="Nom"
+                   maxLength={50}
+                   required
+                   name="name"
+                   value={name}
+                   onChange={e => setName(e.target.value)}
+            />
 
-            <div className="input-group mt-3">
-                <label>
-                    Distance avant premier passage (m)
-                    <input className="input"
-                           type="number"
-                           step={0.001}
-                           min={0}
-                           required={true}
-                           value={initialDistance}
-                           name="initial-distance"
-                           onChange={e => setInitialDistance(e.target.value)}
-                    />
-                </label>
-            </div>
+            <Input label="Distance avant premier passage (m)"
+                   className="mt-3"
+                   type="number"
+                   min={0}
+                   step={0.001}
+                   required
+                   name="initial-distance"
+                   value={initialDistance}
+                   onChange={e => setInitialDistance(e.target.value)}
+            />
 
-            <div className="input-group mt-3">
-                <label>
-                    Distance du tour (m)
-                    <input className="input"
-                           type="number"
-                           step={0.001}
-                           min={0}
-                           required={true}
-                           value={lapDistance}
-                           name="initial-distance"
-                           onChange={e => setLapDistance(e.target.value)}
-                    />
-                </label>
-            </div>
+            <Input label="Distance du tour (m)"
+                   className="mt-3"
+                   type="number"
+                   min={0}
+                   step={0.001}
+                   required
+                   name="lap-distance"
+                   value={lapDistance}
+                   onChange={e => setLapDistance(e.target.value)}
+            />
 
             <div className="input-group mt-3">
                 <label>

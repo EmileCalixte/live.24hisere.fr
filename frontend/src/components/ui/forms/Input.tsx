@@ -10,6 +10,7 @@ interface InputProps {
     required?: boolean;
     min?: string | number;
     max?: string | number;
+    step?: string | number;
     maxLength?: number;
     pattern?: string;
     className?: string;
@@ -24,6 +25,7 @@ export function Input({
     required = false,
     min,
     max,
+    step,
     maxLength,
     pattern,
     className,
@@ -55,6 +57,7 @@ export function Input({
                        required={required}
                        min={min}
                        max={max}
+                       step={step}
                        maxLength={maxLength}
                        pattern={pattern}
                 />
