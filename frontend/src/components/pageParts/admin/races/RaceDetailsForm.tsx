@@ -1,5 +1,6 @@
 import React, {useMemo} from "react";
 import {getDateStringFromDate, getTimeStringFromDate} from "../../../../util/utils";
+import {Checkbox} from "../../../ui/forms/Checkbox";
 import DurationInputs from "../../../ui/forms/DurationInputs";
 import {Input} from "../../../ui/forms/Input";
 
@@ -128,16 +129,11 @@ export default function RaceDetailsForm({
                             setDuration={setDuration}
             />
 
-            <div className="inline-input-group mt-3">
-                <label className="input-checkbox">
-                    <input type="checkbox"
-                           checked={isPublic}
-                           onChange={e => setIsPublic(e.target.checked)}
-                    />
-                    <span/>
-                    Visible par les utilisateurs
-                </label>
-            </div>
+            <Checkbox label="Visible par les utilisateurs"
+                      checked={isPublic}
+                      className="mt-3"
+                      onChange={e => setIsPublic(e.target.checked)}
+            />
 
             <button className="button mt-3"
                     type="submit"
