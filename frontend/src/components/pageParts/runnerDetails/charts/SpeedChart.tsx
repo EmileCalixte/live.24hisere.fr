@@ -3,6 +3,7 @@ import CanvasJSReact from "../../../../lib/canvasjs/canvasjs.react";
 import {useCallback, useMemo, useState} from "react";
 import ReactDOMServer from "react-dom/server";
 import {formatMsAsDuration} from "../../../../util/utils";
+import {Checkbox} from "../../../ui/forms/Checkbox";
 
 const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
@@ -287,37 +288,28 @@ export default function SpeedChart({runner, race, averageSpeed}: SpeedChartProps
                 <Col xxl={2} xl={3} lg={12}>
                     <p>Éléments à afficher</p>
 
-                    <div className="inline-input-group">
-                        <label className="input-checkbox">
-                            <input type="checkbox" checked={displayEachLapSpeed} onChange={e => setDisplayEachLapSpeed(e.target.checked)} />
-                            <span />
-                            Vitesse à chaque tour
-                        </label>
-                    </div>
+                    <Checkbox label="Vitesse à chaque tour"
+                              checked={displayEachLapSpeed}
+                              onChange={e => setDisplayEachLapSpeed(e.target.checked)}
+                    />
 
-                    <div className="inline-input-group mt-2">
-                        <label className="input-checkbox">
-                            <input type="checkbox" checked={displayEachHourSpeed} onChange={e => setDisplayEachHourSpeed(e.target.checked)} />
-                            <span />
-                            Vitesse moyenne à chaque heure
-                        </label>
-                    </div>
+                    <Checkbox label="Vitesse moyenne à chaque heure"
+                              className="mt-2"
+                              checked={displayEachHourSpeed}
+                              onChange={e => setDisplayEachHourSpeed(e.target.checked)}
+                    />
 
-                    <div className="inline-input-group mt-2">
-                        <label className="input-checkbox">
-                            <input type="checkbox" checked={displayAverageSpeed} onChange={e => setDisplayAverageSpeed(e.target.checked)} />
-                            <span />
-                            Vitesse moyenne générale
-                        </label>
-                    </div>
+                    <Checkbox label="Vitesse moyenne générale"
+                              className="mt-2"
+                              checked={displayAverageSpeed}
+                              onChange={e => setDisplayAverageSpeed(e.target.checked)}
+                    />
 
-                    <div className="inline-input-group mt-2">
-                        <label className="input-checkbox">
-                            <input type="checkbox" checked={displayAverageSpeedEvolution} onChange={e => setDisplayAverageSpeedEvolution(e.target.checked)} />
-                            <span />
-                            Évolution de la vitesse moyenne
-                        </label>
-                    </div>
+                    <Checkbox label="Évolution de la vitesse moyenne"
+                              className="mt-2"
+                              checked={displayAverageSpeedEvolution}
+                              onChange={e => setDisplayAverageSpeedEvolution(e.target.checked)}
+                    />
                 </Col>
                 <Col xxl={10} xl={9} lg={12}>
                     <CanvasJSChart options={options} />

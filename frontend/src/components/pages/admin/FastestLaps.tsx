@@ -5,6 +5,7 @@ import {getRunnerProcessedPassages} from "../../../util/RunnerDetailsUtil";
 import {userContext} from "../../App";
 import Breadcrumbs from "../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../ui/breadcrumbs/Crumb";
+import {Checkbox} from "../../ui/forms/Checkbox";
 import Page from "../../ui/Page";
 import Pagination from "../../ui/pagination/Pagination";
 import CircularLoader from "../../ui/CircularLoader";
@@ -223,16 +224,10 @@ export default function FastestLaps() {
                 <>
                     <Row>
                         <Col className="mb-3">
-                            <div className="inline-input-group">
-                                <label className="input-checkbox">
-                                    <input type="checkbox"
-                                           checked={displayOnlyOneFastestLapPerRunner}
-                                           onChange={e => setDisplayOnlyOneFastestLapPerRunner(e.target.checked)}
-                                    />
-                                    <span />
-                                    N'afficher que le tour le plus rapide de chaque coureur
-                                </label>
-                            </div>
+                            <Checkbox label="N'afficher que le tour le plus rapide de chaque coureur"
+                                      checked={displayOnlyOneFastestLapPerRunner}
+                                      onChange={e => setDisplayOnlyOneFastestLapPerRunner(e.target.checked)}
+                            />
                         </Col>
                     </Row>
 
