@@ -4,6 +4,7 @@ import {Col, Row} from "react-bootstrap";
 import {GENDER_MIXED} from "../../constants/Gender";
 import {RANKING_TIME_MODE} from "../../constants/RankingTimeMode";
 import {getRacesSelectOptions} from "../../helpers/raceHelper";
+import {useWindowDimensions} from "../../hooks/useWindowDimensions";
 import {existingCategories} from "../../util/ffaUtils";
 import Select from "../ui/forms/Select";
 import Page from "../ui/Page";
@@ -29,7 +30,7 @@ export default function Ranking() {
     const [selectedTimeMode, setSelectedTimeMode] = useState(RANKING_TIME_MODE.now);
     const [selectedRankingTime, setSelectedRankingTime] = useState(-1); // Set when a race is selected
 
-    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+    const {width: windowWidth} = useWindowDimensions();
 
     const racesOptions = useMemo(() => {
         return getRacesSelectOptions(races);
@@ -116,16 +117,6 @@ export default function Ranking() {
     const onRankingTimeSave = async (time: number) => {
         setSelectedRankingTime(time);
     };
-
-    useEffect(() => {
-        const onResize = (e: UIEvent) => {
-            setWindowWidth((e.target as Window).innerWidth);
-        };
-
-        window.addEventListener("resize", onResize);
-
-        return () => window.removeEventListener("resize", onResize);
-    }, []);
 
     useEffect(() => {
         fetchRaces();

@@ -3,6 +3,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {Col, Row} from "react-bootstrap";
 import {getRaceTime, isRaceFinished, isRaceStarted} from "../../../helpers/raceHelper";
+import {useWindowDimensions} from "../../../hooks/useWindowDimensions";
 import {formatMsAsDuration, SORT_ASC, SORT_DESC} from "../../../util/utils";
 import {appDataContext} from "../../App";
 
@@ -27,7 +28,7 @@ export default function RunnerDetailsLaps({runner}: RunnerDetailsLapsProps) {
     const [sortColumn, setSortColumn] = useState(SortBy.RaceTime);
     const [sortDirection, setSortDirection] = useState(SORT_ASC);
 
-    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+    const {width: windowWidth} = useWindowDimensions();
 
     const currentLapTime = useMemo(() => {
         if (runner.passages.length === 0) {
@@ -145,18 +146,6 @@ export default function RunnerDetailsLaps({runner}: RunnerDetailsLapsProps) {
 
         return () => clearInterval(interval);
     }, [race, serverTimeOffset]);
-
-    useEffect(() => {
-        const onResize = (e: UIEvent) => {
-            setWindowWidth((e.target as Window).innerWidth);
-        };
-
-        window.addEventListener("resize", onResize);
-
-        return () => {
-            window.removeEventListener("resize", onResize);
-        };
-    }, []);
 
     const showCurrentLap = isRaceStarted(race, serverTimeOffset) && !isRaceFinished(race, serverTimeOffset) && sortColumn === SortBy.RaceTime;
 
