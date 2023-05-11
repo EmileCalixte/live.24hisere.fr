@@ -142,7 +142,7 @@ export default function RunnerDetailsLaps({runner}: RunnerDetailsLapsProps) {
     }, []);
 
     useEffect(() => {
-        const interval = setInterval(() => setRaceTime(getRaceTime(race, serverTimeOffset)));
+        const interval = setInterval(() => setRaceTime(getRaceTime(race, serverTimeOffset)), 1000);
 
         return () => clearInterval(interval);
     }, [race, serverTimeOffset]);
