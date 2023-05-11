@@ -1,8 +1,9 @@
 import {faSortDown, faSortUp} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
+import React, {useCallback, useContext, useMemo, useState} from "react";
 import {Col, Row} from "react-bootstrap";
-import {getRaceTime, isRaceFinished, isRaceStarted} from "../../../helpers/raceHelper";
+import {isRaceFinished, isRaceStarted} from "../../../helpers/raceHelper";
+import {useRaceTime} from "../../../hooks/useRaceTime";
 import {useWindowDimensions} from "../../../hooks/useWindowDimensions";
 import {formatMsAsDuration, SORT_ASC, SORT_DESC} from "../../../util/utils";
 import {appDataContext} from "../../App";
@@ -23,7 +24,7 @@ export default function RunnerDetailsLaps({runner}: RunnerDetailsLapsProps) {
 
     const race = runner.race;
 
-    const [raceTime, setRaceTime] = useState(getRaceTime(race, serverTimeOffset));
+    const raceTime = useRaceTime(race, serverTimeOffset);
 
     const [sortColumn, setSortColumn] = useState(SortBy.RaceTime);
     const [sortDirection, setSortDirection] = useState(SORT_ASC);
@@ -140,12 +141,6 @@ export default function RunnerDetailsLaps({runner}: RunnerDetailsLapsProps) {
             return SortBy.RaceTime;
         });
     }, []);
-
-    useEffect(() => {
-        const interval = setInterval(() => setRaceTime(getRaceTime(race, serverTimeOffset)), 1000);
-
-        return () => clearInterval(interval);
-    }, [race, serverTimeOffset]);
 
     const showCurrentLap = isRaceStarted(race, serverTimeOffset) && !isRaceFinished(race, serverTimeOffset) && sortColumn === SortBy.RaceTime;
 
