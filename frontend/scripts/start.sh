@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 
-yarn install --verbose
-yarn start
+npm install --verbose
+npm start
