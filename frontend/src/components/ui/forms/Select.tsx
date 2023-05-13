@@ -10,7 +10,7 @@ interface SelectProps<T extends SelectOption["value"]> {
     loadingOptionLabel?: string;
     placeholderLabel?: string;
     value?: SelectOption["value"];
-    onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+    onChange?: React.ChangeEventHandler<HTMLSelectElement>;
     className?: string;
 }
 
