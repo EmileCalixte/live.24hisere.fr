@@ -4,6 +4,7 @@ import {performAPIRequest} from "../../util/apiUtils";
 import {userContext} from "../App";
 import {Navigate} from "react-router-dom";
 import ToastUtil from "../../util/ToastUtil";
+import {Input} from "../ui/forms/Input";
 import Page from "../ui/Page";
 
 export default function Login() {
@@ -58,30 +59,20 @@ export default function Login() {
                 <Col xl={3} lg={4} md={6} sm={12}>
                     <h1>Connexion</h1>
                     <form onSubmit={onSubmit}>
-                        <div className="input-group">
-                            <label>
-                                Nom d'utilisateur
-                                <input className="input"
-                                       type="text"
-                                       value={username}
-                                       name="username"
-                                       autoFocus={true}
-                                       onChange={(e) => setUsername(e.target.value)}
-                                />
-                            </label>
-                        </div>
+                        <Input label="Nom d'utilisateur"
+                               name="username"
+                               value={username}
+                               autoFocus
+                               onChange={e => setUsername(e.target.value)}
+                        />
 
-                        <div className="input-group">
-                            <label>
-                                Mot de passe<br />
-                                <input className="input"
-                                       type="password"
-                                       value={password}
-                                       name="password"
-                                       onChange={(e) => setPassword(e.target.value)}
-                                />
-                            </label>
-                        </div>
+                        <Input label="Mot de passe"
+                               className="mt-3"
+                               type="password"
+                               name="password"
+                               value={password}
+                               onChange={e => setPassword(e.target.value)}
+                        />
 
                         <button className="button mt-3"
                                 type="submit"

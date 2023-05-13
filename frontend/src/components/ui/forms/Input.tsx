@@ -13,6 +13,7 @@ interface InputProps {
     step?: string | number;
     maxLength?: number;
     pattern?: string;
+    autoFocus?: boolean;
     className?: string;
 }
 
@@ -28,6 +29,7 @@ export function Input({
     step,
     maxLength,
     pattern,
+    autoFocus = false,
     className,
 }: InputProps) {
     if (type === "number" && pattern === undefined) {
@@ -60,6 +62,7 @@ export function Input({
                        step={step}
                        maxLength={maxLength}
                        pattern={pattern}
+                       autoFocus={autoFocus}
                 />
             </label>
         </div>
