@@ -1,6 +1,4 @@
-import {type CategoryShortCode} from "../../../../types/Category";
-import {type Race} from "../../../../types/Race";
-import {Gender, type GenderWithMixed} from "../../../../types/Runner";
+import {GENDER, GENDER_MIXED} from "../../../../constants/Gender";
 import {formatMsAsDuration} from "../../../../util/utils";
 
 interface RankingTableInfoHeaderProps {
@@ -25,11 +23,11 @@ export default function RankingTableInfoHeader({
                     return tableCategory.toUpperCase();
                 }
             })()} {(() => {
-                if (tableGender === "mixed") {
+                if (tableGender === GENDER_MIXED) {
                     return "mixte";
-                } else if (tableGender === Gender.M) {
+                } else if (tableGender === GENDER.M) {
                     return "hommes";
-                } else if (tableGender === Gender.F) {
+                } else if (tableGender === GENDER.F) {
                     return "femmes";
                 } else {
                     return tableGender;

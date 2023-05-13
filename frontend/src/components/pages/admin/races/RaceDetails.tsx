@@ -1,16 +1,15 @@
 import {Col, Row} from "react-bootstrap";
 import {Navigate, useParams} from "react-router-dom";
-import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
-import Crumb from "../../../layout/breadcrumbs/Crumb";
+import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
+import Crumb from "../../../ui/breadcrumbs/Crumb";
 import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
-import Page from "../../../layout/Page";
-import CircularLoader from "../../../layout/CircularLoader";
+import Page from "../../../ui/Page";
+import CircularLoader from "../../../ui/CircularLoader";
 import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
 import {userContext} from "../../../App";
 import {formatDateForApi} from "../../../../util/utils";
 import ToastUtil from "../../../../util/ToastUtil";
 import RaceDetailsForm from "../../../pageParts/admin/races/RaceDetailsForm";
-import {type AdminRaceWithRunnerCount} from "../../../../types/Race";
 
 export default function RaceDetails() {
     const {accessToken} = useContext(userContext);
@@ -163,7 +162,7 @@ export default function RaceDetails() {
                             }
 
                             return (
-                                <Crumb label={race.name}/>
+                                <Crumb label={race.name} />
                             );
                         })()}
                     </Breadcrumbs>

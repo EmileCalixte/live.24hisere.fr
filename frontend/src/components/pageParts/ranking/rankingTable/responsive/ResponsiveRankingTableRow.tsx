@@ -1,8 +1,6 @@
 import {useMemo} from "react";
 import {Link} from "react-router-dom";
-import {type CategoryShortCode} from "../../../../../types/Category";
-import {type ProcessedRankingRunner} from "../../../../../types/Ranking";
-import {type GenderWithMixed} from "../../../../../types/Runner";
+import {GENDER_MIXED} from "../../../../../constants/Gender";
 import {formatFloatNumber, formatMsAsDuration} from "../../../../../util/utils";
 
 interface ResponsiveRankingTableRowProps {
@@ -18,14 +16,14 @@ export default function ResponsiveRankingTableRow({
 }: ResponsiveRankingTableRowProps) {
     const rowRanking = useMemo(() => {
         if (tableCategory === null) {
-            if (tableGender === "mixed") {
+            if (tableGender === GENDER_MIXED) {
                 return runner.rankings.displayed.scratchMixed;
             }
 
             return runner.rankings.displayed.scratchGender;
         }
 
-        if (tableGender === "mixed") {
+        if (tableGender === GENDER_MIXED) {
             return runner.rankings.displayed.categoryMixed;
         }
 
@@ -34,7 +32,7 @@ export default function ResponsiveRankingTableRow({
 
     const rowSecondaryRankings = useMemo(() => {
         if (tableCategory === null) {
-            if (tableGender === "mixed") {
+            if (tableGender === GENDER_MIXED) {
                 return (
                     <>
                         {runner.rankings.displayed.scratchGender} {runner.gender.toUpperCase()}
@@ -57,7 +55,7 @@ export default function ResponsiveRankingTableRow({
             );
         }
 
-        if (tableGender === "mixed") {
+        if (tableGender === GENDER_MIXED) {
             return (
                 <>
                     {runner.rankings.displayed.scratchMixed}

@@ -2,7 +2,6 @@ import {faEye, faEyeSlash, faGrip, faPersonRunning} from "@fortawesome/free-soli
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {Link} from "react-router-dom";
 import React, {useCallback} from "react";
-import {type AdminRaceWithRunnerCount} from "../../../../types/Race";
 import RaceTimer from "../../RaceTimer";
 
 interface RacesListItemProps {
@@ -52,7 +51,7 @@ export default function RacesListItem({race, isSorting, isDragged, isDraggedOver
                 </div>
 
                 <div className="admin-list-link-secondary-icon-group">
-                    <RaceTimer race={race} allowNegative={true}/>
+                    <RaceTimer race={race} allowNegative={true} />
                 </div>
             </div>
         </Link>

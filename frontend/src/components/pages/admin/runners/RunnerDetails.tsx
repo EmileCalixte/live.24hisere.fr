@@ -1,21 +1,15 @@
 import {Col, Row} from "react-bootstrap";
 import {Navigate, useParams} from "react-router-dom";
 import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
-import {type AdminProcessedPassage} from "../../../../types/Passage";
+import {GENDER} from "../../../../constants/Gender";
 import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
 import {formatDateAsString, formatDateForApi} from "../../../../util/utils";
-import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
-import Crumb from "../../../layout/breadcrumbs/Crumb";
-import Page from "../../../layout/Page";
-import CircularLoader from "../../../layout/CircularLoader";
+import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
+import Crumb from "../../../ui/breadcrumbs/Crumb";
+import Page from "../../../ui/Page";
+import CircularLoader from "../../../ui/CircularLoader";
 import {userContext} from "../../../App";
-import {
-    Gender,
-    type RunnerWithAdminPassages,
-    type RunnerWithAdminProcessedPassages, type RunnerWithRace,
-} from "../../../../types/Runner";
 import RunnerDetailsForm from "../../../pageParts/admin/runners/RunnerDetailsForm";
-import {type AdminRaceWithRunnerCount} from "../../../../types/Race";
 import ToastUtil from "../../../../util/ToastUtil";
 import RunnerDetailsPassages from "../../../pageParts/admin/runners/RunnerDetailsPassages";
 import {getRunnerProcessedPassages} from "../../../../util/RunnerDetailsUtil";
@@ -32,7 +26,7 @@ export default function RunnerDetails() {
     const [runnerId, setRunnerId] = useState(0);
     const [runnerFirstname, setRunnerFirstname] = useState("");
     const [runnerLastname, setRunnerLastname] = useState("");
-    const [runnerGender, setRunnerGender] = useState(Gender.M);
+    const [runnerGender, setRunnerGender] = useState(GENDER.M);
     const [runnerBirthYear, setRunnerBirthYear] = useState("0");
     const [runnerRaceId, setRunnerRaceId] = useState(0);
 
@@ -318,7 +312,7 @@ export default function RunnerDetails() {
         setTimeout(() => setRedirectAfterIdUpdate(null), 0);
 
         return (
-            <Navigate to={`/admin/runners/${redirectAfterIdUpdate}`} replace={true}/>
+            <Navigate to={`/admin/runners/${redirectAfterIdUpdate}`} replace={true} />
         );
     }
 

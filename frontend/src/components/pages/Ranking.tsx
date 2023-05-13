@@ -1,25 +1,20 @@
 import "../../css/print-ranking-table.css";
 import React, {useState, useEffect, useCallback, useMemo} from "react";
 import {Col, Row} from "react-bootstrap";
-import {type Race} from "../../types/Race";
+import {GENDER_MIXED} from "../../constants/Gender";
+import {RANKING_TIME_MODE} from "../../constants/RankingTimeMode";
+import {getRacesSelectOptions} from "../../helpers/raceHelper";
+import {useWindowDimensions} from "../../hooks/useWindowDimensions";
 import {existingCategories} from "../../util/ffaUtils";
-import Page from "../layout/Page";
-import CircularLoader from "../layout/CircularLoader";
-import RankingRaceSelector from "../pageParts/ranking/RankingRaceSelector";
+import Select from "../ui/forms/Select";
+import Page from "../ui/Page";
+import CircularLoader from "../ui/CircularLoader";
 import RankingSettings from "../pageParts/ranking/RankingSettings";
 import {performAPIRequest} from "../../util/apiUtils";
 import RankingTable from "../pageParts/ranking/rankingTable/RankingTable";
 import {RankingProcesser} from "../../util/RankingProcesser";
 import {formatDateForApi} from "../../util/utils";
-import {type CategoriesDict, type CategoryShortCode} from "../../types/Category";
-import {type ProcessedRanking, type Ranking as RankingType} from "../../types/Ranking";
-import {type GenderWithMixed} from "../../types/Runner";
 import ResponsiveRankingTable from "../pageParts/ranking/rankingTable/responsive/ResponsiveRankingTable";
-
-export enum TimeMode {
-    Now = "now",
-    At = "at",
-}
 
 const RANKING_UPDATE_INTERVAL_TIME = 20 * 1000;
 
@@ -31,11 +26,15 @@ export default function Ranking() {
 
     const [processedRanking, setProcessedRanking] = useState<ProcessedRanking | false>(false);
     const [selectedCategory, setSelectedCategory] = useState<CategoryShortCode | null>(null);
-    const [selectedGender, setSelectedGender] = useState<GenderWithMixed>("mixed");
-    const [selectedTimeMode, setSelectedTimeMode] = useState(TimeMode.Now);
+    const [selectedGender, setSelectedGender] = useState<GenderWithMixed>(GENDER_MIXED);
+    const [selectedTimeMode, setSelectedTimeMode] = useState(RANKING_TIME_MODE.now);
     const [selectedRankingTime, setSelectedRankingTime] = useState(-1); // Set when a race is selected
 
-    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+    const {width: windowWidth} = useWindowDimensions();
+
+    const racesOptions = useMemo(() => {
+        return getRacesSelectOptions(races);
+    }, [races]);
 
     const fetchRaces = useCallback(async () => {
         const response = await performAPIRequest("/races");
@@ -51,7 +50,7 @@ export default function Ranking() {
 
         let requestUrl = `/ranking/${selectedRace.id}`;
 
-        if (selectedTimeMode === TimeMode.At) {
+        if (selectedTimeMode === RANKING_TIME_MODE.at) {
             const rankingDate = new Date();
             rankingDate.setTime(new Date(selectedRace.startTime).getTime() + rankingTime);
             const rankingDateString = formatDateForApi(rankingDate);
@@ -61,7 +60,7 @@ export default function Ranking() {
         const response = await performAPIRequest(requestUrl);
         const responseJson = await response.json();
 
-        setProcessedRanking(new RankingProcesser(selectedRace, responseJson.ranking as RankingType).getProcessedRanking());
+        setProcessedRanking(new RankingProcesser(selectedRace, responseJson.ranking as Ranking).getProcessedRanking());
     }, [selectedRace, selectedRankingTime, selectedTimeMode]);
 
     const shouldResetRankingTime = useCallback((newRaceDuration: number) => {
@@ -75,7 +74,7 @@ export default function Ranking() {
 
         // For better UX, if the user looks at the current time rankings, we want to reset the time inputs to the
         // duration of the newly selected race
-        if (selectedTimeMode === TimeMode.Now) {
+        if (selectedTimeMode === RANKING_TIME_MODE.now) {
             return true;
         }
 
@@ -112,30 +111,12 @@ export default function Ranking() {
         setSelectedCategory(e.target.value);
     };
 
-    const onGenderSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectedGender(e.target.value as GenderWithMixed);
-    };
-
-    const onTimeModeSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectedTimeMode(e.target.value as TimeMode);
-    };
-
     /**
      * @param time The new ranking time from race start in ms
      */
     const onRankingTimeSave = async (time: number) => {
         setSelectedRankingTime(time);
     };
-
-    useEffect(() => {
-        const onResize = (e: UIEvent) => {
-            setWindowWidth((e.target as Window).innerWidth);
-        };
-
-        window.addEventListener("resize", onResize);
-
-        return () => window.removeEventListener("resize", onResize);
-    }, []);
 
     useEffect(() => {
         fetchRaces();
@@ -179,35 +160,35 @@ export default function Ranking() {
             </Row>
 
             <Row className="hide-on-print mb-3">
-                <Col>
-                    <RankingRaceSelector races={races}
-                                         onSelectRace={onSelectRace}
-                                         selectedRaceId={selectedRace ? selectedRace.id : undefined}
+                <Col xxl={2} xl={3} lg={4} md={6} sm={9} xs={12}>
+                    <Select label="Course"
+                            options={racesOptions}
+                            onChange={onSelectRace}
+                            value={selectedRace ? selectedRace.id : undefined}
+                            placeholderLabel="Sélectionnez une course"
                     />
                 </Col>
             </Row>
 
             {selectedRace &&
                 <>
-                    <Row className="hide-on-print mb-3">
-                        <Col>
-                            <RankingSettings
-                                categories={categories}
-                                onCategorySelect={onCategorySelect}
-                                onGenderSelect={onGenderSelect}
-                                onTimeModeSelect={onTimeModeSelect}
-                                onRankingTimeSave={onRankingTimeSave}
-                                selectedCategory={selectedCategory}
-                                selectedGender={selectedGender}
-                                selectedTimeMode={selectedTimeMode}
-                                currentRankingTime={selectedRankingTime}
-                                maxRankingTime={selectedRace.duration * 1000}
-                            />
-                        </Col>
+                    <Row className="hide-on-print mb-3 row-cols-auto">
+                        <RankingSettings
+                            categories={categories}
+                            onCategorySelect={onCategorySelect}
+                            setGender={setSelectedGender}
+                            setTimeMode={setSelectedTimeMode}
+                            onRankingTimeSave={onRankingTimeSave}
+                            selectedCategory={selectedCategory}
+                            selectedGender={selectedGender}
+                            selectedTimeMode={selectedTimeMode}
+                            currentRankingTime={selectedRankingTime}
+                            maxRankingTime={selectedRace.duration * 1000}
+                        />
                     </Row>
 
                     {!processedRanking &&
-                        <CircularLoader/>
+                        <CircularLoader />
                     }
 
                     {processedRanking &&
@@ -219,7 +200,7 @@ export default function Ranking() {
                                         ranking={processedRanking}
                                         tableCategory={selectedCategory}
                                         tableGender={selectedGender}
-                                        tableRaceDuration={selectedTimeMode === TimeMode.At ? selectedRankingTime : null}
+                                        tableRaceDuration={selectedTimeMode === RANKING_TIME_MODE.at ? selectedRankingTime : null}
                                     />
                                 }
 
@@ -234,7 +215,7 @@ export default function Ranking() {
                                             ranking={processedRanking}
                                             tableCategory={selectedCategory}
                                             tableGender={selectedGender}
-                                            tableRaceDuration={selectedTimeMode === TimeMode.At ? selectedRankingTime : null}
+                                            tableRaceDuration={selectedTimeMode === RANKING_TIME_MODE.at ? selectedRankingTime : null}
                                         />
                                     </div>
                                 }

@@ -1,14 +1,14 @@
 import React, {useCallback, useContext, useEffect, useState} from "react";
 import {Col, Row} from "react-bootstrap";
 import {Navigate} from "react-router-dom";
-import {type AdminRaceWithRunnerCount} from "../../../../types/Race";
-import {Gender} from "../../../../types/Runner";
+import {GENDER} from "../../../../constants/Gender";
+import {useStateWithNonNullableSetter} from "../../../../hooks/useStateWithNonNullableSetter";
 import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
 import ToastUtil from "../../../../util/ToastUtil";
 import {userContext} from "../../../App";
-import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
-import Crumb from "../../../layout/breadcrumbs/Crumb";
-import Page from "../../../layout/Page";
+import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
+import Crumb from "../../../ui/breadcrumbs/Crumb";
+import Page from "../../../ui/Page";
 import RunnerDetailsForm from "../../../pageParts/admin/runners/RunnerDetailsForm";
 
 export default function CreateRunner() {
@@ -19,9 +19,9 @@ export default function CreateRunner() {
     const [id, setId] = useState(1);
     const [firstname, setFirstname] = useState("");
     const [lastname, setLastname] = useState("");
-    const [gender, setGender] = useState(Gender.M);
+    const [gender, setGender] = useState(GENDER.M);
     const [birthYear, setBirthYear] = useState(((new Date()).getFullYear() - 30).toString());
-    const [raceId, setRaceId] = useState<number | null>(null);
+    const [raceId, setRaceId] = useStateWithNonNullableSetter<number | null>(null);
 
     const [isSaving, setIsSaving] = useState(false);
 
@@ -42,7 +42,7 @@ export default function CreateRunner() {
         if (raceId === null && responseRaces.length > 0) {
             setRaceId(responseRaces[0].id);
         }
-    }, [accessToken, raceId]);
+    }, [accessToken, raceId, setRaceId]);
 
     const onSubmit = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
@@ -87,7 +87,7 @@ export default function CreateRunner() {
     }
 
     return (
-        <Page id="admin-create-runner" title={"Créer un coureur"}>
+        <Page id="admin-create-runner" title="Créer un coureur">
             <Row>
                 <Col>
                     <Breadcrumbs>

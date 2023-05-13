@@ -1,11 +1,14 @@
 import React, {useCallback, useMemo} from "react";
-import {prefixNumber} from "../../util/utils";
+import {prefixNumber} from "../../../util/utils";
 
 export const getDurationAsMs = (hours: number, minutes: number, seconds: number) => {
     return (seconds * 1000) + (minutes * 60 * 1000) + (hours * 60 * 60 * 1000);
 };
 
 interface DurationInputsProps {
+    legend?: string;
+    className?: string;
+
     /**
      * The duration, in ms
      */
@@ -27,7 +30,14 @@ interface DurationInputsProps {
     setDuration: (duration: number) => any;
 }
 
-export default function DurationInputs({duration, minDuration = 0, maxDuration, setDuration}: DurationInputsProps) {
+export default function DurationInputs({
+    legend,
+    className,
+    duration,
+    minDuration = 0,
+    maxDuration,
+    setDuration,
+}: DurationInputsProps) {
     if (minDuration < 0) {
         throw new Error("minDuration cannot be negative");
     }
@@ -111,7 +121,10 @@ export default function DurationInputs({duration, minDuration = 0, maxDuration, 
     }, [setDuration, minDuration, maxDuration, hours, minutes]);
 
     return (
-        <>
+        <fieldset className={className}>
+            {legend &&
+                <legend>{legend}</legend>
+            }
             <label style={{marginLeft: -5}}>
                 <input className="input race-time-input"
                        type="number"
@@ -136,6 +149,6 @@ export default function DurationInputs({duration, minDuration = 0, maxDuration, 
                 />
                 s
             </label>
-        </>
+        </fieldset>
     );
 }

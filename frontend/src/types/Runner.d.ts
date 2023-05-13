@@ -1,24 +1,7 @@
-import {type AdminPassage, type AdminProcessedPassage, type ProcessedPassage} from "./Passage";
-import type Passage from "./Passage";
-import {type Race} from "./Race";
-
-/**
- * Represents the gender of a runner
- */
-export enum Gender {
-    M = "M",
-    F = "F",
-}
-
-/**
- * Represents the gender of a runner with an additionnal "mixed" option
- */
-export type GenderWithMixed = Gender | "mixed";
-
 /**
  * An object containing the information of a runner's race hour
  */
-export interface RunnerProcessedHour {
+interface RunnerProcessedHour {
     /**
      * The start time of the hour
      */
@@ -98,7 +81,7 @@ interface Runner {
 /**
  * An object representing a runner with his passages
  */
-export interface RunnerWithPassages extends Runner {
+interface RunnerWithPassages extends Runner {
     /**
      * The list of the runner's passages
      */
@@ -108,7 +91,7 @@ export interface RunnerWithPassages extends Runner {
 /**
  * An object representing a runner with passages and with additional admin info
  */
-export interface RunnerWithAdminPassages extends Runner {
+interface RunnerWithAdminPassages extends Runner {
     /**
      * The list of the runner's passages with additional admin info
      */
@@ -118,7 +101,7 @@ export interface RunnerWithAdminPassages extends Runner {
 /**
  * An object representing a runner with his passages and with additional data on the passages
  */
-export interface RunnerWithProcessedPassages extends Runner {
+interface RunnerWithProcessedPassages extends Runner {
     /**
      * The list of the runner's passages with additional data
      */
@@ -128,7 +111,7 @@ export interface RunnerWithProcessedPassages extends Runner {
 /**
  * An object representing a runner with passages and with additional admin info and additional data on the passages
  */
-export interface RunnerWithAdminProcessedPassages extends Runner {
+interface RunnerWithAdminProcessedPassages extends Runner {
     /**
      * The list of the runner's passages with additional admin info and additional data
      */
@@ -138,7 +121,7 @@ export interface RunnerWithAdminProcessedPassages extends Runner {
 /**
  * An object representing a runner with the information of his race hours
  */
-export interface RunnerWithProcessedHours extends Runner {
+interface RunnerWithProcessedHours extends Runner {
     /**
      * The race hours of the runner
      */
@@ -148,11 +131,9 @@ export interface RunnerWithProcessedHours extends Runner {
 /**
  * An object representing a runner with additional data about his race
  */
-export interface RunnerWithRace extends Runner {
+interface RunnerWithRace extends Runner {
     /**
      * The race in which the runner takes part
      */
     race: Race;
 }
-
-export default Runner;

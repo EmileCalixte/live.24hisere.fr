@@ -22,7 +22,15 @@ export function formatDateForApi(date: Date): string {
     return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
 }
 
+export function isDateValid(date: Date): boolean {
+    return !isNaN(date.getTime());
+}
+
 export function formatDateAsString(date: Date, dateAndTimeSeparator = ", ", dateSeparator = "/", timeSeparator = ":"): string {
+    if (!isDateValid(date)) {
+        return date.toString();
+    }
+
     const dateString = getDateStringFromDate(date, dateSeparator);
     const timeString = getTimeStringFromDate(date, timeSeparator);
 
@@ -30,6 +38,10 @@ export function formatDateAsString(date: Date, dateAndTimeSeparator = ", ", date
 }
 
 export function getDateStringFromDate(date: Date, separator = "/"): string {
+    if (!isDateValid(date)) {
+        return "";
+    }
+
     const year = date.getFullYear();
     const month = prefixNumber(date.getMonth() + 1, 2);
     const day = prefixNumber(date.getDate(), 2);
@@ -38,6 +50,10 @@ export function getDateStringFromDate(date: Date, separator = "/"): string {
 }
 
 export function getTimeStringFromDate(date: Date, separator = ":"): string {
+    if (!isDateValid(date)) {
+        return "";
+    }
+
     const hours = prefixNumber(date.getHours(), 2);
     const minutes = prefixNumber(date.getMinutes(), 2);
     const seconds = prefixNumber(date.getSeconds(), 2);

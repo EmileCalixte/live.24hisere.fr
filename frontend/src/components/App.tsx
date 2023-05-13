@@ -1,9 +1,8 @@
 import {createContext, useCallback, useEffect, useState} from "react";
 import {Helmet} from "react-helmet";
 import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
-import {type User} from "../types/User";
-import Header from "./layout/header/Header";
-import Footer from "./layout/footer/Footer";
+import Header from "./ui/header/Header";
+import Footer from "./ui/footer/Footer";
 import Ranking from "./pages/Ranking";
 import RunnerDetails from "./pages/RunnerDetails";
 import {

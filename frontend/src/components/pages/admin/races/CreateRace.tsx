@@ -1,11 +1,11 @@
 import {Col, Row} from "react-bootstrap";
-import {type AdminRace} from "../../../../types/Race";
-import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
-import Crumb from "../../../layout/breadcrumbs/Crumb";
-import Page from "../../../layout/Page";
-import OptionWithLoadingDots from "../../../forms/OptionWithLoadingDots";
+import {getRacesSelectOptions} from "../../../../helpers/raceHelper";
+import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
+import Crumb from "../../../ui/breadcrumbs/Crumb";
+import Select from "../../../ui/forms/Select";
+import Page from "../../../ui/Page";
 import RaceDetailsForm from "../../../pageParts/admin/races/RaceDetailsForm";
-import React, {useCallback, useContext, useEffect, useState} from "react";
+import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
 import {userContext} from "../../../App";
 import ToastUtil from "../../../../util/ToastUtil";
@@ -27,6 +27,8 @@ export default function CreateRace() {
     const [isSaving, setIsSaving] = useState(false);
 
     const [redirectToId, setRedirectToId] = useState(null);
+
+    const existingRacesOptions = useMemo(() => getRacesSelectOptions(existingRaces), [existingRaces]);
 
     const onSelectRaceToCopy = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
         if (!existingRaces) {
@@ -109,29 +111,14 @@ export default function CreateRace() {
 
             <Row>
                 <Col xxl={3} xl={4} lg={6} md={9} sm={12}>
-                    <div className="input-group">
-                        <label htmlFor="copy-race-select">
-                            Copier les paramètres d'une course existante
-                        </label>
-                        <select id="copy-race-select"
-                                className="input-select"
-                                value={"_placeholder"}
-                                onChange={onSelectRaceToCopy}
-                                disabled={Object.keys(existingRaces).length === 0}
-                        >
-                            <option disabled hidden value="_placeholder">
-                                {existingRaces && existingRaces.length === 0 ? "Aucune course à copier" : "Sélectionnez une course à copier"}
-                            </option>
-
-                            {existingRaces === false &&
-                                <OptionWithLoadingDots>Chargement des courses existantes</OptionWithLoadingDots>
-                            }
-
-                            {existingRaces !== false && existingRaces.map(race => (
-                                <option value={race.id} key={race.id}>{race.name}</option>
-                            ))}
-                        </select>
-                    </div>
+                    <Select label="Copier les paramètres d'une course existante"
+                            options={existingRacesOptions}
+                            disabled={existingRaces && existingRaces.length === 0}
+                            isLoading={existingRaces === false}
+                            loadingOptionLabel="Chargement des courses"
+                            placeholderLabel={existingRaces && existingRaces.length === 0 ? "Aucune course à copier" : "Sélectionnez une course à copier"}
+                            onChange={onSelectRaceToCopy}
+                    />
                 </Col>
             </Row>
 

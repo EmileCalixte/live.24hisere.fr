@@ -1,0 +1,1 @@
+type RankingTimeMode = "now" | "at";

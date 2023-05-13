@@ -1,8 +1,5 @@
 import {useCallback} from "react";
-import {type CategoryShortCode} from "../../../../../types/Category";
-import {type Race} from "../../../../../types/Race";
-import {type ProcessedRanking, type ProcessedRankingRunner} from "../../../../../types/Ranking";
-import {type GenderWithMixed} from "../../../../../types/Runner";
+import {GENDER_MIXED} from "../../../../../constants/Gender";
 import RankingTableInfoHeader from "../RankingTableInfoHeader";
 import ResponsiveRankingTableRow from "./ResponsiveRankingTableRow";
 
@@ -28,7 +25,7 @@ export default function ResponsiveRankingTable({
             }
         }
 
-        if (tableGender !== "mixed") {
+        if (tableGender !== GENDER_MIXED) {
             if (tableGender.toUpperCase() !== rankingRunner.gender.toUpperCase()) {
                 return null;
             }

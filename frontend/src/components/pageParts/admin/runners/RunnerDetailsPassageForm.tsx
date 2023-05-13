@@ -1,8 +1,8 @@
 import React, {useEffect, useRef} from "react";
 import {Col, Row} from "react-bootstrap";
 import {formatDateAsString} from "../../../../util/utils";
-import DurationInputs from "../../../forms/DurationInputs";
-import Modal from "../../../layout/Modal";
+import DurationInputs from "../../../ui/forms/DurationInputs";
+import Modal from "../../../ui/Modal";
 
 interface RunnerDetailsPassageFormProps {
     raceTime: number;
@@ -44,12 +44,10 @@ export default function RunnerDetailsPassageForm({
             <Row>
                 <Col>
                     <form onSubmit={onSubmit}>
-                        <div>
-                            <legend>Temps de course</legend>
-                            <div className="inline-input-group">
-                                <DurationInputs duration={raceTime} setDuration={setRaceTime}/>
-                            </div>
-                        </div>
+                        <DurationInputs legend="Temps de course"
+                                        duration={raceTime}
+                                        setDuration={setRaceTime}
+                        />
 
                         {time &&
                             <p>
