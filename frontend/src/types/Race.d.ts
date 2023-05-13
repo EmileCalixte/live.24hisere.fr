@@ -1,7 +1,7 @@
 /**
  * An object representing a race
  */
-export interface Race {
+interface Race {
     /**
      * The race ID
      */
@@ -43,18 +43,16 @@ interface RaceWithRunnerCount extends Race {
 /**
  * An object representing a race with additional admin properties
  */
-export interface AdminRace extends Race {
+interface AdminRace extends Race {
     /**
      * Whether the race is publicly displayed or not
      */
     isPublic: boolean;
 }
 
-export interface AdminRaceWithRunnerCount extends AdminRace, RaceWithRunnerCount {}
+interface AdminRaceWithRunnerCount extends AdminRace, RaceWithRunnerCount {}
 
 /**
  * An object whose key is a race ID and value is the corresponding race
  */
-export type AdminRaceDict = Record<number, AdminRace>;
-
-export default AdminRace;
+type AdminRaceDict = Record<number, AdminRace>;

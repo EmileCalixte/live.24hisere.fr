@@ -12,5 +12,3 @@ interface AppConfig {
      */
     devMode: boolean;
 }
-
-export default AppConfig;

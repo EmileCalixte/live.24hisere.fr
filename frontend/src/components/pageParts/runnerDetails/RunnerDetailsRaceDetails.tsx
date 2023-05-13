@@ -1,6 +1,5 @@
 import {useMemo} from "react";
 import {Col, Row} from "react-bootstrap";
-import {type Race} from "../../../types/Race";
 import {formatMsAsDuration} from "../../../util/utils";
 import RaceTimer from "../RaceTimer";
 
@@ -21,7 +20,7 @@ export default function RunnerDetailsRaceDetails({race}: RunnerDetailsRaceDetail
 
                 <p>{race.name}</p>
 
-                <p><b><RaceTimer race={race}/></b> / {formattedRaceDuration}</p>
+                <p><b><RaceTimer race={race} /></b> / {formattedRaceDuration}</p>
 
                 <p>
                     Distance tour : <strong>{race.lapDistance} m</strong>

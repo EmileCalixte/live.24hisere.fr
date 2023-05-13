@@ -1,18 +1,16 @@
 import {faPlus} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {Col, Row} from "react-bootstrap";
-import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
-import Crumb from "../../../layout/breadcrumbs/Crumb";
+import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
+import Crumb from "../../../ui/breadcrumbs/Crumb";
 import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
 import {userContext} from "../../../App";
-import Page from "../../../layout/Page";
-import CircularLoader from "../../../layout/CircularLoader";
+import Page from "../../../ui/Page";
+import CircularLoader from "../../../ui/CircularLoader";
 import {Link} from "react-router-dom";
-import OptionWithLoadingDots from "../../../forms/OptionWithLoadingDots";
+import OptionWithLoadingDots from "../../../ui/forms/OptionWithLoadingDots";
 import RunnersTable from "../../../pageParts/admin/runners/RunnersTable";
-import type Runner from "../../../../types/Runner";
-import {type AdminRaceDict} from "../../../../types/Race";
 
 const RACE_SELECT_OPTION_ALL = "all";
 
@@ -135,7 +133,7 @@ export default function Runners() {
                             }
 
                             {displayedRunners.length > 0 &&
-                                <RunnersTable runners={displayedRunners} races={races}/>
+                                <RunnersTable runners={displayedRunners} races={races} />
                             }
                         </Col>
                     </Row>

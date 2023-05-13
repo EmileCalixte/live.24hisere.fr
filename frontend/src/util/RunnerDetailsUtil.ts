@@ -1,11 +1,4 @@
-import {type Race} from "../types/Race";
 import {formatMsAsDuration} from "./utils";
-import {
-    type RunnerProcessedHour,
-    type RunnerWithProcessedPassages,
-} from "../types/Runner";
-import {type PassageProcessedData, type ProcessedPassage} from "../types/Passage";
-import type Passage from "../types/Passage";
 
 function getLapsInRaceTimeInterval(
     passages: ProcessedPassage[],

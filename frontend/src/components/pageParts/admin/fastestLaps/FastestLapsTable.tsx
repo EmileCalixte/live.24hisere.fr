@@ -1,7 +1,4 @@
 import {Link} from "react-router-dom";
-import {type AdminPassageWithRunnerId, type ProcessedPassage} from "../../../../types/Passage";
-import {type AdminRaceDict} from "../../../../types/Race";
-import type Runner from "../../../../types/Runner";
 import {formatFloatNumber, formatMsAsDuration} from "../../../../util/utils";
 
 interface FastestLapsTableProps {

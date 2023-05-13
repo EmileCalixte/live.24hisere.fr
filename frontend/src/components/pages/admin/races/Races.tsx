@@ -1,17 +1,16 @@
 import {faArrowsUpDown, faCheck, faPlus} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {Col, Row} from "react-bootstrap";
-import Breadcrumbs from "../../../layout/breadcrumbs/Breadcrumbs";
-import Crumb from "../../../layout/breadcrumbs/Crumb";
+import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
+import Crumb from "../../../ui/breadcrumbs/Crumb";
 import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
 import {userContext} from "../../../App";
-import Page from "../../../layout/Page";
-import CircularLoader from "../../../layout/CircularLoader";
+import Page from "../../../ui/Page";
+import CircularLoader from "../../../ui/CircularLoader";
 import {Link} from "react-router-dom";
 import RacesListItem from "../../../pageParts/admin/races/RacesListItem";
 import ToastUtil from "../../../../util/ToastUtil";
-import {type AdminRaceWithRunnerCount} from "../../../../types/Race";
 
 export default function Races() {
     const {accessToken} = useContext(userContext);

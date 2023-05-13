@@ -1,10 +1,11 @@
 import {faSortDown, faSortUp} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
+import React, {useCallback, useContext, useMemo, useState} from "react";
 import {Col, Row} from "react-bootstrap";
-import {getRaceTime, isRaceFinished, isRaceStarted} from "../../../helpers/raceHelper";
+import {isRaceFinished, isRaceStarted} from "../../../helpers/raceHelper";
+import {useRaceTime} from "../../../hooks/useRaceTime";
+import {useWindowDimensions} from "../../../hooks/useWindowDimensions";
 import {formatMsAsDuration, SORT_ASC, SORT_DESC} from "../../../util/utils";
-import {type RunnerWithProcessedPassages, type RunnerWithRace} from "../../../types/Runner";
 import {appDataContext} from "../../App";
 
 enum SortBy {
@@ -23,12 +24,12 @@ export default function RunnerDetailsLaps({runner}: RunnerDetailsLapsProps) {
 
     const race = runner.race;
 
-    const [raceTime, setRaceTime] = useState(getRaceTime(race, serverTimeOffset));
+    const raceTime = useRaceTime(race, serverTimeOffset);
 
     const [sortColumn, setSortColumn] = useState(SortBy.RaceTime);
     const [sortDirection, setSortDirection] = useState(SORT_ASC);
 
-    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+    const {width: windowWidth} = useWindowDimensions();
 
     const currentLapTime = useMemo(() => {
         if (runner.passages.length === 0) {
@@ -87,7 +88,7 @@ export default function RunnerDetailsLaps({runner}: RunnerDetailsLapsProps) {
                 <td colSpan={2}>Tour en cours</td>
                 <td>{formatMsAsDuration(raceTime)}</td>
                 <td>{formatMsAsDuration(currentLapTime)}</td>
-                <td colSpan={42}/>
+                <td colSpan={42} />
             </tr>
         );
     }, [raceTime, currentLapTime]);
@@ -139,24 +140,6 @@ export default function RunnerDetailsLaps({runner}: RunnerDetailsLapsProps) {
             setSortDirection(SORT_ASC);
             return SortBy.RaceTime;
         });
-    }, []);
-
-    useEffect(() => {
-        const interval = setInterval(() => setRaceTime(getRaceTime(race, serverTimeOffset)));
-
-        return () => clearInterval(interval);
-    }, [race, serverTimeOffset]);
-
-    useEffect(() => {
-        const onResize = (e: UIEvent) => {
-            setWindowWidth((e.target as Window).innerWidth);
-        };
-
-        window.addEventListener("resize", onResize);
-
-        return () => {
-            window.removeEventListener("resize", onResize);
-        };
     }, []);
 
     const showCurrentLap = isRaceStarted(race, serverTimeOffset) && !isRaceFinished(race, serverTimeOffset) && sortColumn === SortBy.RaceTime;

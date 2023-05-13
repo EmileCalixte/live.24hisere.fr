@@ -8,7 +8,7 @@ import CreateRunner from "./runners/CreateRunner";
 import Runners from "./runners/Runners";
 import CreateRace from "./races/CreateRace";
 import RaceDetails from "./races/RaceDetails";
-import CircularLoader from "../../layout/CircularLoader";
+import CircularLoader from "../../ui/CircularLoader";
 import RunnerDetails from "./runners/RunnerDetails";
 
 export default function Admin() {
@@ -16,28 +16,28 @@ export default function Admin() {
 
     if (user === null) {
         return (
-            <Navigate to="/"/>
+            <Navigate to="/" />
         );
     }
 
     if (user === undefined) {
         return (
-            <CircularLoader/>
+            <CircularLoader />
         );
     }
 
     return (
         <Routes>
-            <Route path="/" element={<AdminHome/>}/>
-            <Route path="runners" element={<Runners/>}/>
-            <Route path="runners/create" element={<CreateRunner/>}/>
-            <Route path="runners/:runnerId" element={<RunnerDetails/>}/>
-            <Route path="races" element={<Races/>}/>
-            <Route path="races/create" element={<CreateRace/>}/>
-            <Route path="races/:raceId" element={<RaceDetails/>}/>
-            <Route path="fastest-laps" element={<FastestLaps/>}/>
+            <Route path="/" element={<AdminHome />} />
+            <Route path="runners" element={<Runners />} />
+            <Route path="runners/create" element={<CreateRunner />} />
+            <Route path="runners/:runnerId" element={<RunnerDetails />} />
+            <Route path="races" element={<Races />} />
+            <Route path="races/create" element={<CreateRace />} />
+            <Route path="races/:raceId" element={<RaceDetails />} />
+            <Route path="fastest-laps" element={<FastestLaps />} />
 
-            <Route path="*" element={<Navigate to="/admin" replace/>}/>
+            <Route path="*" element={<Navigate to="/admin" replace />} />
         </Routes>
     );
 }

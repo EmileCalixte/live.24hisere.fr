@@ -1,16 +1,14 @@
 import {useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {Col, Row} from "react-bootstrap";
-import {type AdminPassageWithRunnerId, type ProcessedPassage} from "../../../types/Passage";
-import {type AdminRaceDict} from "../../../types/Race";
-import type Runner from "../../../types/Runner";
 import {performAuthenticatedAPIRequest} from "../../../util/apiUtils";
 import {getRunnerProcessedPassages} from "../../../util/RunnerDetailsUtil";
 import {userContext} from "../../App";
-import Breadcrumbs from "../../layout/breadcrumbs/Breadcrumbs";
-import Crumb from "../../layout/breadcrumbs/Crumb";
-import Page from "../../layout/Page";
-import Pagination from "../../layout/pagination/Pagination";
-import CircularLoader from "../../layout/CircularLoader";
+import Breadcrumbs from "../../ui/breadcrumbs/Breadcrumbs";
+import Crumb from "../../ui/breadcrumbs/Crumb";
+import {Checkbox} from "../../ui/forms/Checkbox";
+import Page from "../../ui/Page";
+import Pagination from "../../ui/pagination/Pagination";
+import CircularLoader from "../../ui/CircularLoader";
 import FastestLapsTable from "../../pageParts/admin/fastestLaps/FastestLapsTable";
 
 type RunnerSortedPassages = Record<number, AdminPassageWithRunnerId[]>;
@@ -217,7 +215,7 @@ export default function FastestLaps() {
             {passagesInPage === false &&
                 <Row>
                     <Col>
-                        <CircularLoader/>
+                        <CircularLoader />
                     </Col>
                 </Row>
             }
@@ -226,16 +224,10 @@ export default function FastestLaps() {
                 <>
                     <Row>
                         <Col className="mb-3">
-                            <div className="inline-input-group">
-                                <label className="input-checkbox">
-                                    <input type="checkbox"
-                                           checked={displayOnlyOneFastestLapPerRunner}
-                                           onChange={e => setDisplayOnlyOneFastestLapPerRunner(e.target.checked)}
-                                    />
-                                    <span/>
-                                    N'afficher que le tour le plus rapide de chaque coureur
-                                </label>
-                            </div>
+                            <Checkbox label="N'afficher que le tour le plus rapide de chaque coureur"
+                                      checked={displayOnlyOneFastestLapPerRunner}
+                                      onChange={e => setDisplayOnlyOneFastestLapPerRunner(e.target.checked)}
+                            />
                         </Col>
                     </Row>
 
@@ -251,7 +243,7 @@ export default function FastestLaps() {
                     {pageCount > 1 &&
                         <Row>
                             <Col className="mt-3 pagination-container">
-                                <Pagination minPage={1} maxPage={pageCount} currentPage={page} setPage={setPage}/>
+                                <Pagination minPage={1} maxPage={pageCount} currentPage={page} setPage={setPage} />
                             </Col>
                         </Row>
                     }

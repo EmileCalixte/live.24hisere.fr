@@ -1,6 +1,6 @@
-import {useContext, useEffect, useMemo, useState} from "react";
-import {getRaceTime, isRaceFinished, isRaceStarted} from "../../helpers/raceHelper";
-import {type Race} from "../../types/Race";
+import {useContext, useMemo} from "react";
+import {isRaceFinished, isRaceStarted} from "../../helpers/raceHelper";
+import {useRaceTime} from "../../hooks/useRaceTime";
 import {formatMsAsDuration} from "../../util/utils";
 import {appDataContext} from "../App";
 
@@ -12,34 +12,19 @@ interface RaceTimerProps {
 export default function RaceTimer({race, allowNegative = false}: RaceTimerProps) {
     const {serverTimeOffset} = useContext(appDataContext);
 
-    // The current race time
-    const [raceTime, setRaceTime] = useState(0);
+    const raceTime = useRaceTime(race, serverTimeOffset);
 
     const formattedRaceTime = useMemo(() => {
+        if (!isRaceStarted(race, serverTimeOffset) && !allowNegative) {
+            return formatMsAsDuration(0);
+        }
+
+        if (isRaceFinished(race, serverTimeOffset)) {
+            return formatMsAsDuration(race.duration * 1000);
+        }
+
         return formatMsAsDuration(raceTime);
-    }, [raceTime]);
-
-    useEffect(() => {
-        const updateRaceTime = () => {
-            if (!isRaceStarted(race, serverTimeOffset) && !allowNegative) {
-                setRaceTime(0);
-                return;
-            }
-
-            if (isRaceFinished(race, serverTimeOffset)) {
-                setRaceTime(race.duration * 1000);
-                return;
-            }
-
-            setRaceTime(getRaceTime(race, serverTimeOffset));
-        };
-
-        const interval = window.setInterval(updateRaceTime, 1000);
-
-        updateRaceTime();
-
-        return () => window.clearInterval(interval);
-    }, [serverTimeOffset, race, allowNegative]);
+    }, [allowNegative, race, raceTime, serverTimeOffset]);
 
     return (
         <>{formattedRaceTime}</>

@@ -3,7 +3,7 @@
  *
  * See https://www.athle.fr/asp.net/main.html/html.aspx?htmlid=25 for list of existing codes
  */
-export type CategoryShortCode = string;
+type CategoryShortCode = string;
 
 /**
  * An object representing an FFA category
@@ -23,6 +23,4 @@ interface Category {
 /**
  * An object whose key is a category short code and value is the corresponding name
  */
-export type CategoriesDict = Record<CategoryShortCode, string>;
-
-export default Category;
+type CategoriesDict = Record<CategoryShortCode, string>;

@@ -319,19 +319,6 @@ dialog.modal .close-button:hover {
     cursor: pointer;
 }
 
-#ranking-settings-container {
-    display: flex;
-    flex-wrap: wrap;
-
-    gap: 15px 30px;
-}
-
-#ranking-race-select,
-#ranking-settings-category-select {
-    width: 360px;
-    max-width: calc(100vw - 32px);
-}
-
 .race-time-input {
     font-size: 0.9em;
     width: 6ch;
