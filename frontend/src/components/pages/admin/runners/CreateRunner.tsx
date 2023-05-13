@@ -4,6 +4,7 @@ import {Navigate} from "react-router-dom";
 import {GENDER} from "../../../../constants/Gender";
 import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
 import ToastUtil from "../../../../util/ToastUtil";
+import {useStateWithNonNullableSetter} from "../../../../util/utils";
 import {userContext} from "../../../App";
 import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../ui/breadcrumbs/Crumb";
@@ -20,7 +21,7 @@ export default function CreateRunner() {
     const [lastname, setLastname] = useState("");
     const [gender, setGender] = useState(GENDER.M);
     const [birthYear, setBirthYear] = useState(((new Date()).getFullYear() - 30).toString());
-    const [raceId, setRaceId] = useState<number | null>(null);
+    const [raceId, setRaceId] = useStateWithNonNullableSetter<number | null>(null);
 
     const [isSaving, setIsSaving] = useState(false);
 
