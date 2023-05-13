@@ -2,9 +2,9 @@ import React, {useCallback, useContext, useEffect, useState} from "react";
 import {Col, Row} from "react-bootstrap";
 import {Navigate} from "react-router-dom";
 import {GENDER} from "../../../../constants/Gender";
+import {useStateWithNonNullableSetter} from "../../../../hooks/useStateWithNonNullableSetter";
 import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
 import ToastUtil from "../../../../util/ToastUtil";
-import {useStateWithNonNullableSetter} from "../../../../util/utils";
 import {userContext} from "../../../App";
 import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../ui/breadcrumbs/Crumb";
@@ -42,7 +42,7 @@ export default function CreateRunner() {
         if (raceId === null && responseRaces.length > 0) {
             setRaceId(responseRaces[0].id);
         }
-    }, [accessToken, raceId]);
+    }, [accessToken, raceId, setRaceId]);
 
     const onSubmit = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();

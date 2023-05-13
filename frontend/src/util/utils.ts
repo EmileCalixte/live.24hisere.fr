@@ -1,4 +1,3 @@
-import {useState} from "react";
 import config from "../config/config";
 
 export const SORT_ASC = 1;
@@ -10,10 +9,6 @@ export function verbose(...items: any[]) {
     }
 
     console.log("%c[v]", "color: orange", ...items);
-}
-
-export function useStateWithNonNullableSetter<S>(initialState: S | (() => S)): ReactUseStateResultWithNonNullableSetter<S> {
-    return useState<S>(initialState) as ReactUseStateResultWithNonNullableSetter<S>;
 }
 
 export function formatDateForApi(date: Date): string {
