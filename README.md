@@ -22,6 +22,8 @@ Les dépendances des applications backend et frontend sont installées automatiq
 
 Créez le fichier `backend/config/config.php` à partir du modèle `backend/config/config.default.php` et renseignez-y les paramètres relatifs à l'environnement d'exécution.
 
+Créez le fichier `backend-nest/.env` à partir du modèle `backend-nest/.env.default` et renseignez-y les paramètres relatifs à l'environnement d'exécution.
+
 #### Frontend
 
 Créez le fichier `frontend/src/config/config.ts` à partir du modèle `frontend/src/config/config.default.ts` et renseignez-y les paramètres relatifs à l'environnement d'exécution.
@@ -52,13 +54,19 @@ La commande suivante permet de mettre à jour la structure de la base de donnée
 docker compose exec backend vendor/bin/doctrine orm:schema-tool:update --dump-sql --force
 ```
 
+La commande suivante permet de générer le client Prisma à partir de la structure de données définie dans `/backend-nest/prisma/schema.prisma` :
+
+```sh
+docker compose exec backend-nest npx prisma generate
+```
+
 ## Import des données
 
 ### Import des coureurs
 
 L'application backend fournit une commande à exécuter sur le serveur pour importer les coureurs à partir d'un fichier CSV.
 
-La structure du fichier CSV doit être la suivante (l'ordre des colonnes est important, mais les intitulés des colonnes dans la ligne d'en-tête n'ont pas d'importance) : 
+La structure du fichier CSV doit être la suivante (l'ordre des colonnes est important, mais les intitulés des colonnes dans la ligne d'en-tête n'ont pas d'importance) :
 
 ```csv
 Dossard;Nom;Prénom;Date de naissance;Sexe
@@ -67,16 +75,16 @@ Dossard;Nom;Prénom;Date de naissance;Sexe
 ...
 ```
 
-Utilisation de la commande : 
+Utilisation de la commande :
 
-```sh 
+```sh
 ./bin/console app:import-runners <chemin fichier CSV>
 
 # L'option "separator" permet de préciser le séparateur de données selon le format du fichier CSV
 ./bin/console app:import-runners <chemin fichier CSV> --separator ","
 ```
 
-L'utilisateur doit avoir la permission d'exécuter fichier `/backend/bin/console` : 
+L'utilisateur doit avoir la permission d'exécuter fichier `/backend/bin/console` :
 
 ```sh
 chmod u+x backend/bin/console
@@ -99,7 +107,7 @@ Un utilisateur est inclut dans les données chargées par défaut depuis le rép
 
 ```sh
 ./bin/console app:create-user
- 
+
 # Pour exécuter la commande avec l'environnement de développement Docker Compose :
 docker compose exec backend ./bin/console app:create-user
 ```
@@ -117,6 +125,6 @@ docker compose exec backend /app/bin/console cron:import-passages
 
 ### Backend
 
-```sh 
+```sh
 docker compose exec backend ./vendor/bin/phpunit --testdox tests
 ```
