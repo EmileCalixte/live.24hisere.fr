@@ -1,34 +1,31 @@
 import {HttpService} from "@nestjs/axios";
-import {Injectable, Logger} from "@nestjs/common";
-import {Cron} from "@nestjs/schedule";
+import {Injectable} from "@nestjs/common";
 import {AxiosError} from "axios";
 import {catchError, firstValueFrom} from "rxjs";
-import * as dotenv from "dotenv";
-
-dotenv.config();
-
-// TODO move this function somewhere else
-function getTaksInfo(intervalEnvVar: string | undefined): [string, boolean] {
-    if (intervalEnvVar === undefined) {
-        return ["", false];
-    }
-
-    return [intervalEnvVar, true];
-}
-
-// TODO log enabled tasks
-const [importPassagesTaskInterval, isImportPassagesTaskEnabled] = getTaksInfo(process.env.IMPORT_PASSAGES_TASK_CRON);
+import {TaskService} from "./taskService";
+import {SchedulerRegistry} from "@nestjs/schedule";
 
 @Injectable()
-export class ImportPassagesService {
-    private readonly logger = new Logger("Tasks");
+export class ImportPassagesService extends TaskService {
+    private static readonly taskName = "import-passages";
+    private static readonly intervalEnvVar = "IMPORT_PASSAGES_TASK_CRON";
 
-    constructor(private readonly httpService: HttpService) {}
+    constructor(
+        private readonly httpService: HttpService,
+        protected readonly schedulerRegistry: SchedulerRegistry,
+    ) {
+        super(schedulerRegistry);
+    }
 
-    @Cron(importPassagesTaskInterval, {
-        disabled: !isImportPassagesTaskEnabled,
-    })
-    async importPassages() {
+    protected getIntervalEnvVarName() {
+        return ImportPassagesService.intervalEnvVar;
+    }
+
+    protected getTaskName(): string {
+        return ImportPassagesService.taskName;
+    }
+
+    protected async task(): Promise<void> {
         this.logger.log(`Test cron ${new Date().toISOString()}`);
 
         const {data} = await firstValueFrom(
@@ -36,8 +33,8 @@ export class ImportPassagesService {
                 catchError((error: AxiosError) => {
                     this.logger.error(error);
                     throw "An error occurred";
-                })
-            )
+                }),
+            ),
         );
 
         console.log(data.length);
