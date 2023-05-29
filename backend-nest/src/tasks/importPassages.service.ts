@@ -3,6 +3,9 @@ import {Injectable, Logger} from "@nestjs/common";
 import {Cron} from "@nestjs/schedule";
 import {AxiosError} from "axios";
 import {catchError, firstValueFrom} from "rxjs";
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 // TODO move this function somewhere else
 function getTaksInfo(intervalEnvVar: string | undefined): [string, boolean] {
