@@ -1,9 +1,6 @@
 import {Logger} from "@nestjs/common";
 import {SchedulerRegistry} from "@nestjs/schedule";
 import {CronJob} from "cron";
-import * as dotenv from "dotenv";
-
-dotenv.config();
 
 export abstract class TaskService {
     protected readonly logger;
@@ -16,6 +13,7 @@ export abstract class TaskService {
         const cronTime = this.getCronTime();
 
         if (cronTime === false) {
+            this.logger.log(`Interval for task ${this.getTaskName()} not defined, skipping`);
             return;
         }
 
