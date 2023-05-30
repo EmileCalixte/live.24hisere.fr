@@ -13,6 +13,7 @@ import {ImportPassagesService} from "./tasks/importPassages.service";
 import {UserService} from "./services/database/entities/user.service";
 import {AppDataController} from "./controllers/appData.controller";
 import {MiscService} from "./services/database/entities/misc.service";
+import {ConfigService} from "./services/database/entities/config.service";
 
 const appServices = [
     AuthService,
@@ -23,6 +24,7 @@ const appServices = [
 const databaseServices = [
     PrismaService,
     AccessTokenService,
+    ConfigService,
     MiscService,
     UserService,
 ];

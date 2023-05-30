@@ -7,7 +7,6 @@ const KEY_LAST_UPDATE_TIME = "last_update_time";
 
 @Injectable()
 export class MiscService {
-
     constructor(private readonly prisma: PrismaService) {}
 
     public async getLastUpdateTime(): Promise<Date | null>;
