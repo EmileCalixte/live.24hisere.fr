@@ -11,6 +11,8 @@ import {PasswordService} from "./services/password.service";
 import {RandomService} from "./services/random.service";
 import {ImportPassagesService} from "./tasks/importPassages.service";
 import {UserService} from "./services/database/entities/user.service";
+import {AppDataController} from "./controllers/appData.controller";
+import {MiscService} from "./services/database/entities/misc.service";
 
 const appServices = [
     AuthService,
@@ -21,6 +23,7 @@ const appServices = [
 const databaseServices = [
     PrismaService,
     AccessTokenService,
+    MiscService,
     UserService,
 ];
 
@@ -37,6 +40,7 @@ const tasksServices = [
         {...HttpModule.register({}), global: true},
     ],
     controllers: [
+        AppDataController,
         AuthController,
     ],
     providers: [
