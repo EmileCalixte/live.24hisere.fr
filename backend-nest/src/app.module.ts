@@ -14,6 +14,8 @@ import {UserService} from "./services/database/entities/user.service";
 import {AppDataController} from "./controllers/appData.controller";
 import {MiscService} from "./services/database/entities/misc.service";
 import {ConfigService} from "./services/database/entities/config.service";
+import {RacesController} from "./controllers/races.controller";
+import {RacesService} from "./services/database/entities/races.service";
 
 const appServices = [
     AuthService,
@@ -26,6 +28,7 @@ const databaseServices = [
     AccessTokenService,
     ConfigService,
     MiscService,
+    RacesService,
     UserService,
 ];
 
@@ -44,6 +47,7 @@ const tasksServices = [
     controllers: [
         AppDataController,
         AuthController,
+        RacesController,
     ],
     providers: [
         ...appServices,
