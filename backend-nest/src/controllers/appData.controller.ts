@@ -2,8 +2,8 @@ import {MiscService} from "./../services/database/entities/misc.service";
 import {Controller, Get} from "@nestjs/common";
 
 interface AppDataResponse {
-    currentTime: string;
-    lastUpdateTime: string | null;
+    currentTime: DateISOString;
+    lastUpdateTime: DateISOString | null;
 }
 
 @Controller()
