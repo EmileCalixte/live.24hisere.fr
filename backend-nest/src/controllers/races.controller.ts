@@ -1,7 +1,6 @@
 import {Controller, Get} from "@nestjs/common";
 import {RacesService} from "src/services/database/entities/races.service";
 import {PublicRace} from "src/types/Race";
-import {excludeKeys} from "src/utils/misc.utils";
 
 interface RacesResponse {
     races: PublicRace[];

@@ -1,7 +1,8 @@
 import {Injectable} from "@nestjs/common";
 import {PrismaService} from "../prisma.service";
 import {excludeKeys} from "src/utils/misc.utils";
-import {PublicRaceWithRunnerCount} from "src/types/Race";
+import {PublicRaceWithRunnerCount, RaceAndRunners} from "src/types/Race";
+import {Prisma} from "@prisma/client";
 
 @Injectable()
 export class RacesService {
@@ -10,7 +11,7 @@ export class RacesService {
     ) {}
 
     async getPublicRaces(): Promise<PublicRaceWithRunnerCount[]> {
-        const races = await this.prisma.race.findMany({
+        const races: RaceAndRunners[] = await this.prisma.race.findMany({
             where: {
                 isPublic: true,
             },
@@ -22,12 +23,36 @@ export class RacesService {
             },
         });
 
-        return races.map(race => excludeKeys(
-            {
-                ...race,
-                runnerCount: race.runners.length,
+        return this.getPublicRacesWithRunnerCountFromRacesWithRunners(races);
+    }
+
+    async getPublicRace(raceWhereUniqueInput: Prisma.RaceWhereUniqueInput): Promise<PublicRaceWithRunnerCount | null> {
+        const race = await this.prisma.race.findUnique({
+            where: raceWhereUniqueInput,
+            include: {
+                runners: true,
             },
-            ["isPublic", "order", "runners"],
-        ));
+        });
+
+        if (race === null) {
+            return null;
+        }
+
+        if (!race.isPublic) {
+            return null;
+        }
+
+        return this.getPublicRaceWithRunnerCountFromRaceWithRunner(race);
+    }
+
+    private getPublicRacesWithRunnerCountFromRacesWithRunners(races: RaceAndRunners[]): PublicRaceWithRunnerCount[] {
+        return races.map(race => this.getPublicRaceWithRunnerCountFromRaceWithRunner(race));
+    }
+
+    private getPublicRaceWithRunnerCountFromRaceWithRunner(race: RaceAndRunners): PublicRaceWithRunnerCount {
+        return excludeKeys({
+            ...race,
+            runnerCount: race.runners.length,
+        }, ["isPublic", "order", "runners"]);
     }
 }
