@@ -1,4 +1,4 @@
-import {ForbiddenException, Injectable, UnauthorizedException} from "@nestjs/common";
+import {ForbiddenException, Injectable, InternalServerErrorException, UnauthorizedException} from "@nestjs/common";
 import {AccessToken, User} from "@prisma/client";
 import {UserService} from "./database/entities/user.service";
 import {AccessTokenService} from "./database/entities/accessToken.service";
@@ -49,7 +49,7 @@ export class AuthService {
         });
 
         if (!user) {
-            throw new UnauthorizedException(UNABLE_TO_AUTHENTICATE_MESSAGE);
+            throw new InternalServerErrorException(UNABLE_TO_AUTHENTICATE_MESSAGE);
         }
 
         return user;
