@@ -5,7 +5,7 @@ import {PublicRaceWithRunnerCount, RaceAndRunners} from "src/types/Race";
 import {Prisma} from "@prisma/client";
 
 @Injectable()
-export class RacesService {
+export class RaceService {
     constructor(
         private readonly prisma: PrismaService,
     ) {}

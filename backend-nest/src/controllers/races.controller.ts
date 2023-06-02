@@ -1,5 +1,5 @@
 import {Controller, Get} from "@nestjs/common";
-import {RacesService} from "src/services/database/entities/races.service";
+import {RaceService} from "src/services/database/entities/race.service";
 import {PublicRace} from "src/types/Race";
 
 interface RacesResponse {
@@ -9,15 +9,15 @@ interface RacesResponse {
 @Controller()
 export class RacesController {
     constructor(
-        private readonly racesService: RacesService,
+        private readonly raceService: RaceService,
     ) {}
 
     @Get("/races")
     async getRaces(): Promise<RacesResponse> {
-        const races = await this.racesService.getPublicRaces();
+        const races = await this.raceService.getPublicRaces();
 
         return {
-            races: races,
+            races,
         };
     }
 }
