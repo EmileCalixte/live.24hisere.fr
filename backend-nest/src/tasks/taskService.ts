@@ -5,8 +5,12 @@ import {CronJob} from "cron";
 export abstract class TaskService {
     protected readonly logger;
 
+    private executionInProgress = false;
+    private previousExecutionStartTime: Date | null = null;
+
     constructor(
         protected readonly schedulerRegistry: SchedulerRegistry,
+        protected readonly preventOverlapping: boolean = true,
     ) {
         this.logger = new Logger(`Tasks - ${this.getTaskName()}`);
 
@@ -19,7 +23,7 @@ export abstract class TaskService {
 
         this.logger.log(`Enabling task ${this.getTaskName()}`);
 
-        const job = new CronJob(cronTime, this.task.bind(this));
+        const job = new CronJob(cronTime, this.executeTask.bind(this));
 
         this.schedulerRegistry.addCronJob(this.getTaskName(), job);
         job.start();
@@ -28,7 +32,7 @@ export abstract class TaskService {
     /**
      * The function to execute periodically
      */
-    protected abstract task(): void;
+    protected abstract task(): Promise<void>;
 
     protected abstract getTaskName(): string;
 
@@ -42,5 +46,20 @@ export abstract class TaskService {
         }
 
         return cronTime;
+    }
+
+    private executeTask(): void {
+        if (this.executionInProgress && this.preventOverlapping) {
+            this.logger.log(`Previous execution is still in progress (started at ${this.previousExecutionStartTime?.toISOString()}), skipping this one`);
+            return;
+        }
+
+        this.executionInProgress = true;
+        this.previousExecutionStartTime = new Date();
+
+        this.task()
+            .finally(() => {
+                this.executionInProgress = false;
+            });
     }
 }
