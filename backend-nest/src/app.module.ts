@@ -18,9 +18,12 @@ import {RacesController} from "./controllers/races.controller";
 import {RaceService} from "./services/database/entities/race.service";
 import {RunnerService} from "./services/database/entities/runner.service";
 import {RunnersController} from "./controllers/runners.controller";
+import {PassageService} from "./services/database/entities/passage.service";
+import {DagFileService} from "./services/dagFile.service";
 
 const appServices = [
     AuthService,
+    DagFileService,
     PasswordService,
     RandomService,
 ];
@@ -30,6 +33,7 @@ const databaseServices = [
     AccessTokenService,
     ConfigService,
     MiscService,
+    PassageService,
     RaceService,
     RunnerService,
     UserService,

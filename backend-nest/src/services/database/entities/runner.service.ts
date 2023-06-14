@@ -1,6 +1,6 @@
 import {Injectable} from "@nestjs/common";
 import {PrismaService} from "../prisma.service";
-import {Runner} from "@prisma/client";
+import {Prisma, Runner} from "@prisma/client";
 
 @Injectable()
 export class RunnerService {
@@ -8,8 +8,14 @@ export class RunnerService {
         private readonly prisma: PrismaService,
     ) {}
 
+    async getRunner(where: Prisma.RunnerWhereUniqueInput): Promise<Runner | null> {
+        return this.prisma.runner.findUnique({
+            where,
+        });
+    }
+
     async getPublicRunners(): Promise<Runner[]> {
-        const runners = await this.prisma.runner.findMany({
+        return this.prisma.runner.findMany({
             where: {
                 race: {
                     isPublic: true,
@@ -19,7 +25,5 @@ export class RunnerService {
                 id: "asc",
             },
         });
-
-        return runners;
     }
 }
