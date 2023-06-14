@@ -33,7 +33,7 @@ model Misc {
 
 model Passage {
   id Int @default(autoincrement()) @id
-  detectionId Int? @map("detection_id") // Not null if the passage comes from a detection of the timing system
+  detectionId Int? @map("detection_id") @unique // Not null if the passage comes from a detection of the timing system
   runner Runner @relation(fields: [runnerId], references: [id], onUpdate: Restrict, onDelete: Restrict)
   runnerId Int @map("runner_id")
   time DateTime @db.DateTime(0)

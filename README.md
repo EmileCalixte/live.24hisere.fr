@@ -54,6 +54,13 @@ La commande suivante permet de mettre à jour la structure de la base de donnée
 docker compose exec backend vendor/bin/doctrine orm:schema-tool:update --dump-sql --force
 ```
 
+La commande suivante permet de créer une migration et mettre à jour la structure de la base de données à partir de la structure de données définie dans `/backend-nest/prisma/schema.prisma` :
+
+```sh
+docker compose exec backend-nest npx prisma migrate dev --name <nom migration>
+```
+
+
 La commande suivante permet de générer le client Prisma à partir de la structure de données définie dans `/backend-nest/prisma/schema.prisma` :
 
 ```sh
