@@ -1,11 +1,6 @@
-import {DateISOString} from "src/types/Date";
 import {MiscService} from "./../services/database/entities/misc.service";
 import {Controller, Get} from "@nestjs/common";
-
-interface AppDataResponse {
-    currentTime: DateISOString;
-    lastUpdateTime: DateISOString | null;
-}
+import {AppDataResponse} from "../types/responses/AppData";
 
 @Controller()
 export class AppDataController {

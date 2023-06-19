@@ -1,10 +1,6 @@
-import {Runner} from "@prisma/client";
+import {RunnersResponse} from "../types/responses/Runners";
 import {RunnerService} from "./../services/database/entities/runner.service";
 import {Controller, Get} from "@nestjs/common";
-
-interface RunnersResponse {
-    runners: Runner[];
-}
 
 @Controller()
 export class RunnersController {

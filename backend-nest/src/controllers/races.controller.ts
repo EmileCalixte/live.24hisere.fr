@@ -1,10 +1,6 @@
 import {Controller, Get} from "@nestjs/common";
 import {RaceService} from "src/services/database/entities/race.service";
-import {PublicRace} from "src/types/Race";
-
-interface RacesResponse {
-    races: PublicRace[];
-}
+import {RacesResponse} from "src/types/responses/Races";
 
 @Controller()
 export class RacesController {
