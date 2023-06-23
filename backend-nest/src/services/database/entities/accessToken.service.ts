@@ -1,7 +1,7 @@
-import {Injectable} from "@nestjs/common";
-import {AccessToken, Prisma, User} from "@prisma/client";
-import {HEXADECIMAL, RandomService} from "../../random.service";
-import {PrismaService} from "../prisma.service";
+import { Injectable } from "@nestjs/common";
+import { type AccessToken, type Prisma, type User } from "@prisma/client";
+import { HEXADECIMAL, RandomService } from "../../random.service";
+import { PrismaService } from "../prisma.service";
 
 export const ACCESS_TOKEN_LIFETIME = 4 * 60 * 60 * 1000;
 

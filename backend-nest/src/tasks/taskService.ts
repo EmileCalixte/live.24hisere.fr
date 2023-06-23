@@ -1,6 +1,6 @@
-import {Logger} from "@nestjs/common";
-import {SchedulerRegistry} from "@nestjs/schedule";
-import {CronJob} from "cron";
+import { Logger } from "@nestjs/common";
+import { type SchedulerRegistry } from "@nestjs/schedule";
+import { CronJob } from "cron";
 
 export abstract class TaskService {
     protected readonly logger;
@@ -50,7 +50,7 @@ export abstract class TaskService {
 
     private executeTask(): void {
         if (this.executionInProgress && this.preventOverlapping) {
-            this.logger.log(`Previous execution is still in progress (started at ${this.previousExecutionStartTime?.toISOString()}), skipping this one`);
+            this.logger.log(`Previous execution is still in progress (started at ${this.previousExecutionStartTime?.toISOString() ?? "unknown time"}), skipping this one`);
             return;
         }
 

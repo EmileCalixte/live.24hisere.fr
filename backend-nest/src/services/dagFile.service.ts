@@ -1,5 +1,5 @@
-import {DagDetectionType, DagFileLineData} from "src/types/Dag";
-import {isDateValid} from "src/utils/date.utils";
+import { type DagDetectionType, type DagFileLineData } from "src/types/Dag";
+import { isDateValid } from "src/utils/date.utils";
 
 export class DagFileService {
     getDataFromDagFileLine(line: string): DagFileLineData {

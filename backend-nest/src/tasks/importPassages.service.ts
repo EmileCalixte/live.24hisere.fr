@@ -1,14 +1,14 @@
-import {RunnerService} from "./../services/database/entities/runner.service";
-import {HttpService} from "@nestjs/axios";
-import {Injectable} from "@nestjs/common";
-import {AxiosError} from "axios";
-import {catchError, firstValueFrom} from "rxjs";
-import {TaskService} from "./taskService";
-import {SchedulerRegistry} from "@nestjs/schedule";
-import {ConfigService} from "src/services/database/entities/config.service";
-import {PassageService} from "src/services/database/entities/passage.service";
-import {DagFileService} from "src/services/dagFile.service";
-import {DagFileLineData} from "src/types/Dag";
+import { RunnerService } from "../services/database/entities/runner.service";
+import { HttpService } from "@nestjs/axios";
+import { Injectable } from "@nestjs/common";
+import { type AxiosError, type AxiosResponse } from "axios";
+import { catchError, firstValueFrom } from "rxjs";
+import { TaskService } from "./taskService";
+import { SchedulerRegistry } from "@nestjs/schedule";
+import { ConfigService } from "src/services/database/entities/config.service";
+import { PassageService } from "src/services/database/entities/passage.service";
+import { DagFileService } from "src/services/dagFile.service";
+import { type DagFileLineData } from "src/types/Dag";
 
 @Injectable()
 export class ImportPassagesService extends TaskService {
@@ -26,7 +26,7 @@ export class ImportPassagesService extends TaskService {
         super(schedulerRegistry);
     }
 
-    protected getIntervalEnvVarName() {
+    protected getIntervalEnvVarName(): string {
         return ImportPassagesService.intervalEnvVar;
     }
 
@@ -44,11 +44,11 @@ export class ImportPassagesService extends TaskService {
 
         this.logger.log(`Importing passages from dag file located to ${dagFileUrl}`);
 
-        const {data} = await firstValueFrom(
+        const { data } = await firstValueFrom<AxiosResponse<string>>(
             this.httpService.get("http://static:8080/dag-file.txt").pipe(
                 catchError((error: AxiosError) => {
                     this.logger.error(error);
-                    throw "An error occurred";
+                    throw new Error("An error occurred");
                 }),
             ),
         );
@@ -60,7 +60,7 @@ export class ImportPassagesService extends TaskService {
         this.logger.log("Done");
     }
 
-    private async importPassagesFromDagFileContent(dagFileContent: string) {
+    private async importPassagesFromDagFileContent(dagFileContent: string): Promise<void> {
         const lines = dagFileContent.split(/(\r\n|\n|\r)/)
             .map(line => line.trim())
             .filter(line => line.length > 0);
@@ -69,7 +69,11 @@ export class ImportPassagesService extends TaskService {
 
         const dagData = lines.map(line => this.dagFileService.getDataFromDagFileLine(line));
 
-        await Promise.all(dagData.map(data => this.importPassageFromDagLineData(data)));
+        const results = await Promise.all(dagData.map(async data => this.importPassageFromDagLineData(data)));
+
+        const importedPassageCount = results.filter(Boolean).length;
+
+        this.logger.log(`Imported ${importedPassageCount} passages`);
     }
 
     private async importPassageFromDagLineData(data: DagFileLineData): Promise<boolean> {
@@ -78,20 +82,19 @@ export class ImportPassagesService extends TaskService {
         });
 
         if (existingPassage) {
-            this.logger.verbose(`Passage with detection ID ${data.detectionId} already exists, skipping`);
             return false;
         }
-
-        this.logger.verbose(`Importing passage with detection ID ${data.detectionId}`);
 
         const runner = await this.runnerService.getRunner({
             id: data.runnerId,
         });
 
         if (!runner) {
-            this.logger.verbose(`Runner with ID ${data.runnerId} not found, skipping this detection`);
+            this.logger.verbose(`Runner with ID ${data.runnerId} not found, skipping detection with ID ${data.detectionId}`);
             return false;
         }
+
+        this.logger.verbose(`Importing passage with detection ID ${data.detectionId}`);
 
         await this.passageService.savePassage({
             detectionId: data.detectionId,

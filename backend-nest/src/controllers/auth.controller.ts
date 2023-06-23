@@ -1,10 +1,10 @@
-import {Body, Controller, Get, Post, UseGuards} from "@nestjs/common";
-import {User} from "@prisma/client";
-import {LoggedInUser} from "../decorators/loggedInUser.decorator";
-import {LoginDto} from "../dtos/login.dto";
-import {AuthGuard} from "../guards/auth.guard";
-import {AuthService} from "../services/auth.service";
-import {CurrentUserInfoResponse, LoginResponse} from "../types/responses/Auth";
+import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
+import { User } from "@prisma/client";
+import { LoggedInUser } from "../decorators/loggedInUser.decorator";
+import { LoginDto } from "../dtos/login.dto";
+import { AuthGuard } from "../guards/auth.guard";
+import { AuthService } from "../services/auth.service";
+import { type CurrentUserInfoResponse, type LoginResponse } from "../types/responses/Auth";
 
 @Controller()
 export class AuthController {

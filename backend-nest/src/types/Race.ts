@@ -1,4 +1,4 @@
-import {Race, Runner} from "@prisma/client";
+import { type Race, type Runner } from "@prisma/client";
 
 export type PublicRace = Omit<Race, "isPublic" | "order">;
 

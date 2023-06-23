@@ -1,6 +1,6 @@
-import {CanActivate, ExecutionContext, ForbiddenException, Injectable} from "@nestjs/common";
-import {Request} from "express";
-import {AuthService} from "../services/auth.service";
+import { type CanActivate, type ExecutionContext, ForbiddenException, Injectable } from "@nestjs/common";
+import { type Request } from "express";
+import { AuthService } from "../services/auth.service";
 
 const ACCESS_TOKEN_MUST_BE_PROVIDED_MESSAGE = "Access token must be provided";
 

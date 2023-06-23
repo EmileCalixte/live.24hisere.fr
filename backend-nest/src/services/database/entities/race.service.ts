@@ -1,8 +1,8 @@
-import {Injectable} from "@nestjs/common";
-import {PrismaService} from "../prisma.service";
-import {excludeKeys} from "src/utils/misc.utils";
-import {PublicRaceWithRunnerCount, RaceAndRunners} from "src/types/Race";
-import {Prisma} from "@prisma/client";
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "../prisma.service";
+import { excludeKeys } from "src/utils/misc.utils";
+import { type PublicRaceWithRunnerCount, type RaceAndRunners } from "src/types/Race";
+import { type Prisma } from "@prisma/client";
 
 @Injectable()
 export class RaceService {

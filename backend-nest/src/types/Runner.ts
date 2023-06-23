@@ -1,7 +1,7 @@
-import {Runner} from ".prisma/client";
-import {PublicRace} from "./Race";
-import {PublicPassage} from "./Passage";
-import {Passage, Race} from "@prisma/client";
+import { type Runner } from ".prisma/client";
+import { type PublicRace } from "./Race";
+import { type PublicPassage } from "./Passage";
+import { type Passage, type Race } from "@prisma/client";
 
 export interface RunnerWithRace extends Runner {
     race: Race;

@@ -1,4 +1,4 @@
-import {argon2id} from "argon2";
+import { argon2id } from "argon2";
 import * as argon2 from "argon2";
 
 const PARALLELISM = 1;
@@ -7,7 +7,7 @@ const TIME_COST = 4;
 
 export class PasswordService {
     async hashPassword(password: string): Promise<string> {
-        return await argon2.hash(password, {
+        return argon2.hash(password, {
             type: argon2id,
             parallelism: PARALLELISM,
             memoryCost: MEMORY_COST,
@@ -16,6 +16,6 @@ export class PasswordService {
     }
 
     async verifyPassword(hash: string, password: string): Promise<boolean> {
-        return await argon2.verify(hash, password);
+        return argon2.verify(hash, password);
     }
 }

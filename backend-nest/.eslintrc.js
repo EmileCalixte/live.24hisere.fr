@@ -2,12 +2,13 @@ module.exports = {
     parser: "@typescript-eslint/parser",
     parserOptions: {
         project: "tsconfig.json",
+        ecmaVersion: 2022,
         tsconfigRootDir: __dirname,
         sourceType: "module",
     },
-    plugins: ["@typescript-eslint/eslint-plugin"],
     extends: [
-        "plugin:@typescript-eslint/recommended",
+        "standard",
+        "standard-with-typescript",
     ],
     root: true,
     env: {
@@ -16,6 +17,16 @@ module.exports = {
     },
     ignorePatterns: [],
     rules: {
+        "comma-dangle": "off",
+        "@typescript-eslint/comma-dangle": ["error", {
+            arrays: "always-multiline",
+            objects: "always-multiline",
+            imports: "always-multiline",
+            exports: "always-multiline",
+            functions: "always-multiline",
+        }],
+
+        indent: "off",
         "@typescript-eslint/indent": ["error", 4, {
             SwitchCase: 1,
             ignoredNodes: [
@@ -25,22 +36,16 @@ module.exports = {
             ],
         }],
 
+        quotes: "off",
         "@typescript-eslint/quotes": ["error", "double"],
 
+        semi: "off",
         "@typescript-eslint/semi": ["error", "always"],
 
         "no-extra-semi": "error",
 
-        "@typescript-eslint/comma-dangle": ["error", {
-            "arrays": "always-multiline",
-            "objects": "always-multiline",
-            "imports": "always-multiline",
-            "exports": "always-multiline",
-            "functions": "always-multiline",
-        }],
-
-        "object-curly-spacing": ["error", "never"],
-        "@typescript-eslint/object-curly-spacing": ["error", "never"],
+        "no-return-await": "error",
+        "@typescript-eslint/return-await": "off",
 
         "@typescript-eslint/naming-convention": [
             "error",
@@ -76,7 +81,7 @@ module.exports = {
             multilineDetection: "brackets",
         }],
 
-        "@typescript-eslint/no-empty-function": ["error", {allow: ["arrowFunctions"]}],
+        "@typescript-eslint/no-empty-function": ["error"],
 
         "@typescript-eslint/space-before-function-paren": ["error", {
             anonymous: "always",
@@ -86,11 +91,8 @@ module.exports = {
 
         eqeqeq: ["error", "always"],
 
-        "brace-style": ["error", "1tbs", {allowSingleLine: true}],
+        "brace-style": ["error", "1tbs", { allowSingleLine: true }],
 
-        "@typescript-eslint/interface-name-prefix": "off",
-        "@typescript-eslint/explicit-function-return-type": "off",
-        "@typescript-eslint/explicit-module-boundary-types": "off",
-        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/strict-boolean-expressions": "off",
     },
 };

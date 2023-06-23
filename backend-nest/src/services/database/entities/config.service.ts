@@ -1,6 +1,6 @@
-import {Injectable} from "@nestjs/common";
-import {PrismaService} from "../prisma.service";
-import {Config, Prisma} from "@prisma/client";
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "../prisma.service";
+import { type Config, type Prisma } from "@prisma/client";
 
 const KEY_IMPORT_DAG_FILE_PATH = "import_dag_file_path";
 
@@ -16,7 +16,7 @@ export class ConfigService {
 
     private async getLine(key: NonNullable<Prisma.ConfigWhereUniqueInput["key"]>): Promise<Config | null> {
         return this.prisma.config.findUnique({
-            where: {key},
+            where: { key },
         });
     }
 

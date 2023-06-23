@@ -1,6 +1,6 @@
-import {Controller, Get} from "@nestjs/common";
-import {RaceService} from "src/services/database/entities/race.service";
-import {RacesResponse} from "src/types/responses/Races";
+import { Controller, Get } from "@nestjs/common";
+import { RaceService } from "src/services/database/entities/race.service";
+import { type RacesResponse } from "src/types/responses/Races";
 
 @Controller()
 export class RacesController {

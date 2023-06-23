@@ -1,8 +1,8 @@
-import {ForbiddenException, Injectable, InternalServerErrorException, UnauthorizedException} from "@nestjs/common";
-import {AccessToken, User} from "@prisma/client";
-import {UserService} from "./database/entities/user.service";
-import {AccessTokenService} from "./database/entities/accessToken.service";
-import {PasswordService} from "./password.service";
+import { ForbiddenException, Injectable, InternalServerErrorException, UnauthorizedException } from "@nestjs/common";
+import { type AccessToken, type User } from "@prisma/client";
+import { UserService } from "./database/entities/user.service";
+import { AccessTokenService } from "./database/entities/accessToken.service";
+import { PasswordService } from "./password.service";
 
 const INVALID_CREDENTIALS_MESSAGE = "Invalid credentials";
 const INVALID_ACCESS_TOKEN_MESSAGE = "Access token is invalid";
@@ -18,7 +18,7 @@ export class AuthService {
     ) {}
 
     async login(username: string, password: string): Promise<AccessToken> {
-        const user = await this.userService.getUser({username});
+        const user = await this.userService.getUser({ username });
 
         if (!user) {
             throw new ForbiddenException(INVALID_CREDENTIALS_MESSAGE);
@@ -30,11 +30,11 @@ export class AuthService {
             throw new ForbiddenException(INVALID_CREDENTIALS_MESSAGE);
         }
 
-        return await this.accessTokenService.createAccessToken(user);
+        return this.accessTokenService.createAccessToken(user);
     }
 
     async authenticateUser(token: string): Promise<User> {
-        const accessToken = await this.accessTokenService.getAccessToken({token});
+        const accessToken = await this.accessTokenService.getAccessToken({ token });
 
         if (!accessToken) {
             throw new UnauthorizedException(INVALID_ACCESS_TOKEN_MESSAGE);

@@ -1,8 +1,8 @@
-import {Injectable} from "@nestjs/common";
-import {PrismaService} from "../prisma.service";
-import {Misc, Prisma} from "@prisma/client";
-import {isDateValid} from "src/utils/date.utils";
-import {DateISOString} from "src/types/Date";
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "../prisma.service";
+import { type Misc, type Prisma } from "@prisma/client";
+import { isDateValid } from "src/utils/date.utils";
+import { type DateISOString } from "src/types/Date";
 
 const KEY_LAST_UPDATE_TIME = "last_update_time";
 
@@ -35,7 +35,7 @@ export class MiscService {
 
     private async getLine(key: NonNullable<Prisma.MiscWhereUniqueInput["key"]>): Promise<Misc | null> {
         return this.prisma.misc.findUnique({
-            where: {key},
+            where: { key },
         });
     }
 
