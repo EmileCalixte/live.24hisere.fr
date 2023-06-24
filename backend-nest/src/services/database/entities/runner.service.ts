@@ -29,6 +29,20 @@ export class RunnerService {
         });
     }
 
+    async getPublicRunnersOfRace(raceId: number): Promise<Runner[]> {
+        return this.prisma.runner.findMany({
+            where: {
+                race: {
+                    id: raceId,
+                    isPublic: true,
+                },
+            },
+            orderBy: {
+                id: "asc",
+            },
+        });
+    }
+
     async getPublicRunner(where: Prisma.RunnerWhereUniqueInput): Promise<PublicRunnerWithRaceAndPassages | null> {
         const runner = await this.prisma.runner.findUnique({
             where,

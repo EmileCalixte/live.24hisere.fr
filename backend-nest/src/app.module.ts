@@ -3,12 +3,14 @@ import { type MiddlewareConsumer, Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { ScheduleModule } from "@nestjs/schedule";
 import { AuthController } from "./controllers/auth.controller";
+import { RankingController } from "./controllers/ranking.controller";
 import { AccessLoggerMiddleware } from "./middlewares/accessLogger.middleware";
 import { PrismaService } from "./services/database/prisma.service";
 import { AccessTokenService } from "./services/database/entities/accessToken.service";
 import { AuthService } from "./services/auth.service";
 import { PasswordService } from "./services/password.service";
 import { RandomService } from "./services/random.service";
+import { RankingService } from "./services/ranking.service";
 import { ImportPassagesService } from "./tasks/importPassages.service";
 import { UserService } from "./services/database/entities/user.service";
 import { AppDataController } from "./controllers/appData.controller";
@@ -26,6 +28,7 @@ const appServices = [
     DagFileService,
     PasswordService,
     RandomService,
+    RankingService,
 ];
 
 const databaseServices = [
@@ -55,6 +58,7 @@ const tasksServices = [
         AppDataController,
         AuthController,
         RacesController,
+        RankingController,
         RunnersController,
     ],
     providers: [
