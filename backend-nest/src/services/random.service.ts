@@ -1,3 +1,4 @@
+import { Injectable } from "@nestjs/common";
 import * as crypto from "crypto";
 
 export const DIGITS = "0123456789";
@@ -7,6 +8,7 @@ export const UPPERCASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 export const ALL_CASE = LOWERCASE + UPPERCASE;
 const ALL_CASE_AND_DIGITS = ALL_CASE + DIGITS;
 
+@Injectable()
 export class RandomService {
     getRandomString(length: number, availableCharacters: string = ALL_CASE_AND_DIGITS): string {
         const randomStringCharacters: string[] = [];

@@ -1,6 +1,8 @@
+import { Injectable } from "@nestjs/common";
 import { type DagDetectionType, type DagFileLineData } from "src/types/Dag";
 import { isDateValid } from "src/utils/date.utils";
 
+@Injectable()
 export class DagFileService {
     getDataFromDagFileLine(line: string): DagFileLineData {
         const lineItems = line.trim().split(/\s+/);
