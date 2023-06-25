@@ -30,7 +30,7 @@ services:
       - 8000:80
 
   database:
-    image: mariadb:10.3
+    image: mariadb:10.6.14
     restart: always
     volumes:
       - ./sql/:/docker-entrypoint-initdb.d/
