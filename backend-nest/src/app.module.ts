@@ -2,6 +2,7 @@ import { HttpModule } from "@nestjs/axios";
 import { type MiddlewareConsumer, Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { ScheduleModule } from "@nestjs/schedule";
+import { UsersController } from "./controllers/admin/users.controller";
 import { AuthController } from "./controllers/auth.controller";
 import { RankingController } from "./controllers/ranking.controller";
 import { AccessLoggerMiddleware } from "./middlewares/accessLogger.middleware";
@@ -46,6 +47,18 @@ const tasksServices = [
     ImportPassagesService,
 ];
 
+const publicControllers = [
+    AppDataController,
+    AuthController,
+    RacesController,
+    RankingController,
+    RunnersController,
+];
+
+const adminControllers = [
+    UsersController,
+];
+
 @Module({
     imports: [
         ConfigModule.forRoot({
@@ -55,11 +68,8 @@ const tasksServices = [
         { ...HttpModule.register({}), global: true },
     ],
     controllers: [
-        AppDataController,
-        AuthController,
-        RacesController,
-        RankingController,
-        RunnersController,
+        ...publicControllers,
+        ...adminControllers,
     ],
     providers: [
         ...appServices,
