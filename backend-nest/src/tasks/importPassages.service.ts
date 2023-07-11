@@ -42,7 +42,7 @@ export class ImportPassagesService extends TaskService {
             return;
         }
 
-        this.logger.log(`Importing passages from dag file located to ${dagFileUrl}`);
+        this.logger.log(`Importing passages from dag file located at ${dagFileUrl}`);
 
         const { data } = await firstValueFrom<AxiosResponse<string>>(
             this.httpService.get("http://static:8080/dag-file.txt").pipe(

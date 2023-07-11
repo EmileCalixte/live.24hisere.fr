@@ -8,6 +8,10 @@ export class PassageService {
         private readonly prisma: PrismaService,
     ) {}
 
+    async getAllPassages(): Promise<Passage[]> {
+        return this.prisma.passage.findMany();
+    }
+
     async getAllPublicPassages(): Promise<Passage[]> {
         return this.prisma.passage.findMany({
             where: {

@@ -2,6 +2,7 @@ import { HttpModule } from "@nestjs/axios";
 import { type MiddlewareConsumer, Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { ScheduleModule } from "@nestjs/schedule";
+import { PassagesController } from "./controllers/admin/passages.controller";
 import { UsersController } from "./controllers/admin/users.controller";
 import { AuthController } from "./controllers/auth.controller";
 import { RankingController } from "./controllers/ranking.controller";
@@ -56,6 +57,7 @@ const publicControllers = [
 ];
 
 const adminControllers = [
+    PassagesController,
     UsersController,
 ];
 
