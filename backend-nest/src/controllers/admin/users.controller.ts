@@ -7,12 +7,12 @@ import { type UsersResponse } from "../../types/responses/admin/Users";
 import { excludeKeys } from "../../utils/misc.utils";
 
 @Controller()
+@UseGuards(AuthGuard)
 export class UsersController {
     constructor(
         private readonly userService: UserService,
     ) {}
 
-    @UseGuards(AuthGuard)
     @Get("/admin/users")
     async getUsers(@LoggedInUser() currentUser: User): Promise<UsersResponse> {
         const users = await this.userService.getUsers();

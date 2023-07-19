@@ -25,6 +25,7 @@ import { RunnerService } from "./services/database/entities/runner.service";
 import { RunnersController } from "./controllers/runners.controller";
 import { PassageService } from "./services/database/entities/passage.service";
 import { DagFileService } from "./services/dagFile.service";
+import { RaceNameDoesNotExistRule } from "./validation/rules/race/raceNameDoesNotExist.rule";
 
 const appServices = [
     AuthService,
@@ -47,6 +48,10 @@ const databaseServices = [
 
 const tasksServices = [
     ImportPassagesService,
+];
+
+const validationRules = [
+    RaceNameDoesNotExistRule,
 ];
 
 const publicControllers = [
@@ -79,6 +84,7 @@ const adminControllers = [
         ...appServices,
         ...databaseServices,
         ...tasksServices,
+        ...validationRules,
     ],
 })
 export class AppModule {

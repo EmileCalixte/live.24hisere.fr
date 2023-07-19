@@ -21,8 +21,6 @@ export class RaceService {
     async getAdminRace(where: Prisma.RaceWhereUniqueInput): Promise<AdminRaceWithRunnerCount | null> {
         const race = await this.getRaceWithRunners(where);
 
-        console.log(race);
-
         if (!race) {
             return null;
         }
@@ -55,6 +53,20 @@ export class RaceService {
         }
 
         return this.getPublicRaceFromRace(this.getRaceWithRunnerCountFromRaceWithRunner(race));
+    }
+
+    async getMaxOrder(): Promise<number> {
+        const result = await this.prisma.race.aggregate({
+            _max: {
+                order: true,
+            },
+        });
+
+        return result._max.order ?? 0;
+    }
+
+    async createRace(data: Prisma.RaceCreateInput): Promise<Race> {
+        return this.prisma.race.create({ data });
     }
 
     private async getRacesWithRunners(where: Prisma.RaceWhereInput = {}): Promise<RaceAndRunners[]> {

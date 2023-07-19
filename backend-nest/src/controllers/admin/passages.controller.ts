@@ -6,12 +6,12 @@ import { type PassagesResponse } from "../../types/responses/admin/Passages";
 import { isDefined } from "../../utils/misc.utils";
 
 @Controller()
+@UseGuards(AuthGuard)
 export class PassagesController {
     constructor(
         private readonly passageService: PassageService,
     ) {}
 
-    @UseGuards(AuthGuard)
     @Get("/admin/passages")
     async getPassages(@Query("excludeHidden") excludeHidden: QueryParam): Promise<PassagesResponse> {
         const passages = isDefined(excludeHidden)
