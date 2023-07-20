@@ -81,6 +81,10 @@ export class RaceService {
         return this.getRaceWithRunnerCountFromRaceWithRunners(updatedRace);
     }
 
+    async deleteRace(where: Prisma.RaceWhereUniqueInput): Promise<Race> {
+        return this.prisma.race.delete({ where });
+    }
+
     private async getRacesWithRunners(where: Prisma.RaceWhereInput = {}): Promise<RaceAndRunners[]> {
         return this.prisma.race.findMany({
             where,

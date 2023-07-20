@@ -1,8 +1,8 @@
 import {
     BadRequestException,
     Body,
-    Controller,
-    Get,
+    Controller, Delete,
+    Get, HttpCode,
     NotFoundException,
     Param,
     Patch,
@@ -84,5 +84,27 @@ export class RacesController {
         return {
             race: updatedRace,
         };
+    }
+
+    @Delete("/admin/races/:raceId")
+    @HttpCode(204)
+    async deleteRace(@Param("raceId") raceId: string): Promise<void> {
+        const id = Number(raceId);
+
+        if (isNaN(id)) {
+            throw new BadRequestException("Race ID must be a number");
+        }
+
+        const race = await this.raceService.getAdminRace({ id });
+
+        if (!race) {
+            throw new NotFoundException("Race not found");
+        }
+
+        if (race.runnerCount > 0) {
+            throw new BadRequestException("Cannot delete a race if there are runners in it");
+        }
+
+        await this.raceService.deleteRace({ id });
     }
 }
