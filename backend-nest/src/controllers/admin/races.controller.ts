@@ -6,8 +6,8 @@ import {
     NotFoundException,
     Param,
     Patch,
-    Post,
-    UseGuards
+    Post, Put, RawBodyRequest, Req,
+    UseGuards,
 } from "@nestjs/common";
 import { RaceDto } from "../../dtos/race/race.dto";
 import { UpdateRaceDto } from "../../dtos/race/updateRace.dto";
@@ -106,5 +106,50 @@ export class RacesController {
         }
 
         await this.raceService.deleteRace({ id });
+    }
+
+    @Put("/admin/races-order")
+    @HttpCode(204)
+    async updateRacesOrder(@Req() req: RawBodyRequest<Request>): Promise<void> {
+        const body = req.body;
+
+        if (!Array.isArray(body)) {
+            throw new BadRequestException("Request body must be an array of race ids");
+        }
+
+        let order = 0;
+
+        const allRaces = await this.raceService.getAdminRaces();
+        const touchedRaceIds = new Set<typeof allRaces[number]["id"]>();
+        const updates: Array<Promise<unknown>> = [];
+
+        // Update races whose id has been passed in body
+        for (const raceId of body) {
+            if (typeof raceId !== "number") {
+                continue;
+            }
+
+            const race = allRaces.find(r => r.id === raceId);
+
+            if (!race) {
+                continue;
+            }
+
+            updates.push(this.raceService.updateRace(raceId, { order }));
+            ++order;
+
+            touchedRaceIds.add(raceId);
+        }
+
+        // Update other races order to last provided race order + 1
+        for (const race of allRaces) {
+            if (touchedRaceIds.has(race.id)) {
+                continue;
+            }
+
+            updates.push(this.raceService.updateRace(race.id, { order }));
+        }
+
+        await Promise.all(updates);
     }
 }
