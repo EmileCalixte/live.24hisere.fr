@@ -15,7 +15,7 @@ export class RaceService {
 
         return races
             .map(race => this.getAdminRaceFromRace(race))
-            .map(race => this.getRaceWithRunnerCountFromRaceWithRunner(race));
+            .map(race => this.getRaceWithRunnerCountFromRaceWithRunners(race));
     }
 
     async getAdminRace(where: Prisma.RaceWhereUniqueInput): Promise<AdminRaceWithRunnerCount | null> {
@@ -25,7 +25,7 @@ export class RaceService {
             return null;
         }
 
-        return this.getAdminRaceFromRace(this.getRaceWithRunnerCountFromRaceWithRunner(race));
+        return this.getAdminRaceFromRace(this.getRaceWithRunnerCountFromRaceWithRunners(race));
     }
 
     async getPublicRaces(): Promise<PublicRaceWithRunnerCount[]> {
@@ -33,7 +33,7 @@ export class RaceService {
 
         return races
             .map(race => this.getPublicRaceFromRace(race))
-            .map(race => this.getRaceWithRunnerCountFromRaceWithRunner(race));
+            .map(race => this.getRaceWithRunnerCountFromRaceWithRunners(race));
     }
 
     async getPublicRace(raceWhereUniqueInput: Prisma.RaceWhereUniqueInput): Promise<PublicRaceWithRunnerCount | null> {
@@ -52,7 +52,7 @@ export class RaceService {
             return null;
         }
 
-        return this.getPublicRaceFromRace(this.getRaceWithRunnerCountFromRaceWithRunner(race));
+        return this.getPublicRaceFromRace(this.getRaceWithRunnerCountFromRaceWithRunners(race));
     }
 
     async getMaxOrder(): Promise<number> {
@@ -67,6 +67,18 @@ export class RaceService {
 
     async createRace(data: Prisma.RaceCreateInput): Promise<Race> {
         return this.prisma.race.create({ data });
+    }
+
+    async updateRace(id: Race["id"], data: Prisma.RaceUpdateInput): Promise<AdminRaceWithRunnerCount> {
+        const updatedRace = await this.prisma.race.update({
+            where: { id },
+            data,
+            include: {
+                runners: true,
+            },
+        });
+
+        return this.getRaceWithRunnerCountFromRaceWithRunners(updatedRace);
     }
 
     private async getRacesWithRunners(where: Prisma.RaceWhereInput = {}): Promise<RaceAndRunners[]> {
@@ -98,7 +110,7 @@ export class RaceService {
         return excludeKeys(race, ["isPublic", "order"]);
     }
 
-    private getRaceWithRunnerCountFromRaceWithRunner<T extends { runners: R[] }, R>(race: T): Omit<T, "runners"> & { runnerCount: number } {
+    private getRaceWithRunnerCountFromRaceWithRunners<T extends { runners: R[] }, R>(race: T): Omit<T, "runners"> & { runnerCount: number } {
         return excludeKeys({
             ...race,
             runnerCount: race.runners.length,

@@ -8,9 +8,9 @@ import {
     Min,
     Validate,
 } from "class-validator";
-import { RACE_MAX_DISTANCE, RACE_MAX_DURATION, RACE_NAME_MAX_LENGTH } from "../constants/race.constants";
-import { RaceNameDoesNotExistRule } from "../validation/rules/race/raceNameDoesNotExist.rule";
-import { IsISO8601UTCDateString } from "../validation/validators/IsISO8601UTCDateString";
+import { RACE_MAX_DISTANCE, RACE_MAX_DURATION, RACE_NAME_MAX_LENGTH } from "../../constants/race.constants";
+import { RaceNameDoesNotExistRule } from "../../validation/rules/race/raceNameDoesNotExist.rule";
+import { IsISO8601UTCDateString } from "../../validation/validators/IsISO8601UTCDateString";
 
 export class RaceDto {
     @IsString()
