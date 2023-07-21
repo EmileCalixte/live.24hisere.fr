@@ -21,4 +21,8 @@ export interface PublicRunnerWithPassages extends Runner {
     passages: PublicPassage[];
 }
 
+export interface AdminRunnerWithPassages extends Runner {
+    passages: Array<Omit<Passage, "runnerId">>;
+}
+
 export type PublicRunnerWithRaceAndPassages = PublicRunnerWithRace & PublicRunnerWithPassages;

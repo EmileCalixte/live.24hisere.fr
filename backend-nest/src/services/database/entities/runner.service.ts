@@ -1,7 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
 import { type Prisma, type Runner } from "@prisma/client";
-import { type PublicRunnerWithRaceAndPassages, type RunnerWithRaceAndPassages } from "src/types/Runner";
+import {
+    type AdminRunnerWithPassages,
+    type PublicRunnerWithRaceAndPassages,
+    type RunnerWithRaceAndPassages,
+} from "src/types/Runner";
 import { excludeKeys, pickKeys } from "src/utils/misc.utils";
 
 @Injectable()
@@ -10,10 +14,37 @@ export class RunnerService {
         private readonly prisma: PrismaService,
     ) {}
 
+    async getRunners(where: Prisma.RunnerWhereInput = {}): Promise<Runner[]> {
+        return this.prisma.runner.findMany({
+            where,
+            orderBy: {
+                id: "asc",
+            },
+        });
+    }
+
     async getRunner(where: Prisma.RunnerWhereUniqueInput): Promise<Runner | null> {
         return this.prisma.runner.findUnique({
             where,
         });
+    }
+
+    async getAdminRunner(where: Prisma.RunnerWhereUniqueInput): Promise<AdminRunnerWithPassages | null> {
+        const runner = await this.prisma.runner.findUnique({
+            where,
+            include: {
+                passages: true,
+            },
+        });
+
+        if (!runner) {
+            return null;
+        }
+
+        return {
+            ...runner,
+            passages: runner.passages.map(passage => excludeKeys(passage, ["runnerId"])),
+        };
     }
 
     async getPublicRunners(): Promise<Runner[]> {
