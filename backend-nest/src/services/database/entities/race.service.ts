@@ -10,6 +10,10 @@ export class RaceService {
         private readonly prisma: PrismaService,
     ) {}
 
+    async getRace(where: Prisma.RaceWhereUniqueInput): Promise<Race | null> {
+        return this.prisma.race.findUnique({ where });
+    }
+
     async getAdminRaces(): Promise<AdminRaceWithRunnerCount[]> {
         const races = await this.getRacesWithRunners();
 

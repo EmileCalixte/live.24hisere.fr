@@ -94,6 +94,10 @@ export class RunnerService {
         return this.getPublicRunnerWithRaceAndPassages(runner);
     }
 
+    async createRunner(data: Prisma.RunnerCreateInput): Promise<Runner> {
+        return this.prisma.runner.create({ data });
+    }
+
     private getPublicRunnerWithRaceAndPassages(runner: RunnerWithRaceAndPassages): PublicRunnerWithRaceAndPassages {
         return {
             ...runner,

@@ -26,7 +26,9 @@ import { RunnerService } from "./services/database/entities/runner.service";
 import { RunnersController } from "./controllers/runners.controller";
 import { PassageService } from "./services/database/entities/passage.service";
 import { DagFileService } from "./services/dagFile.service";
+import { RaceIdExistsRule } from "./validation/rules/race/raceIdExists.rule";
 import { RaceNameDoesNotExistRule } from "./validation/rules/race/raceNameDoesNotExist.rule";
+import { RunnerIdDoesNotExistRule } from "./validation/rules/runner/runnerIdDoesNotExist.rule";
 
 const appServices = [
     AuthService,
@@ -52,7 +54,9 @@ const tasksServices = [
 ];
 
 const validationRules = [
+    RaceIdExistsRule,
     RaceNameDoesNotExistRule,
+    RunnerIdDoesNotExistRule,
 ];
 
 const publicControllers = [
