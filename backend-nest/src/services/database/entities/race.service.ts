@@ -82,7 +82,7 @@ export class RaceService {
             },
         });
 
-        return this.getRaceWithRunnerCountFromRaceWithRunners(updatedRace);
+        return this.getAdminRaceFromRace(this.getRaceWithRunnerCountFromRaceWithRunners(updatedRace));
     }
 
     async deleteRace(where: Prisma.RaceWhereUniqueInput): Promise<Race> {
