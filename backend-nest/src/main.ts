@@ -5,7 +5,9 @@ import { AppModule } from "./app.module";
 
 async function bootstrap(): Promise<void> {
     const app = await NestFactory.create(AppModule);
-    app.useGlobalPipes(new ValidationPipe());
+    app.useGlobalPipes(new ValidationPipe({
+        whitelist: true, // Prevent unwanted properties in request body by only taking into account properties listed in DTOs
+    }));
     app.enableCors({
         methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
         origin: process.env.NODE_ENV === "development" ? "*" : process.env.FRONTEND_URL ?? " ",
