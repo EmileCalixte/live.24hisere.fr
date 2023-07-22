@@ -31,4 +31,11 @@ export class PassageService {
             data,
         });
     }
+
+    async updatePassage(id: Passage["id"], data: Omit<Prisma.PassageUpdateInput, "runner">): Promise<Passage> {
+        return this.prisma.passage.update({
+            where: { id },
+            data,
+        });
+    }
 }
