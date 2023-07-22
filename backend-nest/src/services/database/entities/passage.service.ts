@@ -26,7 +26,7 @@ export class PassageService {
         });
     }
 
-    async savePassage(data: Prisma.PassageCreateInput): Promise<Passage> {
+    async createPassage(data: Prisma.PassageCreateInput): Promise<Passage> {
         return this.prisma.passage.create({
             data,
         });

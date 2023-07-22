@@ -96,7 +96,7 @@ export class ImportPassagesService extends TaskService {
 
         this.logger.verbose(`Importing passage with detection ID ${data.detectionId}`);
 
-        await this.passageService.savePassage({
+        await this.passageService.createPassage({
             detectionId: data.detectionId,
             runner: {
                 connect: {

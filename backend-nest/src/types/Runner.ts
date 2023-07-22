@@ -1,6 +1,6 @@
 import { type Runner } from ".prisma/client";
 import { type PublicRace } from "./Race";
-import { type PublicPassage } from "./Passage";
+import { type AdminRunnerPassage, type PublicPassage } from "./Passage";
 import { type Passage, type Race } from "@prisma/client";
 
 /**
@@ -45,5 +45,5 @@ export type PublicRunnerWithRaceAndPassages = PublicRunnerWithRace & PublicRunne
  * Admin data about a runner with list of his passages
  */
 export interface AdminRunnerWithPassages extends Runner {
-    passages: Array<Omit<Passage, "runnerId">>;
+    passages: AdminRunnerPassage[];
 }

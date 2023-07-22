@@ -4,6 +4,7 @@ import { ConfigModule } from "@nestjs/config";
 import { ScheduleModule } from "@nestjs/schedule";
 import { PassagesController } from "./controllers/admin/passages.controller";
 import { RacesController as RacesControllerAdmin } from "./controllers/admin/races.controller";
+import { RunnerPassagesController } from "./controllers/admin/runnerPassages.controller";
 import { RunnersController as RunnersControllerAdmin } from "./controllers/admin/runners.controller";
 import { UsersController } from "./controllers/admin/users.controller";
 import { AuthController } from "./controllers/auth.controller";
@@ -70,6 +71,7 @@ const publicControllers = [
 const adminControllers = [
     PassagesController,
     RacesControllerAdmin,
+    RunnerPassagesController,
     RunnersControllerAdmin,
     UsersController,
 ];

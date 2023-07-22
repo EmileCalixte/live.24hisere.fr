@@ -23,8 +23,8 @@ export class RaceDto {
     @IsNotEmpty()
     isPublic: boolean;
 
-    @IsNotEmpty()
     @IsISO8601UTCDateString()
+    @IsNotEmpty()
     startTime: Date;
 
     @IsNotEmpty()
