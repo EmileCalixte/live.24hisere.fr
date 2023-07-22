@@ -1,8 +1,8 @@
 import {
     BadRequestException,
     Body,
-    Controller,
-    Get,
+    Controller, Delete,
+    Get, HttpCode,
     NotFoundException,
     Param,
     Patch,
@@ -108,5 +108,23 @@ export class RunnersController {
         return {
             runner: updatedRunner,
         };
+    }
+
+    @Delete("/admin/runners/:runnerId")
+    @HttpCode(204)
+    async deleteRunner(@Param("runnerId") runnerId: string): Promise<void> {
+        const id = Number(runnerId);
+
+        if (isNaN(id)) {
+            throw new BadRequestException("RunnerId must be a number");
+        }
+
+        const runner = await this.runnerService.getRunner({ id });
+
+        if (!runner) {
+            throw new NotFoundException("Runner not found");
+        }
+
+        await this.runnerService.deleteRunner({ id });
     }
 }

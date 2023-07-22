@@ -137,6 +137,16 @@ export class RunnerService {
         });
     }
 
+    async deleteRunner(where: Prisma.RunnerWhereUniqueInput): Promise<Runner> {
+        return this.prisma.$transaction(async (tx) => {
+            await tx.passage.deleteMany({
+                where: { runnerId: where.id },
+            });
+
+            return tx.runner.delete({ where });
+        });
+    }
+
     private getPublicRunnerWithRaceAndPassages(runner: RunnerWithRaceAndPassages): PublicRunnerWithRaceAndPassages {
         return {
             ...runner,
