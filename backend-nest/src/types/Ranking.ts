@@ -10,9 +10,12 @@ export interface RankingRunner extends Runner {
     passageCount: number;
 
     /**
-     * The last passage time`
+     * The last passage time
      */
     lastPassageTime: Date;
 }
 
+/**
+ * An array of runners sorted by number of passages, constituting a ranking
+ */
 export type Ranking = RankingRunner[];
