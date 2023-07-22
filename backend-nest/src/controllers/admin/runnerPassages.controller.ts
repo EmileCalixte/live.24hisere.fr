@@ -2,11 +2,13 @@ import {
     BadRequestException,
     Body,
     Controller,
+    Delete,
+    HttpCode,
     NotFoundException,
     Param,
     Patch,
     Post,
-    UseGuards
+    UseGuards,
 } from "@nestjs/common";
 import { PassageDto } from "../../dtos/passage/passage.dto";
 import { UpdatePassageDto } from "../../dtos/passage/updatePassage.dto";
@@ -80,5 +82,31 @@ export class RunnerPassagesController {
         return {
             passage: excludeKeys(updatedPassage, ["runnerId"]),
         };
+    }
+
+    @Delete("/admin/runners/:runnerId/passages/:passageId")
+    @HttpCode(204)
+    async deleteRunnerPassage(
+        @Param("runnerId") runnerId: string,
+        @Param("passageId") passageId: string,
+    ): Promise<void> {
+        const rId = Number(runnerId);
+        const pId = Number(passageId);
+
+        if (isNaN(rId)) {
+            throw new BadRequestException("RunnerId must be a number");
+        }
+
+        if (isNaN(pId)) {
+            throw new BadRequestException("PassageId must be a number");
+        }
+
+        const passage = await this.passageService.getPassage({ id: pId });
+
+        if (!passage || passage.runnerId !== rId) {
+            throw new NotFoundException("Passage not found");
+        }
+
+        await this.passageService.deletePassage({ id: pId });
     }
 }

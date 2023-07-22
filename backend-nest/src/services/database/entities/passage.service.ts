@@ -38,4 +38,8 @@ export class PassageService {
             data,
         });
     }
+
+    async deletePassage(where: Prisma.PassageWhereUniqueInput): Promise<Passage> {
+        return this.prisma.passage.delete({ where });
+    }
 }
