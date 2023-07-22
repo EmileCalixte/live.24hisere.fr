@@ -98,6 +98,45 @@ export class RunnerService {
         return this.prisma.runner.create({ data });
     }
 
+    async updateRunner(runner: Runner, data: Partial<Prisma.RunnerCreateInput & { id: number }>): Promise<Runner> {
+        // If runner ID is not changed, we can directly update the runner
+        if (!data.id) {
+            return this.prisma.runner.update({
+                where: { id: runner.id },
+                data,
+            });
+        }
+
+        // Else, we can't directly update the runner because we have to change runnerId of all runner's passages
+        return this.prisma.$transaction(async (tx) => {
+            // So first we create a new runner
+            const newRunner = await tx.runner.create({
+                data: {
+                    ...excludeKeys(runner, ["raceId"]),
+                    ...data,
+                    race: data.race ?? {
+                        connect: {
+                            id: runner.raceId,
+                        },
+                    },
+                },
+            });
+
+            // Then we change passage runnerIds
+            await tx.passage.updateMany({
+                where: { runnerId: runner.id },
+                data: { runnerId: newRunner.id },
+            });
+
+            // Finally we delete the old runner
+            await tx.runner.delete({
+                where: { id: runner.id },
+            });
+
+            return newRunner;
+        });
+    }
+
     private getPublicRunnerWithRaceAndPassages(runner: RunnerWithRaceAndPassages): PublicRunnerWithRaceAndPassages {
         return {
             ...runner,

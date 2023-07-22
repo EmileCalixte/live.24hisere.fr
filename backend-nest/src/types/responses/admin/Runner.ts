@@ -6,5 +6,9 @@ export interface AdminRunnersResponse {
 }
 
 export interface AdminRunnerResponse {
+    runner: Runner;
+}
+
+export interface AdminRunnerWithPassagesResponse {
     runner: AdminRunnerWithPassages;
 }
