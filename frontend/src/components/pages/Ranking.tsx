@@ -5,7 +5,7 @@ import {GENDER_MIXED} from "../../constants/Gender";
 import {RANKING_TIME_MODE} from "../../constants/RankingTimeMode";
 import {getRacesSelectOptions} from "../../helpers/raceHelper";
 import {useWindowDimensions} from "../../hooks/useWindowDimensions";
-import {existingCategories} from "../../util/ffaUtils";
+import {existingCategories, getCategoryCodeFromBirthYear} from "../../util/ffaUtils";
 import Select from "../ui/forms/Select";
 import Page from "../ui/Page";
 import CircularLoader from "../ui/CircularLoader";
@@ -137,7 +137,7 @@ export default function Ranking() {
         const categoriesInRanking = new Set<CategoryShortCode>();
 
         for (const runner of processedRanking) {
-            categoriesInRanking.add(runner.category);
+            categoriesInRanking.add(getCategoryCodeFromBirthYear(runner.birthYear));
         }
 
         const categories = {...existingCategories};

@@ -1,4 +1,5 @@
 import {GENDER_MIXED} from "../constants/Gender";
+import {getCategoryCodeFromBirthYear} from "./ffaUtils";
 import {verbose} from "./utils";
 
 type CategoryGenderRanks = {
@@ -49,6 +50,8 @@ export class RankingProcesser {
         const processedRanking: ProcessedRanking = [];
 
         for (const runner of this.ranking) {
+            const runnerCategory = getCategoryCodeFromBirthYear(runner.birthYear);
+
             const rankings: RankingRunnerRanks = {
                 actual: {
                     scratchMixed: 0,
@@ -64,14 +67,14 @@ export class RankingProcesser {
                 },
             };
 
-            if (!(runner.category in this.currentRanksByCategory)) {
-                this.addCategoryToCurrentRanks(runner.category);
+            if (!(runnerCategory in this.currentRanksByCategory)) {
+                this.addCategoryToCurrentRanks(runnerCategory);
             }
 
             rankings.actual.scratchMixed = this.currentRanksByCategory.scratch.mixed.rank + 1;
             rankings.actual.scratchGender = this.currentRanksByCategory.scratch[runner.gender].rank + 1;
-            rankings.actual.categoryMixed = this.currentRanksByCategory[runner.category].mixed.rank + 1;
-            rankings.actual.categoryGender = this.currentRanksByCategory[runner.category][runner.gender].rank + 1;
+            rankings.actual.categoryMixed = this.currentRanksByCategory[runnerCategory].mixed.rank + 1;
+            rankings.actual.categoryGender = this.currentRanksByCategory[runnerCategory][runner.gender].rank + 1;
 
             let scratchMixedPreviousRunner = null;
             let scratchGenderPreviousRunner = null;
@@ -80,8 +83,8 @@ export class RankingProcesser {
 
             scratchMixedPreviousRunner = this.getCurrentLastRunner("scratch", GENDER_MIXED);
             scratchGenderPreviousRunner = this.getCurrentLastRunner("scratch", runner.gender);
-            categoryMixedPreviousRunner = this.getCurrentLastRunner(runner.category, GENDER_MIXED);
-            categoryGenderPreviousRunner = this.getCurrentLastRunner(runner.category, runner.gender);
+            categoryMixedPreviousRunner = this.getCurrentLastRunner(runnerCategory, GENDER_MIXED);
+            categoryGenderPreviousRunner = this.getCurrentLastRunner(runnerCategory, runner.gender);
 
             const scratchMixedPreviousRunnerEquality = this.areRunnersEqual(runner, scratchMixedPreviousRunner);
             const scratchGenderPreviousRunnerEquality = this.areRunnersEqual(runner, scratchGenderPreviousRunner);
@@ -173,8 +176,10 @@ export class RankingProcesser {
     };
 
     private readonly updateCurrentRanks = (runner: ProcessedRankingRunner) => {
-        if (!(runner.category in this.currentRanksByCategory)) {
-            this.addCategoryToCurrentRanks(runner.category);
+        const runnerCategory = getCategoryCodeFromBirthYear(runner.birthYear);
+
+        if (!(runnerCategory in this.currentRanksByCategory)) {
+            this.addCategoryToCurrentRanks(runnerCategory);
         }
 
         ++this.currentRanksByCategory.scratch.mixed.rank;
@@ -183,11 +188,11 @@ export class RankingProcesser {
         ++this.currentRanksByCategory.scratch[runner.gender].rank;
         this.currentRanksByCategory.scratch[runner.gender].lastRunner = runner;
 
-        ++this.currentRanksByCategory[runner.category].mixed.rank;
-        this.currentRanksByCategory[runner.category].mixed.lastRunner = runner;
+        ++this.currentRanksByCategory[runnerCategory].mixed.rank;
+        this.currentRanksByCategory[runnerCategory].mixed.lastRunner = runner;
 
-        ++this.currentRanksByCategory[runner.category][runner.gender].rank;
-        this.currentRanksByCategory[runner.category][runner.gender].lastRunner = runner;
+        ++this.currentRanksByCategory[runnerCategory][runner.gender].rank;
+        this.currentRanksByCategory[runnerCategory][runner.gender].lastRunner = runner;
     };
 
     private readonly areRunnersEqual = (runner1: RankingRunner | null, runner2: RankingRunner | null) => {

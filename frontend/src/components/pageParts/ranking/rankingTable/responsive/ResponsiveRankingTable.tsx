@@ -1,5 +1,6 @@
 import {useCallback} from "react";
 import {GENDER_MIXED} from "../../../../../constants/Gender";
+import {getCategoryCodeFromBirthYear} from "../../../../../util/ffaUtils";
 import RankingTableInfoHeader from "../RankingTableInfoHeader";
 import ResponsiveRankingTableRow from "./ResponsiveRankingTableRow";
 
@@ -19,8 +20,10 @@ export default function ResponsiveRankingTable({
     tableRaceDuration,
 }: ResponsiveRankingTableProps) {
     const getRankingTableRow = useCallback((rankingRunner: ProcessedRankingRunner) => {
+        const runnerCategory = getCategoryCodeFromBirthYear(rankingRunner.birthYear);
+
         if (tableCategory !== null) {
-            if (tableCategory.toUpperCase() !== rankingRunner.category.toUpperCase()) {
+            if (tableCategory !== runnerCategory) {
                 return null;
             }
         }

@@ -1,4 +1,5 @@
 import {GENDER_MIXED} from "../../../../constants/Gender";
+import {getCategoryCodeFromBirthYear} from "../../../../util/ffaUtils";
 import RankingTableInfoHeader from "./RankingTableInfoHeader";
 import RankingTableRow from "./RankingTableRow";
 
@@ -18,8 +19,10 @@ export default function RankingTable({
     tableRaceDuration,
 }: RankingTableProps) {
     const getRankingTableRow = (rankingRunner: ProcessedRankingRunner) => {
+        const runnerCategory = getCategoryCodeFromBirthYear(rankingRunner.birthYear);
+
         if (tableCategory !== null) {
-            if (tableCategory.toUpperCase() !== rankingRunner.category.toUpperCase()) {
+            if (tableCategory !== runnerCategory) {
                 return null;
             }
         }

@@ -1,4 +1,5 @@
 import {Link} from "react-router-dom";
+import {getCategoryCodeFromBirthYear} from "../../../../util/ffaUtils";
 import CircularLoader from "../../../ui/CircularLoader";
 
 interface RunnersTableProps {
@@ -30,7 +31,7 @@ export default function RunnersTable({runners, races}: RunnersTableProps) {
                             </td>
                             <td>{runner.gender}</td>
                             <td>{runner.birthYear}</td>
-                            <td>{runner.category.toUpperCase()}</td>
+                            <td>{getCategoryCodeFromBirthYear(runner.birthYear)}</td>
                             <td>
                                 {(() => {
                                     if (races === false) {

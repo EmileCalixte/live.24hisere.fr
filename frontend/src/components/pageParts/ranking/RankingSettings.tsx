@@ -41,8 +41,6 @@ export default function RankingSettings({
         return [CATEGORY_SCRATCH_SELECT_OPTION, ...getCategoriesDictSelectOptions(categories)];
     }, [categories]);
 
-    console.log(selectedTimeMode);
-
     return (
         <>
             <Col xxl={2} xl={3} lg={3} md={4} sm={6} xs={12}>
