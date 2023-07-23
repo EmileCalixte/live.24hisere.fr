@@ -1,6 +1,5 @@
 import { BadRequestException, Controller, Delete, Get, NotFoundException, Param, UseGuards } from "@nestjs/common";
-import { User } from "@prisma/client";
-import { LoggedInUser } from "../../decorators/loggedInUser.decorator";
+import { AuthData, LoggedInUser } from "../../decorators/loggedInUser.decorator";
 import { AuthGuard } from "../../guards/auth.guard";
 import { AccessTokenService } from "../../services/database/entities/accessToken.service";
 import { UserService } from "../../services/database/entities/user.service";
@@ -16,7 +15,7 @@ export class UsersController {
     ) {}
 
     @Get("/admin/users")
-    async getUsers(@LoggedInUser() currentUser: User): Promise<UsersResponse> {
+    async getUsers(@LoggedInUser() { user: currentUser }: AuthData): Promise<UsersResponse> {
         const users = await this.userService.getUsers();
 
         return {
