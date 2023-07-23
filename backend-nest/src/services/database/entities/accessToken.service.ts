@@ -28,6 +28,12 @@ export class AccessTokenService {
         });
     }
 
+    async deleteAccessTokens(where: Prisma.AccessTokenWhereInput): Promise<number> {
+        return (await this.prisma.accessToken.deleteMany({
+            where,
+        })).count;
+    }
+
     isAccessTokenExpired(accessToken: AccessToken): boolean {
         const now = new Date();
 
