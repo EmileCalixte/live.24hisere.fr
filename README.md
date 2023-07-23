@@ -114,9 +114,11 @@ Un utilisateur est inclut dans les données chargées par défaut depuis le rép
 
 ```sh
 ./bin/console app:create-user
+node dist/cli.js create-user
 
 # Pour exécuter la commande avec l'environnement de développement Docker Compose :
 docker compose exec backend ./bin/console app:create-user
+docker compose exec backend-nest node dist/cli.js create-user
 ```
 
 ## Tâches CRON
