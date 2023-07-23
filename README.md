@@ -32,6 +32,7 @@ Créez le fichier `frontend/src/config/config.ts` à partir du modèle `frontend
 
 - Application frontend : [http://127.0.0.1](http://127.0.0.1)
 - API : [http://127.0.0.1:8000](http://127.0.0.1:8000)
+- API Nest : [http://127.0.0.1:8001](http://127.0.0.1:8001)
 - Fichiers statiques : [http://127.0.0.1:9000](http://127.0.0.1:9000)
 - PHPMyAdmin : [http://127.0.0.1:8080](http://127.0.0.1:8080)
 
@@ -69,37 +70,11 @@ docker compose exec backend-nest npx prisma generate
 
 ## Import des données
 
-### Import des coureurs
-
-L'application backend fournit une commande à exécuter sur le serveur pour importer les coureurs à partir d'un fichier CSV.
-
-La structure du fichier CSV doit être la suivante (l'ordre des colonnes est important, mais les intitulés des colonnes dans la ligne d'en-tête n'ont pas d'importance) :
-
-```csv
-Dossard;Nom;Prénom;Date de naissance;Sexe
-1;Doe;John;04/09/1962;M
-2;Smith;Emily;13/02/1989;F
-...
-```
-
-Utilisation de la commande :
-
-```sh
-./bin/console app:import-runners <chemin fichier CSV>
-
-# L'option "separator" permet de préciser le séparateur de données selon le format du fichier CSV
-./bin/console app:import-runners <chemin fichier CSV> --separator ","
-```
-
-L'utilisateur doit avoir la permission d'exécuter fichier `/backend/bin/console` :
-
-```sh
-chmod u+x backend/bin/console
-```
-
 ### Import des passages
 
 Voir [tâches CRON](#tâches-cron)
+
+
 
 ## Utilisateurs
 
@@ -121,19 +96,6 @@ docker compose exec backend ./bin/console app:create-user
 docker compose exec backend-nest node dist/cli.js create-user
 ```
 
-## Tâches CRON
-
-Les tâches CRON ne sont pas configurées automatiquement dans l'environnement de développement, elles doivent être exécutées à la main. Pour les exécuter dans l'environnement Docker :
-
-```sh
-# Import des passages
-docker compose exec backend /app/bin/console cron:import-passages
-```
-
 ## Tests
 
-### Backend
-
-```sh
-docker compose exec backend ./vendor/bin/phpunit --testdox tests
-```
+TODO ;)
