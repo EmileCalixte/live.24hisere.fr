@@ -19,13 +19,12 @@ export default function Login() {
         e.preventDefault();
         setSubmitButtonDisabled(true);
 
-        const formData = new FormData();
-        formData.append("username", username);
-        formData.append("password", password);
-
         const response = await performAPIRequest("/auth/login", {
             method: "POST",
-            body: formData,
+            body: new URLSearchParams({ // x-www-form-urlencoded
+                username,
+                password,
+            }),
         });
 
         const responseJson = await response.json();
