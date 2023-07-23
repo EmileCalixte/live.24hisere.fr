@@ -22,6 +22,8 @@ Les dépendances des applications backend et frontend sont installées automatiq
 
 Créez le fichier `backend/config/config.php` à partir du modèle `backend/config/config.default.php` et renseignez-y les paramètres relatifs à l'environnement d'exécution.
 
+Créez le fichier `backend-nest/.env` à partir du modèle `backend-nest/.env.default` et renseignez-y les paramètres relatifs à l'environnement d'exécution.
+
 #### Frontend
 
 Créez le fichier `frontend/src/config/config.ts` à partir du modèle `frontend/src/config/config.default.ts` et renseignez-y les paramètres relatifs à l'environnement d'exécution.
@@ -30,6 +32,7 @@ Créez le fichier `frontend/src/config/config.ts` à partir du modèle `frontend
 
 - Application frontend : [http://127.0.0.1](http://127.0.0.1)
 - API : [http://127.0.0.1:8000](http://127.0.0.1:8000)
+- API Nest : [http://127.0.0.1:8001](http://127.0.0.1:8001)
 - Fichiers statiques : [http://127.0.0.1:9000](http://127.0.0.1:9000)
 - PHPMyAdmin : [http://127.0.0.1:8080](http://127.0.0.1:8080)
 
@@ -52,39 +55,26 @@ La commande suivante permet de mettre à jour la structure de la base de donnée
 docker compose exec backend vendor/bin/doctrine orm:schema-tool:update --dump-sql --force
 ```
 
-## Import des données
-
-### Import des coureurs
-
-L'application backend fournit une commande à exécuter sur le serveur pour importer les coureurs à partir d'un fichier CSV.
-
-La structure du fichier CSV doit être la suivante (l'ordre des colonnes est important, mais les intitulés des colonnes dans la ligne d'en-tête n'ont pas d'importance) : 
-
-```csv
-Dossard;Nom;Prénom;Date de naissance;Sexe
-1;Doe;John;04/09/1962;M
-2;Smith;Emily;13/02/1989;F
-...
-```
-
-Utilisation de la commande : 
-
-```sh 
-./bin/console app:import-runners <chemin fichier CSV>
-
-# L'option "separator" permet de préciser le séparateur de données selon le format du fichier CSV
-./bin/console app:import-runners <chemin fichier CSV> --separator ","
-```
-
-L'utilisateur doit avoir la permission d'exécuter fichier `/backend/bin/console` : 
+La commande suivante permet de créer une migration et mettre à jour la structure de la base de données à partir de la structure de données définie dans `/backend-nest/prisma/schema.prisma` :
 
 ```sh
-chmod u+x backend/bin/console
+docker compose exec backend-nest npx prisma migrate dev --name <nom migration>
 ```
+
+
+La commande suivante permet de générer le client Prisma à partir de la structure de données définie dans `/backend-nest/prisma/schema.prisma` :
+
+```sh
+docker compose exec backend-nest npx prisma generate
+```
+
+## Import des données
 
 ### Import des passages
 
 Voir [tâches CRON](#tâches-cron)
+
+
 
 ## Utilisateurs
 
@@ -99,24 +89,13 @@ Un utilisateur est inclut dans les données chargées par défaut depuis le rép
 
 ```sh
 ./bin/console app:create-user
- 
+node dist/cli.js create-user
+
 # Pour exécuter la commande avec l'environnement de développement Docker Compose :
 docker compose exec backend ./bin/console app:create-user
-```
-
-## Tâches CRON
-
-Les tâches CRON ne sont pas configurées automatiquement dans l'environnement de développement, elles doivent être exécutées à la main. Pour les exécuter dans l'environnement Docker :
-
-```sh
-# Import des passages
-docker compose exec backend /app/bin/console cron:import-passages
+docker compose exec backend-nest node dist/cli.js create-user
 ```
 
 ## Tests
 
-### Backend
-
-```sh 
-docker compose exec backend ./vendor/bin/phpunit --testdox tests
-```
+TODO ;)

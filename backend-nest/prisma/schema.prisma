@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+model AccessToken {
+  token String @db.VarChar(32) @id
+  user User @relation(fields: [userId], references: [id], onUpdate: Restrict, onDelete: Restrict)
+  userId Int @map("user_id")
+  expirationDate DateTime @db.DateTime(0) @map("expiration_date")
+
+  @@map("access_token")
+}
+
+model Config {
+  key String @db.VarChar(255) @id
+  value String @db.VarChar(5000)
+
+  @@map("config")
+}
+
+model Misc {
+  key String @db.VarChar(255) @id
+  value String @db.VarChar(5000)
+
+  @@map("misc")
+}
+
+model Passage {
+  id Int @default(autoincrement()) @id
+  detectionId Int? @map("detection_id") @unique // Not null if the passage comes from a detection of the timing system
+  runner Runner @relation(fields: [runnerId], references: [id], onUpdate: Restrict, onDelete: Restrict)
+  runnerId Int @map("runner_id")
+  time DateTime @db.DateTime(0)
+  isHidden Boolean @map("is_hidden")
+
+  @@unique([runnerId, detectionId])
+
+  @@map("passage")
+}
+
+model Race {
+  id Int @default(autoincrement()) @id
+  name String @db.VarChar(50) @unique
+  startTime DateTime @db.DateTime(0) @map("start_time")
+  duration Int @db.UnsignedInt
+  initialDistance Decimal @db.Decimal(10, 3) @map("initial_distance")
+  lapDistance Decimal @db.Decimal(10, 3) @map("lap_distance")
+  order Int
+  isPublic Boolean @map("is_public")
+  runners Runner[]
+
+  @@map("race")
+}
+
+model Runner {
+  id Int @id // Bib number
+  firstname String @db.VarChar(255)
+  lastname String @db.VarChar(255)
+  gender String @db.VarChar(1)
+  birthYear String @db.VarChar(255) @map("birth_year")
+  race Race @relation(fields: [raceId], references: [id], onUpdate: Restrict, onDelete: Restrict)
+  raceId Int @map("race_id")
+  passages Passage[]
+
+  @@map("runner")
+}
+
+model User {
+  id Int @default(autoincrement()) @id
+  username String @db.VarChar(32) @unique
+  passwordHash String @db.VarChar(255) @map("password_hash")
+  accessTokens AccessToken[]
+
+  @@map("user")
+}
