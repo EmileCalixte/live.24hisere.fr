@@ -1,10 +1,12 @@
-import { BadRequestException, Controller, Get, NotFoundException, Param } from "@nestjs/common";
+import { BadRequestException, Controller, Get, NotFoundException, Param, Query } from "@nestjs/common";
 import { PassageService } from "../services/database/entities/passage.service";
 import { RaceService } from "../services/database/entities/race.service";
 import { RunnerService } from "../services/database/entities/runner.service";
 import { RankingService } from "../services/ranking.service";
+import { QueryParam } from "../types/QueryParam";
 import { type Ranking } from "../types/Ranking";
 import { type RankingResponse } from "../types/responses/Ranking";
+import { isDateValid } from "../utils/date.utils";
 
 interface CachedRanking {
     ranking: Ranking;
@@ -26,7 +28,7 @@ export class RankingController {
     ) {}
 
     @Get("/ranking/:raceId")
-    async getRanking(@Param("raceId") raceId: string): Promise<RankingResponse> {
+    async getRanking(@Param("raceId") raceId: string, @Query("at") at: QueryParam): Promise<RankingResponse> {
         const id = Number(raceId);
 
         if (isNaN(id)) {
@@ -39,25 +41,43 @@ export class RankingController {
             throw new NotFoundException("Race not found");
         }
 
+        const rankingDate = this.getRankingDateFromQueryParam(at);
+
         const [raceRunners, passages] = await Promise.all([
             this.runnerService.getPublicRunnersOfRace(race.id),
             this.passageService.getAllPublicPassages(),
         ]);
 
-        if (this.canReturnCachedRanking(race.id)) {
+        if (!rankingDate && this.canReturnCachedRanking(race.id)) {
             return {
                 ranking: (this.cachedRankings.get(race.id) as CachedRanking).ranking,
             };
         }
 
-        const ranking = this.rankingService.calculateRanking(raceRunners, passages);
+        const ranking = this.rankingService.calculateRanking(raceRunners, passages, rankingDate);
 
-        this.cachedRankings.set(race.id, {
-            ranking,
-            calculatedAt: new Date(),
-        });
+        if (!rankingDate) {
+            this.cachedRankings.set(race.id, {
+                ranking,
+                calculatedAt: new Date(),
+            });
+        }
 
         return { ranking };
+    }
+
+    private getRankingDateFromQueryParam(queryAt: string | undefined): Date | undefined {
+        if (!queryAt) {
+            return undefined;
+        }
+
+        const date = new Date(queryAt);
+
+        if (!isDateValid(date)) {
+            return undefined;
+        }
+
+        return date;
     }
 
     private canReturnCachedRanking(raceId: number): boolean {

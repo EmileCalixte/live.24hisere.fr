@@ -5,31 +5,32 @@ import { spaceship } from "../utils/compare.utils";
 
 @Injectable()
 export class RankingService {
-    calculateRanking(runners: Runner[], passages: Passage[]): Ranking {
-        const ranking: Ranking = [];
+    /**
+     * @param runners The list of the runners who are part of the desired ranking
+     * @param passages The list of all the passages used to compute ranking
+     * @param rankingDate A date beyond which passages are excluded from the calculation
+     */
+    calculateRanking(runners: Runner[], passages: Passage[], rankingDate?: Date): Ranking {
+        const ranking: Ranking = runners.map(runner => ({
+            ...runner,
+            passageCount: 0,
+            lastPassageTime: null,
+        }));
 
         for (const passage of passages) {
-            let rankingRunner = ranking.find(r => r.id === passage.runnerId);
+            if (rankingDate && (passage.time > rankingDate)) {
+                continue;
+            }
+
+            const rankingRunner = ranking.find(r => r.id === passage.runnerId);
 
             if (!rankingRunner) {
-                const runner = runners.find(r => r.id === passage.runnerId);
-
-                if (!runner) {
-                    continue;
-                }
-
-                rankingRunner = {
-                    ...runner,
-                    passageCount: 0,
-                    lastPassageTime: new Date(0),
-                };
-
-                ranking.push(rankingRunner);
+                continue; // This passage's runner is not part of the ranking
             }
 
             rankingRunner.passageCount++;
 
-            if (rankingRunner.lastPassageTime.getTime() < passage.time.getTime()) {
+            if (!rankingRunner.lastPassageTime || rankingRunner.lastPassageTime.getTime() < passage.time.getTime()) {
                 rankingRunner.lastPassageTime = new Date(passage.time);
             }
         }
