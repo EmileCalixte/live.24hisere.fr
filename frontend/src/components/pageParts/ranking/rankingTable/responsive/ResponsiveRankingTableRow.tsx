@@ -1,6 +1,7 @@
 import {useMemo} from "react";
 import {Link} from "react-router-dom";
 import {GENDER_MIXED} from "../../../../../constants/Gender";
+import {getCategoryCodeFromBirthYear} from "../../../../../util/ffaUtils";
 import {formatFloatNumber, formatMsAsDuration} from "../../../../../util/utils";
 
 interface ResponsiveRankingTableRowProps {
@@ -14,6 +15,8 @@ export default function ResponsiveRankingTableRow({
     tableCategory,
     tableGender,
 }: ResponsiveRankingTableRowProps) {
+    const runnerCategory = getCategoryCodeFromBirthYear(runner.birthYear);
+
     const rowRanking = useMemo(() => {
         if (tableCategory === null) {
             if (tableGender === GENDER_MIXED) {
@@ -37,9 +40,9 @@ export default function ResponsiveRankingTableRow({
                     <>
                         {runner.rankings.displayed.scratchGender} {runner.gender.toUpperCase()}
                         &nbsp;|&nbsp;
-                        {runner.rankings.displayed.categoryMixed} {runner.category.toUpperCase()}
+                        {runner.rankings.displayed.categoryMixed} {runnerCategory}
                         &nbsp;|&nbsp;
-                        {runner.rankings.displayed.categoryGender} {runner.category.toUpperCase()}-{runner.gender.toUpperCase()}
+                        {runner.rankings.displayed.categoryGender} {runnerCategory}-{runner.gender.toUpperCase()}
                     </>
                 );
             }
@@ -48,9 +51,9 @@ export default function ResponsiveRankingTableRow({
                 <>
                     {runner.rankings.displayed.scratchMixed}
                     &nbsp;|&nbsp;
-                    {runner.rankings.displayed.categoryMixed} {runner.category.toUpperCase()}
+                    {runner.rankings.displayed.categoryMixed} {runnerCategory}
                     &nbsp;|&nbsp;
-                    {runner.rankings.displayed.categoryGender} {runner.category.toUpperCase()}-{runner.gender.toUpperCase()}
+                    {runner.rankings.displayed.categoryGender} {runnerCategory}-{runner.gender.toUpperCase()}
                 </>
             );
         }
@@ -62,7 +65,7 @@ export default function ResponsiveRankingTableRow({
                     &nbsp;|&nbsp;
                     {runner.rankings.displayed.scratchGender} {runner.gender.toUpperCase()}
                     &nbsp;|&nbsp;
-                    {runner.rankings.displayed.categoryGender} {runner.category.toUpperCase()}-{runner.gender.toUpperCase()}
+                    {runner.rankings.displayed.categoryGender} {runnerCategory}-{runner.gender.toUpperCase()}
                 </>
             );
         }
@@ -73,10 +76,10 @@ export default function ResponsiveRankingTableRow({
                 &nbsp;|&nbsp;
                 {runner.rankings.displayed.scratchGender} {runner.gender.toUpperCase()}
                 &nbsp;|&nbsp;
-                {runner.rankings.displayed.categoryMixed} {runner.category.toUpperCase()}
+                {runner.rankings.displayed.categoryMixed} {runnerCategory}
             </>
         );
-    }, [runner, tableCategory, tableGender]);
+    }, [runner, tableCategory, tableGender, runnerCategory]);
 
     return (
         <tr>

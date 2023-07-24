@@ -68,11 +68,6 @@ interface Runner {
     birthYear: string;
 
     /**
-     * The category short code of the runner
-     */
-    category: string;
-
-    /**
      * The ID of the race which the runner takes part
      */
     raceId: number;

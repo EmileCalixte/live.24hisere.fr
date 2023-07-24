@@ -1,5 +1,6 @@
 import {Col, Row} from "react-bootstrap";
 import React, {useMemo} from "react";
+import {getCategoryCodeFromBirthYear} from "../../../util/ffaUtils";
 import CircularLoader from "../../ui/CircularLoader";
 import SpeedChart from "./charts/SpeedChart";
 import {formatMsAsDuration} from "../../../util/utils";
@@ -12,6 +13,8 @@ interface RunnerDetailsStatsProps {
 }
 
 export default function RunnerDetailsStats({runner, race, ranks}: RunnerDetailsStatsProps) {
+    const runnerCategory = getCategoryCodeFromBirthYear(runner.birthYear);
+
     const completeLapCount = useMemo<number>(() => {
         if (race.initialDistance > 0) {
             return Math.max(0, runner.passages.length - 1);
@@ -126,9 +129,9 @@ export default function RunnerDetailsStats({runner, race, ranks}: RunnerDetailsS
                                 &nbsp;|&nbsp;
                                 {ranks.displayed.scratchGender} {runner.gender.toUpperCase()}
                                 &nbsp;|&nbsp;
-                                {ranks.displayed.categoryMixed} {runner.category.toUpperCase()}
+                                {ranks.displayed.categoryMixed} {runnerCategory}
                                 &nbsp;|&nbsp;
-                                {ranks.displayed.categoryGender} {runner.category.toUpperCase()}-{runner.gender.toUpperCase()}
+                                {ranks.displayed.categoryGender} {runnerCategory}-{runner.gender.toUpperCase()}
                             </span>
                         }
                     </p>
