@@ -23,14 +23,14 @@ interface Race {
     duration: number;
 
     /**
-     * The distance before the first lap, in meters
+     * The distance before the first lap, in meters (decimal)
      */
-    initialDistance: number;
+    initialDistance: string;
 
     /**
-     * The distance of a lap, in meters
+     * The distance of a lap, in meters (decimal)
      */
-    lapDistance: number;
+    lapDistance: string;
 }
 
 interface RaceWithRunnerCount extends Race {

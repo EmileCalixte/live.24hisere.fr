@@ -10,12 +10,14 @@ interface RankingTableRowProps {
 }
 
 export default function RankingTableRow({race, runner, tableCategory, tableGender}: RankingTableRowProps) {
+    const raceInitialDistance = Number(race.initialDistance);
+
     return (
         <tr>
             <RankingTableRowNCells runner={runner} tableCategory={tableCategory} tableGender={tableGender} />
             <td>{runner.id}</td>
             <td>{runner.lastname.toUpperCase()} {runner.firstname}</td>
-            <td>{race.initialDistance > 0 ? Math.max(0, runner.passageCount - 1) : runner.passageCount}</td>
+            <td>{raceInitialDistance > 0 ? Math.max(0, runner.passageCount - 1) : runner.passageCount}</td>
             <td>{formatFloatNumber(runner.distance / 1000, 2)} km</td>
             <td>
                 {(() => {

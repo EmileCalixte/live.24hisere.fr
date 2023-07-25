@@ -15,26 +15,29 @@ interface RunnerDetailsStatsProps {
 export default function RunnerDetailsStats({runner, race, ranks}: RunnerDetailsStatsProps) {
     const runnerCategory = getCategoryCodeFromBirthYear(runner.birthYear);
 
+    const raceInitialDistance = Number(race.initialDistance);
+    const raceLapDistance = Number(race.lapDistance);
+
     const completeLapCount = useMemo<number>(() => {
-        if (race.initialDistance > 0) {
+        if (raceInitialDistance > 0) {
             return Math.max(0, runner.passages.length - 1);
         }
 
         return runner.passages.length;
-    }, [race, runner]);
+    }, [raceInitialDistance, runner.passages.length]);
 
     /** Total distance in meters */
     const totalDistance = useMemo<number>(() => {
         if (runner.passages.length >= 1) {
-            if (race.initialDistance > 0) {
-                return race.initialDistance + race.lapDistance * (runner.passages.length - 1);
+            if (raceInitialDistance > 0) {
+                return raceInitialDistance + raceLapDistance * (runner.passages.length - 1);
             }
 
-            return race.lapDistance * runner.passages.length;
+            return raceLapDistance * runner.passages.length;
         }
 
         return 0;
-    }, [race, runner]);
+    }, [raceInitialDistance, raceLapDistance, runner.passages.length]);
 
     const lastPassageDate = useMemo<Date | null>(() => {
         if (runner.passages.length <= 0) {

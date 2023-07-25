@@ -47,6 +47,9 @@ export class RankingProcesser {
     private readonly processRanking = (): ProcessedRanking => {
         verbose("Processing ranking");
 
+        const raceInitialDistance = Number(this.race.initialDistance);
+        const raceLapDistance = Number(this.race.lapDistance);
+
         const processedRanking: ProcessedRanking = [];
 
         for (const runner of this.ranking) {
@@ -120,10 +123,10 @@ export class RankingProcesser {
             let averageSpeed = null;
 
             if (runner.passageCount > 0) {
-                if (this.race.initialDistance > 0) {
-                    distance = this.race.initialDistance + this.race.lapDistance * (runner.passageCount - 1);
+                if (raceInitialDistance > 0) {
+                    distance = raceInitialDistance + raceLapDistance * (runner.passageCount - 1);
                 } else {
-                    distance = this.race.lapDistance * runner.passageCount;
+                    distance = raceLapDistance * runner.passageCount;
                 }
             }
 
