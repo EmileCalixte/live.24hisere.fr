@@ -36,12 +36,26 @@ export default function FastestLaps() {
 
     const [page, setPage] = useState(1);
 
-    const fetchRunnersAndRaces = useCallback(async () => {
+    const fetchRaces = useCallback(async () => {
+        const response = await performAuthenticatedAPIRequest("/admin/races", accessToken);
+        const responseJson = await response.json();
+
+        const races = responseJson.races as AdminRaceWithRunnerCount[];
+
+        const raceDict: AdminRaceDict = {};
+
+        for (const race of races) {
+            raceDict[race.id] = race;
+        }
+
+        setRaces(raceDict);
+    }, [accessToken]);
+
+    const fetchRunners = useCallback(async () => {
         const response = await performAuthenticatedAPIRequest("/admin/runners", accessToken);
         const responseJson = await response.json();
 
         setRunners(responseJson.runners);
-        setRaces(responseJson.races);
     }, [accessToken]);
 
     const fetchPassages = useCallback(async () => {
@@ -53,12 +67,20 @@ export default function FastestLaps() {
     }, [accessToken]);
 
     useEffect(() => {
-        fetchRunnersAndRaces();
+        fetchRaces();
 
-        const interval = setInterval(fetchRunnersAndRaces, RUNNERS_AND_RACES_FETCH_INTERVAL);
+        const interval = setInterval(fetchRaces, RUNNERS_AND_RACES_FETCH_INTERVAL);
 
         return () => clearInterval(interval);
-    }, [fetchRunnersAndRaces]);
+    }, [fetchRaces]);
+
+    useEffect(() => {
+        fetchRunners();
+
+        const interval = setInterval(fetchRunners, RUNNERS_AND_RACES_FETCH_INTERVAL);
+
+        return () => clearInterval(interval);
+    }, [fetchRunners]);
 
     useEffect(() => {
         fetchPassages();
