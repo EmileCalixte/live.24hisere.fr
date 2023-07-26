@@ -11,7 +11,7 @@ async function bootstrap(): Promise<void> {
     app.enableCors({
         methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
         origin: process.env.NODE_ENV === "development" ? "*" : process.env.FRONTEND_URL ?? " ",
-        allowedHeaders: ["Authorization"],
+        allowedHeaders: ["Authorization", "Content-Type"],
     });
 
     useContainer(app.select(AppModule), { fallbackOnErrors: true });

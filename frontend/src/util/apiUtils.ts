@@ -34,7 +34,7 @@ export async function performAPIRequest(url: string, init: RequestInit = {}) {
 
 export async function performAuthenticatedAPIRequest(url: string, accessToken: string | null, init: RequestInit = {}) {
     if ("headers" in init || !(init.headers instanceof Headers)) {
-        init.headers = new Headers();
+        init.headers = new Headers(init.headers);
     }
 
     if (accessToken) {

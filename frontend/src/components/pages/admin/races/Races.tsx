@@ -66,6 +66,9 @@ export default function Races() {
         const response = await performAuthenticatedAPIRequest("/admin/races-order", accessToken, {
             method: "PUT",
             body: JSON.stringify(raceIds),
+            headers: {
+                "Content-Type": "application/json",
+            },
         });
 
         if (!response.ok) {
