@@ -131,6 +131,9 @@ export default function RunnerDetails() {
             body: JSON.stringify({
                 isHidden: hidden,
             }),
+            headers: {
+                "Content-Type": "application/json",
+            },
         });
 
         if (!response.ok) {
@@ -153,6 +156,9 @@ export default function RunnerDetails() {
             body: JSON.stringify({
                 time: formatDateForApi(time),
             }),
+            headers: {
+                "Content-Type": "application/json",
+            },
         });
 
         if (!response.ok) {
@@ -176,6 +182,9 @@ export default function RunnerDetails() {
                 isHidden: false,
                 time: formatDateForApi(time),
             }),
+            headers: {
+                "Content-Type": "application/json",
+            },
         });
 
         if (!response.ok) {
@@ -240,7 +249,7 @@ export default function RunnerDetails() {
             id: runnerId,
             firstname: runnerFirstname,
             lastname: runnerLastname,
-            birthYear: runnerBirthYear,
+            birthYear: parseInt(runnerBirthYear),
             gender: runnerGender,
             raceId: runnerRaceId,
         };
@@ -248,6 +257,9 @@ export default function RunnerDetails() {
         const response = await performAuthenticatedAPIRequest(`/admin/runners/${runner.id}`, accessToken, {
             method: "PATCH",
             body: JSON.stringify(body),
+            headers: {
+                "Content-Type": "application/json",
+            },
         });
 
         const responseJson = await response.json();

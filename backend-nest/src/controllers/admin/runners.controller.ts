@@ -89,6 +89,14 @@ export class RunnersController {
             throw new NotFoundException("Runner not found");
         }
 
+        if (id !== updateRunnerDto.id) {
+            const existingRunner = await this.runnerService.getRunner({ id: updateRunnerDto.id });
+
+            if (existingRunner) {
+                throw new BadRequestException("A runner with the same ID already exists");
+            }
+        }
+
         const updateRunnerData: Parameters<RunnerService["updateRunner"]>[1] = excludeKeys(updateRunnerDto, ["raceId", "birthYear"]);
 
         if (updateRunnerDto.birthYear) {

@@ -100,7 +100,7 @@ export class RunnerService {
 
     async updateRunner(runner: Runner, data: Partial<Prisma.RunnerCreateInput & { id: number }>): Promise<Runner> {
         // If runner ID is not changed, we can directly update the runner
-        if (!data.id) {
+        if (!data.id || data.id === runner.id) {
             return this.prisma.runner.update({
                 where: { id: runner.id },
                 data,
