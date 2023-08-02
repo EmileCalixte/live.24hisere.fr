@@ -1,6 +1,7 @@
 import {faPlus} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {Col, Row} from "react-bootstrap";
+import {getRaceDictFromRaces} from "../../../../util/raceUtil";
 import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../ui/breadcrumbs/Crumb";
 import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
@@ -9,7 +10,6 @@ import {userContext} from "../../../App";
 import Page from "../../../ui/Page";
 import CircularLoader from "../../../ui/CircularLoader";
 import {Link} from "react-router-dom";
-import OptionWithLoadingDots from "../../../ui/forms/OptionWithLoadingDots";
 import RunnersTable from "../../../pageParts/admin/runners/RunnersTable";
 
 const RACE_SELECT_OPTION_ALL = "all";
@@ -21,7 +21,7 @@ export default function Runners() {
     const [runners, setRunners] = useState<Runner[] | false>(false);
 
     // false = not fetched yet
-    const [races, setRaces] = useState<AdminRaceDict | false>(false);
+    const [races, setRaces] = useState<RaceDict<AdminRace> | false>(false);
 
     const [selectedRaceId, setSelectedRaceId] = useState<number | null>(null);
 
@@ -34,12 +34,18 @@ export default function Runners() {
         setSelectedRaceId(parseInt(e.target.value));
     }
 
-    const fetchRunnersAndRaces = useCallback(async () => {
+    const fetchRaces = useCallback(async () => {
+        const response = await performAuthenticatedAPIRequest("/admin/races", accessToken);
+        const responseJson = await response.json();
+
+        setRaces(getRaceDictFromRaces(responseJson.races as AdminRaceWithRunnerCount[]));
+    }, [accessToken]);
+
+    const fetchRunners = useCallback(async () => {
         const response = await performAuthenticatedAPIRequest("/admin/runners", accessToken);
         const responseJson = await response.json();
 
         setRunners(responseJson.runners);
-        setRaces(responseJson.races);
     }, [accessToken]);
 
     const displayedRunners = useMemo<Runner[] | false>(() => {
@@ -55,8 +61,12 @@ export default function Runners() {
     }, [runners, selectedRaceId]);
 
     useEffect(() => {
-        fetchRunnersAndRaces();
-    }, [fetchRunnersAndRaces]);
+        fetchRaces();
+    }, [fetchRaces]);
+
+    useEffect(() => {
+        fetchRunners();
+    }, [fetchRunners]);
 
     return (
         <Page id="admin-runners" title="Coureurs">
@@ -103,9 +113,9 @@ export default function Runners() {
                                     {(() => {
                                         if (races === false) {
                                             return (
-                                                <OptionWithLoadingDots>
-                                                    Chargement des courses
-                                                </OptionWithLoadingDots>
+                                                <option disabled>
+                                                    Chargement des courses...
+                                                </option>
                                             );
                                         }
 

@@ -4,7 +4,7 @@ import CircularLoader from "../../../ui/CircularLoader";
 
 interface RunnersTableProps {
     runners: Runner[];
-    races: AdminRaceDict | false;
+    races: RaceDict | false;
 }
 
 export default function RunnersTable({runners, races}: RunnersTableProps) {

@@ -55,4 +55,4 @@ interface AdminRaceWithRunnerCount extends AdminRace, RaceWithRunnerCount {}
 /**
  * An object whose key is a race ID and value is the corresponding race
  */
-type AdminRaceDict<T extends AdminRace = AdminRace> = Record<string, T>;
+type RaceDict<T extends Race = Race> = Record<string, T>;

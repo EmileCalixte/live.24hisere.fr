@@ -3,7 +3,7 @@ import {formatFloatNumber, formatMsAsDuration} from "../../../../util/utils";
 
 interface FastestLapsTableProps {
     passages: (AdminPassageWithRunnerId & ProcessedPassage)[];
-    races: AdminRaceDict;
+    races: RaceDict;
     runners: Runner[];
 }
 

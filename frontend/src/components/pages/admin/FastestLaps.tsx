@@ -1,6 +1,7 @@
 import {useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {Col, Row} from "react-bootstrap";
 import {performAuthenticatedAPIRequest} from "../../../util/apiUtils";
+import {getRaceDictFromRaces} from "../../../util/raceUtil";
 import {getRunnerProcessedPassages} from "../../../util/RunnerDetailsUtil";
 import {userContext} from "../../App";
 import Breadcrumbs from "../../ui/breadcrumbs/Breadcrumbs";
@@ -27,7 +28,7 @@ export default function FastestLaps() {
     const [passages, setPassages] = useState<AdminPassageWithRunnerId[] | false>(false);
 
     // false = not fetched yet
-    const [races, setRaces] = useState<AdminRaceDict | false>(false);
+    const [races, setRaces] = useState<RaceDict | false>(false);
 
     // false = not fetched yet
     const [runners, setRunners] = useState<Runner[] | false>(false);
@@ -40,15 +41,7 @@ export default function FastestLaps() {
         const response = await performAuthenticatedAPIRequest("/admin/races", accessToken);
         const responseJson = await response.json();
 
-        const races = responseJson.races as AdminRaceWithRunnerCount[];
-
-        const raceDict: AdminRaceDict = {};
-
-        for (const race of races) {
-            raceDict[race.id] = race;
-        }
-
-        setRaces(raceDict);
+        setRaces(getRaceDictFromRaces(responseJson.races as AdminRaceWithRunnerCount[]));
     }, [accessToken]);
 
     const fetchRunners = useCallback(async () => {
@@ -256,7 +249,7 @@ export default function FastestLaps() {
                     <Row>
                         <Col>
                             <FastestLapsTable passages={passagesInPage}
-                                              races={races as AdminRaceDict}
+                                              races={races as RaceDict}
                                               runners={runners as Runner[]}
                             />
                         </Col>
