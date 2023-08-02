@@ -38,6 +38,8 @@ export class RunnersController {
 
     @Post("/admin/runners")
     async createRunner(@Body() runnerDto: RunnerDto): Promise<AdminRunnerWithPassagesResponse> {
+        await this.ensureRunnerIdDoesNotExist(runnerDto.id);
+
         const runner = await this.runnerService.createRunner(excludeKeys({
             ...runnerDto,
             birthYear: runnerDto.birthYear.toString(),
@@ -89,12 +91,8 @@ export class RunnersController {
             throw new NotFoundException("Runner not found");
         }
 
-        if (id !== updateRunnerDto.id) {
-            const existingRunner = await this.runnerService.getRunner({ id: updateRunnerDto.id });
-
-            if (existingRunner) {
-                throw new BadRequestException("A runner with the same ID already exists");
-            }
+        if (updateRunnerDto.id && id !== updateRunnerDto.id) {
+            await this.ensureRunnerIdDoesNotExist(updateRunnerDto.id);
         }
 
         const updateRunnerData: Parameters<RunnerService["updateRunner"]>[1] = excludeKeys(updateRunnerDto, ["raceId", "birthYear"]);
@@ -134,5 +132,13 @@ export class RunnersController {
         }
 
         await this.runnerService.deleteRunner({ id });
+    }
+
+    private async ensureRunnerIdDoesNotExist(id: number): Promise<void> {
+        const existingRunner = await this.runnerService.getRunner({ id });
+
+        if (existingRunner) {
+            throw new BadRequestException("A runner with the same ID already exists");
+        }
     }
 }
