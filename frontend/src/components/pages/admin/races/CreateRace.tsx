@@ -72,6 +72,9 @@ export default function CreateRace() {
         const response = await performAuthenticatedAPIRequest("/admin/races", accessToken, {
             method: "POST",
             body: JSON.stringify(body),
+            headers: {
+                "Content-Type": "application/json",
+            },
         });
 
         const responseJson = await response.json();

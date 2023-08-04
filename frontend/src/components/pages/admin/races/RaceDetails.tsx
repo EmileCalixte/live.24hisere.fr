@@ -90,6 +90,9 @@ export default function RaceDetails() {
         const response = await performAuthenticatedAPIRequest(`/admin/races/${race.id}`, accessToken, {
             method: "PATCH",
             body: JSON.stringify(body),
+            headers: {
+                "Content-Type": "application/json",
+            },
         });
 
         const responseJson = await response.json();
