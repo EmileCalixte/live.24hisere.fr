@@ -33,6 +33,8 @@ export class RacesController {
 
     @Post("/admin/races")
     async createRace(@Body() raceDto: RaceDto): Promise<AdminRaceResponse> {
+        await this.ensureRaceNameDoesNotExist(raceDto.name);
+
         const race = await this.raceService.createRace({
             ...raceDto,
             order: await this.raceService.getMaxOrder() + 1,
@@ -77,6 +79,10 @@ export class RacesController {
 
         if (!race) {
             throw new NotFoundException("Race not found");
+        }
+
+        if (updateRaceDto.name && race.name !== updateRaceDto.name) {
+            await this.ensureRaceNameDoesNotExist(updateRaceDto.name);
         }
 
         const updatedRace = await this.raceService.updateRace(id, updateRaceDto);
@@ -151,5 +157,13 @@ export class RacesController {
         }
 
         await Promise.all(updates);
+    }
+
+    private async ensureRaceNameDoesNotExist(name: string): Promise<void> {
+        const existingRace = await this.raceService.getRace({ name });
+
+        if (existingRace) {
+            throw new BadRequestException("A race with the same name already exists");
+        }
     }
 }

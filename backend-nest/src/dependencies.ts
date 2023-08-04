@@ -26,7 +26,6 @@ import { RandomService } from "./services/random.service";
 import { RankingService } from "./services/ranking.service";
 import { ImportPassagesService } from "./tasks/importPassages.service";
 import { RaceIdExistsRule } from "./validation/rules/race/raceIdExists.rule";
-import { RaceNameDoesNotExistRule } from "./validation/rules/race/raceNameDoesNotExist.rule";
 import { type Type } from "@nestjs/common/interfaces/type.interface";
 
 type DependencyArray = Type[];
@@ -87,7 +86,6 @@ export const dependencies: Dependencies = {
     ],
     validationRules: [
         RaceIdExistsRule,
-        RaceNameDoesNotExistRule,
     ],
     commands: [
         CreateUserCommand,
