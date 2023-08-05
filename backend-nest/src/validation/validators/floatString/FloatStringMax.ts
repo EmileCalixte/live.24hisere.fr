@@ -1,8 +1,8 @@
 import { buildMessage, ValidateBy } from "class-validator";
-import { ValidationOptions } from "class-validator/types/decorator/ValidationOptions";
+import { type ValidationOptions } from "class-validator/types/decorator/ValidationOptions";
 import { isFloatString } from "./IsFloatString";
 
-export const FLOAT_STRING_MAX = 'floatStringMax';
+export const FLOAT_STRING_MAX = "floatStringMax";
 
 export function floatStringMax(value: unknown, max: number): boolean {
     if (!isFloatString(value)) {
@@ -25,11 +25,11 @@ export function FloatStringMax(maxValue: number, validationOptions?: ValidationO
             validator: {
                 validate: (value, args): boolean => floatStringMax(value, args?.constraints[0]),
                 defaultMessage: buildMessage(
-                    eachPrefix => eachPrefix + '$property must not be greater than $constraint1',
-                    validationOptions
+                    eachPrefix => eachPrefix + "$property must not be greater than $constraint1",
+                    validationOptions,
                 ),
             },
         },
-        validationOptions
+        validationOptions,
     );
 }

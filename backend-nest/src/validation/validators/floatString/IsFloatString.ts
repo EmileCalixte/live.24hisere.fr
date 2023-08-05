@@ -1,5 +1,5 @@
 import { buildMessage, ValidateBy } from "class-validator";
-import { ValidationOptions } from "class-validator/types/decorator/ValidationOptions";
+import { type ValidationOptions } from "class-validator/types/decorator/ValidationOptions";
 
 const IS_FLOAT_STRING = "isFLoatString";
 
@@ -28,10 +28,10 @@ export function IsFloatString(validationOptions?: ValidationOptions): PropertyDe
             validator: {
                 validate: (value): boolean => isFloatString(value),
                 defaultMessage: buildMessage(
-                    eachPrefix => eachPrefix + "$property must be a string representing a valid decimal number"
-                )
-            }
+                    eachPrefix => eachPrefix + "$property must be a string representing a valid decimal number",
+                ),
+            },
         },
         validationOptions,
-    )
+    );
 }

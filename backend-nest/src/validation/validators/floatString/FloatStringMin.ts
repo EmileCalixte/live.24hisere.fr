@@ -1,8 +1,8 @@
 import { buildMessage, ValidateBy } from "class-validator";
-import { ValidationOptions } from "class-validator/types/decorator/ValidationOptions";
+import { type ValidationOptions } from "class-validator/types/decorator/ValidationOptions";
 import { isFloatString } from "./IsFloatString";
 
-export const FLOAT_STRING_MIN = 'floatStringMin';
+export const FLOAT_STRING_MIN = "floatStringMin";
 
 export function floatStringMin(value: unknown, min: number): boolean {
     if (!isFloatString(value)) {
@@ -25,11 +25,11 @@ export function FloatStringMin(minValue: number, validationOptions?: ValidationO
             validator: {
                 validate: (value, args): boolean => floatStringMin(value, args?.constraints[0]),
                 defaultMessage: buildMessage(
-                    eachPrefix => eachPrefix + '$property must not be less than $constraint1',
-                    validationOptions
+                    eachPrefix => eachPrefix + "$property must not be less than $constraint1",
+                    validationOptions,
                 ),
             },
         },
-        validationOptions
+        validationOptions,
     );
 }

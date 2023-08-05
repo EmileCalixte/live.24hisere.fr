@@ -1,7 +1,7 @@
 import { buildMessage, ValidateBy } from "class-validator";
 import { type ValidationOptions } from "class-validator/types/decorator/ValidationOptions";
 import { GENDER } from "../../constants/gender.constants";
-import { Gender } from "../../types/Gender";
+import { type Gender } from "../../types/Gender";
 
 const IS_GENDER = "isGender";
 
