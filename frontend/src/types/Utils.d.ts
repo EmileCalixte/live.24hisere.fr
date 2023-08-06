@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
 type React = import("react");
 
 type ReactUseStateResultWithNonNullableSetter<S> = [S, React.Dispatch<React.SetStateAction<NonNullable<S>>>];

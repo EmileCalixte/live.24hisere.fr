@@ -1,5 +1,5 @@
 import OptionWithLoadingDots from "../../ui/forms/OptionWithLoadingDots";
-import React, {useCallback, useEffect, useMemo, useState} from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 interface RunnerSelectorProps {
     runners: Runner[] | false;
@@ -7,7 +7,7 @@ interface RunnerSelectorProps {
     selectedRunnerId: string | undefined;
 }
 
-export default function RunnerSelector({runners, onSelectRunner, selectedRunnerId}: RunnerSelectorProps) {
+export default function RunnerSelector({ runners, onSelectRunner, selectedRunnerId }: RunnerSelectorProps): JSX.Element {
     const [idSortedRunners, setIdSortedRunners] = useState<Runner[] | false>(false);
     const [nameSortedRunners, setNameSortedRunners] = useState<Runner[] | false>(false);
 

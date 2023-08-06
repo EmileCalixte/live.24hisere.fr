@@ -1,8 +1,8 @@
-import {Col, Row} from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import Page from "../../ui/Page";
 import MenuList from "../../pageParts/admin/home/MenuList";
 
-export default function AdminHome() {
+export default function AdminHome(): JSX.Element {
     return (
         <Page id="admin-home" title="Administration">
             <Row>

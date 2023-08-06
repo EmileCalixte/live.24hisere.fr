@@ -1,20 +1,20 @@
-import React, {useCallback, useContext, useEffect, useState} from "react";
-import {Col, Row} from "react-bootstrap";
-import {useNavigate} from "react-router-dom";
-import {GENDER} from "../../../../constants/Gender";
-import {useStateWithNonNullableSetter} from "../../../../hooks/useStateWithNonNullableSetter";
-import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
+import React, { useCallback, useContext, useEffect, useState } from "react";
+import { Col, Row } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { GENDER } from "../../../../constants/Gender";
+import { useStateWithNonNullableSetter } from "../../../../hooks/useStateWithNonNullableSetter";
+import { performAuthenticatedAPIRequest } from "../../../../util/apiUtils";
 import ToastUtil from "../../../../util/ToastUtil";
-import {userContext} from "../../../App";
+import { userContext } from "../../../App";
 import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../ui/breadcrumbs/Crumb";
 import Page from "../../../ui/Page";
 import RunnerDetailsForm from "../../../pageParts/admin/runners/RunnerDetailsForm";
 
-export default function CreateRunner() {
+export default function CreateRunner(): JSX.Element {
     const navigate = useNavigate();
 
-    const {accessToken} = useContext(userContext);
+    const { accessToken } = useContext(userContext);
 
     const [races, setRaces] = useState<AdminRaceWithRunnerCount[] | false>(false);
 
@@ -80,7 +80,7 @@ export default function CreateRunner() {
     }, [accessToken, id, firstname, lastname, gender, birthYear, raceId, navigate]);
 
     useEffect(() => {
-        fetchRaces();
+        void fetchRaces();
     }, [fetchRaces]);
 
     return (

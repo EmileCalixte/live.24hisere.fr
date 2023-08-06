@@ -1,18 +1,18 @@
-import {useContext} from "react";
-import {Col, Row} from "react-bootstrap";
-import {appDataContext, userContext} from "../../App";
-import {formatDateAsString} from "../../../util/utils";
-import {Link} from "react-router-dom";
+import { useContext } from "react";
+import { Col, Row } from "react-bootstrap";
+import { appDataContext, userContext } from "../../App";
+import { formatDateAsString } from "../../../util/utils";
+import { Link } from "react-router-dom";
 
-export default function Footer() {
-    const {lastUpdateTime} = useContext(appDataContext);
-    const {user} = useContext(userContext);
+export default function Footer(): JSX.Element {
+    const { lastUpdateTime } = useContext(appDataContext);
+    const { user } = useContext(userContext);
 
     return (
         <footer id="app-footer">
             <div className="container-fluid">
                 <Row>
-                    <Col style={{textAlign: "center"}}>
+                    <Col style={{ textAlign: "center" }}>
                         <p>Dernière mise à jour des données : {formatDateAsString(lastUpdateTime)}</p>
 
                         <p>Toutes les données disponibles sur cette page sont extraites du système de chronométrage. Toutefois, ayant un but purement indicatif, les calculs peuvent éventuellement contenir des erreurs ou des imprécisions. Seules les données du poste de chronométrage font foi.</p>

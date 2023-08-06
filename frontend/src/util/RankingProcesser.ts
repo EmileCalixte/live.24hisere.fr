@@ -1,6 +1,6 @@
-import {GENDER_MIXED} from "../constants/Gender";
-import {getCategoryCodeFromBirthYear} from "./ffaUtils";
-import {verbose} from "./utils";
+import { GENDER_MIXED } from "../constants/Gender";
+import { getCategoryCodeFromBirthYear } from "./ffaUtils";
+import { verbose } from "./utils";
 
 type CategoryGenderRanks = {
     [key in GenderWithMixed]: {
@@ -24,9 +24,9 @@ export class RankingProcesser {
     // Temporary objects to keep track of the current ranking for each category and each gender during ranking processing
     private currentRanksByCategory: CurrentRanksByCategory = {
         scratch: { // Scratch includes all solo runners regardless of their category
-            mixed: {rank: 0, lastRunner: null},
-            M: {rank: 0, lastRunner: null},
-            F: {rank: 0, lastRunner: null},
+            mixed: { rank: 0, lastRunner: null },
+            M: { rank: 0, lastRunner: null },
+            F: { rank: 0, lastRunner: null },
         },
         // Other categories will be appended here
     };
@@ -36,15 +36,15 @@ export class RankingProcesser {
         this.ranking = ranking;
     }
 
-    public getProcessedRanking = (): ProcessedRanking => {
+    public getProcessedRanking(): ProcessedRanking {
         if (this.processedRanking === undefined) {
             return this.processRanking();
         }
 
         return this.processedRanking;
-    };
+    }
 
-    private readonly processRanking = (): ProcessedRanking => {
+    private processRanking(): ProcessedRanking {
         verbose("Processing ranking");
 
         const raceInitialDistance = Number(this.race.initialDistance);
@@ -156,29 +156,29 @@ export class RankingProcesser {
         verbose("Ranking processed");
 
         return this.processedRanking;
-    };
+    }
 
-    private readonly getCurrentLastRunner = (category: string, gender: GenderWithMixed): ProcessedRankingRunner | null => {
+    private getCurrentLastRunner(category: string, gender: GenderWithMixed): ProcessedRankingRunner | null {
         if (!(category in this.currentRanksByCategory)) {
             return null;
         }
 
         return this.currentRanksByCategory[category][gender].lastRunner;
-    };
+    }
 
-    private readonly addCategoryToCurrentRanks = (category: string) => {
+    private addCategoryToCurrentRanks(category: string): void {
         if (category in this.currentRanksByCategory) {
             throw new Error("Category already existing in current ranks");
         }
 
         this.currentRanksByCategory[category] = {
-            mixed: {rank: 0, lastRunner: null},
-            M: {rank: 0, lastRunner: null},
-            F: {rank: 0, lastRunner: null},
+            mixed: { rank: 0, lastRunner: null },
+            M: { rank: 0, lastRunner: null },
+            F: { rank: 0, lastRunner: null },
         };
-    };
+    }
 
-    private readonly updateCurrentRanks = (runner: ProcessedRankingRunner) => {
+    private updateCurrentRanks(runner: ProcessedRankingRunner): void {
         const runnerCategory = getCategoryCodeFromBirthYear(runner.birthYear);
 
         if (!(runnerCategory in this.currentRanksByCategory)) {
@@ -196,9 +196,9 @@ export class RankingProcesser {
 
         ++this.currentRanksByCategory[runnerCategory][runner.gender].rank;
         this.currentRanksByCategory[runnerCategory][runner.gender].lastRunner = runner;
-    };
+    }
 
-    private readonly areRunnersEqual = (runner1: RankingRunner | null, runner2: RankingRunner | null) => {
+    private areRunnersEqual(runner1: RankingRunner | null, runner2: RankingRunner | null): boolean {
         if (runner1 === null || runner2 === null) {
             return false;
         }
@@ -208,5 +208,5 @@ export class RankingProcesser {
         }
 
         return (new Date(runner1.lastPassageTime)).getTime() === (new Date(runner2.lastPassageTime)).getTime();
-    };
+    }
 }

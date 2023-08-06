@@ -1,5 +1,5 @@
-import {Link} from "react-router-dom";
-import {formatFloatNumber, formatMsAsDuration} from "../../../../util/utils";
+import { Link } from "react-router-dom";
+import { formatFloatNumber, formatMsAsDuration } from "../../../../util/utils";
 import RankingTableRowNCells from "./RankingTableRowNCells";
 
 interface RankingTableRowProps {
@@ -9,7 +9,12 @@ interface RankingTableRowProps {
     tableGender: GenderWithMixed;
 }
 
-export default function RankingTableRow({race, runner, tableCategory, tableGender}: RankingTableRowProps) {
+export default function RankingTableRow({
+    race,
+    runner,
+    tableCategory,
+    tableGender,
+}: RankingTableRowProps): JSX.Element {
     const raceInitialDistance = Number(race.initialDistance);
 
     return (

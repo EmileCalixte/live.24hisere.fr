@@ -1,5 +1,5 @@
-import {Link} from "react-router-dom";
-import {getCategoryCodeFromBirthYear} from "../../../../util/ffaUtils";
+import { Link } from "react-router-dom";
+import { getCategoryCodeFromBirthYear } from "../../../../util/ffaUtils";
 import CircularLoader from "../../../ui/CircularLoader";
 
 interface RunnersTableProps {
@@ -7,7 +7,7 @@ interface RunnersTableProps {
     races: RaceDict | false;
 }
 
-export default function RunnersTable({runners, races}: RunnersTableProps) {
+export default function RunnersTable({ runners, races }: RunnersTableProps): JSX.Element {
     return (
         <table className="table">
             <thead>

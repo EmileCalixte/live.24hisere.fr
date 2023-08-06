@@ -1,7 +1,7 @@
 interface RadioGroupProps<T extends SelectOption["value"]> {
     legend: string;
     name?: string;
-    options: SelectOption<T>[];
+    options: Array<SelectOption<T>>;
     value: SelectOption["value"];
     onSelectOption?: (option: SelectOption<T>) => void;
     className?: string;
@@ -14,7 +14,7 @@ export default function RadioGroup<T extends SelectOption["value"]>({
     value,
     onSelectOption,
     className,
-}: RadioGroupProps<T>) {
+}: RadioGroupProps<T>): JSX.Element {
     return (
         <fieldset className={className}>
             <legend>{legend}</legend>
@@ -25,7 +25,7 @@ export default function RadioGroup<T extends SelectOption["value"]>({
                                name={name}
                                value={option.value}
                                checked={value === option.value}
-                               onChange={onSelectOption ? () => onSelectOption(option) : undefined}
+                               onChange={onSelectOption ? () => { onSelectOption(option); } : undefined}
                         />
                         <span />
                         {option.label}

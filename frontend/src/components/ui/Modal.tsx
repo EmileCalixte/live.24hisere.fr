@@ -1,7 +1,7 @@
-import {faXmark} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
-import React, {useEffect, useRef} from "react";
+import React, { useEffect, useRef } from "react";
 
 interface ModalProps {
     children: React.ReactNode | React.ReactNode[];
@@ -9,7 +9,7 @@ interface ModalProps {
     className?: string;
 }
 
-export default function Modal({children, close, className}: ModalProps) {
+export default function Modal({ children, close, className }: ModalProps): JSX.Element {
     const dialogRef = useRef<HTMLDialogElement | null>(null);
     const modalContentRef = useRef<HTMLDivElement | null>(null);
 
@@ -23,7 +23,7 @@ export default function Modal({children, close, className}: ModalProps) {
         ref.current?.showModal();
 
         // Call props close function on click outside modal
-        function onClick(e: MouseEvent) {
+        function onClick(e: MouseEvent): void {
             if (e.target === null || !(e.target instanceof Element)) {
                 return;
             }
@@ -43,7 +43,7 @@ export default function Modal({children, close, className}: ModalProps) {
 
         // The 'close' event is triggered when HTML dialog is closed via .close() method or Esc key
         // If user closes modal using "esc", we want to call the close function in props, which should unmount this component
-        function onClose() {
+        function onClose(): void {
             close();
         }
 

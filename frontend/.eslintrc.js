@@ -1,22 +1,20 @@
 module.exports = {
+    parser: "@typescript-eslint/parser",
+    parserOptions: {
+        project: "tsconfig.json",
+        ecmaVersion: 2022,
+        tsconfigRootDir: __dirname,
+        sourceType: "module",
+    },
+    extends: [
+        "standard",
+        "standard-with-typescript",
+        "plugin:react/recommended",
+        "plugin:react-hooks/recommended",
+    ],
     env: {
         browser: true,
         es2021: true,
-    },
-    extends: [
-        "plugin:react/recommended",
-        "standard-with-typescript",
-        "plugin:react-hooks/recommended",
-    ],
-    overrides: [
-    ],
-    parser: "@typescript-eslint/parser",
-    parserOptions: {
-        project: [
-            "./tsconfig.json",
-        ],
-        ecmaVersion: "latest",
-        sourceType: "module",
     },
     plugins: [
         "react",
@@ -33,6 +31,15 @@ module.exports = {
         "react-hooks/rules-of-hooks": "error",
         "react-hooks/exhaustive-deps": "warn",
 
+        "comma-dangle": "off",
+        "@typescript-eslint/comma-dangle": ["error", {
+            arrays: "always-multiline",
+            objects: "always-multiline",
+            imports: "always-multiline",
+            exports: "always-multiline",
+            functions: "always-multiline",
+        }],
+
         indent: "off",
         "@typescript-eslint/indent": ["error", 4, {
             SwitchCase: 1,
@@ -46,33 +53,17 @@ module.exports = {
         }],
         "react/jsx-indent-props": ["error", "first"],
 
-        "react/jsx-curly-brace-presence": ["error", {
-            props: "never",
-            children: "never",
-            propElementValues: "always",
-        }],
-
-        "react/jsx-tag-spacing": ["error", {
-            closingSlash: "never",
-            beforeSelfClosing: "always",
-            afterOpening: "never",
-            beforeClosing: "never",
-        }],
-
-        quotes: ["error", "double"],
+        quotes: "off",
         "jsx-quotes": ["error", "prefer-double"],
         "@typescript-eslint/quotes": ["error", "double"],
 
-        semi: ["error", "always"],
+        semi: "off",
         "@typescript-eslint/semi": ["error", "always"],
 
         "no-extra-semi": "error",
 
-        "comma-dangle": ["error", "always-multiline"],
-        "@typescript-eslint/comma-dangle": ["error", "always-multiline"],
-
-        "object-curly-spacing": ["error", "never"],
-        "@typescript-eslint/object-curly-spacing": ["error", "never"],
+        "no-return-await": "error",
+        "@typescript-eslint/return-await": "off",
 
         "@typescript-eslint/naming-convention": [
             "error",
@@ -108,7 +99,20 @@ module.exports = {
             multilineDetection: "brackets",
         }],
 
-        "@typescript-eslint/no-empty-function": ["error", {allow: ["arrowFunctions"]}],
+        "@typescript-eslint/no-empty-function": ["error", { allow: ["arrowFunctions"] }],
+
+        "react/jsx-curly-brace-presence": ["error", {
+            props: "never",
+            children: "never",
+            propElementValues: "always",
+        }],
+
+        "react/jsx-tag-spacing": ["error", {
+            closingSlash: "never",
+            beforeSelfClosing: "always",
+            afterOpening: "never",
+            beforeClosing: "never",
+        }],
 
         "@typescript-eslint/space-before-function-paren": ["error", {
             anonymous: "always",
@@ -116,27 +120,15 @@ module.exports = {
             asyncArrow: "always",
         }],
 
-        "@typescript-eslint/consistent-type-imports": ["error", {
-            disallowTypeAnnotations: false,
-        }],
-
-        "multiline-ternary": "off",
-
-        "@typescript-eslint/array-type": "off",
-        "@typescript-eslint/explicit-function-return-type": "off",
-        "@typescript-eslint/no-confusing-void-expression": "off",
-        "@typescript-eslint/no-dynamic-delete": "off",
-        "@typescript-eslint/no-floating-promises": "off",
-        "@typescript-eslint/no-misused-promises": "off",
-        "@typescript-eslint/restrict-template-expressions": "off",
-        "@typescript-eslint/strict-boolean-expressions": "off",
-
         "@typescript-eslint/ban-ts-comment": "off",
         "@typescript-eslint/prefer-ts-expect-error": "off",
 
         eqeqeq: ["error", "always"],
 
+        "brace-style": ["error", "1tbs", { allowSingleLine: true }],
+
         "prefer-arrow-callback": "error",
-        "brace-style": ["error", "1tbs", {allowSingleLine: true}],
+
+        "@typescript-eslint/strict-boolean-expressions": "off",
     },
 };

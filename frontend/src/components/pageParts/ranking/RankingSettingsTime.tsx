@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import DurationInputs from "../../ui/forms/DurationInputs";
 
 interface RankingSettingsTimeProps {
@@ -13,11 +13,11 @@ export default function RankingSettingsTime({
     currentRankingTime,
     onRankingTimeSave,
     maxRankingTime,
-}: RankingSettingsTimeProps) {
+}: RankingSettingsTimeProps): JSX.Element {
     // The current value from the inputs in ms, saved or not
     const [time, setTime] = useState(currentRankingTime);
 
-    const onSubmit = (e: React.FormEvent) => {
+    const onSubmit = (e: React.FormEvent): void => {
         e.preventDefault();
         setTime(time);
         onRankingTimeSave(time);
@@ -30,7 +30,7 @@ export default function RankingSettingsTime({
 
     return (
         <form className="inline-input-group d-flex"
-              style={{visibility: isVisible ? "visible" : "hidden"}}
+              style={{ visibility: isVisible ? "visible" : "hidden" }}
               onSubmit={onSubmit}
         >
             <DurationInputs duration={time}
@@ -40,7 +40,7 @@ export default function RankingSettingsTime({
             />
             <button className="button"
                     disabled={time === currentRankingTime}
-                    style={{marginLeft: 10}}
+                    style={{ marginLeft: 10 }}
             >
                 OK
             </button>

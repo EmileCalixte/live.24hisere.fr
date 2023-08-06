@@ -1,12 +1,12 @@
-import {useCallback, useContext, useEffect, useMemo, useState} from "react";
-import {Col, Row} from "react-bootstrap";
-import {performAuthenticatedAPIRequest} from "../../../util/apiUtils";
-import {getRaceDictFromRaces} from "../../../util/raceUtil";
-import {getRunnerProcessedPassages} from "../../../util/RunnerDetailsUtil";
-import {userContext} from "../../App";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { Col, Row } from "react-bootstrap";
+import { performAuthenticatedAPIRequest } from "../../../util/apiUtils";
+import { getRaceDictFromRaces } from "../../../util/raceUtil";
+import { getRunnerProcessedPassages } from "../../../util/RunnerDetailsUtil";
+import { userContext } from "../../App";
 import Breadcrumbs from "../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../ui/breadcrumbs/Crumb";
-import {Checkbox} from "../../ui/forms/Checkbox";
+import { Checkbox } from "../../ui/forms/Checkbox";
 import Page from "../../ui/Page";
 import Pagination from "../../ui/pagination/Pagination";
 import CircularLoader from "../../ui/CircularLoader";
@@ -14,15 +14,15 @@ import FastestLapsTable from "../../pageParts/admin/fastestLaps/FastestLapsTable
 
 type RunnerSortedPassages = Record<number, AdminPassageWithRunnerId[]>;
 
-type RunnerSortedProcessedPassages = Record<number, (AdminPassageWithRunnerId & ProcessedPassage)[]>;
+type RunnerSortedProcessedPassages = Record<number, Array<AdminPassageWithRunnerId & ProcessedPassage>>;
 
 const ITEMS_PER_PAGE = 100;
 
 const RUNNERS_AND_RACES_FETCH_INTERVAL = 60 * 1000;
 const PASSAGES_FETCH_INTERVAL = 20 * 1000;
 
-export default function FastestLaps() {
-    const {accessToken} = useContext(userContext);
+export default function FastestLaps(): JSX.Element {
+    const { accessToken } = useContext(userContext);
 
     // false = not fetched yet
     const [passages, setPassages] = useState<AdminPassageWithRunnerId[] | false>(false);
@@ -60,27 +60,27 @@ export default function FastestLaps() {
     }, [accessToken]);
 
     useEffect(() => {
-        fetchRaces();
+        void fetchRaces();
 
-        const interval = setInterval(fetchRaces, RUNNERS_AND_RACES_FETCH_INTERVAL);
+        const interval = setInterval(() => { void fetchRaces(); }, RUNNERS_AND_RACES_FETCH_INTERVAL);
 
-        return () => clearInterval(interval);
+        return () => { clearInterval(interval); };
     }, [fetchRaces]);
 
     useEffect(() => {
-        fetchRunners();
+        void fetchRunners();
 
-        const interval = setInterval(fetchRunners, RUNNERS_AND_RACES_FETCH_INTERVAL);
+        const interval = setInterval(() => { void fetchRunners(); }, RUNNERS_AND_RACES_FETCH_INTERVAL);
 
-        return () => clearInterval(interval);
+        return () => { clearInterval(interval); };
     }, [fetchRunners]);
 
     useEffect(() => {
-        fetchPassages();
+        void fetchPassages();
 
-        const interval = setInterval(fetchPassages, PASSAGES_FETCH_INTERVAL);
+        const interval = setInterval(() => { void fetchPassages(); }, PASSAGES_FETCH_INTERVAL);
 
-        return () => clearInterval(interval);
+        return () => { clearInterval(interval); };
     }, [fetchPassages]);
 
     useEffect(() => {
@@ -142,12 +142,12 @@ export default function FastestLaps() {
         return sortedProcessedPassages;
     }, [runnerSortedPassages, races, runners]);
 
-    const speedSortedProcessedPassages = useMemo<(AdminPassageWithRunnerId & ProcessedPassage)[] | false>(() => {
+    const speedSortedProcessedPassages = useMemo<Array<AdminPassageWithRunnerId & ProcessedPassage> | false>(() => {
         if (!runnerSortedProcessedPassages) {
             return false;
         }
 
-        const sortedProcessedPassages: (AdminPassageWithRunnerId & ProcessedPassage)[] = [];
+        const sortedProcessedPassages: Array<AdminPassageWithRunnerId & ProcessedPassage> = [];
 
         for (const runnerId in runnerSortedProcessedPassages) {
             const runnerProcessedPassages = runnerSortedProcessedPassages[runnerId];
@@ -170,7 +170,7 @@ export default function FastestLaps() {
             });
     }, [runnerSortedProcessedPassages]);
 
-    const passagesToDisplay = useMemo<(AdminPassageWithRunnerId & ProcessedPassage)[] | false>(() => {
+    const passagesToDisplay = useMemo<Array<AdminPassageWithRunnerId & ProcessedPassage> | false>(() => {
         if (!speedSortedProcessedPassages) {
             return false;
         }
@@ -202,12 +202,12 @@ export default function FastestLaps() {
         return Math.ceil(passagesToDisplay.length / ITEMS_PER_PAGE);
     }, [passagesToDisplay]);
 
-    const passagesInPage = useMemo<(AdminPassageWithRunnerId & ProcessedPassage)[] | false>(() => {
+    const passagesInPage = useMemo<Array<AdminPassageWithRunnerId & ProcessedPassage> | false>(() => {
         if (!passagesToDisplay) {
             return false;
         }
 
-        const passages: (AdminPassageWithRunnerId & ProcessedPassage)[] = [];
+        const passages: Array<AdminPassageWithRunnerId & ProcessedPassage> = [];
 
         for (let i = ITEMS_PER_PAGE * (page - 1); i < Math.min(ITEMS_PER_PAGE * (page - 1) + ITEMS_PER_PAGE, passagesToDisplay.length); ++i) {
             passages.push(passagesToDisplay[i]);
@@ -241,7 +241,7 @@ export default function FastestLaps() {
                         <Col className="mb-3">
                             <Checkbox label="N'afficher que le tour le plus rapide de chaque coureur"
                                       checked={displayOnlyOneFastestLapPerRunner}
-                                      onChange={e => setDisplayOnlyOneFastestLapPerRunner(e.target.checked)}
+                                      onChange={e => { setDisplayOnlyOneFastestLapPerRunner(e.target.checked); }}
                             />
                         </Col>
                     </Row>

@@ -1,21 +1,21 @@
-import {Col, Row} from "react-bootstrap";
-import {getRacesSelectOptions} from "../../../../helpers/raceHelper";
+import { Col, Row } from "react-bootstrap";
+import { getRacesSelectOptions } from "../../../../helpers/raceHelper";
 import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../ui/breadcrumbs/Crumb";
 import Select from "../../../ui/forms/Select";
 import Page from "../../../ui/Page";
 import RaceDetailsForm from "../../../pageParts/admin/races/RaceDetailsForm";
-import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
-import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
-import {userContext} from "../../../App";
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { performAuthenticatedAPIRequest } from "../../../../util/apiUtils";
+import { userContext } from "../../../App";
 import ToastUtil from "../../../../util/ToastUtil";
-import {useNavigate} from "react-router-dom";
-import {formatDateForApi} from "../../../../util/utils";
+import { useNavigate } from "react-router-dom";
+import { formatDateForApi } from "../../../../util/utils";
 
-export default function CreateRace() {
+export default function CreateRace(): JSX.Element {
     const navigate = useNavigate();
 
-    const {accessToken} = useContext(userContext);
+    const { accessToken } = useContext(userContext);
 
     const [existingRaces, setExistingRaces] = useState<AdminRace[] | false>(false);
 
@@ -87,11 +87,11 @@ export default function CreateRace() {
         }
 
         ToastUtil.getToastr().success("Course créée");
-        navigate(`/admin/races/${responseJson.race.id}`);
+        navigate(`/admin/races/${responseJson.race.id as string}`);
     }, [accessToken, raceName, isPublic, initialDistance, lapDistance, startTime, duration, navigate]);
 
     useEffect(() => {
-        fetchExistingRaces();
+        void fetchExistingRaces();
     }, [fetchExistingRaces]);
 
     return (

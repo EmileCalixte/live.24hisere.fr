@@ -1,21 +1,21 @@
-import {faPlus} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {Col, Row} from "react-bootstrap";
-import {getRaceDictFromRaces} from "../../../../util/raceUtil";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Col, Row } from "react-bootstrap";
+import { getRaceDictFromRaces } from "../../../../util/raceUtil";
 import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../ui/breadcrumbs/Crumb";
-import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
-import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
-import {userContext} from "../../../App";
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { performAuthenticatedAPIRequest } from "../../../../util/apiUtils";
+import { userContext } from "../../../App";
 import Page from "../../../ui/Page";
 import CircularLoader from "../../../ui/CircularLoader";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import RunnersTable from "../../../pageParts/admin/runners/RunnersTable";
 
 const RACE_SELECT_OPTION_ALL = "all";
 
-export default function Runners() {
-    const {accessToken} = useContext(userContext);
+export default function Runners(): JSX.Element {
+    const { accessToken } = useContext(userContext);
 
     // false = not fetched yet
     const [runners, setRunners] = useState<Runner[] | false>(false);
@@ -25,7 +25,7 @@ export default function Runners() {
 
     const [selectedRaceId, setSelectedRaceId] = useState<number | null>(null);
 
-    function onSelectRace(e: React.ChangeEvent<HTMLSelectElement>) {
+    function onSelectRace(e: React.ChangeEvent<HTMLSelectElement>): void {
         if (e.target.value === RACE_SELECT_OPTION_ALL) {
             setSelectedRaceId(null);
             return;
@@ -61,11 +61,11 @@ export default function Runners() {
     }, [runners, selectedRaceId]);
 
     useEffect(() => {
-        fetchRaces();
+        void fetchRaces();
     }, [fetchRaces]);
 
     useEffect(() => {
-        fetchRunners();
+        void fetchRunners();
     }, [fetchRunners]);
 
     return (

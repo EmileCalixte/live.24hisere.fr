@@ -1,9 +1,9 @@
-import {Col, Row} from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import CanvasJSReact from "../../../../lib/canvasjs/canvasjs.react";
-import {useCallback, useMemo, useState} from "react";
+import { useCallback, useMemo, useState } from "react";
 import ReactDOMServer from "react-dom/server";
-import {formatMsAsDuration} from "../../../../util/utils";
-import {Checkbox} from "../../../ui/forms/Checkbox";
+import { formatMsAsDuration } from "../../../../util/utils";
+import { Checkbox } from "../../../ui/forms/Checkbox";
 
 const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
@@ -33,7 +33,7 @@ interface SpeedChartProps {
     averageSpeed: number;
 }
 
-export default function SpeedChart({runner, race, averageSpeed}: SpeedChartProps) {
+export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartProps): JSX.Element {
     const [displayEachLapSpeed, setDisplayEachLapSpeed] = useState(true);
     const [displayEachHourSpeed, setDisplayEachHourSpeed] = useState(true);
     const [displayAverageSpeed, setDisplayAverageSpeed] = useState(true);
@@ -55,7 +55,7 @@ export default function SpeedChart({runner, race, averageSpeed}: SpeedChartProps
             return ReactDOMServer.renderToString(
                 <div>
                     {passage.processed.lapNumber !== null &&
-                        <div style={{marginBottom: "0.75em"}}>Tour {passage.processed.lapNumber}</div>
+                        <div style={{ marginBottom: "0.75em" }}>Tour {passage.processed.lapNumber}</div>
                     }
 
                     <div>
@@ -74,7 +74,7 @@ export default function SpeedChart({runner, race, averageSpeed}: SpeedChartProps
                         Allure : <strong>{formatMsAsDuration(passage.processed.lapPace, false)}/km</strong>
                     </div>
 
-                    <div style={{marginTop: "0.75em"}}>
+                    <div style={{ marginTop: "0.75em" }}>
                         De <strong>{formatMsAsDuration(0)}</strong> à <strong>{formatMsAsDuration(passage.processed.lapEndRaceTime)}</strong> :
                     </div>
 
@@ -290,25 +290,25 @@ export default function SpeedChart({runner, race, averageSpeed}: SpeedChartProps
 
                     <Checkbox label="Vitesse à chaque tour"
                               checked={displayEachLapSpeed}
-                              onChange={e => setDisplayEachLapSpeed(e.target.checked)}
+                              onChange={e => { setDisplayEachLapSpeed(e.target.checked); }}
                     />
 
                     <Checkbox label="Vitesse moyenne à chaque heure"
                               className="mt-2"
                               checked={displayEachHourSpeed}
-                              onChange={e => setDisplayEachHourSpeed(e.target.checked)}
+                              onChange={e => { setDisplayEachHourSpeed(e.target.checked); }}
                     />
 
                     <Checkbox label="Vitesse moyenne générale"
                               className="mt-2"
                               checked={displayAverageSpeed}
-                              onChange={e => setDisplayAverageSpeed(e.target.checked)}
+                              onChange={e => { setDisplayAverageSpeed(e.target.checked); }}
                     />
 
                     <Checkbox label="Évolution de la vitesse moyenne"
                               className="mt-2"
                               checked={displayAverageSpeedEvolution}
-                              onChange={e => setDisplayAverageSpeedEvolution(e.target.checked)}
+                              onChange={e => { setDisplayAverageSpeedEvolution(e.target.checked); }}
                     />
                 </Col>
                 <Col xxl={10} xl={9} lg={12}>

@@ -1,10 +1,10 @@
-import {Col, Row} from "react-bootstrap";
-import React, {useMemo} from "react";
-import {getCategoryCodeFromBirthYear} from "../../../util/ffaUtils";
+import { Col, Row } from "react-bootstrap";
+import React, { useMemo } from "react";
+import { getCategoryCodeFromBirthYear } from "../../../util/ffaUtils";
 import CircularLoader from "../../ui/CircularLoader";
 import SpeedChart from "./charts/SpeedChart";
-import {formatMsAsDuration} from "../../../util/utils";
-import {getPaceFromSpeed} from "../../../util/RunnerDetailsUtil";
+import { formatMsAsDuration } from "../../../util/utils";
+import { getPaceFromSpeed } from "../../../util/RunnerDetailsUtil";
 
 interface RunnerDetailsStatsProps {
     runner: RunnerWithProcessedPassages & RunnerWithProcessedHours;
@@ -12,7 +12,7 @@ interface RunnerDetailsStatsProps {
     ranks: RankingRunnerRanks | null;
 }
 
-export default function RunnerDetailsStats({runner, race, ranks}: RunnerDetailsStatsProps) {
+export default function RunnerDetailsStats({ runner, race, ranks }: RunnerDetailsStatsProps): JSX.Element {
     const runnerCategory = getCategoryCodeFromBirthYear(runner.birthYear);
 
     const raceInitialDistance = Number(race.initialDistance);

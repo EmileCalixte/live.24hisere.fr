@@ -1,5 +1,5 @@
-import {faAngleLeft, faAngleRight, faAnglesLeft, faAnglesRight} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import { faAngleLeft, faAngleRight, faAnglesLeft, faAnglesRight } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface PaginationProps {
     minPage: number;
@@ -8,7 +8,7 @@ interface PaginationProps {
     setPage: (page: number) => any;
 }
 
-export default function Pagination({minPage = 1, maxPage, currentPage, setPage}: PaginationProps) {
+export default function Pagination({ minPage = 1, maxPage, currentPage, setPage }: PaginationProps): JSX.Element {
     return (
         <div className="pagination">
             <button onClick={() => setPage(minPage)} disabled={currentPage <= minPage}>

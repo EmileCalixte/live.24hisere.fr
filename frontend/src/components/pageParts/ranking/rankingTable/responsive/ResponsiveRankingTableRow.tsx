@@ -1,8 +1,8 @@
-import {useMemo} from "react";
-import {Link} from "react-router-dom";
-import {GENDER_MIXED} from "../../../../../constants/Gender";
-import {getCategoryCodeFromBirthYear} from "../../../../../util/ffaUtils";
-import {formatFloatNumber, formatMsAsDuration} from "../../../../../util/utils";
+import { useMemo } from "react";
+import { Link } from "react-router-dom";
+import { GENDER_MIXED } from "../../../../../constants/Gender";
+import { getCategoryCodeFromBirthYear } from "../../../../../util/ffaUtils";
+import { formatFloatNumber, formatMsAsDuration } from "../../../../../util/utils";
 
 interface ResponsiveRankingTableRowProps {
     runner: ProcessedRankingRunner;
@@ -14,7 +14,7 @@ export default function ResponsiveRankingTableRow({
     runner,
     tableCategory,
     tableGender,
-}: ResponsiveRankingTableRowProps) {
+}: ResponsiveRankingTableRowProps): JSX.Element {
     const runnerCategory = getCategoryCodeFromBirthYear(runner.birthYear);
 
     const rowRanking = useMemo(() => {
@@ -84,7 +84,7 @@ export default function ResponsiveRankingTableRow({
     return (
         <tr>
             <td><strong>{rowRanking}</strong></td>
-            <td style={{width: "100%"}}>
+            <td style={{ width: "100%" }}>
                 <Link to={`/runner-details/${runner.id}`}>
                     <div>
                         <strong>{runner.lastname.toUpperCase()} {runner.firstname} – N°{runner.id}</strong>

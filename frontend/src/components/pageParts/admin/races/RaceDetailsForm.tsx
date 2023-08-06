@@ -1,8 +1,8 @@
-import React, {useMemo} from "react";
-import {getDateStringFromDate, getTimeStringFromDate} from "../../../../util/utils";
-import {Checkbox} from "../../../ui/forms/Checkbox";
+import React, { useMemo } from "react";
+import { getDateStringFromDate, getTimeStringFromDate } from "../../../../util/utils";
+import { Checkbox } from "../../../ui/forms/Checkbox";
 import DurationInputs from "../../../ui/forms/DurationInputs";
-import {Input} from "../../../ui/forms/Input";
+import { Input } from "../../../ui/forms/Input";
 
 interface RaceDetailsFormProps {
     onSubmit: (e: React.FormEvent) => any;
@@ -36,7 +36,7 @@ export default function RaceDetailsForm({
     isPublic,
     setIsPublic,
     submitButtonDisabled,
-}: RaceDetailsFormProps) {
+}: RaceDetailsFormProps): JSX.Element {
     const startTimeDate = useMemo(() => {
         if (!startTime) {
             return;
@@ -54,7 +54,7 @@ export default function RaceDetailsForm({
         return getTimeStringFromDate(startTime);
     }, [startTime]);
 
-    const onStartTimeDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const onStartTimeDateChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         if (!e.target.value) {
             return;
         }
@@ -62,8 +62,8 @@ export default function RaceDetailsForm({
         setStartTime(new Date(`${e.target.value}T${startTimeTime}`));
     };
 
-    const onStartTimeTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (!e.target.value) {
+    const onStartTimeTimeChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        if (!e.target.value || !startTimeDate) {
             return;
         }
 

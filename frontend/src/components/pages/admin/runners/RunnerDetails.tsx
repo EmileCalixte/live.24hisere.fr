@@ -1,23 +1,23 @@
-import {Col, Row} from "react-bootstrap";
-import {Navigate, useParams} from "react-router-dom";
-import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
-import {GENDER} from "../../../../constants/Gender";
-import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
-import {formatDateAsString, formatDateForApi} from "../../../../util/utils";
+import { Col, Row } from "react-bootstrap";
+import { Navigate, useParams } from "react-router-dom";
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { GENDER } from "../../../../constants/Gender";
+import { performAuthenticatedAPIRequest } from "../../../../util/apiUtils";
+import { formatDateAsString, formatDateForApi } from "../../../../util/utils";
 import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../ui/breadcrumbs/Crumb";
 import Page from "../../../ui/Page";
 import CircularLoader from "../../../ui/CircularLoader";
-import {userContext} from "../../../App";
+import { userContext } from "../../../App";
 import RunnerDetailsForm from "../../../pageParts/admin/runners/RunnerDetailsForm";
 import ToastUtil from "../../../../util/ToastUtil";
 import RunnerDetailsPassages from "../../../pageParts/admin/runners/RunnerDetailsPassages";
-import {getRunnerProcessedPassages} from "../../../../util/RunnerDetailsUtil";
+import { getRunnerProcessedPassages } from "../../../../util/RunnerDetailsUtil";
 
-export default function RunnerDetails() {
-    const {accessToken} = useContext(userContext);
+export default function RunnerDetails(): JSX.Element {
+    const { accessToken } = useContext(userContext);
 
-    const {runnerId: urlRunnerId} = useParams();
+    const { runnerId: urlRunnerId } = useParams();
 
     const [races, setRaces] = useState<AdminRaceWithRunnerCount[] | false>(false);
 
@@ -73,7 +73,7 @@ export default function RunnerDetails() {
     }, [accessToken]);
 
     const fetchRunner = useCallback(async () => {
-        if (!races) {
+        if (!races || !urlRunnerId) {
             return;
         }
 
@@ -143,7 +143,7 @@ export default function RunnerDetails() {
 
         ToastUtil.getToastr().success(hidden ? "Le passage a été masqué" : "Le passage n'est plus masqué");
 
-        fetchRunner();
+        void fetchRunner();
     }, [accessToken, runner, fetchRunner]);
 
     const updatePassage = useCallback(async (passage: AdminProcessedPassage, time: Date) => {
@@ -168,7 +168,7 @@ export default function RunnerDetails() {
 
         ToastUtil.getToastr().success("Le temps de passage a bien été modifié");
 
-        fetchRunner();
+        void fetchRunner();
     }, [accessToken, runner, fetchRunner]);
 
     const saveNewPassage = useCallback(async (time: Date) => {
@@ -194,7 +194,7 @@ export default function RunnerDetails() {
 
         ToastUtil.getToastr().success("Le passage a bien été créé");
 
-        fetchRunner();
+        void fetchRunner();
     }, [accessToken, runner, fetchRunner]);
 
     const deletePassage = useCallback(async (passage: AdminProcessedPassage) => {
@@ -223,15 +223,15 @@ export default function RunnerDetails() {
 
         ToastUtil.getToastr().success("Le passage a été supprimé");
 
-        fetchRunner();
+        void fetchRunner();
     }, [accessToken, runner, fetchRunner]);
 
     useEffect(() => {
-        fetchRaces();
+        void fetchRaces();
     }, [fetchRaces]);
 
     useEffect(() => {
-        fetchRunner();
+        void fetchRunner();
     }, [fetchRunner]);
 
     const onSubmit = useCallback(async (e: React.FormEvent) => {
@@ -321,7 +321,7 @@ export default function RunnerDetails() {
     }
 
     if (redirectAfterIdUpdate !== null) {
-        setTimeout(() => setRedirectAfterIdUpdate(null), 0);
+        setTimeout(() => { setRedirectAfterIdUpdate(null); }, 0);
 
         return (
             <Navigate to={`/admin/runners/${redirectAfterIdUpdate}`} replace={true} />
@@ -401,7 +401,7 @@ export default function RunnerDetails() {
                             <p>Cette action est irréversible.</p>
 
                             <button className="button red mt-3"
-                                    onClick={deleteRunner}
+                                    onClick={() => { void deleteRunner(); }}
                             >
                                 Supprimer le coureur
                             </button>

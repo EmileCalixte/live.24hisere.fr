@@ -1,6 +1,6 @@
-import {useContext} from "react";
-import {userContext} from "../../App";
-import {Navigate, Route, Routes} from "react-router-dom";
+import { useContext } from "react";
+import { userContext } from "../../App";
+import { Navigate, Route, Routes } from "react-router-dom";
 import FastestLaps from "./FastestLaps";
 import AdminHome from "./AdminHome";
 import Races from "./races/Races";
@@ -11,8 +11,8 @@ import RaceDetails from "./races/RaceDetails";
 import CircularLoader from "../../ui/CircularLoader";
 import RunnerDetails from "./runners/RunnerDetails";
 
-export default function Admin() {
-    const {user} = useContext(userContext);
+export default function Admin(): JSX.Element {
+    const { user } = useContext(userContext);
 
     if (user === null) {
         return (

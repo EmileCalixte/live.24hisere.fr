@@ -1,5 +1,5 @@
-import {GENDER_MIXED} from "../../../../constants/Gender";
-import {getCategoryCodeFromBirthYear} from "../../../../util/ffaUtils";
+import { GENDER_MIXED } from "../../../../constants/Gender";
+import { getCategoryCodeFromBirthYear } from "../../../../util/ffaUtils";
 
 interface RankingTableRowNCellsProps {
     runner: ProcessedRankingRunner;
@@ -7,7 +7,11 @@ interface RankingTableRowNCellsProps {
     tableGender: GenderWithMixed;
 }
 
-export default function RankingTableRowNCells({runner, tableCategory, tableGender}: RankingTableRowNCellsProps) {
+export default function RankingTableRowNCells({
+    runner,
+    tableCategory,
+    tableGender,
+}: RankingTableRowNCellsProps): JSX.Element {
     const runnerCategory = getCategoryCodeFromBirthYear(runner.birthYear);
 
     if (tableCategory === null) {
