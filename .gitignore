@@ -1,8 +1,7 @@
 .idea/
-backend/config/config.php
-backend/logs
+backend-slim/config/config.php
+backend-slim/logs
 frontend/build/
 frontend/src/config/config.ts
-import-passages/config.json
 node_modules/
 vendor/
