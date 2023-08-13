@@ -45,18 +45,15 @@ jobs:
         run: |
           rm -rf .git
           rm -rf .github
-          rm -f backend/composer.json
-          rm -f backend/composer.lock
           rm -rf frontend/node_modules
           rm -rf frontend/public
           rm -rf frontend/scripts
           rm -rf frontend/src
+          rm -f frontend/.eslintrc.js
           rm -f frontend/.gitignore
           rm -f frontend/package.json
-          rm -f frontend/package-lock.json
+          rm -f frontend/package-lock.jsong
           rm -f frontend/tsconfig.json
-          rm -rf import-passages
-          rm -rf import
           rm -rf sql
           rm -f .gitattributes
           rm -f .gitignore
