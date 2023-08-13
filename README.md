@@ -4,7 +4,7 @@
 
 # Les 24 Heures de l'Isère - Suivi en direct
 
-Une application web de suivi en direct des performances des coureurs, réalisée avec [React](https://reactjs.org/) et [Slim](https://www.slimframework.com/).
+Une application web de suivi en direct des performances des coureurs, réalisée avec [React](https://reactjs.org/) et [NestJS](https://nestjs.com/).
 
 ## Mise en route
 
