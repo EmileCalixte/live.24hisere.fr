@@ -9,26 +9,12 @@ jobs:
     runs-on: ubuntu-20.04
     container: ubuntu:20.04
 
-    env:
-      DEBIAN_FRONTEND: noninteractive # Prevent PHP installation to ask geographic zone and timezone
-
     steps:
       - name: Update apt
         run: apt-get update
 
       - name: Install misc tools
         run: apt-get install -y curl git zip unzip
-
-      - name: Install PHP 8.2
-        run: |
-          apt-get install -y software-properties-common
-          add-apt-repository ppa:ondrej/php
-          apt-get install -y php8.2 php8.2-mbstring php8.2-dom php8.2-curl
-
-      - name: Install Composer
-        run: |
-          curl -sS https://getcomposer.org/installer -o /tmp/composer-setup.php
-          php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer
 
       - name: Install Node.js 18
         run: |
@@ -38,11 +24,7 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v3
 
-      - name: Install PHP dependencies
-        run: composer install --no-cache
-        working-directory: ./backend
-
-      - name: Install JS dependencies
+      - name: Install JS frontend dependencies
         run: npm install
         working-directory: ./frontend
 
@@ -92,20 +74,16 @@ jobs:
           retention-days: 7
 
 
-  test:
-    runs-on: ubuntu-20.04
-    container: php:8.2-cli-alpine3.16
-    needs: build
-
-    steps:
-      - name: Download build
-        uses: actions/download-artifact@v3
-        with:
-          name: live.24hisere.fr-artifact
-
-      - name: Unzip archive
-        run: unzip live.24hisere.fr.zip
-
-      - name: Run PHP tests
-        run: ./vendor/bin/phpunit --testdox tests
-        working-directory: ./backend
+#  test:
+#    runs-on: ubuntu-20.04
+#    container: php:8.2-cli-alpine3.16
+#    needs: build
+#
+#    steps:
+#      - name: Download build
+#        uses: actions/download-artifact@v3
+#        with:
+#          name: live.24hisere.fr-artifact
+#
+#      - name: Unzip archive
+#        run: unzip live.24hisere.fr.zip

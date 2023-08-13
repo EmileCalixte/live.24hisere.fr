@@ -14,21 +14,6 @@ services:
       - 8000:3000
     command: sh -c "./scripts/start.sh"
 
-  backend-slim:
-    image: webdevops/php-nginx:8.2
-    working_dir: /app
-    restart: always
-    environment:
-      WEB_DOCUMENT_ROOT: /app/www
-      PHP_DATE_TIMEZONE: Europe/Paris
-    volumes:
-      - ./backend-slim:/app
-      - ./backend-slim/init/init.sh:/opt/docker/provision/entrypoint.d/30-init.sh
-    depends_on:
-      - database
-    ports:
-      - 8001:80
-
   database:
     image: mariadb:10.6.14
     restart: always

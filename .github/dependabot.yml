@@ -9,7 +9,13 @@ updates:
     directory: "/frontend" # Location of package manifests
     schedule:
       interval: "daily"
-  - package-ecosystem: "composer"
+    labels:
+      - dependencies
+      - dependencies-frontend
+  - package-ecosystem: "npm"
     directory: "/backend"
     schedule:
       interval: "daily"
+    labels:
+      - dependencies
+      - dependencies-backend
