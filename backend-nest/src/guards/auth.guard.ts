@@ -16,7 +16,11 @@ export class AuthGuard implements CanActivate {
             throw new ForbiddenException(ACCESS_TOKEN_MUST_BE_PROVIDED_MESSAGE);
         }
 
+        /**
+         * Insert user data in request. This data can be retrieved in controllers using param decorator {@link LoggedInUser}
+         */
         request.user = await this.authService.authenticateUser(token);
+        request.accessToken = token;
 
         return true;
     }

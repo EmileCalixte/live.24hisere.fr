@@ -13,9 +13,9 @@ interface Race {
     name: string;
 
     /**
-     * A string representing the start time of the race, format `${YYYY}-${MM}-${DD}T{hh}:${ii}:${ss}`
+     * A string representing the start time of the race, format `${YYYY}-${MM}-${DD}T{hh}:${ii}:${ss}Z`
      */
-    startTime: string;
+    startTime: DateISOString;
 
     /**
      * The duration of the race, in seconds
@@ -23,14 +23,14 @@ interface Race {
     duration: number;
 
     /**
-     * The distance before the first lap, in meters
+     * The distance before the first lap, in meters (decimal)
      */
-    initialDistance: number;
+    initialDistance: string;
 
     /**
-     * The distance of a lap, in meters
+     * The distance of a lap, in meters (decimal)
      */
-    lapDistance: number;
+    lapDistance: string;
 }
 
 interface RaceWithRunnerCount extends Race {
@@ -55,4 +55,4 @@ interface AdminRaceWithRunnerCount extends AdminRace, RaceWithRunnerCount {}
 /**
  * An object whose key is a race ID and value is the corresponding race
  */
-type AdminRaceDict = Record<number, AdminRace>;
+type RaceDict<T extends Race = Race> = Record<string, T>;

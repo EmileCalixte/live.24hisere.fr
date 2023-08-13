@@ -1,5 +1,5 @@
 import React from "react";
-import {createRoot} from "react-dom/client";
+import { createRoot } from "react-dom/client";
 import "bootstrap/dist/css/bootstrap-grid.css";
 import "./css/index.css";
 import "./css/forms.css";

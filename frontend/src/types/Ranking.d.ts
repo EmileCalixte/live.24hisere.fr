@@ -56,7 +56,7 @@ interface RankingRunnerRanks {
  */
 interface ProcessedRankingRunner extends RankingRunner {
     /**
-     * The total distance covered by the runner
+     * The total distance covered by the runner, in meters
      */
     distance: number;
 

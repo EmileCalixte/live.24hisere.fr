@@ -1,15 +1,15 @@
-import {faAngleDown, faAngleUp} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {userContext} from "../../App";
-import {useContext, useState} from "react";
+import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { userContext } from "../../App";
+import { useContext, useState } from "react";
 import AdminHeaderUserDropdown from "./AdminHeaderUserDropdown";
 
-export default function AdminHeader() {
-    const {user} = useContext(userContext);
+export default function AdminHeader(): JSX.Element {
+    const { user } = useContext(userContext);
 
     const [userDropdownShown, setUserDropdownShown] = useState(false);
 
-    const hideUserDropdown = () => {
+    const hideUserDropdown = (): void => {
         setUserDropdownShown(false);
     };
 
@@ -22,9 +22,9 @@ export default function AdminHeader() {
             <span>
                 Vous êtes connecté en tant qu'administrateur.
             </span>
-            <div style={{position: "relative"}}>
+            <div style={{ position: "relative" }}>
                 <button className="admin-header-user-button"
-                        onClick={() => setUserDropdownShown(!userDropdownShown)}
+                        onClick={() => { setUserDropdownShown(!userDropdownShown); }}
                 >
                     {user.username}
                     &nbsp;

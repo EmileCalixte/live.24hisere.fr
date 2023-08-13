@@ -1,6 +1,6 @@
-import React, {useEffect, useRef} from "react";
-import {Col, Row} from "react-bootstrap";
-import {formatDateAsString} from "../../../../util/utils";
+import React, { useEffect, useRef } from "react";
+import { Col, Row } from "react-bootstrap";
+import { formatDateAsString } from "../../../../util/utils";
 import DurationInputs from "../../../ui/forms/DurationInputs";
 import Modal from "../../../ui/Modal";
 
@@ -22,7 +22,7 @@ export default function RunnerDetailsPassageForm({
     onSubmit,
     submitButtonDisabled,
     onClose,
-}: RunnerDetailsPassageFormProps) {
+}: RunnerDetailsPassageFormProps): JSX.Element {
     const dialogRef = useRef<HTMLDialogElement | null>(null);
 
     useEffect(() => {

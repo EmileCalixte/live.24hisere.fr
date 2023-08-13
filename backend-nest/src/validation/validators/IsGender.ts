@@ -1,10 +1,11 @@
 import { buildMessage, ValidateBy } from "class-validator";
 import { type ValidationOptions } from "class-validator/types/decorator/ValidationOptions";
 import { GENDER } from "../../constants/gender.constants";
+import { type Gender } from "../../types/Gender";
 
 const IS_GENDER = "isGender";
 
-export function isGender(value: unknown): boolean {
+export function isGender(value: unknown): value is Gender {
     if (typeof value !== "string") {
         return false;
     }

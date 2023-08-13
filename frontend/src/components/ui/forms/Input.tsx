@@ -31,7 +31,7 @@ export function Input({
     pattern,
     autoFocus = false,
     className,
-}: InputProps) {
+}: InputProps): JSX.Element {
     if (type === "number" && pattern === undefined) {
         pattern = "[0-9]*";
 

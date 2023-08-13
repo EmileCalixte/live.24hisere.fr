@@ -1,8 +1,8 @@
-import {faEye, faEyeSlash, faPen, faPlus, faTrash} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {useEffect, useMemo, useState} from "react";
-import {Col, Row} from "react-bootstrap";
-import {formatDateAsString, formatMsAsDuration} from "../../../../util/utils";
+import { faEye, faEyeSlash, faPen, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect, useMemo, useState } from "react";
+import { Col, Row } from "react-bootstrap";
+import { formatDateAsString, formatMsAsDuration } from "../../../../util/utils";
 import RunnerDetailsCreatePassage from "./RunnerDetailsCreatePassage";
 import RunnerDetailsEditPassage from "./RunnerDetailsEditPassage";
 
@@ -22,7 +22,7 @@ export default function RunnerDetailsPassages({
     updatePassage,
     saveNewPassage,
     deletePassage,
-}: RunnerDetailsPassagesProps) {
+}: RunnerDetailsPassagesProps): JSX.Element {
     const [isAdding, setIsAdding] = useState(false);
 
     // The passage for which user is currently editing the time
@@ -38,7 +38,7 @@ export default function RunnerDetailsPassages({
         const scrollX = window.scrollX;
         const scrollY = window.scrollY;
 
-        function onScroll() {
+        function onScroll(): void {
             window.scrollTo(scrollX, scrollY);
         }
 
@@ -57,7 +57,7 @@ export default function RunnerDetailsPassages({
                 {isAdding &&
                     <RunnerDetailsCreatePassage runnerRace={runnerRace}
                                                 savePassage={saveNewPassage}
-                                                onClose={() => setIsAdding(false)}
+                                                onClose={() => { setIsAdding(false); }}
                     />
                 }
 
@@ -65,12 +65,12 @@ export default function RunnerDetailsPassages({
                     <RunnerDetailsEditPassage passage={editingPassage}
                                               runnerRace={runnerRace}
                                               updatePassage={updatePassage}
-                                              onClose={() => setEditingPassage(null)}
+                                              onClose={() => { setEditingPassage(null); }}
                     />
                 }
 
                 <Col className="mb-3">
-                    <button className="button" onClick={() => setIsAdding(true)}>
+                    <button className="button" onClick={() => { setIsAdding(true); }}>
                         <FontAwesomeIcon icon={faPlus} /> Ajouter manuellement
                     </button>
 
@@ -107,8 +107,8 @@ export default function RunnerDetailsPassages({
                                     {passages.map(passage => {
                                         return (
                                             <tr key={passage.id}>
-                                                <td style={{fontSize: "0.85em"}}>{passage.id}</td>
-                                                <td style={{fontSize: "0.85em"}}>
+                                                <td style={{ fontSize: "0.85em" }}>{passage.id}</td>
+                                                <td style={{ fontSize: "0.85em" }}>
                                                     {(() => {
                                                         if (passage.detectionId !== null) {
                                                             return `Auto (${passage.detectionId})`;
@@ -140,7 +140,7 @@ export default function RunnerDetailsPassages({
                                                 </td>
                                                 <td>
                                                     <button className="button small"
-                                                            onClick={() => setEditingPassage(passage)}
+                                                            onClick={() => { setEditingPassage(passage); }}
                                                     >
                                                         <FontAwesomeIcon icon={faPen} /> Modifier
                                                     </button>

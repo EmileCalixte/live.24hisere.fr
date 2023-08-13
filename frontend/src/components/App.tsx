@@ -1,6 +1,6 @@
-import {createContext, useCallback, useEffect, useState} from "react";
-import {Helmet} from "react-helmet";
-import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
+import { createContext, useCallback, useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Header from "./ui/header/Header";
 import Footer from "./ui/footer/Footer";
 import Ranking from "./pages/Ranking";
@@ -13,7 +13,7 @@ import {
 } from "../util/apiUtils";
 import Login from "./pages/Login";
 import Admin from "./pages/admin/Admin";
-import {verbose} from "../util/utils";
+import { verbose } from "../util/utils";
 import ToastUtil from "../util/ToastUtil";
 
 interface AppDataContext {
@@ -78,7 +78,7 @@ export const userContext = createContext<UserContext>({
 
 const FETCH_APP_DATA_INTERVAL_TIME = 20 * 1000;
 
-export default function App() {
+export default function App(): JSX.Element {
     const [fetchLevel, setFetchLevel] = useState(0);
     const [lastUpdateTime, setLastUpdateTime] = useState(new Date());
     const [serverTimeOffset, setServerTimeOffset] = useState(0);
@@ -137,7 +137,7 @@ export default function App() {
     }, [accessToken, forgetAccessToken]);
 
     const logout = useCallback(() => {
-        performAuthenticatedAPIRequest("/auth/logout", accessToken, {
+        void performAuthenticatedAPIRequest("/auth/logout", accessToken, {
             method: "POST",
         });
 
@@ -160,9 +160,9 @@ export default function App() {
     }, [incrementFetchLevel, decrementFetchLevel]);
 
     useEffect(() => {
-        fetchAppData();
+        void fetchAppData();
 
-        const interval = setInterval(fetchAppData, FETCH_APP_DATA_INTERVAL_TIME);
+        const interval = setInterval(() => { void fetchAppData(); }, FETCH_APP_DATA_INTERVAL_TIME);
 
         return () => {
             clearInterval(interval);
@@ -175,7 +175,7 @@ export default function App() {
             return;
         }
 
-        fetchUserInfo();
+        void fetchUserInfo();
     }, [accessToken, fetchUserInfo]);
 
     if (redirect !== null) {

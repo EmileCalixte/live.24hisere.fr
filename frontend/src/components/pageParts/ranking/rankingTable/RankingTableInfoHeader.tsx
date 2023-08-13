@@ -1,5 +1,5 @@
-import {GENDER, GENDER_MIXED} from "../../../../constants/Gender";
-import {formatMsAsDuration} from "../../../../util/utils";
+import { GENDER, GENDER_MIXED } from "../../../../constants/Gender";
+import { formatMsAsDuration } from "../../../../util/utils";
 
 interface RankingTableInfoHeaderProps {
     race: Race;
@@ -13,7 +13,7 @@ export default function RankingTableInfoHeader({
     tableCategory,
     tableGender,
     tableRaceDuration,
-}: RankingTableInfoHeaderProps) {
+}: RankingTableInfoHeaderProps): JSX.Element {
     return (
         <td colSpan={42} className="ranking-table-info-header">
             {race.name} : Classement {(() => {

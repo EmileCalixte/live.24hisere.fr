@@ -2,21 +2,20 @@ import {
     IsBoolean,
     IsInt,
     IsNotEmpty,
-    IsNumber,
     IsString, Max,
     MaxLength,
     Min,
-    Validate,
 } from "class-validator";
 import { RACE_MAX_DISTANCE, RACE_MAX_DURATION, RACE_NAME_MAX_LENGTH } from "../../constants/race.constants";
-import { RaceNameDoesNotExistRule } from "../../validation/rules/race/raceNameDoesNotExist.rule";
+import { FloatStringMax } from "../../validation/validators/floatString/FloatStringMax";
+import { FloatStringMin } from "../../validation/validators/floatString/FloatStringMin";
+import { IsFloatString } from "../../validation/validators/floatString/IsFloatString";
 import { IsISO8601UTCDateString } from "../../validation/validators/IsISO8601UTCDateString";
 
 export class RaceDto {
     @IsString()
     @IsNotEmpty()
     @MaxLength(RACE_NAME_MAX_LENGTH)
-    @Validate(RaceNameDoesNotExistRule)
     name: string;
 
     @IsBoolean()
@@ -34,14 +33,14 @@ export class RaceDto {
     duration: number;
 
     @IsNotEmpty()
-    @IsNumber()
-    @Min(0)
-    @Max(RACE_MAX_DISTANCE)
-    initialDistance: number;
+    @IsFloatString()
+    @FloatStringMin(0)
+    @FloatStringMax(RACE_MAX_DISTANCE)
+    initialDistance: string;
 
     @IsNotEmpty()
-    @IsNumber()
-    @Min(0)
-    @Max(RACE_MAX_DISTANCE)
-    lapDistance: number;
+    @IsFloatString()
+    @FloatStringMin(0)
+    @FloatStringMax(RACE_MAX_DISTANCE)
+    lapDistance: string;
 }

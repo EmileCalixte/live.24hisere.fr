@@ -1,26 +1,27 @@
 import "../../css/print-ranking-table.css";
-import React, {useState, useEffect, useCallback, useMemo} from "react";
-import {Col, Row} from "react-bootstrap";
-import {GENDER_MIXED} from "../../constants/Gender";
-import {RANKING_TIME_MODE} from "../../constants/RankingTimeMode";
-import {getRacesSelectOptions} from "../../helpers/raceHelper";
-import {useWindowDimensions} from "../../hooks/useWindowDimensions";
-import {existingCategories} from "../../util/ffaUtils";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { Col, Row } from "react-bootstrap";
+import { GENDER_MIXED } from "../../constants/Gender";
+import { RANKING_TIME_MODE } from "../../constants/RankingTimeMode";
+import { excludeKeys } from "../../helpers/objectHelper";
+import { getRacesSelectOptions } from "../../helpers/raceHelper";
+import { useWindowDimensions } from "../../hooks/useWindowDimensions";
+import { existingCategories, getCategoryCodeFromBirthYear } from "../../util/ffaUtils";
 import Select from "../ui/forms/Select";
 import Page from "../ui/Page";
 import CircularLoader from "../ui/CircularLoader";
 import RankingSettings from "../pageParts/ranking/RankingSettings";
-import {performAPIRequest} from "../../util/apiUtils";
+import { performAPIRequest } from "../../util/apiUtils";
 import RankingTable from "../pageParts/ranking/rankingTable/RankingTable";
-import {RankingProcesser} from "../../util/RankingProcesser";
-import {formatDateForApi} from "../../util/utils";
+import { RankingProcesser } from "../../util/RankingProcesser";
+import { formatDateForApi } from "../../util/utils";
 import ResponsiveRankingTable from "../pageParts/ranking/rankingTable/responsive/ResponsiveRankingTable";
 
 const RANKING_UPDATE_INTERVAL_TIME = 20 * 1000;
 
 const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
 
-export default function Ranking() {
+export default function Ranking(): JSX.Element {
     const [races, setRaces] = useState<Race[] | false>(false);
     const [selectedRace, setSelectedRace] = useState<Race | null>(null);
 
@@ -30,7 +31,7 @@ export default function Ranking() {
     const [selectedTimeMode, setSelectedTimeMode] = useState(RANKING_TIME_MODE.now);
     const [selectedRankingTime, setSelectedRankingTime] = useState(-1); // Set when a race is selected
 
-    const {width: windowWidth} = useWindowDimensions();
+    const { width: windowWidth } = useWindowDimensions();
 
     const racesOptions = useMemo(() => {
         return getRacesSelectOptions(races);
@@ -102,7 +103,7 @@ export default function Ranking() {
         }
     }, [races, shouldResetRankingTime]);
 
-    const onCategorySelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const onCategorySelect = (e: React.ChangeEvent<HTMLSelectElement>): void => {
         if (e.target.value === "scratch") {
             setSelectedCategory(null);
             return;
@@ -114,19 +115,19 @@ export default function Ranking() {
     /**
      * @param time The new ranking time from race start in ms
      */
-    const onRankingTimeSave = async (time: number) => {
+    const onRankingTimeSave = async (time: number): Promise<void> => {
         setSelectedRankingTime(time);
     };
 
     useEffect(() => {
-        fetchRaces();
+        void fetchRaces();
     }, [fetchRaces]);
 
     useEffect(() => {
-        fetchRanking();
+        void fetchRanking();
 
-        const refreshRankingInterval = setInterval(fetchRanking, RANKING_UPDATE_INTERVAL_TIME);
-        return () => clearInterval(refreshRankingInterval);
+        const refreshRankingInterval = setInterval(() => { void fetchRanking(); }, RANKING_UPDATE_INTERVAL_TIME);
+        return () => { clearInterval(refreshRankingInterval); };
     }, [fetchRanking]);
 
     const categories = useMemo<CategoriesDict | false>(() => {
@@ -137,18 +138,18 @@ export default function Ranking() {
         const categoriesInRanking = new Set<CategoryShortCode>();
 
         for (const runner of processedRanking) {
-            categoriesInRanking.add(runner.category);
+            categoriesInRanking.add(getCategoryCodeFromBirthYear(runner.birthYear));
         }
 
-        const categories = {...existingCategories};
+        const categoriesToRemove: Array<keyof CategoriesDict> = [];
 
-        for (const categoryCode in categories) {
+        for (const categoryCode in existingCategories) {
             if (!categoriesInRanking.has(categoryCode)) {
-                delete categories[categoryCode];
+                categoriesToRemove.push(categoryCode);
             }
         }
 
-        return categories;
+        return excludeKeys(existingCategories, categoriesToRemove);
     }, [processedRanking]);
 
     return (

@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import ToastUtil from "../../../../util/ToastUtil";
 import RunnerDetailsPassageForm from "./RunnerDetailsPassageForm";
 
@@ -14,7 +14,7 @@ export default function RunnerDetailsEditPassage({
     runnerRace,
     updatePassage,
     onClose,
-}: RunnerDetailsEditPassageProps) {
+}: RunnerDetailsEditPassageProps): JSX.Element {
     const [passageRaceTime, setPassageRaceTime] = useState(passage.processed.lapEndRaceTime);
 
     const [isSaving, setIsSaving] = useState(false);

@@ -4,7 +4,7 @@ import React from "react";
 interface SelectProps<T extends SelectOption["value"]> {
     label: string;
     name?: string;
-    options: SelectOption<T>[];
+    options: Array<SelectOption<T>>;
     disabled?: boolean;
     isLoading?: boolean;
     loadingOptionLabel?: string;
@@ -25,7 +25,7 @@ export default function Select<T extends SelectOption["value"]>({
     value,
     onChange,
     className,
-}: SelectProps<T>) {
+}: SelectProps<T>): JSX.Element {
     return (
         <div className={clsx("input-group", className)}>
             <label>
@@ -37,15 +37,17 @@ export default function Select<T extends SelectOption["value"]>({
                         onChange={onChange}
                 >
                     <option disabled hidden value="_placeholder">{placeholderLabel}</option>
-                    {isLoading ? (
-                        <option value="_loading">{loadingOptionLabel}</option>
-                    ) : (
-                        <>
-                            {options.map((option, index) => (
-                                <option key={index} value={option.value}>{option.label}</option>
-                            ))}
-                        </>
-                    )}
+                    {isLoading
+                        ? (
+                            <option value="_loading">{loadingOptionLabel}</option>
+                        )
+                        : (
+                            <>
+                                {options.map((option, index) => (
+                                    <option key={index} value={option.value}>{option.label}</option>
+                                ))}
+                            </>
+                        )}
                 </select>
             </label>
         </div>

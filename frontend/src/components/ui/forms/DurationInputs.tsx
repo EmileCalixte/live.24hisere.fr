@@ -1,9 +1,6 @@
-import React, {useCallback, useMemo} from "react";
-import {prefixNumber} from "../../../util/utils";
-
-export const getDurationAsMs = (hours: number, minutes: number, seconds: number) => {
-    return (seconds * 1000) + (minutes * 60 * 1000) + (hours * 60 * 60 * 1000);
-};
+import React, { useCallback, useMemo } from "react";
+import { getDurationAsMs } from "../../../helpers/durationHelper";
+import { prefixNumber } from "../../../util/utils";
 
 interface DurationInputsProps {
     legend?: string;
@@ -37,7 +34,7 @@ export default function DurationInputs({
     minDuration = 0,
     maxDuration,
     setDuration,
-}: DurationInputsProps) {
+}: DurationInputsProps): JSX.Element {
     if (minDuration < 0) {
         throw new Error("minDuration cannot be negative");
     }
@@ -125,7 +122,7 @@ export default function DurationInputs({
             {legend &&
                 <legend>{legend}</legend>
             }
-            <label style={{marginLeft: -5}}>
+            <label style={{ marginLeft: -5 }}>
                 <input className="input race-time-input"
                        type="number"
                        value={prefixNumber(hours, 2)}

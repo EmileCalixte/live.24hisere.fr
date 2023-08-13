@@ -1,7 +1,7 @@
-import {faEye, faEyeSlash, faGrip, faPersonRunning} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {Link} from "react-router-dom";
-import React, {useCallback} from "react";
+import { faEye, faEyeSlash, faGrip, faPersonRunning } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Link } from "react-router-dom";
+import React, { useCallback } from "react";
 import RaceTimer from "../../RaceTimer";
 
 interface RacesListItemProps {
@@ -11,7 +11,7 @@ interface RacesListItemProps {
     isDraggedOver: boolean;
 }
 
-export default function RacesListItem({race, isSorting, isDragged, isDraggedOver}: RacesListItemProps) {
+export default function RacesListItem({ race, isSorting, isDragged, isDraggedOver }: RacesListItemProps): JSX.Element {
     const onClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
         // Prevent navigation to the clicked race if sorting mode is enabled
         if (isSorting) {

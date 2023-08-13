@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 export const MIN_DOTS = 0;
 export const MAX_DOTS = 3;
@@ -11,7 +11,7 @@ interface OptionWithLoadingDotsProps {
 /**
  * @deprecated Causes blinking when select is opened on mobile
  */
-export default function OptionWithLoadingDots({children}: OptionWithLoadingDotsProps) {
+export default function OptionWithLoadingDots({ children }: OptionWithLoadingDotsProps): JSX.Element {
     const [dotCount, setDotCount] = useState(MAX_DOTS);
 
     const updateDotCount = useCallback(() => {
@@ -19,9 +19,9 @@ export default function OptionWithLoadingDots({children}: OptionWithLoadingDotsP
     }, []);
 
     useEffect(() => {
-        const dotsInterval = setInterval(() => updateDotCount(), UPDATE_DOT_COUNT_INTERVAL_TIME);
+        const dotsInterval = setInterval(() => { updateDotCount(); }, UPDATE_DOT_COUNT_INTERVAL_TIME);
 
-        return () => clearInterval(dotsInterval);
+        return () => { clearInterval(dotsInterval); };
     }, [updateDotCount]);
 
     const dots = useMemo<string>(() => {

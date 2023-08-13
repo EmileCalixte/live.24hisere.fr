@@ -1,20 +1,20 @@
-import {Col, Row} from "react-bootstrap";
-import {Navigate, useParams} from "react-router-dom";
+import { Col, Row } from "react-bootstrap";
+import { Navigate, useParams } from "react-router-dom";
 import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../ui/breadcrumbs/Crumb";
-import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import Page from "../../../ui/Page";
 import CircularLoader from "../../../ui/CircularLoader";
-import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
-import {userContext} from "../../../App";
-import {formatDateForApi} from "../../../../util/utils";
+import { performAuthenticatedAPIRequest } from "../../../../util/apiUtils";
+import { userContext } from "../../../App";
+import { formatDateForApi } from "../../../../util/utils";
 import ToastUtil from "../../../../util/ToastUtil";
 import RaceDetailsForm from "../../../pageParts/admin/races/RaceDetailsForm";
 
-export default function RaceDetails() {
-    const {accessToken} = useContext(userContext);
+export default function RaceDetails(): JSX.Element {
+    const { accessToken } = useContext(userContext);
 
-    const {raceId: urlRaceId} = useParams();
+    const { raceId: urlRaceId } = useParams();
 
     const [race, setRace] = useState<AdminRaceWithRunnerCount | undefined | null>(undefined);
 
@@ -45,6 +45,10 @@ export default function RaceDetails() {
     }, [race, raceName, initialDistance, lapDistance, startTime, duration, isPublic]);
 
     const fetchRace = useCallback(async () => {
+        if (!urlRaceId) {
+            return;
+        }
+
         const response = await performAuthenticatedAPIRequest(`/admin/races/${urlRaceId}`, accessToken);
 
         if (!response.ok) {
@@ -66,10 +70,10 @@ export default function RaceDetails() {
     }, [accessToken, urlRaceId]);
 
     useEffect(() => {
-        fetchRace();
+        void fetchRace();
     }, [fetchRace]);
 
-    const onSubmit = async (e: React.FormEvent) => {
+    const onSubmit = async (e: React.FormEvent): Promise<void> => {
         e.preventDefault();
 
         if (!race) {
@@ -90,6 +94,9 @@ export default function RaceDetails() {
         const response = await performAuthenticatedAPIRequest(`/admin/races/${race.id}`, accessToken, {
             method: "PATCH",
             body: JSON.stringify(body),
+            headers: {
+                "Content-Type": "application/json",
+            },
         });
 
         const responseJson = await response.json();
@@ -211,7 +218,7 @@ export default function RaceDetails() {
 
                                     <button className="button red mt-3"
                                             disabled={race.runnerCount > 0}
-                                            onClick={deleteRace}
+                                            onClick={() => { void deleteRace(); }}
                                     >
                                         Supprimer la course
                                     </button>

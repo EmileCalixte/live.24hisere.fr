@@ -1,19 +1,19 @@
-import {faArrowsUpDown, faCheck, faPlus} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {Col, Row} from "react-bootstrap";
+import { faArrowsUpDown, faCheck, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Col, Row } from "react-bootstrap";
 import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../ui/breadcrumbs/Crumb";
-import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
-import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
-import {userContext} from "../../../App";
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { performAuthenticatedAPIRequest } from "../../../../util/apiUtils";
+import { userContext } from "../../../App";
 import Page from "../../../ui/Page";
 import CircularLoader from "../../../ui/CircularLoader";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import RacesListItem from "../../../pageParts/admin/races/RacesListItem";
 import ToastUtil from "../../../../util/ToastUtil";
 
-export default function Races() {
-    const {accessToken} = useContext(userContext);
+export default function Races(): JSX.Element {
+    const { accessToken } = useContext(userContext);
 
     // false = not fetched yet
     const [races, setRaces] = useState<AdminRaceWithRunnerCount[] | false>(false);
@@ -66,6 +66,9 @@ export default function Races() {
         const response = await performAuthenticatedAPIRequest("/admin/races-order", accessToken, {
             method: "PUT",
             body: JSON.stringify(raceIds),
+            headers: {
+                "Content-Type": "application/json",
+            },
         });
 
         if (!response.ok) {
@@ -99,7 +102,7 @@ export default function Races() {
     }, [isSorting, races, sortingRaces]);
 
     useEffect(() => {
-        fetchRaces();
+        void fetchRaces();
     }, [fetchRaces]);
 
     useEffect(() => {
@@ -148,7 +151,7 @@ export default function Races() {
                                     <Row className="mt-4">
                                         <Col>
                                             {!isSorting &&
-                                                <button className="button" onClick={() => setIsSorting(true)}>
+                                                <button className="button" onClick={() => { setIsSorting(true); }}>
                                                     <FontAwesomeIcon icon={faArrowsUpDown} className="mr-2" />
                                                     Changer l'ordre
                                                 </button>
@@ -157,13 +160,13 @@ export default function Races() {
                                             {isSorting &&
                                                 <>
                                                     <button className="button red mr-2"
-                                                            onClick={() => setIsSorting(false)}
+                                                            onClick={() => { setIsSorting(false); }}
                                                             disabled={isSaving}
                                                     >
                                                         Annuler
                                                     </button>
                                                     <button className="button"
-                                                            onClick={saveSort}
+                                                            onClick={() => { void saveSort(); }}
                                                             disabled={isSaving}>
                                                         <FontAwesomeIcon icon={faCheck} className="mr-2" />
                                                         Enregistrer
@@ -181,9 +184,9 @@ export default function Races() {
                                                         <li key={race.id}
                                                             className={isSorting ? "draggable" : ""}
                                                             draggable={isSorting}
-                                                            onDragStart={isSorting ? e => onDragStart(e, index) : undefined}
-                                                            onDragEnter={isSorting ? e => onDragEnter(e, index) : undefined}
-                                                            onDragOver={isSorting ? e => e.preventDefault() : undefined}
+                                                            onDragStart={isSorting ? e => { onDragStart(e, index); } : undefined}
+                                                            onDragEnter={isSorting ? e => { onDragEnter(e, index); } : undefined}
+                                                            onDragOver={isSorting ? e => { e.preventDefault(); } : undefined}
                                                             onDragEnd={isSorting ? onDragEnd : undefined}
                                                         >
                                                             <RacesListItem key={race.id}

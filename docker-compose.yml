@@ -1,7 +1,7 @@
 version: "3.8"
 
 services:
-  backend-nest:
+  backend:
     image: node:18
     working_dir: /home/node/app
     environment:
@@ -11,10 +11,10 @@ services:
     depends_on:
       - database
     ports:
-      - 8001:3000
+      - 8000:3000
     command: sh -c "./scripts/start.sh"
 
-  backend:
+  backend-slim:
     image: webdevops/php-nginx:8.2
     working_dir: /app
     restart: always
@@ -27,7 +27,7 @@ services:
     depends_on:
       - database
     ports:
-      - 8000:80
+      - 8001:80
 
   database:
     image: mariadb:10.6.14

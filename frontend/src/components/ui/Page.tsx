@@ -1,5 +1,5 @@
 import React from "react";
-import {Helmet} from "react-helmet";
+import { Helmet } from "react-helmet";
 
 interface PageProps {
     children: React.ReactNode[] | React.ReactNode;
@@ -7,7 +7,7 @@ interface PageProps {
     title: string;
 }
 
-export default function Page({children, id, title}: PageProps) {
+export default function Page({ children, id, title }: PageProps): JSX.Element {
     if (Array.isArray(children)) {
         children = [children];
     }

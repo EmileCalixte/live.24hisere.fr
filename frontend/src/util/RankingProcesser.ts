@@ -1,5 +1,6 @@
-import {GENDER_MIXED} from "../constants/Gender";
-import {verbose} from "./utils";
+import { GENDER_MIXED } from "../constants/Gender";
+import { getCategoryCodeFromBirthYear } from "./ffaUtils";
+import { verbose } from "./utils";
 
 type CategoryGenderRanks = {
     [key in GenderWithMixed]: {
@@ -23,9 +24,9 @@ export class RankingProcesser {
     // Temporary objects to keep track of the current ranking for each category and each gender during ranking processing
     private currentRanksByCategory: CurrentRanksByCategory = {
         scratch: { // Scratch includes all solo runners regardless of their category
-            mixed: {rank: 0, lastRunner: null},
-            M: {rank: 0, lastRunner: null},
-            F: {rank: 0, lastRunner: null},
+            mixed: { rank: 0, lastRunner: null },
+            M: { rank: 0, lastRunner: null },
+            F: { rank: 0, lastRunner: null },
         },
         // Other categories will be appended here
     };
@@ -35,20 +36,25 @@ export class RankingProcesser {
         this.ranking = ranking;
     }
 
-    public getProcessedRanking = (): ProcessedRanking => {
+    public getProcessedRanking(): ProcessedRanking {
         if (this.processedRanking === undefined) {
             return this.processRanking();
         }
 
         return this.processedRanking;
-    };
+    }
 
-    private readonly processRanking = (): ProcessedRanking => {
+    private processRanking(): ProcessedRanking {
         verbose("Processing ranking");
+
+        const raceInitialDistance = Number(this.race.initialDistance);
+        const raceLapDistance = Number(this.race.lapDistance);
 
         const processedRanking: ProcessedRanking = [];
 
         for (const runner of this.ranking) {
+            const runnerCategory = getCategoryCodeFromBirthYear(runner.birthYear);
+
             const rankings: RankingRunnerRanks = {
                 actual: {
                     scratchMixed: 0,
@@ -64,14 +70,14 @@ export class RankingProcesser {
                 },
             };
 
-            if (!(runner.category in this.currentRanksByCategory)) {
-                this.addCategoryToCurrentRanks(runner.category);
+            if (!(runnerCategory in this.currentRanksByCategory)) {
+                this.addCategoryToCurrentRanks(runnerCategory);
             }
 
             rankings.actual.scratchMixed = this.currentRanksByCategory.scratch.mixed.rank + 1;
             rankings.actual.scratchGender = this.currentRanksByCategory.scratch[runner.gender].rank + 1;
-            rankings.actual.categoryMixed = this.currentRanksByCategory[runner.category].mixed.rank + 1;
-            rankings.actual.categoryGender = this.currentRanksByCategory[runner.category][runner.gender].rank + 1;
+            rankings.actual.categoryMixed = this.currentRanksByCategory[runnerCategory].mixed.rank + 1;
+            rankings.actual.categoryGender = this.currentRanksByCategory[runnerCategory][runner.gender].rank + 1;
 
             let scratchMixedPreviousRunner = null;
             let scratchGenderPreviousRunner = null;
@@ -80,8 +86,8 @@ export class RankingProcesser {
 
             scratchMixedPreviousRunner = this.getCurrentLastRunner("scratch", GENDER_MIXED);
             scratchGenderPreviousRunner = this.getCurrentLastRunner("scratch", runner.gender);
-            categoryMixedPreviousRunner = this.getCurrentLastRunner(runner.category, GENDER_MIXED);
-            categoryGenderPreviousRunner = this.getCurrentLastRunner(runner.category, runner.gender);
+            categoryMixedPreviousRunner = this.getCurrentLastRunner(runnerCategory, GENDER_MIXED);
+            categoryGenderPreviousRunner = this.getCurrentLastRunner(runnerCategory, runner.gender);
 
             const scratchMixedPreviousRunnerEquality = this.areRunnersEqual(runner, scratchMixedPreviousRunner);
             const scratchGenderPreviousRunnerEquality = this.areRunnersEqual(runner, scratchGenderPreviousRunner);
@@ -117,10 +123,10 @@ export class RankingProcesser {
             let averageSpeed = null;
 
             if (runner.passageCount > 0) {
-                if (this.race.initialDistance > 0) {
-                    distance = this.race.initialDistance + this.race.lapDistance * (runner.passageCount - 1);
+                if (raceInitialDistance > 0) {
+                    distance = raceInitialDistance + raceLapDistance * (runner.passageCount - 1);
                 } else {
-                    distance = this.race.lapDistance * runner.passageCount;
+                    distance = raceLapDistance * runner.passageCount;
                 }
             }
 
@@ -150,31 +156,33 @@ export class RankingProcesser {
         verbose("Ranking processed");
 
         return this.processedRanking;
-    };
+    }
 
-    private readonly getCurrentLastRunner = (category: string, gender: GenderWithMixed): ProcessedRankingRunner | null => {
+    private getCurrentLastRunner(category: string, gender: GenderWithMixed): ProcessedRankingRunner | null {
         if (!(category in this.currentRanksByCategory)) {
             return null;
         }
 
         return this.currentRanksByCategory[category][gender].lastRunner;
-    };
+    }
 
-    private readonly addCategoryToCurrentRanks = (category: string) => {
+    private addCategoryToCurrentRanks(category: string): void {
         if (category in this.currentRanksByCategory) {
             throw new Error("Category already existing in current ranks");
         }
 
         this.currentRanksByCategory[category] = {
-            mixed: {rank: 0, lastRunner: null},
-            M: {rank: 0, lastRunner: null},
-            F: {rank: 0, lastRunner: null},
+            mixed: { rank: 0, lastRunner: null },
+            M: { rank: 0, lastRunner: null },
+            F: { rank: 0, lastRunner: null },
         };
-    };
+    }
 
-    private readonly updateCurrentRanks = (runner: ProcessedRankingRunner) => {
-        if (!(runner.category in this.currentRanksByCategory)) {
-            this.addCategoryToCurrentRanks(runner.category);
+    private updateCurrentRanks(runner: ProcessedRankingRunner): void {
+        const runnerCategory = getCategoryCodeFromBirthYear(runner.birthYear);
+
+        if (!(runnerCategory in this.currentRanksByCategory)) {
+            this.addCategoryToCurrentRanks(runnerCategory);
         }
 
         ++this.currentRanksByCategory.scratch.mixed.rank;
@@ -183,14 +191,14 @@ export class RankingProcesser {
         ++this.currentRanksByCategory.scratch[runner.gender].rank;
         this.currentRanksByCategory.scratch[runner.gender].lastRunner = runner;
 
-        ++this.currentRanksByCategory[runner.category].mixed.rank;
-        this.currentRanksByCategory[runner.category].mixed.lastRunner = runner;
+        ++this.currentRanksByCategory[runnerCategory].mixed.rank;
+        this.currentRanksByCategory[runnerCategory].mixed.lastRunner = runner;
 
-        ++this.currentRanksByCategory[runner.category][runner.gender].rank;
-        this.currentRanksByCategory[runner.category][runner.gender].lastRunner = runner;
-    };
+        ++this.currentRanksByCategory[runnerCategory][runner.gender].rank;
+        this.currentRanksByCategory[runnerCategory][runner.gender].lastRunner = runner;
+    }
 
-    private readonly areRunnersEqual = (runner1: RankingRunner | null, runner2: RankingRunner | null) => {
+    private areRunnersEqual(runner1: RankingRunner | null, runner2: RankingRunner | null): boolean {
         if (runner1 === null || runner2 === null) {
             return false;
         }
@@ -200,5 +208,5 @@ export class RankingProcesser {
         }
 
         return (new Date(runner1.lastPassageTime)).getTime() === (new Date(runner2.lastPassageTime)).getTime();
-    };
+    }
 }

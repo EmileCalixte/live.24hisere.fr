@@ -1,4 +1,4 @@
-import {formatMsAsDuration} from "./utils";
+import { formatMsAsDuration } from "./utils";
 
 function getLapsInRaceTimeInterval(
     passages: ProcessedPassage[],
@@ -24,7 +24,7 @@ function getSpeedAndPaceInHour(
     passages: ProcessedPassage[],
     hourStartRaceTime: number,
     hourEndRaceTime: number,
-): {speed: number; pace: number} {
+): { speed: number; pace: number } {
     let speedSum = 0;
     let durationSum = 0;
 
@@ -51,17 +51,20 @@ function getSpeedAndPaceInHour(
     const speed = speedSum / durationSum;
     const pace = getPaceFromSpeed(speed);
 
-    return {speed, pace};
+    return { speed, pace };
 }
 
 /**
  * @param passages Passages sorted by ascending time
  * @param race
  */
-export function getRunnerProcessedPassages<T extends Passage>(passages: T[], race: Race): (T & {processed: PassageProcessedData})[] {
+export function getRunnerProcessedPassages<T extends Passage>(passages: T[], race: Race): Array<T & { processed: PassageProcessedData }> {
+    const raceInitialDistance = Number(race.initialDistance);
+    const raceLapDistance = Number(race.lapDistance);
+
     let totalDistance = 0;
 
-    const processedPassages: (T & {processed: PassageProcessedData})[] = [];
+    const processedPassages: Array<T & { processed: PassageProcessedData }> = [];
 
     for (let i = 0; i < passages.length; ++i) {
         const isFirstPassage = i === 0;
@@ -71,13 +74,13 @@ export function getRunnerProcessedPassages<T extends Passage>(passages: T[], rac
 
         let lapNumber: number | null;
 
-        if (race.initialDistance <= 0) {
+        if (raceInitialDistance <= 0) {
             lapNumber = i + 1;
         } else {
             lapNumber = isFirstPassage ? null : i; // The first passage is an incomplete lap, so it's not counted
         }
 
-        const lapDistance = lapNumber === null ? race.initialDistance : race.lapDistance;
+        const lapDistance = lapNumber === null ? raceInitialDistance : raceLapDistance;
         const lapStartTime = isFirstPassage ? new Date(race.startTime) : new Date((previousPassage as Passage).time);
         const lapEndTime = new Date(passage.time);
 
@@ -146,7 +149,7 @@ export function getRunnerProcessedHours(runner: RunnerWithProcessedPassages, rac
         let averagePace = null;
 
         if (passages.length > 0) {
-            const {speed, pace} = getSpeedAndPaceInHour(
+            const { speed, pace } = getSpeedAndPaceInHour(
                 passages,
                 hourStartRaceTime,
                 hourEndRaceTime,

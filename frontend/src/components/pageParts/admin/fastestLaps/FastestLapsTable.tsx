@@ -1,13 +1,13 @@
-import {Link} from "react-router-dom";
-import {formatFloatNumber, formatMsAsDuration} from "../../../../util/utils";
+import { Link } from "react-router-dom";
+import { formatFloatNumber, formatMsAsDuration } from "../../../../util/utils";
 
 interface FastestLapsTableProps {
-    passages: (AdminPassageWithRunnerId & ProcessedPassage)[];
-    races: AdminRaceDict;
+    passages: Array<AdminPassageWithRunnerId & ProcessedPassage>;
+    races: RaceDict;
     runners: Runner[];
 }
 
-export default function FastestLapsTable({passages, races, runners}: FastestLapsTableProps) {
+export default function FastestLapsTable({ passages, races, runners }: FastestLapsTableProps): JSX.Element {
     return (
         <table className="table">
             <thead>
@@ -23,18 +23,23 @@ export default function FastestLapsTable({passages, races, runners}: FastestLaps
             <tbody>
                 {passages.map(passage => {
                     const runner = runners.find(ru => ru.id === passage.runnerId);
+
+                    if (!runner) {
+                        return null;
+                    }
+
                     const race = runner ? races[runner?.raceId] : undefined; // undefined should never happen
 
                     return (
                         <tr key={passage.id}>
-                            <td style={{fontSize: "0.85em"}}>{passage.id}</td>
+                            <td style={{ fontSize: "0.85em" }}>{passage.id}</td>
                             <td>
-                                <Link to={`/runner-details/${runner?.id}`}>
-                                    {`${runner?.id} – ${runner?.firstname} ${runner?.lastname}`}
+                                <Link to={`/runner-details/${runner.id}`}>
+                                    {`${runner.id} – ${runner.firstname} ${runner.lastname}`}
                                 </Link>
                             </td>
                             <td>
-                                {`${race?.name}`}
+                                {race?.name ?? <i>Course inconnue</i>}
                             </td>
                             <td>
                                 {formatMsAsDuration(passage.processed.lapDuration, false)}

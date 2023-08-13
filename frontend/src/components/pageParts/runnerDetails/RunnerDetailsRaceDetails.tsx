@@ -1,13 +1,16 @@
-import {useMemo} from "react";
-import {Col, Row} from "react-bootstrap";
-import {formatMsAsDuration} from "../../../util/utils";
+import { useMemo } from "react";
+import { Col, Row } from "react-bootstrap";
+import { formatMsAsDuration } from "../../../util/utils";
 import RaceTimer from "../RaceTimer";
 
 interface RunnerDetailsRaceDetailsProps {
     race: Race;
 }
 
-export default function RunnerDetailsRaceDetails({race}: RunnerDetailsRaceDetailsProps) {
+export default function RunnerDetailsRaceDetails({ race }: RunnerDetailsRaceDetailsProps): JSX.Element {
+    const raceInitialDistance = Number(race.initialDistance);
+    const raceLapDistance = Number(race.lapDistance);
+
     // The race total duration formatted to be human-readable
     const formattedRaceDuration = useMemo(() => {
         return formatMsAsDuration(race.duration * 1000);
@@ -23,11 +26,11 @@ export default function RunnerDetailsRaceDetails({race}: RunnerDetailsRaceDetail
                 <p><b><RaceTimer race={race} /></b> / {formattedRaceDuration}</p>
 
                 <p>
-                    Distance tour : <strong>{race.lapDistance} m</strong>
+                    Distance tour : <strong>{raceLapDistance} m</strong>
                     <> </>
-                    {race.initialDistance > 0 &&
+                    {raceInitialDistance > 0 &&
                         <>
-                            (distance avant le premier tour : {race.initialDistance} m)
+                            (distance avant le premier tour : {raceInitialDistance} m)
                         </>
                     }
                 </p>

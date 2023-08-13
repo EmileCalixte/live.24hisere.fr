@@ -3,7 +3,15 @@
  * @see https://www.athle.fr/asp.net/main.html/html.aspx?htmlid=25
  * @param {number} birthYear
  */
-export function getCategoryCodeFromBirthYear(birthYear: number): string {
+export function getCategoryCodeFromBirthYear(birthYear: number | string): string {
+    if (typeof birthYear === "string") {
+        birthYear = Number(birthYear);
+
+        if (isNaN(birthYear)) {
+            throw new Error("birthYear is not a valid number");
+        }
+    }
+
     if (birthYear >= 2017) {
         return "BB";
     }

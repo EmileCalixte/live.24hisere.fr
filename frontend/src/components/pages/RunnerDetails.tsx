@@ -1,13 +1,13 @@
-import {faFileExcel} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {Col, Row} from "react-bootstrap";
-import {useParams} from "react-router-dom";
-import {RankingProcesser} from "../../util/RankingProcesser";
+import { faFileExcel } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Col, Row } from "react-bootstrap";
+import { useParams } from "react-router-dom";
+import { RankingProcesser } from "../../util/RankingProcesser";
 import Page from "../ui/Page";
 import RunnerDetailsRaceDetails from "../pageParts/runnerDetails/RunnerDetailsRaceDetails";
 import RunnerSelector from "../pageParts/runnerDetails/RunnerSelector";
-import React, {useCallback, useEffect, useMemo, useState} from "react";
-import {performAPIRequest} from "../../util/apiUtils";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { performAPIRequest } from "../../util/apiUtils";
 import RunnerDetailsStats from "../pageParts/runnerDetails/RunnerDetailsStats";
 import RunnerDetailsLaps from "../pageParts/runnerDetails/RunnerDetailsLaps";
 import {
@@ -15,18 +15,18 @@ import {
     getRunnerProcessedHours,
     getRunnerProcessedPassages,
 } from "../../util/RunnerDetailsUtil";
-import {generateXlsxFromData} from "../../util/excelUtils";
+import { generateXlsxFromData } from "../../util/excelUtils";
 
 enum Tab {
     Stats = "stats",
-    Laps = "laps",
+    Laps = "laps"
 }
 
 export const RUNNER_UPDATE_INTERVAL_TIME = 20 * 1000;
 export const RANKING_UPDATE_INTERVAL_TIME = 20 * 1000;
 
-export default function RunnerDetails() {
-    const {runnerId: urlRunnerId} = useParams();
+export default function RunnerDetails(): JSX.Element {
+    const { runnerId: urlRunnerId } = useParams();
 
     const [selectedRunnerId, setSelectedRunnerId] = useState(urlRunnerId);
     const [selectedRunner, setSelectedRunner] = useState<RunnerWithRace & RunnerWithProcessedPassages & RunnerWithProcessedHours | null>(null);
@@ -115,25 +115,25 @@ export default function RunnerDetails() {
     }, [selectedRunner]);
 
     useEffect(() => {
-        fetchRunners();
+        void fetchRunners();
     }, [fetchRunners]);
 
     useEffect(() => {
-        fetchSelectedRunner();
+        void fetchSelectedRunner();
 
-        const refreshRunnerInterval = setInterval(fetchSelectedRunner, RUNNER_UPDATE_INTERVAL_TIME);
-        return () => clearInterval(refreshRunnerInterval);
+        const refreshRunnerInterval = setInterval(() => { void fetchSelectedRunner(); }, RUNNER_UPDATE_INTERVAL_TIME);
+        return () => { clearInterval(refreshRunnerInterval); };
     }, [fetchSelectedRunner]);
 
     useEffect(() => {
-        fetchRanking();
+        void fetchRanking();
 
-        const refreshRankingInterval = setInterval(fetchRanking, RANKING_UPDATE_INTERVAL_TIME);
-        return () => clearInterval(refreshRankingInterval);
+        const refreshRankingInterval = setInterval(() => { void fetchRanking(); }, RANKING_UPDATE_INTERVAL_TIME);
+        return () => { clearInterval(refreshRankingInterval); };
     }, [fetchRanking]);
 
     useEffect(() => {
-        if (selectedRunnerId === urlRunnerId) {
+        if (!selectedRunnerId || selectedRunnerId === urlRunnerId) {
             return;
         }
 
@@ -189,10 +189,10 @@ export default function RunnerDetails() {
                             <div className="runner-details-data-container">
                                 <ul className="tabs-container">
                                     <li className={selectedTab === Tab.Stats ? "active" : ""}>
-                                        <button onClick={() => setSelectedTab(Tab.Stats)}>Statistiques</button>
+                                        <button onClick={() => { setSelectedTab(Tab.Stats); }}>Statistiques</button>
                                     </li>
                                     <li className={selectedTab === Tab.Laps ? "active" : ""}>
-                                        <button onClick={() => setSelectedTab(Tab.Laps)}>Détails des tours</button>
+                                        <button onClick={() => { setSelectedTab(Tab.Laps); }}>Détails des tours</button>
                                     </li>
                                 </ul>
 

@@ -12,7 +12,7 @@ export interface RankingRunner extends Runner {
     /**
      * The last passage time
      */
-    lastPassageTime: Date;
+    lastPassageTime: Date | null;
 }
 
 /**

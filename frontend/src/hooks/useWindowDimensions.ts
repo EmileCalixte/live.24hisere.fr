@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 
 function getWindowDimensions(): Dimensions2d {
     return {
@@ -7,17 +7,17 @@ function getWindowDimensions(): Dimensions2d {
     };
 }
 
-export function useWindowDimensions() {
+export function useWindowDimensions(): Dimensions2d {
     const [windowDimensions, setWindowDimensions] = useState<Dimensions2d>(getWindowDimensions());
 
     useEffect(() => {
-        function handleResize() {
+        function handleResize(): void {
             setWindowDimensions(getWindowDimensions());
         }
 
         window.addEventListener("resize", handleResize);
 
-        return () => window.removeEventListener("resize", handleResize);
+        return () => { window.removeEventListener("resize", handleResize); };
     }, []);
 
     return windowDimensions;

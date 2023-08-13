@@ -1,14 +1,15 @@
-import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
-import { User } from "@prisma/client";
-import { LoggedInUser } from "../decorators/loggedInUser.decorator";
+import { Body, Controller, Get, HttpCode, Post, UseGuards } from "@nestjs/common";
+import { AuthData, LoggedInUser } from "../decorators/loggedInUser.decorator";
 import { LoginDto } from "../dtos/auth/login.dto";
 import { AuthGuard } from "../guards/auth.guard";
 import { AuthService } from "../services/auth.service";
+import { AccessTokenService } from "../services/database/entities/accessToken.service";
 import { type CurrentUserInfoResponse, type LoginResponse } from "../types/responses/Auth";
 
 @Controller()
 export class AuthController {
     constructor(
+        private readonly accessTokenService: AccessTokenService,
         private readonly authService: AuthService,
     ) {}
 
@@ -23,8 +24,15 @@ export class AuthController {
     }
 
     @UseGuards(AuthGuard)
+    @Post("/auth/logout")
+    @HttpCode(204)
+    async logout(@LoggedInUser() { accessToken }: AuthData): Promise<void> {
+        await this.accessTokenService.deleteAccessToken({ token: accessToken });
+    }
+
+    @UseGuards(AuthGuard)
     @Get("/auth/current-user-info")
-    async getCurrentUserInfo(@LoggedInUser() user: User): Promise<CurrentUserInfoResponse> {
+    async getCurrentUserInfo(@LoggedInUser() { user }: AuthData): Promise<CurrentUserInfoResponse> {
         return {
             user: {
                 username: user.username,

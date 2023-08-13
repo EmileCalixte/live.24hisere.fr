@@ -15,7 +15,7 @@ export function Checkbox({
     name,
     onChange,
     className,
-}: CheckboxProps) {
+}: CheckboxProps): JSX.Element {
     return (
         <div className={clsx("inline-input-group", className)}>
             <label className="input-checkbox">

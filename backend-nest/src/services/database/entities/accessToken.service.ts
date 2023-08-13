@@ -28,6 +28,10 @@ export class AccessTokenService {
         });
     }
 
+    async deleteAccessToken(where: Prisma.AccessTokenWhereUniqueInput): Promise<AccessToken> {
+        return this.prisma.accessToken.delete({ where });
+    }
+
     async deleteAccessTokens(where: Prisma.AccessTokenWhereInput): Promise<number> {
         return (await this.prisma.accessToken.deleteMany({
             where,

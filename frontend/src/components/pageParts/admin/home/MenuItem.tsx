@@ -1,4 +1,4 @@
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 interface MenuItemProps {
     url: string;
@@ -6,7 +6,7 @@ interface MenuItemProps {
     icon: JSX.Element;
 }
 
-export default function MenuItem({url, label, icon}: MenuItemProps) {
+export default function MenuItem({ url, label, icon }: MenuItemProps): JSX.Element {
     return (
         <li>
             <Link to={url}>

@@ -1,9 +1,10 @@
-import {Col, Row} from "react-bootstrap";
-import React, {useMemo} from "react";
+import { Col, Row } from "react-bootstrap";
+import React, { useMemo } from "react";
+import { getCategoryCodeFromBirthYear } from "../../../util/ffaUtils";
 import CircularLoader from "../../ui/CircularLoader";
 import SpeedChart from "./charts/SpeedChart";
-import {formatMsAsDuration} from "../../../util/utils";
-import {getPaceFromSpeed} from "../../../util/RunnerDetailsUtil";
+import { formatMsAsDuration } from "../../../util/utils";
+import { getPaceFromSpeed } from "../../../util/RunnerDetailsUtil";
 
 interface RunnerDetailsStatsProps {
     runner: RunnerWithProcessedPassages & RunnerWithProcessedHours;
@@ -11,27 +12,32 @@ interface RunnerDetailsStatsProps {
     ranks: RankingRunnerRanks | null;
 }
 
-export default function RunnerDetailsStats({runner, race, ranks}: RunnerDetailsStatsProps) {
+export default function RunnerDetailsStats({ runner, race, ranks }: RunnerDetailsStatsProps): JSX.Element {
+    const runnerCategory = getCategoryCodeFromBirthYear(runner.birthYear);
+
+    const raceInitialDistance = Number(race.initialDistance);
+    const raceLapDistance = Number(race.lapDistance);
+
     const completeLapCount = useMemo<number>(() => {
-        if (race.initialDistance > 0) {
+        if (raceInitialDistance > 0) {
             return Math.max(0, runner.passages.length - 1);
         }
 
         return runner.passages.length;
-    }, [race, runner]);
+    }, [raceInitialDistance, runner.passages.length]);
 
     /** Total distance in meters */
     const totalDistance = useMemo<number>(() => {
         if (runner.passages.length >= 1) {
-            if (race.initialDistance > 0) {
-                return race.initialDistance + race.lapDistance * (runner.passages.length - 1);
+            if (raceInitialDistance > 0) {
+                return raceInitialDistance + raceLapDistance * (runner.passages.length - 1);
             }
 
-            return race.lapDistance * runner.passages.length;
+            return raceLapDistance * runner.passages.length;
         }
 
         return 0;
-    }, [race, runner]);
+    }, [raceInitialDistance, raceLapDistance, runner.passages.length]);
 
     const lastPassageDate = useMemo<Date | null>(() => {
         if (runner.passages.length <= 0) {
@@ -126,9 +132,9 @@ export default function RunnerDetailsStats({runner, race, ranks}: RunnerDetailsS
                                 &nbsp;|&nbsp;
                                 {ranks.displayed.scratchGender} {runner.gender.toUpperCase()}
                                 &nbsp;|&nbsp;
-                                {ranks.displayed.categoryMixed} {runner.category.toUpperCase()}
+                                {ranks.displayed.categoryMixed} {runnerCategory}
                                 &nbsp;|&nbsp;
-                                {ranks.displayed.categoryGender} {runner.category.toUpperCase()}-{runner.gender.toUpperCase()}
+                                {ranks.displayed.categoryGender} {runnerCategory}-{runner.gender.toUpperCase()}
                             </span>
                         }
                     </p>

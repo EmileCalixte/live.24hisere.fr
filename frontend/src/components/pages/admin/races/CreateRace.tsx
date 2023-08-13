@@ -1,19 +1,21 @@
-import {Col, Row} from "react-bootstrap";
-import {getRacesSelectOptions} from "../../../../helpers/raceHelper";
+import { Col, Row } from "react-bootstrap";
+import { getRacesSelectOptions } from "../../../../helpers/raceHelper";
 import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../ui/breadcrumbs/Crumb";
 import Select from "../../../ui/forms/Select";
 import Page from "../../../ui/Page";
 import RaceDetailsForm from "../../../pageParts/admin/races/RaceDetailsForm";
-import React, {useCallback, useContext, useEffect, useMemo, useState} from "react";
-import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
-import {userContext} from "../../../App";
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { performAuthenticatedAPIRequest } from "../../../../util/apiUtils";
+import { userContext } from "../../../App";
 import ToastUtil from "../../../../util/ToastUtil";
-import {Navigate} from "react-router-dom";
-import {formatDateForApi} from "../../../../util/utils";
+import { useNavigate } from "react-router-dom";
+import { formatDateForApi } from "../../../../util/utils";
 
-export default function CreateRace() {
-    const {accessToken} = useContext(userContext);
+export default function CreateRace(): JSX.Element {
+    const navigate = useNavigate();
+
+    const { accessToken } = useContext(userContext);
 
     const [existingRaces, setExistingRaces] = useState<AdminRace[] | false>(false);
 
@@ -25,8 +27,6 @@ export default function CreateRace() {
     const [isPublic, setIsPublic] = useState(false);
 
     const [isSaving, setIsSaving] = useState(false);
-
-    const [redirectToId, setRedirectToId] = useState(null);
 
     const existingRacesOptions = useMemo(() => getRacesSelectOptions(existingRaces), [existingRaces]);
 
@@ -72,6 +72,9 @@ export default function CreateRace() {
         const response = await performAuthenticatedAPIRequest("/admin/races", accessToken, {
             method: "POST",
             body: JSON.stringify(body),
+            headers: {
+                "Content-Type": "application/json",
+            },
         });
 
         const responseJson = await response.json();
@@ -84,18 +87,12 @@ export default function CreateRace() {
         }
 
         ToastUtil.getToastr().success("Course créée");
-        setRedirectToId(responseJson.id);
-    }, [accessToken, raceName, isPublic, initialDistance, lapDistance, startTime, duration]);
+        navigate(`/admin/races/${responseJson.race.id as string}`);
+    }, [accessToken, raceName, isPublic, initialDistance, lapDistance, startTime, duration, navigate]);
 
     useEffect(() => {
-        fetchExistingRaces();
+        void fetchExistingRaces();
     }, [fetchExistingRaces]);
-
-    if (redirectToId) {
-        return (
-            <Navigate to={`/admin/races/${redirectToId}`} />
-        );
-    }
 
     return (
         <Page id="admin-create-race" title="Créer une course">

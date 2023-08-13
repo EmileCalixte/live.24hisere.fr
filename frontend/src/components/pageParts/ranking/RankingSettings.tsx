@@ -1,16 +1,16 @@
-import {Col} from "react-bootstrap";
-import {CATEGORY_SCRATCH} from "../../../constants/Category";
+import { Col } from "react-bootstrap";
+import { CATEGORY_SCRATCH } from "../../../constants/Category";
 import {
     CATEGORY_SCRATCH_SELECT_OPTION,
     GENDER_WITH_MIXED_OPTIONS,
     RANKING_TIME_MODE_OPTIONS,
 } from "../../../constants/Forms";
-import {RANKING_TIME_MODE} from "../../../constants/RankingTimeMode";
-import {getCategoriesDictSelectOptions} from "../../../helpers/categoryHelper";
+import { RANKING_TIME_MODE } from "../../../constants/RankingTimeMode";
+import { getCategoriesDictSelectOptions } from "../../../helpers/categoryHelper";
 import RadioGroup from "../../ui/forms/RadioGroup";
 import Select from "../../ui/forms/Select";
 import RankingSettingsTime from "./RankingSettingsTime";
-import React, {useMemo} from "react";
+import React, { useMemo } from "react";
 
 interface RankingSettingsProps {
     categories: CategoriesDict | false;
@@ -36,12 +36,10 @@ export default function RankingSettings({
     selectedTimeMode,
     currentRankingTime,
     maxRankingTime,
-}: RankingSettingsProps) {
+}: RankingSettingsProps): JSX.Element {
     const categoriesOptions = useMemo<SelectOption[]>(() => {
         return [CATEGORY_SCRATCH_SELECT_OPTION, ...getCategoriesDictSelectOptions(categories)];
     }, [categories]);
-
-    console.log(selectedTimeMode);
 
     return (
         <>

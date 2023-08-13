@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
 type InputType = Extract<import("react").HTMLInputTypeAttribute, "text" | "email" | "password" | "number">;
 
 interface SelectOption<T extends string | number = string | number> {

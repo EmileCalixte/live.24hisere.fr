@@ -52,20 +52,20 @@ Un jeu de données est chargé automatiquement lors du lancement du docker-compo
 La commande suivante permet de mettre à jour la structure de la base de données à partir des entités Doctrine du répertoire `/backend/src/Database/Entity`:
 
 ```sh
-docker compose exec backend vendor/bin/doctrine orm:schema-tool:update --dump-sql --force
+docker compose exec backend-slim vendor/bin/doctrine orm:schema-tool:update --dump-sql --force
 ```
 
 La commande suivante permet de créer une migration et mettre à jour la structure de la base de données à partir de la structure de données définie dans `/backend-nest/prisma/schema.prisma` :
 
 ```sh
-docker compose exec backend-nest npx prisma migrate dev --name <nom migration>
+docker compose exec backend npx prisma migrate dev --name <nom migration>
 ```
 
 
 La commande suivante permet de générer le client Prisma à partir de la structure de données définie dans `/backend-nest/prisma/schema.prisma` :
 
 ```sh
-docker compose exec backend-nest npx prisma generate
+docker compose exec backend npx prisma generate
 ```
 
 ## Import des données
@@ -92,8 +92,8 @@ Un utilisateur est inclut dans les données chargées par défaut depuis le rép
 node dist/cli.js create-user
 
 # Pour exécuter la commande avec l'environnement de développement Docker Compose :
-docker compose exec backend ./bin/console app:create-user
-docker compose exec backend-nest node dist/cli.js create-user
+docker compose exec backend-slim ./bin/console app:create-user
+docker compose exec backend node dist/cli.js create-user
 ```
 
 ## Tests

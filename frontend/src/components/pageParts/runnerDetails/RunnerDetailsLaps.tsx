@@ -1,16 +1,16 @@
-import {faSortDown, faSortUp} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import React, {useCallback, useContext, useMemo, useState} from "react";
-import {Col, Row} from "react-bootstrap";
-import {isRaceFinished, isRaceStarted} from "../../../helpers/raceHelper";
-import {useRaceTime} from "../../../hooks/useRaceTime";
-import {useWindowDimensions} from "../../../hooks/useWindowDimensions";
-import {formatMsAsDuration, SORT_ASC, SORT_DESC} from "../../../util/utils";
-import {appDataContext} from "../../App";
+import { faSortDown, faSortUp } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useCallback, useContext, useMemo, useState } from "react";
+import { Col, Row } from "react-bootstrap";
+import { isRaceFinished, isRaceStarted } from "../../../helpers/raceHelper";
+import { useRaceTime } from "../../../hooks/useRaceTime";
+import { useWindowDimensions } from "../../../hooks/useWindowDimensions";
+import { formatMsAsDuration, SORT_ASC, SORT_DESC } from "../../../util/utils";
+import { appDataContext } from "../../App";
 
 enum SortBy {
     RaceTime = "raceTime",
-    LapSpeed = "lapSpeed",
+    LapSpeed = "lapSpeed"
 }
 
 const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
@@ -19,8 +19,8 @@ interface RunnerDetailsLapsProps {
     runner: RunnerWithRace & RunnerWithProcessedPassages;
 }
 
-export default function RunnerDetailsLaps({runner}: RunnerDetailsLapsProps) {
-    const {serverTimeOffset} = useContext(appDataContext);
+export default function RunnerDetailsLaps({ runner }: RunnerDetailsLapsProps): JSX.Element {
+    const { serverTimeOffset } = useContext(appDataContext);
 
     const race = runner.race;
 
@@ -29,7 +29,7 @@ export default function RunnerDetailsLaps({runner}: RunnerDetailsLapsProps) {
     const [sortColumn, setSortColumn] = useState(SortBy.RaceTime);
     const [sortDirection, setSortDirection] = useState(SORT_ASC);
 
-    const {width: windowWidth} = useWindowDimensions();
+    const { width: windowWidth } = useWindowDimensions();
 
     const currentLapTime = useMemo(() => {
         if (runner.passages.length === 0) {
@@ -153,7 +153,7 @@ export default function RunnerDetailsLaps({runner}: RunnerDetailsLapsProps) {
                 <h2>Détails des tours</h2>
 
                 {windowWidth > RESPONSIVE_TABLE_MAX_WINDOW_WIDTH &&
-                    <div style={{maxWidth: 1400}}>
+                    <div style={{ maxWidth: 1400 }}>
                         <table id="runner-laps-table" className="table">
                             <thead>
                                 <tr>
@@ -161,7 +161,7 @@ export default function RunnerDetailsLaps({runner}: RunnerDetailsLapsProps) {
                                     <th>Distance</th>
                                     <th>
                                         <button className="a"
-                                                onClick={e => updateSort(e, SortBy.RaceTime)}
+                                                onClick={e => { updateSort(e, SortBy.RaceTime); }}
                                         >
                                             Temps de course
                                             {sortColumn === SortBy.RaceTime &&

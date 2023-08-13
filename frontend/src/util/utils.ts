@@ -3,7 +3,7 @@ import config from "../config/config";
 export const SORT_ASC = 1;
 export const SORT_DESC = -1;
 
-export function verbose(...items: any[]) {
+export function verbose(...items: any[]): void {
     if (!config.devMode) {
         return;
     }
@@ -12,14 +12,7 @@ export function verbose(...items: any[]) {
 }
 
 export function formatDateForApi(date: Date): string {
-    const year = date.getFullYear();
-    const month = prefixNumber(date.getMonth() + 1, 2);
-    const day = prefixNumber(date.getDate(), 2);
-    const hours = prefixNumber(date.getHours(), 2);
-    const minutes = prefixNumber(date.getMinutes(), 2);
-    const seconds = prefixNumber(date.getSeconds(), 2);
-
-    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+    return date.toISOString();
 }
 
 export function isDateValid(date: Date): boolean {

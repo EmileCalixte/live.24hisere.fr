@@ -1,18 +1,20 @@
-import React, {useCallback, useContext, useEffect, useState} from "react";
-import {Col, Row} from "react-bootstrap";
-import {Navigate} from "react-router-dom";
-import {GENDER} from "../../../../constants/Gender";
-import {useStateWithNonNullableSetter} from "../../../../hooks/useStateWithNonNullableSetter";
-import {performAuthenticatedAPIRequest} from "../../../../util/apiUtils";
+import React, { useCallback, useContext, useEffect, useState } from "react";
+import { Col, Row } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { GENDER } from "../../../../constants/Gender";
+import { useStateWithNonNullableSetter } from "../../../../hooks/useStateWithNonNullableSetter";
+import { performAuthenticatedAPIRequest } from "../../../../util/apiUtils";
 import ToastUtil from "../../../../util/ToastUtil";
-import {userContext} from "../../../App";
+import { userContext } from "../../../App";
 import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../ui/breadcrumbs/Crumb";
 import Page from "../../../ui/Page";
 import RunnerDetailsForm from "../../../pageParts/admin/runners/RunnerDetailsForm";
 
-export default function CreateRunner() {
-    const {accessToken} = useContext(userContext);
+export default function CreateRunner(): JSX.Element {
+    const navigate = useNavigate();
+
+    const { accessToken } = useContext(userContext);
 
     const [races, setRaces] = useState<AdminRaceWithRunnerCount[] | false>(false);
 
@@ -24,8 +26,6 @@ export default function CreateRunner() {
     const [raceId, setRaceId] = useStateWithNonNullableSetter<number | null>(null);
 
     const [isSaving, setIsSaving] = useState(false);
-
-    const [redirectToId, setRedirectToId] = useState(null);
 
     const fetchRaces = useCallback(async () => {
         const response = await performAuthenticatedAPIRequest("/admin/races", accessToken);
@@ -54,13 +54,16 @@ export default function CreateRunner() {
             firstname,
             lastname,
             gender,
-            birthYear,
+            birthYear: parseInt(birthYear),
             raceId,
         };
 
         const response = await performAuthenticatedAPIRequest("/admin/runners", accessToken, {
             method: "POST",
             body: JSON.stringify(body),
+            headers: {
+                "Content-Type": "application/json",
+            },
         });
 
         const responseJson = await response.json();
@@ -73,18 +76,12 @@ export default function CreateRunner() {
         }
 
         ToastUtil.getToastr().success("Coureur créé");
-        setRedirectToId(responseJson.id);
-    }, [accessToken, id, firstname, lastname, gender, birthYear, raceId]);
+        navigate(`/admin/runners/${id}`);
+    }, [accessToken, id, firstname, lastname, gender, birthYear, raceId, navigate]);
 
     useEffect(() => {
-        fetchRaces();
+        void fetchRaces();
     }, [fetchRaces]);
-
-    if (redirectToId) {
-        return (
-            <Navigate to={`/admin/runners/${redirectToId}`} />
-        );
-    }
 
     return (
         <Page id="admin-create-runner" title="Créer un coureur">

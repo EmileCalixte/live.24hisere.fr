@@ -26,11 +26,9 @@ import { RandomService } from "./services/random.service";
 import { RankingService } from "./services/ranking.service";
 import { ImportPassagesService } from "./tasks/importPassages.service";
 import { RaceIdExistsRule } from "./validation/rules/race/raceIdExists.rule";
-import { RaceNameDoesNotExistRule } from "./validation/rules/race/raceNameDoesNotExist.rule";
-import { RunnerIdDoesNotExistRule } from "./validation/rules/runner/runnerIdDoesNotExist.rule";
 import { type Type } from "@nestjs/common/interfaces/type.interface";
 
-type DependencyArray = Array<Type<any>>;
+type DependencyArray = Type[];
 
 export interface Dependencies {
     controllers: {
@@ -88,8 +86,6 @@ export const dependencies: Dependencies = {
     ],
     validationRules: [
         RaceIdExistsRule,
-        RaceNameDoesNotExistRule,
-        RunnerIdDoesNotExistRule,
     ],
     commands: [
         CreateUserCommand,

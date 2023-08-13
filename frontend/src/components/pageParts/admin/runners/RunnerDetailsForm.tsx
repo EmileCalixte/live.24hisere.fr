@@ -1,9 +1,9 @@
-import {useMemo} from "react";
-import {Link} from "react-router-dom";
-import {GENDER_OPTIONS} from "../../../../constants/Forms";
-import {getRacesSelectOptions} from "../../../../helpers/raceHelper";
-import {Input} from "../../../ui/forms/Input";
-import {getCategoryNameFromBirthYear} from "../../../../util/ffaUtils";
+import { useMemo } from "react";
+import { Link } from "react-router-dom";
+import { GENDER_OPTIONS } from "../../../../constants/Forms";
+import { getRacesSelectOptions } from "../../../../helpers/raceHelper";
+import { Input } from "../../../ui/forms/Input";
+import { getCategoryNameFromBirthYear } from "../../../../util/ffaUtils";
 import RadioGroup from "../../../ui/forms/RadioGroup";
 import Select from "../../../ui/forms/Select";
 
@@ -41,7 +41,7 @@ export default function RunnerDetailsForm({
     raceId,
     setRaceId,
     submitButtonDisabled,
-}: RunnerDetailsFormProps) {
+}: RunnerDetailsFormProps): JSX.Element {
     const racesOptions = useMemo(() => {
         return getRacesSelectOptions(races, race => `${race.name} (${race.runnerCount} ${race.runnerCount >= 2 ? "coureurs" : "coureur"})`);
     }, [races]);
@@ -98,18 +98,20 @@ export default function RunnerDetailsForm({
                         onSelectOption={option => setGender(option.value)}
             />
 
-            {races && races.length < 1 ? (
-                <p>Vous devez <Link to="/admin/races/create">créer une course</Link> pour pouvoir enregistrer un coureur.</p>
-            ) : (
-                <Select className="mt-3"
-                        label="Course"
-                        options={racesOptions}
-                        isLoading={races === false}
-                        loadingOptionLabel="Chargement des courses"
-                        onChange={e => setRaceId(parseInt(e.target.value))}
-                        value={raceId}
-                />
-            )}
+            {races && races.length < 1
+                ? (
+                    <p>Vous devez <Link to="/admin/races/create">créer une course</Link> pour pouvoir enregistrer un coureur.</p>
+                )
+                : (
+                    <Select className="mt-3"
+                            label="Course"
+                            options={racesOptions}
+                            isLoading={races === false}
+                            loadingOptionLabel="Chargement des courses"
+                            onChange={e => setRaceId(parseInt(e.target.value))}
+                            value={raceId}
+                    />
+                )}
 
             <button className="button mt-3"
                     type="submit"

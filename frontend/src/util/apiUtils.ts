@@ -1,10 +1,10 @@
 import config from "../config/config";
-import {verbose} from "./utils";
+import { verbose } from "./utils";
 
 export const EVENT_API_REQUEST_STARTED = "apiRequestStarted";
 export const EVENT_API_REQUEST_ENDED = "apiRequestEnded";
 
-function getBackendFullUrl(shortUrl: string) {
+function getBackendFullUrl(shortUrl: string): string {
     if (!shortUrl.startsWith("/")) {
         shortUrl = "/" + shortUrl;
     }
@@ -12,7 +12,7 @@ function getBackendFullUrl(shortUrl: string) {
     return config.apiUrl + shortUrl;
 }
 
-export async function performAPIRequest(url: string, init: RequestInit = {}) {
+export async function performAPIRequest(url: string, init: RequestInit = {}): Promise<Response> {
     if (!url.startsWith(config.apiUrl)) {
         url = getBackendFullUrl(url);
     }
@@ -32,14 +32,14 @@ export async function performAPIRequest(url: string, init: RequestInit = {}) {
     return response;
 }
 
-export async function performAuthenticatedAPIRequest(url: string, accessToken: string | null, init: RequestInit = {}) {
+export async function performAuthenticatedAPIRequest(url: string, accessToken: string | null, init: RequestInit = {}): Promise<Response> {
     if ("headers" in init || !(init.headers instanceof Headers)) {
-        init.headers = new Headers();
+        init.headers = new Headers(init.headers);
     }
 
     if (accessToken) {
         init.headers.append("Authorization", accessToken);
     }
 
-    return await performAPIRequest(url, init);
+    return performAPIRequest(url, init);
 }
