@@ -7,7 +7,10 @@ import { Checkbox } from "../../../ui/forms/Checkbox";
 
 const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
-const getInterval = (raceDuration: number): number => {
+const DEFAULT_MIN_SPEED = 0;
+const DEFAULT_MAX_SPEED = 10;
+
+function getInterval(raceDuration: number): number {
     if (raceDuration <= 14400) { // up to 4h
         return Math.ceil(raceDuration / 60 / 24 / 10) * 10;
     }
@@ -25,7 +28,7 @@ const getInterval = (raceDuration: number): number => {
     }
 
     return Math.ceil(raceDuration / 60 / 24 / 60) * 60;
-};
+}
 
 interface SpeedChartProps {
     runner: RunnerWithProcessedPassages & RunnerWithProcessedHours;
@@ -119,6 +122,30 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
         return null;
     }, [averageSpeed, runner]);
 
+    const minSpeed = useMemo(() => {
+        let minSpeed: number | undefined;
+
+        runner.passages.forEach(passage => {
+            if (minSpeed === undefined || passage.processed.lapSpeed < minSpeed) {
+                minSpeed = passage.processed.lapSpeed;
+            }
+        });
+
+        return minSpeed ?? DEFAULT_MIN_SPEED;
+    }, [runner]);
+
+    const maxSpeed = useMemo(() => {
+        let maxSpeed: number | undefined;
+
+        runner.passages.forEach(passage => {
+            if (maxSpeed === undefined || passage.processed.lapSpeed > maxSpeed) {
+                maxSpeed = passage.processed.lapSpeed;
+            }
+        });
+
+        return maxSpeed ?? DEFAULT_MAX_SPEED;
+    }, [runner]);
+
     const options = useMemo(() => {
         const options = {
             theme: "light2",
@@ -142,8 +169,8 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
             },
             axisY: {
                 suffix: " km/h",
-                minimum: 0,
-                maximum: 10,
+                minimum: Math.floor(minSpeed),
+                maximum: Math.ceil(maxSpeed),
             },
             data: [
                 {
@@ -274,6 +301,8 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
         runner,
         race,
         averageSpeed,
+        minSpeed,
+        maxSpeed,
         getXAxisLabelValue,
         getTooltipContent,
         displayEachLapSpeed,
