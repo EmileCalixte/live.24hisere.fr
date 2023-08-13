@@ -20,9 +20,7 @@ Les dépendances des applications backend et frontend sont installées automatiq
 
 #### Backend (API)
 
-Créez le fichier `backend/config/config.php` à partir du modèle `backend/config/config.default.php` et renseignez-y les paramètres relatifs à l'environnement d'exécution.
-
-Créez le fichier `backend-nest/.env` à partir du modèle `backend-nest/.env.default` et renseignez-y les paramètres relatifs à l'environnement d'exécution.
+Créez le fichier `backend/.env` à partir du modèle `backend/.env.default` et renseignez-y les paramètres relatifs à l'environnement d'exécution.
 
 #### Frontend
 
@@ -32,7 +30,6 @@ Créez le fichier `frontend/src/config/config.ts` à partir du modèle `frontend
 
 - Application frontend : [http://127.0.0.1](http://127.0.0.1)
 - API : [http://127.0.0.1:8000](http://127.0.0.1:8000)
-- API Nest : [http://127.0.0.1:8001](http://127.0.0.1:8001)
 - Fichiers statiques : [http://127.0.0.1:9000](http://127.0.0.1:9000)
 - PHPMyAdmin : [http://127.0.0.1:8080](http://127.0.0.1:8080)
 
@@ -49,18 +46,11 @@ Identifiants du serveur MariaDB du container docker `database` :
 
 Un jeu de données est chargé automatiquement lors du lancement du docker-compose à partir du/des fichiers SQL contenus dans le répertoire `/sql`.
 
-La commande suivante permet de mettre à jour la structure de la base de données à partir des entités Doctrine du répertoire `/backend/src/Database/Entity`:
-
-```sh
-docker compose exec backend-slim vendor/bin/doctrine orm:schema-tool:update --dump-sql --force
-```
-
 La commande suivante permet de créer une migration et mettre à jour la structure de la base de données à partir de la structure de données définie dans `/backend-nest/prisma/schema.prisma` :
 
 ```sh
 docker compose exec backend npx prisma migrate dev --name <nom migration>
 ```
-
 
 La commande suivante permet de générer le client Prisma à partir de la structure de données définie dans `/backend-nest/prisma/schema.prisma` :
 
@@ -72,9 +62,7 @@ docker compose exec backend npx prisma generate
 
 ### Import des passages
 
-Voir [tâches CRON](#tâches-cron)
-
-
+TODO (documenter la task nest)
 
 ## Utilisateurs
 
@@ -88,11 +76,9 @@ Un utilisateur est inclut dans les données chargées par défaut depuis le rép
 ### Créer un utilisateur
 
 ```sh
-./bin/console app:create-user
 node dist/cli.js create-user
 
 # Pour exécuter la commande avec l'environnement de développement Docker Compose :
-docker compose exec backend-slim ./bin/console app:create-user
 docker compose exec backend node dist/cli.js create-user
 ```
 
