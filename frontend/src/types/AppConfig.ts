@@ -1,7 +1,7 @@
 /**
  * An object representing the application configuration
  */
-interface AppConfig {
+export interface AppConfig {
     /**
      * The base URL of the API
      */
