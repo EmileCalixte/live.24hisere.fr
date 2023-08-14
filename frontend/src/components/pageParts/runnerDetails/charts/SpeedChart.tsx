@@ -315,30 +315,32 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
         <div className="runner-details-chart-container speed-chart-container">
             <Row>
                 <Col xxl={2} xl={3} lg={12}>
-                    <p>Éléments à afficher</p>
+                    <fieldset className="mb-3">
+                        <legend className="mb-2">Éléments à afficher</legend>
 
-                    <Checkbox label="Vitesse à chaque tour"
-                              checked={displayEachLapSpeed}
-                              onChange={e => { setDisplayEachLapSpeed(e.target.checked); }}
-                    />
+                        <Checkbox label="Vitesse à chaque tour"
+                                  checked={displayEachLapSpeed}
+                                  onChange={e => { setDisplayEachLapSpeed(e.target.checked); }}
+                        />
 
-                    <Checkbox label="Vitesse moyenne à chaque heure"
-                              className="mt-2"
-                              checked={displayEachHourSpeed}
-                              onChange={e => { setDisplayEachHourSpeed(e.target.checked); }}
-                    />
+                        <Checkbox label="Vitesse moyenne à chaque heure"
+                                  className="mt-2"
+                                  checked={displayEachHourSpeed}
+                                  onChange={e => { setDisplayEachHourSpeed(e.target.checked); }}
+                        />
 
-                    <Checkbox label="Vitesse moyenne générale"
-                              className="mt-2"
-                              checked={displayAverageSpeed}
-                              onChange={e => { setDisplayAverageSpeed(e.target.checked); }}
-                    />
+                        <Checkbox label="Vitesse moyenne générale"
+                                  className="mt-2"
+                                  checked={displayAverageSpeed}
+                                  onChange={e => { setDisplayAverageSpeed(e.target.checked); }}
+                        />
 
-                    <Checkbox label="Évolution de la vitesse moyenne"
-                              className="mt-2"
-                              checked={displayAverageSpeedEvolution}
-                              onChange={e => { setDisplayAverageSpeedEvolution(e.target.checked); }}
-                    />
+                        <Checkbox label="Évolution de la vitesse moyenne"
+                                  className="mt-2"
+                                  checked={displayAverageSpeedEvolution}
+                                  onChange={e => { setDisplayAverageSpeedEvolution(e.target.checked); }}
+                        />
+                    </fieldset>
                 </Col>
                 <Col xxl={10} xl={9} lg={12}>
                     <CanvasJSChart options={options} />
