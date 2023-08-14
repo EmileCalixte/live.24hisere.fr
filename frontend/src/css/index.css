@@ -183,7 +183,7 @@ a, button.a {
     color: #444;
 }
 
-.circular-loader i {
+.circular-loader svg {
     animation-duration: 0.5s;
     animation-name: circular-loader;
     animation-iteration-count: infinite;
