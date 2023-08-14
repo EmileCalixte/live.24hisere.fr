@@ -1,4 +1,5 @@
 import { Col, Row } from "react-bootstrap";
+import { useWindowDimensions } from "../../../../hooks/useWindowDimensions";
 import CanvasJSReact from "../../../../lib/canvasjs/canvasjs.react";
 import { useCallback, useMemo, useState } from "react";
 import ReactDOMServer from "react-dom/server";
@@ -10,7 +11,7 @@ const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 const DEFAULT_MIN_SPEED = 0;
 const DEFAULT_MAX_SPEED = 10;
 
-function getInterval(raceDuration: number): number {
+function getBaseXAxisInterval(raceDuration: number): number {
     if (raceDuration <= 14400) { // up to 4h
         return Math.ceil(raceDuration / 60 / 24 / 10) * 10;
     }
@@ -41,6 +42,22 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
     const [displayEachHourSpeed, setDisplayEachHourSpeed] = useState(true);
     const [displayAverageSpeed, setDisplayAverageSpeed] = useState(true);
     const [displayAverageSpeedEvolution, setDisplayAverageSpeedEvolution] = useState(true);
+
+    const { width: windowWidth } = useWindowDimensions();
+
+    const getXAxisInterval = useCallback((): number => {
+        const baseInterval = getBaseXAxisInterval(race.duration);
+
+        if (windowWidth < 640) {
+            return baseInterval * 4;
+        }
+
+        if (windowWidth < 968) {
+            return baseInterval * 2;
+        }
+
+        return baseInterval;
+    }, [race.duration, windowWidth]);
 
     const getXAxisLabelValue = useCallback((e: any) => {
         return formatMsAsDuration(e.value.getTime());
@@ -164,7 +181,7 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
                 minimum: 0,
                 maximum: race.duration * 1000,
                 intervalType: "minute",
-                interval: getInterval(race.duration),
+                interval: getXAxisInterval(),
                 labelAngle: -25,
             },
             axisY: {
@@ -303,6 +320,7 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
         averageSpeed,
         minSpeed,
         maxSpeed,
+        getXAxisInterval,
         getXAxisLabelValue,
         getTooltipContent,
         displayEachLapSpeed,
