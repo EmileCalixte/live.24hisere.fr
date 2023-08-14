@@ -35,7 +35,7 @@
     "rxjs": "^7.2.0"
   },
   "devDependencies": {
-    "@nestjs/cli": "^9.0.0",
+    "@nestjs/cli": "^10.1.11",
     "@nestjs/schematics": "^10.0.2",
     "@nestjs/testing": "^9.0.0",
     "@types/cron": "^2.0.0",
