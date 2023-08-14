@@ -44,6 +44,8 @@
     "test": "react-scripts test",
     "lint": "npx eslint .",
     "lint-fix": "npx eslint . --fix",
+    "typecheck": "npx tsc --noEmit",
+    "codecheck": "npm run typecheck && npm run lint",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
