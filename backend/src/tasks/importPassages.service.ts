@@ -45,10 +45,9 @@ export class ImportPassagesService extends TaskService {
         this.logger.log(`Importing passages from dag file located at ${dagFileUrl}`);
 
         const { data } = await firstValueFrom<AxiosResponse<string>>(
-            this.httpService.get("http://static:8080/dag-file.txt").pipe(
+            this.httpService.get(dagFileUrl).pipe(
                 catchError((error: AxiosError) => {
-                    this.logger.error(error);
-                    throw new Error("An error occurred");
+                    throw new Error(`An error occurred while fetching dag file: ${error.message}`);
                 }),
             ),
         );

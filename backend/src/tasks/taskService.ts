@@ -58,6 +58,9 @@ export abstract class TaskService {
         this.previousExecutionStartTime = new Date();
 
         this.task()
+            .catch(error => {
+                this.logger.error(error);
+            })
             .finally(() => {
                 this.executionInProgress = false;
             });
