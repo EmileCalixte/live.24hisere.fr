@@ -1,3 +1,5 @@
+import { type SelectOption } from "../../../types/Forms";
+
 interface RadioGroupProps<T extends SelectOption["value"]> {
     legend: string;
     name?: string;

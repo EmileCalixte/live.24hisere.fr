@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { GENDER_MIXED } from "../../../../../constants/Gender";
+import { type CategoryShortCode } from "../../../../../types/Category";
 import { getCategoryCodeFromBirthYear } from "../../../../../util/ffaUtils";
 import RankingTableInfoHeader from "../RankingTableInfoHeader";
 import ResponsiveRankingTableRow from "./ResponsiveRankingTableRow";

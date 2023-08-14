@@ -1,3 +1,4 @@
+import { type SelectOption } from "../types/Forms";
 import { CATEGORY_SCRATCH } from "./Category";
 import { GENDER } from "./Gender";
 import { RANKING_TIME_MODE } from "./RankingTimeMode";

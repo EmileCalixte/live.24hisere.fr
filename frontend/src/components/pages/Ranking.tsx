@@ -6,6 +6,7 @@ import { RANKING_TIME_MODE } from "../../constants/RankingTimeMode";
 import { excludeKeys } from "../../helpers/objectHelper";
 import { getRacesSelectOptions } from "../../helpers/raceHelper";
 import { useWindowDimensions } from "../../hooks/useWindowDimensions";
+import { type CategoriesDict, type CategoryShortCode } from "../../types/Category";
 import { existingCategories, getCategoryCodeFromBirthYear } from "../../util/ffaUtils";
 import Select from "../ui/forms/Select";
 import Page from "../ui/Page";

@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { type CategoryShortCode } from "../../../../types/Category";
 import { formatFloatNumber, formatMsAsDuration } from "../../../../util/utils";
 import RankingTableRowNCells from "./RankingTableRowNCells";
 

@@ -1,3 +1,5 @@
+import { type SelectOption } from "../types/Forms";
+
 /**
  * @param race
  * @param serverTimeOffset in ms

@@ -1,3 +1,6 @@
+import { type CategoriesDict, type CategoryShortCode } from "../types/Category";
+import { type SelectOption } from "../types/Forms";
+
 export function getCategoriesDictSelectOptions<T extends CategoriesDict>(
     categoriesDict: T | false,
     label?: (code: CategoryShortCode, name: string) => string,
