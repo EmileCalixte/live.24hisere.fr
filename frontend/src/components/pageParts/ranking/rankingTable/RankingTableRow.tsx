@@ -1,5 +1,8 @@
 import { Link } from "react-router-dom";
 import { type CategoryShortCode } from "../../../../types/Category";
+import { type GenderWithMixed } from "../../../../types/Gender";
+import { type Race } from "../../../../types/Race";
+import { type ProcessedRankingRunner } from "../../../../types/Ranking";
 import { formatFloatNumber, formatMsAsDuration } from "../../../../util/utils";
 import RankingTableRowNCells from "./RankingTableRowNCells";
 

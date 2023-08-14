@@ -9,6 +9,8 @@ import { RANKING_TIME_MODE } from "../../../constants/RankingTimeMode";
 import { getCategoriesDictSelectOptions } from "../../../helpers/categoryHelper";
 import { type CategoriesDict, type CategoryShortCode } from "../../../types/Category";
 import { type SelectOption } from "../../../types/Forms";
+import { type GenderWithMixed } from "../../../types/Gender";
+import { type RankingTimeMode } from "../../../types/RankingTimeMode";
 import RadioGroup from "../../ui/forms/RadioGroup";
 import Select from "../../ui/forms/Select";
 import RankingSettingsTime from "./RankingSettingsTime";

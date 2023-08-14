@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getRaceTime } from "../helpers/raceHelper";
+import { type Race } from "../types/Race";
 
 const UPDATE_RACE_TIME_INTERVAL = 1000;
 

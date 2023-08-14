@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { type Dimensions2d } from "../types/Dimensions";
 
 function getWindowDimensions(): Dimensions2d {
     return {

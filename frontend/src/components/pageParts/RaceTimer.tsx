@@ -1,6 +1,7 @@
 import { useContext, useMemo } from "react";
 import { isRaceFinished, isRaceStarted } from "../../helpers/raceHelper";
 import { useRaceTime } from "../../hooks/useRaceTime";
+import { type Race } from "../../types/Race";
 import { formatMsAsDuration } from "../../util/utils";
 import { appDataContext } from "../App";
 

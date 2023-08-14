@@ -3,6 +3,8 @@ import { useWindowDimensions } from "../../../../hooks/useWindowDimensions";
 import CanvasJSReact from "../../../../lib/canvasjs/canvasjs.react";
 import { useCallback, useMemo, useState } from "react";
 import ReactDOMServer from "react-dom/server";
+import { type Race } from "../../../../types/Race";
+import { type RunnerWithProcessedHours, type RunnerWithProcessedPassages } from "../../../../types/Runner";
 import { formatMsAsDuration } from "../../../../util/utils";
 import { Checkbox } from "../../../ui/forms/Checkbox";
 

@@ -2,6 +2,8 @@ import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { GENDER_MIXED } from "../../../../../constants/Gender";
 import { type CategoryShortCode } from "../../../../../types/Category";
+import { type GenderWithMixed } from "../../../../../types/Gender";
+import { type ProcessedRankingRunner } from "../../../../../types/Ranking";
 import { getCategoryCodeFromBirthYear } from "../../../../../util/ffaUtils";
 import { formatFloatNumber, formatMsAsDuration } from "../../../../../util/utils";
 

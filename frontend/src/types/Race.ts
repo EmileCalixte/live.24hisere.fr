@@ -1,7 +1,9 @@
+import { type DateISOString } from "./Utils";
+
 /**
  * An object representing a race
  */
-interface Race {
+export interface Race {
     /**
      * The race ID
      */
@@ -33,7 +35,7 @@ interface Race {
     lapDistance: string;
 }
 
-interface RaceWithRunnerCount extends Race {
+export interface RaceWithRunnerCount extends Race {
     /**
      * The number of runners participating in the race
      */
@@ -43,16 +45,16 @@ interface RaceWithRunnerCount extends Race {
 /**
  * An object representing a race with additional admin properties
  */
-interface AdminRace extends Race {
+export interface AdminRace extends Race {
     /**
      * Whether the race is publicly displayed or not
      */
     isPublic: boolean;
 }
 
-interface AdminRaceWithRunnerCount extends AdminRace, RaceWithRunnerCount {}
+export interface AdminRaceWithRunnerCount extends AdminRace, RaceWithRunnerCount {}
 
 /**
  * An object whose key is a race ID and value is the corresponding race
  */
-type RaceDict<T extends Race = Race> = Record<string, T>;
+export type RaceDict<T extends Race = Race> = Record<string, T>;

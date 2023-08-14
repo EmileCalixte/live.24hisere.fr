@@ -3,6 +3,8 @@ import { Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { GENDER } from "../../../../constants/Gender";
 import { useStateWithNonNullableSetter } from "../../../../hooks/useStateWithNonNullableSetter";
+import { type Gender } from "../../../../types/Gender";
+import { type AdminRaceWithRunnerCount } from "../../../../types/Race";
 import { performAuthenticatedAPIRequest } from "../../../../util/apiUtils";
 import ToastUtil from "../../../../util/ToastUtil";
 import { userContext } from "../../../App";
@@ -21,7 +23,7 @@ export default function CreateRunner(): JSX.Element {
     const [id, setId] = useState(1);
     const [firstname, setFirstname] = useState("");
     const [lastname, setLastname] = useState("");
-    const [gender, setGender] = useState(GENDER.M);
+    const [gender, setGender] = useState<Gender>(GENDER.M);
     const [birthYear, setBirthYear] = useState(((new Date()).getFullYear() - 30).toString());
     const [raceId, setRaceId] = useStateWithNonNullableSetter<number | null>(null);
 

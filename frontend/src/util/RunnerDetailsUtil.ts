@@ -1,3 +1,6 @@
+import { type Passage, type PassageProcessedData, type ProcessedPassage } from "../types/Passage";
+import { type Race } from "../types/Race";
+import { type RunnerProcessedHour, type RunnerWithProcessedPassages } from "../types/Runner";
 import { formatMsAsDuration } from "./utils";
 
 function getLapsInRaceTimeInterval(

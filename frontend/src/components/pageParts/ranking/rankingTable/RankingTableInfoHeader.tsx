@@ -1,5 +1,7 @@
 import { GENDER, GENDER_MIXED } from "../../../../constants/Gender";
 import { type CategoryShortCode } from "../../../../types/Category";
+import { type GenderWithMixed } from "../../../../types/Gender";
+import { type Race } from "../../../../types/Race";
 import { formatMsAsDuration } from "../../../../util/utils";
 
 interface RankingTableInfoHeaderProps {

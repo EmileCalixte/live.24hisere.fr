@@ -1,4 +1,7 @@
-export const GENDER: Record<Gender, Gender> = {
+import { type Gender, type GenderWithMixed } from "../types/Gender";
+import { type ConstantRecord } from "../types/Utils";
+
+export const GENDER: ConstantRecord<Gender> = {
     M: "M",
     F: "F",
 };

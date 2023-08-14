@@ -1,6 +1,9 @@
 import { type ReactNode } from "react";
 import { GENDER_MIXED } from "../../../../constants/Gender";
 import { type CategoryShortCode } from "../../../../types/Category";
+import { type GenderWithMixed } from "../../../../types/Gender";
+import { type Race } from "../../../../types/Race";
+import { type ProcessedRanking, type ProcessedRankingRunner } from "../../../../types/Ranking";
 import { getCategoryCodeFromBirthYear } from "../../../../util/ffaUtils";
 import RankingTableInfoHeader from "./RankingTableInfoHeader";
 import RankingTableRow from "./RankingTableRow";

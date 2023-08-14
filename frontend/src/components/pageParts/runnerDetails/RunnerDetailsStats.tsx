@@ -1,5 +1,9 @@
 import { Col, Row } from "react-bootstrap";
 import React, { useMemo } from "react";
+import { type ProcessedPassage } from "../../../types/Passage";
+import { type Race } from "../../../types/Race";
+import { type RankingRunnerRanks } from "../../../types/Ranking";
+import { type RunnerWithProcessedHours, type RunnerWithProcessedPassages } from "../../../types/Runner";
 import { getCategoryCodeFromBirthYear } from "../../../util/ffaUtils";
 import CircularLoader from "../../ui/CircularLoader";
 import SpeedChart from "./charts/SpeedChart";

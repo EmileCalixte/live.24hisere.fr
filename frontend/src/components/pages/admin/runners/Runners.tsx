@@ -1,6 +1,8 @@
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
+import { type AdminRace, type AdminRaceWithRunnerCount, type RaceDict } from "../../../../types/Race";
+import { type Runner } from "../../../../types/Runner";
 import { getRaceDictFromRaces } from "../../../../util/raceUtil";
 import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../ui/breadcrumbs/Crumb";

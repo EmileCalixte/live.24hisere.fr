@@ -5,6 +5,7 @@ import { Col, Row } from "react-bootstrap";
 import { isRaceFinished, isRaceStarted } from "../../../helpers/raceHelper";
 import { useRaceTime } from "../../../hooks/useRaceTime";
 import { useWindowDimensions } from "../../../hooks/useWindowDimensions";
+import { type RunnerWithProcessedPassages, type RunnerWithRace } from "../../../types/Runner";
 import { formatMsAsDuration, SORT_ASC, SORT_DESC } from "../../../util/utils";
 import { appDataContext } from "../../App";
 

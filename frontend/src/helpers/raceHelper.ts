@@ -1,4 +1,5 @@
 import { type SelectOption } from "../types/Forms";
+import { type Race } from "../types/Race";
 
 /**
  * @param race

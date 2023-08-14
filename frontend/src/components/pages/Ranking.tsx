@@ -7,6 +7,10 @@ import { excludeKeys } from "../../helpers/objectHelper";
 import { getRacesSelectOptions } from "../../helpers/raceHelper";
 import { useWindowDimensions } from "../../hooks/useWindowDimensions";
 import { type CategoriesDict, type CategoryShortCode } from "../../types/Category";
+import { type GenderWithMixed } from "../../types/Gender";
+import { type Race } from "../../types/Race";
+import { type ProcessedRanking, type Ranking as RankingType } from "../../types/Ranking";
+import { type RankingTimeMode } from "../../types/RankingTimeMode";
 import { existingCategories, getCategoryCodeFromBirthYear } from "../../util/ffaUtils";
 import Select from "../ui/forms/Select";
 import Page from "../ui/Page";
@@ -29,7 +33,7 @@ export default function Ranking(): JSX.Element {
     const [processedRanking, setProcessedRanking] = useState<ProcessedRanking | false>(false);
     const [selectedCategory, setSelectedCategory] = useState<CategoryShortCode | null>(null);
     const [selectedGender, setSelectedGender] = useState<GenderWithMixed>(GENDER_MIXED);
-    const [selectedTimeMode, setSelectedTimeMode] = useState(RANKING_TIME_MODE.now);
+    const [selectedTimeMode, setSelectedTimeMode] = useState<RankingTimeMode>(RANKING_TIME_MODE.now);
     const [selectedRankingTime, setSelectedRankingTime] = useState(-1); // Set when a race is selected
 
     const { width: windowWidth } = useWindowDimensions();
@@ -62,7 +66,7 @@ export default function Ranking(): JSX.Element {
         const response = await performAPIRequest(requestUrl);
         const responseJson = await response.json();
 
-        setProcessedRanking(new RankingProcesser(selectedRace, responseJson.ranking as Ranking).getProcessedRanking());
+        setProcessedRanking(new RankingProcesser(selectedRace, responseJson.ranking as RankingType).getProcessedRanking());
     }, [selectedRace, selectedRankingTime, selectedTimeMode]);
 
     const shouldResetRankingTime = useCallback((newRaceDuration: number) => {

@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo, useState } from "react";
+import { type AdminRaceWithRunnerCount } from "../../../../types/Race";
 import ToastUtil from "../../../../util/ToastUtil";
 import RunnerDetailsPassageForm from "./RunnerDetailsPassageForm";
 

@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { Col, Row } from "react-bootstrap";
+import { type Race } from "../../../types/Race";
 import { formatMsAsDuration } from "../../../util/utils";
 import RaceTimer from "../RaceTimer";
 

@@ -1,7 +1,9 @@
+import { type Runner } from "./Runner";
+
 /**
  * An object representing a runner in a ranking array
  */
-interface RankingRunner extends Runner {
+export interface RankingRunner extends Runner {
     /**
      * The total number of times the runner has passed the timing point
      */
@@ -13,7 +15,7 @@ interface RankingRunner extends Runner {
     lastPassageTime: string;
 }
 
-interface RankingRunnerRanksObject {
+export interface RankingRunnerRanksObject {
     /**
      * The scratch rank of the runner (regardless of category and gender)
      */
@@ -38,7 +40,7 @@ interface RankingRunnerRanksObject {
 /**
  * An object representing the ranks of the runner on the rankings scratch, by category and by gender
  */
-interface RankingRunnerRanks {
+export interface RankingRunnerRanks {
     /**
      * The real, absolute ranks of the runner
      */
@@ -54,7 +56,7 @@ interface RankingRunnerRanks {
 /**
  * An object representing a runner in ranking array with additionnal data about the runner
  */
-interface ProcessedRankingRunner extends RankingRunner {
+export interface ProcessedRankingRunner extends RankingRunner {
     /**
      * The total distance covered by the runner, in meters
      */
@@ -76,6 +78,6 @@ interface ProcessedRankingRunner extends RankingRunner {
     rankings: RankingRunnerRanks;
 }
 
-type Ranking = RankingRunner[];
+export type Ranking = RankingRunner[];
 
-type ProcessedRanking = ProcessedRankingRunner[];
+export type ProcessedRanking = ProcessedRankingRunner[];

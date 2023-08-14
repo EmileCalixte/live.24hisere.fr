@@ -2,6 +2,7 @@ import { faEye, faEyeSlash, faGrip, faPersonRunning } from "@fortawesome/free-so
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 import React, { useCallback } from "react";
+import { type AdminRaceWithRunnerCount } from "../../../../types/Race";
 import RaceTimer from "../../RaceTimer";
 
 interface RacesListItemProps {

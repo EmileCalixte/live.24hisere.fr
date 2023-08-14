@@ -1,7 +1,7 @@
 /**
  * An object representing a passage of a runner at the timing point
  */
-interface Passage {
+export interface Passage {
     /**
      * The passage ID
      */
@@ -16,7 +16,7 @@ interface Passage {
 /**
  * An object representing a passage of a runner at the timing point with additional admin info
  */
-interface AdminPassage extends Passage {
+export interface AdminPassage extends Passage {
     /**
      * Not null if the passage comes from a detection of the timing system
      */
@@ -28,7 +28,7 @@ interface AdminPassage extends Passage {
     isHidden: boolean;
 }
 
-interface AdminPassageWithRunnerId extends AdminPassage {
+export interface AdminPassageWithRunnerId extends AdminPassage {
     /**
      * The ID of the runner of the passage
      */
@@ -38,7 +38,7 @@ interface AdminPassageWithRunnerId extends AdminPassage {
 /**
  * An object containing computed data about a runner passage
  */
-interface PassageProcessedData {
+export interface PassageProcessedData {
     /**
      * The distance of the lap, in meters
      */
@@ -103,7 +103,7 @@ interface PassageProcessedData {
 /**
  * An object representing a passage of a runner at the timing point with additionnal data about the corresponding lap
  */
-interface ProcessedPassage extends Passage {
+export interface ProcessedPassage extends Passage {
     /**
      * An object containing additionnal data about the corresponding lap
      */
@@ -114,4 +114,4 @@ interface ProcessedPassage extends Passage {
  * An object representing a passage of a runner at the timing point with additional admin info and additional data
  * about the corresponding lap
  */
-interface AdminProcessedPassage extends AdminPassage, ProcessedPassage {}
+export interface AdminProcessedPassage extends AdminPassage, ProcessedPassage {}

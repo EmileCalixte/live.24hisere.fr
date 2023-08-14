@@ -1,4 +1,6 @@
 import { Link } from "react-router-dom";
+import { type RaceDict } from "../../../../types/Race";
+import { type Runner } from "../../../../types/Runner";
 import { getCategoryCodeFromBirthYear } from "../../../../util/ffaUtils";
 import CircularLoader from "../../../ui/CircularLoader";
 

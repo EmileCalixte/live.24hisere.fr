@@ -2,6 +2,8 @@ import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { GENDER_OPTIONS } from "../../../../constants/Forms";
 import { getRacesSelectOptions } from "../../../../helpers/raceHelper";
+import { type Gender } from "../../../../types/Gender";
+import { type AdminRaceWithRunnerCount } from "../../../../types/Race";
 import { Input } from "../../../ui/forms/Input";
 import { getCategoryNameFromBirthYear } from "../../../../util/ffaUtils";
 import RadioGroup from "../../../ui/forms/RadioGroup";

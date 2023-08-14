@@ -1,4 +1,4 @@
-interface Dimensions2d {
+export interface Dimensions2d {
     width: number;
     height: number;
 }

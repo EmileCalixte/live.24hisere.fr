@@ -1,4 +1,7 @@
 import { GENDER_MIXED } from "../constants/Gender";
+import { type GenderWithMixed } from "../types/Gender";
+import { type Race } from "../types/Race";
+import { type ProcessedRanking, type ProcessedRankingRunner, type Ranking, type RankingRunner, type RankingRunnerRanks } from "../types/Ranking";
 import { getCategoryCodeFromBirthYear } from "./ffaUtils";
 import { verbose } from "./utils";
 

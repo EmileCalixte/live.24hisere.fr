@@ -2,6 +2,14 @@ import { faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
 import { useParams } from "react-router-dom";
+import { type ProcessedRanking, type Ranking, type RankingRunnerRanks } from "../../types/Ranking";
+import {
+    type Runner,
+    type RunnerWithPassages,
+    type RunnerWithProcessedHours,
+    type RunnerWithProcessedPassages,
+    type RunnerWithRace,
+} from "../../types/Runner";
 import { RankingProcesser } from "../../util/RankingProcesser";
 import Page from "../ui/Page";
 import RunnerDetailsRaceDetails from "../pageParts/runnerDetails/RunnerDetailsRaceDetails";
