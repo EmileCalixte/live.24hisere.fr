@@ -33,13 +33,25 @@ jobs:
           FRONTEND_CONFIG_FILE_CONTENT: ${{ secrets.FRONTEND_CONFIG }}
         run: echo ${FRONTEND_CONFIG_FILE_CONTENT} > frontend/src/config/config.ts
 
-      - name: Run JS linter
+      - name: Run ESLint on frontend
         run: npm run lint
         working-directory: ./frontend
 
       - name: Create frontend production builds
         run: npm run build
         working-directory: ./frontend
+
+      - name: Install JS backend dependencies
+        run: npm install
+        working-directory: ./backend
+
+      - name: Run ESLint on backend
+        run: npm run lint
+        working-directory: ./backend
+
+      - name: Create backend production builds
+        run: npm run build
+        working-directory: ./backend
 
       - name: Clean files
         run: |
@@ -54,6 +66,14 @@ jobs:
           rm -f frontend/package.json
           rm -f frontend/package-lock.jsong
           rm -f frontend/tsconfig.json
+          rm -rf backend/prisma
+          rm -rf backend/scripts
+          rm -rf backend/src
+          rm -f backend/.eslintrc.js
+          rm -f backend/.gitignore
+          rm -f backend/.prettierrc
+          rm -f backend/.tsconfig.build.json
+          rm -f backend/.tsconfig.json
           rm -rf sql
           rm -f .gitattributes
           rm -f .gitignore
