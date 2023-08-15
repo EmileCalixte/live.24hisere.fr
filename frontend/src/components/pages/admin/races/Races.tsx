@@ -1,11 +1,12 @@
 import { faArrowsUpDown, faCheck, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
+import { getAdminRaces } from "../../../../services/api/RaceService";
 import { type AdminRaceWithRunnerCount } from "../../../../types/Race";
 import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../ui/breadcrumbs/Crumb";
 import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { performAuthenticatedAPIRequest } from "../../../../util/apiUtils";
+import { isApiRequestResultOk, performAuthenticatedAPIRequest } from "../../../../util/apiUtils";
 import { userContext } from "../../../App";
 import Page from "../../../ui/Page";
 import CircularLoader from "../../../ui/CircularLoader";
@@ -26,11 +27,19 @@ export default function Races(): JSX.Element {
     const [isSaving, setIsSaving] = useState(false);
 
     const fetchRaces = useCallback(async () => {
-        const response = await performAuthenticatedAPIRequest("/admin/races", accessToken);
-        const responseJson = await response.json();
+        if (!accessToken) {
+            return;
+        }
 
-        setRaces(responseJson.races);
-        setSortingRaces(responseJson.races);
+        const response = await getAdminRaces(accessToken);
+
+        if (!isApiRequestResultOk(response)) {
+            ToastUtil.getToastr().error("Impossible de récupérer la liste des courses");
+            return;
+        }
+
+        setRaces(response.json.races);
+        setSortingRaces(response.json.races);
     }, [accessToken]);
 
     const [dragItemIndex, setDragItemIndex] = useState<number | null>(null);
