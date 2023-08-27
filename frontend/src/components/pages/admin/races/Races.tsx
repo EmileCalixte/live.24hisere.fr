@@ -1,12 +1,12 @@
 import { faArrowsUpDown, faCheck, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
-import { getAdminRaces } from "../../../../services/api/RaceService";
+import { getAdminRaces, putAdminRaceOrder } from "../../../../services/api/RaceService";
 import { type AdminRaceWithRunnerCount } from "../../../../types/Race";
 import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../ui/breadcrumbs/Crumb";
 import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { isApiRequestResultOk, performAuthenticatedAPIRequest } from "../../../../util/apiUtils";
+import { isApiRequestResultOk } from "../../../../util/apiUtils";
 import { userContext } from "../../../App";
 import Page from "../../../ui/Page";
 import CircularLoader from "../../../ui/CircularLoader";
@@ -31,15 +31,15 @@ export default function Races(): JSX.Element {
             return;
         }
 
-        const response = await getAdminRaces(accessToken);
+        const result = await getAdminRaces(accessToken);
 
-        if (!isApiRequestResultOk(response)) {
+        if (!isApiRequestResultOk(result)) {
             ToastUtil.getToastr().error("Impossible de récupérer la liste des courses");
             return;
         }
 
-        setRaces(response.json.races);
-        setSortingRaces(response.json.races);
+        setRaces(result.json.races);
+        setSortingRaces(result.json.races);
     }, [accessToken]);
 
     const [dragItemIndex, setDragItemIndex] = useState<number | null>(null);
@@ -69,26 +69,23 @@ export default function Races(): JSX.Element {
     }, [sortingRaces, dragItemIndex, dragOverItemIndex]);
 
     const saveSort = useCallback(async () => {
+        if (!accessToken || !sortingRaces) {
+            return;
+        }
+
         setIsSaving(true);
 
-        const raceIds = (sortingRaces as AdminRaceWithRunnerCount[]).map(race => race.id);
+        const raceIds = sortingRaces.map(race => race.id);
 
-        const response = await performAuthenticatedAPIRequest("/admin/races-order", accessToken, {
-            method: "PUT",
-            body: JSON.stringify(raceIds),
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
+        const result = await putAdminRaceOrder(accessToken, raceIds);
 
-        if (!response.ok) {
-            ToastUtil.getToastr().error("Une erreur est survenue");
-            console.error(await response.text());
+        if (!isApiRequestResultOk(result)) {
+            ToastUtil.getToastr().error("Impossible de sauvegarder l'ordre des courses");
             setIsSaving(false);
             return;
         }
 
-        setRaces([...(sortingRaces as AdminRaceWithRunnerCount[])]);
+        setRaces([...sortingRaces]);
 
         ToastUtil.getToastr().success("L'ordre des courses a été modifié");
         setIsSorting(false);

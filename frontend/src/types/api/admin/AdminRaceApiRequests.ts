@@ -9,4 +9,8 @@ export interface GetAdminRacesApiRequest extends ApiRequest {
     };
 }
 
-// TODO other interfaces for AdminRace requests
+export interface PutAdminRaceOrderApiRequest extends ApiRequest {
+    payload: number[];
+
+    response: never;
+}
