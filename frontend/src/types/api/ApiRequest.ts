@@ -1,7 +1,7 @@
 export interface ApiRequest {
     payload: object | undefined;
 
-    response: object;
+    response: object | undefined;
 }
 
 export interface ApiRequestResult<T extends ApiRequest> {

@@ -1,6 +1,8 @@
 import { createContext, useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { getAppData } from "../services/api/AppDataService";
+import { getCurrentUserInfo, logout as performLogoutRequest } from "../services/api/AuthService";
 import { type User } from "../types/User";
 import Header from "./ui/header/Header";
 import Footer from "./ui/footer/Footer";
@@ -9,8 +11,7 @@ import RunnerDetails from "./pages/RunnerDetails";
 import {
     EVENT_API_REQUEST_ENDED,
     EVENT_API_REQUEST_STARTED,
-    performAPIRequest,
-    performAuthenticatedAPIRequest,
+    isApiRequestResultOk,
 } from "../util/apiUtils";
 import Login from "./pages/Login";
 import Admin from "./pages/admin/Admin";
@@ -106,12 +107,20 @@ export default function App(): JSX.Element {
     }, []);
 
     const fetchAppData = useCallback(async () => {
-        const response = await performAPIRequest("/app-data");
-        const responseJson = await response.json();
+        verbose("Fetching app data");
 
-        setLastUpdateTime(new Date(responseJson.lastUpdateTime));
+        const result = await getAppData();
 
-        const serverTime = new Date(responseJson.currentTime);
+        if (!isApiRequestResultOk(result)) {
+            ToastUtil.getToastr().error("Impossible de récupérer les informations de l'application");
+            return;
+        }
+
+        verbose("App data", result.json);
+
+        setLastUpdateTime(new Date(result.json.lastUpdateTime));
+
+        const serverTime = new Date(result.json.currentTime);
         const clientTime = new Date();
 
         const timeOffsetMs = serverTime.getTime() - clientTime.getTime();
@@ -120,27 +129,30 @@ export default function App(): JSX.Element {
     }, []);
 
     const fetchUserInfo = useCallback(async () => {
+        if (!accessToken) {
+            return;
+        }
+
         verbose("Fetching user info");
 
-        const response = await performAuthenticatedAPIRequest("/auth/current-user-info", accessToken);
+        const result = await getCurrentUserInfo(accessToken);
 
-        if (!response.ok) {
+        if (!isApiRequestResultOk(result)) {
             forgetAccessToken();
             setUser(null);
             ToastUtil.getToastr().error("Vous avez été déconecté");
+            return;
         }
 
-        const responseJson = await response.json();
+        verbose("User info", result.json);
 
-        verbose("User info", responseJson);
-
-        setUser(responseJson.user);
+        setUser(result.json.user);
     }, [accessToken, forgetAccessToken]);
 
     const logout = useCallback(() => {
-        void performAuthenticatedAPIRequest("/auth/logout", accessToken, {
-            method: "POST",
-        });
+        if (accessToken) {
+            void performLogoutRequest(accessToken);
+        }
 
         forgetAccessToken();
 

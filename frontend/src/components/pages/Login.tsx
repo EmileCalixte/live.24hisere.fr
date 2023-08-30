@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Col, Row } from "react-bootstrap";
-import { performAPIRequest } from "../../util/apiUtils";
+import { login } from "../../services/api/AuthService";
+import { isApiRequestResultOk } from "../../util/apiUtils";
 import { userContext } from "../App";
 import { Navigate } from "react-router-dom";
 import ToastUtil from "../../util/ToastUtil";
@@ -19,18 +20,10 @@ export default function Login(): JSX.Element {
         e.preventDefault();
         setSubmitButtonDisabled(true);
 
-        const response = await performAPIRequest("/auth/login", {
-            method: "POST",
-            body: new URLSearchParams({ // x-www-form-urlencoded
-                username,
-                password,
-            }),
-        });
+        const result = await login(username, password);
 
-        const responseJson = await response.json();
-
-        if (!response.ok) {
-            if (response.status === 403) {
+        if (!isApiRequestResultOk(result)) {
+            if (result.response.status === 403) {
                 ToastUtil.getToastr().error("Identifiants incorrects");
             } else {
                 ToastUtil.getToastr().error("Une erreur est survenue");
@@ -39,7 +32,7 @@ export default function Login(): JSX.Element {
             return;
         }
 
-        const accessToken = responseJson.accessToken;
+        const accessToken = result.json.accessToken;
 
         saveAccessToken(accessToken);
         setUser(undefined); // Will be defined when the application has fetched user info
