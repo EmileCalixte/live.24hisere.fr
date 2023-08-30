@@ -14,6 +14,7 @@ interface InputProps {
     step?: string | number;
     maxLength?: number;
     pattern?: string;
+    autoComplete?: string;
     autoFocus?: boolean;
     className?: string;
 }
@@ -30,6 +31,7 @@ export function Input({
     step,
     maxLength,
     pattern,
+    autoComplete,
     autoFocus = false,
     className,
 }: InputProps): JSX.Element {
@@ -64,6 +66,7 @@ export function Input({
                        maxLength={maxLength}
                        pattern={pattern}
                        autoFocus={autoFocus}
+                       autoComplete={autoComplete}
                 />
             </label>
         </div>

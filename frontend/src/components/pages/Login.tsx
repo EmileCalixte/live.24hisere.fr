@@ -55,6 +55,7 @@ export default function Login(): JSX.Element {
                                name="username"
                                value={username}
                                autoFocus
+                               autoComplete="username"
                                onChange={e => { setUsername(e.target.value); }}
                         />
 
@@ -63,6 +64,7 @@ export default function Login(): JSX.Element {
                                type="password"
                                name="password"
                                value={password}
+                               autoComplete="current-password"
                                onChange={e => { setPassword(e.target.value); }}
                         />
 
