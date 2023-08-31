@@ -1,18 +1,21 @@
 import { Col, Row } from "react-bootstrap";
-import { Navigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { deleteAdminRace, getAdminRace, patchAdminRace } from "../../../../services/api/RaceService";
 import { type AdminRaceWithRunnerCount } from "../../../../types/Race";
 import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../ui/breadcrumbs/Crumb";
 import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import Page from "../../../ui/Page";
 import CircularLoader from "../../../ui/CircularLoader";
-import { performAuthenticatedAPIRequest } from "../../../../util/apiUtils";
+import { isApiRequestResultOk } from "../../../../util/apiUtils";
 import { userContext } from "../../../App";
 import { formatDateForApi } from "../../../../util/utils";
 import ToastUtil from "../../../../util/ToastUtil";
 import RaceDetailsForm from "../../../pageParts/admin/races/RaceDetailsForm";
 
 export default function RaceDetails(): JSX.Element {
+    const navigate = useNavigate();
+
     const { accessToken } = useContext(userContext);
 
     const { raceId: urlRaceId } = useParams();
@@ -27,8 +30,6 @@ export default function RaceDetails(): JSX.Element {
     const [isPublic, setIsPublic] = useState(false);
 
     const [isSaving, setIsSaving] = useState(false);
-
-    const [redirectAfterDelete, setRedirectAfterDelete] = useState(false);
 
     const unsavedChanges = useMemo(() => {
         if (!race) {
@@ -46,19 +47,19 @@ export default function RaceDetails(): JSX.Element {
     }, [race, raceName, initialDistance, lapDistance, startTime, duration, isPublic]);
 
     const fetchRace = useCallback(async () => {
-        if (!urlRaceId) {
+        if (!urlRaceId || !accessToken) {
             return;
         }
 
-        const response = await performAuthenticatedAPIRequest(`/admin/races/${urlRaceId}`, accessToken);
+        const result = await getAdminRace(accessToken, urlRaceId);
 
-        if (!response.ok) {
-            console.error("Failed to fetch race", await response.json());
+        if (!isApiRequestResultOk(result)) {
+            ToastUtil.getToastr().error("Impossible de récupérer les détails de la course");
             setRace(null);
             return;
         }
 
-        const responseJson = await response.json();
+        const responseJson = result.json;
 
         setRace(responseJson.race);
 
@@ -77,7 +78,7 @@ export default function RaceDetails(): JSX.Element {
     const onSubmit = async (e: React.FormEvent): Promise<void> => {
         e.preventDefault();
 
-        if (!race) {
+        if (!race || !accessToken) {
             return;
         }
 
@@ -88,23 +89,14 @@ export default function RaceDetails(): JSX.Element {
             isPublic,
             startTime: formatDateForApi(startTime),
             duration: Math.floor(duration / 1000),
-            initialDistance,
-            lapDistance,
+            initialDistance: initialDistance.toString(),
+            lapDistance: lapDistance.toString(),
         };
 
-        const response = await performAuthenticatedAPIRequest(`/admin/races/${race.id}`, accessToken, {
-            method: "PATCH",
-            body: JSON.stringify(body),
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
+        const result = await patchAdminRace(accessToken, race.id, body);
 
-        const responseJson = await response.json();
-
-        if (!response.ok) {
+        if (!isApiRequestResultOk(result)) {
             ToastUtil.getToastr().error("Une erreur est survenue");
-            console.error(responseJson);
             setIsSaving(false);
             return;
         }
@@ -116,11 +108,7 @@ export default function RaceDetails(): JSX.Element {
     };
 
     const deleteRace = useCallback(async () => {
-        if (!race) {
-            return;
-        }
-
-        if (!window.confirm("Êtes-vous sûr de vouloir supprimer cette course ?")) {
+        if (!race || !accessToken) {
             return;
         }
 
@@ -128,26 +116,20 @@ export default function RaceDetails(): JSX.Element {
             return;
         }
 
-        const response = await performAuthenticatedAPIRequest(`/admin/races/${race.id}`, accessToken, {
-            method: "DELETE",
-        });
+        if (!window.confirm("Êtes-vous sûr de vouloir supprimer cette course ?")) {
+            return;
+        }
 
-        if (!response.ok) {
+        const result = await deleteAdminRace(accessToken, race.id);
+
+        if (!isApiRequestResultOk(result)) {
             ToastUtil.getToastr().error("Une erreur est survenue");
-            const responseJson = await response.json();
-            console.error(responseJson);
             return;
         }
 
         ToastUtil.getToastr().success("Course supprimée");
-        setRedirectAfterDelete(true);
+        navigate("/admin/races");
     }, [accessToken, race]);
-
-    if (redirectAfterDelete) {
-        return (
-            <Navigate to="/admin/races" />
-        );
-    }
 
     if (race === null) {
         return (
