@@ -129,7 +129,7 @@ export default function RaceDetails(): JSX.Element {
 
         ToastUtil.getToastr().success("Course supprimée");
         navigate("/admin/races");
-    }, [accessToken, race]);
+    }, [accessToken, navigate, race]);
 
     if (race === null) {
         return (
