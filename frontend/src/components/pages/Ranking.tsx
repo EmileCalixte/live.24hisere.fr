@@ -6,17 +6,20 @@ import { RANKING_TIME_MODE } from "../../constants/RankingTimeMode";
 import { excludeKeys } from "../../helpers/objectHelper";
 import { getRacesSelectOptions } from "../../helpers/raceHelper";
 import { useWindowDimensions } from "../../hooks/useWindowDimensions";
+import { getRaces } from "../../services/api/RaceService";
+import { getRanking } from "../../services/api/RankingService";
 import { type CategoriesDict, type CategoryShortCode } from "../../types/Category";
 import { type GenderWithMixed } from "../../types/Gender";
 import { type Race } from "../../types/Race";
-import { type ProcessedRanking, type Ranking as RankingType } from "../../types/Ranking";
+import { type ProcessedRanking } from "../../types/Ranking";
 import { type RankingTimeMode } from "../../types/RankingTimeMode";
 import { existingCategories, getCategoryCodeFromBirthYear } from "../../util/ffaUtils";
+import ToastUtil from "../../util/ToastUtil";
 import Select from "../ui/forms/Select";
 import Page from "../ui/Page";
 import CircularLoader from "../ui/CircularLoader";
 import RankingSettings from "../pageParts/ranking/RankingSettings";
-import { performAPIRequest } from "../../util/apiUtils";
+import { isApiRequestResultOk } from "../../util/apiUtils";
 import RankingTable from "../pageParts/ranking/rankingTable/RankingTable";
 import { RankingProcesser } from "../../util/RankingProcesser";
 import { formatDateForApi } from "../../util/utils";
@@ -43,10 +46,14 @@ export default function Ranking(): JSX.Element {
     }, [races]);
 
     const fetchRaces = useCallback(async () => {
-        const response = await performAPIRequest("/races");
-        const responseJson = await response.json();
+        const result = await getRaces();
 
-        setRaces(responseJson.races as Race[]);
+        if (!isApiRequestResultOk(result)) {
+            ToastUtil.getToastr().error("Impossible de récupérer la liste des courses");
+            return;
+        }
+
+        setRaces(result.json.races);
     }, []);
 
     const fetchRanking = useCallback(async (rankingTime = selectedRankingTime) => {
@@ -54,19 +61,21 @@ export default function Ranking(): JSX.Element {
             return;
         }
 
-        let requestUrl = `/ranking/${selectedRace.id}`;
+        let rankingDateString;
 
         if (selectedTimeMode === RANKING_TIME_MODE.at) {
             const rankingDate = new Date();
             rankingDate.setTime(new Date(selectedRace.startTime).getTime() + rankingTime);
-            const rankingDateString = formatDateForApi(rankingDate);
-            requestUrl += `?at=${rankingDateString}`;
+            rankingDateString = formatDateForApi(rankingDate);
         }
 
-        const response = await performAPIRequest(requestUrl);
-        const responseJson = await response.json();
+        const result = await getRanking(selectedRace.id, rankingDateString);
 
-        setProcessedRanking(new RankingProcesser(selectedRace, responseJson.ranking as RankingType).getProcessedRanking());
+        if (!isApiRequestResultOk(result)) {
+            ToastUtil.getToastr().error("Impossible de récupérer le classement de cette course");
+            return;
+        }
+        setProcessedRanking(new RankingProcesser(selectedRace, result.json.ranking).getProcessedRanking());
     }, [selectedRace, selectedRankingTime, selectedTimeMode]);
 
     const shouldResetRankingTime = useCallback((newRaceDuration: number) => {
@@ -80,11 +89,7 @@ export default function Ranking(): JSX.Element {
 
         // For better UX, if the user looks at the current time rankings, we want to reset the time inputs to the
         // duration of the newly selected race
-        if (selectedTimeMode === RANKING_TIME_MODE.now) {
-            return true;
-        }
-
-        return false;
+        return selectedTimeMode === RANKING_TIME_MODE.now;
     }, [selectedRankingTime, selectedRace, selectedTimeMode]);
 
     const onSelectRace = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {

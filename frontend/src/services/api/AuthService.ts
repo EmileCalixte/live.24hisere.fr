@@ -3,7 +3,7 @@ import {
     type GetCurrentUserInfoApiRequest,
     type LoginApiRequest,
     type LogoutApiRequest,
-} from "../../types/api/AuthApiRequest";
+} from "../../types/api/AuthApiRequests";
 import { performApiRequest, performAuthenticatedApiRequest } from "./ApiService";
 
 export async function getCurrentUserInfo(accessToken: string): Promise<ApiRequestResult<GetCurrentUserInfoApiRequest>> {
