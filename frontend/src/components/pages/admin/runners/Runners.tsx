@@ -1,13 +1,16 @@
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
-import { type AdminRace, type AdminRaceWithRunnerCount, type RaceDict } from "../../../../types/Race";
+import { getAdminRaces } from "../../../../services/api/RaceService";
+import { getAdminRunners } from "../../../../services/api/RunnerService";
+import { type AdminRace, type RaceDict } from "../../../../types/Race";
 import { type Runner } from "../../../../types/Runner";
 import { getRaceDictFromRaces } from "../../../../util/raceUtil";
+import ToastUtil from "../../../../util/ToastUtil";
 import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../ui/breadcrumbs/Crumb";
 import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { performAuthenticatedAPIRequest } from "../../../../util/apiUtils";
+import { isApiRequestResultOk } from "../../../../util/apiUtils";
 import { userContext } from "../../../App";
 import Page from "../../../ui/Page";
 import CircularLoader from "../../../ui/CircularLoader";
@@ -37,17 +40,33 @@ export default function Runners(): JSX.Element {
     }
 
     const fetchRaces = useCallback(async () => {
-        const response = await performAuthenticatedAPIRequest("/admin/races", accessToken);
-        const responseJson = await response.json();
+        if (!accessToken) {
+            return;
+        }
 
-        setRaces(getRaceDictFromRaces(responseJson.races as AdminRaceWithRunnerCount[]));
+        const result = await getAdminRaces(accessToken);
+
+        if (!isApiRequestResultOk(result)) {
+            ToastUtil.getToastr().error("Impossible de récupérer la liste des courses");
+            return;
+        }
+
+        setRaces(getRaceDictFromRaces(result.json.races));
     }, [accessToken]);
 
     const fetchRunners = useCallback(async () => {
-        const response = await performAuthenticatedAPIRequest("/admin/runners", accessToken);
-        const responseJson = await response.json();
+        if (!accessToken) {
+            return;
+        }
 
-        setRunners(responseJson.runners);
+        const result = await getAdminRunners(accessToken);
+
+        if (!isApiRequestResultOk(result)) {
+            ToastUtil.getToastr().error("Impossible de récupérer la liste des coureurs");
+            return;
+        }
+
+        setRunners(result.json.runners);
     }, [accessToken]);
 
     const displayedRunners = useMemo<Runner[] | false>(() => {
