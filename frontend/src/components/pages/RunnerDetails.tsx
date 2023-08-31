@@ -2,20 +2,22 @@ import { faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
 import { useParams } from "react-router-dom";
-import { type ProcessedRanking, type Ranking, type RankingRunnerRanks } from "../../types/Ranking";
+import { getRanking } from "../../services/api/RankingService";
+import { getRunner, getRunners } from "../../services/api/RunnerService";
+import { type ProcessedRanking, type RankingRunnerRanks } from "../../types/Ranking";
 import {
     type Runner,
-    type RunnerWithPassages,
     type RunnerWithProcessedHours,
     type RunnerWithProcessedPassages,
     type RunnerWithRace,
 } from "../../types/Runner";
 import { RankingProcesser } from "../../util/RankingProcesser";
+import ToastUtil from "../../util/ToastUtil";
 import Page from "../ui/Page";
 import RunnerDetailsRaceDetails from "../pageParts/runnerDetails/RunnerDetailsRaceDetails";
 import RunnerSelector from "../pageParts/runnerDetails/RunnerSelector";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { performAPIRequest } from "../../util/apiUtils";
+import { isApiRequestResultOk } from "../../util/apiUtils";
 import RunnerDetailsStats from "../pageParts/runnerDetails/RunnerDetailsStats";
 import RunnerDetailsLaps from "../pageParts/runnerDetails/RunnerDetailsLaps";
 import {
@@ -46,10 +48,14 @@ export default function RunnerDetails(): JSX.Element {
     const [selectedTab, setSelectedTab] = useState(Tab.Stats);
 
     const fetchRunners = useCallback(async () => {
-        const response = await performAPIRequest("/runners");
-        const responseJson = await response.json();
+        const result = await getRunners();
 
-        setRunners(responseJson.runners);
+        if (!isApiRequestResultOk(result)) {
+            ToastUtil.getToastr().error("Impossible de récupérer la liste des coureurs");
+            return;
+        }
+
+        setRunners(result.json.runners);
     }, []);
 
     const fetchRanking = useCallback(async () => {
@@ -58,10 +64,14 @@ export default function RunnerDetails(): JSX.Element {
             return;
         }
 
-        const response = await performAPIRequest(`/ranking/${selectedRunner.raceId}`);
-        const responseJson = await response.json();
+        const result = await getRanking(selectedRunner.raceId);
 
-        setProcessedRanking(new RankingProcesser(selectedRunner.race, responseJson.ranking as Ranking).getProcessedRanking());
+        if (!isApiRequestResultOk(result)) {
+            ToastUtil.getToastr().error("Impossible de récupérer le classement du coureur");
+            return;
+        }
+
+        setProcessedRanking(new RankingProcesser(selectedRunner.race, result.json.ranking).getProcessedRanking());
     }, [selectedRunner]);
 
     const fetchSelectedRunner = useCallback(async () => {
@@ -69,16 +79,15 @@ export default function RunnerDetails(): JSX.Element {
             return;
         }
 
-        const response = await performAPIRequest(`/runners/${selectedRunnerId}`);
+        const result = await getRunner(selectedRunnerId);
 
-        if (!response.ok) {
-            console.error("Failed to fetch runner", await response.json());
+        if (!isApiRequestResultOk(result)) {
+            ToastUtil.getToastr().error("Impossible de récupérer les détails du coureur");
             setSelectedRunner(null);
             return;
         }
 
-        const responseJson = await response.json();
-        const runner = responseJson.runner as RunnerWithRace & RunnerWithPassages;
+        const runner = result.json.runner;
 
         runner.passages.sort((passageA, passageB) => {
             const passageADate = new Date(passageA.time);
