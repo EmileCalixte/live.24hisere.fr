@@ -1,11 +1,15 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Col, Row } from "react-bootstrap";
+import { getAdminPassages } from "../../../services/api/PassageService";
+import { getAdminRaces } from "../../../services/api/RaceService";
+import { getAdminRunners } from "../../../services/api/RunnerService";
 import { type AdminPassageWithRunnerId, type ProcessedPassage } from "../../../types/Passage";
-import { type AdminRaceWithRunnerCount, type RaceDict } from "../../../types/Race";
+import { type RaceDict } from "../../../types/Race";
 import { type Runner } from "../../../types/Runner";
-import { performAuthenticatedAPIRequest } from "../../../util/apiUtils";
+import { isApiRequestResultOk } from "../../../util/apiUtils";
 import { getRaceDictFromRaces } from "../../../util/raceUtil";
 import { getRunnerProcessedPassages } from "../../../util/RunnerDetailsUtil";
+import ToastUtil from "../../../util/ToastUtil";
 import { userContext } from "../../App";
 import Breadcrumbs from "../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../ui/breadcrumbs/Crumb";
@@ -41,25 +45,49 @@ export default function FastestLaps(): JSX.Element {
     const [page, setPage] = useState(1);
 
     const fetchRaces = useCallback(async () => {
-        const response = await performAuthenticatedAPIRequest("/admin/races", accessToken);
-        const responseJson = await response.json();
+        if (!accessToken) {
+            return;
+        }
 
-        setRaces(getRaceDictFromRaces(responseJson.races as AdminRaceWithRunnerCount[]));
+        const result = await getAdminRaces(accessToken);
+
+        if (!isApiRequestResultOk(result)) {
+            ToastUtil.getToastr().error("Impossible de récupérer la liste des courses");
+            return;
+        }
+
+        setRaces(getRaceDictFromRaces(result.json.races));
     }, [accessToken]);
 
     const fetchRunners = useCallback(async () => {
-        const response = await performAuthenticatedAPIRequest("/admin/runners", accessToken);
-        const responseJson = await response.json();
+        if (!accessToken) {
+            return;
+        }
 
-        setRunners(responseJson.runners);
+        const result = await getAdminRunners(accessToken);
+
+        if (!isApiRequestResultOk(result)) {
+            ToastUtil.getToastr().error("Impossible de récupérer la liste des coureurs");
+            return;
+        }
+
+        setRunners(result.json.runners);
     }, [accessToken]);
 
     const fetchPassages = useCallback(async () => {
-        const response = await performAuthenticatedAPIRequest("/admin/passages", accessToken);
-        const responseJson = await response.json();
+        if (!accessToken) {
+            return;
+        }
+
+        const result = await getAdminPassages(accessToken);
+
+        if (!isApiRequestResultOk(result)) {
+            ToastUtil.getToastr().error("Impossible de récupérer la liste des passages");
+            return;
+        }
 
         // The passages are already ordered by time
-        setPassages(responseJson.passages);
+        setPassages(result.json.passages);
     }, [accessToken]);
 
     useEffect(() => {

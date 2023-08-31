@@ -16,3 +16,11 @@ export interface GetRunnerApiRequest extends ApiRequest {
         runner: RunnerWithRace & RunnerWithPassages;
     };
 }
+
+export interface GetAdminRunnersApiRequest extends ApiRequest {
+    payload: never;
+
+    response: {
+        runners: Runner[];
+    };
+}

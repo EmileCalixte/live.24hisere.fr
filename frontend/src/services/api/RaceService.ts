@@ -1,6 +1,9 @@
-import { type GetAdminRacesApiRequest, type PutAdminRaceOrderApiRequest } from "../../types/api/admin/AdminRaceApiRequests";
 import { type ApiRequestResult } from "../../types/api/ApiRequest";
-import { type GetRacesApiRequest } from "../../types/api/RaceApiRequests";
+import {
+    type GetAdminRacesApiRequest,
+    type GetRacesApiRequest,
+    type PutAdminRaceOrderApiRequest,
+} from "../../types/api/RaceApiRequests";
 import { performApiRequest, performAuthenticatedApiRequest } from "./ApiService";
 
 export async function getRaces(): Promise<ApiRequestResult<GetRacesApiRequest>> {
