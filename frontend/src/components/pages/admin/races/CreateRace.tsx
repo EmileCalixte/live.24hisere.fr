@@ -1,5 +1,6 @@
 import { Col, Row } from "react-bootstrap";
 import { getRacesSelectOptions } from "../../../../helpers/raceHelper";
+import { getAdminRaces, postAdminRace } from "../../../../services/api/RaceService";
 import { type AdminRace } from "../../../../types/Race";
 import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../ui/breadcrumbs/Crumb";
@@ -7,7 +8,7 @@ import Select from "../../../ui/forms/Select";
 import Page from "../../../ui/Page";
 import RaceDetailsForm from "../../../pageParts/admin/races/RaceDetailsForm";
 import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { performAuthenticatedAPIRequest } from "../../../../util/apiUtils";
+import { isApiRequestResultOk } from "../../../../util/apiUtils";
 import { userContext } from "../../../App";
 import ToastUtil from "../../../../util/ToastUtil";
 import { useNavigate } from "react-router-dom";
@@ -50,14 +51,26 @@ export default function CreateRace(): JSX.Element {
     }, [existingRaces]);
 
     const fetchExistingRaces = useCallback(async () => {
-        const response = await performAuthenticatedAPIRequest("/admin/races", accessToken);
-        const responseJson = await response.json();
+        if (!accessToken) {
+            return;
+        }
 
-        setExistingRaces(responseJson.races);
+        const result = await getAdminRaces(accessToken);
+
+        if (!isApiRequestResultOk(result)) {
+            ToastUtil.getToastr().error("Impossible de récupérer la liste des courses existantes");
+            return;
+        }
+
+        setExistingRaces(result.json.races);
     }, [accessToken]);
 
     const onSubmit = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (!accessToken) {
+            return;
+        }
 
         setIsSaving(true);
 
@@ -66,29 +79,20 @@ export default function CreateRace(): JSX.Element {
             isPublic,
             startTime: formatDateForApi(startTime),
             duration: Math.floor(duration / 1000),
-            initialDistance,
-            lapDistance,
+            initialDistance: initialDistance.toString(),
+            lapDistance: lapDistance.toString(),
         };
 
-        const response = await performAuthenticatedAPIRequest("/admin/races", accessToken, {
-            method: "POST",
-            body: JSON.stringify(body),
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
+        const result = await postAdminRace(accessToken, body);
 
-        const responseJson = await response.json();
-
-        if (!response.ok) {
+        if (!isApiRequestResultOk(result)) {
             ToastUtil.getToastr().error("Une erreur est survenue");
-            console.error(responseJson);
             setIsSaving(false);
             return;
         }
 
         ToastUtil.getToastr().success("Course créée");
-        navigate(`/admin/races/${responseJson.race.id as string}`);
+        navigate(`/admin/races/${result.json.race.id}`);
     }, [accessToken, raceName, isPublic, initialDistance, lapDistance, startTime, duration, navigate]);
 
     useEffect(() => {

@@ -14,6 +14,7 @@ import { UpdateRaceDto } from "../../dtos/race/updateRace.dto";
 import { AuthGuard } from "../../guards/auth.guard";
 import { RaceService } from "../../services/database/entities/race.service";
 import { type AdminRaceResponse, type AdminRacesResponse } from "../../types/responses/admin/Races";
+import { excludeKeys } from "../../utils/misc.utils";
 
 @Controller()
 @UseGuards(AuthGuard)
@@ -42,7 +43,7 @@ export class RacesController {
 
         return {
             race: {
-                ...race,
+                ...excludeKeys(race, ["order"]),
                 runnerCount: 0,
             },
         };
