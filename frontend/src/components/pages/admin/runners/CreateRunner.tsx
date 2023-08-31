@@ -3,9 +3,11 @@ import { Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { GENDER } from "../../../../constants/Gender";
 import { useStateWithNonNullableSetter } from "../../../../hooks/useStateWithNonNullableSetter";
+import { getAdminRaces } from "../../../../services/api/RaceService";
+import { postAdminRunner } from "../../../../services/api/RunnerService";
 import { type Gender } from "../../../../types/Gender";
 import { type AdminRaceWithRunnerCount } from "../../../../types/Race";
-import { performAuthenticatedAPIRequest } from "../../../../util/apiUtils";
+import { isApiRequestResultOk } from "../../../../util/apiUtils";
 import ToastUtil from "../../../../util/ToastUtil";
 import { userContext } from "../../../App";
 import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
@@ -30,10 +32,18 @@ export default function CreateRunner(): JSX.Element {
     const [isSaving, setIsSaving] = useState(false);
 
     const fetchRaces = useCallback(async () => {
-        const response = await performAuthenticatedAPIRequest("/admin/races", accessToken);
-        const responseJson = await response.json();
+        if (!accessToken) {
+            return;
+        }
 
-        const responseRaces = responseJson.races as AdminRaceWithRunnerCount[];
+        const result = await getAdminRaces(accessToken);
+
+        if (!isApiRequestResultOk(result)) {
+            ToastUtil.getToastr().error("Impossible de récupérer la liste des courses");
+            return;
+        }
+
+        const responseRaces = result.json.races;
 
         if (responseRaces.length < 1) {
             ToastUtil.getToastr().warning("Aucune course n'a été créée. Au moins une course doit exister pour enregistrer un coureur.");
@@ -49,6 +59,10 @@ export default function CreateRunner(): JSX.Element {
     const onSubmit = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
 
+        if (!accessToken || raceId === null) {
+            return;
+        }
+
         setIsSaving(true);
 
         const body = {
@@ -60,19 +74,10 @@ export default function CreateRunner(): JSX.Element {
             raceId,
         };
 
-        const response = await performAuthenticatedAPIRequest("/admin/runners", accessToken, {
-            method: "POST",
-            body: JSON.stringify(body),
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
+        const result = await postAdminRunner(accessToken, body);
 
-        const responseJson = await response.json();
-
-        if (!response.ok) {
+        if (!isApiRequestResultOk(result)) {
             ToastUtil.getToastr().error("Une erreur est survenue");
-            console.error(responseJson);
             setIsSaving(false);
             return;
         }
