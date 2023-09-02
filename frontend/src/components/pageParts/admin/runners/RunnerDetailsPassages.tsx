@@ -1,5 +1,6 @@
 import { faEye, faEyeSlash, faPen, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import clsx from "clsx";
 import { useEffect, useMemo, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { type AdminProcessedPassage } from "../../../../types/Passage";
@@ -95,7 +96,7 @@ export default function RunnerDetailsPassages({
                                 }
                             </p>
 
-                            <table className="table no-full-width">
+                            <table className="table no-full-width admin-runner-passages-table">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -108,7 +109,7 @@ export default function RunnerDetailsPassages({
                                 <tbody>
                                     {passages.map(passage => {
                                         return (
-                                            <tr key={passage.id}>
+                                            <tr key={passage.id} className={clsx(passage.isHidden && "passage-hidden")}>
                                                 <td style={{ fontSize: "0.85em" }}>{passage.id}</td>
                                                 <td style={{ fontSize: "0.85em" }}>
                                                     {(() => {
