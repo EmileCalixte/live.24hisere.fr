@@ -32,11 +32,10 @@ services:
     working_dir: /home/node/app
     environment:
       - NODE_ENV=development
-      - WDS_SOCKET_PORT=0
     volumes:
       - ./frontend:/home/node/app
     ports:
-      - 80:3000
+      - 80:80
     command: sh -c "./scripts/start.sh"
 
   static:
