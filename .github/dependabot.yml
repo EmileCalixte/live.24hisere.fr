@@ -9,6 +9,7 @@ updates:
     directory: "/frontend" # Location of package manifests
     schedule:
       interval: "daily"
+    open-pull-requests-limit: 100
     labels:
       - dependencies
       - dependencies-frontend
@@ -16,6 +17,7 @@ updates:
     directory: "/backend"
     schedule:
       interval: "daily"
+    open-pull-requests-limit: 100
     labels:
       - dependencies
       - dependencies-backend
