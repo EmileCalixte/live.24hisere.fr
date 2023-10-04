@@ -16,6 +16,9 @@ interface CachedRanking {
 // The time (in ms) during which the controller can return a cached ranking, without recalculating it from the database data
 const RANKING_CACHE_DURATION = 5000;
 
+/**
+ * @deprecated
+ */
 @Controller()
 export class RankingController {
     private readonly cachedRankings = new Map<number, CachedRanking>();
