@@ -1,6 +1,6 @@
 import { type Runner } from "@prisma/client";
 import { type DateISOString } from "src/types/Date";
-import { type PublicPassage } from "../Passage";
+import { type PublicPassageWithRunnerId } from "../Passage";
 import { type PublicRace } from "../Race";
 
 export interface AppDataResponse {
@@ -27,5 +27,5 @@ export interface AppDataResponse {
     /**
      * List of all publicly visible passages of all runners
      */
-    passages: PublicPassage[];
+    passages: PublicPassageWithRunnerId[];
 }
