@@ -78,6 +78,7 @@ export const userContext = createContext<UserContext>({
     logout: () => {},
 });
 
+// Fetch app data every 20 seconds
 const FETCH_APP_DATA_INTERVAL_TIME = 20 * 1000;
 
 export default function App(): React.ReactElement {

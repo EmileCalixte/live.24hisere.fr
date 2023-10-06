@@ -13,6 +13,13 @@ export interface Passage {
     time: string;
 }
 
+export interface PassageWithRunnerId extends Passage {
+    /**
+     * The ID of the runner of the passage
+     */
+    runnerId: number;
+}
+
 /**
  * An object representing a passage of a runner at the timing point with additional admin info
  */
@@ -28,12 +35,7 @@ export interface AdminPassage extends Passage {
     isHidden: boolean;
 }
 
-export interface AdminPassageWithRunnerId extends AdminPassage {
-    /**
-     * The ID of the runner of the passage
-     */
-    runnerId: number;
-}
+export interface AdminPassageWithRunnerId extends PassageWithRunnerId, AdminPassage {}
 
 /**
  * An object containing computed data about a runner passage
