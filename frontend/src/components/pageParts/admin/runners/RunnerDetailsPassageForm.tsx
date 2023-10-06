@@ -22,7 +22,7 @@ export default function RunnerDetailsPassageForm({
     onSubmit,
     submitButtonDisabled,
     onClose,
-}: RunnerDetailsPassageFormProps): JSX.Element {
+}: RunnerDetailsPassageFormProps): React.ReactElement {
     const dialogRef = useRef<HTMLDialogElement | null>(null);
 
     useEffect(() => {

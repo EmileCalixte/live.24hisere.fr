@@ -19,7 +19,7 @@ import RunnersTable from "../../../pageParts/admin/runners/RunnersTable";
 
 const RACE_SELECT_OPTION_ALL = "all";
 
-export default function Runners(): JSX.Element {
+export default function Runners(): React.ReactElement {
     const { accessToken } = useContext(userContext);
 
     // false = not fetched yet

@@ -34,7 +34,7 @@ export function Input({
     autoComplete,
     autoFocus = false,
     className,
-}: InputProps): JSX.Element {
+}: InputProps): React.ReactElement {
     if (type === "number" && pattern === undefined) {
         pattern = "[0-9]*";
 

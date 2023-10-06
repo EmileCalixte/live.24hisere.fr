@@ -36,7 +36,7 @@ export default function RaceDetailsForm({
     isPublic,
     setIsPublic,
     submitButtonDisabled,
-}: RaceDetailsFormProps): JSX.Element {
+}: RaceDetailsFormProps): React.ReactElement {
     const startTimeDate = useMemo(() => {
         if (!startTime) {
             return;

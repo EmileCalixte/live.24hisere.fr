@@ -26,7 +26,7 @@ import ToastUtil from "../../../../util/ToastUtil";
 import RunnerDetailsPassages from "../../../pageParts/admin/runners/RunnerDetailsPassages";
 import { getRunnerProcessedPassages } from "../../../../util/RunnerDetailsUtil";
 
-export default function RunnerDetails(): JSX.Element {
+export default function RunnerDetails(): React.ReactElement {
     const navigate = useNavigate();
 
     const { accessToken } = useContext(userContext);

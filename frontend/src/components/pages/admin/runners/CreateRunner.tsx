@@ -15,7 +15,7 @@ import Crumb from "../../../ui/breadcrumbs/Crumb";
 import Page from "../../../ui/Page";
 import RunnerDetailsForm from "../../../pageParts/admin/runners/RunnerDetailsForm";
 
-export default function CreateRunner(): JSX.Element {
+export default function CreateRunner(): React.ReactElement {
     const navigate = useNavigate();
 
     const { accessToken } = useContext(userContext);

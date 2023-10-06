@@ -14,7 +14,7 @@ import ToastUtil from "../../../../util/ToastUtil";
 import { useNavigate } from "react-router-dom";
 import { formatDateForApi } from "../../../../util/utils";
 
-export default function CreateRace(): JSX.Element {
+export default function CreateRace(): React.ReactElement {
     const navigate = useNavigate();
 
     const { accessToken } = useContext(userContext);

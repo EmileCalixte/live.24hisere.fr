@@ -1,7 +1,7 @@
 import { Col, Row } from "react-bootstrap";
 import { useWindowDimensions } from "../../../../hooks/useWindowDimensions";
 import CanvasJSReact from "../../../../lib/canvasjs/canvasjs.react";
-import { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import ReactDOMServer from "react-dom/server";
 import { type Race } from "../../../../types/Race";
 import { type RunnerWithProcessedHours, type RunnerWithProcessedPassages } from "../../../../types/Runner";
@@ -39,7 +39,7 @@ interface SpeedChartProps {
     averageSpeed: number;
 }
 
-export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartProps): JSX.Element {
+export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartProps): React.ReactElement {
     const [displayEachLapSpeed, setDisplayEachLapSpeed] = useState(true);
     const [displayEachHourSpeed, setDisplayEachHourSpeed] = useState(true);
     const [displayAverageSpeed, setDisplayAverageSpeed] = useState(true);

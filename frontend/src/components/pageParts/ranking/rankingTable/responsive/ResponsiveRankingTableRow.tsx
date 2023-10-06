@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { GENDER_MIXED } from "../../../../../constants/Gender";
 import { type CategoryShortCode } from "../../../../../types/Category";
@@ -17,7 +17,7 @@ export default function ResponsiveRankingTableRow({
     runner,
     tableCategory,
     tableGender,
-}: ResponsiveRankingTableRowProps): JSX.Element {
+}: ResponsiveRankingTableRowProps): React.ReactElement {
     const runnerCategory = getCategoryCodeFromBirthYear(runner.birthYear);
 
     const rowRanking = useMemo(() => {

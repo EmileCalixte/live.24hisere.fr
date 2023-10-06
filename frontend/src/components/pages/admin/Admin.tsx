@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import React, { useContext } from "react";
 import { userContext } from "../../App";
 import { Navigate, Route, Routes } from "react-router-dom";
 import FastestLaps from "./FastestLaps";
@@ -11,7 +11,7 @@ import RaceDetails from "./races/RaceDetails";
 import CircularLoader from "../../ui/CircularLoader";
 import RunnerDetails from "./runners/RunnerDetails";
 
-export default function Admin(): JSX.Element {
+export default function Admin(): React.ReactElement {
     const { user } = useContext(userContext);
 
     if (user === null) {

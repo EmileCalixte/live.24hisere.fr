@@ -1,4 +1,4 @@
-import { type ReactNode } from "react";
+import React, { type ReactNode } from "react";
 import { GENDER_MIXED } from "../../../../constants/Gender";
 import { type CategoryShortCode } from "../../../../types/Category";
 import { type GenderWithMixed } from "../../../../types/Gender";
@@ -22,7 +22,7 @@ export default function RankingTable({
     tableCategory,
     tableGender,
     tableRaceDuration,
-}: RankingTableProps): JSX.Element {
+}: RankingTableProps): React.ReactElement {
     const getRankingTableRow = (rankingRunner: ProcessedRankingRunner): ReactNode => {
         const runnerCategory = getCategoryCodeFromBirthYear(rankingRunner.birthYear);
 

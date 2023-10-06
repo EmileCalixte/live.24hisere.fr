@@ -1,10 +1,10 @@
 import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { userContext } from "../../App";
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import AdminHeaderUserDropdown from "./AdminHeaderUserDropdown";
 
-export default function AdminHeader(): JSX.Element {
+export default function AdminHeader(): React.ReactElement {
     const { user } = useContext(userContext);
 
     const [userDropdownShown, setUserDropdownShown] = useState(false);

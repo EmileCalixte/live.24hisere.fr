@@ -12,7 +12,7 @@ interface RacesListItemProps {
     isDraggedOver: boolean;
 }
 
-export default function RacesListItem({ race, isSorting, isDragged, isDraggedOver }: RacesListItemProps): JSX.Element {
+export default function RacesListItem({ race, isSorting, isDragged, isDraggedOver }: RacesListItemProps): React.ReactElement {
     const onClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
         // Prevent navigation to the clicked race if sorting mode is enabled
         if (isSorting) {

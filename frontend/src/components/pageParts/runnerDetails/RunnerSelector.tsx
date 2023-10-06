@@ -8,7 +8,7 @@ interface RunnerSelectorProps {
     selectedRunnerId: string | undefined;
 }
 
-export default function RunnerSelector({ runners, onSelectRunner, selectedRunnerId }: RunnerSelectorProps): JSX.Element {
+export default function RunnerSelector({ runners, onSelectRunner, selectedRunnerId }: RunnerSelectorProps): React.ReactElement {
     const [idSortedRunners, setIdSortedRunners] = useState<Runner[] | false>(false);
     const [nameSortedRunners, setNameSortedRunners] = useState<Runner[] | false>(false);
 

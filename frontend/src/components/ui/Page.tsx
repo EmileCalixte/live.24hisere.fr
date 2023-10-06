@@ -7,7 +7,7 @@ interface PageProps {
     title: string;
 }
 
-export default function Page({ children, id, title }: PageProps): JSX.Element {
+export default function Page({ children, id, title }: PageProps): React.ReactElement {
     if (Array.isArray(children)) {
         children = [children];
     }

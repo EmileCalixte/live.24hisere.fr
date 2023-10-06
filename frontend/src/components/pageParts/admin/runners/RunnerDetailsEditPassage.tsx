@@ -16,7 +16,7 @@ export default function RunnerDetailsEditPassage({
     runnerRace,
     updatePassage,
     onClose,
-}: RunnerDetailsEditPassageProps): JSX.Element {
+}: RunnerDetailsEditPassageProps): React.ReactElement {
     const [passageRaceTime, setPassageRaceTime] = useState(passage.processed.lapEndRaceTime);
 
     const [isSaving, setIsSaving] = useState(false);

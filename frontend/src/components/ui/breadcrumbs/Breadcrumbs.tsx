@@ -1,11 +1,12 @@
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React from "react";
 
 interface BreadcrumbsProps {
     children: React.ReactNode[] | React.ReactNode;
 }
 
-export default function Breadcrumbs({ children }: BreadcrumbsProps): JSX.Element {
+export default function Breadcrumbs({ children }: BreadcrumbsProps): React.ReactElement {
     if (!Array.isArray(children)) {
         return (
             <ul className="breadcrumbs">

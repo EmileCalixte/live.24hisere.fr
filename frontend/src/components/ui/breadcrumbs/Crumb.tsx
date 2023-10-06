@@ -1,3 +1,4 @@
+import React from "react";
 import { Link } from "react-router-dom";
 
 interface CrumbProps {
@@ -5,7 +6,7 @@ interface CrumbProps {
     url?: string;
 }
 
-export default function Crumb({ label, url }: CrumbProps): JSX.Element {
+export default function Crumb({ label, url }: CrumbProps): React.ReactElement {
     if (url) {
         return (
             <li className="crumb">

@@ -13,7 +13,7 @@ import { formatDateForApi } from "../../../../util/utils";
 import ToastUtil from "../../../../util/ToastUtil";
 import RaceDetailsForm from "../../../pageParts/admin/races/RaceDetailsForm";
 
-export default function RaceDetails(): JSX.Element {
+export default function RaceDetails(): React.ReactElement {
     const navigate = useNavigate();
 
     const { accessToken } = useContext(userContext);

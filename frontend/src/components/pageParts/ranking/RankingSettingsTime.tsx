@@ -13,7 +13,7 @@ export default function RankingSettingsTime({
     currentRankingTime,
     onRankingTimeSave,
     maxRankingTime,
-}: RankingSettingsTimeProps): JSX.Element {
+}: RankingSettingsTimeProps): React.ReactElement {
     // The current value from the inputs in ms, saved or not
     const [time, setTime] = useState(currentRankingTime);
 

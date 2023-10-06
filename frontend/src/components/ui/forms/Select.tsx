@@ -26,7 +26,7 @@ export default function Select<T extends SelectOption["value"]>({
     value,
     onChange,
     className,
-}: SelectProps<T>): JSX.Element {
+}: SelectProps<T>): React.ReactElement {
     return (
         <div className={clsx("input-group", className)}>
             <label>

@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { getAdminPassages } from "../../../services/api/PassageService";
 import { getAdminRaces } from "../../../services/api/RaceService";
@@ -28,7 +28,7 @@ const ITEMS_PER_PAGE = 100;
 const RUNNERS_AND_RACES_FETCH_INTERVAL = 60 * 1000;
 const PASSAGES_FETCH_INTERVAL = 20 * 1000;
 
-export default function FastestLaps(): JSX.Element {
+export default function FastestLaps(): React.ReactElement {
     const { accessToken } = useContext(userContext);
 
     // false = not fetched yet

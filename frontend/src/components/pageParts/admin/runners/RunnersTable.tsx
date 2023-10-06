@@ -1,3 +1,4 @@
+import React from "react";
 import { Link } from "react-router-dom";
 import { type RaceDict } from "../../../../types/Race";
 import { type Runner } from "../../../../types/Runner";
@@ -9,7 +10,7 @@ interface RunnersTableProps {
     races: RaceDict | false;
 }
 
-export default function RunnersTable({ runners, races }: RunnersTableProps): JSX.Element {
+export default function RunnersTable({ runners, races }: RunnersTableProps): React.ReactElement {
     return (
         <table className="table">
             <thead>

@@ -20,7 +20,7 @@ interface RunnerDetailsLapsProps {
     runner: RunnerWithRace & RunnerWithProcessedPassages;
 }
 
-export default function RunnerDetailsLaps({ runner }: RunnerDetailsLapsProps): JSX.Element {
+export default function RunnerDetailsLaps({ runner }: RunnerDetailsLapsProps): React.ReactElement {
     const { serverTimeOffset } = useContext(appDataContext);
 
     const race = runner.race;
