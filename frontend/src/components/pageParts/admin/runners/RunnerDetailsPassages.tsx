@@ -1,7 +1,7 @@
 import { faEye, faEyeSlash, faPen, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { type AdminProcessedPassage } from "../../../../types/Passage";
 import { type AdminRaceWithRunnerCount } from "../../../../types/Race";
@@ -25,7 +25,7 @@ export default function RunnerDetailsPassages({
     updatePassage,
     saveNewPassage,
     deletePassage,
-}: RunnerDetailsPassagesProps): JSX.Element {
+}: RunnerDetailsPassagesProps): React.ReactElement {
     const [isAdding, setIsAdding] = useState(false);
 
     // The passage for which user is currently editing the time

@@ -9,7 +9,7 @@ interface ModalProps {
     className?: string;
 }
 
-export default function Modal({ children, close, className }: ModalProps): JSX.Element {
+export default function Modal({ children, close, className }: ModalProps): React.ReactElement {
     const dialogRef = useRef<HTMLDialogElement | null>(null);
     const modalContentRef = useRef<HTMLDivElement | null>(null);
 

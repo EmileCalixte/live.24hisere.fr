@@ -40,7 +40,7 @@ export default function RankingSettings({
     selectedTimeMode,
     currentRankingTime,
     maxRankingTime,
-}: RankingSettingsProps): JSX.Element {
+}: RankingSettingsProps): React.ReactElement {
     const categoriesOptions = useMemo<SelectOption[]>(() => {
         return [CATEGORY_SCRATCH_SELECT_OPTION, ...getCategoriesDictSelectOptions(categories)];
     }, [categories]);

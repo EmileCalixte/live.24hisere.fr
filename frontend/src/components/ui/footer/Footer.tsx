@@ -1,10 +1,10 @@
-import { useContext } from "react";
+import React, { useContext } from "react";
 import { Col, Row } from "react-bootstrap";
 import { appDataContext, userContext } from "../../App";
 import { formatDateAsString } from "../../../util/utils";
 import { Link } from "react-router-dom";
 
-export default function Footer(): JSX.Element {
+export default function Footer(): React.ReactElement {
     const { lastUpdateTime } = useContext(appDataContext);
     const { user } = useContext(userContext);
 

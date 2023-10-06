@@ -1,4 +1,4 @@
-import { useContext, useMemo } from "react";
+import React, { useContext, useMemo } from "react";
 import { isRaceFinished, isRaceStarted } from "../../helpers/raceHelper";
 import { useRaceTime } from "../../hooks/useRaceTime";
 import { type Race } from "../../types/Race";
@@ -10,7 +10,7 @@ interface RaceTimerProps {
     allowNegative?: boolean;
 }
 
-export default function RaceTimer({ race, allowNegative = false }: RaceTimerProps): JSX.Element {
+export default function RaceTimer({ race, allowNegative = false }: RaceTimerProps): React.ReactElement {
     const { serverTimeOffset } = useContext(appDataContext);
 
     const raceTime = useRaceTime(race, serverTimeOffset);

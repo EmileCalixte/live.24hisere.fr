@@ -1,3 +1,4 @@
+import React from "react";
 import { GENDER_MIXED } from "../../../../constants/Gender";
 import { type CategoryShortCode } from "../../../../types/Category";
 import { type GenderWithMixed } from "../../../../types/Gender";
@@ -14,7 +15,7 @@ export default function RankingTableRowNCells({
     runner,
     tableCategory,
     tableGender,
-}: RankingTableRowNCellsProps): JSX.Element {
+}: RankingTableRowNCellsProps): React.ReactElement {
     const runnerCategory = getCategoryCodeFromBirthYear(runner.birthYear);
 
     if (tableCategory === null) {

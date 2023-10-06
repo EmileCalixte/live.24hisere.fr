@@ -13,7 +13,7 @@ export default function RunnerDetailsCreatePassage({
     runnerRace,
     savePassage,
     onClose,
-}: RunnerDetailsCreatePassageProps): JSX.Element {
+}: RunnerDetailsCreatePassageProps): React.ReactElement {
     const [passageRaceTime, setPassageRaceTime] = useState(0);
 
     const [isSaving, setIsSaving] = useState(false);

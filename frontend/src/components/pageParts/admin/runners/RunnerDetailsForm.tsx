@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { GENDER_OPTIONS } from "../../../../constants/Forms";
 import { getRacesSelectOptions } from "../../../../helpers/raceHelper";
@@ -43,7 +43,7 @@ export default function RunnerDetailsForm({
     raceId,
     setRaceId,
     submitButtonDisabled,
-}: RunnerDetailsFormProps): JSX.Element {
+}: RunnerDetailsFormProps): React.ReactElement {
     const racesOptions = useMemo(() => {
         return getRacesSelectOptions(races, race => `${race.name} (${race.runnerCount} ${race.runnerCount >= 2 ? "coureurs" : "coureur"})`);
     }, [races]);

@@ -35,7 +35,7 @@ enum Tab {
 export const RUNNER_UPDATE_INTERVAL_TIME = 20 * 1000;
 export const RANKING_UPDATE_INTERVAL_TIME = 20 * 1000;
 
-export default function RunnerDetails(): JSX.Element {
+export default function RunnerDetails(): React.ReactElement {
     const { runnerId: urlRunnerId } = useParams();
 
     const [selectedRunnerId, setSelectedRunnerId] = useState(urlRunnerId);

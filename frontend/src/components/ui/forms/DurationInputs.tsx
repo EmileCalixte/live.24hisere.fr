@@ -34,7 +34,7 @@ export default function DurationInputs({
     minDuration = 0,
     maxDuration,
     setDuration,
-}: DurationInputsProps): JSX.Element {
+}: DurationInputsProps): React.ReactElement {
     if (minDuration < 0) {
         throw new Error("minDuration cannot be negative");
     }

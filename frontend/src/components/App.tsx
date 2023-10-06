@@ -1,4 +1,4 @@
-import { createContext, useCallback, useEffect, useState } from "react";
+import React, { createContext, useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { getAppData } from "../services/api/AppDataService";
@@ -80,7 +80,7 @@ export const userContext = createContext<UserContext>({
 
 const FETCH_APP_DATA_INTERVAL_TIME = 20 * 1000;
 
-export default function App(): JSX.Element {
+export default function App(): React.ReactElement {
     const [fetchLevel, setFetchLevel] = useState(0);
     const [lastUpdateTime, setLastUpdateTime] = useState(new Date());
     const [serverTimeOffset, setServerTimeOffset] = useState(0);

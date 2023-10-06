@@ -1,3 +1,4 @@
+import React from "react";
 import { GENDER, GENDER_MIXED } from "../../../../constants/Gender";
 import { type CategoryShortCode } from "../../../../types/Category";
 import { type GenderWithMixed } from "../../../../types/Gender";
@@ -16,7 +17,7 @@ export default function RankingTableInfoHeader({
     tableCategory,
     tableGender,
     tableRaceDuration,
-}: RankingTableInfoHeaderProps): JSX.Element {
+}: RankingTableInfoHeaderProps): React.ReactElement {
     return (
         <td colSpan={42} className="ranking-table-info-header">
             {race.name} : Classement {(() => {

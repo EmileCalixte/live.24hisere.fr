@@ -1,8 +1,8 @@
-import { useContext } from "react";
+import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { userContext } from "../../App";
 
-export default function Navbar(): JSX.Element {
+export default function Navbar(): React.ReactElement {
     const { user } = useContext(userContext);
 
     return (

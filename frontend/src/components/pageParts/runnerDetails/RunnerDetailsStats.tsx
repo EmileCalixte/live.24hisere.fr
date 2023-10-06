@@ -16,7 +16,7 @@ interface RunnerDetailsStatsProps {
     ranks: RankingRunnerRanks | null;
 }
 
-export default function RunnerDetailsStats({ runner, race, ranks }: RunnerDetailsStatsProps): JSX.Element {
+export default function RunnerDetailsStats({ runner, race, ranks }: RunnerDetailsStatsProps): React.ReactElement {
     const runnerCategory = getCategoryCodeFromBirthYear(runner.birthYear);
 
     const raceInitialDistance = Number(race.initialDistance);

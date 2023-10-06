@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import React, { useCallback } from "react";
 import { GENDER_MIXED } from "../../../../../constants/Gender";
 import { type CategoryShortCode } from "../../../../../types/Category";
 import { type GenderWithMixed } from "../../../../../types/Gender";
@@ -22,7 +22,7 @@ export default function ResponsiveRankingTable({
     tableCategory,
     tableGender,
     tableRaceDuration,
-}: ResponsiveRankingTableProps): JSX.Element {
+}: ResponsiveRankingTableProps): React.ReactElement {
     const getRankingTableRow = useCallback((rankingRunner: ProcessedRankingRunner) => {
         const runnerCategory = getCategoryCodeFromBirthYear(rankingRunner.birthYear);
 

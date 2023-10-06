@@ -1,3 +1,4 @@
+import React from "react";
 import { Link } from "react-router-dom";
 import { type AdminPassageWithRunnerId, type ProcessedPassage } from "../../../../types/Passage";
 import { type RaceDict } from "../../../../types/Race";
@@ -10,7 +11,7 @@ interface FastestLapsTableProps {
     runners: Runner[];
 }
 
-export default function FastestLapsTable({ passages, races, runners }: FastestLapsTableProps): JSX.Element {
+export default function FastestLapsTable({ passages, races, runners }: FastestLapsTableProps): React.ReactElement {
     return (
         <table className="table">
             <thead>

@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import { Col, Row } from "react-bootstrap";
 import { type Race } from "../../../types/Race";
 import { formatMsAsDuration } from "../../../util/utils";
@@ -8,7 +8,7 @@ interface RunnerDetailsRaceDetailsProps {
     race: Race;
 }
 
-export default function RunnerDetailsRaceDetails({ race }: RunnerDetailsRaceDetailsProps): JSX.Element {
+export default function RunnerDetailsRaceDetails({ race }: RunnerDetailsRaceDetailsProps): React.ReactElement {
     const raceInitialDistance = Number(race.initialDistance);
     const raceLapDistance = Number(race.lapDistance);
 

@@ -1,3 +1,4 @@
+import React from "react";
 import { type SelectOption } from "../../../types/Forms";
 
 interface RadioGroupProps<T extends SelectOption["value"]> {
@@ -16,7 +17,7 @@ export default function RadioGroup<T extends SelectOption["value"]>({
     value,
     onSelectOption,
     className,
-}: RadioGroupProps<T>): JSX.Element {
+}: RadioGroupProps<T>): React.ReactElement {
     return (
         <fieldset className={className}>
             <legend>{legend}</legend>

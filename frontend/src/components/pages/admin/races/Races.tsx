@@ -14,7 +14,7 @@ import { Link } from "react-router-dom";
 import RacesListItem from "../../../pageParts/admin/races/RacesListItem";
 import ToastUtil from "../../../../util/ToastUtil";
 
-export default function Races(): JSX.Element {
+export default function Races(): React.ReactElement {
     const { accessToken } = useContext(userContext);
 
     // false = not fetched yet

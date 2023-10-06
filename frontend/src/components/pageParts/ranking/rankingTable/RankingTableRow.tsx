@@ -1,3 +1,4 @@
+import React from "react";
 import { Link } from "react-router-dom";
 import { type CategoryShortCode } from "../../../../types/Category";
 import { type GenderWithMixed } from "../../../../types/Gender";
@@ -18,7 +19,7 @@ export default function RankingTableRow({
     runner,
     tableCategory,
     tableGender,
-}: RankingTableRowProps): JSX.Element {
+}: RankingTableRowProps): React.ReactElement {
     const raceInitialDistance = Number(race.initialDistance);
 
     return (
