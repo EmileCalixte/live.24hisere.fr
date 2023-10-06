@@ -42,24 +42,21 @@ export async function performApiRequest<T extends ApiRequest>(
     verbose(`Performing request ${init.method?.toUpperCase() ?? "GET"} ${url}`);
     window.dispatchEvent(new CustomEvent(EVENT_API_REQUEST_STARTED));
 
-    const response = await fetch(url, fetchInit);
-
-    window.dispatchEvent(new CustomEvent(EVENT_API_REQUEST_ENDED));
-    verbose(`${method} ${url} response code:`, response.status);
-
-    let responseJson;
-
     try {
-        responseJson = await response.json();
-    } catch (error) {
-        verbose("Cannot parse request response as JSON");
-    }
+        const response = await fetch(url, fetchInit);
 
-    return {
-        isOk: response.ok,
-        response,
-        json: responseJson,
-    };
+        verbose(`${method} ${url} response code:`, response.status);
+
+        const responseJson = await response.json();
+
+        return {
+            isOk: response.ok,
+            response,
+            json: responseJson,
+        };
+    } finally {
+        window.dispatchEvent(new CustomEvent(EVENT_API_REQUEST_ENDED));
+    }
 }
 
 export async function performAuthenticatedApiRequest<T extends ApiRequest>(
