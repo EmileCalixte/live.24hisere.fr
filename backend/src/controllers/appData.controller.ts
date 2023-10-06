@@ -5,6 +5,7 @@ import { RaceService } from "../services/database/entities/race.service";
 import { RunnerService } from "../services/database/entities/runner.service";
 import { type PublicPassageWithRunnerId } from "../types/Passage";
 import { type AppDataResponse } from "../types/responses/AppData";
+import { excludeKeys } from "../utils/misc.utils";
 
 interface CachedPassages {
     cacheTime: Date;
@@ -34,7 +35,7 @@ export class AppDataController {
         return {
             currentTime: new Date().toISOString(),
             lastUpdateTime: await this.miscService.getLastUpdateTime(true),
-            races: await this.raceService.getPublicRaces(),
+            races: (await this.raceService.getPublicRaces()).map(race => excludeKeys(race, ["runnerCount"])),
             runners: await this.runnerService.getPublicRunners(),
             passages: await this.getPassages(),
         };
