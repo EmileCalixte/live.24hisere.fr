@@ -1,7 +1,7 @@
 import { GENDER_MIXED } from "../constants/Gender";
 import { type GenderWithMixed } from "../types/Gender";
 import { type Race } from "../types/Race";
-import { type ProcessedRanking, type ProcessedRankingRunner, type Ranking, type RankingRunner, type RankingRunnerRanks } from "../types/Ranking";
+import { type ProcessedRanking, type ProcessedRankingRunner, type OldRanking, type OldRankingRunner, type RankingRunnerRanks } from "../types/Ranking";
 import { getCategoryCodeFromBirthYear } from "./ffaUtils";
 import { verbose } from "./utils";
 
@@ -17,10 +17,13 @@ interface CurrentRanksByCategory {
     [key: string]: CategoryGenderRanks;
 }
 
+/**
+ * @deprecated
+ */
 export class RankingProcesser {
     private readonly race: Race;
 
-    private readonly ranking: Ranking;
+    private readonly ranking: OldRanking;
 
     private processedRanking: ProcessedRanking | undefined;
 
@@ -34,7 +37,7 @@ export class RankingProcesser {
         // Other categories will be appended here
     };
 
-    constructor(race: Race, ranking: Ranking) {
+    constructor(race: Race, ranking: OldRanking) {
         this.race = race;
         this.ranking = ranking;
     }
@@ -201,7 +204,7 @@ export class RankingProcesser {
         this.currentRanksByCategory[runnerCategory][runner.gender].lastRunner = runner;
     }
 
-    private areRunnersEqual(runner1: RankingRunner | null, runner2: RankingRunner | null): boolean {
+    private areRunnersEqual(runner1: OldRankingRunner | null, runner2: OldRankingRunner | null): boolean {
         if (runner1 === null || runner2 === null) {
             return false;
         }

@@ -1,9 +1,12 @@
-import { type Runner } from "./Runner";
+import { type ProcessedPassage } from "./Passage";
+import { type Runner, type RunnerProcessedHour, type RunnerWithPassageCount } from "./Runner";
 
 /**
  * An object representing a runner in a ranking array
+ *
+ * @deprecated
  */
-export interface RankingRunner extends Runner {
+export interface OldRankingRunner extends Runner {
     /**
      * The total number of times the runner has passed the timing point
      */
@@ -55,8 +58,10 @@ export interface RankingRunnerRanks {
 
 /**
  * An object representing a runner in ranking array with additionnal data about the runner
+ *
+ * @deprecated
  */
-export interface ProcessedRankingRunner extends RankingRunner {
+export interface ProcessedRankingRunner extends OldRankingRunner {
     /**
      * The total distance covered by the runner, in meters
      */
@@ -78,6 +83,66 @@ export interface ProcessedRankingRunner extends RankingRunner {
     rankings: RankingRunnerRanks;
 }
 
+/**
+ * @deprecated
+ */
+export type OldRanking = OldRankingRunner[];
+
+/**
+ * @deprecated
+ */
+export type ProcessedRanking = ProcessedRankingRunner[];
+
+export interface RankingRunner extends RunnerWithPassageCount {
+    /**
+     * The total distance covered by the runner, in meters
+     */
+    distance: number;
+
+    /**
+     * The average speed of the runner, in km/h. Null if runner has no passage
+     */
+    averageSpeed: number | null;
+
+    /**
+     * The average pace of the runner, in ms/km. Null if runner has no passage
+     */
+    averagePace: number | null;
+
+    /**
+     * The time of the last passage of the runner. Null if runner has no passage
+     */
+    lastPassageTime: null | {
+        /**
+         * The race time at the last passage of the runner, in milliseconds
+         */
+        raceTime: number;
+
+        /**
+         * The date and time of the runner's last passage
+         */
+        time: Date;
+    };
+
+    /**
+     * The list of the runner's passages with additional data
+     */
+    passages: ProcessedPassage[];
+
+    /**
+     * The ranks of the runner on the rankings scratch, by category and by gender
+     */
+    rankings: RankingRunnerRanks;
+
+    /**
+     * The race hours of the runner
+     */
+    hours: RunnerProcessedHour[];
+}
+
 export type Ranking = RankingRunner[];
 
-export type ProcessedRanking = ProcessedRankingRunner[];
+/**
+ * A map whose keys are race IDs ande values are the corresponding rankings
+ */
+export type RankingMap = Map<number, Ranking>;

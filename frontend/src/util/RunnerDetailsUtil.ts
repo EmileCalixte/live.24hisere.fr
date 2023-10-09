@@ -3,6 +3,9 @@ import { type Race } from "../types/Race";
 import { type RunnerProcessedHour, type RunnerWithProcessedPassages } from "../types/Runner";
 import { formatMsAsDuration } from "./utils";
 
+/**
+ * @deprecated
+ */
 function getLapsInRaceTimeInterval(
     passages: ProcessedPassage[],
     intervalStartRaceTime: number,
@@ -23,6 +26,9 @@ function getLapsInRaceTimeInterval(
     });
 }
 
+/**
+ * @deprecated
+ */
 function getSpeedAndPaceInHour(
     passages: ProcessedPassage[],
     hourStartRaceTime: number,
@@ -182,6 +188,7 @@ export function getRunnerProcessedHours(runner: RunnerWithProcessedPassages, rac
  * Calculates a pace from a speed
  * @param speed the speed in km/h
  * @return {number} the corresponding pace in ms/km
+ * @deprecated
  */
 export function getPaceFromSpeed(speed: number): number {
     return (1 / (speed / 60)) * 60 * 1000;

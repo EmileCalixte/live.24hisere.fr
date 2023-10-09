@@ -77,6 +77,13 @@ export interface Runner {
     raceId: number;
 }
 
+export interface RunnerWithPassageCount extends Runner {
+    /**
+     * The total number of times the runner has passed the timing point
+     */
+    passageCount: number;
+}
+
 /**
  * An object representing a runner with his passages
  */

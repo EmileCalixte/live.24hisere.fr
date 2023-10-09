@@ -1,8 +1,11 @@
 import React, { createContext, useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { getRankingMap, getRunnersFromRankingMap } from "../helpers/rankingHelper";
 import { getAppData } from "../services/api/AppDataService";
 import { getCurrentUserInfo, logout as performLogoutRequest } from "../services/api/AuthService";
+import { type Race } from "../types/Race";
+import { type RankingMap, type RankingRunner } from "../types/Ranking";
 import { type User } from "../types/User";
 import Header from "./ui/header/Header";
 import Footer from "./ui/footer/Footer";
@@ -28,6 +31,21 @@ interface AppDataContext {
      * Difference between server time and client time in seconds. > 0 if the server is ahead, < 0 otherwise.
      */
     serverTimeOffset: number;
+
+    /**
+     * The race list, false if not fetched yet
+     */
+    races: Race[] | false;
+
+    /**
+     * The list of runners with processed data, false if not fetched/processed yet
+     */
+    runners: RankingRunner[] | false;
+
+    /**
+     * The rankings, false if not fetched/processed yet
+     */
+    rankings: RankingMap | false;
 }
 
 interface HeaderFetchLoaderContext {
@@ -62,6 +80,9 @@ interface UserContext {
 export const appDataContext = createContext<AppDataContext>({
     lastUpdateTime: new Date(),
     serverTimeOffset: 0,
+    races: false,
+    runners: false,
+    rankings: false,
 });
 
 export const headerFetchLoaderContext = createContext<HeaderFetchLoaderContext>({
@@ -85,6 +106,9 @@ export default function App(): React.ReactElement {
     const [fetchLevel, setFetchLevel] = useState(0);
     const [lastUpdateTime, setLastUpdateTime] = useState(new Date());
     const [serverTimeOffset, setServerTimeOffset] = useState(0);
+    const [races, setRaces] = useState<Race[] | false>(false);
+    const [runners, setRunners] = useState<RankingRunner[] | false>(false);
+    const [rankings, setRankings] = useState<RankingMap | false>(false);
     const [accessToken, setAccessToken] = useState<string | null>(localStorage.getItem("accessToken"));
     const [user, setUser] = useState<User | null | undefined>(undefined); // If null, user is not logged in. If undefined, user info was not fetched yet
     const [redirect, setRedirect] = useState<string | null>(null); // Used to redirect the user to a specified location, for example when user logs out
@@ -127,6 +151,18 @@ export default function App(): React.ReactElement {
         const timeOffsetMs = serverTime.getTime() - clientTime.getTime();
 
         setServerTimeOffset(Math.round(timeOffsetMs / 1000));
+
+        const rankingMap = getRankingMap(
+            result.json.races,
+            result.json.runners,
+            result.json.passages,
+        );
+
+        verbose("Rankings", rankingMap);
+
+        setRaces(result.json.races);
+        setRunners(getRunnersFromRankingMap(rankingMap));
+        setRankings(rankingMap);
     }, []);
 
     const fetchUserInfo = useCallback(async () => {
@@ -211,6 +247,9 @@ export default function App(): React.ReactElement {
                 <appDataContext.Provider value={{
                     lastUpdateTime,
                     serverTimeOffset,
+                    races,
+                    runners,
+                    rankings,
                 }}>
                     <headerFetchLoaderContext.Provider value={{
                         fetchLevel,

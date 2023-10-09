@@ -30,6 +30,7 @@ const RANKING_UPDATE_INTERVAL_TIME = 20 * 1000;
 const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
 
 export default function Ranking(): React.ReactElement {
+    // TODO get races and ranking from app context
     const [races, setRaces] = useState<Race[] | false>(false);
     const [selectedRace, setSelectedRace] = useState<Race | null>(null);
 

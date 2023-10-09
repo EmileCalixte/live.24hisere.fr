@@ -21,6 +21,7 @@ module.exports = {
     ],
     ignorePatterns: [
         "src/config/config.ts",
+        "dist/**",
         "**/lib/**",
     ],
     rules: {
