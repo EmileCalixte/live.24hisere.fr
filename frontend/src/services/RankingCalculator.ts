@@ -107,7 +107,9 @@ export class RankingCalculator {
         return rankingStep1
             .sort((runnerA, runnerB) => {
                 if (runnerA.passageCount === runnerB.passageCount) {
-                    return spaceship(runnerB.lastPassageTime?.raceTime, runnerA.lastPassageTime?.raceTime);
+                    // When two riders have completed the same number of laps,
+                    // the one who has completed them the fastest is considered to be faster than the other.
+                    return spaceship(runnerA.lastPassageTime?.raceTime, runnerB.lastPassageTime?.raceTime);
                 }
 
                 return spaceship(runnerB.passageCount, runnerA.passageCount);
@@ -166,10 +168,10 @@ export class RankingCalculator {
 
             this.ensureCategoryCodeIsInCurrentRanks(runnerCategoryCode);
 
-            rankings.actual.scratchMixed = this.currentRanksByCategory.scratch.mixed.rank + 1;
-            rankings.actual.scratchGender = this.currentRanksByCategory.scratch[runner.gender].rank + 1;
-            rankings.actual.categoryMixed = this.currentRanksByCategory[runnerCategoryCode].mixed.rank + 1;
-            rankings.actual.categoryGender = this.currentRanksByCategory[runnerCategoryCode][runner.gender].rank + 1;
+            rankings.actual.scratchMixed = ++this.currentRanksByCategory.scratch.mixed.rank;
+            rankings.actual.scratchGender = ++this.currentRanksByCategory.scratch[runner.gender].rank;
+            rankings.actual.categoryMixed = ++this.currentRanksByCategory[runnerCategoryCode].mixed.rank;
+            rankings.actual.categoryGender = ++this.currentRanksByCategory[runnerCategoryCode][runner.gender].rank;
 
             const scratchMixedPreviousRunner = this.getCurrentLastRunner("scratch", GENDER_MIXED, rankingStep3);
             const scratchGenderPreviousRunner = this.getCurrentLastRunner("scratch", runner.gender, rankingStep3);
@@ -204,6 +206,11 @@ export class RankingCalculator {
             } else {
                 rankings.displayed.categoryGender = rankings.actual.categoryGender;
             }
+
+            this.currentRanksByCategory.scratch.mixed.lastRunnerId = runner.id;
+            this.currentRanksByCategory.scratch[runner.gender].lastRunnerId = runner.id;
+            this.currentRanksByCategory[runnerCategoryCode].mixed.lastRunnerId = runner.id;
+            this.currentRanksByCategory[runnerCategoryCode][runner.gender].lastRunnerId = runner.id;
 
             rankingStep3.push({
                 ...runner,
