@@ -1,22 +1,5 @@
 import { type ProcessedPassage } from "./Passage";
-import { type Runner, type RunnerProcessedHour, type RunnerWithPassageCount } from "./Runner";
-
-/**
- * An object representing a runner in a ranking array
- *
- * @deprecated
- */
-export interface OldRankingRunner extends Runner {
-    /**
-     * The total number of times the runner has passed the timing point
-     */
-    passageCount: number;
-
-    /**
-     * A string representing the last passage time, format `${YYYY}-${MM}-${DD}T{hh}:${ii}:${ss}`
-     */
-    lastPassageTime: string;
-}
+import { type RunnerProcessedHour, type RunnerWithPassageCount } from "./Runner";
 
 export interface RankingRunnerRanksObject {
     /**
@@ -55,43 +38,6 @@ export interface RankingRunnerRanks {
      */
     displayed: RankingRunnerRanksObject;
 }
-
-/**
- * An object representing a runner in ranking array with additionnal data about the runner
- *
- * @deprecated
- */
-export interface ProcessedRankingRunner extends OldRankingRunner {
-    /**
-     * The total distance covered by the runner, in meters
-     */
-    distance: number;
-
-    /**
-     * The race time at the last passage of the runner, in milliseconds. Null if runner has no passage
-     */
-    lastPassageRaceTime: number | null;
-
-    /**
-     * The average speed of the runner, in km/h. Null if runner has no passage
-     */
-    averageSpeed: number | null;
-
-    /**
-     * The ranks of the runner on the rankings scratch, by category and by gender
-     */
-    rankings: RankingRunnerRanks;
-}
-
-/**
- * @deprecated
- */
-export type OldRanking = OldRankingRunner[];
-
-/**
- * @deprecated
- */
-export type ProcessedRanking = ProcessedRankingRunner[];
 
 export interface RankingRunner extends RunnerWithPassageCount {
     /**

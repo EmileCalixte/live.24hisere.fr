@@ -1,67 +1,7 @@
-import { type Passage, type PassageProcessedData, type ProcessedPassage } from "../types/Passage";
+import { type Passage, type PassageProcessedData } from "../types/Passage";
 import { type Race } from "../types/Race";
-import { type RunnerProcessedHour, type RunnerWithProcessedPassages } from "../types/Runner";
+import { type RunnerWithProcessedPassages } from "../types/Runner";
 import { formatMsAsDuration } from "./utils";
-
-/**
- * @deprecated
- */
-function getLapsInRaceTimeInterval(
-    passages: ProcessedPassage[],
-    intervalStartRaceTime: number,
-    intervalEndRaceTime: number,
-): ProcessedPassage[] {
-    return passages.filter(passage => {
-        // lap END time is BEFORE interval
-        if (passage.processed.lapEndRaceTime < intervalStartRaceTime) {
-            return false;
-        }
-
-        // lap START time is AFTER interval
-        if (passage.processed.lapStartRaceTime > intervalEndRaceTime) {
-            return false;
-        }
-
-        return true;
-    });
-}
-
-/**
- * @deprecated
- */
-function getSpeedAndPaceInHour(
-    passages: ProcessedPassage[],
-    hourStartRaceTime: number,
-    hourEndRaceTime: number,
-): { speed: number; pace: number } {
-    let speedSum = 0;
-    let durationSum = 0;
-
-    passages.forEach(passage => {
-        const lapStartsInHour = passage.processed.lapStartRaceTime >= hourStartRaceTime;
-        const lapEndsInHour = passage.processed.lapEndRaceTime <= hourEndRaceTime;
-
-        let lapDurationOutsideHour = 0;
-
-        if (!lapStartsInHour) { // If lap starts before hour
-            lapDurationOutsideHour += hourStartRaceTime - passage.processed.lapStartRaceTime;
-        }
-
-        if (!lapEndsInHour) { // If lap ends after hour
-            lapDurationOutsideHour += passage.processed.lapEndRaceTime - hourEndRaceTime;
-        }
-
-        const lapDurationInHour = passage.processed.lapDuration - lapDurationOutsideHour;
-
-        speedSum += passage.processed.lapSpeed * lapDurationInHour;
-        durationSum += lapDurationInHour;
-    });
-
-    const speed = speedSum / durationSum;
-    const pace = getPaceFromSpeed(speed);
-
-    return { speed, pace };
-}
 
 /**
  * @param passages Passages sorted by ascending time
@@ -137,51 +77,6 @@ export function getRunnerProcessedPassages<T extends Passage>(passages: T[], rac
     }
 
     return processedPassages;
-}
-
-export function getRunnerProcessedHours(runner: RunnerWithProcessedPassages, race: Race): RunnerProcessedHour[] {
-    const hourDuration = 60 * 60 * 1000; // in ms
-
-    const hours: RunnerProcessedHour[] = [];
-
-    const raceStartTime = new Date(race.startTime);
-    const raceDurationMs = race.duration * 1000 - 1; // - 1 to not create an hour of 1 ms
-
-    for (let hourStartRaceTime = 0; hourStartRaceTime <= raceDurationMs; hourStartRaceTime += hourDuration) {
-        const hourEndRaceTime = Math.min(hourStartRaceTime + hourDuration - 1, raceDurationMs);
-        const hourStartTime = new Date(raceStartTime.getTime() + hourStartRaceTime);
-        const hourEndTime = new Date(raceStartTime.getTime() + hourEndRaceTime);
-
-        const passages = getLapsInRaceTimeInterval(runner.passages, hourStartRaceTime, hourEndRaceTime);
-
-        let averageSpeed = null;
-        let averagePace = null;
-
-        if (passages.length > 0) {
-            const { speed, pace } = getSpeedAndPaceInHour(
-                passages,
-                hourStartRaceTime,
-                hourEndRaceTime,
-            );
-
-            averageSpeed = speed;
-            averagePace = pace;
-        }
-
-        const hour: RunnerProcessedHour = {
-            startTime: hourStartTime,
-            startRaceTime: hourStartRaceTime,
-            endTime: hourEndTime,
-            endRaceTime: hourEndRaceTime,
-            passages,
-            averageSpeed,
-            averagePace,
-        };
-
-        hours.push(hour);
-    }
-
-    return hours;
 }
 
 /**

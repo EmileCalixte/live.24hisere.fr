@@ -1,5 +1,6 @@
 import { Col, Row } from "react-bootstrap";
 import React, { useMemo } from "react";
+import { getPaceFromSpeed } from "../../../helpers/mathHelper";
 import { type ProcessedPassage } from "../../../types/Passage";
 import { type Race } from "../../../types/Race";
 import { type RankingRunnerRanks } from "../../../types/Ranking";
@@ -8,7 +9,6 @@ import { getCategoryCodeFromBirthYear } from "../../../util/ffaUtils";
 import CircularLoader from "../../ui/CircularLoader";
 import SpeedChart from "./charts/SpeedChart";
 import { formatMsAsDuration } from "../../../util/utils";
-import { getPaceFromSpeed } from "../../../util/RunnerDetailsUtil";
 
 interface RunnerDetailsStatsProps {
     runner: RunnerWithProcessedPassages & RunnerWithProcessedHours;

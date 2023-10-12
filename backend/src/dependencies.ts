@@ -9,7 +9,6 @@ import { UsersController } from "./controllers/admin/users.controller";
 import { AppDataController } from "./controllers/appData.controller";
 import { AuthController } from "./controllers/auth.controller";
 import { RacesController } from "./controllers/races.controller";
-import { RankingController } from "./controllers/ranking.controller";
 import { RunnersController } from "./controllers/runners.controller";
 import { AuthService } from "./services/auth.service";
 import { DagFileService } from "./services/dagFile.service";
@@ -51,7 +50,6 @@ export const dependencies: Dependencies = {
             AppDataController,
             AuthController,
             RacesController,
-            RankingController,
             RunnersController,
         ],
         admin: [
