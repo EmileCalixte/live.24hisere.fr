@@ -21,12 +21,12 @@ import Crumb from "../../../ui/breadcrumbs/Crumb";
 import Page from "../../../ui/Page";
 import CircularLoader from "../../../ui/CircularLoader";
 import { userContext } from "../../../App";
-import RunnerDetailsForm from "../../../pageParts/admin/runners/RunnerDetailsForm";
+import RunnerDetailsForm from "../../../viewParts/admin/runners/RunnerDetailsForm";
 import ToastUtil from "../../../../util/ToastUtil";
-import RunnerDetailsPassages from "../../../pageParts/admin/runners/RunnerDetailsPassages";
+import RunnerDetailsPassages from "../../../viewParts/admin/runners/RunnerDetailsPassages";
 import { getRunnerProcessedPassages } from "../../../../util/RunnerDetailsUtil";
 
-export default function RunnerDetails(): React.ReactElement {
+export default function RunnerDetailsAdminView(): React.ReactElement {
     const navigate = useNavigate();
 
     const { accessToken } = useContext(userContext);

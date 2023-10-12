@@ -3,13 +3,13 @@ import { Link } from "react-router-dom";
 import { type CategoryShortCode } from "../../../../types/Category";
 import { type GenderWithMixed } from "../../../../types/Gender";
 import { type Race } from "../../../../types/Race";
-import { type ProcessedRankingRunner } from "../../../../types/Ranking";
+import { type RankingRunner } from "../../../../types/Ranking";
 import { formatFloatNumber, formatMsAsDuration } from "../../../../util/utils";
 import RankingTableRowNCells from "./RankingTableRowNCells";
 
 interface RankingTableRowProps {
     race: Race;
-    runner: ProcessedRankingRunner;
+    runner: RankingRunner;
     tableCategory: CategoryShortCode | null;
     tableGender: GenderWithMixed;
 }
@@ -31,10 +31,10 @@ export default function RankingTableRow({
             <td>{formatFloatNumber(runner.distance / 1000, 2)} km</td>
             <td>
                 {(() => {
-                    if (runner.lastPassageRaceTime === null) {
+                    if (runner.lastPassageTime === null) {
                         return "n/a";
                     } else {
-                        return formatMsAsDuration(runner.lastPassageRaceTime);
+                        return formatMsAsDuration(runner.lastPassageTime.raceTime);
                     }
                 })()}
             </td>

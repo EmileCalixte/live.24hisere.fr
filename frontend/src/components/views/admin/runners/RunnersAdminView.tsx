@@ -15,11 +15,11 @@ import { userContext } from "../../../App";
 import Page from "../../../ui/Page";
 import CircularLoader from "../../../ui/CircularLoader";
 import { Link } from "react-router-dom";
-import RunnersTable from "../../../pageParts/admin/runners/RunnersTable";
+import RunnersTable from "../../../viewParts/admin/runners/RunnersTable";
 
 const RACE_SELECT_OPTION_ALL = "all";
 
-export default function Runners(): React.ReactElement {
+export default function RunnersAdminView(): React.ReactElement {
     const { accessToken } = useContext(userContext);
 
     // false = not fetched yet

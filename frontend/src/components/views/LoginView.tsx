@@ -8,7 +8,7 @@ import ToastUtil from "../../util/ToastUtil";
 import { Input } from "../ui/forms/Input";
 import Page from "../ui/Page";
 
-export default function Login(): React.ReactElement {
+export default function LoginView(): React.ReactElement {
     const { accessToken, saveAccessToken, setUser } = useContext(userContext);
 
     const [username, setUsername] = useState("");

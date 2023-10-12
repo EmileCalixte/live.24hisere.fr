@@ -6,7 +6,7 @@ import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../ui/breadcrumbs/Crumb";
 import Select from "../../../ui/forms/Select";
 import Page from "../../../ui/Page";
-import RaceDetailsForm from "../../../pageParts/admin/races/RaceDetailsForm";
+import RaceDetailsForm from "../../../viewParts/admin/races/RaceDetailsForm";
 import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { isApiRequestResultOk } from "../../../../util/apiUtils";
 import { userContext } from "../../../App";
@@ -14,7 +14,7 @@ import ToastUtil from "../../../../util/ToastUtil";
 import { useNavigate } from "react-router-dom";
 import { formatDateForApi } from "../../../../util/utils";
 
-export default function CreateRace(): React.ReactElement {
+export default function CreateRaceAdminView(): React.ReactElement {
     const navigate = useNavigate();
 
     const { accessToken } = useContext(userContext);

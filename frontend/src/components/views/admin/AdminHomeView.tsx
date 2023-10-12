@@ -1,9 +1,9 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 import Page from "../../ui/Page";
-import MenuList from "../../pageParts/admin/home/MenuList";
+import MenuList from "../../viewParts/admin/home/MenuList";
 
-export default function AdminHome(): React.ReactElement {
+export default function AdminHomeView(): React.ReactElement {
     return (
         <Page id="admin-home" title="Administration">
             <Row>

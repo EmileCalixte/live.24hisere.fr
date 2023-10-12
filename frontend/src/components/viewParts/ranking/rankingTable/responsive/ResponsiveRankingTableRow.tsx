@@ -3,12 +3,12 @@ import { Link } from "react-router-dom";
 import { GENDER_MIXED } from "../../../../../constants/Gender";
 import { type CategoryShortCode } from "../../../../../types/Category";
 import { type GenderWithMixed } from "../../../../../types/Gender";
-import { type ProcessedRankingRunner } from "../../../../../types/Ranking";
+import { type RankingRunner } from "../../../../../types/Ranking";
 import { getCategoryCodeFromBirthYear } from "../../../../../util/ffaUtils";
 import { formatFloatNumber, formatMsAsDuration } from "../../../../../util/utils";
 
 interface ResponsiveRankingTableRowProps {
-    runner: ProcessedRankingRunner;
+    runner: RankingRunner;
     tableCategory: CategoryShortCode | null;
     tableGender: GenderWithMixed;
 }
@@ -114,13 +114,13 @@ export default function ResponsiveRankingTableRow({
                         })()}
 
                         {(() => {
-                            if (runner.lastPassageRaceTime === null) {
+                            if (runner.lastPassageTime === null) {
                                 return null;
                             } else {
                                 return (
                                     <>
                                         &nbsp;–&nbsp;
-                                        Dernier passage {formatMsAsDuration(runner.lastPassageRaceTime)}
+                                        Dernier passage {formatMsAsDuration(runner.lastPassageTime.raceTime)}
                                     </>
                                 );
                             }

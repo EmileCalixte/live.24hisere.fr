@@ -14,12 +14,12 @@ import {
 import { RankingProcesser } from "../../util/RankingProcesser";
 import ToastUtil from "../../util/ToastUtil";
 import Page from "../ui/Page";
-import RunnerDetailsRaceDetails from "../pageParts/runnerDetails/RunnerDetailsRaceDetails";
-import RunnerSelector from "../pageParts/runnerDetails/RunnerSelector";
+import RunnerDetailsRaceDetails from "../viewParts/runnerDetails/RunnerDetailsRaceDetails";
+import RunnerSelector from "../viewParts/runnerDetails/RunnerSelector";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { isApiRequestResultOk } from "../../util/apiUtils";
-import RunnerDetailsStats from "../pageParts/runnerDetails/RunnerDetailsStats";
-import RunnerDetailsLaps from "../pageParts/runnerDetails/RunnerDetailsLaps";
+import RunnerDetailsStats from "../viewParts/runnerDetails/RunnerDetailsStats";
+import RunnerDetailsLaps from "../viewParts/runnerDetails/RunnerDetailsLaps";
 import {
     getDataForExcelExport,
     getRunnerProcessedHours,
@@ -35,7 +35,7 @@ enum Tab {
 export const RUNNER_UPDATE_INTERVAL_TIME = 20 * 1000;
 export const RANKING_UPDATE_INTERVAL_TIME = 20 * 1000;
 
-export default function RunnerDetails(): React.ReactElement {
+export default function RunnerDetailsView(): React.ReactElement {
     const { runnerId: urlRunnerId } = useParams();
 
     const [selectedRunnerId, setSelectedRunnerId] = useState(urlRunnerId);

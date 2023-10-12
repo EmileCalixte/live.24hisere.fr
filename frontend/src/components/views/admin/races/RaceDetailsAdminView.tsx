@@ -11,9 +11,9 @@ import { isApiRequestResultOk } from "../../../../util/apiUtils";
 import { userContext } from "../../../App";
 import { formatDateForApi } from "../../../../util/utils";
 import ToastUtil from "../../../../util/ToastUtil";
-import RaceDetailsForm from "../../../pageParts/admin/races/RaceDetailsForm";
+import RaceDetailsForm from "../../../viewParts/admin/races/RaceDetailsForm";
 
-export default function RaceDetails(): React.ReactElement {
+export default function RaceDetailsAdminView(): React.ReactElement {
     const navigate = useNavigate();
 
     const { accessToken } = useContext(userContext);

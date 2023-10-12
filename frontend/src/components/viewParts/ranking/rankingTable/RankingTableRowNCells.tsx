@@ -2,11 +2,11 @@ import React from "react";
 import { GENDER_MIXED } from "../../../../constants/Gender";
 import { type CategoryShortCode } from "../../../../types/Category";
 import { type GenderWithMixed } from "../../../../types/Gender";
-import { type ProcessedRankingRunner } from "../../../../types/Ranking";
+import { type RankingRunner } from "../../../../types/Ranking";
 import { getCategoryCodeFromBirthYear } from "../../../../util/ffaUtils";
 
 interface RankingTableRowNCellsProps {
-    runner: ProcessedRankingRunner;
+    runner: RankingRunner;
     tableCategory: CategoryShortCode | null;
     tableGender: GenderWithMixed;
 }

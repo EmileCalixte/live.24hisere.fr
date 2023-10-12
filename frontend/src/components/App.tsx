@@ -9,15 +9,15 @@ import { type RankingMap, type RankingRunner } from "../types/Ranking";
 import { type User } from "../types/User";
 import Header from "./ui/header/Header";
 import Footer from "./ui/footer/Footer";
-import Ranking from "./pages/Ranking";
-import RunnerDetails from "./pages/RunnerDetails";
+import RankingView from "./views/RankingView";
+import RunnerDetailsView from "./views/RunnerDetailsView";
 import {
     EVENT_API_REQUEST_ENDED,
     EVENT_API_REQUEST_STARTED,
     isApiRequestResultOk,
 } from "../util/apiUtils";
-import Login from "./pages/Login";
-import Admin from "./pages/admin/Admin";
+import LoginView from "./views/LoginView";
+import Admin from "./views/admin/Admin";
 import { verbose } from "../util/utils";
 import ToastUtil from "../util/ToastUtil";
 
@@ -267,11 +267,11 @@ export default function App(): React.ReactElement {
                                 <Header />
                                 <main id="page-content" className="container-fluid">
                                     <Routes>
-                                        <Route path="/ranking" element={<Ranking />} />
-                                        <Route path="/runner-details" element={<RunnerDetails />} />
-                                        <Route path="/runner-details/:runnerId" element={<RunnerDetails />} />
+                                        <Route path="/ranking" element={<RankingView />} />
+                                        <Route path="/runner-details" element={<RunnerDetailsView />} />
+                                        <Route path="/runner-details/:runnerId" element={<RunnerDetailsView />} />
 
-                                        <Route path="/login" element={<Login />} />
+                                        <Route path="/login" element={<LoginView />} />
 
                                         <Route path="/admin/*" element={<Admin />} />
 

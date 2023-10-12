@@ -11,10 +11,10 @@ import { userContext } from "../../../App";
 import Page from "../../../ui/Page";
 import CircularLoader from "../../../ui/CircularLoader";
 import { Link } from "react-router-dom";
-import RacesListItem from "../../../pageParts/admin/races/RacesListItem";
+import RacesListItem from "../../../viewParts/admin/races/RacesListItem";
 import ToastUtil from "../../../../util/ToastUtil";
 
-export default function Races(): React.ReactElement {
+export default function RacesAdminView(): React.ReactElement {
     const { accessToken } = useContext(userContext);
 
     // false = not fetched yet

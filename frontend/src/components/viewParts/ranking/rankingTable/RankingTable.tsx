@@ -3,14 +3,14 @@ import { GENDER_MIXED } from "../../../../constants/Gender";
 import { type CategoryShortCode } from "../../../../types/Category";
 import { type GenderWithMixed } from "../../../../types/Gender";
 import { type Race } from "../../../../types/Race";
-import { type ProcessedRanking, type ProcessedRankingRunner } from "../../../../types/Ranking";
+import { type Ranking, type RankingRunner } from "../../../../types/Ranking";
 import { getCategoryCodeFromBirthYear } from "../../../../util/ffaUtils";
 import RankingTableInfoHeader from "./RankingTableInfoHeader";
 import RankingTableRow from "./RankingTableRow";
 
 interface RankingTableProps {
     race: Race;
-    ranking: ProcessedRanking;
+    ranking: Ranking;
     tableCategory: CategoryShortCode | null;
     tableGender: GenderWithMixed;
     tableRaceDuration: number | null;
@@ -23,7 +23,7 @@ export default function RankingTable({
     tableGender,
     tableRaceDuration,
 }: RankingTableProps): React.ReactElement {
-    const getRankingTableRow = (rankingRunner: ProcessedRankingRunner): ReactNode => {
+    const getRankingTableRow = (rankingRunner: RankingRunner): ReactNode => {
         const runnerCategory = getCategoryCodeFromBirthYear(rankingRunner.birthYear);
 
         if (tableCategory !== null) {

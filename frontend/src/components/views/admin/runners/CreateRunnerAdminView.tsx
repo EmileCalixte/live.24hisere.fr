@@ -13,9 +13,9 @@ import { userContext } from "../../../App";
 import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../ui/breadcrumbs/Crumb";
 import Page from "../../../ui/Page";
-import RunnerDetailsForm from "../../../pageParts/admin/runners/RunnerDetailsForm";
+import RunnerDetailsForm from "../../../viewParts/admin/runners/RunnerDetailsForm";
 
-export default function CreateRunner(): React.ReactElement {
+export default function CreateRunnerAdminView(): React.ReactElement {
     const navigate = useNavigate();
 
     const { accessToken } = useContext(userContext);

@@ -17,7 +17,7 @@ import { Checkbox } from "../../ui/forms/Checkbox";
 import Page from "../../ui/Page";
 import Pagination from "../../ui/pagination/Pagination";
 import CircularLoader from "../../ui/CircularLoader";
-import FastestLapsTable from "../../pageParts/admin/fastestLaps/FastestLapsTable";
+import FastestLapsTable from "../../viewParts/admin/fastestLaps/FastestLapsTable";
 
 type RunnerSortedPassages = Record<number, AdminPassageWithRunnerId[]>;
 
@@ -28,7 +28,7 @@ const ITEMS_PER_PAGE = 100;
 const RUNNERS_AND_RACES_FETCH_INTERVAL = 60 * 1000;
 const PASSAGES_FETCH_INTERVAL = 20 * 1000;
 
-export default function FastestLaps(): React.ReactElement {
+export default function FastestLapsAdminView(): React.ReactElement {
     const { accessToken } = useContext(userContext);
 
     // false = not fetched yet
