@@ -23,17 +23,17 @@ export default function ResponsiveRankingTableRow({
     const rowRanking = useMemo(() => {
         if (tableCategory === null) {
             if (tableGender === GENDER_MIXED) {
-                return runner.rankings.displayed.scratchMixed;
+                return runner.ranks.displayed.scratchMixed;
             }
 
-            return runner.rankings.displayed.scratchGender;
+            return runner.ranks.displayed.scratchGender;
         }
 
         if (tableGender === GENDER_MIXED) {
-            return runner.rankings.displayed.categoryMixed;
+            return runner.ranks.displayed.categoryMixed;
         }
 
-        return runner.rankings.displayed.categoryGender;
+        return runner.ranks.displayed.categoryGender;
     }, [runner, tableCategory, tableGender]);
 
     const rowSecondaryRankings = useMemo(() => {
@@ -41,22 +41,22 @@ export default function ResponsiveRankingTableRow({
             if (tableGender === GENDER_MIXED) {
                 return (
                     <>
-                        {runner.rankings.displayed.scratchGender} {runner.gender.toUpperCase()}
+                        {runner.ranks.displayed.scratchGender} {runner.gender.toUpperCase()}
                         &nbsp;|&nbsp;
-                        {runner.rankings.displayed.categoryMixed} {runnerCategory}
+                        {runner.ranks.displayed.categoryMixed} {runnerCategory}
                         &nbsp;|&nbsp;
-                        {runner.rankings.displayed.categoryGender} {runnerCategory}-{runner.gender.toUpperCase()}
+                        {runner.ranks.displayed.categoryGender} {runnerCategory}-{runner.gender.toUpperCase()}
                     </>
                 );
             }
 
             return (
                 <>
-                    {runner.rankings.displayed.scratchMixed}
+                    {runner.ranks.displayed.scratchMixed}
                     &nbsp;|&nbsp;
-                    {runner.rankings.displayed.categoryMixed} {runnerCategory}
+                    {runner.ranks.displayed.categoryMixed} {runnerCategory}
                     &nbsp;|&nbsp;
-                    {runner.rankings.displayed.categoryGender} {runnerCategory}-{runner.gender.toUpperCase()}
+                    {runner.ranks.displayed.categoryGender} {runnerCategory}-{runner.gender.toUpperCase()}
                 </>
             );
         }
@@ -64,22 +64,22 @@ export default function ResponsiveRankingTableRow({
         if (tableGender === GENDER_MIXED) {
             return (
                 <>
-                    {runner.rankings.displayed.scratchMixed}
+                    {runner.ranks.displayed.scratchMixed}
                     &nbsp;|&nbsp;
-                    {runner.rankings.displayed.scratchGender} {runner.gender.toUpperCase()}
+                    {runner.ranks.displayed.scratchGender} {runner.gender.toUpperCase()}
                     &nbsp;|&nbsp;
-                    {runner.rankings.displayed.categoryGender} {runnerCategory}-{runner.gender.toUpperCase()}
+                    {runner.ranks.displayed.categoryGender} {runnerCategory}-{runner.gender.toUpperCase()}
                 </>
             );
         }
 
         return (
             <>
-                {runner.rankings.displayed.scratchMixed}
+                {runner.ranks.displayed.scratchMixed}
                 &nbsp;|&nbsp;
-                {runner.rankings.displayed.scratchGender} {runner.gender.toUpperCase()}
+                {runner.ranks.displayed.scratchGender} {runner.gender.toUpperCase()}
                 &nbsp;|&nbsp;
-                {runner.rankings.displayed.categoryMixed} {runnerCategory}
+                {runner.ranks.displayed.categoryMixed} {runnerCategory}
             </>
         );
     }, [runner, tableCategory, tableGender, runnerCategory]);

@@ -132,7 +132,7 @@ export interface RankingRunner extends RunnerWithPassageCount {
     /**
      * The ranks of the runner on the rankings scratch, by category and by gender
      */
-    rankings: RankingRunnerRanks;
+    ranks: RankingRunnerRanks;
 
     /**
      * The race hours of the runner

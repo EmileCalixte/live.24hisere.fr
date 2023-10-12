@@ -2,29 +2,14 @@ import { faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
 import { useParams } from "react-router-dom";
-import { getRanking } from "../../services/api/RankingService";
-import { getRunner, getRunners } from "../../services/api/RunnerService";
-import { type ProcessedRanking, type RankingRunnerRanks } from "../../types/Ranking";
-import {
-    type Runner,
-    type RunnerWithProcessedHours,
-    type RunnerWithProcessedPassages,
-    type RunnerWithRace,
-} from "../../types/Runner";
-import { RankingProcesser } from "../../util/RankingProcesser";
-import ToastUtil from "../../util/ToastUtil";
+import { appDataContext } from "../App";
 import Page from "../ui/Page";
 import RunnerDetailsRaceDetails from "../viewParts/runnerDetails/RunnerDetailsRaceDetails";
 import RunnerSelector from "../viewParts/runnerDetails/RunnerSelector";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { isApiRequestResultOk } from "../../util/apiUtils";
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import RunnerDetailsStats from "../viewParts/runnerDetails/RunnerDetailsStats";
 import RunnerDetailsLaps from "../viewParts/runnerDetails/RunnerDetailsLaps";
-import {
-    getDataForExcelExport,
-    getRunnerProcessedHours,
-    getRunnerProcessedPassages,
-} from "../../util/RunnerDetailsUtil";
+import { getDataForExcelExport } from "../../util/RunnerDetailsUtil";
 import { generateXlsxFromData } from "../../util/excelUtils";
 
 enum Tab {
@@ -32,90 +17,29 @@ enum Tab {
     Laps = "laps"
 }
 
-export const RUNNER_UPDATE_INTERVAL_TIME = 20 * 1000;
-export const RANKING_UPDATE_INTERVAL_TIME = 20 * 1000;
-
 export default function RunnerDetailsView(): React.ReactElement {
+    const { runners, races } = useContext(appDataContext);
     const { runnerId: urlRunnerId } = useParams();
 
     const [selectedRunnerId, setSelectedRunnerId] = useState(urlRunnerId);
-    const [selectedRunner, setSelectedRunner] = useState<RunnerWithRace & RunnerWithProcessedPassages & RunnerWithProcessedHours | null>(null);
-
-    const [runners, setRunners] = useState<Runner[] | false>(false);
-
-    const [processedRanking, setProcessedRanking] = useState<ProcessedRanking | false>(false);
 
     const [selectedTab, setSelectedTab] = useState(Tab.Stats);
 
-    const fetchRunners = useCallback(async () => {
-        const result = await getRunners();
-
-        if (!isApiRequestResultOk(result)) {
-            ToastUtil.getToastr().error("Impossible de récupérer la liste des coureurs");
-            return;
+    const selectedRunner = useMemo(() => {
+        if (!runners || !selectedRunnerId) {
+            return null;
         }
 
-        setRunners(result.json.runners);
-    }, []);
+        return runners.find(runner => runner.id === Number(selectedRunnerId)) ?? null;
+    }, [runners, selectedRunnerId]);
 
-    const fetchRanking = useCallback(async () => {
-        if (!selectedRunner) {
-            setProcessedRanking(false);
-            return;
+    const race = useMemo(() => {
+        if (!races || !selectedRunner) {
+            return null;
         }
 
-        const result = await getRanking(selectedRunner.raceId);
-
-        if (!isApiRequestResultOk(result)) {
-            ToastUtil.getToastr().error("Impossible de récupérer le classement du coureur");
-            return;
-        }
-
-        setProcessedRanking(new RankingProcesser(selectedRunner.race, result.json.ranking).getProcessedRanking());
-    }, [selectedRunner]);
-
-    const fetchSelectedRunner = useCallback(async () => {
-        if (!selectedRunnerId) {
-            return;
-        }
-
-        const result = await getRunner(selectedRunnerId);
-
-        if (!isApiRequestResultOk(result)) {
-            ToastUtil.getToastr().error("Impossible de récupérer les détails du coureur");
-            setSelectedRunner(null);
-            return;
-        }
-
-        const runner = result.json.runner;
-
-        runner.passages.sort((passageA, passageB) => {
-            const passageADate = new Date(passageA.time);
-            const passageBDate = new Date(passageB.time);
-
-            if (passageADate.getTime() < passageBDate.getTime()) {
-                return -1;
-            }
-
-            if (passageADate.getTime() > passageBDate.getTime()) {
-                return 1;
-            }
-
-            return 0;
-        });
-
-        const processedPassages = getRunnerProcessedPassages(runner.passages, runner.race);
-
-        const runnerWithProcessedPassages = {
-            ...runner,
-            passages: processedPassages,
-        };
-
-        setSelectedRunner({
-            ...runnerWithProcessedPassages,
-            hours: getRunnerProcessedHours(runnerWithProcessedPassages, runner.race),
-        });
-    }, [selectedRunnerId]);
+        return races.find(race => race.id === selectedRunner.raceId) ?? null;
+    }, [races, selectedRunner]);
 
     const onSelectRunner = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedRunnerId(e.target.value);
@@ -132,24 +56,6 @@ export default function RunnerDetailsView(): React.ReactElement {
     }, [selectedRunner]);
 
     useEffect(() => {
-        void fetchRunners();
-    }, [fetchRunners]);
-
-    useEffect(() => {
-        void fetchSelectedRunner();
-
-        const refreshRunnerInterval = setInterval(() => { void fetchSelectedRunner(); }, RUNNER_UPDATE_INTERVAL_TIME);
-        return () => { clearInterval(refreshRunnerInterval); };
-    }, [fetchSelectedRunner]);
-
-    useEffect(() => {
-        void fetchRanking();
-
-        const refreshRankingInterval = setInterval(() => { void fetchRanking(); }, RANKING_UPDATE_INTERVAL_TIME);
-        return () => { clearInterval(refreshRankingInterval); };
-    }, [fetchRanking]);
-
-    useEffect(() => {
         if (!selectedRunnerId || selectedRunnerId === urlRunnerId) {
             return;
         }
@@ -157,22 +63,6 @@ export default function RunnerDetailsView(): React.ReactElement {
         // TODO better UX: use pushState instead of replaceState & handle popState event
         window.history.replaceState(window.history.state, "", `/runner-details/${selectedRunnerId}`);
     }, [selectedRunnerId, urlRunnerId]);
-
-    const ranks = useMemo<RankingRunnerRanks | null>(() => {
-        if (!selectedRunner || !processedRanking) {
-            return null;
-        }
-
-        const rankingRunner = processedRanking.find(runner => {
-            return runner.id === selectedRunner.id;
-        });
-
-        if (!rankingRunner) {
-            return null;
-        }
-
-        return rankingRunner.rankings;
-    }, [processedRanking, selectedRunner]);
 
     return (
         <Page id="runner-details" title={selectedRunner === null ? "Détails coureur" : `Détails coureur ${selectedRunner.firstname} ${selectedRunner.lastname}`}>
@@ -191,7 +81,7 @@ export default function RunnerDetailsView(): React.ReactElement {
                 </Col>
             </Row>
 
-            {selectedRunner !== null &&
+            {selectedRunner !== null && race !== null &&
                 <>
                     <Row className="mt-3">
                         <Col className="mb-3">
@@ -219,12 +109,12 @@ export default function RunnerDetailsView(): React.ReactElement {
                                             case Tab.Stats:
                                                 return (
                                                     <>
-                                                        <RunnerDetailsRaceDetails race={selectedRunner.race} />
-                                                        <RunnerDetailsStats runner={selectedRunner} race={selectedRunner.race} ranks={ranks} />
+                                                        <RunnerDetailsRaceDetails race={race} />
+                                                        <RunnerDetailsStats runner={selectedRunner} race={race} ranks={selectedRunner.ranks} />
                                                     </>
                                                 );
                                             case Tab.Laps:
-                                                return <RunnerDetailsLaps runner={selectedRunner} />;
+                                                return <RunnerDetailsLaps runner={selectedRunner} race={race} />;
                                             default:
                                                 return null;
                                         }

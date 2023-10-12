@@ -17,7 +17,7 @@ import { isDateValid } from "../util/utils";
  */
 type RankingCalculationStep1 = Array<Omit<RankingCalculationStep2[number], "distance" | "averageSpeed" | "averagePace">>;
 
-type RankingCalculationStep2 = Array<Omit<RankingCalculationStep3[number], "rankings">>;
+type RankingCalculationStep2 = Array<Omit<RankingCalculationStep3[number], "ranks">>;
 
 type RankingCalculationStep3 = Array<Omit<RankingCalculationStep4[number], "passages"> & { passages: Passage[] }>;
 
@@ -184,25 +184,25 @@ export class RankingCalculator {
             const categoryGenderPreviousRunnerEquality = this.areRunnersEqual(runner, categoryGenderPreviousRunner);
 
             if (scratchMixedPreviousRunner && scratchMixedPreviousRunnerEquality) {
-                rankings.displayed.scratchMixed = scratchMixedPreviousRunner.rankings.displayed.scratchMixed;
+                rankings.displayed.scratchMixed = scratchMixedPreviousRunner.ranks.displayed.scratchMixed;
             } else {
                 rankings.displayed.scratchMixed = rankings.actual.scratchMixed;
             }
 
             if (scratchGenderPreviousRunner && scratchGenderPreviousRunnerEquality) {
-                rankings.displayed.scratchGender = scratchGenderPreviousRunner.rankings.displayed.scratchGender;
+                rankings.displayed.scratchGender = scratchGenderPreviousRunner.ranks.displayed.scratchGender;
             } else {
                 rankings.displayed.scratchGender = rankings.actual.scratchGender;
             }
 
             if (categoryMixedPreviousRunner && categoryMixedPreviousRunnerEquality) {
-                rankings.displayed.categoryMixed = categoryMixedPreviousRunner.rankings.displayed.categoryMixed;
+                rankings.displayed.categoryMixed = categoryMixedPreviousRunner.ranks.displayed.categoryMixed;
             } else {
                 rankings.displayed.categoryMixed = rankings.actual.categoryMixed;
             }
 
             if (categoryGenderPreviousRunner && categoryGenderPreviousRunnerEquality) {
-                rankings.displayed.categoryGender = categoryGenderPreviousRunner.rankings.displayed.categoryGender;
+                rankings.displayed.categoryGender = categoryGenderPreviousRunner.ranks.displayed.categoryGender;
             } else {
                 rankings.displayed.categoryGender = rankings.actual.categoryGender;
             }
@@ -214,7 +214,7 @@ export class RankingCalculator {
 
             rankingStep3.push({
                 ...runner,
-                rankings,
+                ranks: rankings,
             });
         }
 

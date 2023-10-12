@@ -5,7 +5,8 @@ import { Col, Row } from "react-bootstrap";
 import { isRaceFinished, isRaceStarted } from "../../../helpers/raceHelper";
 import { useRaceTime } from "../../../hooks/useRaceTime";
 import { useWindowDimensions } from "../../../hooks/useWindowDimensions";
-import { type RunnerWithProcessedPassages, type RunnerWithRace } from "../../../types/Runner";
+import { type Race } from "../../../types/Race";
+import { type RankingRunner } from "../../../types/Ranking";
 import { formatMsAsDuration, SORT_ASC, SORT_DESC } from "../../../util/utils";
 import { appDataContext } from "../../App";
 
@@ -17,13 +18,12 @@ enum SortBy {
 const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
 
 interface RunnerDetailsLapsProps {
-    runner: RunnerWithRace & RunnerWithProcessedPassages;
+    runner: RankingRunner;
+    race: Race;
 }
 
-export default function RunnerDetailsLaps({ runner }: RunnerDetailsLapsProps): React.ReactElement {
+export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsProps): React.ReactElement {
     const { serverTimeOffset } = useContext(appDataContext);
-
-    const race = runner.race;
 
     const raceTime = useRaceTime(race, serverTimeOffset);
 
@@ -207,7 +207,7 @@ export default function RunnerDetailsLaps({ runner }: RunnerDetailsLapsProps): R
                                 {passagesToDisplay.map((passage, index) => (
                                     <tr key={index}>
                                         <td>
-                                            {passage.processed.lapNumber !== null ? passage.processed.lapNumber : "–"}
+                                            {passage.processed.lapNumber ?? "–"}
                                         </td>
                                         <td>
                                             {(passage.processed.totalDistance / 1000).toFixed(2)} km

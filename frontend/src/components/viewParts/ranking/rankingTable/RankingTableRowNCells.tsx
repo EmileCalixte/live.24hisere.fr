@@ -23,16 +23,16 @@ export default function RankingTableRowNCells({
             return (
                 <>
                     <td>
-                        <strong>{runner.rankings.displayed.scratchMixed}</strong>
+                        <strong>{runner.ranks.displayed.scratchMixed}</strong>
                     </td>
                     <td>
-                        {runner.rankings.displayed.scratchGender} {runner.gender.toUpperCase()}
+                        {runner.ranks.displayed.scratchGender} {runner.gender.toUpperCase()}
                     </td>
                     <td>
-                        {runner.rankings.displayed.categoryMixed} {runnerCategory}
+                        {runner.ranks.displayed.categoryMixed} {runnerCategory}
                     </td>
                     <td>
-                        {runner.rankings.displayed.categoryGender} {runnerCategory}-{runner.gender.toUpperCase()}
+                        {runner.ranks.displayed.categoryGender} {runnerCategory}-{runner.gender.toUpperCase()}
                     </td>
                 </>
             );
@@ -40,16 +40,16 @@ export default function RankingTableRowNCells({
             return (
                 <>
                     <td>
-                        <strong>{runner.rankings.displayed.scratchGender} {runner.gender.toUpperCase()}</strong>
+                        <strong>{runner.ranks.displayed.scratchGender} {runner.gender.toUpperCase()}</strong>
                     </td>
                     <td>
-                        {runner.rankings.displayed.scratchMixed}
+                        {runner.ranks.displayed.scratchMixed}
                     </td>
                     <td>
-                        {runner.rankings.displayed.categoryMixed} {runnerCategory}
+                        {runner.ranks.displayed.categoryMixed} {runnerCategory}
                     </td>
                     <td>
-                        {runner.rankings.displayed.categoryGender} {runnerCategory}-{runner.gender.toUpperCase()}
+                        {runner.ranks.displayed.categoryGender} {runnerCategory}-{runner.gender.toUpperCase()}
                     </td>
                 </>
             );
@@ -59,16 +59,16 @@ export default function RankingTableRowNCells({
             return (
                 <>
                     <td>
-                        <strong>{runner.rankings.displayed.categoryMixed} {runnerCategory}</strong>
+                        <strong>{runner.ranks.displayed.categoryMixed} {runnerCategory}</strong>
                     </td>
                     <td>
-                        {runner.rankings.displayed.scratchMixed}
+                        {runner.ranks.displayed.scratchMixed}
                     </td>
                     <td>
-                        {runner.rankings.displayed.scratchGender} {runner.gender.toUpperCase()}
+                        {runner.ranks.displayed.scratchGender} {runner.gender.toUpperCase()}
                     </td>
                     <td>
-                        {runner.rankings.displayed.categoryGender} {runnerCategory}-{runner.gender.toUpperCase()}
+                        {runner.ranks.displayed.categoryGender} {runnerCategory}-{runner.gender.toUpperCase()}
                     </td>
                 </>
             );
@@ -76,16 +76,16 @@ export default function RankingTableRowNCells({
             return (
                 <>
                     <td>
-                        <strong>{runner.rankings.displayed.categoryGender} {runnerCategory}-{runner.gender.toUpperCase()}</strong>
+                        <strong>{runner.ranks.displayed.categoryGender} {runnerCategory}-{runner.gender.toUpperCase()}</strong>
                     </td>
                     <td>
-                        {runner.rankings.displayed.scratchMixed}
+                        {runner.ranks.displayed.scratchMixed}
                     </td>
                     <td>
-                        {runner.rankings.displayed.scratchGender} {runner.gender.toUpperCase()}
+                        {runner.ranks.displayed.scratchGender} {runner.gender.toUpperCase()}
                     </td>
                     <td>
-                        {runner.rankings.displayed.categoryMixed} {runnerCategory}
+                        {runner.ranks.displayed.categoryMixed} {runnerCategory}
                     </td>
                 </>
             );
