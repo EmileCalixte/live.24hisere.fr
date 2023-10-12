@@ -4,6 +4,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { getRankingMap, getRunnersFromRankingMap } from "../helpers/rankingHelper";
 import { getAppData } from "../services/api/AppDataService";
 import { getCurrentUserInfo, logout as performLogoutRequest } from "../services/api/AuthService";
+import { type PassageWithRunnerId } from "../types/Passage";
 import { type Race } from "../types/Race";
 import { type RankingMap, type RankingRunner } from "../types/Ranking";
 import { type User } from "../types/User";
@@ -41,6 +42,11 @@ interface AppDataContext {
      * The list of runners with processed data, false if not fetched/processed yet
      */
     runners: RankingRunner[] | false;
+
+    /**
+     * The list of all passages of all runners
+     */
+    passages: PassageWithRunnerId[] | false;
 
     /**
      * The rankings, false if not fetched/processed yet
@@ -82,6 +88,7 @@ export const appDataContext = createContext<AppDataContext>({
     serverTimeOffset: 0,
     races: false,
     runners: false,
+    passages: false,
     rankings: false,
 });
 
@@ -108,6 +115,7 @@ export default function App(): React.ReactElement {
     const [serverTimeOffset, setServerTimeOffset] = useState(0);
     const [races, setRaces] = useState<Race[] | false>(false);
     const [runners, setRunners] = useState<RankingRunner[] | false>(false);
+    const [passages, setPassages] = useState<PassageWithRunnerId[] | false>(false);
     const [rankings, setRankings] = useState<RankingMap | false>(false);
     const [accessToken, setAccessToken] = useState<string | null>(localStorage.getItem("accessToken"));
     const [user, setUser] = useState<User | null | undefined>(undefined); // If null, user is not logged in. If undefined, user info was not fetched yet
@@ -162,6 +170,7 @@ export default function App(): React.ReactElement {
 
         setRaces(result.json.races);
         setRunners(getRunnersFromRankingMap(rankingMap));
+        setPassages(result.json.passages);
         setRankings(rankingMap);
     }, []);
 
@@ -249,6 +258,7 @@ export default function App(): React.ReactElement {
                     serverTimeOffset,
                     races,
                     runners,
+                    passages,
                     rankings,
                 }}>
                     <headerFetchLoaderContext.Provider value={{

@@ -38,6 +38,17 @@ export function isRaceFinished(race: Race, serverTimeOffset = 0): boolean {
 }
 
 /**
+ * Returns a Date object from a race duration
+ * @param race
+ * @param raceTime in ms
+ */
+export function getDateFromRaceTime(race: Race, raceTime: number): Date {
+    const raceStartDate = new Date(race.startTime);
+
+    return new Date(raceStartDate.getTime() + raceTime);
+}
+
+/**
  * Returns an array of select options from an array of races
  * @param races
  * @param label an optional callback function to format the label

@@ -4,8 +4,9 @@ import { Col, Row } from "react-bootstrap";
 import { GENDER_MIXED } from "../../constants/Gender";
 import { RANKING_TIME_MODE } from "../../constants/RankingTimeMode";
 import { excludeKeys } from "../../helpers/objectHelper";
-import { getRacesSelectOptions } from "../../helpers/raceHelper";
+import { getDateFromRaceTime, getRacesSelectOptions } from "../../helpers/raceHelper";
 import { useWindowDimensions } from "../../hooks/useWindowDimensions";
+import { RankingCalculator } from "../../services/RankingCalculator";
 import { type CategoriesDict, type CategoryShortCode } from "../../types/Category";
 import { type GenderWithMixed } from "../../types/Gender";
 import { type Race } from "../../types/Race";
@@ -23,14 +24,14 @@ import ResponsiveRankingTable from "../viewParts/ranking/rankingTable/responsive
 const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
 
 export default function RankingView(): React.ReactElement {
-    const { races, rankings } = useContext(appDataContext);
+    const { races, rankings, runners, passages } = useContext(appDataContext);
 
     const [selectedRace, setSelectedRace] = useState<Race | null>(null);
 
     const [selectedCategory, setSelectedCategory] = useState<CategoryShortCode | null>(null);
     const [selectedGender, setSelectedGender] = useState<GenderWithMixed>(GENDER_MIXED);
     const [selectedTimeMode, setSelectedTimeMode] = useState<RankingTimeMode>(RANKING_TIME_MODE.now);
-    const [selectedRankingTime, setSelectedRankingTime] = useState(-1); // Set when a race is selected
+    const [selectedRankingTime, setSelectedRankingTime] = useState(-1); // Set when a race is selected, in ms
 
     const { width: windowWidth } = useWindowDimensions();
 
@@ -45,6 +46,33 @@ export default function RankingView(): React.ReactElement {
 
         return rankings.get(selectedRace.id) ?? null;
     }, [selectedRace, rankings]);
+
+    const rankingAtSelectedRankingTime = useMemo<Ranking | null>(() => {
+        if (!selectedRace || !runners || !passages) {
+            return null;
+        }
+
+        if (selectedTimeMode !== RANKING_TIME_MODE.at) {
+            return null;
+        }
+
+        const rankingCalculator = new RankingCalculator(
+            selectedRace,
+            runners,
+            passages,
+            getDateFromRaceTime(selectedRace, selectedRankingTime),
+        );
+
+        return rankingCalculator.getRanking();
+    }, [selectedRace, runners, passages, selectedTimeMode, selectedRankingTime]);
+
+    const displayedRanking = useMemo<Ranking | null>(() => {
+        if (selectedTimeMode !== RANKING_TIME_MODE.at) {
+            return ranking;
+        }
+
+        return rankingAtSelectedRankingTime;
+    }, [ranking, rankingAtSelectedRankingTime, selectedTimeMode]);
 
     const shouldResetRankingTime = useCallback((newRaceDuration: number) => {
         if (selectedRankingTime < 0) {
@@ -158,13 +186,13 @@ export default function RankingView(): React.ReactElement {
                         <CircularLoader />
                     }
 
-                    {ranking &&
+                    {displayedRanking &&
                         <Row>
                             <Col>
                                 {windowWidth > RESPONSIVE_TABLE_MAX_WINDOW_WIDTH &&
                                     <RankingTable
                                         race={selectedRace}
-                                        ranking={ranking}
+                                        ranking={displayedRanking}
                                         tableCategory={selectedCategory}
                                         tableGender={selectedGender}
                                         tableRaceDuration={selectedTimeMode === RANKING_TIME_MODE.at ? selectedRankingTime : null}
@@ -179,7 +207,7 @@ export default function RankingView(): React.ReactElement {
 
                                         <ResponsiveRankingTable
                                             race={selectedRace}
-                                            ranking={ranking}
+                                            ranking={displayedRanking}
                                             tableCategory={selectedCategory}
                                             tableGender={selectedGender}
                                             tableRaceDuration={selectedTimeMode === RANKING_TIME_MODE.at ? selectedRankingTime : null}
