@@ -1,19 +1,4 @@
-import { type Runner } from "./Runner";
-
-/**
- * An object representing a runner in a ranking array
- */
-export interface RankingRunner extends Runner {
-    /**
-     * The total number of times the runner has passed the timing point
-     */
-    passageCount: number;
-
-    /**
-     * A string representing the last passage time, format `${YYYY}-${MM}-${DD}T{hh}:${ii}:${ss}`
-     */
-    lastPassageTime: string;
-}
+import { type RunnerWithPassages, type RunnerWithProcessedData } from "./Runner";
 
 export interface RankingRunnerRanksObject {
     /**
@@ -53,31 +38,18 @@ export interface RankingRunnerRanks {
     displayed: RankingRunnerRanksObject;
 }
 
-/**
- * An object representing a runner in ranking array with additionnal data about the runner
- */
-export interface ProcessedRankingRunner extends RankingRunner {
-    /**
-     * The total distance covered by the runner, in meters
-     */
-    distance: number;
-
-    /**
-     * The race time at the last passage of the runner, in milliseconds. Null if runner has no passage
-     */
-    lastPassageRaceTime: number | null;
-
-    /**
-     * The average speed of the runner, in km/h. Null if runner has no passage
-     */
-    averageSpeed: number | null;
-
+export type RankingRunner<T extends MinimalRankingRunnerInput = MinimalRankingRunnerInput> = T & {
     /**
      * The ranks of the runner on the rankings scratch, by category and by gender
      */
-    rankings: RankingRunnerRanks;
-}
+    ranks: RankingRunnerRanks;
+};
 
-export type Ranking = RankingRunner[];
+export type MinimalRankingRunnerInput = RunnerWithPassages & RunnerWithProcessedData;
 
-export type ProcessedRanking = ProcessedRankingRunner[];
+export type Ranking<T extends MinimalRankingRunnerInput = MinimalRankingRunnerInput> = Array<RankingRunner<T>>;
+
+/**
+ * A map whose keys are race IDs ande values are the corresponding rankings
+ */
+export type RankingMap<T extends MinimalRankingRunnerInput> = Map<number, Ranking<T>>;

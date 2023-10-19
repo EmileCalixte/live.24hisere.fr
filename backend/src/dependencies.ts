@@ -8,9 +8,6 @@ import { RunnersController as RunnersControllerAdmin } from "./controllers/admin
 import { UsersController } from "./controllers/admin/users.controller";
 import { AppDataController } from "./controllers/appData.controller";
 import { AuthController } from "./controllers/auth.controller";
-import { RacesController } from "./controllers/races.controller";
-import { RankingController } from "./controllers/ranking.controller";
-import { RunnersController } from "./controllers/runners.controller";
 import { AuthService } from "./services/auth.service";
 import { DagFileService } from "./services/dagFile.service";
 import { AccessTokenService } from "./services/database/entities/accessToken.service";
@@ -23,7 +20,6 @@ import { UserService } from "./services/database/entities/user.service";
 import { PrismaService } from "./services/database/prisma.service";
 import { PasswordService } from "./services/password.service";
 import { RandomService } from "./services/random.service";
-import { RankingService } from "./services/ranking.service";
 import { ImportPassagesService } from "./tasks/importPassages.service";
 import { RaceIdExistsRule } from "./validation/rules/race/raceIdExists.rule";
 import { type Type } from "@nestjs/common/interfaces/type.interface";
@@ -50,9 +46,6 @@ export const dependencies: Dependencies = {
         public: [
             AppDataController,
             AuthController,
-            RacesController,
-            RankingController,
-            RunnersController,
         ],
         admin: [
             PassagesController,
@@ -68,7 +61,6 @@ export const dependencies: Dependencies = {
             DagFileService,
             PasswordService,
             RandomService,
-            RankingService,
         ],
         database: [
             PrismaService,

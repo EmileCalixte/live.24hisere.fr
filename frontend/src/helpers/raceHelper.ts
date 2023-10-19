@@ -3,14 +3,20 @@ import { type Race } from "../types/Race";
 
 /**
  * @param race
- * @param serverTimeOffset in ms
- * @returns The race time in ms
+ * @param date
+ * @return The race time in ms
  */
-export function getRaceTime(race: Race, serverTimeOffset = 0): number {
-    const raceStartMs = new Date(race.startTime).getTime();
-    const nowMs = (new Date()).getTime() + (serverTimeOffset);
+export function getRaceTime(race: Race, date: Date): number {
+    return date.getTime() - new Date(race.startTime).getTime();
+}
 
-    return nowMs - raceStartMs;
+/**
+ * @param race
+ * @param serverTimeOffset in ms
+ * @return The race time in ms
+ */
+export function getCurrentRaceTime(race: Race, serverTimeOffset = 0): number {
+    return getRaceTime(race, new Date(Date.now() + serverTimeOffset));
 }
 
 /**
@@ -19,7 +25,7 @@ export function getRaceTime(race: Race, serverTimeOffset = 0): number {
  * @param serverTimeOffset in ms
  */
 export function isRaceStarted(race: Race, serverTimeOffset = 0): boolean {
-    return getRaceTime(race, serverTimeOffset) >= 0;
+    return getCurrentRaceTime(race, serverTimeOffset) >= 0;
 }
 
 /**
@@ -28,7 +34,18 @@ export function isRaceStarted(race: Race, serverTimeOffset = 0): boolean {
  * @param serverTimeOffset in ms
  */
 export function isRaceFinished(race: Race, serverTimeOffset = 0): boolean {
-    return getRaceTime(race, serverTimeOffset) > race.duration * 1000;
+    return getCurrentRaceTime(race, serverTimeOffset) > race.duration * 1000;
+}
+
+/**
+ * Returns a Date object from a race duration
+ * @param race
+ * @param raceTime in ms
+ */
+export function getDateFromRaceTime(race: Race, raceTime: number): Date {
+    const raceStartDate = new Date(race.startTime);
+
+    return new Date(raceStartDate.getTime() + raceTime);
 }
 
 /**

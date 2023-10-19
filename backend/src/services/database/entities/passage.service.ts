@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { type PublicPassageWithRunnerId } from "../../../types/Passage";
 import { PrismaService } from "../prisma.service";
 import { type Passage, type Prisma } from ".prisma/client";
 
@@ -16,6 +17,27 @@ export class PassageService {
         return this.prisma.passage.findMany({
             where: {
                 isHidden: false,
+            },
+        });
+    }
+
+    async getAllPublicPassagesOfPublicRunners(): Promise<PublicPassageWithRunnerId[]> {
+        return this.prisma.passage.findMany({
+            select: {
+                id: true,
+                runnerId: true,
+                time: true,
+            },
+            where: {
+                isHidden: false,
+                runner: {
+                    race: {
+                        isPublic: true,
+                    },
+                },
+            },
+            orderBy: {
+                time: "asc",
             },
         });
     }

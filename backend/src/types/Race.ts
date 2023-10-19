@@ -18,13 +18,6 @@ export interface RaceAndRunners extends Race {
 }
 
 /**
- * Public data of a race with runner count
- */
-export interface PublicRaceWithRunnerCount extends PublicRace {
-    runnerCount: number;
-}
-
-/**
  * Admin data of a race with runner count
  */
 export interface AdminRaceWithRunnerCount extends AdminRace {

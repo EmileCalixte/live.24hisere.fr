@@ -3,14 +3,10 @@ import {
     type DeleteAdminRaceApiRequest,
     type GetAdminRaceApiRequest,
     type GetAdminRacesApiRequest,
-    type GetRacesApiRequest, type PatchAdminRaceApiRequest, type PostAdminRaceApiRequest,
+    type PatchAdminRaceApiRequest, type PostAdminRaceApiRequest,
     type PutAdminRaceOrderApiRequest,
 } from "../../types/api/RaceApiRequests";
-import { performApiRequest, performAuthenticatedApiRequest } from "./ApiService";
-
-export async function getRaces(): Promise<ApiRequestResult<GetRacesApiRequest>> {
-    return performApiRequest<GetRacesApiRequest>("/races");
-}
+import { performAuthenticatedApiRequest } from "./ApiService";
 
 export async function getAdminRaces(accessToken: string): Promise<ApiRequestResult<GetAdminRacesApiRequest>> {
     return performAuthenticatedApiRequest<GetAdminRacesApiRequest>("/admin/races", accessToken);

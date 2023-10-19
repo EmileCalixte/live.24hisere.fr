@@ -19,6 +19,14 @@ export function isDateValid(date: Date): boolean {
     return !isNaN(date.getTime());
 }
 
+/**
+ * Returns true if value is null or undefined
+ * @param value
+ */
+export function isNullOrUndefined(value: unknown): value is null | undefined {
+    return value === null || value === undefined;
+}
+
 export function formatDateAsString(date: Date, dateAndTimeSeparator = ", ", dateSeparator = "/", timeSeparator = ":"): string {
     if (!isDateValid(date)) {
         return date.toString();
@@ -112,4 +120,19 @@ export function prefixNumber(number: number, minDigits = 2): string | typeof NaN
     }
 
     return formattedString;
+}
+
+/**
+ * Returns a map from an array of objects
+ * @param array the source array
+ * @param indexKey The property name of the array objects that will become map keys. Each object should have a unique value for this property.
+ */
+export function objectArrayToMap<T extends object, K extends keyof T>(array: T[], indexKey: K): Map<T[K], T> {
+    const map = new Map<T[K], T>();
+
+    for (const item of array) {
+        map.set(item[indexKey], item);
+    }
+
+    return map;
 }

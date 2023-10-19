@@ -77,6 +77,40 @@ export interface Runner {
     raceId: number;
 }
 
+export interface RunnerProcessedData {
+    /**
+     * The total distance covered by the runner, in meters
+     */
+    distance: number;
+
+    /**
+     * The average speed of the runner, in km/h. Null if runner has no passage
+     */
+    averageSpeed: number | null;
+
+    /**
+     * The average pace of the runner, in ms/km. Null if runner has no passage
+     */
+    averagePace: number | null;
+
+    /**
+     * The time of the last passage of the runner. Null if runner has no passage
+     */
+    lastPassageTime: null | {
+        /**
+         * The race time at the last passage of the runner, in milliseconds
+         */
+        raceTime: number;
+
+        /**
+         * The date and time of the runner's last passage
+         */
+        time: Date;
+    };
+}
+
+export type RunnerWithProcessedData = Runner & RunnerProcessedData;
+
 /**
  * An object representing a runner with his passages
  */
