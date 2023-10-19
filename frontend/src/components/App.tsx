@@ -7,7 +7,10 @@ import { getCurrentUserInfo, logout as performLogoutRequest } from "../services/
 import { type PassageWithRunnerId } from "../types/Passage";
 import { type Race } from "../types/Race";
 import { type RankingMap, type RankingRunner } from "../types/Ranking";
+import { type RunnerProcessedData, type RunnerWithProcessedHours, type RunnerWithProcessedPassages } from "../types/Runner";
 import { type User } from "../types/User";
+import { getProcessedHoursFromPassages, getProcessedPassagesFromPassages, getRunnerProcessedDataFromPassages } from "../util/passageUtils";
+import { getRunnersWithPassagesFromRunnersAndPassages } from "../util/runnerUtils";
 import Header from "./ui/header/Header";
 import Footer from "./ui/footer/Footer";
 import RankingView from "./views/RankingView";
@@ -19,8 +22,10 @@ import {
 } from "../util/apiUtils";
 import LoginView from "./views/LoginView";
 import Admin from "./views/admin/Admin";
-import { verbose } from "../util/utils";
+import { objectArrayToMap, verbose } from "../util/utils";
 import ToastUtil from "../util/ToastUtil";
+
+type AppDataContextRunner = RunnerWithProcessedPassages & RunnerWithProcessedHours & RunnerProcessedData;
 
 interface AppDataContext {
     /**
@@ -41,7 +46,7 @@ interface AppDataContext {
     /**
      * The list of runners with processed data, false if not fetched/processed yet
      */
-    runners: RankingRunner[] | false;
+    runners: Array<RankingRunner<AppDataContextRunner>> | false;
 
     /**
      * The list of all passages of all runners
@@ -51,7 +56,7 @@ interface AppDataContext {
     /**
      * The rankings, false if not fetched/processed yet
      */
-    rankings: RankingMap | false;
+    rankings: RankingMap<AppDataContextRunner> | false;
 }
 
 interface HeaderFetchLoaderContext {
@@ -114,9 +119,9 @@ export default function App(): React.ReactElement {
     const [lastUpdateTime, setLastUpdateTime] = useState(new Date());
     const [serverTimeOffset, setServerTimeOffset] = useState(0);
     const [races, setRaces] = useState<Race[] | false>(false);
-    const [runners, setRunners] = useState<RankingRunner[] | false>(false);
+    const [runners, setRunners] = useState<Array<RankingRunner<AppDataContextRunner>> | false>(false);
     const [passages, setPassages] = useState<PassageWithRunnerId[] | false>(false);
-    const [rankings, setRankings] = useState<RankingMap | false>(false);
+    const [rankings, setRankings] = useState<RankingMap<AppDataContextRunner> | false>(false);
     const [accessToken, setAccessToken] = useState<string | null>(localStorage.getItem("accessToken"));
     const [user, setUser] = useState<User | null | undefined>(undefined); // If null, user is not logged in. If undefined, user info was not fetched yet
     const [redirect, setRedirect] = useState<string | null>(null); // Used to redirect the user to a specified location, for example when user logs out
@@ -160,10 +165,35 @@ export default function App(): React.ReactElement {
 
         setServerTimeOffset(Math.round(timeOffsetMs / 1000));
 
-        const rankingMap = getRankingMap(
-            result.json.races,
+        const raceMap = objectArrayToMap(result.json.races, "id");
+
+        const processedRunners = getRunnersWithPassagesFromRunnersAndPassages(
             result.json.runners,
             result.json.passages,
+        )
+            .filter(runner => raceMap.has(runner.raceId))
+            .map(runner => ({
+                ...runner,
+                ...getRunnerProcessedDataFromPassages(
+                    raceMap.get(runner.raceId) as Race,
+                    runner.passages,
+                ),
+                passages: getProcessedPassagesFromPassages(
+                    runner.passages,
+                    raceMap.get(runner.raceId) as Race,
+                ),
+            }))
+            .map(runner => ({
+                ...runner,
+                hours: getProcessedHoursFromPassages(
+                    runner.passages,
+                    raceMap.get(runner.raceId) as Race,
+                ),
+            }));
+
+        const rankingMap = getRankingMap(
+            result.json.races,
+            processedRunners,
         );
 
         verbose("Rankings", rankingMap);

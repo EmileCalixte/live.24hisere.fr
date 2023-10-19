@@ -1,26 +1,4 @@
-import { type Passage, ProcessedPassage } from "../types/Passage";
-import { type Race } from "../types/Race";
-import { type RunnerWithPassageCount } from "../types/Runner";
-
-/**
- * @param runner
- * @param race
- * @return The runner total distance in meters
- */
-export function getRunnerTotalDistance(runner: RunnerWithPassageCount, race: Race): number {
-    if (runner.passageCount === 0) {
-        return 0;
-    }
-
-    const initialDistance = Number(race.initialDistance);
-    const lapDistance = Number(race.lapDistance);
-
-    if (initialDistance > 0) {
-        return initialDistance + lapDistance * (runner.passageCount - 1);
-    }
-
-    return lapDistance * runner.passageCount;
-}
+import { type ProcessedPassage } from "../types/Passage";
 
 /**
  * @param passages

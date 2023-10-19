@@ -1,5 +1,10 @@
 import { type ProcessedPassage } from "./Passage";
-import { type RunnerProcessedHour, type RunnerWithPassageCount } from "./Runner";
+import {
+    Runner,
+    type RunnerProcessedData,
+    type RunnerProcessedHour,
+    type RunnerWithPassageCount, RunnerWithPassages, RunnerWithProcessedData,
+} from "./Runner";
 
 export interface RankingRunnerRanksObject {
     /**
@@ -39,56 +44,18 @@ export interface RankingRunnerRanks {
     displayed: RankingRunnerRanksObject;
 }
 
-export interface RankingRunner extends RunnerWithPassageCount {
-    /**
-     * The total distance covered by the runner, in meters
-     */
-    distance: number;
-
-    /**
-     * The average speed of the runner, in km/h. Null if runner has no passage
-     */
-    averageSpeed: number | null;
-
-    /**
-     * The average pace of the runner, in ms/km. Null if runner has no passage
-     */
-    averagePace: number | null;
-
-    /**
-     * The time of the last passage of the runner. Null if runner has no passage
-     */
-    lastPassageTime: null | {
-        /**
-         * The race time at the last passage of the runner, in milliseconds
-         */
-        raceTime: number;
-
-        /**
-         * The date and time of the runner's last passage
-         */
-        time: Date;
-    };
-
-    /**
-     * The list of the runner's passages with additional data
-     */
-    passages: ProcessedPassage[];
-
+export type RankingRunner<T extends MinimalRankingRunnerInput = MinimalRankingRunnerInput> = T & {
     /**
      * The ranks of the runner on the rankings scratch, by category and by gender
      */
     ranks: RankingRunnerRanks;
+};
 
-    /**
-     * The race hours of the runner
-     */
-    hours: RunnerProcessedHour[];
-}
+export type MinimalRankingRunnerInput = RunnerWithPassages & RunnerWithProcessedData;
 
-export type Ranking = RankingRunner[];
+export type Ranking<T extends MinimalRankingRunnerInput = MinimalRankingRunnerInput> = Array<RankingRunner<T>>;
 
 /**
  * A map whose keys are race IDs ande values are the corresponding rankings
  */
-export type RankingMap = Map<number, Ranking>;
+export type RankingMap<T extends MinimalRankingRunnerInput> = Map<number, Ranking<T>>;

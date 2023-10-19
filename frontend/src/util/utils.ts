@@ -121,3 +121,18 @@ export function prefixNumber(number: number, minDigits = 2): string | typeof NaN
 
     return formattedString;
 }
+
+/**
+ * Returns a map from an array of objects
+ * @param array the source array
+ * @param indexKey The property name of the array objects that will become map keys. Each object should have a unique value for this property.
+ */
+export function objectArrayToMap<T extends object, K extends keyof T>(array: T[], indexKey: K): Map<T[K], T> {
+    const map = new Map<T[K], T>();
+
+    for (const item of array) {
+        map.set(item[indexKey], item);
+    }
+
+    return map;
+}

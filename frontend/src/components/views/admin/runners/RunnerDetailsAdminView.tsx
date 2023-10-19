@@ -15,6 +15,7 @@ import { type AdminProcessedPassage } from "../../../../types/Passage";
 import { type AdminRaceWithRunnerCount } from "../../../../types/Race";
 import { type RunnerWithAdminProcessedPassages, type RunnerWithRace } from "../../../../types/Runner";
 import { isApiRequestResultOk } from "../../../../util/apiUtils";
+import { getProcessedPassagesFromPassages } from "../../../../util/passageUtils";
 import { formatDateAsString, formatDateForApi } from "../../../../util/utils";
 import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../ui/breadcrumbs/Crumb";
@@ -24,7 +25,6 @@ import { userContext } from "../../../App";
 import RunnerDetailsForm from "../../../viewParts/admin/runners/RunnerDetailsForm";
 import ToastUtil from "../../../../util/ToastUtil";
 import RunnerDetailsPassages from "../../../viewParts/admin/runners/RunnerDetailsPassages";
-import { getRunnerProcessedPassages } from "../../../../util/RunnerDetailsUtil";
 
 export default function RunnerDetailsAdminView(): React.ReactElement {
     const navigate = useNavigate();
@@ -114,7 +114,7 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
         setRunner({
             ...runner,
             race,
-            passages: getRunnerProcessedPassages(runner.passages, race),
+            passages: getProcessedPassagesFromPassages(runner.passages, race),
         });
 
         setRunnerId(runner.id);

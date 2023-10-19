@@ -1,15 +1,16 @@
 import { RankingCalculator } from "../services/RankingCalculator";
-import { type PassageWithRunnerId } from "../types/Passage";
 import { type Race } from "../types/Race";
-import { type RankingMap, type RankingRunner } from "../types/Ranking";
-import { type Runner } from "../types/Runner";
+import { type MinimalRankingRunnerInput, type RankingMap, type RankingRunner } from "../types/Ranking";
 import { spaceship } from "../util/compareUtils";
 
-export function getRankingMap(races: Race[], runners: Runner[], passages: PassageWithRunnerId[]): RankingMap {
-    const rankingMap: RankingMap = new Map();
+/**
+ * Returns rankings from a list of races and a list of runners
+ */
+export function getRankingMap<T extends MinimalRankingRunnerInput>(races: Race[], runners: T[]): RankingMap<T> {
+    const rankingMap: RankingMap<T> = new Map();
 
     for (const race of races) {
-        const rankingCalculator = new RankingCalculator(race, runners, passages);
+        const rankingCalculator = new RankingCalculator(race, runners);
 
         rankingMap.set(race.id, rankingCalculator.getRanking());
     }
@@ -17,7 +18,10 @@ export function getRankingMap(races: Race[], runners: Runner[], passages: Passag
     return rankingMap;
 }
 
-export function getRunnersFromRankingMap(rankingMap: RankingMap): RankingRunner[] {
+/**
+ * Returns the list of runners of a ranking sorted by ids
+ */
+export function getRunnersFromRankingMap<T extends MinimalRankingRunnerInput>(rankingMap: RankingMap<T>): Array<RankingRunner<T>> {
     return Array.from(rankingMap, ([, ranking]) => ranking)
         .flat()
         .sort((runnerA, runnerB) => spaceship(runnerA.id, runnerB.id));

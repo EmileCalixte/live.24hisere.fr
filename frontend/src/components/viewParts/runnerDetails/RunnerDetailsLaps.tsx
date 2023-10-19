@@ -6,7 +6,8 @@ import { isRaceFinished, isRaceStarted } from "../../../helpers/raceHelper";
 import { useRaceTime } from "../../../hooks/useRaceTime";
 import { useWindowDimensions } from "../../../hooks/useWindowDimensions";
 import { type Race } from "../../../types/Race";
-import { type RankingRunner } from "../../../types/Ranking";
+import { type MinimalRankingRunnerInput, type RankingRunner } from "../../../types/Ranking";
+import { type RunnerWithProcessedPassages } from "../../../types/Runner";
 import { formatMsAsDuration, SORT_ASC, SORT_DESC } from "../../../util/utils";
 import { appDataContext } from "../../App";
 
@@ -18,7 +19,7 @@ enum SortBy {
 const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
 
 interface RunnerDetailsLapsProps {
-    runner: RankingRunner;
+    runner: RankingRunner<MinimalRankingRunnerInput & RunnerWithProcessedPassages>;
     race: Race;
 }
 

@@ -27,7 +27,7 @@ export default function RankingTableRow({
             <RankingTableRowNCells runner={runner} tableCategory={tableCategory} tableGender={tableGender} />
             <td>{runner.id}</td>
             <td>{runner.lastname.toUpperCase()} {runner.firstname}</td>
-            <td>{raceInitialDistance > 0 ? Math.max(0, runner.passageCount - 1) : runner.passageCount}</td>
+            <td>{raceInitialDistance > 0 ? Math.max(0, runner.passages.length - 1) : runner.passages.length}</td>
             <td>{formatFloatNumber(runner.distance / 1000, 2)} km</td>
             <td>
                 {(() => {

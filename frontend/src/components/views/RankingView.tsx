@@ -59,7 +59,6 @@ export default function RankingView(): React.ReactElement {
         const rankingCalculator = new RankingCalculator(
             selectedRace,
             runners,
-            passages,
             getDateFromRaceTime(selectedRace, selectedRankingTime),
         );
 

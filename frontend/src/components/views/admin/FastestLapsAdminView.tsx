@@ -7,8 +7,8 @@ import { type AdminPassageWithRunnerId, type ProcessedPassage } from "../../../t
 import { type RaceDict } from "../../../types/Race";
 import { type Runner } from "../../../types/Runner";
 import { isApiRequestResultOk } from "../../../util/apiUtils";
+import { getProcessedPassagesFromPassages } from "../../../util/passageUtils";
 import { getRaceDictFromRaces } from "../../../util/raceUtil";
-import { getRunnerProcessedPassages } from "../../../util/RunnerDetailsUtil";
 import ToastUtil from "../../../util/ToastUtil";
 import { userContext } from "../../App";
 import Breadcrumbs from "../../ui/breadcrumbs/Breadcrumbs";
@@ -167,7 +167,7 @@ export default function FastestLapsAdminView(): React.ReactElement {
 
             const runnerPassages = runnerSortedPassages[runnerId];
 
-            sortedProcessedPassages[runnerId] = getRunnerProcessedPassages(runnerPassages, race);
+            sortedProcessedPassages[runnerId] = getProcessedPassagesFromPassages(runnerPassages, race);
         }
 
         return sortedProcessedPassages;
