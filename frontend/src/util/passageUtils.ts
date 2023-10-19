@@ -122,7 +122,7 @@ export function getProcessedPassagesFromPassages<T extends Passage>(passages: T[
  * @param race
  * @param passages the list of passages sorted in ascending time order
  */
-export function getProcessedHoursFromPassages(passages: ProcessedPassage[], race: Race): RunnerProcessedHour[] {
+export function getProcessedHoursFromPassages(race: Race, passages: ProcessedPassage[]): RunnerProcessedHour[] {
     const hours: RunnerProcessedHour[] = [];
 
     const raceStartTime = new Date(race.startTime);

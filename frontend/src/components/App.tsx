@@ -172,24 +172,27 @@ export default function App(): React.ReactElement {
             result.json.passages,
         )
             .filter(runner => raceMap.has(runner.raceId))
-            .map(runner => ({
-                ...runner,
-                ...getRunnerProcessedDataFromPassages(
-                    raceMap.get(runner.raceId) as Race,
-                    runner.passages,
-                ),
-                passages: getProcessedPassagesFromPassages(
+            .map(runner => {
+                const passages = getProcessedPassagesFromPassages(
                     runner.passages,
                     raceMap.get(runner.raceId) as Race,
-                ),
-            }))
-            .map(runner => ({
-                ...runner,
-                hours: getProcessedHoursFromPassages(
-                    runner.passages,
-                    raceMap.get(runner.raceId) as Race,
-                ),
-            }));
+                );
+
+                const race = raceMap.get(runner.raceId) as Race;
+
+                return {
+                    ...runner,
+                    passages,
+                    ...getRunnerProcessedDataFromPassages(
+                        race,
+                        passages,
+                    ),
+                    hours: getProcessedHoursFromPassages(
+                        race,
+                        passages,
+                    ),
+                };
+            });
 
         const rankingMap = getRankingMap(
             result.json.races,
