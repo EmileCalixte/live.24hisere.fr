@@ -1,7 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
 import { excludeKeys } from "src/utils/misc.utils";
-import { type AdminRaceWithRunnerCount, type PublicRaceWithRunnerCount, type RaceAndRunners } from "src/types/Race";
+import {
+    type AdminRaceWithRunnerCount,
+    type PublicRace,
+    type RaceAndRunners,
+} from "src/types/Race";
 import { type Prisma, type Race } from "@prisma/client";
 
 @Injectable()
@@ -32,31 +36,10 @@ export class RaceService {
         return this.getAdminRaceFromRace(this.getRaceWithRunnerCountFromRaceWithRunners(race));
     }
 
-    async getPublicRaces(): Promise<PublicRaceWithRunnerCount[]> {
+    async getPublicRaces(): Promise<PublicRace[]> {
         const races = await this.getRacesWithRunners({ isPublic: true });
 
-        return races
-            .map(race => this.getPublicRaceFromRace(race))
-            .map(race => this.getRaceWithRunnerCountFromRaceWithRunners(race));
-    }
-
-    async getPublicRace(raceWhereUniqueInput: Prisma.RaceWhereUniqueInput): Promise<PublicRaceWithRunnerCount | null> {
-        const race = await this.prisma.race.findUnique({
-            where: raceWhereUniqueInput,
-            include: {
-                runners: true,
-            },
-        });
-
-        if (race === null) {
-            return null;
-        }
-
-        if (!race.isPublic) {
-            return null;
-        }
-
-        return this.getPublicRaceFromRace(this.getRaceWithRunnerCountFromRaceWithRunners(race));
+        return races.map(race => this.getPublicRaceFromRace(race));
     }
 
     async getMaxOrder(): Promise<number> {
