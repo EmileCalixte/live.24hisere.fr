@@ -111,13 +111,6 @@ export interface RunnerProcessedData {
 
 export type RunnerWithProcessedData = Runner & RunnerProcessedData;
 
-export interface RunnerWithPassageCount extends Runner {
-    /**
-     * The total number of times the runner has passed the timing point
-     */
-    passageCount: number;
-}
-
 /**
  * An object representing a runner with his passages
  */

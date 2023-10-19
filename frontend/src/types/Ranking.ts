@@ -1,10 +1,4 @@
-import { type ProcessedPassage } from "./Passage";
-import {
-    Runner,
-    type RunnerProcessedData,
-    type RunnerProcessedHour,
-    type RunnerWithPassageCount, RunnerWithPassages, RunnerWithProcessedData,
-} from "./Runner";
+import { type RunnerWithPassages, type RunnerWithProcessedData } from "./Runner";
 
 export interface RankingRunnerRanksObject {
     /**

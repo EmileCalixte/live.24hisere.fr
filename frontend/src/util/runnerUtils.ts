@@ -1,7 +1,6 @@
 import { type Passage, type PassageWithRunnerId } from "../types/Passage";
 import {
     type Runner,
-    type RunnerWithPassageCount,
     type RunnerWithPassages,
     type RunnerWithProcessedData,
     type RunnerWithProcessedPassages,
@@ -54,11 +53,11 @@ export function getRunnerWithPassagesFromRunnerAndPassages<T extends Runner, U e
  * Returns -1 if `runner1` is faster, 1 if `runner2` is faster and 0 if the runners are equal
  */
 export function spaceshipRunners(
-    runner1: (RunnerWithPassages | RunnerWithPassageCount) & RunnerWithProcessedData,
-    runner2: (RunnerWithPassages | RunnerWithPassageCount) & RunnerWithProcessedData,
+    runner1: RunnerWithPassages & RunnerWithProcessedData,
+    runner2: RunnerWithPassages & RunnerWithProcessedData,
 ): ReturnType<typeof spaceship> {
-    const runner1PassageCount = "passageCount" in runner1 ? runner1.passageCount : runner1.passages.length;
-    const runner2PassageCount = "passageCount" in runner2 ? runner2.passageCount : runner2.passages.length;
+    const runner1PassageCount = runner1.passages.length;
+    const runner2PassageCount = runner2.passages.length;
 
     if (runner1PassageCount === runner2PassageCount) {
         // When two runners have completed the same number of laps,
@@ -73,8 +72,8 @@ export function spaceshipRunners(
  * Returns true if two runners are equal (same number of laps and last passage at the same time)
  */
 export function areRunnersEqual(
-    runner1: (RunnerWithPassages | RunnerWithPassageCount) & RunnerWithProcessedData,
-    runner2: (RunnerWithPassages | RunnerWithPassageCount) & RunnerWithProcessedData,
+    runner1: RunnerWithPassages & RunnerWithProcessedData,
+    runner2: RunnerWithPassages & RunnerWithProcessedData,
 ): boolean {
     return spaceshipRunners(runner1, runner2) === 0;
 }

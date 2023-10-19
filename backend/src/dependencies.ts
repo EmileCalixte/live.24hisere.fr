@@ -20,7 +20,6 @@ import { UserService } from "./services/database/entities/user.service";
 import { PrismaService } from "./services/database/prisma.service";
 import { PasswordService } from "./services/password.service";
 import { RandomService } from "./services/random.service";
-import { RankingService } from "./services/ranking.service";
 import { ImportPassagesService } from "./tasks/importPassages.service";
 import { RaceIdExistsRule } from "./validation/rules/race/raceIdExists.rule";
 import { type Type } from "@nestjs/common/interfaces/type.interface";
@@ -62,7 +61,6 @@ export const dependencies: Dependencies = {
             DagFileService,
             PasswordService,
             RandomService,
-            RankingService,
         ],
         database: [
             PrismaService,
