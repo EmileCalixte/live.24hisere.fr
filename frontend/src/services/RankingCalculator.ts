@@ -1,7 +1,7 @@
 import { GENDER_MIXED } from "../constants/Gender";
 import { type GenderWithMixed } from "../types/Gender";
 import { type Race } from "../types/Race";
-import { type Ranking, type RankingRunnerRanks } from "../types/Ranking";
+import { MinimalRankingRunnerInput, type Ranking, type RankingRunnerRanks } from "../types/Ranking";
 import { type RunnerWithPassages, type RunnerWithProcessedData } from "../types/Runner";
 import { getCategoryCodeFromBirthYear } from "../util/ffaUtils";
 import { getRunnerProcessedDataFromPassages } from "../util/passageUtils";
@@ -19,7 +19,7 @@ interface CurrentRanksByCategory {
     [key: string]: CategoryGenderRanks;
 }
 
-export class RankingCalculator<T extends RunnerWithPassages & RunnerWithProcessedData> {
+export class RankingCalculator<T extends MinimalRankingRunnerInput> {
     // Temporary objects to keep track of the current ranking for each category and each gender during ranking processing
     private currentRanksByCategory: CurrentRanksByCategory = {
         scratch: { // Scratch includes all solo runners regardless of their category
