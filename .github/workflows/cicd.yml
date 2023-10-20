@@ -2,7 +2,11 @@ name: CI/CD
 
 on:
   pull_request:
-    types: [ opened, reopened, ready_for_review ]
+    types:
+      - opened
+      - reopened
+      - ready_for_review # When a PR changes from draft to ready for review
+      - synchronize # When new commits are added to the PR
   push:
     branches: [ master ]
 
