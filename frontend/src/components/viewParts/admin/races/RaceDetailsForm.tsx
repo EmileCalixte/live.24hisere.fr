@@ -46,7 +46,7 @@ export default function RaceDetailsForm({
         return getDateStringFromDate(startTime, "-").split("-").reverse().join("-");
     }, [startTime]);
 
-    const startTimeTime = useMemo(() => {
+    const startTimeTime = useMemo<string | undefined>(() => {
         if (!startTime) {
             return "";
         }
