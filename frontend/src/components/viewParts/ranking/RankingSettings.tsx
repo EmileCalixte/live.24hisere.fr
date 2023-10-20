@@ -1,12 +1,12 @@
 import { Col } from "react-bootstrap";
-import { CATEGORY_SCRATCH } from "../../../constants/Category";
+import { CATEGORY_SCRATCH } from "../../../constants/category";
 import {
     CATEGORY_SCRATCH_SELECT_OPTION,
     GENDER_WITH_MIXED_OPTIONS,
     RANKING_TIME_MODE_OPTIONS,
-} from "../../../constants/Forms";
-import { RANKING_TIME_MODE } from "../../../constants/RankingTimeMode";
-import { getCategoriesDictSelectOptions } from "../../../helpers/categoryHelper";
+} from "../../../constants/forms";
+import { RANKING_TIME_MODE } from "../../../constants/rankingTimeMode";
+import { getCategoriesDictSelectOptions } from "../../../utils/categoryUtils";
 import { type CategoriesDict, type CategoryShortCode } from "../../../types/Category";
 import { type SelectOption } from "../../../types/Forms";
 import { type GenderWithMixed } from "../../../types/Gender";

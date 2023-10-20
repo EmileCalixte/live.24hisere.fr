@@ -6,13 +6,13 @@ import { type AdminRaceWithRunnerCount } from "../../../../types/Race";
 import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../ui/breadcrumbs/Crumb";
 import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { isApiRequestResultOk } from "../../../../util/apiUtils";
+import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { userContext } from "../../../App";
 import Page from "../../../ui/Page";
 import CircularLoader from "../../../ui/CircularLoader";
 import { Link } from "react-router-dom";
 import RacesListItem from "../../../viewParts/admin/races/RacesListItem";
-import ToastUtil from "../../../../util/ToastUtil";
+import ToastService from "../../../../services/ToastService";
 
 export default function RacesAdminView(): React.ReactElement {
     const { accessToken } = useContext(userContext);
@@ -34,7 +34,7 @@ export default function RacesAdminView(): React.ReactElement {
         const result = await getAdminRaces(accessToken);
 
         if (!isApiRequestResultOk(result)) {
-            ToastUtil.getToastr().error("Impossible de récupérer la liste des courses");
+            ToastService.getToastr().error("Impossible de récupérer la liste des courses");
             return;
         }
 
@@ -80,14 +80,14 @@ export default function RacesAdminView(): React.ReactElement {
         const result = await putAdminRaceOrder(accessToken, raceIds);
 
         if (!isApiRequestResultOk(result)) {
-            ToastUtil.getToastr().error("Impossible de sauvegarder l'ordre des courses");
+            ToastService.getToastr().error("Impossible de sauvegarder l'ordre des courses");
             setIsSaving(false);
             return;
         }
 
         setRaces([...sortingRaces]);
 
-        ToastUtil.getToastr().success("L'ordre des courses a été modifié");
+        ToastService.getToastr().success("L'ordre des courses a été modifié");
         setIsSorting(false);
         setIsSaving(false);
     }, [accessToken, sortingRaces]);

@@ -1,14 +1,14 @@
 import { Col, Row } from "react-bootstrap";
 import React, { useMemo } from "react";
-import { getPaceFromSpeed } from "../../../helpers/mathHelper";
+import { getPaceFromSpeed } from "../../../utils/mathUtils";
 import { type ProcessedPassage } from "../../../types/Passage";
 import { type Race } from "../../../types/Race";
 import { type RankingRunnerRanks } from "../../../types/Ranking";
 import { type RunnerWithProcessedHours, type RunnerWithProcessedPassages } from "../../../types/Runner";
-import { getCategoryCodeFromBirthYear } from "../../../util/ffaUtils";
+import { getCategoryCodeFromBirthYear } from "../../../utils/ffaUtils";
 import CircularLoader from "../../ui/CircularLoader";
 import SpeedChart from "./charts/SpeedChart";
-import { formatMsAsDuration } from "../../../util/utils";
+import { formatMsAsDuration } from "../../../utils/utils";
 
 interface RunnerDetailsStatsProps {
     runner: RunnerWithProcessedPassages & RunnerWithProcessedHours;

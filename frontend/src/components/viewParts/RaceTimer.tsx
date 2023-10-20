@@ -1,8 +1,8 @@
 import React, { useContext, useMemo } from "react";
-import { isRaceFinished, isRaceStarted } from "../../helpers/raceHelper";
+import { isRaceFinished, isRaceStarted } from "../../utils/raceUtils";
 import { useRaceTime } from "../../hooks/useRaceTime";
 import { type Race } from "../../types/Race";
-import { formatMsAsDuration } from "../../util/utils";
+import { formatMsAsDuration } from "../../utils/utils";
 import { appDataContext } from "../App";
 
 interface RaceTimerProps {

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { Col, Row } from "react-bootstrap";
-import { formatDateAsString } from "../../../../util/utils";
+import { formatDateAsString } from "../../../../utils/utils";
 import DurationInputs from "../../../ui/forms/DurationInputs";
 import Modal from "../../../ui/Modal";
 

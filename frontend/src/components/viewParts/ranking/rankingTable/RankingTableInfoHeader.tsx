@@ -1,9 +1,9 @@
 import React from "react";
-import { GENDER, GENDER_MIXED } from "../../../../constants/Gender";
+import { GENDER, GENDER_MIXED } from "../../../../constants/gender";
 import { type CategoryShortCode } from "../../../../types/Category";
 import { type GenderWithMixed } from "../../../../types/Gender";
 import { type Race } from "../../../../types/Race";
-import { formatMsAsDuration } from "../../../../util/utils";
+import { formatMsAsDuration } from "../../../../utils/utils";
 
 interface RankingTableInfoHeaderProps {
     race: Race;

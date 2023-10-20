@@ -1,11 +1,11 @@
 import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { GENDER_OPTIONS } from "../../../../constants/Forms";
-import { getRacesSelectOptions } from "../../../../helpers/raceHelper";
+import { GENDER_OPTIONS } from "../../../../constants/forms";
+import { getRacesSelectOptions } from "../../../../utils/raceUtils";
 import { type Gender } from "../../../../types/Gender";
 import { type AdminRaceWithRunnerCount } from "../../../../types/Race";
 import { Input } from "../../../ui/forms/Input";
-import { getCategoryNameFromBirthYear } from "../../../../util/ffaUtils";
+import { getCategoryNameFromBirthYear } from "../../../../utils/ffaUtils";
 import RadioGroup from "../../../ui/forms/RadioGroup";
 import Select from "../../../ui/forms/Select";
 

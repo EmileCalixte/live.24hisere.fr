@@ -1,9 +1,9 @@
 import { type SelectOption } from "../types/Forms";
 import { type Gender, type GenderWithMixed } from "../types/Gender";
 import { type RankingTimeMode } from "../types/RankingTimeMode";
-import { CATEGORY_SCRATCH } from "./Category";
-import { GENDER } from "./Gender";
-import { RANKING_TIME_MODE } from "./RankingTimeMode";
+import { CATEGORY_SCRATCH } from "./category";
+import { GENDER } from "./gender";
+import { RANKING_TIME_MODE } from "./rankingTimeMode";
 
 export const CATEGORY_SCRATCH_SELECT_OPTION: SelectOption = {
     label: "Scratch (toutes catégories)",

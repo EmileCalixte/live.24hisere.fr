@@ -1,5 +1,5 @@
 import { Col, Row } from "react-bootstrap";
-import { getRacesSelectOptions } from "../../../../helpers/raceHelper";
+import { getRacesSelectOptions } from "../../../../utils/raceUtils";
 import { getAdminRaces, postAdminRace } from "../../../../services/api/RaceService";
 import { type AdminRace } from "../../../../types/Race";
 import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
@@ -8,11 +8,11 @@ import Select from "../../../ui/forms/Select";
 import Page from "../../../ui/Page";
 import RaceDetailsForm from "../../../viewParts/admin/races/RaceDetailsForm";
 import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { isApiRequestResultOk } from "../../../../util/apiUtils";
+import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { userContext } from "../../../App";
-import ToastUtil from "../../../../util/ToastUtil";
+import ToastService from "../../../../services/ToastService";
 import { useNavigate } from "react-router-dom";
-import { formatDateForApi } from "../../../../util/utils";
+import { formatDateForApi } from "../../../../utils/utils";
 
 export default function CreateRaceAdminView(): React.ReactElement {
     const navigate = useNavigate();
@@ -58,7 +58,7 @@ export default function CreateRaceAdminView(): React.ReactElement {
         const result = await getAdminRaces(accessToken);
 
         if (!isApiRequestResultOk(result)) {
-            ToastUtil.getToastr().error("Impossible de récupérer la liste des courses existantes");
+            ToastService.getToastr().error("Impossible de récupérer la liste des courses existantes");
             return;
         }
 
@@ -86,12 +86,12 @@ export default function CreateRaceAdminView(): React.ReactElement {
         const result = await postAdminRace(accessToken, body);
 
         if (!isApiRequestResultOk(result)) {
-            ToastUtil.getToastr().error("Une erreur est survenue");
+            ToastService.getToastr().error("Une erreur est survenue");
             setIsSaving(false);
             return;
         }
 
-        ToastUtil.getToastr().success("Course créée");
+        ToastService.getToastr().success("Course créée");
         navigate(`/admin/races/${result.json.race.id}`);
     }, [accessToken, raceName, isPublic, initialDistance, lapDistance, startTime, duration, navigate]);
 

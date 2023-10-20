@@ -7,10 +7,10 @@ import Crumb from "../../../ui/breadcrumbs/Crumb";
 import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import Page from "../../../ui/Page";
 import CircularLoader from "../../../ui/CircularLoader";
-import { isApiRequestResultOk } from "../../../../util/apiUtils";
+import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { userContext } from "../../../App";
-import { formatDateForApi } from "../../../../util/utils";
-import ToastUtil from "../../../../util/ToastUtil";
+import { formatDateForApi } from "../../../../utils/utils";
+import ToastService from "../../../../services/ToastService";
 import RaceDetailsForm from "../../../viewParts/admin/races/RaceDetailsForm";
 
 export default function RaceDetailsAdminView(): React.ReactElement {
@@ -54,7 +54,7 @@ export default function RaceDetailsAdminView(): React.ReactElement {
         const result = await getAdminRace(accessToken, urlRaceId);
 
         if (!isApiRequestResultOk(result)) {
-            ToastUtil.getToastr().error("Impossible de récupérer les détails de la course");
+            ToastService.getToastr().error("Impossible de récupérer les détails de la course");
             setRace(null);
             return;
         }
@@ -96,12 +96,12 @@ export default function RaceDetailsAdminView(): React.ReactElement {
         const result = await patchAdminRace(accessToken, race.id, body);
 
         if (!isApiRequestResultOk(result)) {
-            ToastUtil.getToastr().error("Une erreur est survenue");
+            ToastService.getToastr().error("Une erreur est survenue");
             setIsSaving(false);
             return;
         }
 
-        ToastUtil.getToastr().success("Paramètres de la course enregistrés");
+        ToastService.getToastr().success("Paramètres de la course enregistrés");
 
         await fetchRace();
         setIsSaving(false);
@@ -123,11 +123,11 @@ export default function RaceDetailsAdminView(): React.ReactElement {
         const result = await deleteAdminRace(accessToken, race.id);
 
         if (!isApiRequestResultOk(result)) {
-            ToastUtil.getToastr().error("Une erreur est survenue");
+            ToastService.getToastr().error("Une erreur est survenue");
             return;
         }
 
-        ToastUtil.getToastr().success("Course supprimée");
+        ToastService.getToastr().success("Course supprimée");
         navigate("/admin/races");
     }, [accessToken, navigate, race]);
 

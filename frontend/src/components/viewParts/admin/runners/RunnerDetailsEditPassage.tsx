@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { type AdminProcessedPassage } from "../../../../types/Passage";
 import { type AdminRaceWithRunnerCount } from "../../../../types/Race";
-import ToastUtil from "../../../../util/ToastUtil";
+import ToastService from "../../../../services/ToastService";
 import RunnerDetailsPassageForm from "./RunnerDetailsPassageForm";
 
 interface RunnerDetailsEditPassageProps {
@@ -45,7 +45,7 @@ export default function RunnerDetailsEditPassage({
         e.preventDefault();
 
         if (!passageTime) {
-            ToastUtil.getToastr().error("Erreur : date et heure de départ de la course inconnues, impossible de calculer la date et l'heure du passage");
+            ToastService.getToastr().error("Erreur : date et heure de départ de la course inconnues, impossible de calculer la date et l'heure du passage");
             return;
         }
 

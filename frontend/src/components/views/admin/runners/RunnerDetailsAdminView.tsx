@@ -1,7 +1,7 @@
 import { Col, Row } from "react-bootstrap";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { GENDER } from "../../../../constants/Gender";
+import { GENDER } from "../../../../constants/gender";
 import { getAdminRaces } from "../../../../services/api/RaceService";
 import {
     deleteAdminRunner,
@@ -14,16 +14,16 @@ import { type Gender } from "../../../../types/Gender";
 import { type AdminProcessedPassage } from "../../../../types/Passage";
 import { type AdminRaceWithRunnerCount } from "../../../../types/Race";
 import { type RunnerWithAdminProcessedPassages, type RunnerWithRace } from "../../../../types/Runner";
-import { isApiRequestResultOk } from "../../../../util/apiUtils";
-import { getProcessedPassagesFromPassages } from "../../../../util/passageUtils";
-import { formatDateAsString, formatDateForApi } from "../../../../util/utils";
+import { isApiRequestResultOk } from "../../../../utils/apiUtils";
+import { getProcessedPassagesFromPassages } from "../../../../utils/passageUtils";
+import { formatDateAsString, formatDateForApi } from "../../../../utils/utils";
 import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../ui/breadcrumbs/Crumb";
 import Page from "../../../ui/Page";
 import CircularLoader from "../../../ui/CircularLoader";
 import { userContext } from "../../../App";
 import RunnerDetailsForm from "../../../viewParts/admin/runners/RunnerDetailsForm";
-import ToastUtil from "../../../../util/ToastUtil";
+import ToastService from "../../../../services/ToastService";
 import RunnerDetailsPassages from "../../../viewParts/admin/runners/RunnerDetailsPassages";
 
 export default function RunnerDetailsAdminView(): React.ReactElement {
@@ -83,7 +83,7 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
         const result = await getAdminRaces(accessToken);
 
         if (!isApiRequestResultOk(result)) {
-            ToastUtil.getToastr().error("Impossible de récupérer la liste des courses");
+            ToastService.getToastr().error("Impossible de récupérer la liste des courses");
             return;
         }
 
@@ -98,7 +98,7 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
         const result = await getAdminRunner(accessToken, urlRunnerId);
 
         if (!isApiRequestResultOk(result)) {
-            ToastUtil.getToastr().error("Impossible de récupérer les détails du coureur");
+            ToastService.getToastr().error("Impossible de récupérer les détails du coureur");
             setRunner(null);
             return;
         }
@@ -145,11 +145,11 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
         const result = await patchAdminRunnerPassage(accessToken, runner.id, passage.id, { isHidden: hidden });
 
         if (!isApiRequestResultOk(result)) {
-            ToastUtil.getToastr().error("Une erreur est survenue");
+            ToastService.getToastr().error("Une erreur est survenue");
             return;
         }
 
-        ToastUtil.getToastr().success(hidden ? "Le passage a été masqué" : "Le passage n'est plus masqué");
+        ToastService.getToastr().success(hidden ? "Le passage a été masqué" : "Le passage n'est plus masqué");
 
         void fetchRunner();
     }, [accessToken, runner, fetchRunner]);
@@ -162,11 +162,11 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
         const result = await patchAdminRunnerPassage(accessToken, runner.id, passage.id, { time: formatDateForApi(time) });
 
         if (!isApiRequestResultOk(result)) {
-            ToastUtil.getToastr().error("Une erreur est survenue");
+            ToastService.getToastr().error("Une erreur est survenue");
             return;
         }
 
-        ToastUtil.getToastr().success("Le temps de passage a bien été modifié");
+        ToastService.getToastr().success("Le temps de passage a bien été modifié");
 
         void fetchRunner();
     }, [accessToken, runner, fetchRunner]);
@@ -182,11 +182,11 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
         });
 
         if (!isApiRequestResultOk(result)) {
-            ToastUtil.getToastr().error("Une erreur est survenue");
+            ToastService.getToastr().error("Une erreur est survenue");
             return;
         }
 
-        ToastUtil.getToastr().success("Le passage a bien été créé");
+        ToastService.getToastr().success("Le passage a bien été créé");
 
         void fetchRunner();
     }, [accessToken, runner, fetchRunner]);
@@ -209,11 +209,11 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
         const result = await deleteAdminRunnerPassage(accessToken, runner.id, passage.id);
 
         if (!isApiRequestResultOk(result)) {
-            ToastUtil.getToastr().error("Une erreur est survenue");
+            ToastService.getToastr().error("Une erreur est survenue");
             return;
         }
 
-        ToastUtil.getToastr().success("Le passage a été supprimé");
+        ToastService.getToastr().success("Le passage a été supprimé");
 
         void fetchRunner();
     }, [accessToken, runner, fetchRunner]);
@@ -249,12 +249,12 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
         const result = await patchAdminRunner(accessToken, runner.id, body);
 
         if (!isApiRequestResultOk(result)) {
-            ToastUtil.getToastr().error("Une erreur est survenue");
+            ToastService.getToastr().error("Une erreur est survenue");
             setIsSaving(false);
             return;
         }
 
-        ToastUtil.getToastr().success("Détails du coureur enregistrés");
+        ToastService.getToastr().success("Détails du coureur enregistrés");
 
         if (idHasChanged) {
             navigate(`/admin/runners/${runnerId}`, { replace: true });
@@ -278,11 +278,11 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
         const result = await deleteAdminRunner(accessToken, runner.id);
 
         if (!isApiRequestResultOk(result)) {
-            ToastUtil.getToastr().error("Une erreur est survenue");
+            ToastService.getToastr().error("Une erreur est survenue");
             return;
         }
 
-        ToastUtil.getToastr().success("Coureur supprimé");
+        ToastService.getToastr().success("Coureur supprimé");
         navigate("/admin/runners");
     }, [accessToken, navigate, runner]);
 

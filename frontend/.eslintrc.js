@@ -39,6 +39,7 @@ module.exports = {
             imports: "always-multiline",
             exports: "always-multiline",
             functions: "always-multiline",
+            enums: "always-multiline",
         }],
 
         indent: "off",

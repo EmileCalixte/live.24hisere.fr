@@ -1,14 +1,14 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { GENDER } from "../../../../constants/Gender";
+import { GENDER } from "../../../../constants/gender";
 import { useStateWithNonNullableSetter } from "../../../../hooks/useStateWithNonNullableSetter";
 import { getAdminRaces } from "../../../../services/api/RaceService";
 import { postAdminRunner } from "../../../../services/api/RunnerService";
 import { type Gender } from "../../../../types/Gender";
 import { type AdminRaceWithRunnerCount } from "../../../../types/Race";
-import { isApiRequestResultOk } from "../../../../util/apiUtils";
-import ToastUtil from "../../../../util/ToastUtil";
+import { isApiRequestResultOk } from "../../../../utils/apiUtils";
+import ToastService from "../../../../services/ToastService";
 import { userContext } from "../../../App";
 import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../ui/breadcrumbs/Crumb";
@@ -39,14 +39,14 @@ export default function CreateRunnerAdminView(): React.ReactElement {
         const result = await getAdminRaces(accessToken);
 
         if (!isApiRequestResultOk(result)) {
-            ToastUtil.getToastr().error("Impossible de récupérer la liste des courses");
+            ToastService.getToastr().error("Impossible de récupérer la liste des courses");
             return;
         }
 
         const responseRaces = result.json.races;
 
         if (responseRaces.length < 1) {
-            ToastUtil.getToastr().warning("Aucune course n'a été créée. Au moins une course doit exister pour enregistrer un coureur.");
+            ToastService.getToastr().warning("Aucune course n'a été créée. Au moins une course doit exister pour enregistrer un coureur.");
         }
 
         setRaces(responseRaces);
@@ -77,12 +77,12 @@ export default function CreateRunnerAdminView(): React.ReactElement {
         const result = await postAdminRunner(accessToken, body);
 
         if (!isApiRequestResultOk(result)) {
-            ToastUtil.getToastr().error("Une erreur est survenue");
+            ToastService.getToastr().error("Une erreur est survenue");
             setIsSaving(false);
             return;
         }
 
-        ToastUtil.getToastr().success("Coureur créé");
+        ToastService.getToastr().success("Coureur créé");
         navigate(`/admin/runners/${id}`);
     }, [accessToken, id, firstname, lastname, gender, birthYear, raceId, navigate]);
 

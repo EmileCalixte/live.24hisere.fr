@@ -1,8 +1,8 @@
 import config from "../../config/config";
-import { DEFAULT_HEADERS, DEFAULT_HEADERS_WITH_BODY } from "../../constants/Api";
+import { DEFAULT_HEADERS, DEFAULT_HEADERS_WITH_BODY } from "../../constants/api";
 import { type ApiRequest, type ApiRequestResult } from "../../types/api/ApiRequest";
-import { addHeadersIfNotSet, EVENT_API_REQUEST_ENDED, EVENT_API_REQUEST_STARTED } from "../../util/apiUtils";
-import { verbose } from "../../util/utils";
+import { addHeadersIfNotSet, EVENT_API_REQUEST_ENDED, EVENT_API_REQUEST_STARTED } from "../../utils/apiUtils";
+import { verbose } from "../../utils/utils";
 
 function getBackendFullUrl(shortUrl: string): string {
     if (!shortUrl.startsWith("/")) {

@@ -5,7 +5,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { type AdminProcessedPassage } from "../../../../types/Passage";
 import { type AdminRaceWithRunnerCount } from "../../../../types/Race";
-import { formatDateAsString, formatMsAsDuration } from "../../../../util/utils";
+import { formatDateAsString, formatMsAsDuration } from "../../../../utils/utils";
 import RunnerDetailsCreatePassage from "./RunnerDetailsCreatePassage";
 import RunnerDetailsEditPassage from "./RunnerDetailsEditPassage";
 

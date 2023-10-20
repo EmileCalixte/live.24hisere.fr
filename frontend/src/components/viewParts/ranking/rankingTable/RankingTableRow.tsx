@@ -4,7 +4,7 @@ import { type CategoryShortCode } from "../../../../types/Category";
 import { type GenderWithMixed } from "../../../../types/Gender";
 import { type Race } from "../../../../types/Race";
 import { type RankingRunner } from "../../../../types/Ranking";
-import { formatFloatNumber, formatMsAsDuration } from "../../../../util/utils";
+import { formatFloatNumber, formatMsAsDuration } from "../../../../utils/utils";
 import RankingTableRowNCells from "./RankingTableRowNCells";
 
 interface RankingTableRowProps {

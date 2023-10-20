@@ -1,11 +1,11 @@
 import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { GENDER_MIXED } from "../../../../../constants/Gender";
+import { GENDER_MIXED } from "../../../../../constants/gender";
 import { type CategoryShortCode } from "../../../../../types/Category";
 import { type GenderWithMixed } from "../../../../../types/Gender";
 import { type RankingRunner } from "../../../../../types/Ranking";
-import { getCategoryCodeFromBirthYear } from "../../../../../util/ffaUtils";
-import { formatFloatNumber, formatMsAsDuration } from "../../../../../util/utils";
+import { getCategoryCodeFromBirthYear } from "../../../../../utils/ffaUtils";
+import { formatFloatNumber, formatMsAsDuration } from "../../../../../utils/utils";
 
 interface ResponsiveRankingTableRowProps {
     runner: RankingRunner;

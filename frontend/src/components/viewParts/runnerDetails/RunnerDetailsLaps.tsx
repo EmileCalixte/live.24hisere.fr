@@ -2,13 +2,13 @@ import { faSortDown, faSortUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useCallback, useContext, useMemo, useState } from "react";
 import { Col, Row } from "react-bootstrap";
-import { isRaceFinished, isRaceStarted } from "../../../helpers/raceHelper";
+import { isRaceFinished, isRaceStarted } from "../../../utils/raceUtils";
 import { useRaceTime } from "../../../hooks/useRaceTime";
 import { useWindowDimensions } from "../../../hooks/useWindowDimensions";
 import { type Race } from "../../../types/Race";
 import { type MinimalRankingRunnerInput, type RankingRunner } from "../../../types/Ranking";
 import { type RunnerWithProcessedPassages } from "../../../types/Runner";
-import { formatMsAsDuration, SORT_ASC, SORT_DESC } from "../../../util/utils";
+import { formatMsAsDuration, SORT_ASC, SORT_DESC } from "../../../utils/utils";
 import { appDataContext } from "../../App";
 
 enum SortBy {

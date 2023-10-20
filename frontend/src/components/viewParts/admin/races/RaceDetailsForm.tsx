@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { getDateStringFromDate, getTimeStringFromDate } from "../../../../util/utils";
+import { getDateStringFromDate, getTimeStringFromDate } from "../../../../utils/utils";
 import { Checkbox } from "../../../ui/forms/Checkbox";
 import DurationInputs from "../../../ui/forms/DurationInputs";
 import { Input } from "../../../ui/forms/Input";

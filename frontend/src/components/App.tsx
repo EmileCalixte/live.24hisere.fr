@@ -1,7 +1,7 @@
 import React, { createContext, useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import { getRankingMap, getRunnersFromRankingMap } from "../helpers/rankingHelper";
+import { getRankingMap, getRunnersFromRankingMap } from "../utils/rankingUtils";
 import { getAppData } from "../services/api/AppDataService";
 import { getCurrentUserInfo, logout as performLogoutRequest } from "../services/api/AuthService";
 import { type PassageWithRunnerId } from "../types/Passage";
@@ -9,8 +9,8 @@ import { type Race } from "../types/Race";
 import { type RankingMap, type RankingRunner } from "../types/Ranking";
 import { type RunnerProcessedData, type RunnerWithProcessedHours, type RunnerWithProcessedPassages } from "../types/Runner";
 import { type User } from "../types/User";
-import { getProcessedHoursFromPassages, getProcessedPassagesFromPassages, getRunnerProcessedDataFromPassages } from "../util/passageUtils";
-import { getRunnersWithPassagesFromRunnersAndPassages } from "../util/runnerUtils";
+import { getProcessedHoursFromPassages, getProcessedPassagesFromPassages, getRunnerProcessedDataFromPassages } from "../utils/passageUtils";
+import { getRunnersWithPassagesFromRunnersAndPassages } from "../utils/runnerUtils";
 import Header from "./ui/header/Header";
 import Footer from "./ui/footer/Footer";
 import RankingView from "./views/RankingView";
@@ -19,11 +19,11 @@ import {
     EVENT_API_REQUEST_ENDED,
     EVENT_API_REQUEST_STARTED,
     isApiRequestResultOk,
-} from "../util/apiUtils";
+} from "../utils/apiUtils";
 import LoginView from "./views/LoginView";
 import Admin from "./views/admin/Admin";
-import { objectArrayToMap, verbose } from "../util/utils";
-import ToastUtil from "../util/ToastUtil";
+import { objectArrayToMap, verbose } from "../utils/utils";
+import ToastService from "../services/ToastService";
 
 type AppDataContextRunner = RunnerWithProcessedPassages & RunnerWithProcessedHours & RunnerProcessedData;
 
@@ -150,7 +150,7 @@ export default function App(): React.ReactElement {
         const result = await getAppData();
 
         if (!isApiRequestResultOk(result)) {
-            ToastUtil.getToastr().error("Impossible de récupérer les informations de l'application");
+            ToastService.getToastr().error("Impossible de récupérer les informations de l'application");
             return;
         }
 
@@ -219,7 +219,7 @@ export default function App(): React.ReactElement {
         if (!isApiRequestResultOk(result)) {
             forgetAccessToken();
             setUser(null);
-            ToastUtil.getToastr().error("Vous avez été déconecté");
+            ToastService.getToastr().error("Vous avez été déconecté");
             return;
         }
 
@@ -238,7 +238,7 @@ export default function App(): React.ReactElement {
         setUser(null);
         setRedirect("/");
 
-        ToastUtil.getToastr().success("Vous avez été déconnecté");
+        ToastService.getToastr().success("Vous avez été déconnecté");
     }, [accessToken, forgetAccessToken]);
 
     useEffect(() => {

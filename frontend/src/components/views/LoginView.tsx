@@ -1,10 +1,10 @@
 import React, { useContext, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { login } from "../../services/api/AuthService";
-import { isApiRequestResultOk } from "../../util/apiUtils";
+import { isApiRequestResultOk } from "../../utils/apiUtils";
 import { userContext } from "../App";
 import { Navigate } from "react-router-dom";
-import ToastUtil from "../../util/ToastUtil";
+import ToastService from "../../services/ToastService";
 import { Input } from "../ui/forms/Input";
 import Page from "../ui/Page";
 
@@ -24,9 +24,9 @@ export default function LoginView(): React.ReactElement {
 
         if (!isApiRequestResultOk(result)) {
             if (result.response.status === 403) {
-                ToastUtil.getToastr().error("Identifiants incorrects");
+                ToastService.getToastr().error("Identifiants incorrects");
             } else {
-                ToastUtil.getToastr().error("Une erreur est survenue");
+                ToastService.getToastr().error("Une erreur est survenue");
             }
             setSubmitButtonDisabled(false);
             return;

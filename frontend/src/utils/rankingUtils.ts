@@ -1,7 +1,7 @@
 import { RankingCalculator } from "../services/RankingCalculator";
 import { type Race } from "../types/Race";
 import { type MinimalRankingRunnerInput, type RankingMap, type RankingRunner } from "../types/Ranking";
-import { spaceship } from "../util/compareUtils";
+import { spaceship } from "./compareUtils";
 
 /**
  * Returns rankings from a list of races and a list of runners

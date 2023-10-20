@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Col, Row } from "react-bootstrap";
 import { appDataContext, userContext } from "../../App";
-import { formatDateAsString } from "../../../util/utils";
+import { formatDateAsString } from "../../../utils/utils";
 import { Link } from "react-router-dom";
 
 export default function Footer(): React.ReactElement {

@@ -5,12 +5,12 @@ import { getAdminRaces } from "../../../../services/api/RaceService";
 import { getAdminRunners } from "../../../../services/api/RunnerService";
 import { type AdminRace, type RaceDict } from "../../../../types/Race";
 import { type Runner } from "../../../../types/Runner";
-import { getRaceDictFromRaces } from "../../../../util/raceUtil";
-import ToastUtil from "../../../../util/ToastUtil";
+import { getRaceDictFromRaces } from "../../../../utils/raceUtils";
+import ToastService from "../../../../services/ToastService";
 import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../ui/breadcrumbs/Crumb";
 import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { isApiRequestResultOk } from "../../../../util/apiUtils";
+import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { userContext } from "../../../App";
 import Page from "../../../ui/Page";
 import CircularLoader from "../../../ui/CircularLoader";
@@ -47,7 +47,7 @@ export default function RunnersAdminView(): React.ReactElement {
         const result = await getAdminRaces(accessToken);
 
         if (!isApiRequestResultOk(result)) {
-            ToastUtil.getToastr().error("Impossible de récupérer la liste des courses");
+            ToastService.getToastr().error("Impossible de récupérer la liste des courses");
             return;
         }
 
@@ -62,7 +62,7 @@ export default function RunnersAdminView(): React.ReactElement {
         const result = await getAdminRunners(accessToken);
 
         if (!isApiRequestResultOk(result)) {
-            ToastUtil.getToastr().error("Impossible de récupérer la liste des coureurs");
+            ToastService.getToastr().error("Impossible de récupérer la liste des coureurs");
             return;
         }
 

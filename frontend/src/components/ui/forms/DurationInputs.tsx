@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from "react";
-import { getDurationAsMs } from "../../../helpers/durationHelper";
-import { prefixNumber } from "../../../util/utils";
+import { getDurationAsMs } from "../../../utils/mathUtils";
+import { prefixNumber } from "../../../utils/utils";
 
 interface DurationInputsProps {
     legend?: string;

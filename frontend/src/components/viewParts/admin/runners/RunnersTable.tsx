@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { type RaceDict } from "../../../../types/Race";
 import { type Runner } from "../../../../types/Runner";
-import { getCategoryCodeFromBirthYear } from "../../../../util/ffaUtils";
+import { getCategoryCodeFromBirthYear } from "../../../../utils/ffaUtils";
 import CircularLoader from "../../../ui/CircularLoader";
 
 interface RunnersTableProps {

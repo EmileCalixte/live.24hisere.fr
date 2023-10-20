@@ -9,8 +9,8 @@ import RunnerSelector from "../viewParts/runnerDetails/RunnerSelector";
 import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import RunnerDetailsStats from "../viewParts/runnerDetails/RunnerDetailsStats";
 import RunnerDetailsLaps from "../viewParts/runnerDetails/RunnerDetailsLaps";
-import { getDataForExcelExport } from "../../util/runnerUtils";
-import { generateXlsxFromData } from "../../util/excelUtils";
+import { getDataForExcelExport } from "../../utils/runnerUtils";
+import { generateXlsxFromData } from "../../utils/excelUtils";
 
 enum Tab {
     Stats = "stats",

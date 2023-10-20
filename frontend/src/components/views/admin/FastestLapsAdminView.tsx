@@ -6,10 +6,10 @@ import { getAdminRunners } from "../../../services/api/RunnerService";
 import { type AdminPassageWithRunnerId, type ProcessedPassage } from "../../../types/Passage";
 import { type RaceDict } from "../../../types/Race";
 import { type Runner } from "../../../types/Runner";
-import { isApiRequestResultOk } from "../../../util/apiUtils";
-import { getProcessedPassagesFromPassages } from "../../../util/passageUtils";
-import { getRaceDictFromRaces } from "../../../util/raceUtil";
-import ToastUtil from "../../../util/ToastUtil";
+import { isApiRequestResultOk } from "../../../utils/apiUtils";
+import { getProcessedPassagesFromPassages } from "../../../utils/passageUtils";
+import { getRaceDictFromRaces } from "../../../utils/raceUtils";
+import ToastService from "../../../services/ToastService";
 import { userContext } from "../../App";
 import Breadcrumbs from "../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../ui/breadcrumbs/Crumb";
@@ -52,7 +52,7 @@ export default function FastestLapsAdminView(): React.ReactElement {
         const result = await getAdminRaces(accessToken);
 
         if (!isApiRequestResultOk(result)) {
-            ToastUtil.getToastr().error("Impossible de récupérer la liste des courses");
+            ToastService.getToastr().error("Impossible de récupérer la liste des courses");
             return;
         }
 
@@ -67,7 +67,7 @@ export default function FastestLapsAdminView(): React.ReactElement {
         const result = await getAdminRunners(accessToken);
 
         if (!isApiRequestResultOk(result)) {
-            ToastUtil.getToastr().error("Impossible de récupérer la liste des coureurs");
+            ToastService.getToastr().error("Impossible de récupérer la liste des coureurs");
             return;
         }
 
@@ -82,7 +82,7 @@ export default function FastestLapsAdminView(): React.ReactElement {
         const result = await getAdminPassages(accessToken);
 
         if (!isApiRequestResultOk(result)) {
-            ToastUtil.getToastr().error("Impossible de récupérer la liste des passages");
+            ToastService.getToastr().error("Impossible de récupérer la liste des passages");
             return;
         }
 

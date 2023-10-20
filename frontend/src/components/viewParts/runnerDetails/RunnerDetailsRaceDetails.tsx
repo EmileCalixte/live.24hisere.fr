@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { Col, Row } from "react-bootstrap";
 import { type Race } from "../../../types/Race";
-import { formatMsAsDuration } from "../../../util/utils";
+import { formatMsAsDuration } from "../../../utils/utils";
 import RaceTimer from "../RaceTimer";
 
 interface RunnerDetailsRaceDetailsProps {

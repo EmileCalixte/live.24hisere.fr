@@ -1,10 +1,10 @@
-import { GENDER_MIXED } from "../constants/Gender";
+import { GENDER_MIXED } from "../constants/gender";
 import { type GenderWithMixed } from "../types/Gender";
 import { type Race } from "../types/Race";
 import { type MinimalRankingRunnerInput, type Ranking, type RankingRunnerRanks } from "../types/Ranking";
-import { getCategoryCodeFromBirthYear } from "../util/ffaUtils";
-import { getRunnerProcessedDataFromPassages } from "../util/passageUtils";
-import { areRunnersEqual, spaceshipRunners } from "../util/runnerUtils";
+import { getCategoryCodeFromBirthYear } from "../utils/ffaUtils";
+import { getRunnerProcessedDataFromPassages } from "../utils/passageUtils";
+import { areRunnersEqual, spaceshipRunners } from "../utils/runnerUtils";
 
 type CategoryGenderRanks = {
     [key in GenderWithMixed]: {
