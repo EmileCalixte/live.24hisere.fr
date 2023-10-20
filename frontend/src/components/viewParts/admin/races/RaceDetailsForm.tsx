@@ -37,7 +37,7 @@ export default function RaceDetailsForm({
     setIsPublic,
     submitButtonDisabled,
 }: RaceDetailsFormProps): React.ReactElement {
-    const startTimeDate = useMemo(() => {
+    const startTimeDate = useMemo<string>(() => { // This should trigger a build failure
         if (!startTime) {
             return;
         }
