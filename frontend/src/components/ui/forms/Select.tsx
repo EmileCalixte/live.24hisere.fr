@@ -14,6 +14,7 @@ export interface SelectProps<T extends SelectOption["value"]> {
     onChange?: React.ChangeEventHandler<HTMLSelectElement>;
     onMouseDown?: React.MouseEventHandler<HTMLSelectElement>;
     onKeyDown?: React.KeyboardEventHandler<HTMLSelectElement>;
+    onBlur?: React.FocusEventHandler<HTMLSelectElement>;
     className?: string;
     selectRef?: React.LegacyRef<HTMLSelectElement>;
 }
@@ -30,6 +31,7 @@ export default function Select<T extends SelectOption["value"]>({
     onChange,
     onMouseDown,
     onKeyDown,
+    onBlur,
     className,
     selectRef,
 }: SelectProps<T>): React.ReactElement {
@@ -45,6 +47,7 @@ export default function Select<T extends SelectOption["value"]>({
                         onChange={onChange}
                         onMouseDown={onMouseDown}
                         onKeyDown={onKeyDown}
+                        onBlur={onBlur}
                 >
                     <option disabled hidden value="_placeholder">{placeholderLabel}</option>
                     {isLoading

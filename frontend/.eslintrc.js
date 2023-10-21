@@ -132,5 +132,7 @@ module.exports = {
         "prefer-arrow-callback": "error",
 
         "@typescript-eslint/strict-boolean-expressions": "off",
+
+        "operator-linebreak": ["error", "before"],
     },
 };

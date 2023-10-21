@@ -66,6 +66,7 @@ export default function RunnerSelector({ runners, onSelectRunner, selectedRunner
             <CustomSelect
                 label="Coureur"
                 searchable
+                searchInputLabelAndPlaceHolder="Rechercher par nom, prénom ou dossard"
                 options={getRunnersSelectOptions(idSortedRunners)}
                 isLoading={!idSortedRunners}
                 loadingOptionLabel="Chargement des coureurs"

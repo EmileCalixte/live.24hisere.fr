@@ -7,6 +7,7 @@ interface InputProps {
     type?: InputType;
     name?: string;
     value?: string | number;
+    placeholder?: string;
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
     required?: boolean;
     min?: string | number;
@@ -17,6 +18,8 @@ interface InputProps {
     autoComplete?: string;
     autoFocus?: boolean;
     className?: string;
+    labelClassName?: string;
+    inputRef?: React.LegacyRef<HTMLInputElement>;
 }
 
 export function Input({
@@ -24,6 +27,7 @@ export function Input({
     type = "text",
     name,
     value,
+    placeholder,
     onChange,
     required = false,
     min,
@@ -34,6 +38,8 @@ export function Input({
     autoComplete,
     autoFocus = false,
     className,
+    labelClassName,
+    inputRef,
 }: InputProps): React.ReactElement {
     if (type === "number" && pattern === undefined) {
         pattern = "[0-9]*";
@@ -53,11 +59,12 @@ export function Input({
     return (
         <div className={clsx("input-group", className)}>
             <label>
-                {label}
+                <span className={labelClassName}>{label}</span>
                 <input className="input"
                        type={type}
                        name={name}
                        value={value}
+                       placeholder={placeholder}
                        onChange={onChange}
                        required={required}
                        min={min}
@@ -67,6 +74,7 @@ export function Input({
                        pattern={pattern}
                        autoFocus={autoFocus}
                        autoComplete={autoComplete}
+                       ref={inputRef}
                 />
             </label>
         </div>
