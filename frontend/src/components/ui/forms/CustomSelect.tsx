@@ -21,7 +21,7 @@ export default function CustomSelect<T extends SelectOption["value"]>({
 
     const documentActiveElement = useDocumentActiveElement();
 
-    const [shouldOpenOnSelectFocus, setShouldOpenOnSelectFocus] = React.useState(true);
+    const [shouldOpenOnSelectFocus, setShouldOpenOnSelectFocus] = React.useState(false);
 
     // TODO handle properly touch events on mobile (currently we have to touch twice to open menu after page loading)
     const isOpened = React.useMemo<boolean>(() => {
@@ -38,11 +38,11 @@ export default function CustomSelect<T extends SelectOption["value"]>({
         props.onMouseDown?.(e);
     };
 
-    const onOpenedContainerMouseDown: React.MouseEventHandler<HTMLDivElement> = (e) => {
-        // We don't want the select options to close when the user clicks on the menu background
-        if (e.target === openedContainerRef.current) {
-            e.preventDefault();
-        }
+    const onSelectBlur: React.FocusEventHandler<HTMLSelectElement> = (e) => {
+        // Without setTimeout 0, menu is hidden before search input is focused on search input click / focus with tab key
+        setTimeout(() => { setShouldOpenOnSelectFocus(false); }, 0);
+
+        props.onBlur?.(e);
     };
 
     const onSelectKeyDown: React.KeyboardEventHandler<HTMLSelectElement> = (e) => {
@@ -53,12 +53,11 @@ export default function CustomSelect<T extends SelectOption["value"]>({
 
         props.onKeyDown?.(e);
     };
-
-    const onBlur: React.FocusEventHandler<HTMLSelectElement> = (e) => {
-        // Without setTimeout 0, menu is hidden before search input is focused on search input click / focus with tab key
-        setTimeout(() => { setShouldOpenOnSelectFocus(false); }, 0);
-
-        props.onBlur?.(e);
+    const onOpenedContainerMouseDown: React.MouseEventHandler<HTMLDivElement> = (e) => {
+        // We don't want the select options to close when the user clicks on the menu background
+        if (e.target === openedContainerRef.current) {
+            e.preventDefault();
+        }
     };
 
     return (
@@ -66,7 +65,7 @@ export default function CustomSelect<T extends SelectOption["value"]>({
             <Select {...props}
                     onMouseDown={onSelectMouseDown}
                     onKeyDown={onSelectKeyDown}
-                    onBlur={onBlur}
+                    onBlur={onSelectBlur}
                     selectRef={selectRef}
             />
             {isOpened && (
