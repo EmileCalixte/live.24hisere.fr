@@ -1,4 +1,6 @@
 import { type Runner } from "../../../types/Runner";
+import { getRunnersSelectOptions } from "../../../utils/runnerUtils";
+import CustomSelect from "../../ui/forms/CustomSelect";
 import OptionWithLoadingDots from "../../ui/forms/OptionWithLoadingDots";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
@@ -61,6 +63,17 @@ export default function RunnerSelector({ runners, onSelectRunner, selectedRunner
 
     return (
         <div className="runner-details-runner-selector-container">
+            <CustomSelect
+                label="Coureur"
+                searchable
+                options={getRunnersSelectOptions(idSortedRunners)}
+                isLoading={!idSortedRunners}
+                loadingOptionLabel="Chargement des coureurs"
+                placeholderLabel="Cliquez ici pour sélectionner un coureur"
+                value={selectedRunnerExists ? selectedRunnerId : undefined}
+                onChange={onSelectRunner}
+            />
+
             <div className="input-group">
                 <label htmlFor="runner-select">
                     Coureur
