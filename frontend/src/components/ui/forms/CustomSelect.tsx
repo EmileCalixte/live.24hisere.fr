@@ -78,9 +78,10 @@ export default function CustomSelect<T extends SelectOption["value"]>({
                         <Input label={searchInputLabelAndPlaceHolder ?? "Rechercher"}
                                placeholder={searchInputLabelAndPlaceHolder}
                                className="mx-2 my-2"
-                               labelClassName="d-none"
-                               inputRef={searchInputRef}
+                               labelClassName="hidden-label"
                                autoFocus
+                               autoComplete="off"
+                               inputRef={searchInputRef}
                         />
                     )}
                     Options
