@@ -72,7 +72,7 @@ export default function CustomSelect<T extends SelectOption["value"]>({
             closeSelect();
         }
 
-        if (e.key === Key.ENTER) {
+        if ([Key.ENTER, Key.SPACE].includes(e.key as Key)) {
             e.preventDefault(); // Prevent the select default menu from opening on pressing Enter
             setShouldOpenOnSelectFocus(opened => !opened);
         }
@@ -115,7 +115,7 @@ export default function CustomSelect<T extends SelectOption["value"]>({
         const selectedButtonOffsetTop = selectedButtonRef.current.offsetTop;
 
         optionsListRef.current.scrollTop = selectedButtonOffsetTop - (optionsContainerHeight / 2);
-    }, [isOpened, search]);
+    }, [isOpened, search, value]);
 
     React.useEffect(() => {
         if (!isOpened) {
@@ -155,7 +155,10 @@ export default function CustomSelect<T extends SelectOption["value"]>({
 
                     {searchable && options.length && !filteredOptions.length
                         ? (
-                            <p className="mx-2 mt-0 mb-2">Aucun résultat</p>
+                            <p className="mx-2 mt-0 mb-2">
+                                {/* Easter egg */}
+                                {search === "SALUT DJESON" ? "Salut" : "Aucun résultat"}
+                            </p>
                         )
                         : (
                             <ul className="custom-select-options-list" ref={optionsListRef}>
