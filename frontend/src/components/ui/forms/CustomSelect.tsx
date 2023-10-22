@@ -81,17 +81,47 @@ export default function CustomSelect<T extends SelectOption["value"]>({
     };
 
     const onSearchInputKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
-        if (e.key === Key.ESCAPE) {
-            closeSelect();
+        switch (e.key) {
+            case Key.ESCAPE:
+                closeSelect();
+                break;
+            case Key.ARROW_UP:
+            case Key.ARROW_DOWN:
+                updateSelectedOptionFromKeyboardArrow(e.key);
+                break;
         }
     };
+
+    function updateSelectedOptionFromKeyboardArrow(key: Key.ARROW_UP | Key.ARROW_DOWN): void {
+        if (!filteredOptions.length) {
+            return;
+        }
+
+        if (!value) {
+            if (key === Key.ARROW_UP) {
+                return;
+            }
+
+            selectOption(filteredOptions[0].value, false);
+            return;
+        }
+
+        const valueIndex = filteredOptions.findIndex(option => option.value.toString() === value.toString());
+
+        if ((valueIndex === 0 && key === Key.ARROW_UP)
+            || (valueIndex === filteredOptions.length - 1 && key === Key.ARROW_DOWN)) {
+            return;
+        }
+
+        selectOption(filteredOptions[valueIndex + (key === Key.ARROW_UP ? -1 : +1)].value, false);
+    }
 
     function closeSelect(): void {
         selectRef.current?.focus();
         setShouldOpenOnSelectFocus(false);
     }
 
-    function selectOption(value: T): void {
+    function selectOption(value: T, closeSelectOptions = true): void {
         if (!selectRef.current) {
             return;
         }
@@ -102,7 +132,7 @@ export default function CustomSelect<T extends SelectOption["value"]>({
             cancelable: true,
         }));
 
-        closeSelect();
+        closeSelectOptions && closeSelect();
     }
 
     React.useEffect(() => {
