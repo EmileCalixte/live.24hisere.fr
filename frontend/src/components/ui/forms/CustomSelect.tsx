@@ -85,12 +85,38 @@ export default function CustomSelect<T extends SelectOption["value"]>({
             case Key.ESCAPE:
                 closeSelect();
                 break;
+            case Key.ENTER:
+                e.preventDefault(); // For some reason, if we don't prevent the default event, the default select options will appear after the custom menu is closed
+                updateSelectedOptionFromKeyboardEnter();
+                break;
             case Key.ARROW_UP:
             case Key.ARROW_DOWN:
                 updateSelectedOptionFromKeyboardArrow(e.key);
                 break;
         }
     };
+
+    function updateSelectedOptionFromKeyboardEnter(): void {
+        if (!filteredOptions.length) {
+            return;
+        }
+
+        if (!value) {
+            selectOption(filteredOptions[0].value);
+            return;
+        }
+
+        const valueIndex = filteredOptions.findIndex(option => option.value.toString() === value.toString());
+
+        if (valueIndex !== -1) {
+            // The currently selected option is visible in filtered options, so we keep this one and just close the select menu
+            closeSelect();
+            return;
+        }
+
+        // The currently selected option is not visible in filtered options, so we select the first one and close the select menu
+        selectOption(filteredOptions[0].value);
+    }
 
     function updateSelectedOptionFromKeyboardArrow(key: Key.ARROW_UP | Key.ARROW_DOWN): void {
         if (!filteredOptions.length) {
