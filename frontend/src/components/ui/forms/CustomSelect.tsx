@@ -1,3 +1,5 @@
+import clsx from "clsx";
+import latinize from "latinize";
 import React from "react";
 import { Key } from "../../../constants/keyboardEvent";
 import { useDocumentActiveElement } from "../../../hooks/useDocumentActiveElement";
@@ -15,25 +17,45 @@ export default function CustomSelect<T extends SelectOption["value"]>({
     searchInputLabelAndPlaceHolder,
     ...props
 }: CustomSelectProps<T>): React.ReactElement {
+    const { options, value } = props;
+
     const selectRef = React.useRef<HTMLSelectElement>(null);
     const openedContainerRef = React.useRef<HTMLDivElement>(null);
     const searchInputRef = React.useRef<HTMLInputElement>(null);
+    const optionsListRef = React.useRef<HTMLUListElement>(null);
+    const selectedButtonRef = React.useRef<HTMLButtonElement>(null);
 
     const documentActiveElement = useDocumentActiveElement();
 
     const [shouldOpenOnSelectFocus, setShouldOpenOnSelectFocus] = React.useState(false);
+    const [search, setSearch] = React.useState("");
 
-    // TODO handle properly touch events on mobile (currently we have to touch twice to open menu after page loading)
+    const filteredOptions = React.useMemo(() => {
+        const simplifiedSearch = latinize(search.trim()).toLowerCase();
+
+        return options.filter(option => {
+            const simplifiedLabel = latinize(option.label).toLowerCase();
+
+            return simplifiedLabel.includes(simplifiedSearch);
+        });
+    }, [options, search]);
+
     const isOpened = React.useMemo<boolean>(() => {
-        return (documentActiveElement === selectRef.current && shouldOpenOnSelectFocus)
-            || documentActiveElement === openedContainerRef.current
-            || documentActiveElement === searchInputRef.current;
+        return (
+            (documentActiveElement === selectRef.current && shouldOpenOnSelectFocus)
+            || openedContainerRef.current?.contains(documentActiveElement)
+        ) ?? false;
     }, [documentActiveElement, shouldOpenOnSelectFocus]);
 
     const onSelectMouseDown: React.MouseEventHandler<HTMLSelectElement> = (e) => {
         e.preventDefault(); // Prevent the select default menu from opening on click
         selectRef.current?.focus();
-        setShouldOpenOnSelectFocus(opened => !opened);
+
+        if (isOpened) {
+            setShouldOpenOnSelectFocus(false);
+        } else {
+            setShouldOpenOnSelectFocus(opened => !opened);
+        }
 
         props.onMouseDown?.(e);
     };
@@ -53,12 +75,42 @@ export default function CustomSelect<T extends SelectOption["value"]>({
 
         props.onKeyDown?.(e);
     };
-    const onOpenedContainerMouseDown: React.MouseEventHandler<HTMLDivElement> = (e) => {
-        // We don't want the select options to close when the user clicks on the menu background
-        if (e.target === openedContainerRef.current) {
-            e.preventDefault();
+
+    function selectOption(value: T): void {
+        if (!selectRef.current) {
+            return;
         }
-    };
+
+        selectRef.current.value = value.toString();
+        selectRef.current.dispatchEvent(new Event("change", {
+            bubbles: true,
+            cancelable: true,
+        }));
+
+        selectRef.current.focus();
+        setShouldOpenOnSelectFocus(false);
+    }
+
+    React.useEffect(() => {
+        if (!isOpened || !openedContainerRef.current || !optionsListRef.current || !selectedButtonRef.current) {
+            return;
+        }
+
+        // When options menu is opened or search value is updated, scroll to selected element
+        const optionsContainerHeight = openedContainerRef.current.offsetHeight;
+        const selectedButtonOffsetTop = selectedButtonRef.current.offsetTop;
+
+        optionsListRef.current.scrollTop = selectedButtonOffsetTop - (optionsContainerHeight / 2);
+    }, [isOpened, search]);
+
+    React.useEffect(() => {
+        if (!isOpened) {
+            return;
+        }
+
+        // When options menu is opened, reset search field
+        setSearch("");
+    }, [isOpened]);
 
     return (
         <div className="custom-select-container">
@@ -70,12 +122,14 @@ export default function CustomSelect<T extends SelectOption["value"]>({
             />
             {isOpened && (
                 <div className="custom-select-opened-container"
-                     onMouseDown={onOpenedContainerMouseDown}
+                     onMouseDown={(e) => { e.preventDefault(); }} // We don't want the select options to close when the user clicks inside
                      ref={openedContainerRef}
                 >
                     {searchable && (
                         <Input label={searchInputLabelAndPlaceHolder ?? "Rechercher"}
                                placeholder={searchInputLabelAndPlaceHolder}
+                               value={search}
+                               onChange={e => { setSearch(e.target.value); }}
                                className="mx-2 my-2"
                                labelClassName="hidden-label"
                                autoFocus
@@ -83,7 +137,29 @@ export default function CustomSelect<T extends SelectOption["value"]>({
                                inputRef={searchInputRef}
                         />
                     )}
-                    Options
+
+                    {searchable && options.length && !filteredOptions.length
+                        ? (
+                            <p className="mx-2 mt-0 mb-2">Aucun résultat</p>
+                        )
+                        : (
+                            <ul className="custom-select-options-list" ref={optionsListRef}>
+                                {filteredOptions.map((option, index) => {
+                                    const isSelectedOption = value === option.value.toString();
+
+                                    return (
+                                        <li key={index}>
+                                            <button className={clsx(isSelectedOption && "selected")}
+                                                    ref={isSelectedOption ? selectedButtonRef : undefined}
+                                                    onMouseDown={() => { selectOption(option.value); }}
+                                            >
+                                                {option.label}
+                                            </button>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        )}
                 </div>
             )}
         </div>
