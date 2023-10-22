@@ -24,7 +24,7 @@ Créez le fichier `backend/.env` à partir du modèle `backend/.env.default` et 
 
 #### Frontend
 
-Créez le fichier `frontend/src/config/config.ts` à partir du modèle `frontend/src/config/config.default.ts` et renseignez-y les paramètres relatifs à l'environnement d'exécution.
+Si besoin, créez un fichier `frontend/.env.development.local` à partir du fichier `frontend/.env.development` et renseignez-y les valeurs souhaitées.
 
 ### Accès
 
