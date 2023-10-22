@@ -1,7 +1,6 @@
 import { type Runner } from "../../../types/Runner";
 import { getRunnersSelectOptions } from "../../../utils/runnerUtils";
 import CustomSelect from "../../ui/forms/CustomSelect";
-import OptionWithLoadingDots from "../../ui/forms/OptionWithLoadingDots";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 interface RunnerSelectorProps {
@@ -12,7 +11,6 @@ interface RunnerSelectorProps {
 
 export default function RunnerSelector({ runners, onSelectRunner, selectedRunnerId }: RunnerSelectorProps): React.ReactElement {
     const [idSortedRunners, setIdSortedRunners] = useState<Runner[] | false>(false);
-    const [nameSortedRunners, setNameSortedRunners] = useState<Runner[] | false>(false);
 
     const selectedRunnerExists = useMemo(() => {
         if (!runners) {
@@ -48,13 +46,6 @@ export default function RunnerSelector({ runners, onSelectRunner, selectedRunner
 
             return 0;
         }));
-
-        setNameSortedRunners([...runners].sort((a, b) => {
-            const aName = a.lastname + a.firstname;
-            const bName = b.lastname + b.firstname;
-
-            return aName.localeCompare(bName);
-        }));
     }, [runners]);
 
     useEffect(() => {
@@ -74,53 +65,6 @@ export default function RunnerSelector({ runners, onSelectRunner, selectedRunner
                 value={selectedRunnerExists ? selectedRunnerId : undefined}
                 onChange={onSelectRunner}
             />
-
-            <div className="input-group">
-                <label htmlFor="runner-select">
-                    Coureur
-                </label>
-                <select id="runner-select"
-                        className="input-select"
-                        value={selectedRunnerExists ? selectedRunnerId : "_placeholder"}
-                        onChange={onSelectRunner}
-                >
-                    <option disabled hidden value="_placeholder">Sélectionnez un coureur</option>
-
-                    {(() => {
-                        if (idSortedRunners === false || nameSortedRunners === false) {
-                            return (
-                                <OptionWithLoadingDots>
-                                    Chargement des coureurs
-                                </OptionWithLoadingDots>
-                            );
-                        }
-
-                        return (
-                            <>
-                                {idSortedRunners.map(runner => {
-                                    return (
-                                        <option key={runner.id} value={runner.id}>
-                                            N° {runner.id} –  {runner.lastname} {runner.firstname}
-                                        </option>
-                                    );
-                                })}
-
-                                <option disabled />
-                                <option disabled>—————</option>
-                                <option disabled />
-
-                                {nameSortedRunners.map(runner => {
-                                    return (
-                                        <option key={runner.id} value={runner.id}>
-                                            {runner.lastname} {runner.firstname} – N° {runner.id}
-                                        </option>
-                                    );
-                                })}
-                            </>
-                        );
-                    })()}
-                </select>
-            </div>
         </div>
     );
 }
