@@ -8,7 +8,8 @@ interface InputProps {
     name?: string;
     value?: string | number;
     placeholder?: string;
-    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onChange?: React.ChangeEventHandler<HTMLInputElement>;
+    onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
     required?: boolean;
     min?: string | number;
     max?: string | number;
@@ -29,6 +30,7 @@ export function Input({
     value,
     placeholder,
     onChange,
+    onKeyDown,
     required = false,
     min,
     max,
@@ -66,6 +68,7 @@ export function Input({
                        value={value}
                        placeholder={placeholder}
                        onChange={onChange}
+                       onKeyDown={onKeyDown}
                        required={required}
                        min={min}
                        max={max}

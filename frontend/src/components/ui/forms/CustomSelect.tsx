@@ -68,6 +68,10 @@ export default function CustomSelect<T extends SelectOption["value"]>({
     };
 
     const onSelectKeyDown: React.KeyboardEventHandler<HTMLSelectElement> = (e) => {
+        if (e.key === Key.ESCAPE) {
+            closeSelect();
+        }
+
         if (e.key === Key.ENTER) {
             e.preventDefault(); // Prevent the select default menu from opening on pressing Enter
             setShouldOpenOnSelectFocus(opened => !opened);
@@ -75,6 +79,17 @@ export default function CustomSelect<T extends SelectOption["value"]>({
 
         props.onKeyDown?.(e);
     };
+
+    const onSearchInputKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
+        if (e.key === Key.ESCAPE) {
+            closeSelect();
+        }
+    };
+
+    function closeSelect(): void {
+        selectRef.current?.focus();
+        setShouldOpenOnSelectFocus(false);
+    }
 
     function selectOption(value: T): void {
         if (!selectRef.current) {
@@ -87,8 +102,7 @@ export default function CustomSelect<T extends SelectOption["value"]>({
             cancelable: true,
         }));
 
-        selectRef.current.focus();
-        setShouldOpenOnSelectFocus(false);
+        closeSelect();
     }
 
     React.useEffect(() => {
@@ -130,6 +144,7 @@ export default function CustomSelect<T extends SelectOption["value"]>({
                                placeholder={searchInputLabelAndPlaceHolder}
                                value={search}
                                onChange={e => { setSearch(e.target.value); }}
+                               onKeyDown={onSearchInputKeyDown}
                                className="mx-2 my-2"
                                labelClassName="hidden-label"
                                autoFocus
