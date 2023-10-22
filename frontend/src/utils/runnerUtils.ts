@@ -1,3 +1,4 @@
+import { type SelectOption } from "../types/Forms";
 import { type Passage, type PassageWithRunnerId } from "../types/Passage";
 import {
     type Runner,
@@ -76,6 +77,22 @@ export function areRunnersEqual(
     runner2: RunnerWithPassages & RunnerWithProcessedData,
 ): boolean {
     return spaceshipRunners(runner1, runner2) === 0;
+}
+
+/**
+ * Returns an array of select options from an array of runners
+ * @param runners
+ * @param label an optional callback function to format the label
+ */
+export function getRunnersSelectOptions<T extends Runner>(runners: T[] | false, label?: (runner: T) => string): SelectOption[] {
+    if (!runners) {
+        return [];
+    }
+
+    return runners.map(runner => ({
+        label: label ? label(runner) : `N° ${runner.id} – ${runner.firstname} ${runner.lastname.toUpperCase()}`,
+        value: runner.id,
+    }));
 }
 
 /**
