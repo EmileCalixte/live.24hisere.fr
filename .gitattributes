@@ -3,8 +3,9 @@
 * text=auto
 
 # Github
-frontend/src/lib/** linguist-vendored
-frontend/eslintrc.js linguist-vendored
+backend/.eslintrc.js
+frontend/src/lib/* linguist-vendored
+frontend/.eslintrc.js linguist-vendored
 
 #
 # The above will handle all files NOT found below
