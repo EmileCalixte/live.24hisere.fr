@@ -8,7 +8,7 @@ export abstract class TaskService {
     private executionInProgress = false;
     private previousExecutionStartTime: Date | null = null;
 
-    constructor(
+    protected constructor(
         protected readonly schedulerRegistry: SchedulerRegistry,
         protected readonly preventOverlapping: boolean = true,
     ) {
@@ -38,7 +38,7 @@ export abstract class TaskService {
 
     protected abstract getIntervalEnvVarName(): string;
 
-    protected getCronTime(): ConstructorParameters<typeof CronJob>[0]["cronTime"] | false {
+    protected getCronTime(): ConstructorParameters<typeof CronJob>[0] | false {
         const cronTime = process.env[this.getIntervalEnvVarName()];
 
         if (cronTime === undefined) {
