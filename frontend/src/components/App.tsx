@@ -91,9 +91,13 @@ interface UserContext {
 export const appDataContext = createContext<AppDataContext>({
     lastUpdateTime: new Date(),
     serverTimeOffset: 0,
+    /** @deprecated */
     races: false,
+    /** @deprecated */
     runners: false,
+    /** @deprecated */
     passages: false,
+    /** @deprecated */
     rankings: false,
 });
 

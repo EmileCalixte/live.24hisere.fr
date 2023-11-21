@@ -1,8 +1,10 @@
 import "../../css/print-ranking-table.css";
-import React, { useState, useCallback, useMemo, useContext } from "react";
+import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { GENDER_MIXED } from "../../constants/gender";
 import { RANKING_TIME_MODE } from "../../constants/rankingTimeMode";
+import { useIntervalApiRequest } from "../../hooks/useIntervalApiRequest";
+import { getRaces } from "../../services/api/RaceService";
 import { excludeKeys } from "../../utils/objectUtils";
 import { getDateFromRaceTime, getRacesSelectOptions } from "../../utils/raceUtils";
 import { useWindowDimensions } from "../../hooks/useWindowDimensions";
@@ -24,22 +26,24 @@ import ResponsiveRankingTable from "../viewParts/ranking/rankingTable/responsive
 const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
 
 export default function RankingView(): React.ReactElement {
-    const { races, rankings, runners, passages } = useContext(appDataContext);
+    const { rankings, runners, passages } = React.useContext(appDataContext);
 
-    const [selectedRace, setSelectedRace] = useState<Race | null>(null);
+    const [selectedRace, setSelectedRace] = React.useState<Race | null>(null);
 
-    const [selectedCategory, setSelectedCategory] = useState<CategoryShortCode | null>(null);
-    const [selectedGender, setSelectedGender] = useState<GenderWithMixed>(GENDER_MIXED);
-    const [selectedTimeMode, setSelectedTimeMode] = useState<RankingTimeMode>(RANKING_TIME_MODE.now);
-    const [selectedRankingTime, setSelectedRankingTime] = useState(-1); // Set when a race is selected, in ms
+    const [selectedCategory, setSelectedCategory] = React.useState<CategoryShortCode | null>(null);
+    const [selectedGender, setSelectedGender] = React.useState<GenderWithMixed>(GENDER_MIXED);
+    const [selectedTimeMode, setSelectedTimeMode] = React.useState<RankingTimeMode>(RANKING_TIME_MODE.now);
+    const [selectedRankingTime, setSelectedRankingTime] = React.useState(-1); // Set when a race is selected, in ms
 
     const { width: windowWidth } = useWindowDimensions();
 
-    const racesOptions = useMemo(() => {
+    const races = useIntervalApiRequest(getRaces).json?.races;
+
+    const racesOptions = React.useMemo(() => {
         return getRacesSelectOptions(races);
     }, [races]);
 
-    const ranking = useMemo<Ranking | null>(() => {
+    const ranking = React.useMemo<Ranking | null>(() => {
         if (!selectedRace || !rankings) {
             return null;
         }
@@ -47,7 +51,7 @@ export default function RankingView(): React.ReactElement {
         return rankings.get(selectedRace.id) ?? null;
     }, [selectedRace, rankings]);
 
-    const rankingAtSelectedRankingTime = useMemo<Ranking | null>(() => {
+    const rankingAtSelectedRankingTime = React.useMemo<Ranking | null>(() => {
         if (!selectedRace || !runners || !passages) {
             return null;
         }
@@ -65,7 +69,7 @@ export default function RankingView(): React.ReactElement {
         return rankingCalculator.getRanking();
     }, [selectedRace, runners, passages, selectedTimeMode, selectedRankingTime]);
 
-    const displayedRanking = useMemo<Ranking | null>(() => {
+    const displayedRanking = React.useMemo<Ranking | null>(() => {
         if (selectedTimeMode !== RANKING_TIME_MODE.at) {
             return ranking;
         }
@@ -73,7 +77,7 @@ export default function RankingView(): React.ReactElement {
         return rankingAtSelectedRankingTime;
     }, [ranking, rankingAtSelectedRankingTime, selectedTimeMode]);
 
-    const shouldResetRankingTime = useCallback((newRaceDuration: number) => {
+    const shouldResetRankingTime = React.useCallback((newRaceDuration: number) => {
         if (selectedRankingTime < 0) {
             return true;
         }
@@ -87,7 +91,7 @@ export default function RankingView(): React.ReactElement {
         return selectedTimeMode === RANKING_TIME_MODE.now;
     }, [selectedRankingTime, selectedRace, selectedTimeMode]);
 
-    const onSelectRace = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    const onSelectRace = React.useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
         if (!races) {
             return;
         }
@@ -123,7 +127,7 @@ export default function RankingView(): React.ReactElement {
         setSelectedRankingTime(time);
     };
 
-    const categories = useMemo<CategoriesDict | false>(() => {
+    const categories = React.useMemo<CategoriesDict | false>(() => {
         if (!ranking) {
             return false;
         }

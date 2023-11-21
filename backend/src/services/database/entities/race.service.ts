@@ -3,7 +3,7 @@ import { PrismaService } from "../prisma.service";
 import { excludeKeys } from "src/utils/misc.utils";
 import {
     type AdminRaceWithRunnerCount,
-    type PublicRace,
+    type PublicRaceWithRunnerCount,
     type RaceAndRunners,
 } from "src/types/Race";
 import { type Prisma, type Race } from "@prisma/client";
@@ -36,10 +36,12 @@ export class RaceService {
         return this.getAdminRaceFromRace(this.getRaceWithRunnerCountFromRaceWithRunners(race));
     }
 
-    async getPublicRaces(): Promise<PublicRace[]> {
+    async getPublicRaces(): Promise<PublicRaceWithRunnerCount[]> {
         const races = await this.getRacesWithRunners({ isPublic: true });
 
-        return races.map(race => this.getPublicRaceFromRace(race));
+        return races
+            .map(race => this.getPublicRaceFromRace(race))
+            .map(race => this.getRaceWithRunnerCountFromRaceWithRunners(race));
     }
 
     async getMaxOrder(): Promise<number> {

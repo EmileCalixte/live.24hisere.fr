@@ -34,9 +34,9 @@ export class AppDataController {
         return {
             currentTime: new Date().toISOString(),
             lastUpdateTime: await this.miscService.getLastUpdateTime(true),
-            races: await this.raceService.getPublicRaces(),
-            runners: await this.runnerService.getPublicRunners(),
-            passages: await this.getPassages(),
+            races: await this.raceService.getPublicRaces(), // TODO remove
+            runners: await this.runnerService.getPublicRunners(), // TODO remove
+            passages: await this.getPassages(), // TODO remove
         };
     }
 

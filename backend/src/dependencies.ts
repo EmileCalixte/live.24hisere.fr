@@ -8,6 +8,7 @@ import { RunnersController as RunnersControllerAdmin } from "./controllers/admin
 import { UsersController } from "./controllers/admin/users.controller";
 import { AppDataController } from "./controllers/appData.controller";
 import { AuthController } from "./controllers/auth.controller";
+import { RacesController } from "./controllers/races.controller";
 import { AuthService } from "./services/auth.service";
 import { DagFileService } from "./services/dagFile.service";
 import { AccessTokenService } from "./services/database/entities/accessToken.service";
@@ -46,6 +47,7 @@ export const dependencies: Dependencies = {
         public: [
             AppDataController,
             AuthController,
+            RacesController,
         ],
         admin: [
             PassagesController,
