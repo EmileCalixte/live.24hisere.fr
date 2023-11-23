@@ -44,6 +44,16 @@ export class RaceService {
             .map(race => this.getRaceWithRunnerCountFromRaceWithRunners(race));
     }
 
+    async getPublicRace(where: Prisma.RaceWhereUniqueInput): Promise<PublicRaceWithRunnerCount | null> {
+        const race = await this.getRaceWithRunners({ ...where, isPublic: true });
+
+        if (!race) {
+            return null;
+        }
+
+        return this.getPublicRaceFromRace(this.getRaceWithRunnerCountFromRaceWithRunners(race));
+    }
+
     async getMaxOrder(): Promise<number> {
         const result = await this.prisma.race.aggregate({
             _max: {

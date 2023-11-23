@@ -2,6 +2,8 @@ import { faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
 import { useParams } from "react-router-dom";
+import { useIntervalApiRequest } from "../../hooks/useIntervalApiRequest";
+import { getRace } from "../../services/api/RaceService";
 import { appDataContext } from "../App";
 import Page from "../ui/Page";
 import RunnerDetailsRaceDetails from "../viewParts/runnerDetails/RunnerDetailsRaceDetails";
@@ -18,7 +20,7 @@ enum Tab {
 }
 
 export default function RunnerDetailsView(): React.ReactElement {
-    const { runners, races } = useContext(appDataContext);
+    const { runners } = useContext(appDataContext);
     const { runnerId: urlRunnerId } = useParams();
 
     const [selectedRunnerId, setSelectedRunnerId] = useState(urlRunnerId);
@@ -33,13 +35,23 @@ export default function RunnerDetailsView(): React.ReactElement {
         return runners.find(runner => runner.id === Number(selectedRunnerId)) ?? null;
     }, [runners, selectedRunnerId]);
 
-    const race = useMemo(() => {
-        if (!races || !selectedRunner) {
-            return null;
+    const raceId: number | undefined = React.useMemo(() => {
+        if (!selectedRunner) {
+            return undefined;
         }
 
-        return races.find(race => race.id === selectedRunner.raceId) ?? null;
-    }, [races, selectedRunner]);
+        return selectedRunner.raceId;
+    }, [selectedRunner]);
+
+    const fetchRace = useMemo(() => {
+        if (raceId === undefined) {
+            return;
+        }
+
+        return async () => getRace(raceId);
+    }, [raceId]);
+
+    const race = useIntervalApiRequest(fetchRace).json?.race;
 
     const onSelectRunner = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedRunnerId(e.target.value);
@@ -81,7 +93,7 @@ export default function RunnerDetailsView(): React.ReactElement {
                 </Col>
             </Row>
 
-            {selectedRunner !== null && race !== null &&
+            {selectedRunner && race &&
                 <>
                     <Row className="mt-3">
                         <Col className="mb-3">

@@ -9,12 +9,16 @@ interface UseIntervalApiRequestReturn<T extends ApiRequest> {
 }
 
 export function useIntervalApiRequest<T extends ApiRequest>(
-    fetchFunction: () => Promise<ApiRequestResult<T>>,
+    fetchFunction: (() => Promise<ApiRequestResult<T>>) | undefined,
     fetchInterval = DEFAULT_FETCH_INTERVAL,
 ): UseIntervalApiRequestReturn<T> {
     const [result, setResult] = React.useState<ApiRequestResult<T> | undefined>(undefined);
 
     const performApiRequest = React.useCallback(async (): Promise<void> => {
+        if (!fetchFunction) {
+            return;
+        }
+
         setResult(await fetchFunction());
     }, [fetchFunction]);
 

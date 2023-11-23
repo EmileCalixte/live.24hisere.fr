@@ -9,6 +9,14 @@ export interface GetRacesApiRequest extends ApiRequest {
     };
 }
 
+export interface GetRaceApiRequest extends ApiRequest {
+    payload: never;
+
+    response: {
+        race: RaceWithRunnerCount;
+    };
+}
+
 export interface GetAdminRacesApiRequest extends ApiRequest {
     payload: never;
 

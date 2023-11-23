@@ -1,6 +1,6 @@
-import { Controller, Get } from "@nestjs/common";
+import { BadRequestException, Controller, Get, NotFoundException, Param } from "@nestjs/common";
 import { RaceService } from "src/services/database/entities/race.service";
-import { type RacesResponse } from "src/types/responses/Races";
+import { type RaceResponse, type RacesResponse } from "src/types/responses/Races";
 
 @Controller()
 export class RacesController {
@@ -14,6 +14,25 @@ export class RacesController {
 
         return {
             races,
+        };
+    }
+
+    @Get("/races/:raceId")
+    async getRace(@Param("raceId") raceId: string): Promise<RaceResponse> {
+        const id = Number(raceId);
+
+        if (isNaN(id)) {
+            throw new BadRequestException("Race ID must be a number");
+        }
+
+        const race = await this.raceService.getPublicRace({ id });
+
+        if (!race) {
+            throw new NotFoundException("Race not found");
+        }
+
+        return {
+            race,
         };
     }
 }

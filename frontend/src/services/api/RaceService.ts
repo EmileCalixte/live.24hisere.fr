@@ -3,6 +3,7 @@ import {
     type DeleteAdminRaceApiRequest,
     type GetAdminRaceApiRequest,
     type GetAdminRacesApiRequest,
+    type GetRaceApiRequest,
     type GetRacesApiRequest,
     type PatchAdminRaceApiRequest,
     type PostAdminRaceApiRequest,
@@ -12,6 +13,10 @@ import { performApiRequest, performAuthenticatedApiRequest } from "./ApiService"
 
 export async function getRaces(): Promise<ApiRequestResult<GetRacesApiRequest>> {
     return performApiRequest<GetRacesApiRequest>("/races");
+}
+
+export async function getRace(raceId: number | string): Promise<ApiRequestResult<GetRaceApiRequest>> {
+    return performApiRequest<GetRaceApiRequest>(`/races/${raceId}`);
 }
 
 export async function getAdminRaces(accessToken: string): Promise<ApiRequestResult<GetAdminRacesApiRequest>> {
