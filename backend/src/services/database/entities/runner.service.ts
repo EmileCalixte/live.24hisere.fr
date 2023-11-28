@@ -3,6 +3,7 @@ import { PrismaService } from "../prisma.service";
 import { type Prisma, type Runner } from "@prisma/client";
 import {
     type AdminRunnerWithPassages,
+    type PublicRunnerWithPassages,
     type PublicRunnerWithRaceAndPassages,
     type RunnerWithRaceAndPassages,
 } from "src/types/Runner";
@@ -60,7 +61,7 @@ export class RunnerService {
         });
     }
 
-    async getPublicRunnersOfRace(raceId: number): Promise<Runner[]> {
+    async getPublicRunnersOfRace(raceId: number): Promise<PublicRunnerWithPassages[]> {
         return this.prisma.runner.findMany({
             where: {
                 race: {
@@ -70,6 +71,20 @@ export class RunnerService {
             },
             orderBy: {
                 id: "asc",
+            },
+            include: {
+                passages: {
+                    select: {
+                        id: true,
+                        time: true,
+                    },
+                    where: {
+                        isHidden: false,
+                    },
+                    orderBy: {
+                        time: "asc",
+                    },
+                },
             },
         });
     }

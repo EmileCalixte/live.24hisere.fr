@@ -5,7 +5,10 @@ import { GENDER_MIXED } from "../../constants/gender";
 import { RANKING_TIME_MODE } from "../../constants/rankingTimeMode";
 import { useIntervalApiRequest } from "../../hooks/useIntervalApiRequest";
 import { getRaces } from "../../services/api/RaceService";
+import { getRaceRunners } from "../../services/api/RunnerService";
+import { type RunnerWithPassages, type RunnerWithProcessedData } from "../../types/Runner";
 import { excludeKeys } from "../../utils/objectUtils";
+import { getRunnerProcessedDataFromPassages } from "../../utils/passageUtils";
 import { getDateFromRaceTime, getRacesSelectOptions } from "../../utils/raceUtils";
 import { useWindowDimensions } from "../../hooks/useWindowDimensions";
 import { RankingCalculator } from "../../services/RankingCalculator";
@@ -15,7 +18,6 @@ import { type Race } from "../../types/Race";
 import { type Ranking } from "../../types/Ranking";
 import { type RankingTimeMode } from "../../types/RankingTimeMode";
 import { existingCategories, getCategoryCodeFromBirthYear } from "../../utils/ffaUtils";
-import { appDataContext } from "../App";
 import Select from "../ui/forms/Select";
 import Page from "../ui/Page";
 import CircularLoader from "../ui/CircularLoader";
@@ -26,8 +28,6 @@ import ResponsiveRankingTable from "../viewParts/ranking/rankingTable/responsive
 const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
 
 export default function RankingView(): React.ReactElement {
-    const { rankings, runners, passages } = React.useContext(appDataContext);
-
     const [selectedRace, setSelectedRace] = React.useState<Race | null>(null);
 
     const [selectedCategory, setSelectedCategory] = React.useState<CategoryShortCode | null>(null);
@@ -43,39 +43,42 @@ export default function RankingView(): React.ReactElement {
         return getRacesSelectOptions(races);
     }, [races]);
 
+    const fetchRunners = React.useMemo(() => {
+        if (!selectedRace) {
+            return;
+        }
+
+        return async () => getRaceRunners(selectedRace.id);
+    }, [selectedRace]);
+
+    const runners = useIntervalApiRequest(fetchRunners).json?.runners;
+
+    const processedRunners = React.useMemo<Array<RunnerWithPassages & RunnerWithProcessedData> | undefined>(() => {
+        if (!runners || !selectedRace) {
+            return;
+        }
+
+        return runners.map(runner => ({
+            ...runner,
+            ...getRunnerProcessedDataFromPassages(selectedRace, runner.passages),
+        }));
+    }, [runners, selectedRace]);
+
     const ranking = React.useMemo<Ranking | null>(() => {
-        if (!selectedRace || !rankings) {
+        if (!selectedRace || !processedRunners) {
             return null;
         }
 
-        return rankings.get(selectedRace.id) ?? null;
-    }, [selectedRace, rankings]);
-
-    const rankingAtSelectedRankingTime = React.useMemo<Ranking | null>(() => {
-        if (!selectedRace || !runners || !passages) {
-            return null;
-        }
-
-        if (selectedTimeMode !== RANKING_TIME_MODE.at) {
-            return null;
-        }
+        const rankingDate = selectedTimeMode === RANKING_TIME_MODE.at ? getDateFromRaceTime(selectedRace, selectedRankingTime) : undefined;
 
         const rankingCalculator = new RankingCalculator(
             selectedRace,
-            runners,
-            getDateFromRaceTime(selectedRace, selectedRankingTime),
+            processedRunners,
+            rankingDate,
         );
 
         return rankingCalculator.getRanking();
-    }, [selectedRace, runners, passages, selectedTimeMode, selectedRankingTime]);
-
-    const displayedRanking = React.useMemo<Ranking | null>(() => {
-        if (selectedTimeMode !== RANKING_TIME_MODE.at) {
-            return ranking;
-        }
-
-        return rankingAtSelectedRankingTime;
-    }, [ranking, rankingAtSelectedRankingTime, selectedTimeMode]);
+    }, [processedRunners, selectedRace, selectedTimeMode, selectedRankingTime]);
 
     const shouldResetRankingTime = React.useCallback((newRaceDuration: number) => {
         if (selectedRankingTime < 0) {
@@ -189,13 +192,13 @@ export default function RankingView(): React.ReactElement {
                         <CircularLoader />
                     }
 
-                    {displayedRanking &&
+                    {ranking &&
                         <Row>
                             <Col>
                                 {windowWidth > RESPONSIVE_TABLE_MAX_WINDOW_WIDTH &&
                                     <RankingTable
                                         race={selectedRace}
-                                        ranking={displayedRanking}
+                                        ranking={ranking}
                                         tableCategory={selectedCategory}
                                         tableGender={selectedGender}
                                         tableRaceDuration={selectedTimeMode === RANKING_TIME_MODE.at ? selectedRankingTime : null}
@@ -210,7 +213,7 @@ export default function RankingView(): React.ReactElement {
 
                                         <ResponsiveRankingTable
                                             race={selectedRace}
-                                            ranking={displayedRanking}
+                                            ranking={ranking}
                                             tableCategory={selectedCategory}
                                             tableGender={selectedGender}
                                             tableRaceDuration={selectedTimeMode === RANKING_TIME_MODE.at ? selectedRankingTime : null}

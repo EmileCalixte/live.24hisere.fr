@@ -1,7 +1,7 @@
 import { BadRequestException, Controller, Get, NotFoundException, Param } from "@nestjs/common";
 import { RaceService } from "../services/database/entities/race.service";
 import { RunnerService } from "../services/database/entities/runner.service";
-import { type RunnersResponse } from "../types/responses/Runners";
+import { type RaceRunnersResponse } from "../types/responses/Runners";
 
 @Controller()
 export class RunnersController {
@@ -11,7 +11,7 @@ export class RunnersController {
     ) {}
 
     @Get("/races/:raceId/runners")
-    async getRaceRunners(@Param("raceId") raceId: string): Promise<RunnersResponse> {
+    async getRaceRunners(@Param("raceId") raceId: string): Promise<RaceRunnersResponse> {
         const id = Number(raceId);
 
         if (isNaN(id)) {
@@ -24,9 +24,7 @@ export class RunnersController {
             throw new NotFoundException("Race not found");
         }
 
-        const runners = await this.runnerService.getRunners({
-            race: { id },
-        });
+        const runners = await this.runnerService.getPublicRunnersOfRace(id);
 
         return {
             runners,
