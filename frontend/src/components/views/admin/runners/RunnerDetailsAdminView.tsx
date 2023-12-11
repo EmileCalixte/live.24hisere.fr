@@ -114,7 +114,7 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
         setRunner({
             ...runner,
             race,
-            passages: getProcessedPassagesFromPassages(runner.passages, race),
+            passages: getProcessedPassagesFromPassages(race, runner.passages),
         });
 
         setRunnerId(runner.id);

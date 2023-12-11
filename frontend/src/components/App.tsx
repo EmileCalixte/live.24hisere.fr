@@ -178,8 +178,8 @@ export default function App(): React.ReactElement {
             .filter(runner => raceMap.has(runner.raceId))
             .map(runner => {
                 const passages = getProcessedPassagesFromPassages(
-                    runner.passages,
                     raceMap.get(runner.raceId) as Race,
+                    runner.passages,
                 );
 
                 const race = raceMap.get(runner.raceId) as Race;

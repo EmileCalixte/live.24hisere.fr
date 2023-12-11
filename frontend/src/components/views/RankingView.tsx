@@ -4,6 +4,7 @@ import { Col, Row } from "react-bootstrap";
 import { GENDER_MIXED } from "../../constants/gender";
 import { RANKING_TIME_MODE } from "../../constants/rankingTimeMode";
 import { useIntervalApiRequest } from "../../hooks/useIntervalApiRequest";
+import { useRanking } from "../../hooks/useRanking";
 import { getRaces } from "../../services/api/RaceService";
 import { getRaceRunners } from "../../services/api/RunnerService";
 import { type RunnerWithPassages, type RunnerWithProcessedData } from "../../types/Runner";
@@ -11,11 +12,9 @@ import { excludeKeys } from "../../utils/objectUtils";
 import { getRunnerProcessedDataFromPassages } from "../../utils/passageUtils";
 import { getDateFromRaceTime, getRacesSelectOptions } from "../../utils/raceUtils";
 import { useWindowDimensions } from "../../hooks/useWindowDimensions";
-import { RankingCalculator } from "../../services/RankingCalculator";
 import { type CategoriesDict, type CategoryShortCode } from "../../types/Category";
 import { type GenderWithMixed } from "../../types/Gender";
 import { type Race } from "../../types/Race";
-import { type Ranking } from "../../types/Ranking";
 import { type RankingTimeMode } from "../../types/RankingTimeMode";
 import { existingCategories, getCategoryCodeFromBirthYear } from "../../utils/ffaUtils";
 import Select from "../ui/forms/Select";
@@ -64,21 +63,19 @@ export default function RankingView(): React.ReactElement {
         }));
     }, [runners, selectedRace]);
 
-    const ranking = React.useMemo<Ranking | null>(() => {
-        if (!selectedRace || !processedRunners) {
-            return null;
+    const rankingDate = React.useMemo<Date | undefined>(() => {
+        if (!selectedRace) {
+            return;
         }
 
-        const rankingDate = selectedTimeMode === RANKING_TIME_MODE.at ? getDateFromRaceTime(selectedRace, selectedRankingTime) : undefined;
+        if (selectedTimeMode !== RANKING_TIME_MODE.at) {
+            return;
+        }
 
-        const rankingCalculator = new RankingCalculator(
-            selectedRace,
-            processedRunners,
-            rankingDate,
-        );
+        return getDateFromRaceTime(selectedRace, selectedRankingTime);
+    }, [selectedRace, selectedRankingTime, selectedTimeMode]);
 
-        return rankingCalculator.getRanking();
-    }, [processedRunners, selectedRace, selectedTimeMode, selectedRankingTime]);
+    const ranking = useRanking(selectedRace ?? undefined, processedRunners, rankingDate);
 
     const shouldResetRankingTime = React.useCallback((newRaceDuration: number) => {
         if (selectedRankingTime < 0) {

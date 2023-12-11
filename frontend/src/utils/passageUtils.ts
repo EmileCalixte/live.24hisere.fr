@@ -48,7 +48,7 @@ export function getRunnerProcessedDataFromPassages(race: Race, passages: Passage
     };
 }
 
-export function getProcessedPassagesFromPassages<T extends Passage>(passages: T[], race: Race): Array<T & { processed: PassageProcessedData }> {
+export function getProcessedPassagesFromPassages<T extends Passage>(race: Race, passages: T[]): Array<T & { processed: PassageProcessedData }> {
     const raceInitialDistance = Number(race.initialDistance);
     const raceLapDistance = Number(race.lapDistance);
 

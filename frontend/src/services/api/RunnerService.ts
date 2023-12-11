@@ -5,12 +5,17 @@ import {
     type GetAdminRunnerApiRequest,
     type GetAdminRunnersApiRequest,
     type GetRaceRunnersApiRequest,
+    type GetRunnersApiRequest,
     type PatchAdminRunnerApiRequest,
     type PatchAdminRunnerPassageApiRequest,
     type PostAdminRunnerApiRequest,
     type PostAdminRunnerPassageApiRequest,
 } from "../../types/api/RunnerApiRequests";
 import { performApiRequest, performAuthenticatedApiRequest } from "./ApiService";
+
+export async function getRunners(): Promise<ApiRequestResult<GetRunnersApiRequest>> {
+    return performApiRequest<GetRunnersApiRequest>("/runners");
+}
 
 export async function getRaceRunners(raceId: number | string): Promise<ApiRequestResult<GetRaceRunnersApiRequest>> {
     return performApiRequest<GetRaceRunnersApiRequest>(`/races/${raceId}/runners`);

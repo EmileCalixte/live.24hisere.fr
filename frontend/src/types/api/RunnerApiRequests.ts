@@ -1,13 +1,21 @@
 import { type AdminPassage } from "../Passage";
-import { type Runner, type RunnerWithAdminPassages, RunnerWithPassages } from "../Runner";
+import { type Runner, type RunnerWithAdminPassages, type RunnerWithPassages } from "../Runner";
 import { type ApiRequest } from "./ApiRequest";
+
+export interface GetRunnersApiRequest extends ApiRequest {
+    payload: never;
+
+    response: {
+        runners: Runner[];
+    };
+}
 
 export interface GetRaceRunnersApiRequest extends ApiRequest {
     payload: never;
 
     response: {
         runners: RunnerWithPassages[];
-    }
+    };
 }
 
 export interface GetAdminRunnersApiRequest extends ApiRequest {

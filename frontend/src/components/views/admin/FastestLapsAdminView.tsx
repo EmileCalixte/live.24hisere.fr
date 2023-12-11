@@ -167,7 +167,7 @@ export default function FastestLapsAdminView(): React.ReactElement {
 
             const runnerPassages = runnerSortedPassages[runnerId];
 
-            sortedProcessedPassages[runnerId] = getProcessedPassagesFromPassages(runnerPassages, race);
+            sortedProcessedPassages[runnerId] = getProcessedPassagesFromPassages(race, runnerPassages);
         }
 
         return sortedProcessedPassages;
