@@ -1,16 +1,9 @@
 import React, { createContext, useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import { getRankingMap, getRunnersFromRankingMap } from "../utils/rankingUtils";
 import { getAppData } from "../services/api/AppDataService";
 import { getCurrentUserInfo, logout as performLogoutRequest } from "../services/api/AuthService";
-import { type PassageWithRunnerId } from "../types/Passage";
-import { type Race } from "../types/Race";
-import { type RankingMap, type RankingRunner } from "../types/Ranking";
-import { type RunnerProcessedData, type RunnerWithProcessedHours, type RunnerWithProcessedPassages } from "../types/Runner";
 import { type User } from "../types/User";
-import { getProcessedHoursFromPassages, getProcessedPassagesFromPassages, getRunnerProcessedDataFromPassages } from "../utils/passageUtils";
-import { getRunnersWithPassagesFromRunnersAndPassages } from "../utils/runnerUtils";
 import Header from "./ui/header/Header";
 import Footer from "./ui/footer/Footer";
 import RankingView from "./views/RankingView";
@@ -22,10 +15,8 @@ import {
 } from "../utils/apiUtils";
 import LoginView from "./views/LoginView";
 import Admin from "./views/admin/Admin";
-import { objectArrayToMap, verbose } from "../utils/utils";
+import { verbose } from "../utils/utils";
 import ToastService from "../services/ToastService";
-
-type AppDataContextRunner = RunnerWithProcessedPassages & RunnerWithProcessedHours & RunnerProcessedData;
 
 interface AppDataContext {
     /**
@@ -37,26 +28,6 @@ interface AppDataContext {
      * Difference between server time and client time in seconds. > 0 if the server is ahead, < 0 otherwise.
      */
     serverTimeOffset: number;
-
-    /**
-     * The race list, false if not fetched yet
-     */
-    races: Race[] | false;
-
-    /**
-     * The list of runners with processed data, false if not fetched/processed yet
-     */
-    runners: Array<RankingRunner<AppDataContextRunner>> | false;
-
-    /**
-     * The list of all passages of all runners
-     */
-    passages: PassageWithRunnerId[] | false;
-
-    /**
-     * The rankings, false if not fetched/processed yet
-     */
-    rankings: RankingMap<AppDataContextRunner> | false;
 }
 
 interface HeaderFetchLoaderContext {
@@ -91,14 +62,6 @@ interface UserContext {
 export const appDataContext = createContext<AppDataContext>({
     lastUpdateTime: new Date(),
     serverTimeOffset: 0,
-    /** @deprecated */
-    races: false,
-    /** @deprecated */
-    runners: false,
-    /** @deprecated */
-    passages: false,
-    /** @deprecated */
-    rankings: false,
 });
 
 export const headerFetchLoaderContext = createContext<HeaderFetchLoaderContext>({
@@ -122,10 +85,6 @@ export default function App(): React.ReactElement {
     const [fetchLevel, setFetchLevel] = useState(0);
     const [lastUpdateTime, setLastUpdateTime] = useState(new Date());
     const [serverTimeOffset, setServerTimeOffset] = useState(0);
-    const [races, setRaces] = useState<Race[] | false>(false);
-    const [runners, setRunners] = useState<Array<RankingRunner<AppDataContextRunner>> | false>(false);
-    const [passages, setPassages] = useState<PassageWithRunnerId[] | false>(false);
-    const [rankings, setRankings] = useState<RankingMap<AppDataContextRunner> | false>(false);
     const [accessToken, setAccessToken] = useState<string | null>(localStorage.getItem("accessToken"));
     const [user, setUser] = useState<User | null | undefined>(undefined); // If null, user is not logged in. If undefined, user info was not fetched yet
     const [redirect, setRedirect] = useState<string | null>(null); // Used to redirect the user to a specified location, for example when user logs out
@@ -168,47 +127,6 @@ export default function App(): React.ReactElement {
         const timeOffsetMs = serverTime.getTime() - clientTime.getTime();
 
         setServerTimeOffset(Math.round(timeOffsetMs / 1000));
-
-        const raceMap = objectArrayToMap(result.json.races, "id");
-
-        const processedRunners = getRunnersWithPassagesFromRunnersAndPassages(
-            result.json.runners,
-            result.json.passages,
-        )
-            .filter(runner => raceMap.has(runner.raceId))
-            .map(runner => {
-                const passages = getProcessedPassagesFromPassages(
-                    raceMap.get(runner.raceId) as Race,
-                    runner.passages,
-                );
-
-                const race = raceMap.get(runner.raceId) as Race;
-
-                return {
-                    ...runner,
-                    passages,
-                    ...getRunnerProcessedDataFromPassages(
-                        race,
-                        passages,
-                    ),
-                    hours: getProcessedHoursFromPassages(
-                        race,
-                        passages,
-                    ),
-                };
-            });
-
-        const rankingMap = getRankingMap(
-            result.json.races,
-            processedRunners,
-        );
-
-        verbose("Rankings", rankingMap);
-
-        setRaces(result.json.races);
-        setRunners(getRunnersFromRankingMap(rankingMap));
-        setPassages(result.json.passages);
-        setRankings(rankingMap);
     }, []);
 
     const fetchUserInfo = useCallback(async () => {
@@ -293,10 +211,6 @@ export default function App(): React.ReactElement {
                 <appDataContext.Provider value={{
                     lastUpdateTime,
                     serverTimeOffset,
-                    races,
-                    runners,
-                    passages,
-                    rankings,
                 }}>
                     <headerFetchLoaderContext.Provider value={{
                         fetchLevel,

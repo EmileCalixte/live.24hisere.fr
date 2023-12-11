@@ -48,8 +48,3 @@ export type RankingRunner<T extends MinimalRankingRunnerInput = MinimalRankingRu
 export type MinimalRankingRunnerInput = RunnerWithPassages & RunnerWithProcessedData;
 
 export type Ranking<T extends MinimalRankingRunnerInput = MinimalRankingRunnerInput> = Array<RankingRunner<T>>;
-
-/**
- * A map whose keys are race IDs ande values are the corresponding rankings
- */
-export type RankingMap<T extends MinimalRankingRunnerInput> = Map<number, Ranking<T>>;
