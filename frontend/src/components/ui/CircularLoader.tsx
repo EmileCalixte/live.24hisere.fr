@@ -2,10 +2,21 @@ import { faCircleNotch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 
-export default function CircularLoader(): React.ReactElement {
+interface CircularLoaderProps {
+    asideText?: string;
+}
+
+export default function CircularLoader({ asideText }: CircularLoaderProps): React.ReactElement {
     return (
-        <span className="circular-loader">
-            <FontAwesomeIcon icon={faCircleNotch} />
+        <span>
+            <span className="circular-loader">
+                <FontAwesomeIcon icon={faCircleNotch} />
+            </span>
+
+            {asideText && (
+                <span className="ms-2">{asideText}</span>
+            )}
         </span>
+
     );
 }

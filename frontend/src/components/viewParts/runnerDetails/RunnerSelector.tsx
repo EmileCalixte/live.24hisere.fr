@@ -4,7 +4,7 @@ import CustomSelect from "../../ui/forms/CustomSelect";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 interface RunnerSelectorProps {
-    runners: Runner[] | false;
+    runners: Runner[] | undefined;
     onSelectRunner: (e: React.ChangeEvent<HTMLSelectElement>) => any;
     selectedRunnerId: string | undefined;
 }
@@ -31,7 +31,7 @@ export default function RunnerSelector({ runners, onSelectRunner, selectedRunner
     }, [runners, selectedRunnerId]);
 
     const sortRunners = useCallback(() => {
-        if (runners === false) {
+        if (!runners) {
             return;
         }
 

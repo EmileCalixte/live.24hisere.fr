@@ -5,10 +5,6 @@ import { type Passage } from "@prisma/client";
  */
 export type PublicPassage = Pick<Passage, "id" | "time">;
 
-export interface PublicPassageWithRunnerId extends PublicPassage {
-    runnerId: number;
-}
-
 /**
  * Admin data of a runner's passage
  */

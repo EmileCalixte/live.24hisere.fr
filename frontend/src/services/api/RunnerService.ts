@@ -4,12 +4,22 @@ import {
     type DeleteAdminRunnerPassageApiRequest,
     type GetAdminRunnerApiRequest,
     type GetAdminRunnersApiRequest,
+    type GetRaceRunnersApiRequest,
+    type GetRunnersApiRequest,
     type PatchAdminRunnerApiRequest,
     type PatchAdminRunnerPassageApiRequest,
     type PostAdminRunnerApiRequest,
     type PostAdminRunnerPassageApiRequest,
 } from "../../types/api/RunnerApiRequests";
-import { performAuthenticatedApiRequest } from "./ApiService";
+import { performApiRequest, performAuthenticatedApiRequest } from "./ApiService";
+
+export async function getRunners(): Promise<ApiRequestResult<GetRunnersApiRequest>> {
+    return performApiRequest<GetRunnersApiRequest>("/runners");
+}
+
+export async function getRaceRunners(raceId: number | string): Promise<ApiRequestResult<GetRaceRunnersApiRequest>> {
+    return performApiRequest<GetRaceRunnersApiRequest>(`/races/${raceId}/runners`);
+}
 
 export async function getAdminRunners(accessToken: string): Promise<ApiRequestResult<GetAdminRunnersApiRequest>> {
     return performAuthenticatedApiRequest<GetAdminRunnersApiRequest>("/admin/runners", accessToken);

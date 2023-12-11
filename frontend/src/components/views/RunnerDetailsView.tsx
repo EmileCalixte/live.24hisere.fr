@@ -2,51 +2,101 @@ import { faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
 import { useParams } from "react-router-dom";
-import { appDataContext } from "../App";
+import { useIntervalApiRequest } from "../../hooks/useIntervalApiRequest";
+import { useRanking } from "../../hooks/useRanking";
+import { getRace } from "../../services/api/RaceService";
+import { getRaceRunners, getRunners } from "../../services/api/RunnerService";
+import {
+    type RunnerWithProcessedData,
+    type RunnerWithProcessedHours,
+    type RunnerWithProcessedPassages,
+} from "../../types/Runner";
+import {
+    getProcessedHoursFromPassages,
+    getProcessedPassagesFromPassages,
+    getRunnerProcessedDataFromPassages,
+} from "../../utils/passageUtils";
+import CircularLoader from "../ui/CircularLoader";
 import Page from "../ui/Page";
 import RunnerDetailsRaceDetails from "../viewParts/runnerDetails/RunnerDetailsRaceDetails";
 import RunnerSelector from "../viewParts/runnerDetails/RunnerSelector";
-import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import React from "react";
 import RunnerDetailsStats from "../viewParts/runnerDetails/RunnerDetailsStats";
 import RunnerDetailsLaps from "../viewParts/runnerDetails/RunnerDetailsLaps";
 import { getDataForExcelExport } from "../../utils/runnerUtils";
 import { generateXlsxFromData } from "../../utils/excelUtils";
 
-enum Tab {
+const enum Tab {
     Stats = "stats",
-    Laps = "laps"
+    Laps = "laps",
 }
 
 export default function RunnerDetailsView(): React.ReactElement {
-    const { runners, races } = useContext(appDataContext);
     const { runnerId: urlRunnerId } = useParams();
 
-    const [selectedRunnerId, setSelectedRunnerId] = useState(urlRunnerId);
+    const [selectedTab, setSelectedTab] = React.useState(Tab.Stats);
 
-    const [selectedTab, setSelectedTab] = useState(Tab.Stats);
+    const runners = useIntervalApiRequest(getRunners).json?.runners;
 
-    const selectedRunner = useMemo(() => {
-        if (!runners || !selectedRunnerId) {
-            return null;
+    const [selectedRunnerId, setSelectedRunnerId] = React.useState(urlRunnerId);
+
+    const raceId: number | undefined = React.useMemo(() => {
+        if (selectedRunnerId === undefined) {
+            return undefined;
         }
 
-        return runners.find(runner => runner.id === Number(selectedRunnerId)) ?? null;
-    }, [runners, selectedRunnerId]);
+        return runners?.find(runner => runner.id.toString() === selectedRunnerId)?.raceId;
+    }, [selectedRunnerId, runners]);
 
-    const race = useMemo(() => {
-        if (!races || !selectedRunner) {
-            return null;
+    const fetchRace = React.useMemo(() => {
+        if (raceId === undefined) {
+            return;
         }
 
-        return races.find(race => race.id === selectedRunner.raceId) ?? null;
-    }, [races, selectedRunner]);
+        return async () => getRace(raceId);
+    }, [raceId]);
 
-    const onSelectRunner = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    const race = useIntervalApiRequest(fetchRace).json?.race;
+
+    const fetchRaceRunners = React.useMemo(() => {
+        if (raceId === undefined) {
+            return;
+        }
+
+        return async () => getRaceRunners(raceId);
+    }, [raceId]);
+
+    const raceRunners = useIntervalApiRequest(fetchRaceRunners).json?.runners;
+
+    const processedRaceRunners = React.useMemo<Array<RunnerWithProcessedPassages & RunnerWithProcessedHours & RunnerWithProcessedData> | undefined>(() => {
+        if (!raceRunners || !race) {
+            return;
+        }
+
+        return raceRunners.map(runner => {
+            const processedPassages = getProcessedPassagesFromPassages(race, runner.passages);
+
+            return {
+                ...runner,
+                ...getRunnerProcessedDataFromPassages(race, runner.passages),
+                passages: processedPassages,
+                hours: getProcessedHoursFromPassages(race, processedPassages),
+            };
+        });
+    }, [raceRunners, race]);
+
+    const ranking = useRanking(race, processedRaceRunners);
+
+    const selectedRunner = React.useMemo(() => {
+        return ranking?.find(rankingRunner => rankingRunner.id.toString() === selectedRunnerId);
+    }, [ranking, selectedRunnerId]);
+
+    const onSelectRunner = React.useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedRunnerId(e.target.value);
     }, []);
 
-    const exportRunnerToXlsx = useCallback(() => {
-        if (selectedRunner === null) {
+    const exportRunnerToXlsx = React.useCallback(() => {
+        if (!selectedRunner) {
             return;
         }
 
@@ -55,7 +105,7 @@ export default function RunnerDetailsView(): React.ReactElement {
         generateXlsxFromData(getDataForExcelExport(selectedRunner), filename);
     }, [selectedRunner]);
 
-    useEffect(() => {
+    React.useEffect(() => {
         if (!selectedRunnerId || selectedRunnerId === urlRunnerId) {
             return;
         }
@@ -65,7 +115,7 @@ export default function RunnerDetailsView(): React.ReactElement {
     }, [selectedRunnerId, urlRunnerId]);
 
     return (
-        <Page id="runner-details" title={selectedRunner === null ? "Détails coureur" : `Détails coureur ${selectedRunner.firstname} ${selectedRunner.lastname}`}>
+        <Page id="runner-details" title={selectedRunner === undefined ? "Détails coureur" : `Détails coureur ${selectedRunner.firstname} ${selectedRunner.lastname}`}>
             <Row className="hide-on-print">
                 <Col>
                     <h1>Détails coureur</h1>
@@ -81,7 +131,7 @@ export default function RunnerDetailsView(): React.ReactElement {
                 </Col>
             </Row>
 
-            {selectedRunner !== null && race !== null &&
+            {selectedRunner && race ? (
                 <>
                     <Row className="mt-3">
                         <Col className="mb-3">
@@ -124,7 +174,17 @@ export default function RunnerDetailsView(): React.ReactElement {
                         </Col>
                     </Row>
                 </>
-            }
+            ) : (
+                <>
+                    {selectedRunnerId !== undefined &&
+                        <Row className="mt-3">
+                            <Col>
+                                <CircularLoader asideText="Chargement des données" />
+                            </Col>
+                        </Row>
+                    }
+                </>
+            )}
         </Page>
     );
 }

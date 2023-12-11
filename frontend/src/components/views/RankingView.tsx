@@ -1,19 +1,22 @@
 import "../../css/print-ranking-table.css";
-import React, { useState, useCallback, useMemo, useContext } from "react";
+import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { GENDER_MIXED } from "../../constants/gender";
 import { RANKING_TIME_MODE } from "../../constants/rankingTimeMode";
+import { useIntervalApiRequest } from "../../hooks/useIntervalApiRequest";
+import { useRanking } from "../../hooks/useRanking";
+import { getRaces } from "../../services/api/RaceService";
+import { getRaceRunners } from "../../services/api/RunnerService";
+import { type RunnerWithPassages, type RunnerWithProcessedData } from "../../types/Runner";
 import { excludeKeys } from "../../utils/objectUtils";
+import { getRunnerProcessedDataFromPassages } from "../../utils/passageUtils";
 import { getDateFromRaceTime, getRacesSelectOptions } from "../../utils/raceUtils";
 import { useWindowDimensions } from "../../hooks/useWindowDimensions";
-import { RankingCalculator } from "../../services/RankingCalculator";
 import { type CategoriesDict, type CategoryShortCode } from "../../types/Category";
 import { type GenderWithMixed } from "../../types/Gender";
 import { type Race } from "../../types/Race";
-import { type Ranking } from "../../types/Ranking";
 import { type RankingTimeMode } from "../../types/RankingTimeMode";
 import { existingCategories, getCategoryCodeFromBirthYear } from "../../utils/ffaUtils";
-import { appDataContext } from "../App";
 import Select from "../ui/forms/Select";
 import Page from "../ui/Page";
 import CircularLoader from "../ui/CircularLoader";
@@ -24,56 +27,57 @@ import ResponsiveRankingTable from "../viewParts/ranking/rankingTable/responsive
 const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
 
 export default function RankingView(): React.ReactElement {
-    const { races, rankings, runners, passages } = useContext(appDataContext);
+    const [selectedRace, setSelectedRace] = React.useState<Race | null>(null);
 
-    const [selectedRace, setSelectedRace] = useState<Race | null>(null);
-
-    const [selectedCategory, setSelectedCategory] = useState<CategoryShortCode | null>(null);
-    const [selectedGender, setSelectedGender] = useState<GenderWithMixed>(GENDER_MIXED);
-    const [selectedTimeMode, setSelectedTimeMode] = useState<RankingTimeMode>(RANKING_TIME_MODE.now);
-    const [selectedRankingTime, setSelectedRankingTime] = useState(-1); // Set when a race is selected, in ms
+    const [selectedCategory, setSelectedCategory] = React.useState<CategoryShortCode | null>(null);
+    const [selectedGender, setSelectedGender] = React.useState<GenderWithMixed>(GENDER_MIXED);
+    const [selectedTimeMode, setSelectedTimeMode] = React.useState<RankingTimeMode>(RANKING_TIME_MODE.now);
+    const [selectedRankingTime, setSelectedRankingTime] = React.useState(-1); // Set when a race is selected, in ms
 
     const { width: windowWidth } = useWindowDimensions();
 
-    const racesOptions = useMemo(() => {
+    const races = useIntervalApiRequest(getRaces).json?.races;
+
+    const racesOptions = React.useMemo(() => {
         return getRacesSelectOptions(races);
     }, [races]);
 
-    const ranking = useMemo<Ranking | null>(() => {
-        if (!selectedRace || !rankings) {
-            return null;
+    const fetchRunners = React.useMemo(() => {
+        if (!selectedRace) {
+            return;
         }
 
-        return rankings.get(selectedRace.id) ?? null;
-    }, [selectedRace, rankings]);
+        return async () => getRaceRunners(selectedRace.id);
+    }, [selectedRace]);
 
-    const rankingAtSelectedRankingTime = useMemo<Ranking | null>(() => {
-        if (!selectedRace || !runners || !passages) {
-            return null;
+    const runners = useIntervalApiRequest(fetchRunners).json?.runners;
+
+    const processedRunners = React.useMemo<Array<RunnerWithPassages & RunnerWithProcessedData> | undefined>(() => {
+        if (!runners || !selectedRace) {
+            return;
+        }
+
+        return runners.map(runner => ({
+            ...runner,
+            ...getRunnerProcessedDataFromPassages(selectedRace, runner.passages),
+        }));
+    }, [runners, selectedRace]);
+
+    const rankingDate = React.useMemo<Date | undefined>(() => {
+        if (!selectedRace) {
+            return;
         }
 
         if (selectedTimeMode !== RANKING_TIME_MODE.at) {
-            return null;
+            return;
         }
 
-        const rankingCalculator = new RankingCalculator(
-            selectedRace,
-            runners,
-            getDateFromRaceTime(selectedRace, selectedRankingTime),
-        );
+        return getDateFromRaceTime(selectedRace, selectedRankingTime);
+    }, [selectedRace, selectedRankingTime, selectedTimeMode]);
 
-        return rankingCalculator.getRanking();
-    }, [selectedRace, runners, passages, selectedTimeMode, selectedRankingTime]);
+    const ranking = useRanking(selectedRace ?? undefined, processedRunners, rankingDate);
 
-    const displayedRanking = useMemo<Ranking | null>(() => {
-        if (selectedTimeMode !== RANKING_TIME_MODE.at) {
-            return ranking;
-        }
-
-        return rankingAtSelectedRankingTime;
-    }, [ranking, rankingAtSelectedRankingTime, selectedTimeMode]);
-
-    const shouldResetRankingTime = useCallback((newRaceDuration: number) => {
+    const shouldResetRankingTime = React.useCallback((newRaceDuration: number) => {
         if (selectedRankingTime < 0) {
             return true;
         }
@@ -87,7 +91,7 @@ export default function RankingView(): React.ReactElement {
         return selectedTimeMode === RANKING_TIME_MODE.now;
     }, [selectedRankingTime, selectedRace, selectedTimeMode]);
 
-    const onSelectRace = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    const onSelectRace = React.useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
         if (!races) {
             return;
         }
@@ -123,7 +127,7 @@ export default function RankingView(): React.ReactElement {
         setSelectedRankingTime(time);
     };
 
-    const categories = useMemo<CategoriesDict | false>(() => {
+    const categories = React.useMemo<CategoriesDict | false>(() => {
         if (!ranking) {
             return false;
         }
@@ -185,13 +189,13 @@ export default function RankingView(): React.ReactElement {
                         <CircularLoader />
                     }
 
-                    {displayedRanking &&
+                    {ranking &&
                         <Row>
                             <Col>
                                 {windowWidth > RESPONSIVE_TABLE_MAX_WINDOW_WIDTH &&
                                     <RankingTable
                                         race={selectedRace}
-                                        ranking={displayedRanking}
+                                        ranking={ranking}
                                         tableCategory={selectedCategory}
                                         tableGender={selectedGender}
                                         tableRaceDuration={selectedTimeMode === RANKING_TIME_MODE.at ? selectedRankingTime : null}
@@ -206,7 +210,7 @@ export default function RankingView(): React.ReactElement {
 
                                         <ResponsiveRankingTable
                                             race={selectedRace}
-                                            ranking={displayedRanking}
+                                            ranking={ranking}
                                             tableCategory={selectedCategory}
                                             tableGender={selectedGender}
                                             tableRaceDuration={selectedTimeMode === RANKING_TIME_MODE.at ? selectedRankingTime : null}

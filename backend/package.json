@@ -11,6 +11,8 @@
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,test}/**/*.ts\"",
     "lint-fix": "eslint \"{src,test}/**/*.ts\" --fix",
+    "typecheck": "npx tsc --noEmit",
+    "codecheck": "npm run typecheck && npm run lint",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",

@@ -133,6 +133,8 @@ module.exports = {
 
         "@typescript-eslint/strict-boolean-expressions": "off",
 
+        "multiline-ternary": "off",
+
         "operator-linebreak": ["error", "before"],
     },
 };
