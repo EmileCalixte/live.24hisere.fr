@@ -47,6 +47,10 @@ jobs:
         run: npm install
         working-directory: ./backend
 
+      - name: Generate Prisma client
+        run: npx prisma generate
+        working-directory: ./backend
+
       - name: Run ESLint on backend
         run: npm run lint
         working-directory: ./backend
