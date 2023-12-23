@@ -1,8 +1,9 @@
-import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { getAdminPassages } from "../../../services/api/PassageService";
 import { getAdminRaces } from "../../../services/api/RaceService";
 import { getAdminRunners } from "../../../services/api/RunnerService";
+import { type SelectOption } from "../../../types/Forms";
 import { type AdminPassageWithRunnerId, type ProcessedPassage } from "../../../types/Passage";
 import { type RaceDict } from "../../../types/Race";
 import { type Runner } from "../../../types/Runner";
@@ -14,6 +15,7 @@ import { userContext } from "../../App";
 import Breadcrumbs from "../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../ui/breadcrumbs/Crumb";
 import { Checkbox } from "../../ui/forms/Checkbox";
+import Select from "../../ui/forms/Select";
 import Page from "../../ui/Page";
 import Pagination from "../../ui/pagination/Pagination";
 import CircularLoader from "../../ui/CircularLoader";
@@ -29,22 +31,23 @@ const RUNNERS_AND_RACES_FETCH_INTERVAL = 60 * 1000;
 const PASSAGES_FETCH_INTERVAL = 20 * 1000;
 
 export default function FastestLapsAdminView(): React.ReactElement {
-    const { accessToken } = useContext(userContext);
+    const { accessToken } = React.useContext(userContext);
 
     // false = not fetched yet
-    const [passages, setPassages] = useState<AdminPassageWithRunnerId[] | false>(false);
+    const [passages, setPassages] = React.useState<AdminPassageWithRunnerId[] | false>(false);
 
     // false = not fetched yet
-    const [races, setRaces] = useState<RaceDict | false>(false);
+    const [races, setRaces] = React.useState<RaceDict | false>(false);
 
     // false = not fetched yet
-    const [runners, setRunners] = useState<Runner[] | false>(false);
+    const [runners, setRunners] = React.useState<Runner[] | false>(false);
 
-    const [displayOnlyOneFastestLapPerRunner, setDisplayOnlyOneFastestLapPerRunner] = useState(false);
+    const [displayOnlyOneFastestLapPerRunner, setDisplayOnlyOneFastestLapPerRunner] = React.useState(false);
+    const [selectedRaceId, setSelectedRaceId] = React.useState<number | "ALL">("ALL");
 
-    const [page, setPage] = useState(1);
+    const [page, setPage] = React.useState(1);
 
-    const fetchRaces = useCallback(async () => {
+    const fetchRaces = React.useCallback(async () => {
         if (!accessToken) {
             return;
         }
@@ -59,7 +62,7 @@ export default function FastestLapsAdminView(): React.ReactElement {
         setRaces(getRaceDictFromRaces(result.json.races));
     }, [accessToken]);
 
-    const fetchRunners = useCallback(async () => {
+    const fetchRunners = React.useCallback(async () => {
         if (!accessToken) {
             return;
         }
@@ -74,7 +77,7 @@ export default function FastestLapsAdminView(): React.ReactElement {
         setRunners(result.json.runners);
     }, [accessToken]);
 
-    const fetchPassages = useCallback(async () => {
+    const fetchPassages = React.useCallback(async () => {
         if (!accessToken) {
             return;
         }
@@ -90,7 +93,7 @@ export default function FastestLapsAdminView(): React.ReactElement {
         setPassages(result.json.passages);
     }, [accessToken]);
 
-    useEffect(() => {
+    React.useEffect(() => {
         void fetchRaces();
 
         const interval = setInterval(() => { void fetchRaces(); }, RUNNERS_AND_RACES_FETCH_INTERVAL);
@@ -98,7 +101,7 @@ export default function FastestLapsAdminView(): React.ReactElement {
         return () => { clearInterval(interval); };
     }, [fetchRaces]);
 
-    useEffect(() => {
+    React.useEffect(() => {
         void fetchRunners();
 
         const interval = setInterval(() => { void fetchRunners(); }, RUNNERS_AND_RACES_FETCH_INTERVAL);
@@ -106,7 +109,7 @@ export default function FastestLapsAdminView(): React.ReactElement {
         return () => { clearInterval(interval); };
     }, [fetchRunners]);
 
-    useEffect(() => {
+    React.useEffect(() => {
         void fetchPassages();
 
         const interval = setInterval(() => { void fetchPassages(); }, PASSAGES_FETCH_INTERVAL);
@@ -114,11 +117,11 @@ export default function FastestLapsAdminView(): React.ReactElement {
         return () => { clearInterval(interval); };
     }, [fetchPassages]);
 
-    useEffect(() => {
+    React.useEffect(() => {
         setPage(1);
     }, [displayOnlyOneFastestLapPerRunner]);
 
-    const runnerSortedPassages = useMemo<RunnerSortedPassages | false>(() => {
+    const runnerSortedPassages = React.useMemo<RunnerSortedPassages | false>(() => {
         if (!passages) {
             return false;
         }
@@ -142,7 +145,7 @@ export default function FastestLapsAdminView(): React.ReactElement {
         return sortedPassages;
     }, [passages]);
 
-    const runnerSortedProcessedPassages = useMemo<RunnerSortedProcessedPassages | false>(() => {
+    const runnerSortedProcessedPassages = React.useMemo<RunnerSortedProcessedPassages | false>(() => {
         if (!runnerSortedPassages || !races || !runners) {
             return false;
         }
@@ -173,7 +176,7 @@ export default function FastestLapsAdminView(): React.ReactElement {
         return sortedProcessedPassages;
     }, [runnerSortedPassages, races, runners]);
 
-    const speedSortedProcessedPassages = useMemo<Array<AdminPassageWithRunnerId & ProcessedPassage> | false>(() => {
+    const speedSortedProcessedPassages = React.useMemo<Array<AdminPassageWithRunnerId & ProcessedPassage> | false>(() => {
         if (!runnerSortedProcessedPassages) {
             return false;
         }
@@ -201,12 +204,22 @@ export default function FastestLapsAdminView(): React.ReactElement {
             });
     }, [runnerSortedProcessedPassages]);
 
-    const passagesToDisplay = useMemo<Array<AdminPassageWithRunnerId & ProcessedPassage> | false>(() => {
+    console.log(selectedRaceId)
+
+    const passagesToDisplay = React.useMemo<Array<AdminPassageWithRunnerId & ProcessedPassage> | false>(() => {
         if (!speedSortedProcessedPassages) {
             return false;
         }
 
         let passages = [...speedSortedProcessedPassages];
+
+        if (selectedRaceId !== "ALL" && runners) {
+            passages = passages.filter(passage => {
+                const runner = runners.find(runner => runner.id === passage.runnerId);
+
+                return runner?.raceId === selectedRaceId;
+            });
+        }
 
         if (displayOnlyOneFastestLapPerRunner) {
             const alreadyDisplayedRunnerIds: number[] = [];
@@ -223,9 +236,9 @@ export default function FastestLapsAdminView(): React.ReactElement {
         }
 
         return passages;
-    }, [speedSortedProcessedPassages, displayOnlyOneFastestLapPerRunner]);
+    }, [speedSortedProcessedPassages, selectedRaceId, runners, displayOnlyOneFastestLapPerRunner]);
 
-    const pageCount = useMemo<number>(() => {
+    const pageCount = React.useMemo<number>(() => {
         if (!passagesToDisplay) {
             return 1;
         }
@@ -233,7 +246,7 @@ export default function FastestLapsAdminView(): React.ReactElement {
         return Math.ceil(passagesToDisplay.length / ITEMS_PER_PAGE);
     }, [passagesToDisplay]);
 
-    const passagesInPage = useMemo<Array<AdminPassageWithRunnerId & ProcessedPassage> | false>(() => {
+    const passagesInPage = React.useMemo<Array<AdminPassageWithRunnerId & ProcessedPassage> | false>(() => {
         if (!passagesToDisplay) {
             return false;
         }
@@ -246,6 +259,33 @@ export default function FastestLapsAdminView(): React.ReactElement {
 
         return passages;
     }, [passagesToDisplay, page]);
+
+    const raceOptions = React.useMemo<Array<SelectOption<number | "ALL">>>(() => {
+        const allOption: SelectOption<"ALL"> = { label: "Toutes les courses", value: "ALL" };
+
+        if (!races) {
+            return [allOption];
+        }
+
+        return [
+            allOption,
+            ...Object.values(races).map((race) => ({
+                label: race.name,
+                value: race.id,
+            })),
+        ];
+    }, [races]);
+
+    const onSelectRace: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
+        const raceId = Number(e.target.value);
+
+        if (isNaN(raceId)) {
+            setSelectedRaceId("ALL");
+            return;
+        }
+
+        setSelectedRaceId(raceId);
+    };
 
     return (
         <Page id="admin-fastest-laps" title="Tours les plus rapides">
@@ -268,11 +308,21 @@ export default function FastestLapsAdminView(): React.ReactElement {
 
             {passagesInPage !== false &&
                 <>
-                    <Row>
-                        <Col className="mb-3">
+                    <Row className="mb-3">
+                        <Col>
                             <Checkbox label="N'afficher que le tour le plus rapide de chaque coureur"
                                       checked={displayOnlyOneFastestLapPerRunner}
                                       onChange={e => { setDisplayOnlyOneFastestLapPerRunner(e.target.checked); }}
+                            />
+                        </Col>
+                    </Row>
+
+                    <Row className="mb-3">
+                        <Col xxl={2} xl={3} lg={4} md={6} sm={12}>
+                            <Select label="Course"
+                                    options={raceOptions}
+                                    value={selectedRaceId}
+                                    onChange={onSelectRace}
                             />
                         </Col>
                     </Row>
