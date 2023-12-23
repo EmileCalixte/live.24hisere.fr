@@ -1,7 +1,7 @@
 import { RunnerService } from "../services/database/entities/runner.service";
 import { HttpService } from "@nestjs/axios";
 import { Injectable } from "@nestjs/common";
-import { type AxiosError, type AxiosResponse } from "axios";
+import { type AxiosError } from "axios";
 import { catchError, firstValueFrom } from "rxjs";
 import { TaskService } from "./taskService";
 import { SchedulerRegistry } from "@nestjs/schedule";
@@ -44,8 +44,8 @@ export class ImportPassagesService extends TaskService {
 
         this.logger.log(`Importing passages from dag file located at ${dagFileUrl}`);
 
-        const { data } = await firstValueFrom<AxiosResponse<string>>(
-            this.httpService.get(dagFileUrl).pipe(
+        const { data } = await firstValueFrom(
+            this.httpService.get<string>(dagFileUrl).pipe(
                 catchError((error: AxiosError) => {
                     throw new Error(`An error occurred while fetching dag file: ${error.message}`);
                 }),

@@ -21,9 +21,8 @@ export function FloatStringMax(maxValue: number, validationOptions?: ValidationO
     return ValidateBy(
         {
             name: FLOAT_STRING_MAX,
-            constraints: [maxValue],
             validator: {
-                validate: (value, args): boolean => floatStringMax(value, args?.constraints[0]),
+                validate: (value): boolean => floatStringMax(value, maxValue),
                 defaultMessage: buildMessage(
                     eachPrefix => eachPrefix + "$property must not be greater than $constraint1",
                     validationOptions,

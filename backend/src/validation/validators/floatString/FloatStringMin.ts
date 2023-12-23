@@ -21,9 +21,8 @@ export function FloatStringMin(minValue: number, validationOptions?: ValidationO
     return ValidateBy(
         {
             name: FLOAT_STRING_MIN,
-            constraints: [minValue],
             validator: {
-                validate: (value, args): boolean => floatStringMin(value, args?.constraints[0]),
+                validate: (value): boolean => floatStringMin(value, minValue),
                 defaultMessage: buildMessage(
                     eachPrefix => eachPrefix + "$property must not be less than $constraint1",
                     validationOptions,
