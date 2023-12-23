@@ -204,8 +204,6 @@ export default function FastestLapsAdminView(): React.ReactElement {
             });
     }, [runnerSortedProcessedPassages]);
 
-    console.log(selectedRaceId)
-
     const passagesToDisplay = React.useMemo<Array<AdminPassageWithRunnerId & ProcessedPassage> | false>(() => {
         if (!speedSortedProcessedPassages) {
             return false;
