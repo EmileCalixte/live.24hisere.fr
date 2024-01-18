@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   backend:
-    image: node:18
+    image: node:20
     restart: always
     working_dir: /home/node/app
     environment:
@@ -27,7 +27,7 @@ services:
       MYSQL_DATABASE: live
 
   frontend:
-    image: node:18
+    image: node:20
     restart: always
     working_dir: /home/node/app
     environment:

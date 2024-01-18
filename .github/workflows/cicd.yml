@@ -23,9 +23,9 @@ jobs:
       - name: Install misc tools
         run: apt-get install -y curl git zip unzip
 
-      - name: Install Node.js 18
+      - name: Install Node.js 20
         run: |
-          curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+          curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
           apt-get install -y nodejs
 
       - name: Check out repository code
