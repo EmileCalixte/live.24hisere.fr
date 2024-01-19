@@ -7,9 +7,9 @@ import { useIntervalApiRequest } from "../../hooks/useIntervalApiRequest";
 import { useRanking } from "../../hooks/useRanking";
 import { getRaces } from "../../services/api/RaceService";
 import { getRaceRunners } from "../../services/api/RunnerService";
-import { type RunnerWithPassages, type RunnerWithProcessedData } from "../../types/Runner";
+import { type RunnerWithProcessedData, type RunnerWithProcessedPassages } from "../../types/Runner";
 import { excludeKeys } from "../../utils/objectUtils";
-import { getRunnerProcessedDataFromPassages } from "../../utils/passageUtils";
+import { getProcessedPassagesFromPassages, getRunnerProcessedDataFromPassages } from "../../utils/passageUtils";
 import { getDateFromRaceTime, getRacesSelectOptions } from "../../utils/raceUtils";
 import { useWindowDimensions } from "../../hooks/useWindowDimensions";
 import { type CategoriesDict, type CategoryShortCode } from "../../types/Category";
@@ -52,7 +52,7 @@ export default function RankingView(): React.ReactElement {
 
     const runners = useIntervalApiRequest(fetchRunners).json?.runners;
 
-    const processedRunners = React.useMemo<Array<RunnerWithPassages & RunnerWithProcessedData> | undefined>(() => {
+    const processedRunners = React.useMemo<Array<RunnerWithProcessedPassages & RunnerWithProcessedData> | undefined>(() => {
         if (!runners || !selectedRace) {
             return;
         }
@@ -60,6 +60,7 @@ export default function RankingView(): React.ReactElement {
         return runners.map(runner => ({
             ...runner,
             ...getRunnerProcessedDataFromPassages(selectedRace, runner.passages),
+            passages: getProcessedPassagesFromPassages(selectedRace, runner.passages),
         }));
     }, [runners, selectedRace]);
 

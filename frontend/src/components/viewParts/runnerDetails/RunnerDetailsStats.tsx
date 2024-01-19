@@ -1,5 +1,6 @@
 import { Col, Row } from "react-bootstrap";
 import React, { useMemo } from "react";
+import { NO_VALUE_PLACEHOLDER } from "../../../constants/misc";
 import { getPaceFromSpeed } from "../../../utils/mathUtils";
 import { type ProcessedPassage } from "../../../types/Passage";
 import { type Race } from "../../../types/Race";
@@ -150,7 +151,7 @@ export default function RunnerDetailsStats({ runner, race, ranks }: RunnerDetail
                     <p>
                         Tour le plus rapide : {(() => {
                             if (fastestLapPassage === null) {
-                                return "n/a";
+                                return NO_VALUE_PLACEHOLDER;
                             }
 
                             return (
@@ -167,7 +168,7 @@ export default function RunnerDetailsStats({ runner, race, ranks }: RunnerDetail
                     <p>
                         Tour le plus lent : {(() => {
                             if (slowestLapPassage === null) {
-                                return "n/a";
+                                return NO_VALUE_PLACEHOLDER;
                             }
 
                             return (

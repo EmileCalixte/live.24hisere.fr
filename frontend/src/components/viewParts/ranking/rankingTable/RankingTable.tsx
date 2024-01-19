@@ -67,6 +67,7 @@ export default function RankingTable({
                     <th>Distance</th>
                     <th>Dernier passage</th>
                     <th>Vitesse moy.</th>
+                    <th>Écart 1er</th>
                     <th className="hide-on-print">Détails</th>
                 </tr>
             </thead>

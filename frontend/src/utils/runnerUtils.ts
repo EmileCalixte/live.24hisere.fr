@@ -1,5 +1,6 @@
 import { type SelectOption } from "../types/Forms";
 import { type Passage, type PassageWithRunnerId } from "../types/Passage";
+import { type RankingRunnerGap } from "../types/Ranking";
 import {
     type Runner,
     type RunnerWithPassages,
@@ -47,6 +48,70 @@ export function getRunnerWithPassagesFromRunnerAndPassages<T extends Runner, U e
         ...runner,
         passages: getSortedPassages(passages),
     };
+}
+
+/**
+ * Computes the gap between two runners of a race
+ * @param runner1 Must be the highest-ranking runner
+ * @param runner2 Must be the lowest-ranking runner
+ */
+export function getGapBetweenRunners(
+    runner1: RunnerWithProcessedPassages & RunnerWithProcessedData,
+    runner2: RunnerWithProcessedPassages & RunnerWithProcessedData,
+): RankingRunnerGap | null {
+    if (Object.is(runner1, runner2)) {
+        return null;
+    }
+
+    const runner1PassageCount = runner1.passages.length;
+    const runner2PassageCount = runner2.passages.length;
+
+    if (runner1PassageCount === 0) {
+        return null;
+    }
+
+    if (runner2PassageCount === 0) {
+        const runner1LastPassage = runner1.passages[runner1.passages.length - 1];
+
+        return {
+            laps: runner1LastPassage.processed.lapNumber ?? 0,
+            time: runner1LastPassage.processed.lapEndRaceTime,
+        };
+    }
+
+    const passageCountDifference = runner1PassageCount - runner2PassageCount;
+
+    const runner2LastPassage = runner2.passages[runner2.passages.length - 1];
+
+    const runner1SameLapNumberPassage = runner1.passages
+        .find(passage => passage.processed.lapNumber === runner2LastPassage.processed.lapNumber);
+
+    if (!runner1SameLapNumberPassage) {
+        throw new Error("Runner 1");
+    }
+
+    const passageTimeGap = runner2LastPassage.processed.lapEndRaceTime - runner1SameLapNumberPassage.processed.lapEndRaceTime;
+
+    return {
+        laps: passageCountDifference,
+        time: passageTimeGap,
+    };
+}
+
+export function formatGap(gap: RankingRunnerGap | null): string | null {
+    if (!gap) {
+        return null;
+    }
+
+    if (gap.time === 0) {
+        return "=";
+    }
+
+    if (gap.laps === 0) {
+        return `+${formatMsAsDuration(gap.time, false)}`;
+    }
+
+    return `+${gap.laps} ${gap.laps > 1 ? "tours" : "tour"}`;
 }
 
 /**
