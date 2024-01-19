@@ -4,22 +4,21 @@ import { NO_VALUE_PLACEHOLDER } from "../../../constants/misc";
 import { getPaceFromSpeed } from "../../../utils/mathUtils";
 import { type ProcessedPassage } from "../../../types/Passage";
 import { type Race } from "../../../types/Race";
-import { type RankingRunnerRanks } from "../../../types/Ranking";
-import { type RunnerWithProcessedHours, type RunnerWithProcessedPassages } from "../../../types/Runner";
-import { getCategoryCodeFromBirthYear } from "../../../utils/ffaUtils";
-import CircularLoader from "../../ui/CircularLoader";
+import {
+    type Ranking, type RankingRunner,
+} from "../../../types/Ranking";
+import { type RunnerWithProcessedHours } from "../../../types/Runner";
 import SpeedChart from "./charts/SpeedChart";
 import { formatMsAsDuration } from "../../../utils/utils";
+import RunnerDetailsStatsRankingTable from "./RunnerDetailsStatsRankingTable";
 
 interface RunnerDetailsStatsProps {
-    runner: RunnerWithProcessedPassages & RunnerWithProcessedHours;
+    runner: RankingRunner & RunnerWithProcessedHours;
     race: Race;
-    ranks: RankingRunnerRanks | null;
+    ranking: Ranking;
 }
 
-export default function RunnerDetailsStats({ runner, race, ranks }: RunnerDetailsStatsProps): React.ReactElement {
-    const runnerCategory = getCategoryCodeFromBirthYear(runner.birthYear);
-
+export default function RunnerDetailsStats({ runner, race, ranking }: RunnerDetailsStatsProps): React.ReactElement {
     const raceInitialDistance = Number(race.initialDistance);
     const raceLapDistance = Number(race.lapDistance);
 
@@ -128,21 +127,7 @@ export default function RunnerDetailsStats({ runner, race, ranks }: RunnerDetail
                 <Col>
                     <h2>Données générales</h2>
 
-                    <p>
-                        Classement : {!ranks && <CircularLoader />}
-
-                        {ranks &&
-                            <span>
-                                <b>{ranks.displayed.scratchMixed}</b>
-                                &nbsp;|&nbsp;
-                                {ranks.displayed.scratchGender} {runner.gender.toUpperCase()}
-                                &nbsp;|&nbsp;
-                                {ranks.displayed.categoryMixed} {runnerCategory}
-                                &nbsp;|&nbsp;
-                                {ranks.displayed.categoryGender} {runnerCategory}-{runner.gender.toUpperCase()}
-                            </span>
-                        }
-                    </p>
+                    <RunnerDetailsStatsRankingTable runner={runner} ranking={ranking} />
 
                     <p>
                         Nombre de tours complets : <strong>{completeLapCount}</strong>, distance totale : <strong>{(totalDistance / 1000).toFixed(3)} km</strong>
@@ -198,6 +183,5 @@ export default function RunnerDetailsStats({ runner, race, ranks }: RunnerDetail
                 </Row>
             }
         </>
-
     );
 }

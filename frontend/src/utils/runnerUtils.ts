@@ -98,7 +98,7 @@ export function getGapBetweenRunners(
     };
 }
 
-export function formatGap(gap: RankingRunnerGap | null): string | null {
+export function formatGap(gap: RankingRunnerGap | null, exhaustive: boolean = false): string | null {
     if (!gap) {
         return null;
     }
@@ -107,11 +107,19 @@ export function formatGap(gap: RankingRunnerGap | null): string | null {
         return "=";
     }
 
+    const timeGap = `+${formatMsAsDuration(gap.time, false)}`;
+
     if (gap.laps === 0) {
-        return `+${formatMsAsDuration(gap.time, false)}`;
+        return timeGap;
     }
 
-    return `+${gap.laps} ${gap.laps > 1 ? "tours" : "tour"}`;
+    const lapsGap = `+${gap.laps} ${gap.laps > 1 ? "tours" : "tour"}`;
+
+    if (!exhaustive) {
+        return lapsGap;
+    }
+
+    return `${lapsGap} (${timeGap})`;
 }
 
 /**
