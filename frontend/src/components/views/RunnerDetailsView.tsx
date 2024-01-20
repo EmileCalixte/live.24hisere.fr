@@ -160,7 +160,10 @@ export default function RunnerDetailsView(): React.ReactElement {
                                                 return (
                                                     <>
                                                         <RunnerDetailsRaceDetails race={race} />
-                                                        <RunnerDetailsStats runner={selectedRunner} race={race} ranks={selectedRunner.ranks} />
+                                                        {ranking
+                                                            ? <RunnerDetailsStats runner={selectedRunner} race={race} ranking={ranking} />
+                                                            : <CircularLoader />
+                                                        }
                                                     </>
                                                 );
                                             case Tab.Laps:

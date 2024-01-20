@@ -1,9 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { NO_VALUE_PLACEHOLDER } from "../../../../constants/misc";
 import { type CategoryShortCode } from "../../../../types/Category";
 import { type GenderWithMixed } from "../../../../types/Gender";
 import { type Race } from "../../../../types/Race";
 import { type RankingRunner } from "../../../../types/Ranking";
+import { getRankingType } from "../../../../utils/rankingUtils";
+import { formatGap } from "../../../../utils/runnerUtils";
 import { formatFloatNumber, formatMsAsDuration } from "../../../../utils/utils";
 import RankingTableRowNCells from "./RankingTableRowNCells";
 
@@ -32,7 +35,7 @@ export default function RankingTableRow({
             <td>
                 {(() => {
                     if (runner.lastPassageTime === null) {
-                        return "n/a";
+                        return NO_VALUE_PLACEHOLDER;
                     } else {
                         return formatMsAsDuration(runner.lastPassageTime.raceTime);
                     }
@@ -41,7 +44,7 @@ export default function RankingTableRow({
             <td>
                 {(() => {
                     if (runner.averageSpeed === null) {
-                        return "n/a";
+                        return NO_VALUE_PLACEHOLDER;
                     } else {
                         return (
                             <>
@@ -50,6 +53,9 @@ export default function RankingTableRow({
                         );
                     }
                 })()}
+            </td>
+            <td>
+                {formatGap(runner.gaps.firstRunner[getRankingType(tableCategory, tableGender)].gap) ?? NO_VALUE_PLACEHOLDER}
             </td>
 
             <td className="hide-on-print">
