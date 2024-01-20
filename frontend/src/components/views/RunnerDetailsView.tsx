@@ -1,8 +1,9 @@
 import { faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useIntervalApiRequest } from "../../hooks/useIntervalApiRequest";
+import { useQueryString } from "../../hooks/useQueryString";
 import { useRanking } from "../../hooks/useRanking";
 import { getRace } from "../../services/api/RaceService";
 import { getRaceRunners, getRunners } from "../../services/api/RunnerService";
@@ -11,6 +12,7 @@ import {
     type RunnerWithProcessedHours,
     type RunnerWithProcessedPassages,
 } from "../../types/Runner";
+import inArray from "../../utils/arrayUtils";
 import {
     getProcessedHoursFromPassages,
     getProcessedPassagesFromPassages,
@@ -31,22 +33,40 @@ const enum Tab {
     Laps = "laps",
 }
 
-export default function RunnerDetailsView(): React.ReactElement {
-    const { runnerId: urlRunnerId } = useParams();
+function isValidTab(tabName: string | null): tabName is Tab {
+    return inArray(tabName, [Tab.Stats, Tab.Laps]);
+}
 
-    const [selectedTab, setSelectedTab] = React.useState(Tab.Stats);
+export default function RunnerDetailsView(): React.ReactElement {
+    const { runnerId } = useParams();
+
+    const navigate = useNavigate();
+
+    const { searchParams, setParams, prefixedQueryString } = useQueryString();
+
+    const searchParamsTab = searchParams.get("tab");
+
+    if (!isValidTab(searchParamsTab)) {
+        setParams({ tab: Tab.Stats });
+    }
+
+    const selectedTab = React.useMemo<Tab>(() => {
+        if (!isValidTab(searchParamsTab)) {
+            return Tab.Stats;
+        }
+
+        return searchParamsTab;
+    }, [searchParamsTab]);
 
     const runners = useIntervalApiRequest(getRunners).json?.runners;
 
-    const [selectedRunnerId, setSelectedRunnerId] = React.useState(urlRunnerId);
-
     const raceId: number | undefined = React.useMemo(() => {
-        if (selectedRunnerId === undefined) {
+        if (runnerId === undefined) {
             return undefined;
         }
 
-        return runners?.find(runner => runner.id.toString() === selectedRunnerId)?.raceId;
-    }, [selectedRunnerId, runners]);
+        return runners?.find(runner => runner.id.toString() === runnerId)?.raceId;
+    }, [runnerId, runners]);
 
     const fetchRace = React.useMemo(() => {
         if (raceId === undefined) {
@@ -88,12 +108,12 @@ export default function RunnerDetailsView(): React.ReactElement {
     const ranking = useRanking(race, processedRaceRunners);
 
     const selectedRunner = React.useMemo(() => {
-        return ranking?.find(rankingRunner => rankingRunner.id.toString() === selectedRunnerId);
-    }, [ranking, selectedRunnerId]);
+        return ranking?.find(rankingRunner => rankingRunner.id.toString() === runnerId);
+    }, [ranking, runnerId]);
 
     const onSelectRunner = React.useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedRunnerId(e.target.value);
-    }, []);
+        navigate(`/runner-details/${e.target.value}${prefixedQueryString}`);
+    }, [navigate, prefixedQueryString]);
 
     const exportRunnerToXlsx = React.useCallback(() => {
         if (!selectedRunner) {
@@ -106,13 +126,14 @@ export default function RunnerDetailsView(): React.ReactElement {
     }, [selectedRunner]);
 
     React.useEffect(() => {
-        if (!selectedRunnerId || selectedRunnerId === urlRunnerId) {
+        if (!runners || runnerId === undefined) {
             return;
         }
 
-        // TODO better UX: use pushState instead of replaceState & handle popState event
-        window.history.replaceState(window.history.state, "", `/runner-details/${selectedRunnerId}`);
-    }, [selectedRunnerId, urlRunnerId]);
+        if (runners.find(runner => runner.id.toString() === runnerId) === undefined) {
+            navigate("/runner-details");
+        }
+    }, [runners, runnerId, navigate, prefixedQueryString]);
 
     return (
         <Page id="runner-details" title={selectedRunner === undefined ? "Détails coureur" : `Détails coureur ${selectedRunner.firstname} ${selectedRunner.lastname}`}>
@@ -126,7 +147,7 @@ export default function RunnerDetailsView(): React.ReactElement {
                 <Col>
                     <RunnerSelector runners={runners}
                                     onSelectRunner={onSelectRunner}
-                                    selectedRunnerId={selectedRunnerId}
+                                    selectedRunnerId={runnerId}
                     />
                 </Col>
             </Row>
@@ -146,10 +167,10 @@ export default function RunnerDetailsView(): React.ReactElement {
                             <div className="runner-details-data-container">
                                 <ul className="tabs-container">
                                     <li className={selectedTab === Tab.Stats ? "active" : ""}>
-                                        <button onClick={() => { setSelectedTab(Tab.Stats); }}>Statistiques</button>
+                                        <button onClick={() => { setParams({ tab: Tab.Stats }); }}>Statistiques</button>
                                     </li>
                                     <li className={selectedTab === Tab.Laps ? "active" : ""}>
-                                        <button onClick={() => { setSelectedTab(Tab.Laps); }}>Détails des tours</button>
+                                        <button onClick={() => { setParams({ tab: Tab.Laps }); }}>Détails des tours</button>
                                     </li>
                                 </ul>
 
@@ -179,7 +200,7 @@ export default function RunnerDetailsView(): React.ReactElement {
                 </>
             ) : (
                 <>
-                    {selectedRunnerId !== undefined && (
+                    {runnerId !== undefined && (
                         <Row className="mt-3">
                             <Col>
                                 <CircularLoader asideText="Chargement des données" />
