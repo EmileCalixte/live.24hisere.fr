@@ -2,13 +2,14 @@ import { faSortDown, faSortUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { Col, Row } from "react-bootstrap";
+import { SearchParam } from "../../../constants/searchParams";
 import { useQueryString } from "../../../hooks/useQueryString";
 import { useRaceTime } from "../../../hooks/useRaceTime";
 import { useWindowDimensions } from "../../../hooks/useWindowDimensions";
 import { type Race } from "../../../types/Race";
 import { type MinimalRankingRunnerInput, type RankingRunner } from "../../../types/Ranking";
 import { type RunnerWithProcessedPassages } from "../../../types/Runner";
-import { SortDirection } from "../../../types/Sort";
+import { SortDirection } from "../../../constants/sort";
 import { inArray } from "../../../utils/arrayUtils";
 import { isRaceFinished, isRaceStarted } from "../../../utils/raceUtils";
 import { getOppositeSortDirection } from "../../../utils/sortUtils";
@@ -40,18 +41,18 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
 
     const { searchParams, setParams } = useQueryString();
 
-    const searchParamsSortColumn = searchParams.get("sortColumn");
-    const searchParamsDirection = searchParams.get("sortDirection");
+    const searchParamsSortColumn = searchParams.get(SearchParam.SORT_COLUMN);
+    const searchParamsDirection = searchParams.get(SearchParam.SORT_DIRECTION);
 
     React.useEffect(() => {
         const newParams: Record<string, string> = {};
 
         if (!isValidSortColumn(searchParamsSortColumn)) {
-            newParams.sortColumn = SortBy.RACE_TIME;
+            newParams[SearchParam.SORT_COLUMN] = SortBy.RACE_TIME;
         }
 
         if (!isValidSortDirection(searchParamsDirection)) {
-            newParams.sortDirection = SortDirection.ASC;
+            newParams[SearchParam.SORT_DIRECTION] = SortDirection.ASC;
         }
 
         setParams(newParams);
@@ -160,20 +161,31 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
         e.preventDefault();
 
         if (clickedSortColumn !== sortColumn) {
-            setParams({ sortColumn: clickedSortColumn, sortDirection: SortDirection.ASC });
+            setParams({
+                [SearchParam.SORT_COLUMN]: clickedSortColumn,
+                [SearchParam.SORT_DIRECTION]: SortDirection.ASC,
+            });
+
             return;
         }
 
-        setParams({ sortDirection: getOppositeSortDirection(sortDirection) });
+        setParams({ [SearchParam.SORT_DIRECTION]: getOppositeSortDirection(sortDirection) });
     }, [setParams, sortColumn, sortDirection]);
 
     const onResponsiveSortButtonClick = React.useCallback(() => {
         if (sortColumn === SortBy.RACE_TIME) {
-            setParams({ sortColumn: SortBy.LAP_SPEED, sortDirection: SortDirection.DESC });
+            setParams({
+                [SearchParam.SORT_COLUMN]: SortBy.LAP_SPEED,
+                [SearchParam.SORT_DIRECTION]: SortDirection.DESC,
+            });
+
             return;
         }
 
-        setParams({ sortColumn: SortBy.RACE_TIME, sortDirection: SortDirection.ASC });
+        setParams({
+            [SearchParam.SORT_COLUMN]: SortBy.RACE_TIME,
+            [SearchParam.SORT_DIRECTION]: SortDirection.ASC,
+        });
     }, [setParams, sortColumn]);
 
     const showCurrentLap = isRaceStarted(race, serverTimeOffset) && !isRaceFinished(race, serverTimeOffset) && sortColumn === SortBy.RACE_TIME;

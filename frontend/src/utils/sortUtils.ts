@@ -1,4 +1,4 @@
-import { SortDirection } from "../types/Sort";
+import { SortDirection } from "../constants/sort";
 
 export function getOppositeSortDirection(sortDirection: SortDirection): SortDirection {
     if (sortDirection === SortDirection.ASC) {

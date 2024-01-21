@@ -2,6 +2,7 @@ import { faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
+import { SearchParam } from "../../constants/searchParams";
 import { useIntervalApiRequest } from "../../hooks/useIntervalApiRequest";
 import { useQueryString } from "../../hooks/useQueryString";
 import { useRanking } from "../../hooks/useRanking";
@@ -44,11 +45,11 @@ export default function RunnerDetailsView(): React.ReactElement {
 
     const { searchParams, setParams, deleteParams, prefixedQueryString } = useQueryString();
 
-    const searchParamsTab = searchParams.get("tab");
+    const searchParamsTab = searchParams.get(SearchParam.TAB);
 
     React.useEffect(() => {
         if (!isValidTab(searchParamsTab)) {
-            setParams({ tab: Tab.Stats });
+            setParams({ [SearchParam.TAB]: Tab.Stats });
         }
     }, [searchParamsTab, setParams]);
 
@@ -175,10 +176,10 @@ export default function RunnerDetailsView(): React.ReactElement {
                             <div className="runner-details-data-container">
                                 <ul className="tabs-container">
                                     <li className={selectedTab === Tab.Stats ? "active" : ""}>
-                                        <button onClick={() => { setParams({ tab: Tab.Stats }); }}>Statistiques</button>
+                                        <button onClick={() => { setParams({ [SearchParam.TAB]: Tab.Stats }); }}>Statistiques</button>
                                     </li>
                                     <li className={selectedTab === Tab.Laps ? "active" : ""}>
-                                        <button onClick={() => { setParams({ tab: Tab.Laps }); }}>Détails des tours</button>
+                                        <button onClick={() => { setParams({ [SearchParam.TAB]: Tab.Laps }); }}>Détails des tours</button>
                                     </li>
                                 </ul>
 
