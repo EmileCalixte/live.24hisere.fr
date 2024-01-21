@@ -25,7 +25,7 @@ interface UseQueryString {
      * Deletes the specified parameters
      * @param toDelete The params to delete
      */
-    deleteParams: (toDelete: string | string[]) => void;
+    deleteParams: (...toDelete: string[]) => void;
 }
 
 export function useQueryString(defaultInit?: URLSearchParamsInit): UseQueryString {
@@ -45,11 +45,7 @@ export function useQueryString(defaultInit?: URLSearchParamsInit): UseQueryStrin
         });
     }, [setSearchParams]);
 
-    const deleteParams = React.useCallback((toDelete: string | string[]) => {
-        if (typeof toDelete === "string") {
-            toDelete = [toDelete];
-        }
-
+    const deleteParams = React.useCallback((...toDelete: string[]) => {
         setSearchParams(params => {
             for (const paramToDelete of toDelete) {
                 params.delete(paramToDelete);

@@ -42,7 +42,7 @@ export default function RunnerDetailsView(): React.ReactElement {
 
     const navigate = useNavigate();
 
-    const { searchParams, setParams, prefixedQueryString } = useQueryString();
+    const { searchParams, setParams, deleteParams, prefixedQueryString } = useQueryString();
 
     const searchParamsTab = searchParams.get("tab");
 
@@ -134,6 +134,12 @@ export default function RunnerDetailsView(): React.ReactElement {
             navigate("/runner-details");
         }
     }, [runners, runnerId, navigate, prefixedQueryString]);
+
+    React.useEffect(() => {
+        if (selectedTab !== Tab.Laps && (searchParams.has("sortColumn") || searchParams.has("sortDirection"))) {
+            deleteParams("sortColumn", "sortDirection");
+        }
+    }, [deleteParams, searchParams, selectedTab]);
 
     return (
         <Page id="runner-details" title={selectedRunner === undefined ? "Détails coureur" : `Détails coureur ${selectedRunner.firstname} ${selectedRunner.lastname}`}>
