@@ -12,7 +12,7 @@ import {
     type RunnerWithProcessedHours,
     type RunnerWithProcessedPassages,
 } from "../../types/Runner";
-import inArray from "../../utils/arrayUtils";
+import { inArray } from "../../utils/arrayUtils";
 import {
     getProcessedHoursFromPassages,
     getProcessedPassagesFromPassages,
@@ -46,9 +46,11 @@ export default function RunnerDetailsView(): React.ReactElement {
 
     const searchParamsTab = searchParams.get("tab");
 
-    if (!isValidTab(searchParamsTab)) {
-        setParams({ tab: Tab.Stats });
-    }
+    React.useEffect(() => {
+        if (!isValidTab(searchParamsTab)) {
+            setParams({ tab: Tab.Stats });
+        }
+    }, [searchParamsTab, setParams]);
 
     const selectedTab = React.useMemo<Tab>(() => {
         if (!isValidTab(searchParamsTab)) {

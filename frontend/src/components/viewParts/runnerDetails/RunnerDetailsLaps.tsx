@@ -9,7 +9,7 @@ import { type Race } from "../../../types/Race";
 import { type MinimalRankingRunnerInput, type RankingRunner } from "../../../types/Ranking";
 import { type RunnerWithProcessedPassages } from "../../../types/Runner";
 import { SortDirection } from "../../../types/Sort";
-import inArray from "../../../utils/arrayUtils";
+import { inArray } from "../../../utils/arrayUtils";
 import { isRaceFinished, isRaceStarted } from "../../../utils/raceUtils";
 import { getOppositeSortDirection } from "../../../utils/sortUtils";
 import { formatMsAsDuration } from "../../../utils/utils";
@@ -43,13 +43,19 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
     const searchParamsSortColumn = searchParams.get("sortColumn");
     const searchParamsDirection = searchParams.get("sortDirection");
 
-    if (!isValidSortColumn(searchParamsSortColumn)) {
-        setParams({ sortColumn: SortBy.RACE_TIME });
-    }
+    React.useEffect(() => {
+        const newParams: Record<string, string> = {};
 
-    if (!isValidSortDirection(searchParamsDirection)) {
-        setParams({ sortDirection: SortDirection.ASC });
-    }
+        if (!isValidSortColumn(searchParamsSortColumn)) {
+            newParams.sortColumn = SortBy.RACE_TIME;
+        }
+
+        if (!isValidSortDirection(searchParamsDirection)) {
+            newParams.sortDirection = SortDirection.ASC;
+        }
+
+        setParams(newParams);
+    }, [searchParamsDirection, searchParamsSortColumn, setParams]);
 
     const sortColumn = React.useMemo<SortBy>(() => {
         return isValidSortColumn(searchParamsSortColumn) ? searchParamsSortColumn : SortBy.RACE_TIME;
