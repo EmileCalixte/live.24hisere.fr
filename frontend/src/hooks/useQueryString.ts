@@ -46,13 +46,15 @@ export function useQueryString(defaultInit?: URLSearchParamsInit): UseQueryStrin
     }, [setSearchParams]);
 
     const deleteParams = React.useCallback((...toDelete: string[]) => {
-        setSearchParams(params => {
-            for (const paramToDelete of toDelete) {
-                params.delete(paramToDelete);
-            }
-            return params;
-        });
-    }, [setSearchParams]);
+        if (toDelete.some(paramToDelete => searchParams.has(paramToDelete))) {
+            setSearchParams(params => {
+                for (const paramToDelete of toDelete) {
+                    params.delete(paramToDelete);
+                }
+                return params;
+            });
+        }
+    }, [searchParams, setSearchParams]);
 
     return {
         searchParams,

@@ -2,7 +2,11 @@ import { faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
-import { SearchParam } from "../../constants/searchParams";
+import {
+    RUNNER_LAPS_TABLE_SEARCH_PARAMS,
+    RUNNER_SPEED_CHART_SEARCH_PARAMS,
+    SearchParam,
+} from "../../constants/searchParams";
 import { useIntervalApiRequest } from "../../hooks/useIntervalApiRequest";
 import { useQueryString } from "../../hooks/useQueryString";
 import { useRanking } from "../../hooks/useRanking";
@@ -139,8 +143,12 @@ export default function RunnerDetailsView(): React.ReactElement {
     }, [runners, runnerId, navigate, prefixedQueryString]);
 
     React.useEffect(() => {
-        if (selectedTab !== Tab.Laps && (searchParams.has("sortColumn") || searchParams.has("sortDirection"))) {
-            deleteParams("sortColumn", "sortDirection");
+        if (selectedTab !== Tab.Laps) {
+            deleteParams(...RUNNER_LAPS_TABLE_SEARCH_PARAMS);
+        }
+
+        if (selectedTab !== Tab.Stats) {
+            deleteParams(...RUNNER_SPEED_CHART_SEARCH_PARAMS);
         }
     }, [deleteParams, searchParams, selectedTab]);
 
