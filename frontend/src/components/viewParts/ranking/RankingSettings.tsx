@@ -18,10 +18,10 @@ import React, { useMemo } from "react";
 
 interface RankingSettingsProps {
     categories: CategoriesDict | false;
-    onCategorySelect: (e: React.ChangeEvent<HTMLSelectElement>) => any;
-    setGender: (gender: GenderWithMixed) => any;
-    setTimeMode: (timeMode: RankingTimeMode) => any;
-    onRankingTimeSave: (time: number) => any;
+    onCategorySelect: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+    onGenderSelect: (gender: GenderWithMixed) => void;
+    setTimeMode: (timeMode: RankingTimeMode) => void;
+    onRankingTimeSave: (time: number) => void;
     selectedCategory: CategoryShortCode | null;
     selectedGender: GenderWithMixed;
     selectedTimeMode: RankingTimeMode;
@@ -32,7 +32,7 @@ interface RankingSettingsProps {
 export default function RankingSettings({
     categories,
     onCategorySelect,
-    setGender,
+    onGenderSelect,
     setTimeMode,
     onRankingTimeSave,
     selectedCategory,
@@ -59,7 +59,7 @@ export default function RankingSettings({
                 <RadioGroup legend="Genre"
                             options={GENDER_WITH_MIXED_OPTIONS}
                             value={selectedGender}
-                            onSelectOption={option => setGender(option.value)}
+                            onSelectOption={option => { onGenderSelect(option.value); }}
                 />
             </Col>
 
@@ -67,7 +67,7 @@ export default function RankingSettings({
                 <RadioGroup legend="Heure"
                             options={RANKING_TIME_MODE_OPTIONS}
                             value={selectedTimeMode}
-                            onSelectOption={option => setTimeMode(option.value)}
+                            onSelectOption={option => { setTimeMode(option.value); }}
                 />
 
                 <RankingSettingsTime isVisible={selectedTimeMode === RANKING_TIME_MODE.at}

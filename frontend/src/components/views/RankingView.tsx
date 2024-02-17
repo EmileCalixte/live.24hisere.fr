@@ -1,9 +1,11 @@
 import "../../css/print-ranking-table.css";
 import React from "react";
 import { Col, Row } from "react-bootstrap";
-import { GENDER_MIXED } from "../../constants/gender";
+import { GENDER } from "../../constants/gender";
 import { RANKING_TIME_MODE } from "../../constants/rankingTimeMode";
+import { SearchParam } from "../../constants/searchParams";
 import { useIntervalApiRequest } from "../../hooks/useIntervalApiRequest";
+import { useQueryString } from "../../hooks/useQueryString";
 import { useRanking } from "../../hooks/useRanking";
 import { getRaces } from "../../services/api/RaceService";
 import { getRaceRunners } from "../../services/api/RunnerService";
@@ -14,7 +16,7 @@ import { getDateFromRaceTime, getRacesSelectOptions } from "../../utils/raceUtil
 import { useWindowDimensions } from "../../hooks/useWindowDimensions";
 import { type CategoriesDict, type CategoryShortCode } from "../../types/Category";
 import { type GenderWithMixed } from "../../types/Gender";
-import { type Race } from "../../types/Race";
+import { type RaceWithRunnerCount } from "../../types/Race";
 import { type RankingTimeMode } from "../../types/RankingTimeMode";
 import { existingCategories, getCategoryCodeFromBirthYear } from "../../utils/ffaUtils";
 import Select from "../ui/forms/Select";
@@ -27,10 +29,14 @@ import ResponsiveRankingTable from "../viewParts/ranking/rankingTable/responsive
 const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
 
 export default function RankingView(): React.ReactElement {
-    const [selectedRace, setSelectedRace] = React.useState<Race | null>(null);
+    const { searchParams, setParams, deleteParams } = useQueryString();
 
-    const [selectedCategory, setSelectedCategory] = React.useState<CategoryShortCode | null>(null);
-    const [selectedGender, setSelectedGender] = React.useState<GenderWithMixed>(GENDER_MIXED);
+    const searchParamsRace = searchParams.get(SearchParam.RACE);
+    const searchParamsCategory = searchParams.get(SearchParam.CATEGORY);
+    const searchParamsGender = searchParams.get(SearchParam.GENDER);
+    const searchParamsTimeMode = searchParams.get(SearchParam.TIME_MODE);
+    const searchParamsRankingTime = searchParams.get(SearchParam.RANKING_TIME);
+
     const [selectedTimeMode, setSelectedTimeMode] = React.useState<RankingTimeMode>(RANKING_TIME_MODE.now);
     const [selectedRankingTime, setSelectedRankingTime] = React.useState(-1); // Set when a race is selected, in ms
 
@@ -41,6 +47,14 @@ export default function RankingView(): React.ReactElement {
     const racesOptions = React.useMemo(() => {
         return getRacesSelectOptions(races);
     }, [races]);
+
+    const selectedRace = React.useMemo<RaceWithRunnerCount | null>(() => {
+        if (searchParamsRace === null) {
+            return null;
+        }
+
+        return races?.find(race => race.id.toString() === searchParamsRace) ?? null;
+    }, [races, searchParamsRace]);
 
     const fetchRunners = React.useMemo(() => {
         if (!selectedRace) {
@@ -93,32 +107,35 @@ export default function RankingView(): React.ReactElement {
     }, [selectedRankingTime, selectedRace, selectedTimeMode]);
 
     const onSelectRace = React.useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-        if (!races) {
-            return;
-        }
+        setParams({ [SearchParam.RACE]: e.target.value });
 
-        const raceId = parseInt(e.target.value);
-
-        const race = races.find(race => race.id === raceId);
+        const race = races?.find(race => race.id.toString() === e.target.value);
 
         if (!race) {
             return;
         }
 
-        setSelectedRace(race);
-
         if (shouldResetRankingTime(race.duration)) {
             setSelectedRankingTime(race.duration * 1000);
         }
-    }, [races, shouldResetRankingTime]);
+    }, [races, setParams, shouldResetRankingTime]);
 
     const onCategorySelect = (e: React.ChangeEvent<HTMLSelectElement>): void => {
         if (e.target.value === "scratch") {
-            setSelectedCategory(null);
+            deleteParams(SearchParam.CATEGORY);
             return;
         }
 
-        setSelectedCategory(e.target.value);
+        setParams({ [SearchParam.CATEGORY]: e.target.value });
+    };
+
+    const onGenderSelect = (gender: GenderWithMixed): void => {
+        if (gender === "mixed") {
+            deleteParams(SearchParam.GENDER);
+            return;
+        }
+
+        setParams({ [SearchParam.GENDER]: gender });
     };
 
     /**
@@ -150,6 +167,40 @@ export default function RankingView(): React.ReactElement {
         return excludeKeys(existingCategories, categoriesToRemove);
     }, [ranking]);
 
+    const selectedCategory = React.useMemo<CategoryShortCode | null>(() => {
+        if (!selectedRace || !categories) {
+            return null;
+        }
+
+        return Object.keys(categories).find(categoryCode => categoryCode === searchParamsCategory) ?? null;
+    }, [categories, searchParamsCategory, selectedRace]);
+
+    const selectedGender = React.useMemo<GenderWithMixed>(() => {
+        if ([GENDER.M, GENDER.F].includes(searchParamsGender)) {
+            return searchParamsGender;
+        }
+
+        return "mixed";
+    }, [searchParamsGender]);
+
+    React.useEffect(() => {
+        if (races && searchParamsRace !== null && !selectedRace) {
+            deleteParams(SearchParam.RACE);
+        }
+    }, [deleteParams, races, searchParamsRace, selectedRace]);
+
+    React.useEffect(() => {
+        if (categories && searchParamsCategory !== null && !selectedCategory) {
+            deleteParams(SearchParam.CATEGORY);
+        }
+    }, [categories, deleteParams, searchParamsCategory, selectedCategory]);
+
+    React.useEffect(() => {
+        if (searchParamsGender && selectedGender === "mixed") {
+            deleteParams(SearchParam.GENDER);
+        }
+    });
+
     return (
         <Page id="ranking" title="Classements">
             <Row className="hide-on-print">
@@ -175,7 +226,7 @@ export default function RankingView(): React.ReactElement {
                         <RankingSettings
                             categories={categories}
                             onCategorySelect={onCategorySelect}
-                            setGender={setSelectedGender}
+                            onGenderSelect={onGenderSelect}
                             setTimeMode={setSelectedTimeMode}
                             onRankingTimeSave={onRankingTimeSave}
                             selectedCategory={selectedCategory}
