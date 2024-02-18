@@ -57,20 +57,20 @@ export default function RunnerDetailsPassages({
     return (
         <>
             <Row>
-                {isAdding &&
+                {isAdding && (
                     <RunnerDetailsCreatePassage runnerRace={runnerRace}
                                                 savePassage={saveNewPassage}
                                                 onClose={() => { setIsAdding(false); }}
                     />
-                }
+                )}
 
-                {editingPassage !== null &&
+                {editingPassage !== null && (
                     <RunnerDetailsEditPassage passage={editingPassage}
                                               runnerRace={runnerRace}
                                               updatePassage={updatePassage}
                                               onClose={() => { setEditingPassage(null); }}
                     />
-                }
+                )}
 
                 <Col className="mb-3">
                     <button className="button" onClick={() => { setIsAdding(true); }}>
@@ -82,18 +82,18 @@ export default function RunnerDetailsPassages({
 
             <Row>
                 <Col>
-                    {passages.length === 0 &&
+                    {passages.length === 0 && (
                         <p><i>Aucun passage</i></p>
-                    }
+                    )}
 
-                    {passages.length > 0 &&
+                    {passages.length > 0 && (
                         <>
                             <p>
                                 {passageCount} passage{passageCount >= 2 ? "s" : ""}
 
-                                {hiddenPassageCount > 0 &&
+                                {hiddenPassageCount > 0 && (
                                     `, dont ${hiddenPassageCount} masqué${hiddenPassageCount >= 2 ? "s" : ""}`
-                                }
+                                )}
                             </p>
 
                             <table className="table no-full-width admin-runner-passages-table">
@@ -124,21 +124,21 @@ export default function RunnerDetailsPassages({
                                                 <td>{formatMsAsDuration(passage.processed.lapEndRaceTime)}</td>
                                                 <td className="no-padding-vertical">
                                                     <div className="buttons-container">
-                                                        {passage.isHidden &&
+                                                        {passage.isHidden && (
                                                             <button className="button small"
                                                                     onClick={() => updatePassageVisiblity(passage, false)}
                                                             >
                                                                 <FontAwesomeIcon icon={faEye} /> Ne plus masquer
                                                             </button>
-                                                        }
+                                                        )}
 
-                                                        {!passage.isHidden &&
+                                                        {!passage.isHidden && (
                                                             <button className="button orange small"
                                                                     onClick={() => updatePassageVisiblity(passage, true)}
                                                             >
                                                                 <FontAwesomeIcon icon={faEyeSlash} /> Masquer
                                                             </button>
-                                                        }
+                                                        )}
                                                     </div>
                                                 </td>
                                                 <td>
@@ -161,7 +161,7 @@ export default function RunnerDetailsPassages({
                                 </tbody>
                             </table>
                         </>
-                    }
+                    )}
                 </Col>
             </Row>
         </>

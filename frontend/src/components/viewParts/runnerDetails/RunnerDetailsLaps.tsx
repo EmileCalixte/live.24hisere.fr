@@ -13,7 +13,7 @@ import { appDataContext } from "../../App";
 
 enum SortBy {
     RaceTime = "raceTime",
-    LapSpeed = "lapSpeed"
+    LapSpeed = "lapSpeed",
 }
 
 const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
@@ -154,7 +154,7 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
             <Col>
                 <h2>Détails des tours</h2>
 
-                {windowWidth > RESPONSIVE_TABLE_MAX_WINDOW_WIDTH &&
+                {windowWidth > RESPONSIVE_TABLE_MAX_WINDOW_WIDTH && (
                     <div style={{ maxWidth: 1400 }}>
                         <table id="runner-laps-table" className="table">
                             <thead>
@@ -166,16 +166,16 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
                                                 onClick={e => { updateSort(e, SortBy.RaceTime); }}
                                         >
                                             Temps de course
-                                            {sortColumn === SortBy.RaceTime &&
+                                            {sortColumn === SortBy.RaceTime && (
                                                 <>
-                                                    {sortDirection === SORT_ASC &&
+                                                    {sortDirection === SORT_ASC && (
                                                         <FontAwesomeIcon icon={faSortDown} className="ms-1" />
-                                                    }
-                                                    {sortDirection === SORT_DESC &&
+                                                    )}
+                                                    {sortDirection === SORT_DESC && (
                                                         <FontAwesomeIcon icon={faSortUp} className="ms-1" />
-                                                    }
+                                                    )}
                                                 </>
-                                            }
+                                            )}
                                         </button>
                                     </th>
                                     <th>Temps au tour</th>
@@ -184,16 +184,16 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
                                                 onClick={e => { updateSort(e, SortBy.LapSpeed); }}
                                         >
                                             Vitesse
-                                            {sortColumn === SortBy.LapSpeed &&
+                                            {sortColumn === SortBy.LapSpeed && (
                                                 <>
-                                                    {sortDirection === SORT_ASC &&
+                                                    {sortDirection === SORT_ASC && (
                                                         <FontAwesomeIcon icon={faSortDown} className="ms-1" />
-                                                    }
-                                                    {sortDirection === SORT_DESC &&
+                                                    )}
+                                                    {sortDirection === SORT_DESC && (
                                                         <FontAwesomeIcon icon={faSortUp} className="ms-1" />
-                                                    }
+                                                    )}
                                                 </>
-                                            }
+                                            )}
                                         </button>
                                     </th>
                                     <th>Allure</th>
@@ -202,9 +202,8 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
                                 </tr>
                             </thead>
                             <tbody>
-                                {showCurrentLapAtTopOfTable &&
-                                    <>{currentLapTableRow}</>
-                                }
+                                {showCurrentLapAtTopOfTable && <>{currentLapTableRow}</>}
+
                                 {passagesToDisplay.map((passage, index) => (
                                     <tr key={index}>
                                         <td>
@@ -233,45 +232,43 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
                                         </td>
                                     </tr>
                                 ))}
-                                {showCurrentLapAtBottomOfTable &&
-                                    <>{currentLapTableRow}</>
-                                }
+
+                                {showCurrentLapAtBottomOfTable && <>{currentLapTableRow}</>}
                             </tbody>
                         </table>
                     </div>
-                }
+                )}
 
-                {windowWidth <= RESPONSIVE_TABLE_MAX_WINDOW_WIDTH &&
+                {windowWidth <= RESPONSIVE_TABLE_MAX_WINDOW_WIDTH && (
                     <div>
                         <div className="mb-3">
                             <button className="button" onClick={onResponsiveSortButtonClick}>
-                                {sortColumn === SortBy.RaceTime &&
+                                {sortColumn === SortBy.RaceTime && (
                                     <>Trier par vitesse</>
-                                }
+                                )}
 
-                                {sortColumn === SortBy.LapSpeed &&
+                                {sortColumn === SortBy.LapSpeed && (
                                     <>Trier par temps de passage</>
-                                }
+                                )}
                             </button>
                         </div>
 
                         <table id="runner-laps-table" className="table responsive-runner-laps-table">
                             <tbody>
-                                {showCurrentLapAtTopOfTable &&
-                                    <>{currentLapResponsiveTableRow}</>
-                                }
+                                {showCurrentLapAtTopOfTable && <>{currentLapResponsiveTableRow}</>}
+
                                 {passagesToDisplay.map((passage, index) => (
                                     <tr key={index}>
                                         <td>
                                             <div>
                                                 <strong>
-                                                    {passage.processed.lapNumber === null &&
+                                                    {passage.processed.lapNumber === null && (
                                                         <>Premier passage</>
-                                                    }
+                                                    )}
 
-                                                    {passage.processed.lapNumber !== null &&
+                                                    {passage.processed.lapNumber !== null && (
                                                         <>Tour {passage.processed.lapNumber}</>
-                                                    }
+                                                    )}
                                                 </strong>
 
                                                 &nbsp;–&nbsp;
@@ -300,13 +297,11 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
                                     </tr>
                                 ))}
 
-                                {showCurrentLapAtBottomOfTable &&
-                                    <>{currentLapResponsiveTableRow}</>
-                                }
+                                {showCurrentLapAtBottomOfTable && <>{currentLapResponsiveTableRow}</>}
                             </tbody>
                         </table>
                     </div>
-                }
+                )}
             </Col>
         </Row>
     );

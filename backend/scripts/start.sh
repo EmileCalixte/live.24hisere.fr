@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
 
-npm install --verbose
+yarn
 npx prisma generate
-npm run start:dev
+yarn run start:dev

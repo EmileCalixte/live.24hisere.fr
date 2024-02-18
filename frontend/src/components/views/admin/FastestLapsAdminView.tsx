@@ -296,15 +296,15 @@ export default function FastestLapsAdminView(): React.ReactElement {
                 </Col>
             </Row>
 
-            {passagesInPage === false &&
+            {passagesInPage === false && (
                 <Row>
                     <Col>
                         <CircularLoader />
                     </Col>
                 </Row>
-            }
+            )}
 
-            {passagesInPage !== false &&
+            {passagesInPage !== false && (
                 <>
                     <Row className="mb-3">
                         <Col>
@@ -334,15 +334,15 @@ export default function FastestLapsAdminView(): React.ReactElement {
                         </Col>
                     </Row>
 
-                    {pageCount > 1 &&
+                    {pageCount > 1 && (
                         <Row>
                             <Col className="mt-3 pagination-container">
                                 <Pagination minPage={1} maxPage={pageCount} currentPage={page} setPage={setPage} />
                             </Col>
                         </Row>
-                    }
+                    )}
                 </>
-            }
+            )}
         </Page>
     );
 }

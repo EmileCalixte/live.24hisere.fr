@@ -19,15 +19,16 @@ export default function Breadcrumbs({ children }: BreadcrumbsProps): React.React
         <ul className="breadcrumbs">
             {children.map((child, key) => {
                 const renderSeparator = key <= children.length - 2;
+
                 return (
                     <span key={key}>
                         {child}
 
-                        {renderSeparator &&
+                        {renderSeparator && (
                             <span className="crumb-separator">
                                 <FontAwesomeIcon icon={faChevronRight} />
                             </span>
-                        }
+                        )}
                     </span>
                 );
             })}

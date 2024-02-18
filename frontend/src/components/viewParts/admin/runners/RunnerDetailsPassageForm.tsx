@@ -49,11 +49,11 @@ export default function RunnerDetailsPassageForm({
                                         setDuration={setRaceTime}
                         />
 
-                        {time &&
+                        {time && (
                             <p>
                                 Date et heure : {formatDateAsString(time)}
                             </p>
-                        }
+                        )}
 
                         <div className="flex-space-between-container">
                             <button className="button grey" type="button" onClick={() => onClose()}>

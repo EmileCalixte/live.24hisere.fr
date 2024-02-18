@@ -100,15 +100,15 @@ export default function RunnersAdminView(): React.ReactElement {
                 </Col>
             </Row>
 
-            {displayedRunners === false &&
+            {displayedRunners === false && (
                 <Row>
                     <Col>
                         <CircularLoader />
                     </Col>
                 </Row>
-            }
+            )}
 
-            {displayedRunners !== false &&
+            {displayedRunners !== false && (
                 <>
                     <Row>
                         <Col>
@@ -159,17 +159,17 @@ export default function RunnersAdminView(): React.ReactElement {
 
                     <Row>
                         <Col className="mt-3">
-                            {displayedRunners.length === 0 &&
+                            {displayedRunners.length === 0 && (
                                 <p>Aucun coureur</p>
-                            }
+                            )}
 
-                            {displayedRunners.length > 0 &&
+                            {displayedRunners.length > 0 && (
                                 <RunnersTable runners={displayedRunners} races={races} />
-                            }
+                            )}
                         </Col>
                     </Row>
                 </>
-            }
+            )}
         </Page>
     );
 }

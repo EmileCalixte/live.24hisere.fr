@@ -25,11 +25,11 @@ export default function RacesListItem({ race, isSorting, isDragged, isDraggedOve
               onClick={onClick}
               className={`${isDragged ? "dragged" : ""} ${isDraggedOver ? "dragged-over" : ""}`}
         >
-            {isSorting &&
+            {isSorting && (
                 <div className="admin-list-link-drag-icon">
                     <FontAwesomeIcon icon={faGrip} />
                 </div>
-            }
+            )}
 
             <div className="admin-list-link-label">
                 {race.name}
@@ -42,13 +42,13 @@ export default function RacesListItem({ race, isSorting, isDragged, isDraggedOve
                 </div>
 
                 <div className="admin-list-link-secondary-icon-group">
-                    {race.isPublic &&
+                    {race.isPublic && (
                         <FontAwesomeIcon icon={faEye} />
-                    }
+                    )}
 
-                    {!race.isPublic &&
+                    {!race.isPublic && (
                         <FontAwesomeIcon icon={faEyeSlash} />
-                    }
+                    )}
                 </div>
 
                 <div className="admin-list-link-secondary-icon-group">

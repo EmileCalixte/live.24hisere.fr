@@ -28,17 +28,16 @@ export default function AdminHeader(): React.ReactElement {
                 >
                     {user.username}
                     &nbsp;
-                    {userDropdownShown &&
+                    {userDropdownShown ? (
                         <FontAwesomeIcon icon={faAngleUp} />
-                    }
-                    {!userDropdownShown &&
+                    ) : (
                         <FontAwesomeIcon icon={faAngleDown} />
-                    }
+                    )}
                 </button>
 
-                {userDropdownShown &&
+                {userDropdownShown && (
                     <AdminHeaderUserDropdown hideDropdown={hideUserDropdown} />
-                }
+                )}
             </div>
         </div>
     );

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+
 import { Col, Row } from "react-bootstrap";
 import { useWindowDimensions } from "../../../../hooks/useWindowDimensions";
 import CanvasJSReact from "../../../../lib/canvasjs/canvasjs.react";
@@ -76,9 +78,9 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
 
             return ReactDOMServer.renderToString(
                 <div>
-                    {passage.processed.lapNumber !== null &&
+                    {passage.processed.lapNumber !== null && (
                         <div style={{ marginBottom: "0.75em" }}>Tour {passage.processed.lapNumber}</div>
-                    }
+                    )}
 
                     <div>
                         De <strong>{formatMsAsDuration(passage.processed.lapStartRaceTime)}</strong> à <strong>{formatMsAsDuration(passage.processed.lapEndRaceTime)}</strong> :
