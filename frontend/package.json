@@ -47,10 +47,10 @@
   "scripts": {
     "start": "vite",
     "build": "npx tsc && vite build",
-    "lint": "npx eslint .",
-    "lint-fix": "npx eslint . --fix",
+    "lint": "npx eslint . --ext .ts,.tsx",
+    "lint-fix": "yarn run lint --fix",
     "typecheck": "npx tsc --noEmit",
-    "codecheck": "npm run typecheck && npm run lint",
+    "codecheck": "yarn run typecheck && yarn run lint",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

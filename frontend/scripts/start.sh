@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 
-npm install --verbose
+yarn
 npm start
