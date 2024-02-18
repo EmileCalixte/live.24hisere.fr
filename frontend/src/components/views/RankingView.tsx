@@ -141,7 +141,7 @@ export default function RankingView(): React.ReactElement {
     /**
      * @param time The new ranking time from race start in ms
      */
-    const onRankingTimeSave = async (time: number): Promise<void> => {
+    const onRankingTimeSave = (time: number): void => {
         setSelectedRankingTime(time);
     };
 
