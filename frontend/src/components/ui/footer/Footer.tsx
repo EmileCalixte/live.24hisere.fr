@@ -23,11 +23,11 @@ export default function Footer(): React.ReactElement {
                             <a href="https://github.com/EmileCalixte/live.24hisere.fr" target="_blank" rel="noopener noreferrer">Code source</a> – <a href="https://www.24hisere.fr/" target="_blank" rel="noopener noreferrer">Les 24 Heures de l'Isère</a>
                         </p>
 
-                        {!user &&
+                        {!user && (
                             <p>
                                 <Link to="/login">Connexion admin</Link>
                             </p>
-                        }
+                        )}
                     </Col>
                 </Row>
             </div>

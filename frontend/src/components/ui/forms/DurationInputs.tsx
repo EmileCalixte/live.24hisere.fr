@@ -119,9 +119,8 @@ export default function DurationInputs({
 
     return (
         <fieldset className={className}>
-            {legend &&
-                <legend>{legend}</legend>
-            }
+            {legend && <legend>{legend}</legend>}
+
             <label style={{ marginLeft: -5 }}>
                 <input className="input race-time-input"
                        type="number"

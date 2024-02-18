@@ -3,7 +3,8 @@ import { type GenderWithMixed } from "../types/Gender";
 import { type Race } from "../types/Race";
 import {
     type MinimalRankingRunnerInput,
-    type Ranking, RankingRunner,
+    type Ranking,
+    type RankingRunner,
     type RankingRunnerGaps,
     type RankingRunnerRanks,
 } from "../types/Ranking";
@@ -267,7 +268,7 @@ export class RankingCalculator<T extends MinimalRankingRunnerInput> {
             return null;
         }
 
-        return this.firstRunnersByCategory[category][gender]
+        return this.firstRunnersByCategory[category][gender];
     }
 
     private getCurrentLastRunner(category: string, gender: GenderWithMixed, ranking: Ranking<T>): Ranking<T>[number] | null {

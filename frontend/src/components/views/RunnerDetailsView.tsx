@@ -179,13 +179,13 @@ export default function RunnerDetailsView(): React.ReactElement {
                 </>
             ) : (
                 <>
-                    {selectedRunnerId !== undefined &&
+                    {selectedRunnerId !== undefined && (
                         <Row className="mt-3">
                             <Col>
                                 <CircularLoader asideText="Chargement des données" />
                             </Col>
                         </Row>
-                    }
+                    )}
                 </>
             )}
         </Page>

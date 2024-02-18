@@ -173,7 +173,7 @@ export default function RunnerDetailsStats({ runner, race, ranking }: RunnerDeta
                 </Col>
             </Row>
 
-            {averageSpeed !== null &&
+            {averageSpeed !== null && (
                 <Row>
                     <Col>
                         <h2>Vitesse</h2>
@@ -181,7 +181,7 @@ export default function RunnerDetailsStats({ runner, race, ranking }: RunnerDeta
                         <SpeedChart runner={runner} race={race} averageSpeed={averageSpeed} />
                     </Col>
                 </Row>
-            }
+            )}
         </>
     );
 }

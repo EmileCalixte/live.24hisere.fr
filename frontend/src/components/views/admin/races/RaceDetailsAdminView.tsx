@@ -161,11 +161,11 @@ export default function RaceDetailsAdminView(): React.ReactElement {
 
             <Row>
                 <Col xxl={3} xl={4} lg={6} md={9} sm={12}>
-                    {race === undefined &&
+                    {race === undefined && (
                         <CircularLoader />
-                    }
+                    )}
 
-                    {race !== undefined &&
+                    {race !== undefined && (
                         <>
                             <Row>
                                 <Col>
@@ -191,13 +191,11 @@ export default function RaceDetailsAdminView(): React.ReactElement {
                                 <Col>
                                     <h3>Supprimer la course</h3>
 
-                                    {race.runnerCount > 0 &&
+                                    {race.runnerCount > 0 ? (
                                         <p>La course ne peut pas être supprimée tant qu'elle contient des coureurs.</p>
-                                    }
-
-                                    {race.runnerCount === 0 &&
+                                    ) : (
                                         <p>Cette action est irréversible.</p>
-                                    }
+                                    )}
 
                                     <button className="button red mt-3"
                                             disabled={race.runnerCount > 0}
@@ -208,7 +206,7 @@ export default function RaceDetailsAdminView(): React.ReactElement {
                                 </Col>
                             </Row>
                         </>
-                    }
+                    )}
                 </Col>
             </Row>
         </Page>

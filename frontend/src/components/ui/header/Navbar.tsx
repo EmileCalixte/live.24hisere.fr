@@ -16,11 +16,11 @@ export default function Navbar(): React.ReactElement {
                     <NavLink to="/runner-details">Détails coureur</NavLink>
                 </li>
 
-                {user &&
+                {user && (
                     <li>
                         <NavLink to="/admin">Admin</NavLink>
                     </li>
-                }
+                )}
             </ul>
         </nav>
     );

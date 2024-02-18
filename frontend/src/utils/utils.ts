@@ -3,7 +3,7 @@ import config from "../config/config";
 export const SORT_ASC = 1;
 export const SORT_DESC = -1;
 
-export function verbose(...items: any[]): void {
+export function verbose(...items: unknown[]): void {
     if (!config.devMode) {
         return;
     }

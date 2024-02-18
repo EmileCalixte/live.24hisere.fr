@@ -313,15 +313,15 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
                     </Breadcrumbs>
                 </Col>
             </Row>
-            {runner === undefined &&
+            {runner === undefined && (
                 <Row>
                     <Col>
                         <CircularLoader />
                     </Col>
                 </Row>
-            }
+            )}
 
-            {runner !== undefined &&
+            {runner !== undefined && (
                 <>
                     <Row>
                         <Col xxl={3} xl={4} lg={6} md={9} sm={12}>
@@ -372,7 +372,7 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
                         </Col>
                     </Row>
                 </>
-            }
+            )}
         </Page>
     );
 }

@@ -1,11 +1,10 @@
 import { HOUR_IN_MS } from "../constants/misc";
 import { getPaceFromSpeed, getSpeed } from "./mathUtils";
-import { getRaceTime } from "./raceUtils";
+import { getDistanceFromPassageCount, getRaceTime } from "./raceUtils";
 import { type Passage, type PassageProcessedData, type ProcessedPassage } from "../types/Passage";
 import { type Race } from "../types/Race";
 import { type RunnerProcessedData, type RunnerProcessedHour } from "../types/Runner";
 import { spaceship } from "./compareUtils";
-import { getDistanceFromPassageCount } from "./raceUtils";
 import { isDateValid } from "./utils";
 
 /**

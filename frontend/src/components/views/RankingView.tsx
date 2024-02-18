@@ -169,7 +169,7 @@ export default function RankingView(): React.ReactElement {
                 </Col>
             </Row>
 
-            {selectedRace &&
+            {selectedRace && (
                 <>
                     <Row className="hide-on-print mb-3 row-cols-auto">
                         <RankingSettings
@@ -186,14 +186,14 @@ export default function RankingView(): React.ReactElement {
                         />
                     </Row>
 
-                    {!ranking &&
+                    {!ranking && (
                         <CircularLoader />
-                    }
+                    )}
 
-                    {ranking &&
+                    {ranking && (
                         <Row>
                             <Col>
-                                {windowWidth > RESPONSIVE_TABLE_MAX_WINDOW_WIDTH &&
+                                {windowWidth > RESPONSIVE_TABLE_MAX_WINDOW_WIDTH && (
                                     <RankingTable
                                         race={selectedRace}
                                         ranking={ranking}
@@ -201,9 +201,9 @@ export default function RankingView(): React.ReactElement {
                                         tableGender={selectedGender}
                                         tableRaceDuration={selectedTimeMode === RANKING_TIME_MODE.at ? selectedRankingTime : null}
                                     />
-                                }
+                                )}
 
-                                {windowWidth <= RESPONSIVE_TABLE_MAX_WINDOW_WIDTH &&
+                                {windowWidth <= RESPONSIVE_TABLE_MAX_WINDOW_WIDTH && (
                                     <div>
                                         <div className="mb-3">
                                             Cliquez sur un coureur pour consulter ses données de course
@@ -217,12 +217,12 @@ export default function RankingView(): React.ReactElement {
                                             tableRaceDuration={selectedTimeMode === RANKING_TIME_MODE.at ? selectedRankingTime : null}
                                         />
                                     </div>
-                                }
+                                )}
                             </Col>
                         </Row>
-                    }
+                    )}
                 </>
-            }
+            )}
         </Page>
     );
 }

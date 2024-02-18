@@ -132,11 +132,11 @@ export default function RacesAdminView(): React.ReactElement {
                 </Col>
             </Row>
 
-            {races === false &&
+            {races === false && (
                 <CircularLoader />
-            }
+            )}
 
-            {races !== false &&
+            {races !== false && (
                 <>
                     <Row>
                         <Col>
@@ -149,22 +149,22 @@ export default function RacesAdminView(): React.ReactElement {
 
                     <Row>
                         <Col>
-                            {races.length === 0 &&
+                            {races.length === 0 && (
                                 <p>Aucune course</p>
-                            }
+                            )}
 
-                            {races.length > 0 &&
+                            {races.length > 0 && (
                                 <>
                                     <Row className="mt-4">
                                         <Col>
-                                            {!isSorting &&
+                                            {!isSorting && (
                                                 <button className="button" onClick={() => { setIsSorting(true); }}>
                                                     <FontAwesomeIcon icon={faArrowsUpDown} className="mr-2" />
                                                     Changer l'ordre
                                                 </button>
-                                            }
+                                            )}
 
-                                            {isSorting &&
+                                            {isSorting && (
                                                 <>
                                                     <button className="button red mr-2"
                                                             onClick={() => { setIsSorting(false); }}
@@ -179,7 +179,7 @@ export default function RacesAdminView(): React.ReactElement {
                                                         Enregistrer
                                                     </button>
                                                 </>
-                                            }
+                                            )}
                                         </Col>
                                     </Row>
 
@@ -209,11 +209,11 @@ export default function RacesAdminView(): React.ReactElement {
                                         </Col>
                                     </Row>
                                 </>
-                            }
+                            )}
                         </Col>
                     </Row>
                 </>
-            }
+            )}
         </Page>
     );
 }

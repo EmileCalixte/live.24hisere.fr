@@ -29,11 +29,11 @@ export default function RunnerDetailsRaceDetails({ race }: RunnerDetailsRaceDeta
                 <p>
                     Distance tour : <strong>{raceLapDistance} m</strong>
                     <> </>
-                    {raceInitialDistance > 0 &&
+                    {raceInitialDistance > 0 && (
                         <>
                             (distance avant le premier tour : {raceInitialDistance} m)
                         </>
-                    }
+                    )}
                 </p>
             </Col>
         </Row>
