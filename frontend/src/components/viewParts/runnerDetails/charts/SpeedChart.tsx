@@ -338,7 +338,6 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
         minSpeed,
         maxSpeed,
         getXAxisInterval,
-        getXAxisLabelValue,
         getTooltipContent,
         displayEachLapSpeed,
         displayEachHourSpeed,

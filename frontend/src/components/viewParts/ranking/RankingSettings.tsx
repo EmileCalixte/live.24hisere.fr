@@ -5,12 +5,11 @@ import {
     GENDER_WITH_MIXED_OPTIONS,
     RANKING_TIME_MODE_OPTIONS,
 } from "../../../constants/forms";
-import { RANKING_TIME_MODE } from "../../../constants/rankingTimeMode";
+import { RankingTimeMode } from "../../../constants/rankingTimeMode";
 import { getCategoriesDictSelectOptions } from "../../../utils/categoryUtils";
 import { type CategoriesDict, type CategoryShortCode } from "../../../types/Category";
 import { type SelectOption } from "../../../types/Forms";
 import { type GenderWithMixed } from "../../../types/Gender";
-import { type RankingTimeMode } from "../../../types/RankingTimeMode";
 import RadioGroup from "../../ui/forms/RadioGroup";
 import Select from "../../ui/forms/Select";
 import RankingSettingsTime from "./RankingSettingsTime";
@@ -70,7 +69,7 @@ export default function RankingSettings({
                             onSelectOption={option => { setTimeMode(option.value); }}
                 />
 
-                <RankingSettingsTime isVisible={selectedTimeMode === RANKING_TIME_MODE.at}
+                <RankingSettingsTime isVisible={selectedTimeMode === RankingTimeMode.AT}
                                      currentRankingTime={currentRankingTime}
                                      onRankingTimeSave={onRankingTimeSave}
                                      maxRankingTime={maxRankingTime}

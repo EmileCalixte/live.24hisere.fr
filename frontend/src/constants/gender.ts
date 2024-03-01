@@ -1,9 +1,8 @@
-import { type Gender, type GenderWithMixed } from "../types/Gender";
-import { type ConstantRecord } from "../types/Utils";
+import { type GenderWithMixed } from "../types/Gender";
 
-export const GENDER: ConstantRecord<Gender> = {
-    M: "M",
-    F: "F",
-};
+export const enum Gender {
+    M = "M",
+    F = "F",
+}
 
 export const GENDER_MIXED: GenderWithMixed = "mixed";

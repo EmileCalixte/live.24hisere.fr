@@ -1,32 +1,36 @@
 import "../../css/print-ranking-table.css";
 import React from "react";
 import { Col, Row } from "react-bootstrap";
-import { GENDER } from "../../constants/gender";
-import { RANKING_TIME_MODE } from "../../constants/rankingTimeMode";
+import { Gender } from "../../constants/gender";
+import { RankingTimeMode } from "../../constants/rankingTimeMode";
 import { SearchParam } from "../../constants/searchParams";
 import { useIntervalApiRequest } from "../../hooks/useIntervalApiRequest";
 import { useQueryString } from "../../hooks/useQueryString";
 import { useRanking } from "../../hooks/useRanking";
+import { useWindowDimensions } from "../../hooks/useWindowDimensions";
 import { getRaces } from "../../services/api/RaceService";
 import { getRaceRunners } from "../../services/api/RunnerService";
-import { type RunnerWithProcessedData, type RunnerWithProcessedPassages } from "../../types/Runner";
-import { excludeKeys } from "../../utils/objectUtils";
-import { getProcessedPassagesFromPassages, getRunnerProcessedDataFromPassages } from "../../utils/passageUtils";
-import { getDateFromRaceTime, getRacesSelectOptions } from "../../utils/raceUtils";
-import { useWindowDimensions } from "../../hooks/useWindowDimensions";
 import { type CategoriesDict, type CategoryShortCode } from "../../types/Category";
 import { type GenderWithMixed } from "../../types/Gender";
 import { type RaceWithRunnerCount } from "../../types/Race";
-import { type RankingTimeMode } from "../../types/RankingTimeMode";
+import { type RunnerWithProcessedData, type RunnerWithProcessedPassages } from "../../types/Runner";
+import { inArray } from "../../utils/arrayUtils";
 import { existingCategories, getCategoryCodeFromBirthYear } from "../../utils/ffaUtils";
+import { excludeKeys } from "../../utils/objectUtils";
+import { getProcessedPassagesFromPassages, getRunnerProcessedDataFromPassages } from "../../utils/passageUtils";
+import { getDateFromRaceTime, getRacesSelectOptions } from "../../utils/raceUtils";
+import CircularLoader from "../ui/CircularLoader";
 import Select from "../ui/forms/Select";
 import Page from "../ui/Page";
-import CircularLoader from "../ui/CircularLoader";
 import RankingSettings from "../viewParts/ranking/RankingSettings";
 import RankingTable from "../viewParts/ranking/rankingTable/RankingTable";
 import ResponsiveRankingTable from "../viewParts/ranking/rankingTable/responsive/ResponsiveRankingTable";
 
 const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
+
+function isValidGender(gender: string | null): gender is Gender {
+    return inArray(gender, [Gender.M, Gender.F]);
+}
 
 export default function RankingView(): React.ReactElement {
     const { searchParams, setParams, deleteParams } = useQueryString();
@@ -37,8 +41,8 @@ export default function RankingView(): React.ReactElement {
     const searchParamsTimeMode = searchParams.get(SearchParam.TIME_MODE);
     const searchParamsRankingTime = searchParams.get(SearchParam.RANKING_TIME);
 
-    const [selectedTimeMode, setSelectedTimeMode] = React.useState<RankingTimeMode>(RANKING_TIME_MODE.now);
-    const [selectedRankingTime, setSelectedRankingTime] = React.useState(-1); // Set when a race is selected, in ms
+    // To keep in memory the selected ranking time when the user selects current time ranking mode, in seconds
+    const [rankingTimeMemory, setRankingTimeMemory] = React.useState<number | null>(null);
 
     const { width: windowWidth } = useWindowDimensions();
 
@@ -55,6 +59,33 @@ export default function RankingView(): React.ReactElement {
 
         return races?.find(race => race.id.toString() === searchParamsRace) ?? null;
     }, [races, searchParamsRace]);
+
+    const selectedTimeMode = React.useMemo<RankingTimeMode>(() => {
+        if (searchParamsTimeMode === RankingTimeMode.AT) {
+            return RankingTimeMode.AT;
+        }
+
+        return RankingTimeMode.NOW;
+    }, [searchParamsTimeMode]);
+
+    // Ranking time in ms
+    const selectedRankingTime = React.useMemo<number | null>(() => {
+        if (selectedTimeMode !== RankingTimeMode.AT) {
+            return null;
+        }
+
+        if (searchParamsRankingTime === null) {
+            return null;
+        }
+
+        const time = parseInt(searchParamsRankingTime);
+
+        if (isNaN(time)) {
+            return null;
+        }
+
+        return time * 1000;
+    }, [searchParamsRankingTime, selectedTimeMode]);
 
     const fetchRunners = React.useMemo(() => {
         if (!selectedRace) {
@@ -83,7 +114,7 @@ export default function RankingView(): React.ReactElement {
             return;
         }
 
-        if (selectedTimeMode !== RANKING_TIME_MODE.at) {
+        if (selectedTimeMode !== RankingTimeMode.AT || selectedRankingTime === null) {
             return;
         }
 
@@ -93,18 +124,22 @@ export default function RankingView(): React.ReactElement {
     const ranking = useRanking(selectedRace ?? undefined, processedRunners, rankingDate);
 
     const shouldResetRankingTime = React.useCallback((newRaceDuration: number) => {
-        if (selectedRankingTime < 0) {
+        if (rankingTimeMemory === null) {
             return true;
         }
 
-        if (selectedRace && selectedRankingTime > newRaceDuration * 1000) {
+        if (rankingTimeMemory < 0) {
+            return true;
+        }
+
+        if (selectedRace && rankingTimeMemory > newRaceDuration) {
             return true;
         }
 
         // For better UX, if the user looks at the current time rankings, we want to reset the time inputs to the
         // duration of the newly selected race
-        return selectedTimeMode === RANKING_TIME_MODE.now;
-    }, [selectedRankingTime, selectedRace, selectedTimeMode]);
+        return selectedTimeMode === RankingTimeMode.NOW;
+    }, [rankingTimeMemory, selectedRace, selectedTimeMode]);
 
     const onSelectRace = React.useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
         setParams({ [SearchParam.RACE]: e.target.value });
@@ -116,9 +151,39 @@ export default function RankingView(): React.ReactElement {
         }
 
         if (shouldResetRankingTime(race.duration)) {
-            setSelectedRankingTime(race.duration * 1000);
+            setRankingTimeMemory(race.duration);
+            if (selectedTimeMode === RankingTimeMode.AT) {
+                setParams({ [SearchParam.RANKING_TIME]: race.duration.toString() });
+            }
         }
-    }, [races, setParams, shouldResetRankingTime]);
+    }, [races, selectedTimeMode, setParams, shouldResetRankingTime]);
+
+    React.useEffect(() => {
+        if (!selectedRace) {
+            return;
+        }
+
+        if (selectedTimeMode === RankingTimeMode.AT && !searchParams.has(SearchParam.RANKING_TIME)) {
+            setParams({ [SearchParam.RANKING_TIME]: rankingTimeMemory?.toString() ?? selectedRace.duration.toString() });
+        }
+    }, [deleteParams, rankingTimeMemory, searchParams, selectedRace, selectedTimeMode, setParams]);
+
+    React.useEffect(() => {
+        if (selectedTimeMode !== RankingTimeMode.AT && searchParams.has(SearchParam.RANKING_TIME)) {
+            deleteParams(SearchParam.RANKING_TIME);
+        }
+    }, [deleteParams, searchParams, selectedTimeMode]);
+
+    React.useEffect(() => {
+        if (selectedTimeMode !== RankingTimeMode.AT || !selectedRace || selectedRankingTime === null) {
+            return;
+        }
+
+        if (selectedRankingTime > selectedRace.duration * 1000) {
+            setParams({ [SearchParam.RANKING_TIME]: selectedRace.duration.toString() });
+            setRankingTimeMemory(selectedRace.duration);
+        }
+    }, [selectedRace, selectedRankingTime, selectedTimeMode, setParams]);
 
     const onCategorySelect = (e: React.ChangeEvent<HTMLSelectElement>): void => {
         if (e.target.value === "scratch") {
@@ -138,11 +203,23 @@ export default function RankingView(): React.ReactElement {
         setParams({ [SearchParam.GENDER]: gender });
     };
 
+    const onTimeModeSelect = (timeMode: RankingTimeMode): void => {
+        if (timeMode === RankingTimeMode.NOW) {
+            deleteParams(SearchParam.TIME_MODE, SearchParam.RANKING_TIME);
+            return;
+        }
+
+        setParams({ [SearchParam.TIME_MODE]: timeMode });
+    };
+
     /**
      * @param time The new ranking time from race start in ms
      */
     const onRankingTimeSave = (time: number): void => {
-        setSelectedRankingTime(time);
+        const timeToSave = Math.floor(time / 1000);
+
+        setParams({ [SearchParam.RANKING_TIME]: timeToSave.toString() });
+        setRankingTimeMemory(timeToSave);
     };
 
     const categories = React.useMemo<CategoriesDict | false>(() => {
@@ -176,7 +253,7 @@ export default function RankingView(): React.ReactElement {
     }, [categories, searchParamsCategory, selectedRace]);
 
     const selectedGender = React.useMemo<GenderWithMixed>(() => {
-        if ([GENDER.M, GENDER.F].includes(searchParamsGender)) {
+        if (isValidGender(searchParamsGender)) {
             return searchParamsGender;
         }
 
@@ -227,12 +304,12 @@ export default function RankingView(): React.ReactElement {
                             categories={categories}
                             onCategorySelect={onCategorySelect}
                             onGenderSelect={onGenderSelect}
-                            setTimeMode={setSelectedTimeMode}
+                            setTimeMode={onTimeModeSelect}
                             onRankingTimeSave={onRankingTimeSave}
                             selectedCategory={selectedCategory}
                             selectedGender={selectedGender}
                             selectedTimeMode={selectedTimeMode}
-                            currentRankingTime={selectedRankingTime}
+                            currentRankingTime={selectedRankingTime ?? selectedRace.duration * 1000}
                             maxRankingTime={selectedRace.duration * 1000}
                         />
                     </Row>
@@ -250,7 +327,7 @@ export default function RankingView(): React.ReactElement {
                                         ranking={ranking}
                                         tableCategory={selectedCategory}
                                         tableGender={selectedGender}
-                                        tableRaceDuration={selectedTimeMode === RANKING_TIME_MODE.at ? selectedRankingTime : null}
+                                        tableRaceDuration={selectedTimeMode === RankingTimeMode.AT ? selectedRankingTime : null}
                                     />
                                 )}
 
@@ -265,7 +342,7 @@ export default function RankingView(): React.ReactElement {
                                             ranking={ranking}
                                             tableCategory={selectedCategory}
                                             tableGender={selectedGender}
-                                            tableRaceDuration={selectedTimeMode === RANKING_TIME_MODE.at ? selectedRankingTime : null}
+                                            tableRaceDuration={selectedTimeMode === RankingTimeMode.AT ? selectedRankingTime : null}
                                         />
                                     </div>
                                 )}
