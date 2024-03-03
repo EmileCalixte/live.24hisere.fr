@@ -1,9 +1,10 @@
 import "../../css/print-ranking-table.css";
 import React from "react";
 import { Col, Row } from "react-bootstrap";
-import { Gender } from "../../constants/gender";
 import { RankingTimeMode } from "../../constants/rankingTimeMode";
 import { SearchParam } from "../../constants/searchParams";
+import { useCategoryQueryString } from "../../hooks/queryString/useCategoryQueryString";
+import { useGenderQueryString } from "../../hooks/queryString/useGenderQueryString";
 import { useRaceQueryString } from "../../hooks/queryString/useRaceQueryString";
 import { useIntervalApiRequest } from "../../hooks/useIntervalApiRequest";
 import { useQueryString } from "../../hooks/queryString/useQueryString";
@@ -14,7 +15,6 @@ import { getRaceRunners } from "../../services/api/RunnerService";
 import { type CategoriesDict, type CategoryShortCode } from "../../types/Category";
 import { type GenderWithMixed } from "../../types/Gender";
 import { type RunnerWithProcessedData, type RunnerWithProcessedPassages } from "../../types/Runner";
-import { inArray } from "../../utils/arrayUtils";
 import { existingCategories, getCategoryCodeFromBirthYear } from "../../utils/ffaUtils";
 import { excludeKeys } from "../../utils/objectUtils";
 import { getProcessedPassagesFromPassages, getRunnerProcessedDataFromPassages } from "../../utils/passageUtils";
@@ -28,15 +28,11 @@ import ResponsiveRankingTable from "../viewParts/ranking/rankingTable/responsive
 
 const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
 
-function isValidGender(gender: string | null): gender is Gender {
-    return inArray(gender, [Gender.M, Gender.F]);
-}
-
 export default function RankingView(): React.ReactElement {
     const { searchParams, setParams, deleteParams } = useQueryString();
 
-    const searchParamsCategory = searchParams.get(SearchParam.CATEGORY);
-    const searchParamsGender = searchParams.get(SearchParam.GENDER);
+    const { selectedGender, setGenderParam, deleteGenderParam } = useGenderQueryString();
+
     const searchParamsTimeMode = searchParams.get(SearchParam.TIME_MODE);
     const searchParamsRankingTime = searchParams.get(SearchParam.RANKING_TIME);
 
@@ -180,20 +176,20 @@ export default function RankingView(): React.ReactElement {
 
     const onCategorySelect = (e: React.ChangeEvent<HTMLSelectElement>): void => {
         if (e.target.value === "scratch") {
-            deleteParams(SearchParam.CATEGORY);
+            deleteCategoryParam();
             return;
         }
 
-        setParams({ [SearchParam.CATEGORY]: e.target.value });
+        setCategoryParam(e.target.value);
     };
 
     const onGenderSelect = (gender: GenderWithMixed): void => {
         if (gender === "mixed") {
-            deleteParams(SearchParam.GENDER);
+            deleteGenderParam();
             return;
         }
 
-        setParams({ [SearchParam.GENDER]: gender });
+        setGenderParam(gender);
     };
 
     const onTimeModeSelect = (timeMode: RankingTimeMode): void => {
@@ -215,9 +211,9 @@ export default function RankingView(): React.ReactElement {
         setRankingTimeMemory(timeToSave);
     };
 
-    const categories = React.useMemo<CategoriesDict | false>(() => {
+    const categories = React.useMemo<CategoriesDict | null>(() => {
         if (!ranking) {
-            return false;
+            return null;
         }
 
         const categoriesInRanking = new Set<CategoryShortCode>();
@@ -237,33 +233,7 @@ export default function RankingView(): React.ReactElement {
         return excludeKeys(existingCategories, categoriesToRemove);
     }, [ranking]);
 
-    const selectedCategory = React.useMemo<CategoryShortCode | null>(() => {
-        if (!selectedRace || !categories) {
-            return null;
-        }
-
-        return Object.keys(categories).find(categoryCode => categoryCode === searchParamsCategory) ?? null;
-    }, [categories, searchParamsCategory, selectedRace]);
-
-    const selectedGender = React.useMemo<GenderWithMixed>(() => {
-        if (isValidGender(searchParamsGender)) {
-            return searchParamsGender;
-        }
-
-        return "mixed";
-    }, [searchParamsGender]);
-
-    React.useEffect(() => {
-        if (categories && searchParamsCategory !== null && !selectedCategory) {
-            deleteParams(SearchParam.CATEGORY);
-        }
-    }, [categories, deleteParams, searchParamsCategory, selectedCategory]);
-
-    React.useEffect(() => {
-        if (searchParamsGender && selectedGender === "mixed") {
-            deleteParams(SearchParam.GENDER);
-        }
-    });
+    const { selectedCategory, setCategoryParam, deleteCategoryParam } = useCategoryQueryString(selectedRace, categories);
 
     return (
         <Page id="ranking" title="Classements">

@@ -2,7 +2,7 @@ import { type CategoriesDict, type CategoryShortCode } from "../types/Category";
 import { type SelectOption } from "../types/Forms";
 
 export function getCategoriesDictSelectOptions<T extends CategoriesDict>(
-    categoriesDict: T | false,
+    categoriesDict: T | null,
     label?: (code: CategoryShortCode, name: string) => string,
 ): SelectOption[] {
     if (!categoriesDict) {

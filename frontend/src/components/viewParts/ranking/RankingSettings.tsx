@@ -16,7 +16,7 @@ import RankingSettingsTime from "./RankingSettingsTime";
 import React, { useMemo } from "react";
 
 interface RankingSettingsProps {
-    categories: CategoriesDict | false;
+    categories: CategoriesDict | null;
     onCategorySelect: (e: React.ChangeEvent<HTMLSelectElement>) => void;
     onGenderSelect: (gender: GenderWithMixed) => void;
     setTimeMode: (timeMode: RankingTimeMode) => void;
