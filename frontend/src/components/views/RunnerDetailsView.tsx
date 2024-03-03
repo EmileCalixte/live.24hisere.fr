@@ -8,7 +8,7 @@ import {
     SearchParam,
 } from "../../constants/searchParams";
 import { useIntervalApiRequest } from "../../hooks/useIntervalApiRequest";
-import { useQueryString } from "../../hooks/useQueryString";
+import { useQueryString } from "../../hooks/queryString/useQueryString";
 import { useRanking } from "../../hooks/useRanking";
 import { getRace } from "../../services/api/RaceService";
 import { getRaceRunners, getRunners } from "../../services/api/RunnerService";

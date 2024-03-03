@@ -4,15 +4,15 @@ import { Col, Row } from "react-bootstrap";
 import { Gender } from "../../constants/gender";
 import { RankingTimeMode } from "../../constants/rankingTimeMode";
 import { SearchParam } from "../../constants/searchParams";
+import { useRaceQueryString } from "../../hooks/queryString/useRaceQueryString";
 import { useIntervalApiRequest } from "../../hooks/useIntervalApiRequest";
-import { useQueryString } from "../../hooks/useQueryString";
+import { useQueryString } from "../../hooks/queryString/useQueryString";
 import { useRanking } from "../../hooks/useRanking";
 import { useWindowDimensions } from "../../hooks/useWindowDimensions";
 import { getRaces } from "../../services/api/RaceService";
 import { getRaceRunners } from "../../services/api/RunnerService";
 import { type CategoriesDict, type CategoryShortCode } from "../../types/Category";
 import { type GenderWithMixed } from "../../types/Gender";
-import { type RaceWithRunnerCount } from "../../types/Race";
 import { type RunnerWithProcessedData, type RunnerWithProcessedPassages } from "../../types/Runner";
 import { inArray } from "../../utils/arrayUtils";
 import { existingCategories, getCategoryCodeFromBirthYear } from "../../utils/ffaUtils";
@@ -35,7 +35,6 @@ function isValidGender(gender: string | null): gender is Gender {
 export default function RankingView(): React.ReactElement {
     const { searchParams, setParams, deleteParams } = useQueryString();
 
-    const searchParamsRace = searchParams.get(SearchParam.RACE);
     const searchParamsCategory = searchParams.get(SearchParam.CATEGORY);
     const searchParamsGender = searchParams.get(SearchParam.GENDER);
     const searchParamsTimeMode = searchParams.get(SearchParam.TIME_MODE);
@@ -48,17 +47,11 @@ export default function RankingView(): React.ReactElement {
 
     const races = useIntervalApiRequest(getRaces).json?.races;
 
+    const { selectedRace, setRaceParam } = useRaceQueryString(races);
+
     const racesOptions = React.useMemo(() => {
         return getRacesSelectOptions(races);
     }, [races]);
-
-    const selectedRace = React.useMemo<RaceWithRunnerCount | null>(() => {
-        if (searchParamsRace === null) {
-            return null;
-        }
-
-        return races?.find(race => race.id.toString() === searchParamsRace) ?? null;
-    }, [races, searchParamsRace]);
 
     const selectedTimeMode = React.useMemo<RankingTimeMode>(() => {
         if (searchParamsTimeMode === RankingTimeMode.AT) {
@@ -142,7 +135,7 @@ export default function RankingView(): React.ReactElement {
     }, [rankingTimeMemory, selectedRace, selectedTimeMode]);
 
     const onSelectRace = React.useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-        setParams({ [SearchParam.RACE]: e.target.value });
+        setRaceParam(e.target.value);
 
         const race = races?.find(race => race.id.toString() === e.target.value);
 
@@ -156,7 +149,7 @@ export default function RankingView(): React.ReactElement {
                 setParams({ [SearchParam.RANKING_TIME]: race.duration.toString() });
             }
         }
-    }, [races, selectedTimeMode, setParams, shouldResetRankingTime]);
+    }, [races, selectedTimeMode, setParams, setRaceParam, shouldResetRankingTime]);
 
     React.useEffect(() => {
         if (!selectedRace) {
@@ -259,12 +252,6 @@ export default function RankingView(): React.ReactElement {
 
         return "mixed";
     }, [searchParamsGender]);
-
-    React.useEffect(() => {
-        if (races && searchParamsRace !== null && !selectedRace) {
-            deleteParams(SearchParam.RACE);
-        }
-    }, [deleteParams, races, searchParamsRace, selectedRace]);
 
     React.useEffect(() => {
         if (categories && searchParamsCategory !== null && !selectedCategory) {

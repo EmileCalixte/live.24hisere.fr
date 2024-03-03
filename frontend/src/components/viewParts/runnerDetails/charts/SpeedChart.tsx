@@ -4,7 +4,7 @@ import React from "react";
 import { Col, Row } from "react-bootstrap";
 import ReactDOMServer from "react-dom/server";
 import { SearchParam } from "../../../../constants/searchParams";
-import { useQueryString } from "../../../../hooks/useQueryString";
+import { useQueryString } from "../../../../hooks/queryString/useQueryString";
 import { useWindowDimensions } from "../../../../hooks/useWindowDimensions";
 import CanvasJSReact from "../../../../lib/canvasjs/canvasjs.react";
 import { type Race } from "../../../../types/Race";

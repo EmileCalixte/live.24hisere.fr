@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { SearchParam } from "../../../constants/searchParams";
-import { useQueryString } from "../../../hooks/useQueryString";
+import { useQueryString } from "../../../hooks/queryString/useQueryString";
 import { useRaceTime } from "../../../hooks/useRaceTime";
 import { useWindowDimensions } from "../../../hooks/useWindowDimensions";
 import { type Race } from "../../../types/Race";
