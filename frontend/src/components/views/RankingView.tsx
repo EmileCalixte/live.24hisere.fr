@@ -2,12 +2,11 @@ import "../../css/print-ranking-table.css";
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { RankingTimeMode } from "../../constants/rankingTimeMode";
-import { SearchParam } from "../../constants/searchParams";
 import { useCategoryQueryString } from "../../hooks/queryString/useCategoryQueryString";
 import { useGenderQueryString } from "../../hooks/queryString/useGenderQueryString";
 import { useRaceQueryString } from "../../hooks/queryString/useRaceQueryString";
+import { useRankingTimeQueryString } from "../../hooks/queryString/useRankingTimeQueryString";
 import { useIntervalApiRequest } from "../../hooks/useIntervalApiRequest";
-import { useQueryString } from "../../hooks/queryString/useQueryString";
 import { useRanking } from "../../hooks/useRanking";
 import { useWindowDimensions } from "../../hooks/useWindowDimensions";
 import { getRaces } from "../../services/api/RaceService";
@@ -18,7 +17,7 @@ import { type RunnerWithProcessedData, type RunnerWithProcessedPassages } from "
 import { existingCategories, getCategoryCodeFromBirthYear } from "../../utils/ffaUtils";
 import { excludeKeys } from "../../utils/objectUtils";
 import { getProcessedPassagesFromPassages, getRunnerProcessedDataFromPassages } from "../../utils/passageUtils";
-import { getDateFromRaceTime, getRacesSelectOptions } from "../../utils/raceUtils";
+import { getRacesSelectOptions } from "../../utils/raceUtils";
 import CircularLoader from "../ui/CircularLoader";
 import Select from "../ui/forms/Select";
 import Page from "../ui/Page";
@@ -29,52 +28,27 @@ import ResponsiveRankingTable from "../viewParts/ranking/rankingTable/responsive
 const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
 
 export default function RankingView(): React.ReactElement {
-    const { searchParams, setParams, deleteParams } = useQueryString();
-
     const { selectedGender, setGenderParam, deleteGenderParam } = useGenderQueryString();
-
-    const searchParamsTimeMode = searchParams.get(SearchParam.TIME_MODE);
-    const searchParamsRankingTime = searchParams.get(SearchParam.RANKING_TIME);
-
-    // To keep in memory the selected ranking time when the user selects current time ranking mode, in seconds
-    const [rankingTimeMemory, setRankingTimeMemory] = React.useState<number | null>(null);
 
     const { width: windowWidth } = useWindowDimensions();
 
     const races = useIntervalApiRequest(getRaces).json?.races;
 
     const { selectedRace, setRaceParam } = useRaceQueryString(races);
+    const {
+        selectedTimeMode,
+        selectedRankingTime,
+        rankingDate,
+        setTimeModeParam,
+        deleteTimeModeParam,
+        setRankingTimeParam,
+        deleteRankingTimeParam,
+        setRankingTimeMemory,
+    } = useRankingTimeQueryString(selectedRace);
 
     const racesOptions = React.useMemo(() => {
         return getRacesSelectOptions(races);
     }, [races]);
-
-    const selectedTimeMode = React.useMemo<RankingTimeMode>(() => {
-        if (searchParamsTimeMode === RankingTimeMode.AT) {
-            return RankingTimeMode.AT;
-        }
-
-        return RankingTimeMode.NOW;
-    }, [searchParamsTimeMode]);
-
-    // Ranking time in ms
-    const selectedRankingTime = React.useMemo<number | null>(() => {
-        if (selectedTimeMode !== RankingTimeMode.AT) {
-            return null;
-        }
-
-        if (searchParamsRankingTime === null) {
-            return null;
-        }
-
-        const time = parseInt(searchParamsRankingTime);
-
-        if (isNaN(time)) {
-            return null;
-        }
-
-        return time * 1000;
-    }, [searchParamsRankingTime, selectedTimeMode]);
 
     const fetchRunners = React.useMemo(() => {
         if (!selectedRace) {
@@ -98,81 +72,11 @@ export default function RankingView(): React.ReactElement {
         }));
     }, [runners, selectedRace]);
 
-    const rankingDate = React.useMemo<Date | undefined>(() => {
-        if (!selectedRace) {
-            return;
-        }
-
-        if (selectedTimeMode !== RankingTimeMode.AT || selectedRankingTime === null) {
-            return;
-        }
-
-        return getDateFromRaceTime(selectedRace, selectedRankingTime);
-    }, [selectedRace, selectedRankingTime, selectedTimeMode]);
-
     const ranking = useRanking(selectedRace ?? undefined, processedRunners, rankingDate);
 
-    const shouldResetRankingTime = React.useCallback((newRaceDuration: number) => {
-        if (rankingTimeMemory === null) {
-            return true;
-        }
-
-        if (rankingTimeMemory < 0) {
-            return true;
-        }
-
-        if (selectedRace && rankingTimeMemory > newRaceDuration) {
-            return true;
-        }
-
-        // For better UX, if the user looks at the current time rankings, we want to reset the time inputs to the
-        // duration of the newly selected race
-        return selectedTimeMode === RankingTimeMode.NOW;
-    }, [rankingTimeMemory, selectedRace, selectedTimeMode]);
-
-    const onSelectRace = React.useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    const onRaceSelect = (e: React.ChangeEvent<HTMLSelectElement>): void => {
         setRaceParam(e.target.value);
-
-        const race = races?.find(race => race.id.toString() === e.target.value);
-
-        if (!race) {
-            return;
-        }
-
-        if (shouldResetRankingTime(race.duration)) {
-            setRankingTimeMemory(race.duration);
-            if (selectedTimeMode === RankingTimeMode.AT) {
-                setParams({ [SearchParam.RANKING_TIME]: race.duration.toString() });
-            }
-        }
-    }, [races, selectedTimeMode, setParams, setRaceParam, shouldResetRankingTime]);
-
-    React.useEffect(() => {
-        if (!selectedRace) {
-            return;
-        }
-
-        if (selectedTimeMode === RankingTimeMode.AT && !searchParams.has(SearchParam.RANKING_TIME)) {
-            setParams({ [SearchParam.RANKING_TIME]: rankingTimeMemory?.toString() ?? selectedRace.duration.toString() });
-        }
-    }, [deleteParams, rankingTimeMemory, searchParams, selectedRace, selectedTimeMode, setParams]);
-
-    React.useEffect(() => {
-        if (selectedTimeMode !== RankingTimeMode.AT && searchParams.has(SearchParam.RANKING_TIME)) {
-            deleteParams(SearchParam.RANKING_TIME);
-        }
-    }, [deleteParams, searchParams, selectedTimeMode]);
-
-    React.useEffect(() => {
-        if (selectedTimeMode !== RankingTimeMode.AT || !selectedRace || selectedRankingTime === null) {
-            return;
-        }
-
-        if (selectedRankingTime > selectedRace.duration * 1000) {
-            setParams({ [SearchParam.RANKING_TIME]: selectedRace.duration.toString() });
-            setRankingTimeMemory(selectedRace.duration);
-        }
-    }, [selectedRace, selectedRankingTime, selectedTimeMode, setParams]);
+    };
 
     const onCategorySelect = (e: React.ChangeEvent<HTMLSelectElement>): void => {
         if (e.target.value === "scratch") {
@@ -194,11 +98,12 @@ export default function RankingView(): React.ReactElement {
 
     const onTimeModeSelect = (timeMode: RankingTimeMode): void => {
         if (timeMode === RankingTimeMode.NOW) {
-            deleteParams(SearchParam.TIME_MODE, SearchParam.RANKING_TIME);
+            deleteTimeModeParam();
+            deleteRankingTimeParam();
             return;
         }
 
-        setParams({ [SearchParam.TIME_MODE]: timeMode });
+        setTimeModeParam(timeMode);
     };
 
     /**
@@ -207,7 +112,7 @@ export default function RankingView(): React.ReactElement {
     const onRankingTimeSave = (time: number): void => {
         const timeToSave = Math.floor(time / 1000);
 
-        setParams({ [SearchParam.RANKING_TIME]: timeToSave.toString() });
+        setRankingTimeParam(timeToSave);
         setRankingTimeMemory(timeToSave);
     };
 
@@ -247,7 +152,7 @@ export default function RankingView(): React.ReactElement {
                 <Col xxl={2} xl={3} lg={4} md={6} sm={9} xs={12}>
                     <Select label="Course"
                             options={racesOptions}
-                            onChange={onSelectRace}
+                            onChange={onRaceSelect}
                             value={selectedRace ? selectedRace.id : undefined}
                             placeholderLabel="Sélectionnez une course"
                     />
