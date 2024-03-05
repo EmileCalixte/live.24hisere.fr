@@ -4,7 +4,7 @@ import React from "react";
 import { Col, Row } from "react-bootstrap";
 import ReactDOMServer from "react-dom/server";
 import { SearchParam } from "../../../../constants/searchParams";
-import { useQueryString } from "../../../../hooks/queryString/useQueryString";
+import { useSpeedChartQueryString } from "../../../../hooks/queryString/useSpeedChartQueryString";
 import { useWindowDimensions } from "../../../../hooks/useWindowDimensions";
 import CanvasJSReact from "../../../../lib/canvasjs/canvasjs.react";
 import { type Race } from "../../../../types/Race";
@@ -48,21 +48,13 @@ interface SpeedChartProps {
 }
 
 export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartProps): React.ReactElement {
-    const { searchParams, setParams, deleteParams } = useQueryString();
-
-    const toggleSearchParam = React.useCallback((param: SearchParam) => {
-        if (searchParams.has(param)) {
-            deleteParams(param);
-            return;
-        }
-
-        setParams({ [param]: "" });
-    }, [deleteParams, searchParams, setParams]);
-
-    const displayEachLapSpeed = React.useMemo(() => !searchParams.has(SearchParam.HIDE_LAP_SPEED), [searchParams]);
-    const displayEachHourSpeed = React.useMemo(() => !searchParams.has(SearchParam.HIDE_HOUR_SPEED), [searchParams]);
-    const displayAverageSpeed = React.useMemo(() => !searchParams.has(SearchParam.HIDE_AVG_SPEED), [searchParams]);
-    const displayAverageSpeedEvolution = React.useMemo(() => !searchParams.has(SearchParam.HIDE_AVG_SPEED_EVOLUTION), [searchParams]);
+    const {
+        displayEachLapSpeed,
+        displayEachHourSpeed,
+        displayAverageSpeed,
+        displayAverageSpeedEvolution,
+        toggleSearchParam,
+    } = useSpeedChartQueryString();
 
     const { width: windowWidth } = useWindowDimensions();
 
