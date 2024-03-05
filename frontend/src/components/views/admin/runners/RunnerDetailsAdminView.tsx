@@ -1,7 +1,7 @@
 import { Col, Row } from "react-bootstrap";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { GENDER } from "../../../../constants/gender";
+import { Gender } from "../../../../constants/gender";
 import { getAdminRaces } from "../../../../services/api/RaceService";
 import {
     deleteAdminRunner,
@@ -10,7 +10,6 @@ import {
     patchAdminRunnerPassage,
     postAdminRunnerPassage,
 } from "../../../../services/api/RunnerService";
-import { type Gender } from "../../../../types/Gender";
 import { type AdminProcessedPassage } from "../../../../types/Passage";
 import { type AdminRaceWithRunnerCount } from "../../../../types/Race";
 import { type RunnerWithAdminProcessedPassages, type RunnerWithRace } from "../../../../types/Runner";
@@ -40,7 +39,7 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
     const [runnerId, setRunnerId] = useState(0);
     const [runnerFirstname, setRunnerFirstname] = useState("");
     const [runnerLastname, setRunnerLastname] = useState("");
-    const [runnerGender, setRunnerGender] = useState<Gender>(GENDER.M);
+    const [runnerGender, setRunnerGender] = useState<Gender>(Gender.M);
     const [runnerBirthYear, setRunnerBirthYear] = useState("0");
     const [runnerRaceId, setRunnerRaceId] = useState(0);
 

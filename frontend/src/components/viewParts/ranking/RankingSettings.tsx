@@ -5,23 +5,22 @@ import {
     GENDER_WITH_MIXED_OPTIONS,
     RANKING_TIME_MODE_OPTIONS,
 } from "../../../constants/forms";
-import { RANKING_TIME_MODE } from "../../../constants/rankingTimeMode";
+import { RankingTimeMode } from "../../../constants/rankingTimeMode";
 import { getCategoriesDictSelectOptions } from "../../../utils/categoryUtils";
 import { type CategoriesDict, type CategoryShortCode } from "../../../types/Category";
 import { type SelectOption } from "../../../types/Forms";
 import { type GenderWithMixed } from "../../../types/Gender";
-import { type RankingTimeMode } from "../../../types/RankingTimeMode";
 import RadioGroup from "../../ui/forms/RadioGroup";
 import Select from "../../ui/forms/Select";
 import RankingSettingsTime from "./RankingSettingsTime";
 import React, { useMemo } from "react";
 
 interface RankingSettingsProps {
-    categories: CategoriesDict | false;
-    onCategorySelect: (e: React.ChangeEvent<HTMLSelectElement>) => any;
-    setGender: (gender: GenderWithMixed) => any;
-    setTimeMode: (timeMode: RankingTimeMode) => any;
-    onRankingTimeSave: (time: number) => any;
+    categories: CategoriesDict | null;
+    onCategorySelect: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+    onGenderSelect: (gender: GenderWithMixed) => void;
+    setTimeMode: (timeMode: RankingTimeMode) => void;
+    onRankingTimeSave: (time: number) => void;
     selectedCategory: CategoryShortCode | null;
     selectedGender: GenderWithMixed;
     selectedTimeMode: RankingTimeMode;
@@ -32,7 +31,7 @@ interface RankingSettingsProps {
 export default function RankingSettings({
     categories,
     onCategorySelect,
-    setGender,
+    onGenderSelect,
     setTimeMode,
     onRankingTimeSave,
     selectedCategory,
@@ -59,7 +58,7 @@ export default function RankingSettings({
                 <RadioGroup legend="Genre"
                             options={GENDER_WITH_MIXED_OPTIONS}
                             value={selectedGender}
-                            onSelectOption={option => setGender(option.value)}
+                            onSelectOption={option => { onGenderSelect(option.value); }}
                 />
             </Col>
 
@@ -67,10 +66,10 @@ export default function RankingSettings({
                 <RadioGroup legend="Heure"
                             options={RANKING_TIME_MODE_OPTIONS}
                             value={selectedTimeMode}
-                            onSelectOption={option => setTimeMode(option.value)}
+                            onSelectOption={option => { setTimeMode(option.value); }}
                 />
 
-                <RankingSettingsTime isVisible={selectedTimeMode === RANKING_TIME_MODE.at}
+                <RankingSettingsTime isVisible={selectedTimeMode === RankingTimeMode.AT}
                                      currentRankingTime={currentRankingTime}
                                      onRankingTimeSave={onRankingTimeSave}
                                      maxRankingTime={maxRankingTime}

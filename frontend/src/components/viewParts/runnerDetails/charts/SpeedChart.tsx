@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 
+import React from "react";
 import { Col, Row } from "react-bootstrap";
+import ReactDOMServer from "react-dom/server";
+import { SearchParam } from "../../../../constants/searchParams";
+import { useSpeedChartQueryString } from "../../../../hooks/queryString/useSpeedChartQueryString";
 import { useWindowDimensions } from "../../../../hooks/useWindowDimensions";
 import CanvasJSReact from "../../../../lib/canvasjs/canvasjs.react";
-import React, { useCallback, useMemo, useState } from "react";
-import ReactDOMServer from "react-dom/server";
 import { type Race } from "../../../../types/Race";
 import { type RunnerWithProcessedHours, type RunnerWithProcessedPassages } from "../../../../types/Runner";
 import { formatMsAsDuration } from "../../../../utils/utils";
@@ -35,6 +37,10 @@ function getBaseXAxisInterval(raceDuration: number): number {
     return Math.ceil(raceDuration / 60 / 24 / 60) * 60;
 }
 
+function getXAxisLabelValue(e: any): string {
+    return formatMsAsDuration(e.value.getTime());
+}
+
 interface SpeedChartProps {
     runner: RunnerWithProcessedPassages & RunnerWithProcessedHours;
     race: Race;
@@ -42,14 +48,17 @@ interface SpeedChartProps {
 }
 
 export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartProps): React.ReactElement {
-    const [displayEachLapSpeed, setDisplayEachLapSpeed] = useState(true);
-    const [displayEachHourSpeed, setDisplayEachHourSpeed] = useState(true);
-    const [displayAverageSpeed, setDisplayAverageSpeed] = useState(true);
-    const [displayAverageSpeedEvolution, setDisplayAverageSpeedEvolution] = useState(true);
+    const {
+        displayEachLapSpeed,
+        displayEachHourSpeed,
+        displayAverageSpeed,
+        displayAverageSpeedEvolution,
+        toggleSearchParam,
+    } = useSpeedChartQueryString();
 
     const { width: windowWidth } = useWindowDimensions();
 
-    const getXAxisInterval = useCallback((): number => {
+    const getXAxisInterval = React.useCallback((): number => {
         const baseInterval = getBaseXAxisInterval(race.duration);
 
         if (windowWidth < 640) {
@@ -63,11 +72,7 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
         return baseInterval;
     }, [race.duration, windowWidth]);
 
-    const getXAxisLabelValue = useCallback((e: any) => {
-        return formatMsAsDuration(e.value.getTime());
-    }, []);
-
-    const getTooltipContent = useCallback((e: any) => {
+    const getTooltipContent = React.useCallback((e: any) => {
         // const dataPoint = e.entries[0].dataPoint;
         const dataSeriesIndex = e.entries[0].dataSeries.index;
 
@@ -143,7 +148,7 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
         return null;
     }, [averageSpeed, runner]);
 
-    const minSpeed = useMemo(() => {
+    const minSpeed = React.useMemo(() => {
         let minSpeed: number | undefined;
 
         runner.passages.forEach(passage => {
@@ -155,7 +160,7 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
         return minSpeed ?? DEFAULT_MIN_SPEED;
     }, [runner]);
 
-    const maxSpeed = useMemo(() => {
+    const maxSpeed = React.useMemo(() => {
         let maxSpeed: number | undefined;
 
         runner.passages.forEach(passage => {
@@ -167,7 +172,7 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
         return maxSpeed ?? DEFAULT_MAX_SPEED;
     }, [runner]);
 
-    const options = useMemo(() => {
+    const options = React.useMemo(() => {
         const options = {
             theme: "light2",
             animationEnabled: false,
@@ -325,7 +330,6 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
         minSpeed,
         maxSpeed,
         getXAxisInterval,
-        getXAxisLabelValue,
         getTooltipContent,
         displayEachLapSpeed,
         displayEachHourSpeed,
@@ -342,25 +346,25 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
 
                         <Checkbox label="Vitesse à chaque tour"
                                   checked={displayEachLapSpeed}
-                                  onChange={e => { setDisplayEachLapSpeed(e.target.checked); }}
+                                  onChange={() => { toggleSearchParam(SearchParam.HIDE_LAP_SPEED); }}
                         />
 
                         <Checkbox label="Vitesse moyenne à chaque heure"
                                   className="mt-2"
                                   checked={displayEachHourSpeed}
-                                  onChange={e => { setDisplayEachHourSpeed(e.target.checked); }}
+                                  onChange={() => { toggleSearchParam(SearchParam.HIDE_HOUR_SPEED); }}
                         />
 
                         <Checkbox label="Vitesse moyenne générale"
                                   className="mt-2"
                                   checked={displayAverageSpeed}
-                                  onChange={e => { setDisplayAverageSpeed(e.target.checked); }}
+                                  onChange={() => { toggleSearchParam(SearchParam.HIDE_AVG_SPEED); }}
                         />
 
                         <Checkbox label="Évolution de la vitesse moyenne"
                                   className="mt-2"
                                   checked={displayAverageSpeedEvolution}
-                                  onChange={e => { setDisplayAverageSpeedEvolution(e.target.checked); }}
+                                  onChange={() => { toggleSearchParam(SearchParam.HIDE_AVG_SPEED_EVOLUTION); }}
                         />
                     </fieldset>
                 </Col>

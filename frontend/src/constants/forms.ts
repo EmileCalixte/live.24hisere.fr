@@ -1,9 +1,8 @@
 import { type SelectOption } from "../types/Forms";
-import { type Gender, type GenderWithMixed } from "../types/Gender";
-import { type RankingTimeMode } from "../types/RankingTimeMode";
+import { type GenderWithMixed } from "../types/Gender";
 import { CATEGORY_SCRATCH } from "./category";
-import { GENDER } from "./gender";
-import { RANKING_TIME_MODE } from "./rankingTimeMode";
+import { Gender } from "./gender";
+import { RankingTimeMode } from "./rankingTimeMode";
 
 export const CATEGORY_SCRATCH_SELECT_OPTION: SelectOption = {
     label: "Scratch (toutes catégories)",
@@ -11,8 +10,8 @@ export const CATEGORY_SCRATCH_SELECT_OPTION: SelectOption = {
 };
 
 export const GENDER_OPTIONS: Array<SelectOption<Gender>> = [
-    { label: "Homme", value: GENDER.M },
-    { label: "Femme", value: GENDER.F },
+    { label: "Homme", value: Gender.M },
+    { label: "Femme", value: Gender.F },
 ];
 
 export const GENDER_WITH_MIXED_OPTIONS: Array<SelectOption<GenderWithMixed>> = [
@@ -21,6 +20,6 @@ export const GENDER_WITH_MIXED_OPTIONS: Array<SelectOption<GenderWithMixed>> = [
 ];
 
 export const RANKING_TIME_MODE_OPTIONS: Array<SelectOption<RankingTimeMode>> = [
-    { label: "Classement actuel", value: RANKING_TIME_MODE.now },
-    { label: "Au temps de course", value: RANKING_TIME_MODE.at },
+    { label: "Classement actuel", value: RankingTimeMode.NOW },
+    { label: "Au temps de course", value: RankingTimeMode.AT },
 ];

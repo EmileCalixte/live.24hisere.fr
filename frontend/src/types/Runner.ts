@@ -1,4 +1,4 @@
-import { type Gender } from "./Gender";
+import { type Gender } from "../constants/gender";
 import { type AdminPassage, type AdminProcessedPassage, type Passage, type ProcessedPassage } from "./Passage";
 import { type Race } from "./Race";
 

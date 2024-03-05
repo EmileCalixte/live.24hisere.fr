@@ -1,8 +1,14 @@
 import { faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+    RUNNER_LAPS_TABLE_SEARCH_PARAMS,
+    RUNNER_SPEED_CHART_SEARCH_PARAMS,
+} from "../../constants/searchParams";
+import { useTabQueryString } from "../../hooks/queryString/useTabQueryString";
 import { useIntervalApiRequest } from "../../hooks/useIntervalApiRequest";
+import { useQueryString } from "../../hooks/queryString/useQueryString";
 import { useRanking } from "../../hooks/useRanking";
 import { getRace } from "../../services/api/RaceService";
 import { getRaceRunners, getRunners } from "../../services/api/RunnerService";
@@ -32,21 +38,22 @@ const enum Tab {
 }
 
 export default function RunnerDetailsView(): React.ReactElement {
-    const { runnerId: urlRunnerId } = useParams();
+    const { runnerId } = useParams();
 
-    const [selectedTab, setSelectedTab] = React.useState(Tab.Stats);
+    const navigate = useNavigate();
+
+    const { deleteParams, prefixedQueryString } = useQueryString();
+    const { selectedTab, setTabParam } = useTabQueryString([Tab.Stats, Tab.Laps], Tab.Stats);
 
     const runners = useIntervalApiRequest(getRunners).json?.runners;
 
-    const [selectedRunnerId, setSelectedRunnerId] = React.useState(urlRunnerId);
-
     const raceId: number | undefined = React.useMemo(() => {
-        if (selectedRunnerId === undefined) {
+        if (runnerId === undefined) {
             return undefined;
         }
 
-        return runners?.find(runner => runner.id.toString() === selectedRunnerId)?.raceId;
-    }, [selectedRunnerId, runners]);
+        return runners?.find(runner => runner.id.toString() === runnerId)?.raceId;
+    }, [runnerId, runners]);
 
     const fetchRace = React.useMemo(() => {
         if (raceId === undefined) {
@@ -88,12 +95,12 @@ export default function RunnerDetailsView(): React.ReactElement {
     const ranking = useRanking(race, processedRaceRunners);
 
     const selectedRunner = React.useMemo(() => {
-        return ranking?.find(rankingRunner => rankingRunner.id.toString() === selectedRunnerId);
-    }, [ranking, selectedRunnerId]);
+        return ranking?.find(rankingRunner => rankingRunner.id.toString() === runnerId);
+    }, [ranking, runnerId]);
 
     const onSelectRunner = React.useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedRunnerId(e.target.value);
-    }, []);
+        navigate(`/runner-details/${e.target.value}${prefixedQueryString}`);
+    }, [navigate, prefixedQueryString]);
 
     const exportRunnerToXlsx = React.useCallback(() => {
         if (!selectedRunner) {
@@ -106,13 +113,24 @@ export default function RunnerDetailsView(): React.ReactElement {
     }, [selectedRunner]);
 
     React.useEffect(() => {
-        if (!selectedRunnerId || selectedRunnerId === urlRunnerId) {
+        if (!runners || runnerId === undefined) {
             return;
         }
 
-        // TODO better UX: use pushState instead of replaceState & handle popState event
-        window.history.replaceState(window.history.state, "", `/runner-details/${selectedRunnerId}`);
-    }, [selectedRunnerId, urlRunnerId]);
+        if (runners.find(runner => runner.id.toString() === runnerId) === undefined) {
+            navigate("/runner-details");
+        }
+    }, [runners, runnerId, navigate, prefixedQueryString]);
+
+    React.useEffect(() => {
+        if (selectedTab !== Tab.Laps) {
+            deleteParams(...RUNNER_LAPS_TABLE_SEARCH_PARAMS);
+        }
+
+        if (selectedTab !== Tab.Stats) {
+            deleteParams(...RUNNER_SPEED_CHART_SEARCH_PARAMS);
+        }
+    }, [deleteParams, selectedTab]);
 
     return (
         <Page id="runner-details" title={selectedRunner === undefined ? "Détails coureur" : `Détails coureur ${selectedRunner.firstname} ${selectedRunner.lastname}`}>
@@ -126,7 +144,7 @@ export default function RunnerDetailsView(): React.ReactElement {
                 <Col>
                     <RunnerSelector runners={runners}
                                     onSelectRunner={onSelectRunner}
-                                    selectedRunnerId={selectedRunnerId}
+                                    selectedRunnerId={runnerId}
                     />
                 </Col>
             </Row>
@@ -146,10 +164,10 @@ export default function RunnerDetailsView(): React.ReactElement {
                             <div className="runner-details-data-container">
                                 <ul className="tabs-container">
                                     <li className={selectedTab === Tab.Stats ? "active" : ""}>
-                                        <button onClick={() => { setSelectedTab(Tab.Stats); }}>Statistiques</button>
+                                        <button onClick={() => { setTabParam(Tab.Stats); }}>Statistiques</button>
                                     </li>
                                     <li className={selectedTab === Tab.Laps ? "active" : ""}>
-                                        <button onClick={() => { setSelectedTab(Tab.Laps); }}>Détails des tours</button>
+                                        <button onClick={() => { setTabParam(Tab.Laps); }}>Détails des tours</button>
                                     </li>
                                 </ul>
 
@@ -179,7 +197,7 @@ export default function RunnerDetailsView(): React.ReactElement {
                 </>
             ) : (
                 <>
-                    {selectedRunnerId !== undefined && (
+                    {runnerId !== undefined && (
                         <Row className="mt-3">
                             <Col>
                                 <CircularLoader asideText="Chargement des données" />

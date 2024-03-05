@@ -1,11 +1,10 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { GENDER } from "../../../../constants/gender";
+import { Gender } from "../../../../constants/gender";
 import { useStateWithNonNullableSetter } from "../../../../hooks/useStateWithNonNullableSetter";
 import { getAdminRaces } from "../../../../services/api/RaceService";
 import { postAdminRunner } from "../../../../services/api/RunnerService";
-import { type Gender } from "../../../../types/Gender";
 import { type AdminRaceWithRunnerCount } from "../../../../types/Race";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import ToastService from "../../../../services/ToastService";
@@ -25,7 +24,7 @@ export default function CreateRunnerAdminView(): React.ReactElement {
     const [id, setId] = useState(1);
     const [firstname, setFirstname] = useState("");
     const [lastname, setLastname] = useState("");
-    const [gender, setGender] = useState<Gender>(GENDER.M);
+    const [gender, setGender] = useState<Gender>(Gender.M);
     const [birthYear, setBirthYear] = useState(((new Date()).getFullYear() - 30).toString());
     const [raceId, setRaceId] = useStateWithNonNullableSetter<number | null>(null);
 

@@ -1,20 +1,18 @@
 import { faSortDown, faSortUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useCallback, useContext, useMemo, useState } from "react";
+import React from "react";
 import { Col, Row } from "react-bootstrap";
-import { isRaceFinished, isRaceStarted } from "../../../utils/raceUtils";
+import { RUNNER_DETAILS_LAPS_SORT_COLUMNS, SortBy, SortDirection } from "../../../constants/sort";
+import { useSortQueryString } from "../../../hooks/queryString/useSortQueryString";
 import { useRaceTime } from "../../../hooks/useRaceTime";
 import { useWindowDimensions } from "../../../hooks/useWindowDimensions";
 import { type Race } from "../../../types/Race";
 import { type MinimalRankingRunnerInput, type RankingRunner } from "../../../types/Ranking";
 import { type RunnerWithProcessedPassages } from "../../../types/Runner";
-import { formatMsAsDuration, SORT_ASC, SORT_DESC } from "../../../utils/utils";
+import { isRaceFinished, isRaceStarted } from "../../../utils/raceUtils";
+import { getOppositeSortDirection } from "../../../utils/sortUtils";
+import { formatMsAsDuration } from "../../../utils/utils";
 import { appDataContext } from "../../App";
-
-enum SortBy {
-    RaceTime = "raceTime",
-    LapSpeed = "lapSpeed",
-}
 
 const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
 
@@ -24,16 +22,20 @@ interface RunnerDetailsLapsProps {
 }
 
 export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsProps): React.ReactElement {
-    const { serverTimeOffset } = useContext(appDataContext);
+    const { serverTimeOffset } = React.useContext(appDataContext);
+
+    const {
+        sortColumn,
+        sortDirection,
+        setSortColumnParam,
+        setSortDirectionParam,
+    } = useSortQueryString(RUNNER_DETAILS_LAPS_SORT_COLUMNS, SortBy.RACE_TIME);
 
     const raceTime = useRaceTime(race, serverTimeOffset);
 
-    const [sortColumn, setSortColumn] = useState(SortBy.RaceTime);
-    const [sortDirection, setSortDirection] = useState(SORT_ASC);
-
     const { width: windowWidth } = useWindowDimensions();
 
-    const currentLapTime = useMemo(() => {
+    const currentLapTime = React.useMemo(() => {
         if (runner.passages.length === 0) {
             return raceTime;
         }
@@ -43,31 +45,31 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
         return raceTime - lastPassage.processed.lapEndRaceTime;
     }, [raceTime, runner]);
 
-    const passagesToDisplay = useMemo(() => {
+    const passagesToDisplay = React.useMemo(() => {
         const passagesToDisplay = [...runner.passages];
 
         switch (sortColumn) {
-            case SortBy.RaceTime:
+            case SortBy.RACE_TIME:
                 passagesToDisplay.sort((passageA, passageB) => {
                     if (passageA.processed.lapEndRaceTime < passageB.processed.lapEndRaceTime) {
-                        return sortDirection === SORT_ASC ? -1 : 1;
+                        return sortDirection === SortDirection.ASC ? -1 : 1;
                     }
 
                     if (passageA.processed.lapEndRaceTime > passageB.processed.lapEndRaceTime) {
-                        return sortDirection === SORT_ASC ? 1 : -1;
+                        return sortDirection === SortDirection.ASC ? 1 : -1;
                     }
 
                     return 0;
                 });
                 break;
-            case SortBy.LapSpeed:
+            case SortBy.LAP_SPEED:
                 passagesToDisplay.sort((passageA, passageB) => {
                     if (passageA.processed.lapSpeed < passageB.processed.lapSpeed) {
-                        return sortDirection === SORT_ASC ? -1 : 1;
+                        return sortDirection === SortDirection.ASC ? -1 : 1;
                     }
 
                     if (passageA.processed.lapSpeed > passageB.processed.lapSpeed) {
-                        return sortDirection === SORT_ASC ? 1 : -1;
+                        return sortDirection === SortDirection.ASC ? 1 : -1;
                     }
 
                     return 0;
@@ -80,7 +82,7 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
         return passagesToDisplay;
     }, [runner, sortColumn, sortDirection]);
 
-    const currentLapTableRow = useMemo(() => {
+    const currentLapTableRow = React.useMemo(() => {
         if (currentLapTime === null) {
             return null;
         }
@@ -95,7 +97,7 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
         );
     }, [raceTime, currentLapTime]);
 
-    const currentLapResponsiveTableRow = useMemo(() => {
+    const currentLapResponsiveTableRow = React.useMemo(() => {
         if (currentLapTime === null) {
             return null;
         }
@@ -120,34 +122,35 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
         );
     }, [raceTime, currentLapTime]);
 
-    const updateSort = useCallback((e: React.MouseEvent<HTMLButtonElement>, clickedSortColumn: SortBy) => {
+    const updateSort = React.useCallback((e: React.MouseEvent<HTMLButtonElement>, clickedSortColumn: SortBy) => {
         e.preventDefault();
 
         if (clickedSortColumn !== sortColumn) {
-            setSortColumn(clickedSortColumn);
-            setSortDirection(SORT_ASC);
+            setSortColumnParam(clickedSortColumn);
+            setSortDirectionParam(SortDirection.ASC);
+
             return;
         }
 
-        setSortDirection(sortDirection * -1);
-    }, [sortColumn, sortDirection, setSortColumn, setSortDirection]);
+        setSortDirectionParam(getOppositeSortDirection(sortDirection));
+    }, [setSortColumnParam, setSortDirectionParam, sortColumn, sortDirection]);
 
-    const onResponsiveSortButtonClick = useCallback(() => {
-        setSortColumn(currentSortColumn => {
-            if (currentSortColumn === SortBy.RaceTime) {
-                setSortDirection(SORT_DESC);
-                return SortBy.LapSpeed;
-            }
+    const onResponsiveSortButtonClick = React.useCallback(() => {
+        if (sortColumn === SortBy.RACE_TIME) {
+            setSortColumnParam(SortBy.LAP_SPEED);
+            setSortDirectionParam(SortDirection.DESC);
 
-            setSortDirection(SORT_ASC);
-            return SortBy.RaceTime;
-        });
-    }, []);
+            return;
+        }
 
-    const showCurrentLap = isRaceStarted(race, serverTimeOffset) && !isRaceFinished(race, serverTimeOffset) && sortColumn === SortBy.RaceTime;
+        setSortColumnParam(SortBy.RACE_TIME);
+        setSortDirectionParam(SortDirection.ASC);
+    }, [setSortColumnParam, setSortDirectionParam, sortColumn]);
 
-    const showCurrentLapAtTopOfTable = showCurrentLap && sortDirection === SORT_DESC;
-    const showCurrentLapAtBottomOfTable = showCurrentLap && sortDirection === SORT_ASC;
+    const showCurrentLap = isRaceStarted(race, serverTimeOffset) && !isRaceFinished(race, serverTimeOffset) && sortColumn === SortBy.RACE_TIME;
+
+    const showCurrentLapAtTopOfTable = showCurrentLap && sortDirection === SortDirection.ASC;
+    const showCurrentLapAtBottomOfTable = showCurrentLap && sortDirection === SortDirection.DESC;
 
     return (
         <Row>
@@ -163,15 +166,15 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
                                     <th>Distance</th>
                                     <th>
                                         <button className="a"
-                                                onClick={e => { updateSort(e, SortBy.RaceTime); }}
+                                                onClick={e => { updateSort(e, SortBy.RACE_TIME); }}
                                         >
                                             Temps de course
-                                            {sortColumn === SortBy.RaceTime && (
+                                            {sortColumn === SortBy.RACE_TIME && (
                                                 <>
-                                                    {sortDirection === SORT_ASC && (
+                                                    {sortDirection === SortDirection.ASC && (
                                                         <FontAwesomeIcon icon={faSortDown} className="ms-1" />
                                                     )}
-                                                    {sortDirection === SORT_DESC && (
+                                                    {sortDirection === SortDirection.DESC && (
                                                         <FontAwesomeIcon icon={faSortUp} className="ms-1" />
                                                     )}
                                                 </>
@@ -181,15 +184,15 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
                                     <th>Temps au tour</th>
                                     <th>
                                         <button className="a"
-                                                onClick={e => { updateSort(e, SortBy.LapSpeed); }}
+                                                onClick={e => { updateSort(e, SortBy.LAP_SPEED); }}
                                         >
                                             Vitesse
-                                            {sortColumn === SortBy.LapSpeed && (
+                                            {sortColumn === SortBy.LAP_SPEED && (
                                                 <>
-                                                    {sortDirection === SORT_ASC && (
+                                                    {sortDirection === SortDirection.ASC && (
                                                         <FontAwesomeIcon icon={faSortDown} className="ms-1" />
                                                     )}
-                                                    {sortDirection === SORT_DESC && (
+                                                    {sortDirection === SortDirection.DESC && (
                                                         <FontAwesomeIcon icon={faSortUp} className="ms-1" />
                                                     )}
                                                 </>
@@ -243,11 +246,11 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
                     <div>
                         <div className="mb-3">
                             <button className="button" onClick={onResponsiveSortButtonClick}>
-                                {sortColumn === SortBy.RaceTime && (
+                                {sortColumn === SortBy.RACE_TIME && (
                                     <>Trier par vitesse</>
                                 )}
 
-                                {sortColumn === SortBy.LapSpeed && (
+                                {sortColumn === SortBy.LAP_SPEED && (
                                     <>Trier par temps de passage</>
                                 )}
                             </button>

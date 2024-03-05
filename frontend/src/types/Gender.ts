@@ -1,7 +1,4 @@
-/**
- * Represents the gender of a runner
- */
-export type Gender = "M" | "F";
+import { type Gender } from "../constants/gender";
 
 /**
  * Represents the gender of a runner with an additionnal "mixed" option
