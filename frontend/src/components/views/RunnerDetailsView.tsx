@@ -5,8 +5,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
     RUNNER_LAPS_TABLE_SEARCH_PARAMS,
     RUNNER_SPEED_CHART_SEARCH_PARAMS,
-    SearchParam,
 } from "../../constants/searchParams";
+import { useTabQueryString } from "../../hooks/queryString/useTabQueryString";
 import { useIntervalApiRequest } from "../../hooks/useIntervalApiRequest";
 import { useQueryString } from "../../hooks/queryString/useQueryString";
 import { useRanking } from "../../hooks/useRanking";
@@ -17,7 +17,6 @@ import {
     type RunnerWithProcessedHours,
     type RunnerWithProcessedPassages,
 } from "../../types/Runner";
-import { inArray } from "../../utils/arrayUtils";
 import {
     getProcessedHoursFromPassages,
     getProcessedPassagesFromPassages,
@@ -38,32 +37,13 @@ const enum Tab {
     Laps = "laps",
 }
 
-function isValidTab(tabName: string | null): tabName is Tab {
-    return inArray(tabName, [Tab.Stats, Tab.Laps]);
-}
-
 export default function RunnerDetailsView(): React.ReactElement {
     const { runnerId } = useParams();
 
     const navigate = useNavigate();
 
-    const { searchParams, setParams, deleteParams, prefixedQueryString } = useQueryString();
-
-    const searchParamsTab = searchParams.get(SearchParam.TAB);
-
-    React.useEffect(() => {
-        if (!isValidTab(searchParamsTab)) {
-            setParams({ [SearchParam.TAB]: Tab.Stats });
-        }
-    }, [searchParamsTab, setParams]);
-
-    const selectedTab = React.useMemo<Tab>(() => {
-        if (!isValidTab(searchParamsTab)) {
-            return Tab.Stats;
-        }
-
-        return searchParamsTab;
-    }, [searchParamsTab]);
+    const { deleteParams, prefixedQueryString } = useQueryString();
+    const { selectedTab, setTabParam } = useTabQueryString([Tab.Stats, Tab.Laps], Tab.Stats);
 
     const runners = useIntervalApiRequest(getRunners).json?.runners;
 
@@ -150,7 +130,7 @@ export default function RunnerDetailsView(): React.ReactElement {
         if (selectedTab !== Tab.Stats) {
             deleteParams(...RUNNER_SPEED_CHART_SEARCH_PARAMS);
         }
-    }, [deleteParams, searchParams, selectedTab]);
+    }, [deleteParams, selectedTab]);
 
     return (
         <Page id="runner-details" title={selectedRunner === undefined ? "Détails coureur" : `Détails coureur ${selectedRunner.firstname} ${selectedRunner.lastname}`}>
@@ -184,10 +164,10 @@ export default function RunnerDetailsView(): React.ReactElement {
                             <div className="runner-details-data-container">
                                 <ul className="tabs-container">
                                     <li className={selectedTab === Tab.Stats ? "active" : ""}>
-                                        <button onClick={() => { setParams({ [SearchParam.TAB]: Tab.Stats }); }}>Statistiques</button>
+                                        <button onClick={() => { setTabParam(Tab.Stats); }}>Statistiques</button>
                                     </li>
                                     <li className={selectedTab === Tab.Laps ? "active" : ""}>
-                                        <button onClick={() => { setParams({ [SearchParam.TAB]: Tab.Laps }); }}>Détails des tours</button>
+                                        <button onClick={() => { setTabParam(Tab.Laps); }}>Détails des tours</button>
                                     </li>
                                 </ul>
 
