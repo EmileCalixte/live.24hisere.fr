@@ -1,3 +1,4 @@
+import { MiscService } from "../services/database/entities/misc.service";
 import { RunnerService } from "../services/database/entities/runner.service";
 import { HttpService } from "@nestjs/axios";
 import { Injectable } from "@nestjs/common";
@@ -17,6 +18,7 @@ export class ImportPassagesService extends TaskService {
 
     constructor(
         private readonly configService: ConfigService,
+        private readonly miscService: MiscService,
         private readonly dagFileService: DagFileService,
         private readonly httpService: HttpService,
         private readonly passageService: PassageService,
@@ -55,6 +57,8 @@ export class ImportPassagesService extends TaskService {
         this.logger.log(`Successfully downloaded DAG file: ${data.length} bytes`);
 
         await this.importPassagesFromDagFileContent(data);
+
+        await this.miscService.saveLastUpdateTime(new Date());
 
         this.logger.log("Done");
     }
