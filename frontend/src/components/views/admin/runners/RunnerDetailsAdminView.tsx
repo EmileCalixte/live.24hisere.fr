@@ -20,7 +20,7 @@ import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../ui/breadcrumbs/Crumb";
 import Page from "../../../ui/Page";
 import CircularLoader from "../../../ui/CircularLoader";
-import { userContext } from "../../../App";
+import { appContext } from "../../../App";
 import RunnerDetailsForm from "../../../viewParts/admin/runners/RunnerDetailsForm";
 import ToastService from "../../../../services/ToastService";
 import RunnerDetailsPassages from "../../../viewParts/admin/runners/RunnerDetailsPassages";
@@ -28,7 +28,7 @@ import RunnerDetailsPassages from "../../../viewParts/admin/runners/RunnerDetail
 export default function RunnerDetailsAdminView(): React.ReactElement {
     const navigate = useNavigate();
 
-    const { accessToken } = useContext(userContext);
+    const { accessToken } = useContext(appContext).user;
 
     const { runnerId: urlRunnerId } = useParams();
 

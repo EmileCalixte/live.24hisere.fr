@@ -7,7 +7,7 @@ import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../ui/breadcrumbs/Crumb";
 import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
-import { userContext } from "../../../App";
+import { appContext } from "../../../App";
 import Page from "../../../ui/Page";
 import CircularLoader from "../../../ui/CircularLoader";
 import { Link } from "react-router-dom";
@@ -15,7 +15,7 @@ import RacesListItem from "../../../viewParts/admin/races/RacesListItem";
 import ToastService from "../../../../services/ToastService";
 
 export default function RacesAdminView(): React.ReactElement {
-    const { accessToken } = useContext(userContext);
+    const { accessToken } = useContext(appContext).user;
 
     // false = not fetched yet
     const [races, setRaces] = useState<AdminRaceWithRunnerCount[] | false>(false);

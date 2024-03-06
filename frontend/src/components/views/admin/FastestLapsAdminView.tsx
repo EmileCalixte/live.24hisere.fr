@@ -11,7 +11,7 @@ import { isApiRequestResultOk } from "../../../utils/apiUtils";
 import { getProcessedPassagesFromPassages } from "../../../utils/passageUtils";
 import { getRaceDictFromRaces } from "../../../utils/raceUtils";
 import ToastService from "../../../services/ToastService";
-import { userContext } from "../../App";
+import { appContext } from "../../App";
 import Breadcrumbs from "../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../ui/breadcrumbs/Crumb";
 import { Checkbox } from "../../ui/forms/Checkbox";
@@ -31,7 +31,7 @@ const RUNNERS_AND_RACES_FETCH_INTERVAL = 60 * 1000;
 const PASSAGES_FETCH_INTERVAL = 20 * 1000;
 
 export default function FastestLapsAdminView(): React.ReactElement {
-    const { accessToken } = React.useContext(userContext);
+    const { accessToken } = React.useContext(appContext).user;
 
     // false = not fetched yet
     const [passages, setPassages] = React.useState<AdminPassageWithRunnerId[] | false>(false);

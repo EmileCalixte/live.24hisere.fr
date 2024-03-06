@@ -8,7 +8,7 @@ import React, { useCallback, useContext, useEffect, useMemo, useState } from "re
 import Page from "../../../ui/Page";
 import CircularLoader from "../../../ui/CircularLoader";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
-import { userContext } from "../../../App";
+import { appContext } from "../../../App";
 import { formatDateForApi } from "../../../../utils/utils";
 import ToastService from "../../../../services/ToastService";
 import RaceDetailsForm from "../../../viewParts/admin/races/RaceDetailsForm";
@@ -16,7 +16,7 @@ import RaceDetailsForm from "../../../viewParts/admin/races/RaceDetailsForm";
 export default function RaceDetailsAdminView(): React.ReactElement {
     const navigate = useNavigate();
 
-    const { accessToken } = useContext(userContext);
+    const { accessToken } = useContext(appContext).user;
 
     const { raceId: urlRaceId } = useParams();
 

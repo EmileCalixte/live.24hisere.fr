@@ -1,4 +1,4 @@
-import { userContext } from "../../App";
+import { appContext } from "../../App";
 import React, { useCallback, useContext, useEffect, useRef } from "react";
 
 interface AdminHeaderUserDropdownProps {
@@ -6,7 +6,7 @@ interface AdminHeaderUserDropdownProps {
 }
 
 export default function AdminHeaderUserDropdown({ hideDropdown }: AdminHeaderUserDropdownProps): React.ReactElement {
-    const { logout } = useContext(userContext);
+    const { logout } = useContext(appContext).user;
 
     const dropdownNode = useRef<HTMLDivElement>(null);
 

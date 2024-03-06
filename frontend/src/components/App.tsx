@@ -18,64 +18,66 @@ import Admin from "./views/admin/Admin";
 import { verbose } from "../utils/utils";
 import ToastService from "../services/ToastService";
 
-interface AppDataContext {
-    /**
-     * Date and time the runners' data was exported from the timing system
-     */
-    lastUpdateTime: Date;
+interface AppContext {
+    appData: {
+        /**
+         * Date and time the runners' data was exported from the timing system
+         */
+        lastUpdateTime: Date;
 
-    /**
-     * Difference between server time and client time in seconds. > 0 if the server is ahead, < 0 otherwise.
-     */
-    serverTimeOffset: number;
+        /**
+         * Difference between server time and client time in seconds. > 0 if the server is ahead, < 0 otherwise.
+         */
+        serverTimeOffset: number;
+    };
+
+    headerFetchLoader: {
+        /**
+         * A value incremented when a request is in progress, decremented when a request is completed.
+         * The header loader should be displayed if this value is > 0.
+         */
+        fetchLevel: number;
+
+        incrementFetchLevel: () => any;
+        decrementFetchLevel: () => any;
+    };
+
+    user: {
+        /**
+         * The access token used for authenticated API requests
+         */
+        accessToken: string | null;
+
+        saveAccessToken: (accessToken: string) => any;
+
+        /**
+         * The user logged in. If undefined, user info was not fetched yet.
+         */
+        user: User | null | undefined;
+
+        setUser: (user: User | null | undefined) => any;
+
+        logout: () => any;
+    };
 }
 
-interface HeaderFetchLoaderContext {
-    /**
-     * A value incremented when a request is in progress, decremented when a request is completed.
-     * The header loader should be displayed if this value is > 0.
-     */
-    fetchLevel: number;
-
-    incrementFetchLevel: () => any;
-    decrementFetchLevel: () => any;
-}
-
-interface UserContext {
-    /**
-     * The access token used for authenticated API requests
-     */
-    accessToken: string | null;
-
-    saveAccessToken: (accessToken: string) => any;
-
-    /**
-     * The user logged in. If undefined, user info was not fetched yet.
-     */
-    user: User | null | undefined;
-
-    setUser: (user: User | null | undefined) => any;
-
-    logout: () => any;
-}
-
-export const appDataContext = createContext<AppDataContext>({
-    lastUpdateTime: new Date(),
-    serverTimeOffset: 0,
-});
-
-export const headerFetchLoaderContext = createContext<HeaderFetchLoaderContext>({
-    fetchLevel: 0,
-    incrementFetchLevel: () => {},
-    decrementFetchLevel: () => {},
-});
-
-export const userContext = createContext<UserContext>({
-    accessToken: null,
-    saveAccessToken: () => {},
-    user: undefined,
-    setUser: () => {},
-    logout: () => {},
+export const appContext = createContext<AppContext>({
+    appData: {
+        lastUpdateTime: new Date(),
+        serverTimeOffset: 0,
+    },
+    headerFetchLoader: {
+        fetchLevel: 0,
+        incrementFetchLevel: () => {},
+        decrementFetchLevel: () => {},
+    },
+    user: {
+        accessToken: null,
+        saveAccessToken: () => {},
+        user: undefined,
+        setUser: () => {},
+        logout: () => {},
+    },
 });
 
 // Fetch app data every 20 seconds
@@ -202,49 +204,53 @@ export default function App(): React.ReactElement {
         );
     }
 
+    console.log(appContext);
+
+    const appContextValues: AppContext = {
+        appData: {
+            lastUpdateTime,
+            serverTimeOffset,
+        },
+        headerFetchLoader: {
+            fetchLevel,
+            incrementFetchLevel,
+            decrementFetchLevel,
+        },
+        user: {
+            accessToken,
+            saveAccessToken,
+            user,
+            setUser,
+            logout,
+        },
+    };
+
     return (
         <BrowserRouter>
             <div id="app">
                 <Helmet>
                     <title>Suivi live - Les 24 Heures de l'Isère</title>
                 </Helmet>
-                <appDataContext.Provider value={{
-                    lastUpdateTime,
-                    serverTimeOffset,
-                }}>
-                    <headerFetchLoaderContext.Provider value={{
-                        fetchLevel,
-                        incrementFetchLevel,
-                        decrementFetchLevel,
-                    }}>
-                        <userContext.Provider value={{
-                            accessToken,
-                            saveAccessToken,
-                            user,
-                            setUser,
-                            logout,
-                        }}>
-                            <div id="app-content-wrapper">
-                                <Header />
-                                <main id="page-content" className="container-fluid">
-                                    <Routes>
-                                        <Route path="/ranking" element={<RankingView />} />
-                                        <Route path="/runner-details" element={<RunnerDetailsView />} />
-                                        <Route path="/runner-details/:runnerId" element={<RunnerDetailsView />} />
+                <appContext.Provider value={appContextValues}>
+                    <div id="app-content-wrapper">
+                        <Header />
+                        <main id="page-content" className="container-fluid">
+                            <Routes>
+                                <Route path="/ranking" element={<RankingView />} />
+                                <Route path="/runner-details" element={<RunnerDetailsView />} />
+                                <Route path="/runner-details/:runnerId" element={<RunnerDetailsView />} />
 
-                                        <Route path="/login" element={<LoginView />} />
+                                <Route path="/login" element={<LoginView />} />
 
-                                        <Route path="/admin/*" element={<Admin />} />
+                                <Route path="/admin/*" element={<Admin />} />
 
-                                        {/* Redirect any unresolved route to /ranking */}
-                                        <Route path="*" element={<Navigate to="/ranking" replace />} />
-                                    </Routes>
-                                </main>
-                            </div>
-                            <Footer />
-                        </userContext.Provider>
-                    </headerFetchLoaderContext.Provider>
-                </appDataContext.Provider>
+                                {/* Redirect any unresolved route to /ranking */}
+                                <Route path="*" element={<Navigate to="/ranking" replace />} />
+                            </Routes>
+                        </main>
+                    </div>
+                    <Footer />
+                </appContext.Provider>
             </div>
         </BrowserRouter>
     );

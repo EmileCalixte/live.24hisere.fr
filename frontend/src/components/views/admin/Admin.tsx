@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { userContext } from "../../App";
+import { appContext } from "../../App";
 import { Navigate, Route, Routes } from "react-router-dom";
 import FastestLapsAdminView from "./FastestLapsAdminView";
 import AdminHomeView from "./AdminHomeView";
@@ -12,7 +12,7 @@ import CircularLoader from "../../ui/CircularLoader";
 import RunnerDetailsAdminView from "./runners/RunnerDetailsAdminView";
 
 export default function Admin(): React.ReactElement {
-    const { user } = useContext(userContext);
+    const { user } = useContext(appContext).user;
 
     if (user === null) {
         return (

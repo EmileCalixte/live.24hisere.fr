@@ -11,7 +11,7 @@ import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../ui/breadcrumbs/Crumb";
 import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
-import { userContext } from "../../../App";
+import { appContext } from "../../../App";
 import Page from "../../../ui/Page";
 import CircularLoader from "../../../ui/CircularLoader";
 import { Link } from "react-router-dom";
@@ -20,7 +20,7 @@ import RunnersTable from "../../../viewParts/admin/runners/RunnersTable";
 const RACE_SELECT_OPTION_ALL = "all";
 
 export default function RunnersAdminView(): React.ReactElement {
-    const { accessToken } = useContext(userContext);
+    const { accessToken } = useContext(appContext).user;
 
     // false = not fetched yet
     const [runners, setRunners] = useState<Runner[] | false>(false);

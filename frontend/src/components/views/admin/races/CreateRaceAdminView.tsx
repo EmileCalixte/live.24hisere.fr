@@ -9,7 +9,7 @@ import Page from "../../../ui/Page";
 import RaceDetailsForm from "../../../viewParts/admin/races/RaceDetailsForm";
 import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
-import { userContext } from "../../../App";
+import { appContext } from "../../../App";
 import ToastService from "../../../../services/ToastService";
 import { useNavigate } from "react-router-dom";
 import { formatDateForApi } from "../../../../utils/utils";
@@ -17,7 +17,7 @@ import { formatDateForApi } from "../../../../utils/utils";
 export default function CreateRaceAdminView(): React.ReactElement {
     const navigate = useNavigate();
 
-    const { accessToken } = useContext(userContext);
+    const { accessToken } = useContext(appContext).user;
 
     const [existingRaces, setExistingRaces] = useState<AdminRace[] | false>(false);
 

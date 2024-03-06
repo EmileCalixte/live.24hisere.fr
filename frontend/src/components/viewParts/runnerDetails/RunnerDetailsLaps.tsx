@@ -12,7 +12,7 @@ import { type RunnerWithProcessedPassages } from "../../../types/Runner";
 import { isRaceFinished, isRaceStarted } from "../../../utils/raceUtils";
 import { getOppositeSortDirection } from "../../../utils/sortUtils";
 import { formatMsAsDuration } from "../../../utils/utils";
-import { appDataContext } from "../../App";
+import { appContext } from "../../App";
 
 const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
 
@@ -22,7 +22,7 @@ interface RunnerDetailsLapsProps {
 }
 
 export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsProps): React.ReactElement {
-    const { serverTimeOffset } = React.useContext(appDataContext);
+    const { serverTimeOffset } = React.useContext(appContext).appData;
 
     const {
         sortColumn,

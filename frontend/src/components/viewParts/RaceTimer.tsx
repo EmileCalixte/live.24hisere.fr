@@ -3,7 +3,7 @@ import { isRaceFinished, isRaceStarted } from "../../utils/raceUtils";
 import { useRaceTime } from "../../hooks/useRaceTime";
 import { type Race } from "../../types/Race";
 import { formatMsAsDuration } from "../../utils/utils";
-import { appDataContext } from "../App";
+import { appContext } from "../App";
 
 interface RaceTimerProps {
     race: Race;
@@ -11,7 +11,7 @@ interface RaceTimerProps {
 }
 
 export default function RaceTimer({ race, allowNegative = false }: RaceTimerProps): React.ReactElement {
-    const { serverTimeOffset } = useContext(appDataContext);
+    const { serverTimeOffset } = useContext(appContext).appData;
 
     const raceTime = useRaceTime(race, serverTimeOffset);
 

@@ -8,7 +8,7 @@ import { postAdminRunner } from "../../../../services/api/RunnerService";
 import { type AdminRaceWithRunnerCount } from "../../../../types/Race";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import ToastService from "../../../../services/ToastService";
-import { userContext } from "../../../App";
+import { appContext } from "../../../App";
 import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../ui/breadcrumbs/Crumb";
 import Page from "../../../ui/Page";
@@ -17,7 +17,7 @@ import RunnerDetailsForm from "../../../viewParts/admin/runners/RunnerDetailsFor
 export default function CreateRunnerAdminView(): React.ReactElement {
     const navigate = useNavigate();
 
-    const { accessToken } = useContext(userContext);
+    const { accessToken } = useContext(appContext).user;
 
     const [races, setRaces] = useState<AdminRaceWithRunnerCount[] | false>(false);
 

@@ -2,14 +2,14 @@ import React, { useContext, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { login } from "../../services/api/AuthService";
 import { isApiRequestResultOk } from "../../utils/apiUtils";
-import { userContext } from "../App";
+import { appContext } from "../App";
 import { Navigate } from "react-router-dom";
 import ToastService from "../../services/ToastService";
 import { Input } from "../ui/forms/Input";
 import Page from "../ui/Page";
 
 export default function LoginView(): React.ReactElement {
-    const { accessToken, saveAccessToken, setUser } = useContext(userContext);
+    const { accessToken, saveAccessToken, setUser } = useContext(appContext).user;
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
