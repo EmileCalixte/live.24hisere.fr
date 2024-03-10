@@ -5,7 +5,7 @@ import React, { useContext, useState } from "react";
 import AdminHeaderUserDropdown from "./AdminHeaderUserDropdown";
 
 export default function AdminHeader(): React.ReactElement {
-    const { user } = useContext(appContext).user;
+    const { user: { user }, appData: { isAppEnabled } } = useContext(appContext);
 
     const [userDropdownShown, setUserDropdownShown] = useState(false);
 
@@ -21,6 +21,12 @@ export default function AdminHeader(): React.ReactElement {
         <div id="app-header-admin-section">
             <span>
                 Vous êtes connecté en tant qu'administrateur.
+                {!isAppEnabled && (
+                    <>
+                        <> </>
+                        <strong>Application désactivée</strong>
+                    </>
+                )}
             </span>
             <div style={{ position: "relative" }}>
                 <button className="admin-header-user-button"

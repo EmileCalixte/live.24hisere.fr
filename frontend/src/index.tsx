@@ -5,6 +5,7 @@ import "./css/index.css";
 import "./css/forms.css";
 import "toastr2/dist/toastr.min.css";
 import "./css/toastr-override.css";
+import { BrowserRouter } from "react-router-dom";
 import App from "./components/App";
 
 const container = document.getElementById("root");
@@ -15,4 +16,8 @@ if (!container) {
 
 const root = createRoot(container);
 
-root.render(<App />);
+root.render(
+    <BrowserRouter>
+        <App />
+    </BrowserRouter>,
+);

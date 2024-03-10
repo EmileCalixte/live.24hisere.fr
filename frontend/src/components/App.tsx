@@ -1,11 +1,14 @@
 import React, { createContext, useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes, useMatch } from "react-router-dom";
+import { APP_BASE_TITLE } from "../constants/app";
 import { getAppData } from "../services/api/AppDataService";
 import { getCurrentUserInfo, logout as performLogoutRequest } from "../services/api/AuthService";
 import { type User } from "../types/User";
+import CircularLoader from "./ui/CircularLoader";
 import Header from "./ui/header/Header";
 import Footer from "./ui/footer/Footer";
+import DisabledAppView from "./views/DisabledAppView";
 import RankingView from "./views/RankingView";
 import RunnerDetailsView from "./views/RunnerDetailsView";
 import {
@@ -29,6 +32,17 @@ interface AppContext {
          * Difference between server time and client time in seconds. > 0 if the server is ahead, < 0 otherwise.
          */
         serverTimeOffset: number;
+
+        /**
+         * Whether the app is accessible or not
+         */
+        isAppEnabled: boolean;
+        setIsAppEnabled: (isAppEnabled: boolean) => void;
+
+        /**
+         * If the app is disabled, the message to be displayed
+         */
+        disabledAppMessage: string | null;
     };
 
     headerFetchLoader: {
@@ -65,6 +79,9 @@ export const appContext = createContext<AppContext>({
     appData: {
         lastUpdateTime: new Date(),
         serverTimeOffset: 0,
+        isAppEnabled: false,
+        setIsAppEnabled: () => {},
+        disabledAppMessage: null,
     },
     headerFetchLoader: {
         fetchLevel: 0,
@@ -84,12 +101,18 @@ export const appContext = createContext<AppContext>({
 const FETCH_APP_DATA_INTERVAL_TIME = 20 * 1000;
 
 export default function App(): React.ReactElement {
+    const [isLoading, setIsLoading] = useState(true);
     const [fetchLevel, setFetchLevel] = useState(0);
     const [lastUpdateTime, setLastUpdateTime] = useState(new Date());
     const [serverTimeOffset, setServerTimeOffset] = useState(0);
+    const [isAppEnabled, setIsAppEnabled] = useState(false);
+    const [disabledAppMessage, setDisabledAppMessage] = useState<string | null>(null);
     const [accessToken, setAccessToken] = useState<string | null>(localStorage.getItem("accessToken"));
     const [user, setUser] = useState<User | null | undefined>(undefined); // If null, user is not logged in. If undefined, user info was not fetched yet
     const [redirect, setRedirect] = useState<string | null>(null); // Used to redirect the user to a specified location, for example when user logs out
+
+    const isLoginRoute = !!useMatch("/login");
+    const isAdminRoute = !!useMatch("/admin/*");
 
     const incrementFetchLevel = useCallback(() => {
         setFetchLevel(level => level + 1);
@@ -121,6 +144,9 @@ export default function App(): React.ReactElement {
 
         verbose("App data", result.json);
 
+        setIsAppEnabled(result.json.isAppEnabled);
+        setDisabledAppMessage(result.json.disabledAppMessage);
+
         setLastUpdateTime(new Date(result.json.lastUpdateTime));
 
         const serverTime = new Date(result.json.currentTime);
@@ -129,6 +155,8 @@ export default function App(): React.ReactElement {
         const timeOffsetMs = serverTime.getTime() - clientTime.getTime();
 
         setServerTimeOffset(Math.round(timeOffsetMs / 1000));
+
+        setIsLoading(false);
     }, []);
 
     const fetchUserInfo = useCallback(async () => {
@@ -204,12 +232,13 @@ export default function App(): React.ReactElement {
         );
     }
 
-    console.log(appContext);
-
     const appContextValues: AppContext = {
         appData: {
             lastUpdateTime,
             serverTimeOffset,
+            isAppEnabled,
+            setIsAppEnabled,
+            disabledAppMessage,
         },
         headerFetchLoader: {
             fetchLevel,
@@ -225,16 +254,22 @@ export default function App(): React.ReactElement {
         },
     };
 
+    const showDisabledAppMessage = !user && !isAppEnabled && !isLoginRoute && !isAdminRoute;
+
     return (
-        <BrowserRouter>
-            <div id="app">
-                <Helmet>
-                    <title>Suivi live - Les 24 Heures de l'Isère</title>
-                </Helmet>
-                <appContext.Provider value={appContextValues}>
-                    <div id="app-content-wrapper">
-                        <Header />
-                        <main id="page-content" className="container-fluid">
+        <div id="app">
+            <Helmet>
+                <title>{APP_BASE_TITLE}</title>
+            </Helmet>
+            <appContext.Provider value={appContextValues}>
+                <div id="app-content-wrapper">
+                    <Header />
+                    <main id="page-content" className="container-fluid">
+                        {isLoading ? (
+                            <CircularLoader />
+                        ) : showDisabledAppMessage ? (
+                            <DisabledAppView />
+                        ) : (
                             <Routes>
                                 <Route path="/ranking" element={<RankingView />} />
                                 <Route path="/runner-details" element={<RunnerDetailsView />} />
@@ -247,11 +282,11 @@ export default function App(): React.ReactElement {
                                 {/* Redirect any unresolved route to /ranking */}
                                 <Route path="*" element={<Navigate to="/ranking" replace />} />
                             </Routes>
-                        </main>
-                    </div>
-                    <Footer />
-                </appContext.Provider>
-            </div>
-        </BrowserRouter>
+                        )}
+                    </main>
+                </div>
+                <Footer />
+            </appContext.Provider>
+        </div>
     );
 }
