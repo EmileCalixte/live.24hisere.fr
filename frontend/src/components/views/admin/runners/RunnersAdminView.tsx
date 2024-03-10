@@ -1,4 +1,4 @@
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faFileCsv, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
 import { getAdminRaces } from "../../../../services/api/RaceService";
@@ -111,10 +111,15 @@ export default function RunnersAdminView(): React.ReactElement {
             {displayedRunners !== false && (
                 <>
                     <Row>
-                        <Col>
+                        <Col className="d-flex gap-2">
                             <Link to="/admin/runners/create" className="button">
-                                <FontAwesomeIcon icon={faPlus} className="mr-2" />
+                                <FontAwesomeIcon icon={faPlus} className="me-2" />
                                 Ajouter un coureur
+                            </Link>
+
+                            <Link to="/admin/runners/import-csv" className="button">
+                                <FontAwesomeIcon icon={faFileCsv} className="me-2" />
+                                Importer via fichier CSV
                             </Link>
                         </Col>
                     </Row>
