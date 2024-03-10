@@ -94,5 +94,7 @@ module.exports = {
         "brace-style": ["error", "1tbs", { allowSingleLine: true }],
 
         "@typescript-eslint/strict-boolean-expressions": "off",
+
+        "operator-linebreak": ["error", "before"],
     },
 };

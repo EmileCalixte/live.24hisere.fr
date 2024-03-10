@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { appContext } from "../../App";
 import { Navigate, Route, Routes } from "react-router-dom";
+import DisabledAppAdminView from "./DisabledAppAdminView";
 import FastestLapsAdminView from "./FastestLapsAdminView";
 import AdminHomeView from "./AdminHomeView";
 import RacesAdminView from "./races/RacesAdminView";
@@ -36,6 +37,7 @@ export default function Admin(): React.ReactElement {
             <Route path="races/create" element={<CreateRaceAdminView />} />
             <Route path="races/:raceId" element={<RaceDetailsAdminView />} />
             <Route path="fastest-laps" element={<FastestLapsAdminView />} />
+            <Route path="disabled-app" element={<DisabledAppAdminView />} />
 
             <Route path="*" element={<Navigate to="/admin" replace />} />
         </Routes>

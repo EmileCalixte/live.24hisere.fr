@@ -171,7 +171,7 @@ export default function RunnerDetailsView(): React.ReactElement {
                                     </li>
                                 </ul>
 
-                                <div className="runner-details-data">
+                                <div className="card">
                                     {(() => {
                                         switch (selectedTab) {
                                             case Tab.Stats:

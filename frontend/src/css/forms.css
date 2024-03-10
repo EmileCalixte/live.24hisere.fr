@@ -14,6 +14,7 @@ fieldset legend {
 }
 
 .input-group input,
+.input-group textarea,
 .input-group select {
     display: block;
     width: 100%;
@@ -25,7 +26,8 @@ fieldset legend {
 }
 
 input.input,
-select.input-select {
+select.input-select,
+textarea.textarea {
     font-size: 0.95em;
     padding: 5px;
     box-sizing: border-box;
@@ -86,6 +88,10 @@ select.input-select:focus {
 .custom-select-options-list li button.selected {
     background-color: #1967d2;
     color: #fff;
+}
+
+textarea.textarea {
+    height: 5em;
 }
 
 label.input-radio,

@@ -5,7 +5,11 @@ import { appContext } from "../../App";
 import HeaderFetchLoader from "./HeaderFetchLoader";
 
 export default function Header(): React.ReactElement {
-    const { user: { user }, headerFetchLoader: { fetchLevel } } = useContext(appContext);
+    const {
+        user: { user },
+        headerFetchLoader: { fetchLevel },
+        appData: { isAppEnabled },
+    } = useContext(appContext);
 
     return (
         <header id="app-header">
@@ -15,7 +19,10 @@ export default function Header(): React.ReactElement {
                 <div id="app-header-logo-container">
                     <img alt="Logo" src="/img/24hisere.svg" />
                 </div>
-                <Navbar />
+
+                {(isAppEnabled || user) && (
+                    <Navbar />
+                )}
 
                 {fetchLevel > 0 && <HeaderFetchLoader />}
             </div>

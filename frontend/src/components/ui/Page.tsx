@@ -1,5 +1,6 @@
 import React from "react";
 import { Helmet } from "react-helmet";
+import { APP_BASE_TITLE } from "../../constants/app";
 
 interface PageProps {
     children: React.ReactNode[] | React.ReactNode;
@@ -15,7 +16,7 @@ export default function Page({ children, id, title }: PageProps): React.ReactEle
     return (
         <div id={`page-${id}`}>
             <Helmet>
-                <title>{title}</title>
+                <title>{[title, APP_BASE_TITLE].join(" - ")}</title>
             </Helmet>
             {children}
         </div>

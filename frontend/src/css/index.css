@@ -456,7 +456,7 @@ table.table th .buttons-container {
     max-width: 500px;
 }
 
-.runner-details-data {
+.card {
     background-color: #fff;
     border: 1px solid #ddd;
     padding: 0.75em;
