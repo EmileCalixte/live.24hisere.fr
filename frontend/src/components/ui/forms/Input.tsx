@@ -2,22 +2,10 @@ import clsx from "clsx";
 import React from "react";
 import { type InputType } from "../../../types/Forms";
 
-interface InputProps {
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     label: string;
     type?: InputType;
-    name?: string;
     value?: string | number;
-    placeholder?: string;
-    onChange?: React.ChangeEventHandler<HTMLInputElement>;
-    onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
-    required?: boolean;
-    min?: string | number;
-    max?: string | number;
-    step?: string | number;
-    maxLength?: number;
-    pattern?: string;
-    autoComplete?: string;
-    autoFocus?: boolean;
     className?: string;
     labelClassName?: string;
     inputRef?: React.LegacyRef<HTMLInputElement>;
@@ -26,25 +14,14 @@ interface InputProps {
 export function Input({
     label,
     type = "text",
-    name,
-    value,
-    placeholder,
     onChange,
-    onKeyDown,
-    required = false,
-    min,
-    max,
-    step,
-    maxLength,
-    pattern,
-    autoComplete,
-    autoFocus = false,
     className,
     labelClassName,
     inputRef,
+    ...props
 }: InputProps): React.ReactElement {
-    if (type === "number" && pattern === undefined) {
-        pattern = "[0-9]*";
+    if (type === "number" && props.pattern === undefined) {
+        props.pattern = "[0-9]*";
 
         if (onChange) {
             const propsOnChange = onChange;
@@ -64,20 +41,9 @@ export function Input({
                 <span className={labelClassName}>{label}</span>
                 <input className="input"
                        type={type}
-                       name={name}
-                       value={value}
-                       placeholder={placeholder}
                        onChange={onChange}
-                       onKeyDown={onKeyDown}
-                       required={required}
-                       min={min}
-                       max={max}
-                       step={step}
-                       maxLength={maxLength}
-                       pattern={pattern}
-                       autoFocus={autoFocus}
-                       autoComplete={autoComplete}
                        ref={inputRef}
+                       {...props}
                 />
             </label>
         </div>

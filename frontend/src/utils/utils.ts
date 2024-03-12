@@ -136,3 +136,7 @@ export function objectArrayToMap<T extends object, K extends keyof T>(array: T[]
 
     return map;
 }
+
+export function getObjectKeys<T extends object>(object: T): Array<keyof T> {
+    return Object.keys(object) as Array<keyof T>;
+}
