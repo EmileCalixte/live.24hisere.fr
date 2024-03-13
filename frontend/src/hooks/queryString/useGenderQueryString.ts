@@ -1,18 +1,13 @@
 import React from "react";
-import { Gender } from "../../constants/gender";
 import { SearchParam } from "../../constants/searchParams";
 import type { GenderWithMixed } from "../../types/Gender";
-import { inArray } from "../../utils/arrayUtils";
 import { useQueryString } from "./useQueryString";
+import { isValidGender } from "../../utils/genderUtils";
 
 interface UseGenderQueryString {
     selectedGender: GenderWithMixed;
     setGenderParam: (gender: string) => void;
     deleteGenderParam: () => void;
-}
-
-function isValidGender(gender: string | null): gender is Gender {
-    return inArray(gender, [Gender.M, Gender.F]);
 }
 
 export function useGenderQueryString(): UseGenderQueryString {

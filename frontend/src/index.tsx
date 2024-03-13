@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap-grid.css";
 import "bootstrap/dist/css/bootstrap-utilities.css";
 import "./css/index.css";
 import "./css/forms.css";
-// import "./css/utils.css";
+import "./css/utils.css";
 import "toastr2/dist/toastr.min.css";
 import "./css/toastr-override.css";
 import { BrowserRouter } from "react-router-dom";
