@@ -1,8 +1,5 @@
 import config from "../config/config";
 
-export const SORT_ASC = 1;
-export const SORT_DESC = -1;
-
 export function verbose(...items: unknown[]): void {
     if (!config.devMode) {
         return;
@@ -135,4 +132,8 @@ export function objectArrayToMap<T extends object, K extends keyof T>(array: T[]
     }
 
     return map;
+}
+
+export function getObjectKeys<T extends object>(object: T): Array<keyof T> {
+    return Object.keys(object) as Array<keyof T>;
 }

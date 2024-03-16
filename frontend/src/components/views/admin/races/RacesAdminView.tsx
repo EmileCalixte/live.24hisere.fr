@@ -141,7 +141,7 @@ export default function RacesAdminView(): React.ReactElement {
                     <Row>
                         <Col>
                             <Link to="/admin/races/create" className="button">
-                                <FontAwesomeIcon icon={faPlus} className="mr-2" />
+                                <FontAwesomeIcon icon={faPlus} className="me-2" />
                                 Créer une course
                             </Link>
                         </Col>
@@ -159,14 +159,14 @@ export default function RacesAdminView(): React.ReactElement {
                                         <Col>
                                             {!isSorting && (
                                                 <button className="button" onClick={() => { setIsSorting(true); }}>
-                                                    <FontAwesomeIcon icon={faArrowsUpDown} className="mr-2" />
+                                                    <FontAwesomeIcon icon={faArrowsUpDown} className="me-2" />
                                                     Changer l'ordre
                                                 </button>
                                             )}
 
                                             {isSorting && (
                                                 <>
-                                                    <button className="button red mr-2"
+                                                    <button className="button red me-2"
                                                             onClick={() => { setIsSorting(false); }}
                                                             disabled={isSaving}
                                                     >
@@ -175,7 +175,7 @@ export default function RacesAdminView(): React.ReactElement {
                                                     <button className="button"
                                                             onClick={() => { void saveSort(); }}
                                                             disabled={isSaving}>
-                                                        <FontAwesomeIcon icon={faCheck} className="mr-2" />
+                                                        <FontAwesomeIcon icon={faCheck} className="me-2" />
                                                         Enregistrer
                                                     </button>
                                                 </>

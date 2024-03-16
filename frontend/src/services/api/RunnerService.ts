@@ -10,6 +10,7 @@ import {
     type PatchAdminRunnerPassageApiRequest,
     type PostAdminRunnerApiRequest,
     type PostAdminRunnerPassageApiRequest,
+    type PostAdminRunnersBulkApiRequest,
 } from "../../types/api/RunnerApiRequests";
 import { performApiRequest, performAuthenticatedApiRequest } from "./ApiService";
 
@@ -37,6 +38,15 @@ export async function postAdminRunner(
     runner: PostAdminRunnerApiRequest["payload"],
 ): Promise<ApiRequestResult<PostAdminRunnerApiRequest>> {
     return performAuthenticatedApiRequest<PostAdminRunnerApiRequest>("/admin/runners", accessToken, runner, {
+        method: "POST",
+    });
+}
+
+export async function postAdminRunnersBulk(
+    accessToken: string,
+    runners: PostAdminRunnersBulkApiRequest["payload"],
+): Promise<ApiRequestResult<PostAdminRunnersBulkApiRequest>> {
+    return performAuthenticatedApiRequest<PostAdminRunnersBulkApiRequest>("/admin/runners-bulk", accessToken, runners, {
         method: "POST",
     });
 }

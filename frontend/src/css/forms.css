@@ -25,7 +25,7 @@ fieldset legend {
     width: 100%;
 }
 
-input.input,
+input.input:not([type="file"]),
 select.input-select,
 textarea.textarea {
     font-size: 0.95em;
@@ -38,6 +38,10 @@ textarea.textarea {
     border-style: solid;
 
     outline: none;
+}
+
+input.input[type="file"] {
+    margin-top: 0.25em;
 }
 
 select.input-select:focus {
