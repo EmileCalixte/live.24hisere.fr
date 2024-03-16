@@ -4,7 +4,7 @@ import {
     Controller, Delete,
     Get, HttpCode,
     NotFoundException,
-    Param,
+    Param, ParseArrayPipe,
     Patch,
     Post,
     UseGuards,
@@ -18,6 +18,7 @@ import {
     type AdminRunnersResponse,
     type AdminRunnerResponse,
 } from "../../types/responses/admin/Runner";
+import { type CountResponse } from "../../types/responses/Misc";
 import { excludeKeys } from "../../utils/misc.utils";
 
 @Controller()
@@ -55,6 +56,30 @@ export class RunnersController {
                 ...runner,
                 passages: [],
             },
+        };
+    }
+
+    @Post("/admin/runners-bulk")
+    async createRunnersBulk(@Body(new ParseArrayPipe({ items: RunnerDto })) runnerDtos: RunnerDto[]): Promise<CountResponse> {
+        await Promise.all(runnerDtos.map(async dto => this.ensureRunnerIdDoesNotExist(dto.id)));
+
+        const ids = new Set();
+
+        for (const dto of runnerDtos) {
+            if (ids.has(dto.id)) {
+                throw new BadRequestException("Duplicate IDs");
+            }
+
+            ids.add(dto.id);
+        }
+
+        const createdRunnersCount = await this.runnerService.createRunners(runnerDtos.map(dto => ({
+            ...dto,
+            birthYear: dto.birthYear.toString(),
+        })));
+
+        return {
+            count: createdRunnersCount,
         };
     }
 

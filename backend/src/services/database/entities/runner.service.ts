@@ -113,6 +113,10 @@ export class RunnerService {
         return this.prisma.runner.create({ data });
     }
 
+    async createRunners(data: Prisma.RunnerCreateManyInput[]): Promise<number> {
+        return (await this.prisma.runner.createMany({ data })).count;
+    }
+
     async updateRunner(runner: Runner, data: Partial<Prisma.RunnerCreateInput & { id: number }>): Promise<Runner> {
         // If runner ID is not changed, we can directly update the runner
         if (!data.id || data.id === runner.id) {

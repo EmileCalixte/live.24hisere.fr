@@ -7,8 +7,9 @@ import { GENDER_OPTIONS } from "../../../../constants/forms";
 import { type Gender } from "../../../../constants/gender";
 import { ImportCsvColumn } from "../../../../constants/importCsv";
 import { getAdminRaces } from "../../../../services/api/RaceService";
-import { getAdminRunners } from "../../../../services/api/RunnerService";
+import { getAdminRunners, postAdminRunnersBulk } from "../../../../services/api/RunnerService";
 import ToastService from "../../../../services/ToastService";
+import { type PostAdminRunnersBulkApiRequest } from "../../../../types/api/RunnerApiRequests";
 import { type SelectOption } from "../../../../types/Forms";
 import { type RunnerFromCsv, type RunnersCsvMapping } from "../../../../types/ImportCsv";
 import type { AdminRace, RaceDict } from "../../../../types/Race";
@@ -33,13 +34,13 @@ const DEFAULT_MAPPING: RunnersCsvMapping = {
     [ImportCsvColumn.GENDER]: null,
 };
 
-interface RunnerToImport {
+interface RunnerToImport<T extends Partial<RunnerFromCsv> = Partial<RunnerFromCsv>> {
     /**
      * If false, the runner should not be included in import API request
      */
     toImport: boolean;
 
-    runner: Partial<RunnerFromCsv>;
+    runner: T;
 }
 
 function hasRunnerFromCsvAllRequiredData(runner: Partial<RunnerFromCsv>): runner is RunnerFromCsv {
@@ -84,6 +85,10 @@ export default function ImportRunnersCsvView(): React.ReactElement {
 
     // The runners displayed in import form for import preparation
     const [runnersToImport, setRunnersToImport] = React.useState<RunnerToImport[]>([]);
+
+    const [isSaving, setIsSaving] = React.useState(false);
+
+    const fileInputref = React.useRef<HTMLInputElement>(null);
 
     const csvHeader = React.useMemo<string[] | null>(() => {
         if (!csvData) {
@@ -238,6 +243,17 @@ export default function ImportRunnersCsvView(): React.ReactElement {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [runnersFromCsv]);
 
+    const clearFileInput = React.useCallback(() => {
+        if (fileInputref.current) {
+            fileInputref.current.value = "";
+        }
+
+        setCsvData(null);
+        setIsMappingValidated(false);
+        setRunnersFromCsv([]);
+        setRunnersToImport([]);
+    }, []);
+
     function onSelectRace(e: React.ChangeEvent<HTMLSelectElement>): void {
         setSelectedRaceId(parseInt(e.target.value));
     }
@@ -308,9 +324,36 @@ export default function ImportRunnersCsvView(): React.ReactElement {
         setRunnersToImport(runners);
     };
 
-    const importRunners = (): void => {
-        console.log("TODO CALL IMPORT");
-    };
+    const importRunners = React.useCallback(async () => {
+        if (!accessToken || selectedRaceId === null) {
+            return;
+        }
+
+        const runners = runnersToImport.filter(({ toImport }) => toImport);
+
+        if (!runners.every(({ runner }) => hasRunnerFromCsvAllRequiredData(runner))) {
+            return;
+        }
+
+        const body: PostAdminRunnersBulkApiRequest["payload"] = (runners as Array<RunnerToImport<RunnerFromCsv>>)
+            .map(({ runner }) => ({
+                ...runner,
+                birthYear: parseInt(runner.birthYear),
+                raceId: selectedRaceId,
+            }));
+
+        const result = await postAdminRunnersBulk(accessToken, body);
+
+        if (!isApiRequestResultOk(result)) {
+            ToastService.getToastr().error("Une erreur est survenue");
+            setIsSaving(false);
+            return;
+        }
+
+        ToastService.getToastr().success(`${result.json.count} coureurs importés`);
+        clearFileInput();
+        void fetchRunners();
+    }, [accessToken, clearFileInput, fetchRunners, runnersToImport, selectedRaceId]);
 
     const runnersToImportCount = runnersToImport.filter(({ toImport }) => toImport).length;
     const runnersFromCsvCount = runnersFromCsv.length;
@@ -333,6 +376,7 @@ export default function ImportRunnersCsvView(): React.ReactElement {
                            type="file"
                            onChange={onFileInputChange}
                            accept=".csv"
+                           inputRef={fileInputref}
                     />
                 </Col>
             </Row>
@@ -410,8 +454,8 @@ export default function ImportRunnersCsvView(): React.ReactElement {
                                             </div>
                                             <div>
                                                 <button className="button"
-                                                        onClick={importRunners}
-                                                        disabled={!canImportRunners}
+                                                        onClick={() => { void importRunners(); }}
+                                                        disabled={!canImportRunners && !isSaving}
                                                 >
                                                     <FontAwesomeIcon icon={faFileArrowUp} className="me-2" />
                                                     Importer les coureurs

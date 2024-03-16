@@ -42,6 +42,14 @@ export interface PostAdminRunnerApiRequest extends ApiRequest {
     };
 }
 
+export interface PostAdminRunnersBulkApiRequest extends ApiRequest {
+    payload: Array<PostAdminRunnerApiRequest["payload"]>;
+
+    response: {
+        count: number;
+    };
+}
+
 export interface PatchAdminRunnerApiRequest extends ApiRequest {
     payload: Partial<PostAdminRunnerApiRequest["payload"]>;
 
