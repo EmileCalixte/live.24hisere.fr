@@ -13,8 +13,8 @@ on:
 jobs:
   build:
     if: github.event.pull_request.draft == false
-    runs-on: ubuntu-20.04
-    container: ubuntu:20.04
+    runs-on: ubuntu-22.04
+    container: ubuntu:22.04
 
     steps:
       - name: Update apt
@@ -32,7 +32,7 @@ jobs:
         run: corepack enable
 
       - name: Check out repository code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install JS frontend dependencies
         run: yarn
@@ -66,24 +66,35 @@ jobs:
         run: |
           rm -rf .git
           rm -rf .github
+          rm -rf static
+          rm -rf sql
           rm -rf frontend/node_modules
           rm -rf frontend/public
           rm -rf frontend/scripts
           rm -rf frontend/src
+          rm -f frontend/.env
+          rm -f frontend/.env.development
           rm -f frontend/.eslintrc.js
           rm -f frontend/.gitignore
+          rm -f frontend/index.html
           rm -f frontend/package.json
-          rm -f frontend/yarn.lock
           rm -f frontend/tsconfig.json
+          rm -f frontend/vite.config.ts
+          rm -f frontend/vite-env.d.ts
+          rm -f frontend/yarn.lock
+          rm -rf backend/node_modules
           rm -rf backend/prisma
           rm -rf backend/scripts
           rm -rf backend/src
+          rm -rf backend/test
           rm -f backend/.eslintrc.js
           rm -f backend/.gitignore
           rm -f backend/.prettierrc
-          rm -f backend/.tsconfig.build.json
-          rm -f backend/.tsconfig.json
-          rm -rf sql
+          rm -f backend/nest-cli.json
+          rm -f backend/package.json
+          rm -f backend/tsconfig.build.json
+          rm -f backend/tsconfig.json
+          rm -f backend/yarn.lock
           rm -f .gitattributes
           rm -f .gitignore
           rm -f docker-compose.yml
@@ -93,7 +104,7 @@ jobs:
         run: zip -r live.24hisere.fr.zip .
 
       - name: Create artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: live.24hisere.fr-artifact
           path: live.24hisere.fr.zip
