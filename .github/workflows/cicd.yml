@@ -13,8 +13,8 @@ on:
 jobs:
   build:
     if: github.event.pull_request.draft == false
-    runs-on: ubuntu-20.04
-    container: ubuntu:20.04
+    runs-on: ubuntu-22.04
+    container: ubuntu:22.04
 
     steps:
       - name: Update apt
@@ -32,7 +32,7 @@ jobs:
         run: corepack enable
 
       - name: Check out repository code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install JS frontend dependencies
         run: yarn
@@ -93,7 +93,7 @@ jobs:
         run: zip -r live.24hisere.fr.zip .
 
       - name: Create artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: live.24hisere.fr-artifact
           path: live.24hisere.fr.zip
