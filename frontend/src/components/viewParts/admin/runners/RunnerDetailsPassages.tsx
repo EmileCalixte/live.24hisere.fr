@@ -114,7 +114,13 @@ export default function RunnerDetailsPassages({
                                                 <td style={{ fontSize: "0.85em" }}>
                                                     {(() => {
                                                         if (passage.detectionId !== null) {
-                                                            return `Auto (${passage.detectionId})`;
+                                                            let text = `Auto (${passage.detectionId})`;
+
+                                                            if (passage.importTime !== null) {
+                                                                text = `${text} (${formatDateAsString(new Date(passage.importTime))})`;
+                                                            }
+
+                                                            return text;
                                                         }
 
                                                         return "Manuel";
