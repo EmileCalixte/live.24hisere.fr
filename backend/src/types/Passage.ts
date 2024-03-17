@@ -3,7 +3,7 @@ import { type Passage } from "@prisma/client";
 /**
  * Public data of a passage
  */
-export type PublicPassage = Pick<Passage, "id" | "time">;
+export type PublicPassage = Pick<Passage, "id" | "time" | "importTime">;
 
 /**
  * Admin data of a runner's passage
