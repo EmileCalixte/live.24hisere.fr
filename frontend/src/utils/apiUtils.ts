@@ -16,6 +16,14 @@ export function addHeadersIfNotSet(headers: Headers, toAdd: Record<string, strin
     });
 }
 
+export async function getResponseJson<T = unknown>(response: Response): Promise<T | undefined> {
+    if (response.status === 204) {
+        return undefined;
+    }
+
+    return response.json();
+}
+
 /**
  * Returns true if the api request result was OK.
  */
