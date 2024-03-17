@@ -1,3 +1,5 @@
+import { type DateISOString } from "./Utils";
+
 /**
  * An object representing a passage of a runner at the timing point
  */
@@ -8,9 +10,9 @@ export interface Passage {
     id: number;
 
     /**
-     * A string representing the passage time, format `${YYYY}-${MM}-${DD}T{hh}:${ii}:${ss}`
+     * A string representing the passage time
      */
-    time: string;
+    time: DateISOString;
 }
 
 export interface PassageWithRunnerId extends Passage {
@@ -28,6 +30,11 @@ export interface AdminPassage extends Passage {
      * Not null if the passage comes from a detection of the timing system
      */
     detectionId: number | null;
+
+    /**
+     * Not null if the passage comes from a detection of the timing system
+     */
+    importTime: DateISOString | null;
 
     /**
      * Whether the passage is hidden from public view (if true, the passage is ignored for rankings and statistics)

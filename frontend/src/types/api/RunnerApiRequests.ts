@@ -65,7 +65,7 @@ export interface DeleteAdminRunnerApiRequest extends ApiRequest {
 }
 
 export interface PostAdminRunnerPassageApiRequest extends ApiRequest {
-    payload: Omit<AdminPassage, "id" | "detectionId">;
+    payload: Omit<AdminPassage, "id" | "detectionId" | "importTime">;
 
     response: {
         passage: AdminPassage;

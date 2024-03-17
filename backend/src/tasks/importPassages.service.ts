@@ -101,6 +101,7 @@ export class ImportPassagesService extends TaskService {
 
         await this.passageService.createPassage({
             detectionId: data.detectionId,
+            importTime: new Date(),
             runner: {
                 connect: {
                     id: runner.id,
