@@ -4,6 +4,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import DisabledAppAdminView from "./DisabledAppAdminView";
 import FastestLapsAdminView from "./FastestLapsAdminView";
 import AdminHomeView from "./AdminHomeView";
+import PassageImportSettingsAdminView from "./passageImportSettings/PassageImportSettingsAdminView";
 import RacesAdminView from "./races/RacesAdminView";
 import CreateRunnerAdminView from "./runners/CreateRunnerAdminView";
 import ImportRunnersCsvView from "./runners/ImportRunnersCsvView";
@@ -39,6 +40,7 @@ export default function Admin(): React.ReactElement {
             <Route path="races/create" element={<CreateRaceAdminView />} />
             <Route path="races/:raceId" element={<RaceDetailsAdminView />} />
             <Route path="fastest-laps" element={<FastestLapsAdminView />} />
+            <Route path="passage-import-settings" element={<PassageImportSettingsAdminView />} />
             <Route path="disabled-app" element={<DisabledAppAdminView />} />
 
             <Route path="*" element={<Navigate to="/admin" replace />} />

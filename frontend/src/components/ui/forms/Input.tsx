@@ -8,6 +8,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     value?: string | number;
     className?: string;
     labelClassName?: string;
+    hasError?: boolean;
     inputRef?: React.LegacyRef<HTMLInputElement>;
 }
 
@@ -17,6 +18,7 @@ export function Input({
     onChange,
     className,
     labelClassName,
+    hasError = false,
     inputRef,
     ...props
 }: InputProps): React.ReactElement {
@@ -36,7 +38,7 @@ export function Input({
     }
 
     return (
-        <div className={clsx("input-group", className)}>
+        <div className={clsx("input-group", className, hasError && "error")}>
             <label>
                 <span className={labelClassName}>{label}</span>
                 <input className="input"

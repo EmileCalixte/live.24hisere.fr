@@ -1,9 +1,9 @@
 import DOMPurify from "dompurify";
 import React from "react";
 import { Col, Row } from "react-bootstrap";
-import { getDisabledAppData, patchDisabledAppData } from "../../../services/api/DisabledAppDataService";
+import { getDisabledAppData, patchDisabledAppData } from "../../../services/api/ConfigService";
 import ToastService from "../../../services/ToastService";
-import { type DisabledAppData } from "../../../types/DisabledAppData";
+import { type DisabledAppData } from "../../../types/Config";
 import { isApiRequestResultOk } from "../../../utils/apiUtils";
 import { appContext } from "../../App";
 import Breadcrumbs from "../../ui/breadcrumbs/Breadcrumbs";

@@ -17,6 +17,15 @@ export class ConfigService {
         return config?.value ?? null;
     }
 
+    public async setImportDagFilePath(dagFileUrl: string | null): Promise<void> {
+        if (!dagFileUrl) {
+            await this.deleteLine(KEY_IMPORT_DAG_FILE_PATH);
+            return;
+        }
+
+        await this.saveLine(KEY_IMPORT_DAG_FILE_PATH, dagFileUrl.trim());
+    }
+
     public async getIsAppEnabled(): Promise<boolean | null> {
         const config = await this.getLine(KEY_IS_APP_ENABLED);
 
@@ -59,6 +68,12 @@ export class ConfigService {
                 key,
                 value,
             },
+        });
+    }
+
+    private async deleteLine(key: NonNullable<Prisma.ConfigWhereUniqueInput["key"]>): Promise<void> {
+        await this.prisma.config.delete({
+            where: { key },
         });
     }
 }
