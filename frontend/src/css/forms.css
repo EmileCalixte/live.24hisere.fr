@@ -40,6 +40,10 @@ textarea.textarea {
     outline: none;
 }
 
+.input-group.error input {
+    border-color: #ee3333;
+}
+
 input.input[type="file"] {
     margin-top: 0.25em;
 }

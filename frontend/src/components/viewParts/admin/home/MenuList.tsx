@@ -1,4 +1,4 @@
-import { faFlagCheckered, faHand, faPersonRunning, faStopwatch } from "@fortawesome/free-solid-svg-icons";
+import { faDownload, faFlagCheckered, faHand, faPersonRunning, faStopwatch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import MenuItem from "./MenuItem";
@@ -22,6 +22,11 @@ const menuItems: Array<{
         url: "/admin/fastest-laps",
         label: "Tours les plus rapides",
         icon: <FontAwesomeIcon icon={faStopwatch} />,
+    },
+    {
+        url: "/admin/passage-import-settings",
+        label: "Paramètres d'import des passages",
+        icon: <FontAwesomeIcon icon={faDownload} />,
     },
     {
         url: "/admin/disabled-app",

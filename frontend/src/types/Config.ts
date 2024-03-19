@@ -3,3 +3,7 @@ export interface DisabledAppData {
 
     disabledAppMessage: string | null;
 }
+
+export interface PassageImportSettings {
+    dagFileUrl: string | null;
+}

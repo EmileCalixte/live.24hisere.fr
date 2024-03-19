@@ -1,7 +1,7 @@
 import { CreateUserCommand } from "./commands/createUser.command";
 import { CreateUserPasswordQuestionSet } from "./commands/questionSets/createUserPassword.questionSet";
 import { CreateUserUsernameQuestionSet } from "./commands/questionSets/createUserUsername.questionSet";
-import { DisabledAppController } from "./controllers/admin/disabledApp.controller";
+import { ConfigController } from "./controllers/admin/config.controller";
 import { PassagesController } from "./controllers/admin/passages.controller";
 import { RacesController as RacesControllerAdmin } from "./controllers/admin/races.controller";
 import { RunnerPassagesController } from "./controllers/admin/runnerPassages.controller";
@@ -53,7 +53,7 @@ export const dependencies: Dependencies = {
             RunnersController,
         ],
         admin: [
-            DisabledAppController,
+            ConfigController,
             PassagesController,
             RacesControllerAdmin,
             RunnerPassagesController,

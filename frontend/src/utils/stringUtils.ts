@@ -8,3 +8,14 @@ export function capitalizeWords(text: string, separators: string[] = [" "]): str
 export function harmonizeName(name: string): string {
     return capitalizeWords(name, [" ", "-"]).replace(/\s+/g, " ").trim();
 }
+
+export function isValidUrl(string: string): boolean {
+    try {
+        // eslint-disable-next-line no-new
+        new URL(string);
+    } catch {
+        return false;
+    }
+
+    return true;
+}

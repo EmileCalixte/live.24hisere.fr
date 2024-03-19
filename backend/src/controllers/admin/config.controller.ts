@@ -1,13 +1,14 @@
 import { Body, Controller, Get, Patch, UseGuards } from "@nestjs/common";
 import { UpdateDisabledAppDto } from "../../dtos/disabledApp/updateDisabledApp.dto";
+import { UpdatePassageImportSettingsDto } from "../../dtos/passageImport/updatePassageImportSettings.dto";
 import { AuthGuard } from "../../guards/auth.guard";
 import { ConfigService } from "../../services/database/entities/config.service";
-import { type AdminDisabledAppResponse } from "../../types/responses/admin/DisabledApp";
-import { isNullOrUndefined } from "../../utils/misc.utils";
+import { type AdminDisabledAppResponse, type AdminPassageImportSettingsResponse } from "../../types/responses/admin/Config";
+import { isDefined, isNullOrUndefined } from "../../utils/misc.utils";
 
 @Controller()
 @UseGuards(AuthGuard)
-export class DisabledAppController {
+export class ConfigController {
     constructor(
         private readonly configService: ConfigService,
     ) {}
@@ -19,8 +20,6 @@ export class DisabledAppController {
 
     @Patch("/admin/disabled-app")
     async updateDisabledApp(@Body() updateDisabledAppDto: UpdateDisabledAppDto): Promise<AdminDisabledAppResponse> {
-        console.log(updateDisabledAppDto);
-
         const promises = [];
 
         if (!isNullOrUndefined(updateDisabledAppDto.isAppEnabled)) {
@@ -36,6 +35,20 @@ export class DisabledAppController {
         return this.getDisabledAppData();
     }
 
+    @Get("/admin/passage-import")
+    async getPassageImportSettings(): Promise<AdminPassageImportSettingsResponse> {
+        return this.getPassageImportSettingsData();
+    }
+
+    @Patch("/admin/passage-import")
+    async updatePassageImportSettings(@Body() updatePassageImportSettingsDto: UpdatePassageImportSettingsDto): Promise<AdminPassageImportSettingsResponse> {
+        if (isDefined(updatePassageImportSettingsDto.dagFileUrl)) {
+            await this.configService.setImportDagFilePath(updatePassageImportSettingsDto.dagFileUrl);
+        }
+
+        return this.getPassageImportSettingsData();
+    }
+
     private async getDisabledAppData(): Promise<AdminDisabledAppResponse> {
         const [
             isAppEnabled,
@@ -48,6 +61,14 @@ export class DisabledAppController {
         return {
             isAppEnabled: isAppEnabled ?? false,
             disabledAppMessage,
+        };
+    }
+
+    private async getPassageImportSettingsData(): Promise<AdminPassageImportSettingsResponse> {
+        const dagFileUrl = await this.configService.getImportDagFilePath();
+
+        return {
+            dagFileUrl,
         };
     }
 }
