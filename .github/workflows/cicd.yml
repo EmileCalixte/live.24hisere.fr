@@ -83,7 +83,6 @@ jobs:
           rm -f frontend/vite-env.d.ts
           rm -f frontend/yarn.lock
           rm -rf backend/node_modules
-          rm -rf backend/prisma
           rm -rf backend/scripts
           rm -rf backend/src
           rm -rf backend/test
