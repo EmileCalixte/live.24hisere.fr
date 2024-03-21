@@ -3,13 +3,13 @@ import { Command, CommandRunner, InquirerService } from "nest-commander";
 import { UserService } from "../services/database/entities/user.service";
 import { PasswordService } from "../services/password.service";
 import {
-    CREATE_USER_PASSWORD_QUESTION_SET,
-    type CreateUserPasswordInquiry,
-} from "./questionSets/createUserPassword.questionSet";
+    CREATE_PASSWORD_QUESTION_SET,
+    type CreatePasswordInquiry,
+} from "./questionSets/createPassword.questionSet";
 import {
-    CREATE_USER_USERNAME_QUESTION_SET,
-    type CreateUserUsernameInquiry,
-} from "./questionSets/createUserUsername.questionSet";
+    USERNAME_QUESTION_SET,
+    type UsernameInquiry,
+} from "./questionSets/username.questionSet";
 
 @Injectable()
 @Command({
@@ -41,8 +41,9 @@ export class CreateUserCommand extends CommandRunner {
 
     private async askUsername(): Promise<string> {
         while (true) {
-            const { username } = await this.inquirerService.ask<CreateUserUsernameInquiry>(
-                CREATE_USER_USERNAME_QUESTION_SET, undefined,
+            const { username } = await this.inquirerService.ask<UsernameInquiry>(
+                USERNAME_QUESTION_SET,
+                undefined,
             );
 
             const existingUser = await this.userService.getUser({ username });
@@ -58,8 +59,9 @@ export class CreateUserCommand extends CommandRunner {
 
     private async askPassword(): Promise<string> {
         while (true) {
-            const { password, confirmPassword } = await this.inquirerService.ask<CreateUserPasswordInquiry>(
-                CREATE_USER_PASSWORD_QUESTION_SET, undefined,
+            const { password, confirmPassword } = await this.inquirerService.ask<CreatePasswordInquiry>(
+                CREATE_PASSWORD_QUESTION_SET,
+                undefined,
             );
 
             if (password !== confirmPassword) {

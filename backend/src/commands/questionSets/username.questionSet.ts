@@ -1,13 +1,13 @@
 import { Question, QuestionSet } from "nest-commander";
 
-export interface CreateUserUsernameInquiry {
+export interface UsernameInquiry {
     username: string;
 }
 
-export const CREATE_USER_USERNAME_QUESTION_SET = "create-user-username-questions";
+export const USERNAME_QUESTION_SET = "username-questions";
 
-@QuestionSet({ name: CREATE_USER_USERNAME_QUESTION_SET })
-export class CreateUserUsernameQuestionSet {
+@QuestionSet({ name: USERNAME_QUESTION_SET })
+export class UsernameQuestionSet {
     @Question({
         message: "Enter username:",
         name: "username",

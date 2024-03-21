@@ -1,14 +1,14 @@
 import { Question, QuestionSet } from "nest-commander";
 
-export interface CreateUserPasswordInquiry {
+export interface CreatePasswordInquiry {
     password: string;
     confirmPassword: string;
 }
 
-export const CREATE_USER_PASSWORD_QUESTION_SET = "create-user-password-questions";
+export const CREATE_PASSWORD_QUESTION_SET = "create-password-questions";
 
-@QuestionSet({ name: CREATE_USER_PASSWORD_QUESTION_SET })
-export class CreateUserPasswordQuestionSet {
+@QuestionSet({ name: CREATE_PASSWORD_QUESTION_SET })
+export class CreatePasswordQuestionSet {
     @Question({
         message: "Enter password:",
         name: "password",

@@ -82,6 +82,15 @@ node dist/cli.js create-user
 docker compose exec backend node dist/cli.js create-user
 ```
 
+### Modifier le mot de passe d'un utilisateur
+
+```sh
+node dist/cli.js update-user-password
+
+# Pour exécuter la commande avec l'environnement de développement Docker Compose :
+docker compose exec backend node dist/cli.js update-user-password
+```
+
 ## Tests
 
 TODO ;)
