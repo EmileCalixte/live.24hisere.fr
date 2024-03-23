@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import AdminHeader from "./AdminHeader";
+import FetchAppDataErrorHeader from "./FetchAppDataErrorHeader";
 import Navbar from "./Navbar";
 import { appContext } from "../../App";
 import HeaderFetchLoader from "./HeaderFetchLoader";
@@ -8,7 +9,7 @@ export default function Header(): React.ReactElement {
     const {
         user: { user },
         headerFetchLoader: { fetchLevel },
-        appData: { isAppEnabled },
+        appData: { fetchError, isAppEnabled },
     } = useContext(appContext);
 
     return (
@@ -24,8 +25,12 @@ export default function Header(): React.ReactElement {
                     <Navbar />
                 )}
 
+                <div className="flex-grow-1" />
+
                 {fetchLevel > 0 && <HeaderFetchLoader />}
             </div>
+
+            {!!fetchError && <FetchAppDataErrorHeader />}
         </header>
     );
 }
