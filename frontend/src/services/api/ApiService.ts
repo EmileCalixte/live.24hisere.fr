@@ -1,5 +1,5 @@
 import config from "../../config/config";
-import { DEFAULT_HEADERS, DEFAULT_HEADERS_WITH_BODY } from "../../constants/api";
+import { DEFAULT_HEADERS, DEFAULT_HEADERS_WITH_BODY, REQUEST_TIMEOUT } from "../../constants/api";
 import { type ApiRequest, type ApiRequestResult } from "../../types/api/ApiRequest";
 import {
     addHeadersIfNotSet,
@@ -48,7 +48,16 @@ export async function performApiRequest<T extends ApiRequest>(
     window.dispatchEvent(new CustomEvent(EVENT_API_REQUEST_STARTED));
 
     try {
-        const response = await fetch(url, fetchInit);
+        const response = await Promise.race([
+            new Promise((resolve, reject) => {
+                fetch(url, fetchInit).then(resolve).catch(reject);
+            }),
+            new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    reject(Error(`Request ${method} ${url} timed out after ${REQUEST_TIMEOUT} ms`));
+                }, REQUEST_TIMEOUT);
+            }),
+        ]) as Response;
 
         verbose(`${method} ${url} response code:`, response.status);
 

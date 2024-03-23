@@ -24,6 +24,11 @@ import ToastService from "../services/ToastService";
 interface AppContext {
     appData: {
         /**
+         * The error triggered if last app data request failed
+         */
+        fetchError: unknown;
+
+        /**
          * Date and time the runners' data was exported from the timing system
          */
         lastUpdateTime: Date;
@@ -77,6 +82,7 @@ interface AppContext {
 
 export const appContext = createContext<AppContext>({
     appData: {
+        fetchError: null,
         lastUpdateTime: new Date(),
         serverTimeOffset: 0,
         isAppEnabled: false,
@@ -103,6 +109,7 @@ const FETCH_APP_DATA_INTERVAL_TIME = 20 * 1000;
 export default function App(): React.ReactElement {
     const [isLoading, setIsLoading] = useState(true);
     const [fetchLevel, setFetchLevel] = useState(0);
+    const [fetchAppDataError, setFetchAppDataError] = useState<unknown>(null);
     const [lastUpdateTime, setLastUpdateTime] = useState(new Date());
     const [serverTimeOffset, setServerTimeOffset] = useState(0);
     const [isAppEnabled, setIsAppEnabled] = useState(false);
@@ -135,7 +142,17 @@ export default function App(): React.ReactElement {
     const fetchAppData = useCallback(async () => {
         verbose("Fetching app data");
 
-        const result = await getAppData();
+        let result;
+
+        try {
+            result = await getAppData();
+            setFetchAppDataError(null);
+        } catch (e) {
+            setFetchAppDataError(e);
+            setIsLoading(false);
+            console.error(e);
+            return;
+        }
 
         if (!isApiRequestResultOk(result)) {
             ToastService.getToastr().error("Impossible de récupérer les informations de l'application");
@@ -234,6 +251,7 @@ export default function App(): React.ReactElement {
 
     const appContextValues: AppContext = {
         appData: {
+            fetchError: fetchAppDataError,
             lastUpdateTime,
             serverTimeOffset,
             isAppEnabled,

@@ -37,11 +37,22 @@ a, button.a {
     flex: 1;
 }
 
+#app-header {
+    box-shadow: 0 1px 2px rgb(208 208 208);
+}
+
 #app-header-admin-section {
     display: flex;
     justify-content: space-between;
 
     background-color: #ffc048;
+
+    padding: 5px 20px;
+}
+
+#app-header-error-section {
+    background-color: #fa7676;
+    color: #4f0a0a;
 
     padding: 5px 20px;
 }
@@ -65,7 +76,6 @@ a, button.a {
     display: flex;
 
     background-color: #fff;
-    box-shadow: 0 1px 2px rgb(208 208 208);
 }
 
 #app-header-logo-container {
@@ -84,8 +94,6 @@ a, button.a {
 
 #app-header-main-section nav {
     height: 100%;
-
-    flex: 1;
 }
 
 #app-header-main-section nav ul {
