@@ -5,16 +5,21 @@ import { formatDateAsString } from "../../../utils/utils";
 import { Link } from "react-router-dom";
 
 export default function Footer(): React.ReactElement {
-    const { appData: { lastUpdateTime }, user: { user } } = useContext(appContext);
+    const {
+        appData: { lastUpdateTime, isAppEnabled },
+        user: { user },
+    } = useContext(appContext);
 
     return (
         <footer id="app-footer">
             <div className="container-fluid">
                 <Row>
                     <Col style={{ textAlign: "center" }}>
-                        <p>Dernière mise à jour des données : {formatDateAsString(lastUpdateTime)}</p>
+                        {(isAppEnabled || user) && (
+                            <p>Dernière mise à jour des données : {formatDateAsString(lastUpdateTime)}</p>
+                        )}
 
-                        <p>Toutes les données disponibles sur cette page sont extraites du système de chronométrage. Toutefois, ayant un but purement indicatif, les calculs peuvent éventuellement contenir des erreurs ou des imprécisions. Seules les données du poste de chronométrage font foi.</p>
+                        <p>Toutes les données disponibles sur cette application sont extraites du système de chronométrage. Toutefois, ayant un but purement indicatif, les calculs peuvent éventuellement contenir des erreurs ou des imprécisions. Seules les données du poste de chronométrage font foi.</p>
 
                         <p>Application développée pour Les 24 Heures de l'Isère par Emile Calixte, avec l'aide de Djeson Pascal-Valette</p>
 
