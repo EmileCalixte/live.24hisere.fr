@@ -94,3 +94,36 @@ docker compose exec backend node dist/cli.js update-user-password
 ## Tests
 
 TODO ;)
+
+## Installation en production
+
+1. Récupérer l'artifact du workflow GitHub, copier le fichier `live.24hisere.fr.zip` dans le dossier souhaité sur le serveur
+2. Dézipper l'archive
+   ```bash
+   unzip live.24hisere.fr.zip
+   ```
+3. Installer les dépendances du backend
+   ```bash
+   cd backend
+   yarn install
+   ```
+4. Créer un fichier `.env` à partir du modèle `.env.default` pour le backend
+   ```bash
+   cp .env.default .env
+   ```
+5. Dans le fichier `backend/.env`, renseigner
+   1. L'URL de l'application frontend dans la variable `FRONTEND_URL` (exemple : `FRONTEND_URL="https://live.24hisere.fr"`)
+   2. L'URL de connexion à la base de données dans la variable `DATABASE_URL`
+6. Exécuter les migrations pour créer les tables dans la base de données
+   ```bash
+   npx prisma migrate deploy
+   ```
+   L'utilisateur doit avoir les permissions `CREATE`, `ALTER` et `INDEX`.
+7. Créer le build de production pour le backend
+   ```bash
+   yarn build
+   ```
+8. Lancer l'application
+   ```bash
+   pm2 start dist/main.js --name live.24hisere.fr-api
+   ```
