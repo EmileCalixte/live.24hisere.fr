@@ -129,47 +129,50 @@ export default function RunnerDetailsStats({ runner, race, ranking }: RunnerDeta
 
                     <RunnerDetailsStatsRankingTable runner={runner} ranking={ranking} />
 
-                    <p>
-                        Nombre de tours complets : <strong>{completeLapCount}</strong>, distance totale : <strong>{(totalDistance / 1000).toFixed(3)} km</strong>
-                    </p>
+                    <p>Statistiques de course</p>
 
-                    <p>
-                        Tour le plus rapide : {(() => {
-                            if (fastestLapPassage === null) {
-                                return NO_VALUE_PLACEHOLDER;
-                            }
+                    <ul>
+                        <li>Nombre de tours complets : <strong>{completeLapCount}</strong></li>
+                        <li>Distance totale : <strong>{(totalDistance / 1000).toFixed(3)} km</strong></li>
 
-                            return (
-                                <>
-                                    Tour {fastestLapPassage.processed.lapNumber} à <strong>{formatMsAsDuration(fastestLapPassage.processed.lapEndRaceTime)}</strong> de course,
-                                    durée : <strong>{formatMsAsDuration(fastestLapPassage.processed.lapDuration)}</strong>,
-                                    vitesse : <strong>{fastestLapPassage.processed.lapSpeed.toFixed(2)} km/h</strong>,
-                                    allure : <strong>{formatMsAsDuration(fastestLapPassage.processed.lapPace, false)}/km</strong>
-                                </>
-                            );
-                        })()}
-                    </p>
+                        <li>
+                            Tour le plus rapide : {fastestLapPassage === null && NO_VALUE_PLACEHOLDER}
 
-                    <p>
-                        Tour le plus lent : {(() => {
-                            if (slowestLapPassage === null) {
-                                return NO_VALUE_PLACEHOLDER;
-                            }
+                            {fastestLapPassage !== null && (
+                                <ul>
+                                    <li>Tour {fastestLapPassage.processed.lapNumber} à <strong>{formatMsAsDuration(fastestLapPassage.processed.lapEndRaceTime)}</strong> de course</li>
+                                    <li>Durée du tour : <strong>{formatMsAsDuration(fastestLapPassage.processed.lapDuration)}</strong></li>
+                                    <li>Vitesse : <strong>{fastestLapPassage.processed.lapSpeed.toFixed(2)} km/h</strong></li>
+                                    <li>Allure : <strong>{formatMsAsDuration(fastestLapPassage.processed.lapPace, false)}/km</strong></li>
+                                </ul>
+                            )}
+                        </li>
 
-                            return (
-                                <>
-                                    Tour {slowestLapPassage.processed.lapNumber} à <strong>{formatMsAsDuration(slowestLapPassage.processed.lapEndRaceTime)}</strong> de course,
-                                    durée : <strong>{formatMsAsDuration(slowestLapPassage.processed.lapDuration)}</strong>,
-                                    vitesse : <strong>{slowestLapPassage.processed.lapSpeed.toFixed(2)} km/h</strong>,
-                                    allure : <strong>{formatMsAsDuration(slowestLapPassage.processed.lapPace, false)}/km</strong>
-                                </>
-                            );
-                        })()}
-                    </p>
+                        <li>
+                            Tour le plus lent : {slowestLapPassage === null && NO_VALUE_PLACEHOLDER}
 
-                    <p>
-                        Vitesse moyenne de 00:00:00 à {lastPassageRaceTime !== null ? formatMsAsDuration(lastPassageRaceTime) : "--:--:--"} : <strong>{averageSpeed !== null ? averageSpeed.toFixed(2) + " km/h" : "n/a"}</strong> (allure moyenne : <strong>{averagePace !== null ? formatMsAsDuration(averagePace, false) + "/km" : "n/a"})</strong>
-                    </p>
+                            {slowestLapPassage !== null && (
+                                <ul>
+                                    <li>Tour {slowestLapPassage.processed.lapNumber} à <strong>{formatMsAsDuration(slowestLapPassage.processed.lapEndRaceTime)}</strong> de course</li>
+                                    <li>Durée : <strong>{formatMsAsDuration(slowestLapPassage.processed.lapDuration)}</strong></li>
+                                    <li>Vitesse : <strong>{slowestLapPassage.processed.lapSpeed.toFixed(2)} km/h</strong></li>
+                                    <li>Allure : <strong>{formatMsAsDuration(slowestLapPassage.processed.lapPace, false)}/km</strong></li>
+                                </ul>
+                            )}
+                        </li>
+
+                        <li>
+                            Vitesse moyenne de 00:00:00 à {lastPassageRaceTime !== null ? formatMsAsDuration(lastPassageRaceTime) : "--:--:--"}
+                            <> : </>
+                            <strong>{averageSpeed !== null ? averageSpeed.toFixed(2) + " km/h" : "n/a"}</strong>
+
+                            {averagePace !== null && (
+                                <ul>
+                                    <li>Allure : <strong>{formatMsAsDuration(averagePace, false) + "/km"}</strong></li>
+                                </ul>
+                            )}
+                        </li>
+                    </ul>
                 </Col>
             </Row>
 
