@@ -1,6 +1,6 @@
 ﻿/*
 CanvasJS React Chart - https://canvasjs.com/
-Copyright 2023 fenopix
+Copyright 2024 fenopix
 
 --------------------- License Information --------------------
 The software in CanvasJS React Chart is free and open-source. But, CanvasJS React Chart relies on CanvasJS Chart which requires a valid CanvasJS Chart license for commercial use. Please refer to the following link for further details https://canvasjs.com/license/
@@ -60,12 +60,12 @@ class CanvasJSChart extends React.Component {
 	}
 }
 
-var CanvasJSReact = {
+var CanvasjsReact = {
 	CanvasJSChart: CanvasJSChart,
 	CanvasJS: CanvasJS
 };
 
-export default CanvasJSReact;
+export default CanvasjsReact;
 /*tslint:enable*/
 /*eslint-enable*/
 /*jshint ignore:end*/

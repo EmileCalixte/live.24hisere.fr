@@ -6,13 +6,13 @@ import ReactDOMServer from "react-dom/server";
 import { SearchParam } from "../../../../constants/searchParams";
 import { useSpeedChartQueryString } from "../../../../hooks/queryString/useSpeedChartQueryString";
 import { useWindowDimensions } from "../../../../hooks/useWindowDimensions";
-import CanvasJSReact from "../../../../lib/canvasjs/canvasjs.react";
+import CanvasjsReact from "../../../../lib/canvasjs/canvasjs.react";
 import { type Race } from "../../../../types/Race";
 import { type RunnerWithProcessedHours, type RunnerWithProcessedPassages } from "../../../../types/Runner";
 import { formatMsAsDuration } from "../../../../utils/utils";
 import { Checkbox } from "../../../ui/forms/Checkbox";
 
-const CanvasJSChart = CanvasJSReact.CanvasJSChart;
+const CanvasJSChart = CanvasjsReact.CanvasJSChart;
 
 const DEFAULT_MIN_SPEED = 0;
 const DEFAULT_MAX_SPEED = 10;
