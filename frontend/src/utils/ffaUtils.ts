@@ -1,9 +1,8 @@
 import { type CategoriesDict } from "../types/Category";
 
 /**
- * Returns the category code from a birth year (valid until August 31st, 2023)
+ * Returns the category code from a birth year (valid until August 31st, 2024)
  * @see https://www.athle.fr/asp.net/main.html/html.aspx?htmlid=25
- * @param {number} birthYear
  */
 export function getCategoryCodeFromBirthYear(birthYear: number | string): string {
     if (typeof birthYear === "string") {
@@ -14,79 +13,79 @@ export function getCategoryCodeFromBirthYear(birthYear: number | string): string
         }
     }
 
-    if (birthYear >= 2017) {
+    if (birthYear >= 2018) {
         return "BB";
     }
 
-    if (birthYear >= 2014) {
+    if (birthYear >= 2015) {
         return "EA";
     }
 
-    if (birthYear >= 2012) {
+    if (birthYear >= 2013) {
         return "PO";
     }
 
-    if (birthYear >= 2010) {
+    if (birthYear >= 2011) {
         return "BE";
     }
 
-    if (birthYear >= 2008) {
+    if (birthYear >= 2009) {
         return "MI";
     }
 
-    if (birthYear >= 2006) {
+    if (birthYear >= 2007) {
         return "CA";
     }
 
-    if (birthYear >= 2004) {
+    if (birthYear >= 2005) {
         return "JU";
     }
 
-    if (birthYear >= 2001) {
+    if (birthYear >= 2002) {
         return "ES";
     }
 
-    if (birthYear >= 1989) {
+    if (birthYear >= 1990) {
         return "SE";
     }
 
-    if (birthYear >= 1984) {
+    if (birthYear >= 1985) {
         return "M0";
     }
 
-    if (birthYear >= 1979) {
+    if (birthYear >= 1980) {
         return "M1";
     }
 
-    if (birthYear >= 1974) {
+    if (birthYear >= 1975) {
         return "M2";
     }
 
-    if (birthYear >= 1969) {
+    if (birthYear >= 1970) {
         return "M3";
     }
 
-    if (birthYear >= 1964) {
+    if (birthYear >= 1965) {
         return "M4";
     }
 
-    if (birthYear >= 1959) {
+    if (birthYear >= 1960) {
         return "M5";
     }
 
-    if (birthYear >= 1954) {
+    if (birthYear >= 1955) {
         return "M6";
     }
 
-    if (birthYear >= 1949) {
+    if (birthYear >= 1950) {
         return "M7";
     }
 
-    if (birthYear >= 1944) {
+    if (birthYear >= 1945) {
         return "M8";
     }
 
-    if (birthYear >= 1939) {
+    if (birthYear >= 1940) {
         return "M9";
     }
 
