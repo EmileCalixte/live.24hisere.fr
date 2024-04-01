@@ -206,16 +206,6 @@
     "@babel/helper-validator-identifier" "^7.22.20"
     to-fast-properties "^2.0.0"
 
-"@canvasjs/charts@^3.8.0":
-  version "3.8.0"
-  resolved "https://registry.yarnpkg.com/@canvasjs/charts/-/charts-3.8.0.tgz#d525bcd82f66076404efc0c04e6cff4fef919803"
-  integrity sha512-oBxhhFmNxFcSQ32P6laV9hnHXfI5TGH3xH7xhqDhICphfj+EE20Q6WvXMk4GxzGbFDuo5Sm+Laq1keqvh+h18A==
-
-"@canvasjs/react-charts@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@canvasjs/react-charts/-/react-charts-1.0.2.tgz#56b1fa72018522240ce03106426f4ee57959112f"
-  integrity sha512-PZgJlDbGdMF4AN/KvrvGY9X50EByJMZ7MHfQB/U0aky9Onn9mt0CpsvwudBsBe+DofaV3SHR4SHn/Wfo/pubDw==
-
 "@esbuild/aix-ppc64@0.20.2":
   version "0.20.2"
   resolved "https://registry.yarnpkg.com/@esbuild/aix-ppc64/-/aix-ppc64-0.20.2.tgz#a70f4ac11c6a1dfc18b8bbb13284155d933b9537"

@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 
-// @ts-ignore
-import CanvasJSReact from "@canvasjs/react-charts";
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 import ReactDOMServer from "react-dom/server";
 import { SearchParam } from "../../../../constants/searchParams";
 import { useSpeedChartQueryString } from "../../../../hooks/queryString/useSpeedChartQueryString";
 import { useWindowDimensions } from "../../../../hooks/useWindowDimensions";
+import CanvasJSReact from "../../../../lib/canvasjs/canvasjs.react";
 import { type Race } from "../../../../types/Race";
 import { type RunnerWithProcessedHours, type RunnerWithProcessedPassages } from "../../../../types/Runner";
 import { formatMsAsDuration } from "../../../../utils/utils";
