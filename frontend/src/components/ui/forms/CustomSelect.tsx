@@ -12,6 +12,9 @@ interface CustomSelectProps<T extends SelectOption["value"]> extends Omit<Select
     searchInputLabelAndPlaceHolder?: string;
 }
 
+/**
+ * TODO fix iOS
+ */
 export default function CustomSelect<T extends SelectOption["value"]>({
     searchable = false,
     searchInputLabelAndPlaceHolder,

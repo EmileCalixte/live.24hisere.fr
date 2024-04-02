@@ -163,7 +163,7 @@ export function getRunnersSelectOptions<T extends Runner>(runners: T[] | false, 
     }
 
     return runners.map(runner => ({
-        label: label ? label(runner) : `N° ${runner.id} – ${runner.firstname} ${runner.lastname.toUpperCase()}`,
+        label: label ? label(runner) : `N° ${runner.id} – ${runner.lastname.toUpperCase()} ${runner.firstname}`,
         value: runner.id,
     }));
 }

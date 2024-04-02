@@ -1,7 +1,8 @@
 import { type Runner } from "../../../types/Runner";
+import { spaceship } from "../../../utils/compareUtils";
 import { getRunnersSelectOptions } from "../../../utils/runnerUtils";
-import CustomSelect from "../../ui/forms/CustomSelect";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React from "react";
+import Select from "../../ui/forms/Select";
 
 interface RunnerSelectorProps {
     runners: Runner[] | undefined;
@@ -10,9 +11,7 @@ interface RunnerSelectorProps {
 }
 
 export default function RunnerSelector({ runners, onSelectRunner, selectedRunnerId }: RunnerSelectorProps): React.ReactElement {
-    const [idSortedRunners, setIdSortedRunners] = useState<Runner[] | false>(false);
-
-    const selectedRunnerExists = useMemo(() => {
+    const selectedRunnerExists = React.useMemo(() => {
         if (!runners) {
             return false;
         }
@@ -30,40 +29,39 @@ export default function RunnerSelector({ runners, onSelectRunner, selectedRunner
         return runner !== undefined;
     }, [runners, selectedRunnerId]);
 
-    const sortRunners = useCallback(() => {
+    const idSortedRunners = React.useMemo<Runner[] | false>(() => {
         if (!runners) {
-            return;
+            return false;
         }
 
-        setIdSortedRunners([...runners].sort((a, b) => {
-            if (a.id < b.id) {
-                return -1;
-            }
-
-            if (a.id > b.id) {
-                return 1;
-            }
-
-            return 0;
-        }));
+        return [...runners].sort((a, b) => spaceship(a.id, b.id));
     }, [runners]);
 
-    useEffect(() => {
-        sortRunners();
-    }, [sortRunners]);
+    const nameSortedRunners = React.useMemo<Runner[] | false>(() => {
+        if (!runners) {
+            return false;
+        }
+
+        return [...runners].sort((a, b) => spaceship(
+            a.lastname + a.firstname + a.id,
+            b.lastname + b.firstname + b.id,
+        ));
+    }, [runners]);
+
+    const selectOptions = [
+        ...getRunnersSelectOptions(idSortedRunners),
+        ...getRunnersSelectOptions(nameSortedRunners, runner => `${runner.lastname.toUpperCase()} ${runner.firstname} – N° ${runner.id}`),
+    ];
 
     return (
         <div className="runner-details-runner-selector-container">
-            <CustomSelect
-                label="Coureur"
-                searchable
-                searchInputLabelAndPlaceHolder="Rechercher par nom, prénom ou dossard"
-                options={getRunnersSelectOptions(idSortedRunners)}
-                isLoading={!idSortedRunners}
-                loadingOptionLabel="Chargement des coureurs"
-                placeholderLabel="Cliquez ici pour sélectionner un coureur"
-                value={selectedRunnerExists ? selectedRunnerId : undefined}
-                onChange={onSelectRunner}
+            <Select label="Coureur"
+                    options={selectOptions}
+                    isLoading={!idSortedRunners}
+                    loadingOptionLabel="Chargement des coureurs"
+                    placeholderLabel="Cliquez ici pour sélectionner un coureur"
+                    value={selectedRunnerExists ? selectedRunnerId : undefined}
+                    onChange={onSelectRunner}
             />
         </div>
     );

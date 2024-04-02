@@ -2,38 +2,27 @@ import clsx from "clsx";
 import React from "react";
 import { type SelectOption } from "../../../types/Forms";
 
-export interface SelectProps<T extends SelectOption["value"]> {
+export interface SelectProps<T extends SelectOption["value"]> extends React.SelectHTMLAttributes<HTMLSelectElement> {
     label: string;
-    name?: string;
     options: Array<SelectOption<T>>;
-    disabled?: boolean;
     isLoading?: boolean;
     loadingOptionLabel?: string;
     placeholderLabel?: string;
     value?: SelectOption["value"];
-    onChange?: React.ChangeEventHandler<HTMLSelectElement>;
-    onMouseDown?: React.MouseEventHandler<HTMLSelectElement>;
-    onKeyDown?: React.KeyboardEventHandler<HTMLSelectElement>;
-    onBlur?: React.FocusEventHandler<HTMLSelectElement>;
-    className?: string;
     selectRef?: React.LegacyRef<HTMLSelectElement>;
 }
 
 export default function Select<T extends SelectOption["value"]>({
     label,
-    name,
     options,
     disabled = false,
     isLoading = false,
     loadingOptionLabel = "Chargement",
     placeholderLabel = "",
     value,
-    onChange,
-    onMouseDown,
-    onKeyDown,
-    onBlur,
     className,
     selectRef,
+    ...props
 }: SelectProps<T>): React.ReactElement {
     return (
         <div className={clsx("input-group", className)}>
@@ -42,12 +31,8 @@ export default function Select<T extends SelectOption["value"]>({
                 <select ref={selectRef}
                         className="input-select"
                         disabled={disabled || isLoading}
-                        name={name}
                         value={isLoading ? "_loading" : value ?? "_placeholder"}
-                        onChange={onChange}
-                        onMouseDown={onMouseDown}
-                        onKeyDown={onKeyDown}
-                        onBlur={onBlur}
+                        {...props}
                 >
                     <option disabled hidden value="_placeholder">{placeholderLabel}</option>
                     {isLoading
