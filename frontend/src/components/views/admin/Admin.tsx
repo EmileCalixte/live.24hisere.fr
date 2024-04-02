@@ -13,6 +13,7 @@ import CreateRaceAdminView from "./races/CreateRaceAdminView";
 import RaceDetailsAdminView from "./races/RaceDetailsAdminView";
 import CircularLoader from "../../ui/CircularLoader";
 import RunnerDetailsAdminView from "./runners/RunnerDetailsAdminView";
+import StatisticsAdminView from "./StatisticsAdminView";
 
 export default function Admin(): React.ReactElement {
     const { user } = useContext(appContext).user;
@@ -42,6 +43,7 @@ export default function Admin(): React.ReactElement {
             <Route path="fastest-laps" element={<FastestLapsAdminView />} />
             <Route path="passage-import-settings" element={<PassageImportSettingsAdminView />} />
             <Route path="disabled-app" element={<DisabledAppAdminView />} />
+            <Route path="statistics" element={<StatisticsAdminView />} />
 
             <Route path="*" element={<Navigate to="/admin" replace />} />
         </Routes>
