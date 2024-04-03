@@ -27,7 +27,7 @@ export function useRaceQueryString<T extends Race>(races: T[] | undefined): UseR
 
     React.useEffect(() => {
         if (races && searchParamsRace !== null && !selectedRace) {
-            deleteParams(SearchParam.RACE);
+            deleteParams(SearchParam.RACE, { replace: true });
         }
     }, [deleteParams, races, searchParamsRace, selectedRace]);
 

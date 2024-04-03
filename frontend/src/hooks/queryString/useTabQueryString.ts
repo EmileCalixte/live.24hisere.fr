@@ -13,12 +13,6 @@ export function useTabQueryString<T extends string>(availableTabs: T[], defaultT
 
     const searchParamsTab = searchParams.get(SearchParam.TAB);
 
-    React.useEffect(() => {
-        if (!inArray(searchParamsTab, availableTabs)) {
-            setParams({ [SearchParam.TAB]: defaultTab });
-        }
-    }, [availableTabs, defaultTab, searchParamsTab, setParams]);
-
     const selectedTab = React.useMemo<T>(() => {
         if (!inArray(searchParamsTab, availableTabs)) {
             return defaultTab;
@@ -30,6 +24,12 @@ export function useTabQueryString<T extends string>(availableTabs: T[], defaultT
     const setTabParam = React.useCallback((tab: T) => {
         setParams({ [SearchParam.TAB]: tab });
     }, [setParams]);
+
+    React.useEffect(() => {
+        if (!inArray(searchParamsTab, availableTabs)) {
+            setParams({ [SearchParam.TAB]: defaultTab }, { replace: true });
+        }
+    }, [availableTabs, defaultTab, searchParamsTab, setParams]);
 
     return {
         selectedTab,

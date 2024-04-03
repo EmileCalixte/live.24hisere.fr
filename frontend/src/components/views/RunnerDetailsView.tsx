@@ -124,11 +124,11 @@ export default function RunnerDetailsView(): React.ReactElement {
 
     React.useEffect(() => {
         if (selectedTab !== Tab.Laps) {
-            deleteParams(...RUNNER_LAPS_TABLE_SEARCH_PARAMS);
+            deleteParams(RUNNER_LAPS_TABLE_SEARCH_PARAMS, { replace: true });
         }
 
         if (selectedTab !== Tab.Stats) {
-            deleteParams(...RUNNER_SPEED_CHART_SEARCH_PARAMS);
+            deleteParams(RUNNER_SPEED_CHART_SEARCH_PARAMS, { replace: true });
         }
     }, [deleteParams, selectedTab]);
 

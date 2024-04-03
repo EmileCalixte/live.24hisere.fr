@@ -1,4 +1,5 @@
 import React from "react";
+import { type NavigateOptions } from "react-router-dom";
 import { RankingTimeMode } from "../../constants/rankingTimeMode";
 import { SearchParam } from "../../constants/searchParams";
 import { type Race } from "../../types/Race";
@@ -91,12 +92,12 @@ export function useRankingTimeQueryString(race: Race | null): UseRankingTimeQuer
         deleteParams(SearchParam.TIME_MODE);
     }, [deleteParams]);
 
-    const setRankingTimeParam = React.useCallback((time: number | string) => {
-        setParams({ [SearchParam.RANKING_TIME]: time.toString() });
+    const setRankingTimeParam = React.useCallback((time: number | string, navigateOpts?: NavigateOptions) => {
+        setParams({ [SearchParam.RANKING_TIME]: time.toString() }, navigateOpts);
     }, [setParams]);
 
-    const deleteRankingTimeParam = React.useCallback(() => {
-        deleteParams(SearchParam.RANKING_TIME);
+    const deleteRankingTimeParam = React.useCallback((navigateOpts?: NavigateOptions) => {
+        deleteParams(SearchParam.RANKING_TIME, navigateOpts);
     }, [deleteParams]);
 
     React.useEffect(() => {
@@ -107,7 +108,7 @@ export function useRankingTimeQueryString(race: Race | null): UseRankingTimeQuer
         if (shouldResetRankingTime(race.duration)) {
             setRankingTimeMemory(race.duration);
             if (selectedTimeMode === RankingTimeMode.AT) {
-                setRankingTimeParam(race.duration);
+                setRankingTimeParam(race.duration, { replace: true });
             }
         }
     // We want to run this effect only when race changes
@@ -120,13 +121,13 @@ export function useRankingTimeQueryString(race: Race | null): UseRankingTimeQuer
         }
 
         if (selectedTimeMode === RankingTimeMode.AT && !searchParams.has(SearchParam.RANKING_TIME)) {
-            setRankingTimeParam(rankingTimeMemory ?? race.duration);
+            setRankingTimeParam(rankingTimeMemory ?? race.duration, { replace: true });
         }
     }, [race, rankingTimeMemory, searchParams, selectedTimeMode, setRankingTimeParam]);
 
     React.useEffect(() => {
         if (selectedTimeMode !== RankingTimeMode.AT && searchParams.has(SearchParam.RANKING_TIME)) {
-            deleteRankingTimeParam();
+            deleteRankingTimeParam({ replace: true });
         }
     }, [deleteRankingTimeParam, searchParams, selectedTimeMode]);
 
@@ -136,7 +137,7 @@ export function useRankingTimeQueryString(race: Race | null): UseRankingTimeQuer
         }
 
         if (selectedRankingTime > race.duration * 1000) {
-            setRankingTimeParam(race.duration);
+            setRankingTimeParam(race.duration, { replace: true });
             setRankingTimeMemory(race.duration);
         }
     }, [race, selectedRankingTime, selectedTimeMode, setRankingTimeParam]);

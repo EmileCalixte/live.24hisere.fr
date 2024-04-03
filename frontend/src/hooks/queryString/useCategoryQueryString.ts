@@ -1,4 +1,5 @@
 import React from "react";
+import { type NavigateOptions } from "react-router-dom";
 import { SearchParam } from "../../constants/searchParams";
 import { type CategoriesDict, type CategoryShortCode } from "../../types/Category";
 import { type Race } from "../../types/Race";
@@ -27,13 +28,13 @@ export function useCategoryQueryString(race: Race | null, categories: Categories
         setParams({ [SearchParam.CATEGORY]: categoryCode });
     }, [setParams]);
 
-    const deleteCategoryParam = React.useCallback(() => {
-        deleteParams(SearchParam.CATEGORY);
+    const deleteCategoryParam = React.useCallback((navigateOpts?: NavigateOptions) => {
+        deleteParams(SearchParam.CATEGORY, navigateOpts);
     }, [deleteParams]);
 
     React.useEffect(() => {
         if (categories && searchParamsCategory !== null && !selectedCategory) {
-            deleteCategoryParam();
+            deleteCategoryParam({ replace: true });
         }
     }, [categories, deleteCategoryParam, searchParamsCategory, selectedCategory]);
 

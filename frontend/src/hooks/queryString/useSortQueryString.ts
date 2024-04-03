@@ -25,20 +25,6 @@ export function useSortQueryString<T extends SortBy[]>(availableColumns: T, defa
     const searchParamsSortColumn = searchParams.get(SearchParam.SORT_COLUMN);
     const searchParamsDirection = searchParams.get(SearchParam.SORT_DIRECTION);
 
-    React.useEffect(() => {
-        const newParams: Record<string, string> = {};
-
-        if (!isValidSortColumn(searchParamsSortColumn, availableColumns)) {
-            newParams[SearchParam.SORT_COLUMN] = defaultColumn;
-        }
-
-        if (!isValidSortDirection(searchParamsDirection)) {
-            newParams[SearchParam.SORT_DIRECTION] = SortDirection.ASC;
-        }
-
-        setParams(newParams);
-    }, [availableColumns, defaultColumn, searchParamsDirection, searchParamsSortColumn, setParams]);
-
     const sortColumn = React.useMemo<T[number]>(() => {
         return isValidSortColumn(searchParamsSortColumn, availableColumns) ? searchParamsSortColumn : defaultColumn;
     }, [availableColumns, defaultColumn, searchParamsSortColumn]);
@@ -54,6 +40,20 @@ export function useSortQueryString<T extends SortBy[]>(availableColumns: T, defa
     const setSortDirectionParam = React.useCallback((sortDirection: SortDirection) => {
         setParams({ [SearchParam.SORT_DIRECTION]: sortDirection });
     }, [setParams]);
+
+    React.useEffect(() => {
+        const newParams: Record<string, string> = {};
+
+        if (!isValidSortColumn(searchParamsSortColumn, availableColumns)) {
+            newParams[SearchParam.SORT_COLUMN] = defaultColumn;
+        }
+
+        if (!isValidSortDirection(searchParamsDirection)) {
+            newParams[SearchParam.SORT_DIRECTION] = SortDirection.ASC;
+        }
+
+        setParams(newParams, { replace: true });
+    }, [availableColumns, defaultColumn, searchParamsDirection, searchParamsSortColumn, setParams]);
 
     return {
         sortColumn,

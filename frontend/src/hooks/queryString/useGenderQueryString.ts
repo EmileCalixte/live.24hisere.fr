@@ -1,4 +1,5 @@
 import React from "react";
+import { type NavigateOptions } from "react-router-dom";
 import { SearchParam } from "../../constants/searchParams";
 import type { GenderWithMixed } from "../../types/Gender";
 import { useQueryString } from "./useQueryString";
@@ -27,13 +28,13 @@ export function useGenderQueryString(): UseGenderQueryString {
         setParams({ [SearchParam.GENDER]: gender });
     }, [setParams]);
 
-    const deleteGenderParam = React.useCallback(() => {
-        deleteParams(SearchParam.GENDER);
+    const deleteGenderParam = React.useCallback((navigateOpts?: NavigateOptions) => {
+        deleteParams(SearchParam.GENDER, navigateOpts);
     }, [deleteParams]);
 
     React.useEffect(() => {
         if (!isValidGender(selectedGender)) {
-            deleteGenderParam();
+            deleteGenderParam({ replace: true });
         }
     });
 
