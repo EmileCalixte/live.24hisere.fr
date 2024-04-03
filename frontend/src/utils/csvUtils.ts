@@ -1,9 +1,11 @@
 import Papa from "papaparse";
+import { Gender } from "../constants/gender";
 import { ImportCsvColumn } from "../constants/importCsv";
 import {
     DD_MM_YYYY_NON_STRICT_REGEX,
     DD_SLASH_MM_SLASH_YYYY_NON_STRICT_REGEX,
     NUMERIC_REGEX,
+    YYYY_MM_DD_NON_STRICT_REGEX,
     YYYY_REGEX,
 } from "../constants/misc";
 import { type RunnerFromCsv, type RunnersCsvMapping } from "../types/ImportCsv";
@@ -40,10 +42,18 @@ export function getRunnerFromCsv(csvRow: string[], mapping: RunnersCsvMapping): 
         birthYear = birthYear.split("-")[2];
     } else if (birthYear?.match(DD_SLASH_MM_SLASH_YYYY_NON_STRICT_REGEX)) {
         birthYear = birthYear.split("/")[2];
+    } else if (birthYear?.match(YYYY_MM_DD_NON_STRICT_REGEX)) {
+        birthYear = birthYear?.split("-")[0];
     }
 
     if (!birthYear?.match(YYYY_REGEX)) {
         birthYear = undefined;
+    }
+
+    if (gender === "male") {
+        gender = Gender.M;
+    } else if (gender === "female") {
+        gender = Gender.F;
     }
 
     if (!isValidGender(gender)) {
