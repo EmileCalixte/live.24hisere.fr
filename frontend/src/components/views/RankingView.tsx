@@ -161,7 +161,7 @@ export default function RankingView(): React.ReactElement {
 
             {selectedRace && (
                 <>
-                    <Row className="hide-on-print mb-3 row-cols-auto">
+                    <Row className="hide-on-print mb-3 row-cols-auto gap-3">
                         <RankingSettings
                             categories={categories}
                             onCategorySelect={onCategorySelect}
