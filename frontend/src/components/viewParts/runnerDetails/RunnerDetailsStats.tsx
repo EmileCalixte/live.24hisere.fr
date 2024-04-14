@@ -8,6 +8,7 @@ import {
     type Ranking, type RankingRunner,
 } from "../../../types/Ranking";
 import { type RunnerWithProcessedHours } from "../../../types/Runner";
+import { getFastestLapPassage, getSlowestLapPassage } from "../../../utils/passageUtils";
 import SpeedChart from "./charts/SpeedChart";
 import { formatMsAsDuration } from "../../../utils/utils";
 import RunnerDetailsStatsRankingTable from "./RunnerDetailsStatsRankingTable";
@@ -51,47 +52,8 @@ export default function RunnerDetailsStats({ runner, race, ranking }: RunnerDeta
         return new Date(runner.passages[runner.passages.length - 1].time);
     }, [runner]);
 
-    const fastestLapPassage = useMemo<ProcessedPassage | null>(() => {
-        let fastestLapPassage: ProcessedPassage | null = null;
-
-        runner.passages.forEach(passage => {
-            if (passage.processed.lapNumber === null) {
-                return;
-            }
-
-            if (fastestLapPassage === null) {
-                fastestLapPassage = passage;
-                return;
-            }
-
-            if (passage.processed.lapDuration < fastestLapPassage.processed.lapDuration) {
-                fastestLapPassage = passage;
-            }
-        });
-
-        return fastestLapPassage;
-    }, [runner]);
-
-    const slowestLapPassage = useMemo<ProcessedPassage | null>(() => {
-        let slowestLapPassage: ProcessedPassage | null = null;
-
-        runner.passages.forEach(passage => {
-            if (passage.processed.lapNumber === null) {
-                return;
-            }
-
-            if (slowestLapPassage === null) {
-                slowestLapPassage = passage;
-                return;
-            }
-
-            if (passage.processed.lapDuration > slowestLapPassage.processed.lapDuration) {
-                slowestLapPassage = passage;
-            }
-        });
-
-        return slowestLapPassage;
-    }, [runner]);
+    const fastestLapPassage = useMemo<ProcessedPassage | null>(() => getFastestLapPassage(runner.passages), [runner]);
+    const slowestLapPassage = useMemo<ProcessedPassage | null>(() => getSlowestLapPassage(runner.passages), [runner]);
 
     /** Last runner passage race time in ms */
     const lastPassageRaceTime = useMemo<number | null>(() => {

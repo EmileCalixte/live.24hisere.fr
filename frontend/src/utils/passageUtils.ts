@@ -157,6 +157,48 @@ export function getProcessedHoursFromPassages(race: Race, passages: ProcessedPas
     return hours;
 }
 
+export function getFastestLapPassage(passages: ProcessedPassage[]): ProcessedPassage | null {
+    let fastestLapPassage: ProcessedPassage | null = null;
+
+    for (const passage of passages) {
+        if (passage.processed.lapNumber === null) {
+            continue;
+        }
+
+        if (fastestLapPassage === null) {
+            fastestLapPassage = passage;
+            continue;
+        }
+
+        if (passage.processed.lapDuration < fastestLapPassage.processed.lapDuration) {
+            fastestLapPassage = passage;
+        }
+    }
+
+    return fastestLapPassage;
+}
+
+export function getSlowestLapPassage(passages: ProcessedPassage[]): ProcessedPassage | null {
+    let slowestLapPassage: ProcessedPassage | null = null;
+
+    for (const passage of passages) {
+        if (passage.processed.lapNumber === null) {
+            continue;
+        }
+
+        if (slowestLapPassage === null) {
+            slowestLapPassage = passage;
+            continue;
+        }
+
+        if (passage.processed.lapDuration > slowestLapPassage.processed.lapDuration) {
+            slowestLapPassage = passage;
+        }
+    }
+
+    return slowestLapPassage;
+}
+
 /**
  * @param passages
  * @param intervalStart

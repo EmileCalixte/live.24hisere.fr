@@ -93,7 +93,15 @@ docker compose exec backend node dist/cli.js update-user-password
 
 ## Tests
 
+### Backend
+
 TODO ;)
+
+### Frontend
+
+```sh
+docker compose exec frontend yarn test run
+```
 
 ## Installation en production
 

@@ -8,9 +8,6 @@
     "@fortawesome/free-regular-svg-icons": "^6.5.2",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
-    "@testing-library/jest-dom": "^6.4.2",
-    "@testing-library/react": "^14.2.2",
-    "@testing-library/user-event": "^14.5.2",
     "@types/dompurify": "^3.0.5",
     "@types/jest": "^29.5.12",
     "@types/latinize": "^0.2.18",
@@ -38,6 +35,10 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@testing-library/dom": "^10.0.0",
+    "@testing-library/jest-dom": "^6.4.2",
+    "@testing-library/react": "^15.0.2",
+    "@testing-library/user-event": "^14.5.2",
     "@typescript-eslint/eslint-plugin": "^6.19.0",
     "eslint": "^8.57.0",
     "eslint-config-standard-with-typescript": "^43.0.1",
@@ -46,16 +47,18 @@
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-react": "^7.34.1",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "typescript": "^5.4.4"
+    "jsdom": "^24.0.0",
+    "typescript": "^5.4.4",
+    "vitest": "^1.5.0"
   },
   "scripts": {
     "start": "vite",
     "build": "npx tsc && vite build",
+    "test": "vitest",
     "lint": "npx eslint . --ext .ts,.tsx",
     "lint-fix": "yarn run lint --fix",
     "typecheck": "npx tsc --noEmit",
-    "codecheck": "yarn run typecheck && yarn run lint",
-    "eject": "react-scripts eject"
+    "codecheck": "yarn run typecheck && yarn run lint"
   },
   "eslintConfig": {
     "extends": [
