@@ -80,18 +80,18 @@ export default function RunnerDetailsStats({ runner, race, ranking }: RunnerDeta
                 return;
             }
 
-            if (fastestLapPassage === null) {
+            if (slowestLapPassage === null) {
                 slowestLapPassage = passage;
                 return;
             }
 
-            if (passage.processed.lapDuration > fastestLapPassage.processed.lapDuration) {
+            if (passage.processed.lapDuration > slowestLapPassage.processed.lapDuration) {
                 slowestLapPassage = passage;
             }
         });
 
         return slowestLapPassage;
-    }, [runner, fastestLapPassage]);
+    }, [runner]);
 
     /** Last runner passage race time in ms */
     const lastPassageRaceTime = useMemo<number | null>(() => {
