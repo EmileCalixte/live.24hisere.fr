@@ -39,15 +39,11 @@ export default function ResponsiveRankingTableRow({
     }, [runner, tableCategory, tableGender]);
 
     const rowSecondaryRankings = useMemo(() => {
-        const formattedGap = formatGap(runner.gaps.firstRunner[getRankingType(tableCategory, tableGender)].gap);
-
-        const displayedGap = formattedGap === null || formattedGap === "=" ? null : `(${formattedGap})`;
-
         if (tableCategory === null) {
             if (tableGender === GENDER_MIXED) {
                 return (
                     <>
-                        {runner.ranks.displayed.scratchGender} {runner.gender.toUpperCase()} {displayedGap}
+                        {runner.ranks.displayed.scratchGender} {runner.gender.toUpperCase()}
                         &nbsp;|&nbsp;
                         {runner.ranks.displayed.categoryMixed} {runnerCategory}
                         &nbsp;|&nbsp;
@@ -58,7 +54,7 @@ export default function ResponsiveRankingTableRow({
 
             return (
                 <>
-                    {runner.ranks.displayed.scratchMixed} {displayedGap}
+                    {runner.ranks.displayed.scratchMixed}
                     &nbsp;|&nbsp;
                     {runner.ranks.displayed.categoryMixed} {runnerCategory}
                     &nbsp;|&nbsp;
@@ -70,7 +66,7 @@ export default function ResponsiveRankingTableRow({
         if (tableGender === GENDER_MIXED) {
             return (
                 <>
-                    {runner.ranks.displayed.scratchMixed} {displayedGap}
+                    {runner.ranks.displayed.scratchMixed}
                     &nbsp;|&nbsp;
                     {runner.ranks.displayed.scratchGender} {runner.gender.toUpperCase()}
                     &nbsp;|&nbsp;
@@ -81,7 +77,7 @@ export default function ResponsiveRankingTableRow({
 
         return (
             <>
-                {runner.ranks.displayed.scratchMixed} {displayedGap}
+                {runner.ranks.displayed.scratchMixed}
                 &nbsp;|&nbsp;
                 {runner.ranks.displayed.scratchGender} {runner.gender.toUpperCase()}
                 &nbsp;|&nbsp;
@@ -89,6 +85,10 @@ export default function ResponsiveRankingTableRow({
             </>
         );
     }, [runner, tableCategory, tableGender, runnerCategory]);
+
+    const formattedGap = formatGap(runner.gaps.firstRunner[getRankingType(tableCategory, tableGender)].gap);
+
+    const displayedGap = formattedGap === null || formattedGap === "=" ? null : formattedGap;
 
     return (
         <tr>
@@ -99,11 +99,17 @@ export default function ResponsiveRankingTableRow({
                         <strong>{runner.lastname.toUpperCase()} {runner.firstname} – N°{runner.id}</strong>
                     </div>
 
-                    <div className="responsive-ranking-table-row-secondary-rankings">
+                    {displayedGap && (
+                        <div className="responsive-ranking-table-row-secondary-data-row">
+                            {displayedGap}
+                        </div>
+                    )}
+
+                    <div className="responsive-ranking-table-row-secondary-data-row">
                         {rowSecondaryRankings}
                     </div>
 
-                    <div className="responsive-ranking-table-row-stats">
+                    <div className="responsive-ranking-table-row-secondary-data-row">
                         {formatFloatNumber(runner.distance / 1000, 2)} km
 
                         {(() => {

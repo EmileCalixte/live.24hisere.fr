@@ -455,8 +455,7 @@ table.table th .buttons-container {
     }
 }
 
-.responsive-ranking-table-row-secondary-rankings,
-.responsive-ranking-table-row-stats {
+.responsive-ranking-table-row-secondary-data-row {
     font-size: 0.9em;
 }
 
