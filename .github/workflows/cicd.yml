@@ -38,25 +38,33 @@ jobs:
         run: yarn
         working-directory: ./frontend
 
+      - name: Install JS backend dependencies
+        run: yarn
+        working-directory: ./backend
+
       - name: Run ESLint on frontend
         run: yarn run lint
         working-directory: ./frontend
 
-      - name: Create frontend production builds
-        run: yarn run build
-        working-directory: ./frontend
-
-      - name: Install JS backend dependencies
-        run: yarn
+      - name: Run ESLint on backend
+        run: yarn run lint
         working-directory: ./backend
 
       - name: Generate Prisma client
         run: npx prisma generate
         working-directory: ./backend
 
-      - name: Run ESLint on backend
-        run: yarn run lint
-        working-directory: ./backend
+      - name: Run tests
+        run: yarn test run
+        working-directory: ./frontend
+#        run: |
+#          (cd frontend && yarn test run) &
+#          (cd backend && yarn test run) &
+#          wait
+
+      - name: Create frontend production builds
+        run: yarn run build
+        working-directory: ./frontend
 
       - name: Create backend production builds
         run: yarn run build

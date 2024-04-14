@@ -26,6 +26,7 @@
   },
   "include": [
     "src",
+    "test",
     ".eslintrc.js",
     "vite.config.ts",
     "vite-env.d.ts",
