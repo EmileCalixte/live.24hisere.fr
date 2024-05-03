@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty, IsString, Max, MaxLength, Min, Validate } from "class-validator";
+import { IsBoolean, IsDefined, IsInt, IsNotEmpty, IsString, Max, MaxLength, Min, Validate } from "class-validator";
 import { RUNNER_FIRSTNAME_MAX_LENGTH, RUNNER_LASTNAME_MAX_LENGTH } from "../../constants/runner.constants";
 import { type Gender } from "../../types/Gender";
 import { RaceIdExistsRule } from "../../validation/rules/race/raceIdExists.rule";
@@ -29,6 +29,10 @@ export class RunnerDto {
     @Min(1900)
     @Max(new Date().getFullYear())
     birthYear: number;
+
+    @IsBoolean()
+    @IsDefined()
+    stopped: boolean;
 
     @IsInt()
     @IsNotEmpty()

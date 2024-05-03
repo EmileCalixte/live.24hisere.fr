@@ -41,6 +41,7 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
     const [runnerLastname, setRunnerLastname] = useState("");
     const [runnerGender, setRunnerGender] = useState<Gender>(Gender.M);
     const [runnerBirthYear, setRunnerBirthYear] = useState("0");
+    const [runnerStopped, setRunnerStopped] = useState(false);
     const [runnerRaceId, setRunnerRaceId] = useState(0);
 
     const [isSaving, setIsSaving] = useState(false);
@@ -70,9 +71,10 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
             runnerLastname === runner.lastname,
             runnerGender === runner.gender,
             runnerBirthYear === runner.birthYear,
+            runnerStopped === runner.stopped,
             runnerRaceId === runner.raceId,
         ].includes(false);
-    }, [runner, runnerId, runnerFirstname, runnerLastname, runnerGender, runnerBirthYear, runnerRaceId]);
+    }, [runner, runnerId, runnerFirstname, runnerLastname, runnerGender, runnerBirthYear, runnerStopped, runnerRaceId]);
 
     const fetchRaces = useCallback(async () => {
         if (!accessToken) {
@@ -121,6 +123,7 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
         setRunnerLastname(runner.lastname);
         setRunnerGender(runner.gender);
         setRunnerBirthYear(runner.birthYear);
+        setRunnerStopped(runner.stopped);
         setRunnerRaceId(runner.raceId);
     }, [accessToken, urlRunnerId, races]);
 
@@ -242,6 +245,7 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
             lastname: runnerLastname,
             birthYear: parseInt(runnerBirthYear),
             gender: runnerGender,
+            stopped: runnerStopped,
             raceId: runnerRaceId,
         };
 
@@ -263,7 +267,7 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
         }
 
         setIsSaving(false);
-    }, [runner, accessToken, runnerId, runnerFirstname, runnerLastname, runnerBirthYear, runnerGender, runnerRaceId, navigate, fetchRunner]);
+    }, [runner, accessToken, runnerId, runnerFirstname, runnerLastname, runnerBirthYear, runnerGender, runnerStopped, runnerRaceId, navigate, fetchRunner]);
 
     const deleteRunner = useCallback(async () => {
         if (!runner || !accessToken) {
@@ -324,7 +328,7 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
                 <>
                     <Row>
                         <Col xxl={3} xl={4} lg={6} md={9} sm={12}>
-                            <RunnerDetailsForm onSubmit={onSubmit}
+                            <RunnerDetailsForm onSubmit={e => { void onSubmit(e); }}
                                                id={runnerId}
                                                setId={setRunnerId}
                                                firstname={runnerFirstname}
@@ -335,6 +339,8 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
                                                setGender={setRunnerGender}
                                                birthYear={runnerBirthYear}
                                                setBirthYear={setRunnerBirthYear}
+                                               stopped={runnerStopped}
+                                               setStopped={setRunnerStopped}
                                                races={races}
                                                raceId={runnerRaceId}
                                                setRaceId={setRunnerRaceId}

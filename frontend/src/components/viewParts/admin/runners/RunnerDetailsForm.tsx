@@ -4,26 +4,29 @@ import { GENDER_OPTIONS } from "../../../../constants/forms";
 import { type Gender } from "../../../../constants/gender";
 import { getRacesSelectOptions } from "../../../../utils/raceUtils";
 import { type AdminRaceWithRunnerCount } from "../../../../types/Race";
+import { Checkbox } from "../../../ui/forms/Checkbox";
 import { Input } from "../../../ui/forms/Input";
 import { getCategoryNameFromBirthYear } from "../../../../utils/ffaUtils";
 import RadioGroup from "../../../ui/forms/RadioGroup";
 import Select from "../../../ui/forms/Select";
 
 interface RunnerDetailsFormProps {
-    onSubmit: (e: React.FormEvent) => any;
+    onSubmit: (e: React.FormEvent) => void;
     id: number;
-    setId: (id: number) => any;
+    setId: (id: number) => void;
     firstname: string;
-    setFirstname: (firstname: string) => any;
+    setFirstname: (firstname: string) => void;
     lastname: string;
-    setLastname: (lastname: string) => any;
+    setLastname: (lastname: string) => void;
     gender: Gender;
-    setGender: (gender: Gender) => any;
+    setGender: (gender: Gender) => void;
     birthYear: string;
-    setBirthYear: (birthYear: string) => any;
+    setBirthYear: (birthYear: string) => void;
+    stopped: boolean;
+    setStopped: (stopped: boolean) => void;
     races: AdminRaceWithRunnerCount[] | false;
     raceId: number;
-    setRaceId: (raceId: number) => any;
+    setRaceId: (raceId: number) => void;
     submitButtonDisabled: boolean;
 }
 
@@ -39,6 +42,8 @@ export default function RunnerDetailsForm({
     setGender,
     birthYear,
     setBirthYear,
+    stopped,
+    setStopped,
     races,
     raceId,
     setRaceId,
@@ -54,7 +59,7 @@ export default function RunnerDetailsForm({
                    type="number"
                    name="id"
                    value={id}
-                   onChange={e => setId(parseInt(e.target.value))}
+                   onChange={e => { setId(parseInt(e.target.value)); }}
                    required
                    min={1}
                    max={999999}
@@ -66,7 +71,7 @@ export default function RunnerDetailsForm({
                    maxLength={255}
                    required
                    value={firstname}
-                   onChange={e => setFirstname(e.target.value)}
+                   onChange={e => { setFirstname(e.target.value); }}
             />
 
             <Input className="mt-3"
@@ -75,7 +80,7 @@ export default function RunnerDetailsForm({
                    maxLength={255}
                    required
                    value={lastname}
-                   onChange={e => setLastname(e.target.value)}
+                   onChange={e => { setLastname(e.target.value); }}
             />
 
             <Input className="mt-3"
@@ -86,7 +91,7 @@ export default function RunnerDetailsForm({
                    max={new Date().getFullYear()}
                    required
                    value={birthYear}
-                   onChange={e => setBirthYear(e.target.value)}
+                   onChange={e => { setBirthYear(e.target.value); }}
             />
 
             <div className="mt-1">
@@ -97,7 +102,13 @@ export default function RunnerDetailsForm({
                         legend="Sexe"
                         options={GENDER_OPTIONS}
                         value={gender}
-                        onSelectOption={option => setGender(option.value)}
+                        onSelectOption={option => { setGender(option.value); }}
+            />
+
+            <Checkbox className="mt-3"
+                      label="Arrêté"
+                      checked={stopped}
+                      onChange={e => { setStopped(e.target.checked); }}
             />
 
             {races && races.length < 1
@@ -110,7 +121,7 @@ export default function RunnerDetailsForm({
                             options={racesOptions}
                             isLoading={races === false}
                             loadingOptionLabel="Chargement des courses"
-                            onChange={e => setRaceId(parseInt(e.target.value))}
+                            onChange={e => { setRaceId(parseInt(e.target.value)); }}
                             value={raceId}
                     />
                 )}
