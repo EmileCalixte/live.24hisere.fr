@@ -9,6 +9,7 @@ import { getRankingType } from "../../../../utils/rankingUtils";
 import { formatGap } from "../../../../utils/runnerUtils";
 import { formatFloatNumber, formatMsAsDuration } from "../../../../utils/utils";
 import RankingTableRowNCells from "./RankingTableRowNCells";
+import RankingTableRunnerStoppedBadge from "./RankingTableRunnerStoppedBadge";
 
 interface RankingTableRowProps {
     race: Race;
@@ -29,7 +30,10 @@ export default function RankingTableRow({
         <tr>
             <RankingTableRowNCells runner={runner} tableCategory={tableCategory} tableGender={tableGender} />
             <td>{runner.id}</td>
-            <td>{runner.lastname.toUpperCase()} {runner.firstname}</td>
+            <td>
+                {runner.lastname.toUpperCase()} {runner.firstname}
+                {runner.stopped && <RankingTableRunnerStoppedBadge />}
+            </td>
             <td>{raceInitialDistance > 0 ? Math.max(0, runner.passages.length - 1) : runner.passages.length}</td>
             <td>{formatFloatNumber(runner.distance / 1000, 2)} km</td>
             <td>
