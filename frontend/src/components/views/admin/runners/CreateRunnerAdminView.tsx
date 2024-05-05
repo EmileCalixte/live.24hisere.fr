@@ -26,6 +26,7 @@ export default function CreateRunnerAdminView(): React.ReactElement {
     const [lastname, setLastname] = useState("");
     const [gender, setGender] = useState<Gender>(Gender.M);
     const [birthYear, setBirthYear] = useState(((new Date()).getFullYear() - 30).toString());
+    const [stopped, setStopped] = useState(false);
     const [raceId, setRaceId] = useStateWithNonNullableSetter<number | null>(null);
 
     const [isSaving, setIsSaving] = useState(false);
@@ -70,6 +71,7 @@ export default function CreateRunnerAdminView(): React.ReactElement {
             lastname,
             gender,
             birthYear: parseInt(birthYear),
+            stopped,
             raceId,
         };
 
@@ -83,7 +85,7 @@ export default function CreateRunnerAdminView(): React.ReactElement {
 
         ToastService.getToastr().success("Coureur créé");
         navigate(`/admin/runners/${id}`);
-    }, [accessToken, id, firstname, lastname, gender, birthYear, raceId, navigate]);
+    }, [accessToken, raceId, id, firstname, lastname, gender, birthYear, stopped, navigate]);
 
     useEffect(() => {
         void fetchRaces();
@@ -105,7 +107,7 @@ export default function CreateRunnerAdminView(): React.ReactElement {
                 <Col xxl={3} xl={4} lg={6} md={9} sm={12}>
                     <h2>Créer un coureur</h2>
 
-                    <RunnerDetailsForm onSubmit={onSubmit}
+                    <RunnerDetailsForm onSubmit={e => { void onSubmit(e); }}
                                        id={id}
                                        setId={setId}
                                        firstname={firstname}
@@ -116,6 +118,8 @@ export default function CreateRunnerAdminView(): React.ReactElement {
                                        setGender={setGender}
                                        birthYear={birthYear}
                                        setBirthYear={setBirthYear}
+                                       stopped={stopped}
+                                       setStopped={setStopped}
                                        races={races}
                                        raceId={raceId ?? 0}
                                        setRaceId={setRaceId}

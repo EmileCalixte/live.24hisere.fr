@@ -83,7 +83,7 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
     }, [runner, sortColumn, sortDirection]);
 
     const currentLapTableRow = React.useMemo(() => {
-        if (currentLapTime === null) {
+        if (currentLapTime === null || runner.stopped) {
             return null;
         }
 
@@ -95,7 +95,7 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
                 <td colSpan={42} />
             </tr>
         );
-    }, [raceTime, currentLapTime]);
+    }, [currentLapTime, runner.stopped, raceTime]);
 
     const currentLapResponsiveTableRow = React.useMemo(() => {
         if (currentLapTime === null) {

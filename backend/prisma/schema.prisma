@@ -65,6 +65,7 @@ model Runner {
   lastname String @db.VarChar(255)
   gender String @db.VarChar(1)
   birthYear String @db.VarChar(255) @map("birth_year")
+  stopped Boolean
   race Race @relation(fields: [raceId], references: [id], onUpdate: Restrict, onDelete: Restrict)
   raceId Int @map("race_id")
   passages Passage[]

@@ -339,6 +339,7 @@ export default function ImportRunnersCsvView(): React.ReactElement {
             .map(({ runner }) => ({
                 ...runner,
                 birthYear: parseInt(runner.birthYear),
+                stopped: false,
                 raceId: selectedRaceId,
             }));
 

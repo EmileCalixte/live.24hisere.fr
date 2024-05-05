@@ -8,6 +8,7 @@ import { getCategoryCodeFromBirthYear } from "../../../../../utils/ffaUtils";
 import { getRankingType } from "../../../../../utils/rankingUtils";
 import { formatGap } from "../../../../../utils/runnerUtils";
 import { formatFloatNumber, formatMsAsDuration } from "../../../../../utils/utils";
+import RankingTableRunnerStoppedBadge from "../RankingTableRunnerStoppedBadge";
 
 interface ResponsiveRankingTableRowProps {
     runner: RankingRunner;
@@ -97,6 +98,7 @@ export default function ResponsiveRankingTableRow({
                 <Link to={`/runner-details/${runner.id}`}>
                     <div>
                         <strong>{runner.lastname.toUpperCase()} {runner.firstname} – N°{runner.id}</strong>
+                        {runner.stopped && <RankingTableRunnerStoppedBadge />}
                     </div>
 
                     {displayedGap && (

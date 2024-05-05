@@ -72,6 +72,11 @@ export interface Runner {
     birthYear: string;
 
     /**
+     * Whether the rider has stopped competing or not
+     */
+    stopped: boolean;
+
+    /**
      * The ID of the race which the runner takes part
      */
     raceId: number;
