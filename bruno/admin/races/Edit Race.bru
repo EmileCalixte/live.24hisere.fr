@@ -1,0 +1,30 @@
+meta {
+  name: Edit Race
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{BASE_URL}}/admin/races/{{raceId}}
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: {{accessToken}}
+}
+
+body:json {
+  {
+    "name": "Edited race",
+    "isPublic": true,
+    "startTime": "2020-01-01T00:00:00.000Z",
+    "duration": 86400,
+    "initialDistance": "500",
+    "lapDistance": "1000"
+  }
+}
+
+vars:pre-request {
+  raceId: 1
+}

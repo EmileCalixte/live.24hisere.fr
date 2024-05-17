@@ -1,0 +1,19 @@
+meta {
+  name: Delete Race
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{BASE_URL}}/admin/races/{{raceId}}
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: {{accessToken}}
+}
+
+vars:pre-request {
+  raceId: 1
+}

@@ -1,0 +1,23 @@
+meta {
+  name: Change Races Order
+  type: http
+  seq: 6
+}
+
+put {
+  url: {{BASE_URL}}/admin/races-order
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: {{accessToken}}
+}
+
+body:json {
+  [2, 1, 3, 4]
+}
+
+vars:pre-request {
+  raceId: 1
+}

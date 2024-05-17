@@ -1,0 +1,15 @@
+meta {
+  name: Logout (delete access token)
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{BASE_URL}}/auth/logout
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: {{accessToken}}
+}

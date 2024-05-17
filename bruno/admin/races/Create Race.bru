@@ -1,0 +1,26 @@
+meta {
+  name: Create Race
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{BASE_URL}}/admin/races/
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: {{accessToken}}
+}
+
+body:json {
+  {
+    "name": "New race",
+    "isPublic": true,
+    "startTime": "2020-01-01T00:00:00.000Z",
+    "duration": 86400,
+    "initialDistance": "500",
+    "lapDistance": "1000"
+  }
+}

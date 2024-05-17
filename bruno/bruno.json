@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "live.24hisere.fr",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
