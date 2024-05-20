@@ -27,7 +27,7 @@
     "@nestjs/mapped-types": "^2.0.5",
     "@nestjs/platform-express": "^10.3.7",
     "@nestjs/schedule": "^4.0.1",
-    "@prisma/client": "^5.12.1",
+    "@prisma/client": "^5.14.0",
     "argon2": "^0.40.1",
     "axios": "^1.6.8",
     "class-transformer": "^0.5.1",
