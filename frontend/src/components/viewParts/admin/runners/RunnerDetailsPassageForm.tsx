@@ -6,12 +6,12 @@ import Modal from "../../../ui/Modal";
 
 interface RunnerDetailsPassageFormProps {
     raceTime: number;
-    setRaceTime: (raceTime: number) => any;
+    setRaceTime: (raceTime: number) => void;
     time: Date | null;
     modalTitle: string;
-    onSubmit: (e: React.FormEvent) => any;
+    onSubmit: (e: React.FormEvent) => Promise<void>;
     submitButtonDisabled: boolean;
-    onClose: () => any;
+    onClose: () => void;
 }
 
 export default function RunnerDetailsPassageForm({
@@ -43,7 +43,7 @@ export default function RunnerDetailsPassageForm({
 
             <Row>
                 <Col>
-                    <form onSubmit={onSubmit}>
+                    <form onSubmit={(e) => { void onSubmit(e); }}>
                         <DurationInputs legend="Temps de course"
                                         duration={raceTime}
                                         setDuration={setRaceTime}
@@ -56,7 +56,7 @@ export default function RunnerDetailsPassageForm({
                         )}
 
                         <div className="flex-space-between-container">
-                            <button className="button grey" type="button" onClick={() => onClose()}>
+                            <button className="button grey" type="button" onClick={() => { onClose(); }}>
                                 Annuler
                             </button>
 

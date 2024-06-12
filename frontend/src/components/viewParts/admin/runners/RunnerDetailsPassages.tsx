@@ -12,10 +12,10 @@ import RunnerDetailsEditPassage from "./RunnerDetailsEditPassage";
 interface RunnerDetailsPassagesProps {
     passages: AdminProcessedPassage[];
     runnerRace: AdminRaceWithRunnerCount | null;
-    updatePassageVisiblity: (passage: AdminProcessedPassage, hidden: boolean) => any;
-    updatePassage: (passage: AdminProcessedPassage, time: Date) => any;
-    saveNewPassage: (time: Date) => any;
-    deletePassage: (passage: AdminProcessedPassage) => any;
+    updatePassageVisiblity: (passage: AdminProcessedPassage, hidden: boolean) => Promise<void>;
+    updatePassage: (passage: AdminProcessedPassage, time: Date) => Promise<void>;
+    saveNewPassage: (time: Date) => Promise<void>;
+    deletePassage: (passage: AdminProcessedPassage) => Promise<void>;
 }
 
 export default function RunnerDetailsPassages({
@@ -132,7 +132,7 @@ export default function RunnerDetailsPassages({
                                                     <div className="buttons-container">
                                                         {passage.isHidden && (
                                                             <button className="button small"
-                                                                    onClick={() => updatePassageVisiblity(passage, false)}
+                                                                    onClick={() => { void updatePassageVisiblity(passage, false); }}
                                                             >
                                                                 <FontAwesomeIcon icon={faEye} /> Ne plus masquer
                                                             </button>
@@ -140,7 +140,7 @@ export default function RunnerDetailsPassages({
 
                                                         {!passage.isHidden && (
                                                             <button className="button orange small"
-                                                                    onClick={() => updatePassageVisiblity(passage, true)}
+                                                                    onClick={() => { void updatePassageVisiblity(passage, true); }}
                                                             >
                                                                 <FontAwesomeIcon icon={faEyeSlash} /> Masquer
                                                             </button>
@@ -156,7 +156,7 @@ export default function RunnerDetailsPassages({
                                                 </td>
                                                 <td>
                                                     <button className="button red small"
-                                                            onClick={() => deletePassage(passage)}
+                                                            onClick={() => { void deletePassage(passage); }}
                                                     >
                                                         <FontAwesomeIcon icon={faTrash} /> Supprimer
                                                     </button>

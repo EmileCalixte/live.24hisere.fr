@@ -5,7 +5,7 @@ import React, { useEffect, useRef } from "react";
 
 interface ModalProps {
     children: React.ReactNode | React.ReactNode[];
-    close: () => any;
+    close: () => void;
     className?: string;
 }
 
@@ -62,7 +62,7 @@ export default function Modal({ children, close, className }: ModalProps): React
     return (
         <dialog ref={dialogRef} className={clsx("modal", className)}>
             <div ref={modalContentRef} className="modal-content">
-                <button className="close-button" onClick={() => close()}>
+                <button className="close-button" onClick={close}>
                     <FontAwesomeIcon icon={faXmark} />
                 </button>
 

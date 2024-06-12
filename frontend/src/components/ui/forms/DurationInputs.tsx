@@ -24,7 +24,7 @@ interface DurationInputsProps {
     /**
      * @param duration The new duration, in ms
      */
-    setDuration: (duration: number) => any;
+    setDuration: (duration: number) => void;
 }
 
 export default function DurationInputs({

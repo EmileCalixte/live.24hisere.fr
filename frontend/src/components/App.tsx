@@ -57,8 +57,8 @@ interface AppContext {
          */
         fetchLevel: number;
 
-        incrementFetchLevel: () => any;
-        decrementFetchLevel: () => any;
+        incrementFetchLevel: () => void;
+        decrementFetchLevel: () => void;
     };
 
     user: {
@@ -67,16 +67,16 @@ interface AppContext {
          */
         accessToken: string | null;
 
-        saveAccessToken: (accessToken: string) => any;
+        saveAccessToken: (accessToken: string) => void;
 
         /**
          * The user logged in. If undefined, user info was not fetched yet.
          */
         user: User | null | undefined;
 
-        setUser: (user: User | null | undefined) => any;
+        setUser: (user: User | null | undefined) => void;
 
-        logout: () => any;
+        logout: () => void;
     };
 }
 

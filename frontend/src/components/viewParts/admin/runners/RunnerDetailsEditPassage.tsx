@@ -7,8 +7,8 @@ import RunnerDetailsPassageForm from "./RunnerDetailsPassageForm";
 interface RunnerDetailsEditPassageProps {
     passage: AdminProcessedPassage;
     runnerRace: AdminRaceWithRunnerCount | null;
-    updatePassage: (passage: AdminProcessedPassage, time: Date) => any;
-    onClose: () => any;
+    updatePassage: (passage: AdminProcessedPassage, time: Date) => Promise<void>;
+    onClose: () => void;
 }
 
 export default function RunnerDetailsEditPassage({

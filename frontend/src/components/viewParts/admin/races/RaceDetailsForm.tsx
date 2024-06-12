@@ -5,19 +5,19 @@ import DurationInputs from "../../../ui/forms/DurationInputs";
 import { Input } from "../../../ui/forms/Input";
 
 interface RaceDetailsFormProps {
-    onSubmit: (e: React.FormEvent) => any;
+    onSubmit: (e: React.FormEvent) => Promise<void>;
     name: string;
-    setName: (name: string) => any;
+    setName: (name: string) => void;
     initialDistance: number | string;
-    setInitialDistance: (initialDistance: number | string) => any;
+    setInitialDistance: (initialDistance: number | string) => void;
     lapDistance: number | string;
-    setLapDistance: (lapDistance: number | string) => any;
+    setLapDistance: (lapDistance: number | string) => void;
     startTime: Date;
-    setStartTime: (startTime: Date) => any;
+    setStartTime: (startTime: Date) => void;
     duration: number;
-    setDuration: (duration: number) => any;
+    setDuration: (duration: number) => void;
     isPublic: boolean;
-    setIsPublic: (isPublic: boolean) => any;
+    setIsPublic: (isPublic: boolean) => void;
     submitButtonDisabled: boolean;
 }
 
@@ -71,13 +71,13 @@ export default function RaceDetailsForm({
     };
 
     return (
-        <form onSubmit={onSubmit}>
+        <form onSubmit={(e) => { void onSubmit(e); }}>
             <Input label="Nom"
                    maxLength={50}
                    required
                    name="name"
                    value={name}
-                   onChange={e => setName(e.target.value)}
+                   onChange={e => { setName(e.target.value); }}
             />
 
             <Input label="Distance avant premier passage (m)"
@@ -88,7 +88,7 @@ export default function RaceDetailsForm({
                    required
                    name="initial-distance"
                    value={initialDistance}
-                   onChange={e => setInitialDistance(e.target.value)}
+                   onChange={e => { setInitialDistance(e.target.value); }}
             />
 
             <Input label="Distance du tour (m)"
@@ -99,7 +99,7 @@ export default function RaceDetailsForm({
                    required
                    name="lap-distance"
                    value={lapDistance}
-                   onChange={e => setLapDistance(e.target.value)}
+                   onChange={e => { setLapDistance(e.target.value); }}
             />
 
             <div className="input-group mt-3">
@@ -132,7 +132,7 @@ export default function RaceDetailsForm({
             <Checkbox label="Visible par les utilisateurs"
                       checked={isPublic}
                       className="mt-3"
-                      onChange={e => setIsPublic(e.target.checked)}
+                      onChange={e => { setIsPublic(e.target.checked); }}
             />
 
             <button className="button mt-3"

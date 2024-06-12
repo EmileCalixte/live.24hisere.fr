@@ -4,7 +4,7 @@ import DurationInputs from "../../ui/forms/DurationInputs";
 interface RankingSettingsTimeProps {
     isVisible: boolean;
     currentRankingTime: number;
-    onRankingTimeSave: (time: number) => any;
+    onRankingTimeSave: (time: number) => void;
     maxRankingTime: number;
 }
 

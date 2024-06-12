@@ -6,7 +6,7 @@ import Select from "../../ui/forms/Select";
 
 interface RunnerSelectorProps {
     runners: Runner[] | undefined;
-    onSelectRunner: (e: React.ChangeEvent<HTMLSelectElement>) => any;
+    onSelectRunner: (e: React.ChangeEvent<HTMLSelectElement>) => void;
     selectedRunnerId: string | undefined;
 }
 

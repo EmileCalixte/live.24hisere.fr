@@ -2,7 +2,7 @@ import { appContext } from "../../App";
 import React, { useCallback, useContext, useEffect, useRef } from "react";
 
 interface AdminHeaderUserDropdownProps {
-    hideDropdown: () => any;
+    hideDropdown: () => void;
 }
 
 export default function AdminHeaderUserDropdown({ hideDropdown }: AdminHeaderUserDropdownProps): React.ReactElement {
