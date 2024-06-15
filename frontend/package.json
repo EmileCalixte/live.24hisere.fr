@@ -52,7 +52,7 @@
     "vitest": "^2.0.4"
   },
   "scripts": {
-    "start": "vite",
+    "dev": "vite",
     "build": "npx tsc && vite build",
     "test": "vitest",
     "lint": "npx eslint . --ext .ts,.tsx",
