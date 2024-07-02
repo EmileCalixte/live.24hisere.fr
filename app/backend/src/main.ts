@@ -21,7 +21,7 @@ async function bootstrap(): Promise<void> {
 
     useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
-    await app.listen(3000);
+    await app.listen(8000);
 }
 
 void bootstrap();

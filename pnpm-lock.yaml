@@ -47,6 +47,9 @@ importers:
       prettier:
         specifier: ^3.3.2
         version: 3.3.2
+      turbo:
+        specifier: ^2.0.6
+        version: 2.0.6
       typescript:
         specifier: ^5.4.5
         version: 5.5.3
@@ -89,6 +92,9 @@ importers:
       class-validator:
         specifier: ^0.14.1
         version: 0.14.1
+      cron:
+        specifier: ^3.1.7
+        version: 3.1.7
       nest-commander:
         specifier: ^3.13.0
         version: 3.14.0(@nestjs/common@10.3.10(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.3.10(@nestjs/common@10.3.10(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@10.3.10)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@types/inquirer@8.2.10)(typescript@5.5.3)
@@ -4438,6 +4444,40 @@ packages:
 
   tslib@2.6.3:
     resolution: {integrity: sha512-xNvxJEOUiWPGhUuUdQgAJPKOOJfGnIyKySOc09XkKsgdUV/3E2zvwZYdejjmRgPCgcym1juLH3226yA7sEFJKQ==}
+
+  turbo-darwin-64@2.0.6:
+    resolution: {integrity: sha512-XpgBwWj3Ggmz/gQVqXdMKXHC1iFPMDiuwugLwSzE7Ih0O13JuNtYZKhQnopvbDQnFQCeRq2Vsm5OTWabg/oB/g==}
+    cpu: [x64]
+    os: [darwin]
+
+  turbo-darwin-arm64@2.0.6:
+    resolution: {integrity: sha512-RfeZYXIAkiA21E8lsvfptGTqz/256YD+eI1x37fedfvnHFWuIMFZGAOwJxtZc6QasQunDZ9TRRREbJNI68tkIw==}
+    cpu: [arm64]
+    os: [darwin]
+
+  turbo-linux-64@2.0.6:
+    resolution: {integrity: sha512-92UDa0xNQQbx0HdSp9ag3YSS3xPdavhc7q9q9mxIAcqyjjD6VElA4Y85m4F/DDGE5SolCrvBz2sQhVmkOd6Caw==}
+    cpu: [x64]
+    os: [linux]
+
+  turbo-linux-arm64@2.0.6:
+    resolution: {integrity: sha512-eQKu6utCVUkIH2kqOzD8OS6E0ba6COjWm6PRDTNCHQRljZW503ycaTUIdMOiJrVg1MkEjDyOReUg8s8D18aJ4Q==}
+    cpu: [arm64]
+    os: [linux]
+
+  turbo-windows-64@2.0.6:
+    resolution: {integrity: sha512-+9u4EPrpoeHYCQ46dRcou9kbkSoelhOelHNcbs2d86D6ruYD/oIAHK9qgYK8LeARRz0jxhZIA/dWYdYsxJJWkw==}
+    cpu: [x64]
+    os: [win32]
+
+  turbo-windows-arm64@2.0.6:
+    resolution: {integrity: sha512-rdrKL+p+EjtdDVg0wQ/7yTbzkIYrnb0Pw4IKcjsy3M0RqUM9UcEi67b94XOAyTa5a0GqJL1+tUj2ebsFGPgZbg==}
+    cpu: [arm64]
+    os: [win32]
+
+  turbo@2.0.6:
+    resolution: {integrity: sha512-/Ftmxd5Mq//a9yMonvmwENNUN65jOVTwhhBPQjEtNZutYT9YKyzydFGLyVM1nzhpLWahQSMamRc/RDBv5EapzA==}
+    hasBin: true
 
   type-check@0.4.0:
     resolution: {integrity: sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew==}
@@ -9651,6 +9691,33 @@ snapshots:
       strip-bom: 3.0.0
 
   tslib@2.6.3: {}
+
+  turbo-darwin-64@2.0.6:
+    optional: true
+
+  turbo-darwin-arm64@2.0.6:
+    optional: true
+
+  turbo-linux-64@2.0.6:
+    optional: true
+
+  turbo-linux-arm64@2.0.6:
+    optional: true
+
+  turbo-windows-64@2.0.6:
+    optional: true
+
+  turbo-windows-arm64@2.0.6:
+    optional: true
+
+  turbo@2.0.6:
+    optionalDependencies:
+      turbo-darwin-64: 2.0.6
+      turbo-darwin-arm64: 2.0.6
+      turbo-linux-64: 2.0.6
+      turbo-linux-arm64: 2.0.6
+      turbo-windows-64: 2.0.6
+      turbo-windows-arm64: 2.0.6
 
   type-check@0.4.0:
     dependencies:
