@@ -172,13 +172,15 @@ export default function RunnerDetailsView(): React.ReactElement {
                                 </ul>
 
                                 <div className="card">
-                                    <div>
-                                        <p className="mt-3 mb-0"
-                                           style={{ fontWeight: "bold", color: "#db1616" }}
-                                        >
-                                            Coureur arrêté
-                                        </p>
-                                    </div>
+                                    {selectedRunner.stopped && (
+                                        <div>
+                                            <p className="mt-3 mb-0"
+                                               style={{ fontWeight: "bold", color: "#db1616" }}
+                                            >
+                                                Coureur arrêté
+                                            </p>
+                                        </div>
+                                    )}
 
                                     {(() => {
                                         switch (selectedTab) {
