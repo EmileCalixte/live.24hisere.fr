@@ -1,7 +1,6 @@
-import { type Runner } from "@prisma/client";
 import { type PublicRace } from "./Race";
 import { type AdminRunnerPassage, type PublicPassage } from "./Passage";
-import { type Passage, type Race } from "@prisma/client";
+import { type Passage, type Race, type Runner } from "@prisma/client";
 
 /**
  * Runner with additional data about his race
