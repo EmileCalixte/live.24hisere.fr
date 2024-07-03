@@ -8,32 +8,34 @@ Une application web de suivi en direct des performances des coureurs, réalisée
 
 ## Mise en route
 
-### Lancement des containers Docker
+### Installation des dépendances
 
 ```sh
-docker compose up
+pnpm install
 ```
 
-Les dépendances des applications backend et frontend sont installées automatiquement au lancement du docker-compose.
+### Lancement de l'environnement de développement
+
+```sh
+pnpm dev
+```
 
 ### Configuration
 
 #### Backend (API)
 
-Créez le fichier `backend/.env` à partir du modèle `backend/.env.default` et renseignez-y les paramètres relatifs à l'environnement d'exécution.
+Créez le fichier `apps/backend/.env` à partir du modèle `apps/backend/.env.default` et renseignez-y les paramètres relatifs à l'environnement d'exécution.
 
 #### Frontend
 
-Si besoin, créez un fichier `frontend/.env.development.local` à partir du fichier `frontend/.env.development` et renseignez-y les valeurs souhaitées.
+Si besoin, créez un fichier `apps/frontend/.env.development.local` à partir du fichier `apps/frontend/.env.development` et renseignez-y les valeurs souhaitées.
 
 ### Accès
 
-- Application frontend : [http://127.0.0.1](http://127.0.0.1)
+- Application frontend : [http://127.0.0.1:3000](http://127.0.0.1:3000)
 - API : [http://127.0.0.1:8000](http://127.0.0.1:8000)
 - Fichiers statiques : [http://127.0.0.1:8081](http://127.0.0.1:8081)
 - PHPMyAdmin : [http://127.0.0.1:8080](http://127.0.0.1:8080)
-
-> Si vous utilisez Docker Toolbox, changez l'adresse locale par celle de votre machine virtuelle
 
 ### Base de données
 
@@ -46,16 +48,16 @@ Identifiants du serveur MariaDB du container docker `database` :
 
 Un jeu de données est chargé automatiquement lors du lancement du docker-compose à partir du/des fichiers SQL contenus dans le répertoire `/sql`.
 
-La commande suivante permet de créer une migration et mettre à jour la structure de la base de données à partir de la structure de données définie dans `/backend-nest/prisma/schema.prisma` :
+La commande suivante permet de créer une migration et mettre à jour la structure de la base de données à partir de la structure de données définie dans `apps/backend/prisma/schema.prisma` :
 
 ```sh
-docker compose exec backend npx prisma migrate dev --name <nom migration>
+pnpm backend prisma migrate dev --name <nom migration>
 ```
 
-La commande suivante permet de générer le client Prisma à partir de la structure de données définie dans `/backend-nest/prisma/schema.prisma` :
+La commande suivante permet de générer le client Prisma à partir de la structure de données définie dans `apps/backend/prisma/schema.prisma` :
 
 ```sh
-docker compose exec backend npx prisma generate
+pnpm backend prisma generate
 ```
 
 ## Import des données
@@ -76,19 +78,13 @@ Un utilisateur est inclut dans les données chargées par défaut depuis le rép
 ### Créer un utilisateur
 
 ```sh
-node dist/cli.js create-user
-
-# Pour exécuter la commande avec l'environnement de développement Docker Compose :
-docker compose exec backend node dist/cli.js create-user
+pnpm backend create-user
 ```
 
 ### Modifier le mot de passe d'un utilisateur
 
 ```sh
-node dist/cli.js update-user-password
-
-# Pour exécuter la commande avec l'environnement de développement Docker Compose :
-docker compose exec backend node dist/cli.js update-user-password
+pnpm backend update-password
 ```
 
 ## Tests
@@ -100,7 +96,7 @@ TODO ;)
 ### Frontend
 
 ```sh
-docker compose exec frontend yarn test run
+pnpm frontend test run
 ```
 
 ## Installation en production

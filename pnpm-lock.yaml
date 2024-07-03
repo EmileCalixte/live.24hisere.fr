@@ -54,7 +54,7 @@ importers:
         specifier: ~5.5.2
         version: 5.5.3
 
-  app/backend:
+  apps/backend:
     dependencies:
       '@nestjs/axios':
         specifier: ^3.0.2
@@ -157,9 +157,9 @@ importers:
         specifier: ^5.4.5
         version: 5.5.3
 
-  app/docker: {}
+  apps/docker: {}
 
-  app/frontend:
+  apps/frontend:
     dependencies:
       '@fortawesome/fontawesome-common-types':
         specifier: ^6.5.1

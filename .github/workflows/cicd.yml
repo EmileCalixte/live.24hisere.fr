@@ -45,11 +45,11 @@ jobs:
 
       - name: Generate Prisma client
         run: npx prisma generate
-        working-directory: ./app/backend
+        working-directory: ./apps/backend
 
       - name: Run tests
         run: pnpm test run
-        working-directory: ./app/frontend
+        working-directory: ./apps/frontend
 #        run: |
 #          (cd frontend && yarn test run) &
 #          (cd backend && yarn test run) &
@@ -57,11 +57,11 @@ jobs:
 
       - name: Create frontend production builds
         run: pnpm build
-        working-directory: ./app/frontend
+        working-directory: ./apps/frontend
 
       - name: Create backend production builds
         run: pnpm build
-        working-directory: ./app/backend
+        working-directory: ./apps/backend
 
       - name: Clean files
         run: |
@@ -69,27 +69,27 @@ jobs:
           rm -rf .github
           rm -rf static
           rm -rf sql
-          rm -rf frontend/node_modules
-          rm -rf frontend/public
-          rm -rf frontend/scripts
-          rm -rf frontend/src
-          rm -f frontend/.env
-          rm -f frontend/.env.development
-          rm -f frontend/.eslintrc.js
-          rm -f frontend/.gitignore
-          rm -f frontend/index.html
-          rm -f frontend/package.json
-          rm -f frontend/tsconfig.json
-          rm -f frontend/vite.config.ts
-          rm -f frontend/vite-env.d.ts
-          rm -f frontend/yarn.lock
-          rm -rf backend/dist
-          rm -rf backend/node_modules
-          rm -rf backend/scripts
-          rm -rf backend/test
-          rm -f backend/.eslintrc.js
-          rm -f backend/.gitignore
-          rm -f backend/.prettierrc
+          rm -rf apps/frontend/node_modules
+          rm -rf apps/frontend/public
+          rm -rf apps/frontend/scripts
+          rm -rf apps/frontend/src
+          rm -f apps/frontend/.env
+          rm -f apps/frontend/.env.development
+          rm -f apps/frontend/.eslintrc.js
+          rm -f apps/frontend/.gitignore
+          rm -f apps/frontend/index.html
+          rm -f apps/frontend/package.json
+          rm -f apps/frontend/tsconfig.json
+          rm -f apps/frontend/vite.config.ts
+          rm -f apps/frontend/vite-env.d.ts
+          rm -f apps/frontend/yarn.lock
+          rm -rf apps/backend/dist
+          rm -rf apps/backend/node_modules
+          rm -rf apps/backend/scripts
+          rm -rf apps/backend/test
+          rm -f apps/backend/.eslintrc.js
+          rm -f apps/backend/.gitignore
+          rm -f apps/backend/.prettierrc
           rm -f .gitattributes
           rm -f .gitignore
           rm -f docker-compose.yml
