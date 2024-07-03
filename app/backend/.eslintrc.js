@@ -8,7 +8,7 @@ module.exports = {
     },
     extends: [
         "standard",
-        "standard-with-typescript",
+        "love",
     ],
     root: true,
     env: {

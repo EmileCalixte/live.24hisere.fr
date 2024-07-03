@@ -8,7 +8,7 @@ module.exports = {
     },
     extends: [
         "standard",
-        "standard-with-typescript",
+        "love",
         "plugin:react/recommended",
         "plugin:react-hooks/recommended",
     ],
@@ -24,7 +24,13 @@ module.exports = {
         "dist/**",
         "**/lib/**",
     ],
+    settings: {
+        react: {
+            version: "detect"
+        }
+    },
     rules: {
+        "no-undef": "off",
         "react/react-in-jsx-scope": "off",
         "react/no-unescaped-entities": "off",
         "react/prop-types": "off",
