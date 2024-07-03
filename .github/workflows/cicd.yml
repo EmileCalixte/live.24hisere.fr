@@ -67,12 +67,14 @@ jobs:
         run: |
           rm -rf .git
           rm -rf .github
+          rm -rf node_modules
           rm -rf static
           rm -rf sql
+          rm -rf apps/docker
           rm -rf apps/frontend/node_modules
           rm -rf apps/frontend/public
-          rm -rf apps/frontend/scripts
           rm -rf apps/frontend/src
+          rm -rf apps/frontend/test
           rm -f apps/frontend/.env
           rm -f apps/frontend/.env.development
           rm -f apps/frontend/.eslintrc.js
@@ -82,10 +84,8 @@ jobs:
           rm -f apps/frontend/tsconfig.json
           rm -f apps/frontend/vite.config.ts
           rm -f apps/frontend/vite-env.d.ts
-          rm -f apps/frontend/yarn.lock
           rm -rf apps/backend/dist
           rm -rf apps/backend/node_modules
-          rm -rf apps/backend/scripts
           rm -rf apps/backend/test
           rm -f apps/backend/.eslintrc.js
           rm -f apps/backend/.gitignore
@@ -93,7 +93,9 @@ jobs:
           rm -f .gitattributes
           rm -f .gitignore
           rm -f docker-compose.yml
+          rm -f prettier.config.js
           rm -f README.md
+          rm -f turbo.json
 
       - name: Create archive
         run: zip -r live.24hisere.fr.zip .
