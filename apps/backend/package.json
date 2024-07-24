@@ -10,7 +10,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "dev": "pnpm prisma generate && pnpm start:dev",
     "start": "nest start",
-    "start:dev": "NODE_ENV=development pnpm nest start --watch",
+    "start:dev": "pnpm nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,test}/**/*.ts\"",

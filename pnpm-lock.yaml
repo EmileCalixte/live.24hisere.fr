@@ -157,8 +157,6 @@ importers:
         specifier: ^5.4.5
         version: 5.5.3
 
-  apps/docker: {}
-
   apps/frontend:
     dependencies:
       '@fortawesome/fontawesome-common-types':
