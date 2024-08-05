@@ -28,7 +28,7 @@ jobs:
           curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
           apt-get install -y nodejs
 
-      - name: Enable corepack to use yarn
+      - name: Enable corepack to use pnpm
         run: corepack enable
 
       - name: Check out repository code

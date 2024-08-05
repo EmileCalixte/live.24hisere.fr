@@ -17,6 +17,7 @@ pnpm install
 ### Lancement de l'environnement de développement
 
 ```sh
+docker compose up -d
 pnpm dev
 ```
 
@@ -32,10 +33,10 @@ Si besoin, créez un fichier `apps/frontend/.env.development.local` à partir du
 
 ### Accès
 
-- Application frontend : [http://127.0.0.1:3000](http://127.0.0.1:3000)
-- API : [http://127.0.0.1:8000](http://127.0.0.1:8000)
-- Fichiers statiques : [http://127.0.0.1:8081](http://127.0.0.1:8081)
-- PHPMyAdmin : [http://127.0.0.1:8080](http://127.0.0.1:8080)
+- Application frontend : [http://localhost:3000](http://localhost:3000)
+- API : [http://localhost:8000](http://localhost:8000)
+- Fichiers statiques : [http://localhost:8081](http://localhost:8081)
+- PHPMyAdmin : [http://localhost:8080](http://localhost:8080)
 
 ### Base de données
 
@@ -101,6 +102,11 @@ pnpm frontend test run
 
 ## Installation en production
 
+TODO réécrire les instructions pour fonctionner avec PNPM
+
+<details>
+   <summary>Anciennes instructions (Yarn)</summary>
+
 1. Récupérer l'artifact du workflow GitHub, copier le fichier `live.24hisere.fr.zip` dans le dossier souhaité sur le serveur
 2. Dézipper l'archive
    ```bash
@@ -131,3 +137,4 @@ pnpm frontend test run
    ```bash
    pm2 start dist/main.js --name live.24hisere.fr-api
    ```
+</details>
