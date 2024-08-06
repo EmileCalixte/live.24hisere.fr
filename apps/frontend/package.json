@@ -46,10 +46,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "test": "vitest",
-    "lint": "eslint . --ext .ts,.tsx",
-    "lint-fix": "yarn run lint --fix",
-    "typecheck": "tsc --noEmit",
-    "codecheck": "yarn run typecheck && yarn run lint"
+    "typecheck": "tsc --noEmit"
   },
   "eslintConfig": {
     "extends": [

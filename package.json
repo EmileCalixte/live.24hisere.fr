@@ -10,12 +10,16 @@
   "scripts": {
     "backend": "pnpm --filter @live24hisere/backend",
     "frontend": "pnpm --filter @live24hisere/frontend",
-    "dev": "turbo run dev --parallel"
+    "dev": "turbo run dev --parallel",
+    "format": "prettier \"{apps,packages}/**/*.{js,ts,jsx,tsx,css}\" --write",
+    "lint-path": "eslint --ext ts,tsx --max-warnings=0",
+    "lint": "pnpm lint-path .",
+    "lint-fix": "pnpm lint --fix"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^7.14.1",
     "@typescript-eslint/parser": "^7.14.1",
-    "eslint": "^8.57.0",
+    "eslint": "^9.8.0",
     "eslint-config-love": "47.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-config-standard": "^17.1.0",
