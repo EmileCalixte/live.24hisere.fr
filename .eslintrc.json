@@ -90,7 +90,10 @@
 
         "@typescript-eslint/strict-boolean-expressions": "off",
 
+        "eqeqeq": ["error", "always"],
+
         "@typescript-eslint/ban-ts-comment": "off",
-        "@typescript-eslint/prefer-ts-expect-error": "off"
+        "@typescript-eslint/prefer-ts-expect-error": "off",
+        "@typescript-eslint/no-unsafe-argument": "off"
     }
 }
