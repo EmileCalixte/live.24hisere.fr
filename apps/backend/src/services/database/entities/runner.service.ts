@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaService } from "../prisma.service";
+import { type PrismaService } from "../prisma.service";
 import { type Prisma, type Runner } from "@prisma/client";
 import {
     type AdminRunnerWithPassages,
@@ -16,7 +16,7 @@ export class RunnerService {
     ) {}
 
     async getRunners(where: Prisma.RunnerWhereInput = {}): Promise<Runner[]> {
-        return this.prisma.runner.findMany({
+        return await this.prisma.runner.findMany({
             where,
             orderBy: {
                 id: "asc",
@@ -25,7 +25,7 @@ export class RunnerService {
     }
 
     async getRunner(where: Prisma.RunnerWhereUniqueInput): Promise<Runner | null> {
-        return this.prisma.runner.findUnique({
+        return await this.prisma.runner.findUnique({
             where,
         });
     }
@@ -49,7 +49,7 @@ export class RunnerService {
     }
 
     async getPublicRunners(): Promise<Runner[]> {
-        return this.prisma.runner.findMany({
+        return await this.prisma.runner.findMany({
             where: {
                 race: {
                     isPublic: true,
@@ -62,7 +62,7 @@ export class RunnerService {
     }
 
     async getPublicRunnersOfRace(raceId: number): Promise<PublicRunnerWithPassages[]> {
-        return this.prisma.runner.findMany({
+        return await this.prisma.runner.findMany({
             where: {
                 race: {
                     id: raceId,
@@ -110,7 +110,7 @@ export class RunnerService {
     }
 
     async createRunner(data: Prisma.RunnerCreateInput): Promise<Runner> {
-        return this.prisma.runner.create({ data });
+        return await this.prisma.runner.create({ data });
     }
 
     async createRunners(data: Prisma.RunnerCreateManyInput[]): Promise<number> {
@@ -120,14 +120,14 @@ export class RunnerService {
     async updateRunner(runner: Runner, data: Partial<Prisma.RunnerCreateInput & { id: number }>): Promise<Runner> {
         // If runner ID is not changed, we can directly update the runner
         if (!data.id || data.id === runner.id) {
-            return this.prisma.runner.update({
+            return await this.prisma.runner.update({
                 where: { id: runner.id },
                 data,
             });
         }
 
         // Else, we can't directly update the runner because we have to change runnerId of all runner's passages
-        return this.prisma.$transaction(async (tx) => {
+        return await this.prisma.$transaction(async (tx) => {
             // So first we create a new runner
             const newRunner = await tx.runner.create({
                 data: {
@@ -157,12 +157,12 @@ export class RunnerService {
     }
 
     async deleteRunner(where: Prisma.RunnerWhereUniqueInput): Promise<Runner> {
-        return this.prisma.$transaction(async (tx) => {
+        return await this.prisma.$transaction(async (tx) => {
             await tx.passage.deleteMany({
                 where: { runnerId: where.id },
             });
 
-            return tx.runner.delete({ where });
+            return await tx.runner.delete({ where });
         });
     }
 

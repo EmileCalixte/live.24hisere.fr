@@ -10,9 +10,9 @@ import {
     UseGuards,
 } from "@nestjs/common";
 import { RunnerDto } from "../../dtos/runner/runner.dto";
-import { UpdateRunnerDto } from "../../dtos/runner/updateRunner.dto";
+import { type UpdateRunnerDto } from "../../dtos/runner/updateRunner.dto";
 import { AuthGuard } from "../../guards/auth.guard";
-import { RunnerService } from "../../services/database/entities/runner.service";
+import { type RunnerService } from "../../services/database/entities/runner.service";
 import {
     type AdminRunnerWithPassagesResponse,
     type AdminRunnersResponse,
@@ -61,7 +61,7 @@ export class RunnersController {
 
     @Post("/admin/runners-bulk")
     async createRunnersBulk(@Body(new ParseArrayPipe({ items: RunnerDto })) runnerDtos: RunnerDto[]): Promise<CountResponse> {
-        await Promise.all(runnerDtos.map(async dto => this.ensureRunnerIdDoesNotExist(dto.id)));
+        await Promise.all(runnerDtos.map(async dto => { await this.ensureRunnerIdDoesNotExist(dto.id); }));
 
         const ids = new Set();
 

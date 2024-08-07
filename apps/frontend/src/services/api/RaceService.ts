@@ -12,31 +12,42 @@ import {
 import { performApiRequest, performAuthenticatedApiRequest } from "./ApiService";
 
 export async function getRaces(): Promise<ApiRequestResult<GetRacesApiRequest>> {
-    return performApiRequest<GetRacesApiRequest>("/races");
+    return await performApiRequest<GetRacesApiRequest>("/races");
 }
 
 export async function getRace(raceId: number | string): Promise<ApiRequestResult<GetRaceApiRequest>> {
-    return performApiRequest<GetRaceApiRequest>(`/races/${raceId}`);
+    return await performApiRequest<GetRaceApiRequest>(`/races/${raceId}`);
 }
 
 export async function getAdminRaces(accessToken: string): Promise<ApiRequestResult<GetAdminRacesApiRequest>> {
-    return performAuthenticatedApiRequest<GetAdminRacesApiRequest>("/admin/races", accessToken);
+    return await performAuthenticatedApiRequest<GetAdminRacesApiRequest>(
+        "/admin/races",
+        accessToken,
+    );
 }
 
 export async function getAdminRace(
     accessToken: string,
     raceId: number | string,
 ): Promise<ApiRequestResult<GetAdminRaceApiRequest>> {
-    return performAuthenticatedApiRequest<GetAdminRaceApiRequest>(`/admin/races/${raceId}`, accessToken);
+    return await performAuthenticatedApiRequest<GetAdminRaceApiRequest>(
+        `/admin/races/${raceId}`,
+        accessToken,
+    );
 }
 
 export async function postAdminRace(
     accessToken: string,
     race: PostAdminRaceApiRequest["payload"],
 ): Promise<ApiRequestResult<PostAdminRaceApiRequest>> {
-    return performAuthenticatedApiRequest<PostAdminRaceApiRequest>("/admin/races", accessToken, race, {
-        method: "POST",
-    });
+    return await performAuthenticatedApiRequest<PostAdminRaceApiRequest>(
+        "/admin/races",
+        accessToken,
+        race,
+        {
+            method: "POST",
+        },
+    );
 }
 
 export async function patchAdminRace(
@@ -44,7 +55,7 @@ export async function patchAdminRace(
     raceId: number | string,
     race: PatchAdminRaceApiRequest["payload"],
 ): Promise<ApiRequestResult<PatchAdminRaceApiRequest>> {
-    return performAuthenticatedApiRequest<PatchAdminRaceApiRequest>(
+    return await performAuthenticatedApiRequest<PatchAdminRaceApiRequest>(
         `/admin/races/${raceId}`,
         accessToken,
         race,
@@ -56,7 +67,7 @@ export async function deleteAdminRace(
     accessToken: string,
     raceId: number | string,
 ): Promise<ApiRequestResult<DeleteAdminRaceApiRequest>> {
-    return performAuthenticatedApiRequest<DeleteAdminRaceApiRequest>(
+    return await performAuthenticatedApiRequest<DeleteAdminRaceApiRequest>(
         `/admin/races/${raceId}`,
         accessToken,
         undefined,
@@ -68,7 +79,12 @@ export async function putAdminRaceOrder(
     accessToken: string,
     raceOrder: PutAdminRaceOrderApiRequest["payload"],
 ): Promise<ApiRequestResult<PutAdminRaceOrderApiRequest>> {
-    return performAuthenticatedApiRequest<PutAdminRaceOrderApiRequest>("/admin/races-order", accessToken, raceOrder, {
-        method: "PUT",
-    });
+    return await performAuthenticatedApiRequest<PutAdminRaceOrderApiRequest>(
+        "/admin/races-order",
+        accessToken,
+        raceOrder,
+        {
+            method: "PUT",
+        },
+    );
 }

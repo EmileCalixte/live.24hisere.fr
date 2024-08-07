@@ -55,7 +55,7 @@ export default function RankingView(): React.ReactElement {
             return;
         }
 
-        return async () => getRaceRunners(selectedRace.id);
+        return async () => await getRaceRunners(selectedRace.id);
     }, [selectedRace]);
 
     const runners = useIntervalApiRequest(fetchRunners).json?.runners;

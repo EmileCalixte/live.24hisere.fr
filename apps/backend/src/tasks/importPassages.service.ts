@@ -1,14 +1,14 @@
-import { MiscService } from "../services/database/entities/misc.service";
-import { RunnerService } from "../services/database/entities/runner.service";
-import { HttpService } from "@nestjs/axios";
+import { type MiscService } from "../services/database/entities/misc.service";
+import { type RunnerService } from "../services/database/entities/runner.service";
+import { type HttpService } from "@nestjs/axios";
 import { Injectable } from "@nestjs/common";
 import { type AxiosError } from "axios";
 import { catchError, firstValueFrom } from "rxjs";
 import { TaskService } from "./taskService";
-import { SchedulerRegistry } from "@nestjs/schedule";
-import { ConfigService } from "src/services/database/entities/config.service";
-import { PassageService } from "src/services/database/entities/passage.service";
-import { DagFileService } from "src/services/dagFile.service";
+import { type SchedulerRegistry } from "@nestjs/schedule";
+import { type ConfigService } from "src/services/database/entities/config.service";
+import { type PassageService } from "src/services/database/entities/passage.service";
+import { type DagFileService } from "src/services/dagFile.service";
 import { type DagFileLineData } from "src/types/Dag";
 
 @Injectable()
@@ -72,7 +72,7 @@ export class ImportPassagesService extends TaskService {
 
         const dagData = lines.map(line => this.dagFileService.getDataFromDagFileLine(line));
 
-        const results = await Promise.all(dagData.map(async data => this.importPassageFromDagLineData(data)));
+        const results = await Promise.all(dagData.map(async data => await this.importPassageFromDagLineData(data)));
 
         const importedPassageCount = results.filter(Boolean).length;
 

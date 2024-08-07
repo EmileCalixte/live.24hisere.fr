@@ -3,5 +3,8 @@ import { type GetAdminPassagesApiRequest } from "../../types/api/PassageApiReque
 import { performAuthenticatedApiRequest } from "./ApiService";
 
 export async function getAdminPassages(accessToken: string): Promise<ApiRequestResult<GetAdminPassagesApiRequest>> {
-    return performAuthenticatedApiRequest<GetAdminPassagesApiRequest>("/admin/passages", accessToken);
+    return await performAuthenticatedApiRequest<GetAdminPassagesApiRequest>(
+        "/admin/passages",
+        accessToken,
+    );
 }

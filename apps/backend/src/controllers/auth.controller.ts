@@ -1,9 +1,9 @@
 import { Body, Controller, Get, HttpCode, Post, UseGuards } from "@nestjs/common";
-import { AuthData, LoggedInUser } from "../decorators/loggedInUser.decorator";
-import { LoginDto } from "../dtos/auth/login.dto";
+import { type AuthData, LoggedInUser } from "../decorators/loggedInUser.decorator";
+import { type LoginDto } from "../dtos/auth/login.dto";
 import { AuthGuard } from "../guards/auth.guard";
-import { AuthService } from "../services/auth.service";
-import { AccessTokenService } from "../services/database/entities/accessToken.service";
+import { type AuthService } from "../services/auth.service";
+import { type AccessTokenService } from "../services/database/entities/accessToken.service";
 import { type CurrentUserInfoResponse, type LoginResponse } from "../types/responses/Auth";
 
 @Controller()

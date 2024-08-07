@@ -1,5 +1,5 @@
 import { BadRequestException, Controller, Get, NotFoundException, Param } from "@nestjs/common";
-import { RaceService } from "src/services/database/entities/race.service";
+import { type RaceService } from "src/services/database/entities/race.service";
 import { type RaceResponse, type RacesResponse } from "src/types/responses/Races";
 
 @Controller()

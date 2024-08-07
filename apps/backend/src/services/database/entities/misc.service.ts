@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaService } from "../prisma.service";
+import { type PrismaService } from "../prisma.service";
 import { type Misc, type Prisma } from "@prisma/client";
 import { isDateValid } from "src/utils/date.utils";
 import { type DateISOString } from "src/types/Date";
@@ -34,13 +34,13 @@ export class MiscService {
     }
 
     private async getLine(key: NonNullable<Prisma.MiscWhereUniqueInput["key"]>): Promise<Misc | null> {
-        return this.prisma.misc.findUnique({
+        return await this.prisma.misc.findUnique({
             where: { key },
         });
     }
 
     private async saveLine(key: NonNullable<Prisma.MiscWhereUniqueInput["key"]>, value: Misc["value"]): Promise<Misc> {
-        return this.prisma.misc.upsert({
+        return await this.prisma.misc.upsert({
             where: {
                 key,
             },

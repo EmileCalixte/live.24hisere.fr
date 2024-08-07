@@ -7,11 +7,14 @@ import {
 import { performApiRequest, performAuthenticatedApiRequest } from "./ApiService";
 
 export async function getCurrentUserInfo(accessToken: string): Promise<ApiRequestResult<GetCurrentUserInfoApiRequest>> {
-    return performAuthenticatedApiRequest("/auth/current-user-info", accessToken);
+    return await performAuthenticatedApiRequest(
+        "/auth/current-user-info",
+        accessToken,
+    );
 }
 
 export async function login(username: string, password: string): Promise<ApiRequestResult<LoginApiRequest>> {
-    return performApiRequest<LoginApiRequest>(
+    return await performApiRequest<LoginApiRequest>(
         "/auth/login",
         { username, password },
         { method: "POST" },
@@ -19,5 +22,10 @@ export async function login(username: string, password: string): Promise<ApiRequ
 }
 
 export async function logout(accessToken: string): Promise<ApiRequestResult<LogoutApiRequest>> {
-    return performAuthenticatedApiRequest("/auth/logout", accessToken, undefined, { method: "POST" });
+    return await performAuthenticatedApiRequest(
+        "/auth/logout",
+        accessToken,
+        undefined,
+        { method: "POST" },
+    );
 }

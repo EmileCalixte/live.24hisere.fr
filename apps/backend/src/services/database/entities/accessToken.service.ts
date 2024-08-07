@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { type AccessToken, type Prisma, type User } from "@prisma/client";
-import { HEXADECIMAL, RandomService } from "../../random.service";
-import { PrismaService } from "../prisma.service";
+import { HEXADECIMAL, type RandomService } from "../../random.service";
+import { type PrismaService } from "../prisma.service";
 
 export const ACCESS_TOKEN_LIFETIME = 4 * 60 * 60 * 1000;
 
@@ -13,13 +13,13 @@ export class AccessTokenService {
     ) {}
 
     async getAccessToken(accessTokenWhereUniqueInput: Prisma.AccessTokenWhereUniqueInput): Promise<AccessToken | null> {
-        return this.prisma.accessToken.findUnique({
+        return await this.prisma.accessToken.findUnique({
             where: accessTokenWhereUniqueInput,
         });
     }
 
     async createAccessToken(user: User): Promise<AccessToken> {
-        return this.prisma.accessToken.create({
+        return await this.prisma.accessToken.create({
             data: {
                 userId: user.id,
                 token: this.randomService.getRandomString(32, HEXADECIMAL),
@@ -29,7 +29,7 @@ export class AccessTokenService {
     }
 
     async deleteAccessToken(where: Prisma.AccessTokenWhereUniqueInput): Promise<AccessToken> {
-        return this.prisma.accessToken.delete({ where });
+        return await this.prisma.accessToken.delete({ where });
     }
 
     async deleteAccessTokens(where: Prisma.AccessTokenWhereInput): Promise<number> {

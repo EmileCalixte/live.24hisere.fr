@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Patch, UseGuards } from "@nestjs/common";
-import { UpdateDisabledAppDto } from "../../dtos/disabledApp/updateDisabledApp.dto";
-import { UpdatePassageImportSettingsDto } from "../../dtos/passageImport/updatePassageImportSettings.dto";
+import { type UpdateDisabledAppDto } from "../../dtos/disabledApp/updateDisabledApp.dto";
+import { type UpdatePassageImportSettingsDto } from "../../dtos/passageImport/updatePassageImportSettings.dto";
 import { AuthGuard } from "../../guards/auth.guard";
-import { ConfigService } from "../../services/database/entities/config.service";
+import { type ConfigService } from "../../services/database/entities/config.service";
 import { type AdminDisabledAppResponse, type AdminPassageImportSettingsResponse } from "../../types/responses/admin/Config";
 import { isDefined, isNullOrUndefined } from "../../utils/misc.utils";
 
@@ -15,7 +15,7 @@ export class ConfigController {
 
     @Get("/admin/disabled-app")
     async getDisabledApp(): Promise<AdminDisabledAppResponse> {
-        return this.getDisabledAppData();
+        return await this.getDisabledAppData();
     }
 
     @Patch("/admin/disabled-app")
@@ -32,12 +32,12 @@ export class ConfigController {
 
         await Promise.all(promises);
 
-        return this.getDisabledAppData();
+        return await this.getDisabledAppData();
     }
 
     @Get("/admin/passage-import")
     async getPassageImportSettings(): Promise<AdminPassageImportSettingsResponse> {
-        return this.getPassageImportSettingsData();
+        return await this.getPassageImportSettingsData();
     }
 
     @Patch("/admin/passage-import")
@@ -46,7 +46,7 @@ export class ConfigController {
             await this.configService.setImportDagFilePath(updatePassageImportSettingsDto.dagFileUrl);
         }
 
-        return this.getPassageImportSettingsData();
+        return await this.getPassageImportSettingsData();
     }
 
     private async getDisabledAppData(): Promise<AdminDisabledAppResponse> {

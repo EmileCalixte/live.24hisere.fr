@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { type ValidationArguments, ValidatorConstraint, type ValidatorConstraintInterface } from "class-validator";
-import { RaceService } from "../../../services/database/entities/race.service";
+import { type RaceService } from "src/services/database/entities/race.service";
 
 @Injectable()
 @ValidatorConstraint({ name: "RaceExists", async: true })

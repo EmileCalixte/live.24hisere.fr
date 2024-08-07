@@ -10,11 +10,11 @@ import {
     Post,
     UseGuards,
 } from "@nestjs/common";
-import { PassageDto } from "../../dtos/passage/passage.dto";
-import { UpdatePassageDto } from "../../dtos/passage/updatePassage.dto";
+import { type PassageDto } from "../../dtos/passage/passage.dto";
+import { type UpdatePassageDto } from "../../dtos/passage/updatePassage.dto";
 import { AuthGuard } from "../../guards/auth.guard";
-import { PassageService } from "../../services/database/entities/passage.service";
-import { RunnerService } from "../../services/database/entities/runner.service";
+import { type PassageService } from "../../services/database/entities/passage.service";
+import { type RunnerService } from "../../services/database/entities/runner.service";
 import { type AdminRunnerPassageResponse } from "../../types/responses/admin/RunnerPassage";
 import { excludeKeys } from "../../utils/misc.utils";
 

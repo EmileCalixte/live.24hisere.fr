@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { booleanToString, stringToBoolean } from "../../../utils/db.utils";
-import { PrismaService } from "../prisma.service";
+import { type PrismaService } from "../prisma.service";
 import { type Config, type Prisma } from "@prisma/client";
 
 const KEY_IMPORT_DAG_FILE_PATH = "import_dag_file_path";
@@ -51,13 +51,13 @@ export class ConfigService {
     }
 
     private async getLine(key: NonNullable<Prisma.ConfigWhereUniqueInput["key"]>): Promise<Config | null> {
-        return this.prisma.config.findUnique({
+        return await this.prisma.config.findUnique({
             where: { key },
         });
     }
 
     private async saveLine(key: NonNullable<Prisma.ConfigWhereUniqueInput["key"]>, value: Config["value"]): Promise<Config> {
-        return this.prisma.config.upsert({
+        return await this.prisma.config.upsert({
             where: {
                 key,
             },

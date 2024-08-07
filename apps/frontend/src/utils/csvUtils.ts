@@ -12,7 +12,7 @@ import { type RunnerFromCsv, type RunnersCsvMapping } from "../types/ImportCsv";
 import { isValidGender } from "./genderUtils";
 
 export async function parseCsv(file: File, config?: Papa.ParseLocalConfig): Promise<Papa.ParseResult<string[]>> {
-    return new Promise<Papa.ParseResult<string[]>>((resolve, reject) => {
+    return await new Promise<Papa.ParseResult<string[]>>((resolve, reject) => {
         Papa.parse<string[], File>(file, {
             ...config,
             complete(results) {

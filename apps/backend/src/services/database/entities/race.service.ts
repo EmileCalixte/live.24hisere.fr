@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaService } from "../prisma.service";
+import { type PrismaService } from "../prisma.service";
 import { excludeKeys } from "src/utils/misc.utils";
 import {
     type AdminRaceWithRunnerCount,
@@ -15,7 +15,7 @@ export class RaceService {
     ) {}
 
     async getRace(where: Prisma.RaceWhereUniqueInput): Promise<Race | null> {
-        return this.prisma.race.findUnique({ where });
+        return await this.prisma.race.findUnique({ where });
     }
 
     async getAdminRaces(): Promise<AdminRaceWithRunnerCount[]> {
@@ -65,7 +65,7 @@ export class RaceService {
     }
 
     async createRace(data: Prisma.RaceCreateInput): Promise<Race> {
-        return this.prisma.race.create({ data });
+        return await this.prisma.race.create({ data });
     }
 
     async updateRace(id: Race["id"], data: Prisma.RaceUpdateInput): Promise<AdminRaceWithRunnerCount> {
@@ -81,11 +81,11 @@ export class RaceService {
     }
 
     async deleteRace(where: Prisma.RaceWhereUniqueInput): Promise<Race> {
-        return this.prisma.race.delete({ where });
+        return await this.prisma.race.delete({ where });
     }
 
     private async getRacesWithRunners(where: Prisma.RaceWhereInput = {}): Promise<RaceAndRunners[]> {
-        return this.prisma.race.findMany({
+        return await this.prisma.race.findMany({
             where,
             include: {
                 runners: true,
@@ -97,7 +97,7 @@ export class RaceService {
     }
 
     private async getRaceWithRunners(where: Prisma.RaceWhereUniqueInput): Promise<RaceAndRunners | null> {
-        return this.prisma.race.findUnique({
+        return await this.prisma.race.findUnique({
             where,
             include: {
                 runners: true,

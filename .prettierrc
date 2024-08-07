@@ -1,13 +1,5 @@
 {
     "semi": true,
     "singleQuote": false,
-    "tabWidth": 4,
-    "overrides": [
-        {
-            "files": ["*.jsx", "*.tsx"],
-            "options": {
-                "tabWidth": 2
-            }
-        }
-    ]
+    "tabWidth": 4
 }

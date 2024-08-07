@@ -21,7 +21,7 @@ export async function getResponseJson<T = unknown>(response: Response): Promise<
         return undefined;
     }
 
-    return response.json();
+    return await response.json();
 }
 
 /**

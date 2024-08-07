@@ -3,5 +3,5 @@ import { type GetAppDataApiRequest } from "../../types/api/AppDataApiRequests";
 import { performApiRequest } from "./ApiService";
 
 export async function getAppData(): Promise<ApiRequestResult<GetAppDataApiRequest>> {
-    return performApiRequest<GetAppDataApiRequest>("/app-data");
+    return await performApiRequest<GetAppDataApiRequest>("/app-data");
 }

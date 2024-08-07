@@ -60,7 +60,7 @@ export default function RunnerDetailsView(): React.ReactElement {
             return;
         }
 
-        return async () => getRace(raceId);
+        return async () => await getRace(raceId);
     }, [raceId]);
 
     const race = useIntervalApiRequest(fetchRace).json?.race;
@@ -70,7 +70,7 @@ export default function RunnerDetailsView(): React.ReactElement {
             return;
         }
 
-        return async () => getRaceRunners(raceId);
+        return async () => await getRaceRunners(raceId);
     }, [raceId]);
 
     const raceRunners = useIntervalApiRequest(fetchRaceRunners).json?.runners;
