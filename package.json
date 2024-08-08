@@ -14,7 +14,8 @@
     "format": "prettier \"{apps,packages}/**/*.{js,ts,jsx,tsx,css}\" --write",
     "lint-path": "eslint --ext ts,tsx --max-warnings=0",
     "lint": "pnpm lint-path .",
-    "lint-fix": "pnpm lint --fix"
+    "lint-fix": "pnpm lint --fix",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
@@ -29,6 +30,7 @@
     "eslint-plugin-promise": "^6.6.0",
     "eslint-plugin-react": "^7.35.0",
     "eslint-plugin-react-hooks": "^4.6.2",
+    "husky": "^9.1.4",
     "prettier": "^3.3.3",
     "turbo": "^2.0.12",
     "typescript": "~5.5.4"
