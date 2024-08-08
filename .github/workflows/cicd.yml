@@ -28,79 +28,71 @@ jobs:
           curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
           apt-get install -y nodejs
 
-      - name: Enable corepack to use yarn
+      - name: Enable corepack to use pnpm
         run: corepack enable
 
       - name: Check out repository code
         uses: actions/checkout@v4
 
-      - name: Install JS frontend dependencies
-        run: yarn
-        working-directory: ./frontend
-
-      - name: Install JS backend dependencies
-        run: yarn
-        working-directory: ./backend
-
-      - name: Run ESLint on frontend
-        run: yarn run lint
-        working-directory: ./frontend
-
-      - name: Run ESLint on backend
-        run: yarn run lint
-        working-directory: ./backend
+      - name: Install JS dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Generate Prisma client
-        run: npx prisma generate
-        working-directory: ./backend
+        run: pnpm prisma generate
+        working-directory: ./apps/backend
+
+      - name: Run ESLint
+        run: pnpm lint
 
       - name: Run tests
-        run: yarn test run
-        working-directory: ./frontend
+        run: pnpm test run
+        working-directory: ./apps/frontend
 #        run: |
 #          (cd frontend && yarn test run) &
 #          (cd backend && yarn test run) &
 #          wait
 
       - name: Create frontend production builds
-        run: yarn run build
-        working-directory: ./frontend
+        run: pnpm build
+        working-directory: ./apps/frontend
 
       - name: Create backend production builds
-        run: yarn run build
-        working-directory: ./backend
+        run: pnpm build
+        working-directory: ./apps/backend
 
       - name: Clean files
         run: |
           rm -rf .git
           rm -rf .github
+          rm -rf node_modules
           rm -rf static
           rm -rf sql
-          rm -rf frontend/node_modules
-          rm -rf frontend/public
-          rm -rf frontend/scripts
-          rm -rf frontend/src
-          rm -f frontend/.env
-          rm -f frontend/.env.development
-          rm -f frontend/.eslintrc.js
-          rm -f frontend/.gitignore
-          rm -f frontend/index.html
-          rm -f frontend/package.json
-          rm -f frontend/tsconfig.json
-          rm -f frontend/vite.config.ts
-          rm -f frontend/vite-env.d.ts
-          rm -f frontend/yarn.lock
-          rm -rf backend/dist
-          rm -rf backend/node_modules
-          rm -rf backend/scripts
-          rm -rf backend/test
-          rm -f backend/.eslintrc.js
-          rm -f backend/.gitignore
-          rm -f backend/.prettierrc
+          rm -rf apps/docker
+          rm -rf apps/frontend/node_modules
+          rm -rf apps/frontend/public
+          rm -rf apps/frontend/src
+          rm -rf apps/frontend/test
+          rm -f apps/frontend/.env
+          rm -f apps/frontend/.env.development
+          rm -f apps/frontend/.eslintrc.js
+          rm -f apps/frontend/.gitignore
+          rm -f apps/frontend/index.html
+          rm -f apps/frontend/package.json
+          rm -f apps/frontend/tsconfig.json
+          rm -f apps/frontend/vite.config.ts
+          rm -f apps/frontend/vite-env.d.ts
+          rm -rf apps/backend/dist
+          rm -rf apps/backend/node_modules
+          rm -rf apps/backend/test
+          rm -f apps/backend/.eslintrc.js
+          rm -f apps/backend/.gitignore
+          rm -f apps/backend/.prettierrc
           rm -f .gitattributes
           rm -f .gitignore
           rm -f docker-compose.yml
+          rm -f prettier.config.js
           rm -f README.md
+          rm -f turbo.json
 
       - name: Create archive
         run: zip -r live.24hisere.fr.zip .

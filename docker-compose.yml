@@ -1,18 +1,4 @@
 services:
-  backend:
-    image: node:20
-    restart: always
-    working_dir: /home/node/app
-    environment:
-      - NODE_ENV=development
-    volumes:
-      - ./backend:/home/node/app
-    depends_on:
-      - database
-    ports:
-      - "8000:3000"
-    command: sh -c "./scripts/start.sh"
-
   database:
     image: mariadb:10.6.14
     restart: always
@@ -23,18 +9,8 @@ services:
       MYSQL_USER: admin
       MYSQL_PASSWORD: admin
       MYSQL_DATABASE: live
-
-  frontend:
-    image: node:20
-    restart: always
-    working_dir: /home/node/app
-    environment:
-      - NODE_ENV=development
-    volumes:
-      - ./frontend:/home/node/app
     ports:
-      - "80:80"
-    command: sh -c "./scripts/start.sh"
+      - "3306:3306"
 
   static:
     image: halverneus/static-file-server
