@@ -10,7 +10,8 @@ export interface ApiRequestResult<T extends ApiRequest> {
     json: T["response"] | undefined;
 }
 
-export interface ApiRequestResultOk<T extends ApiRequest> extends ApiRequestResult<T> {
+export interface ApiRequestResultOk<T extends ApiRequest>
+    extends ApiRequestResult<T> {
     isOk: true;
     json: T["response"];
 }

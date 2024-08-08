@@ -24,7 +24,9 @@ export default function RankingTable({
     tableRaceDuration,
 }: RankingTableProps): React.ReactElement {
     const getRankingTableRow = (rankingRunner: RankingRunner): ReactNode => {
-        const runnerCategory = getCategoryCodeFromBirthYear(rankingRunner.birthYear);
+        const runnerCategory = getCategoryCodeFromBirthYear(
+            rankingRunner.birthYear,
+        );
 
         if (tableCategory !== null) {
             if (tableCategory !== runnerCategory) {
@@ -33,17 +35,20 @@ export default function RankingTable({
         }
 
         if (tableGender !== GENDER_MIXED) {
-            if (tableGender.toUpperCase() !== rankingRunner.gender.toUpperCase()) {
+            if (
+                tableGender.toUpperCase() !== rankingRunner.gender.toUpperCase()
+            ) {
                 return null;
             }
         }
 
         return (
-            <RankingTableRow key={rankingRunner.id}
-                             race={race}
-                             runner={rankingRunner}
-                             tableCategory={tableCategory}
-                             tableGender={tableGender}
+            <RankingTableRow
+                key={rankingRunner.id}
+                race={race}
+                runner={rankingRunner}
+                tableCategory={tableCategory}
+                tableGender={tableGender}
             />
         );
     };
@@ -71,9 +76,7 @@ export default function RankingTable({
                     <th className="hide-on-print">Détails</th>
                 </tr>
             </thead>
-            <tbody>
-                {ranking.map((runner) => getRankingTableRow(runner))}
-            </tbody>
+            <tbody>{ranking.map((runner) => getRankingTableRow(runner))}</tbody>
         </table>
     );
 }

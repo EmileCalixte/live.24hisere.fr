@@ -1,30 +1,50 @@
 import { describe, expect, it } from "vitest";
-import { capitalizeWords, harmonizeName, isValidUrl } from "../../src/utils/stringUtils";
+import {
+    capitalizeWords,
+    harmonizeName,
+    isValidUrl,
+} from "../../src/utils/stringUtils";
 
 describe("Capitalize words", () => {
     it("should capitalize a simple sentence", () => {
-        expect(capitalizeWords("Lorem ipsum dolor sit amet, consectetur adipiscing elit."))
-            .toEqual("Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit.");
+        expect(
+            capitalizeWords(
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+            ),
+        ).toEqual("Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit.");
     });
 
     it("should capitalize an uppercase sentence", () => {
-        expect(capitalizeWords("LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT."))
-            .toEqual("Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit.");
+        expect(
+            capitalizeWords(
+                "LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT.",
+            ),
+        ).toEqual("Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit.");
     });
 
     it("should capitalize an sentence with custom separator", () => {
-        expect(capitalizeWords("lorem.ipsum.dolor.sit.amet, consectetur.adipiscing.elit.", ["."]))
-            .toEqual("Lorem.Ipsum.Dolor.Sit.Amet, consectetur.Adipiscing.Elit.");
+        expect(
+            capitalizeWords(
+                "lorem.ipsum.dolor.sit.amet, consectetur.adipiscing.elit.",
+                ["."],
+            ),
+        ).toEqual("Lorem.Ipsum.Dolor.Sit.Amet, consectetur.Adipiscing.Elit.");
 
-        expect(capitalizeWords("lorem.ipsum-dolor.sit-amet, consectetur.adipiscing-elit.", [".", "-"]))
-            .toEqual("Lorem.Ipsum-Dolor.Sit-Amet, consectetur.Adipiscing-Elit.");
+        expect(
+            capitalizeWords(
+                "lorem.ipsum-dolor.sit-amet, consectetur.adipiscing-elit.",
+                [".", "-"],
+            ),
+        ).toEqual("Lorem.Ipsum-Dolor.Sit-Amet, consectetur.Adipiscing-Elit.");
     });
 });
 
 describe("Harmonize name", () => {
     it("should harmonize names", () => {
         expect(harmonizeName("john doe")).toEqual("John Doe");
-        expect(harmonizeName("jean-michel  martin")).toEqual("Jean-Michel Martin");
+        expect(harmonizeName("jean-michel  martin")).toEqual(
+            "Jean-Michel Martin",
+        );
     });
 });
 

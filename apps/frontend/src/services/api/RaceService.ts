@@ -9,17 +9,26 @@ import {
     type PostAdminRaceApiRequest,
     type PutAdminRaceOrderApiRequest,
 } from "../../types/api/RaceApiRequests";
-import { performApiRequest, performAuthenticatedApiRequest } from "./ApiService";
+import {
+    performApiRequest,
+    performAuthenticatedApiRequest,
+} from "./ApiService";
 
-export async function getRaces(): Promise<ApiRequestResult<GetRacesApiRequest>> {
+export async function getRaces(): Promise<
+    ApiRequestResult<GetRacesApiRequest>
+> {
     return await performApiRequest<GetRacesApiRequest>("/races");
 }
 
-export async function getRace(raceId: number | string): Promise<ApiRequestResult<GetRaceApiRequest>> {
+export async function getRace(
+    raceId: number | string,
+): Promise<ApiRequestResult<GetRaceApiRequest>> {
     return await performApiRequest<GetRaceApiRequest>(`/races/${raceId}`);
 }
 
-export async function getAdminRaces(accessToken: string): Promise<ApiRequestResult<GetAdminRacesApiRequest>> {
+export async function getAdminRaces(
+    accessToken: string,
+): Promise<ApiRequestResult<GetAdminRacesApiRequest>> {
     return await performAuthenticatedApiRequest<GetAdminRacesApiRequest>(
         "/admin/races",
         accessToken,

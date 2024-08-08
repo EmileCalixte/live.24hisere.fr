@@ -23,44 +23,52 @@ export default function ResponsiveRankingTable({
     tableGender,
     tableRaceDuration,
 }: ResponsiveRankingTableProps): React.ReactElement {
-    const getRankingTableRow = useCallback((rankingRunner: RankingRunner) => {
-        const runnerCategory = getCategoryCodeFromBirthYear(rankingRunner.birthYear);
+    const getRankingTableRow = useCallback(
+        (rankingRunner: RankingRunner) => {
+            const runnerCategory = getCategoryCodeFromBirthYear(
+                rankingRunner.birthYear,
+            );
 
-        if (tableCategory !== null) {
-            if (tableCategory !== runnerCategory) {
-                return null;
+            if (tableCategory !== null) {
+                if (tableCategory !== runnerCategory) {
+                    return null;
+                }
             }
-        }
 
-        if (tableGender !== GENDER_MIXED) {
-            if (tableGender.toUpperCase() !== rankingRunner.gender.toUpperCase()) {
-                return null;
+            if (tableGender !== GENDER_MIXED) {
+                if (
+                    tableGender.toUpperCase() !==
+                    rankingRunner.gender.toUpperCase()
+                ) {
+                    return null;
+                }
             }
-        }
 
-        return (
-            <ResponsiveRankingTableRow key={rankingRunner.id}
-                                       runner={rankingRunner}
-                                       tableCategory={tableCategory}
-                                       tableGender={tableGender}
-            />
-        );
-    }, [tableCategory, tableGender]);
+            return (
+                <ResponsiveRankingTableRow
+                    key={rankingRunner.id}
+                    runner={rankingRunner}
+                    tableCategory={tableCategory}
+                    tableGender={tableGender}
+                />
+            );
+        },
+        [tableCategory, tableGender],
+    );
 
     return (
         <table id="ranking-table" className="table responsive-ranking-table">
             <thead>
                 <tr>
-                    <RankingTableInfoHeader race={race}
-                                            tableCategory={tableCategory}
-                                            tableGender={tableGender}
-                                            tableRaceDuration={tableRaceDuration}
+                    <RankingTableInfoHeader
+                        race={race}
+                        tableCategory={tableCategory}
+                        tableGender={tableGender}
+                        tableRaceDuration={tableRaceDuration}
                     />
                 </tr>
             </thead>
-            <tbody>
-                {ranking.map(runner => getRankingTableRow(runner))}
-            </tbody>
+            <tbody>{ranking.map((runner) => getRankingTableRow(runner))}</tbody>
         </table>
     );
 }

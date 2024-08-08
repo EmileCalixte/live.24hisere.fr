@@ -11,7 +11,10 @@ import {
 import { type RunnerFromCsv, type RunnersCsvMapping } from "../types/ImportCsv";
 import { isValidGender } from "./genderUtils";
 
-export async function parseCsv(file: File, config?: Papa.ParseLocalConfig): Promise<Papa.ParseResult<string[]>> {
+export async function parseCsv(
+    file: File,
+    config?: Papa.ParseLocalConfig,
+): Promise<Papa.ParseResult<string[]>> {
     return await new Promise<Papa.ParseResult<string[]>>((resolve, reject) => {
         Papa.parse<string[], File>(file, {
             ...config,
@@ -25,12 +28,30 @@ export async function parseCsv(file: File, config?: Papa.ParseLocalConfig): Prom
     });
 }
 
-export function getRunnerFromCsv(csvRow: string[], mapping: RunnersCsvMapping): Partial<RunnerFromCsv> {
-    let id: number | string | undefined = mapping[ImportCsvColumn.ID] !== null ? csvRow[mapping[ImportCsvColumn.ID]]?.trim() : undefined;
-    const firstname = mapping[ImportCsvColumn.FIRSTNAME] !== null ? csvRow[mapping[ImportCsvColumn.FIRSTNAME]]?.trim() : undefined;
-    const lastname = mapping[ImportCsvColumn.LASTNAME] !== null ? csvRow[mapping[ImportCsvColumn.LASTNAME]]?.trim() : undefined;
-    let birthYear = mapping[ImportCsvColumn.BIRTH_YEAR] !== null ? csvRow[mapping[ImportCsvColumn.BIRTH_YEAR]]?.trim() : undefined;
-    let gender = mapping[ImportCsvColumn.GENDER] !== null ? csvRow[mapping[ImportCsvColumn.GENDER]]?.trim() : undefined;
+export function getRunnerFromCsv(
+    csvRow: string[],
+    mapping: RunnersCsvMapping,
+): Partial<RunnerFromCsv> {
+    let id: number | string | undefined =
+        mapping[ImportCsvColumn.ID] !== null
+            ? csvRow[mapping[ImportCsvColumn.ID]]?.trim()
+            : undefined;
+    const firstname =
+        mapping[ImportCsvColumn.FIRSTNAME] !== null
+            ? csvRow[mapping[ImportCsvColumn.FIRSTNAME]]?.trim()
+            : undefined;
+    const lastname =
+        mapping[ImportCsvColumn.LASTNAME] !== null
+            ? csvRow[mapping[ImportCsvColumn.LASTNAME]]?.trim()
+            : undefined;
+    let birthYear =
+        mapping[ImportCsvColumn.BIRTH_YEAR] !== null
+            ? csvRow[mapping[ImportCsvColumn.BIRTH_YEAR]]?.trim()
+            : undefined;
+    let gender =
+        mapping[ImportCsvColumn.GENDER] !== null
+            ? csvRow[mapping[ImportCsvColumn.GENDER]]?.trim()
+            : undefined;
 
     if (id?.match(NUMERIC_REGEX)) {
         id = parseInt(id);

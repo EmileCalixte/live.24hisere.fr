@@ -1,15 +1,16 @@
 import React, { useContext, useState } from "react";
 import { Col, Row } from "react-bootstrap";
+import { Navigate } from "react-router-dom";
 import { login } from "../../services/api/AuthService";
+import ToastService from "../../services/ToastService";
 import { isApiRequestResultOk } from "../../utils/apiUtils";
 import { appContext } from "../App";
-import { Navigate } from "react-router-dom";
-import ToastService from "../../services/ToastService";
 import { Input } from "../ui/forms/Input";
 import Page from "../ui/Page";
 
 export default function LoginView(): React.ReactElement {
-    const { accessToken, saveAccessToken, setUser } = useContext(appContext).user;
+    const { accessToken, saveAccessToken, setUser } =
+        useContext(appContext).user;
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -40,9 +41,7 @@ export default function LoginView(): React.ReactElement {
     };
 
     if (loggedIn) {
-        return (
-            <Navigate to="/admin" replace={true} />
-        );
+        return <Navigate to="/admin" replace={true} />;
     }
 
     return (
@@ -50,27 +49,38 @@ export default function LoginView(): React.ReactElement {
             <Row>
                 <Col xl={3} lg={4} md={6} sm={12}>
                     <h1>Connexion</h1>
-                    <form onSubmit={e => { void onSubmit(e); }}>
-                        <Input label="Nom d'utilisateur"
-                               name="username"
-                               value={username}
-                               autoFocus
-                               autoComplete="username"
-                               onChange={e => { setUsername(e.target.value); }}
+                    <form
+                        onSubmit={(e) => {
+                            void onSubmit(e);
+                        }}
+                    >
+                        <Input
+                            label="Nom d'utilisateur"
+                            name="username"
+                            value={username}
+                            autoFocus
+                            autoComplete="username"
+                            onChange={(e) => {
+                                setUsername(e.target.value);
+                            }}
                         />
 
-                        <Input label="Mot de passe"
-                               className="mt-3"
-                               type="password"
-                               name="password"
-                               value={password}
-                               autoComplete="current-password"
-                               onChange={e => { setPassword(e.target.value); }}
+                        <Input
+                            label="Mot de passe"
+                            className="mt-3"
+                            type="password"
+                            name="password"
+                            value={password}
+                            autoComplete="current-password"
+                            onChange={(e) => {
+                                setPassword(e.target.value);
+                            }}
                         />
 
-                        <button className="button mt-3"
-                                type="submit"
-                                disabled={submitButtonDisabled}
+                        <button
+                            className="button mt-3"
+                            type="submit"
+                            disabled={submitButtonDisabled}
                         >
                             Connexion
                         </button>

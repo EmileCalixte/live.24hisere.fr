@@ -1,28 +1,38 @@
+import React, {
+    useCallback,
+    useContext,
+    useEffect,
+    useMemo,
+    useState,
+} from "react";
 import { Col, Row } from "react-bootstrap";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Gender } from "../../../../constants/gender";
 import { getAdminRaces } from "../../../../services/api/RaceService";
 import {
     deleteAdminRunner,
     deleteAdminRunnerPassage,
-    getAdminRunner, patchAdminRunner,
+    getAdminRunner,
+    patchAdminRunner,
     patchAdminRunnerPassage,
     postAdminRunnerPassage,
 } from "../../../../services/api/RunnerService";
+import ToastService from "../../../../services/ToastService";
 import { type AdminProcessedPassage } from "../../../../types/Passage";
 import { type AdminRaceWithRunnerCount } from "../../../../types/Race";
-import { type RunnerWithAdminProcessedPassages, type RunnerWithRace } from "../../../../types/Runner";
+import {
+    type RunnerWithAdminProcessedPassages,
+    type RunnerWithRace,
+} from "../../../../types/Runner";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { getProcessedPassagesFromPassages } from "../../../../utils/passageUtils";
 import { formatDateAsString, formatDateForApi } from "../../../../utils/utils";
+import { appContext } from "../../../App";
 import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../ui/breadcrumbs/Crumb";
-import Page from "../../../ui/Page";
 import CircularLoader from "../../../ui/CircularLoader";
-import { appContext } from "../../../App";
+import Page from "../../../ui/Page";
 import RunnerDetailsForm from "../../../viewParts/admin/runners/RunnerDetailsForm";
-import ToastService from "../../../../services/ToastService";
 import RunnerDetailsPassages from "../../../viewParts/admin/runners/RunnerDetailsPassages";
 
 export default function RunnerDetailsAdminView(): React.ReactElement {
@@ -32,9 +42,13 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
 
     const { runnerId: urlRunnerId } = useParams();
 
-    const [races, setRaces] = useState<AdminRaceWithRunnerCount[] | false>(false);
+    const [races, setRaces] = useState<AdminRaceWithRunnerCount[] | false>(
+        false,
+    );
 
-    const [runner, setRunner] = useState<RunnerWithRace & RunnerWithAdminProcessedPassages | undefined | null>(undefined);
+    const [runner, setRunner] = useState<
+        (RunnerWithRace & RunnerWithAdminProcessedPassages) | undefined | null
+    >(undefined);
 
     const [runnerId, setRunnerId] = useState(0);
     const [runnerFirstname, setRunnerFirstname] = useState("");
@@ -51,7 +65,7 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
             return null;
         }
 
-        const race = races.find(race => race.id === runner.raceId);
+        const race = races.find((race) => race.id === runner.raceId);
 
         if (!race) {
             return null;
@@ -74,7 +88,16 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
             runnerStopped === runner.stopped,
             runnerRaceId === runner.raceId,
         ].includes(false);
-    }, [runner, runnerId, runnerFirstname, runnerLastname, runnerGender, runnerBirthYear, runnerStopped, runnerRaceId]);
+    }, [
+        runner,
+        runnerId,
+        runnerFirstname,
+        runnerLastname,
+        runnerGender,
+        runnerBirthYear,
+        runnerStopped,
+        runnerRaceId,
+    ]);
 
     const fetchRaces = useCallback(async () => {
         if (!accessToken) {
@@ -84,7 +107,9 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
         const result = await getAdminRaces(accessToken);
 
         if (!isApiRequestResultOk(result)) {
-            ToastService.getToastr().error("Impossible de récupérer la liste des courses");
+            ToastService.getToastr().error(
+                "Impossible de récupérer la liste des courses",
+            );
             return;
         }
 
@@ -99,14 +124,16 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
         const result = await getAdminRunner(accessToken, urlRunnerId);
 
         if (!isApiRequestResultOk(result)) {
-            ToastService.getToastr().error("Impossible de récupérer les détails du coureur");
+            ToastService.getToastr().error(
+                "Impossible de récupérer les détails du coureur",
+            );
             setRunner(null);
             return;
         }
 
         const runner = result.json.runner;
 
-        const race = races.find(race => race.id === runner.raceId);
+        const race = races.find((race) => race.id === runner.raceId);
 
         if (!race) {
             throw new Error("Runner race not found");
@@ -127,98 +154,135 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
         setRunnerRaceId(runner.raceId);
     }, [accessToken, urlRunnerId, races]);
 
-    const updatePassageVisiblity = useCallback(async (passage: AdminProcessedPassage, hidden: boolean) => {
-        if (!runner || !accessToken) {
-            return;
-        }
+    const updatePassageVisiblity = useCallback(
+        async (passage: AdminProcessedPassage, hidden: boolean) => {
+            if (!runner || !accessToken) {
+                return;
+            }
 
-        let confirmMessage: string;
+            let confirmMessage: string;
 
-        if (hidden) {
-            confirmMessage = `Êtes vous sûr de vouloir masquer le passage n°${passage.id} (${formatDateAsString(passage.processed.lapEndTime)}) ?`;
-        } else {
-            confirmMessage = `Êtes vous sûr de vouloir rendre public le passage n°${passage.id} (${formatDateAsString(passage.processed.lapEndTime)}) ?`;
-        }
+            if (hidden) {
+                confirmMessage = `Êtes vous sûr de vouloir masquer le passage n°${passage.id} (${formatDateAsString(passage.processed.lapEndTime)}) ?`;
+            } else {
+                confirmMessage = `Êtes vous sûr de vouloir rendre public le passage n°${passage.id} (${formatDateAsString(passage.processed.lapEndTime)}) ?`;
+            }
 
-        if (!window.confirm(confirmMessage)) {
-            return;
-        }
+            if (!window.confirm(confirmMessage)) {
+                return;
+            }
 
-        const result = await patchAdminRunnerPassage(accessToken, runner.id, passage.id, { isHidden: hidden });
+            const result = await patchAdminRunnerPassage(
+                accessToken,
+                runner.id,
+                passage.id,
+                { isHidden: hidden },
+            );
 
-        if (!isApiRequestResultOk(result)) {
-            ToastService.getToastr().error("Une erreur est survenue");
-            return;
-        }
+            if (!isApiRequestResultOk(result)) {
+                ToastService.getToastr().error("Une erreur est survenue");
+                return;
+            }
 
-        ToastService.getToastr().success(hidden ? "Le passage a été masqué" : "Le passage n'est plus masqué");
+            ToastService.getToastr().success(
+                hidden
+                    ? "Le passage a été masqué"
+                    : "Le passage n'est plus masqué",
+            );
 
-        void fetchRunner();
-    }, [accessToken, runner, fetchRunner]);
+            void fetchRunner();
+        },
+        [accessToken, runner, fetchRunner],
+    );
 
-    const updatePassage = useCallback(async (passage: AdminProcessedPassage, time: Date) => {
-        if (!runner || !accessToken) {
-            return;
-        }
+    const updatePassage = useCallback(
+        async (passage: AdminProcessedPassage, time: Date) => {
+            if (!runner || !accessToken) {
+                return;
+            }
 
-        const result = await patchAdminRunnerPassage(accessToken, runner.id, passage.id, { time: formatDateForApi(time) });
+            const result = await patchAdminRunnerPassage(
+                accessToken,
+                runner.id,
+                passage.id,
+                { time: formatDateForApi(time) },
+            );
 
-        if (!isApiRequestResultOk(result)) {
-            ToastService.getToastr().error("Une erreur est survenue");
-            return;
-        }
+            if (!isApiRequestResultOk(result)) {
+                ToastService.getToastr().error("Une erreur est survenue");
+                return;
+            }
 
-        ToastService.getToastr().success("Le temps de passage a bien été modifié");
+            ToastService.getToastr().success(
+                "Le temps de passage a bien été modifié",
+            );
 
-        void fetchRunner();
-    }, [accessToken, runner, fetchRunner]);
+            void fetchRunner();
+        },
+        [accessToken, runner, fetchRunner],
+    );
 
-    const saveNewPassage = useCallback(async (time: Date) => {
-        if (!runner || !accessToken) {
-            return;
-        }
+    const saveNewPassage = useCallback(
+        async (time: Date) => {
+            if (!runner || !accessToken) {
+                return;
+            }
 
-        const result = await postAdminRunnerPassage(accessToken, runner.id, {
-            isHidden: false,
-            time: formatDateForApi(time),
-        });
+            const result = await postAdminRunnerPassage(
+                accessToken,
+                runner.id,
+                {
+                    isHidden: false,
+                    time: formatDateForApi(time),
+                },
+            );
 
-        if (!isApiRequestResultOk(result)) {
-            ToastService.getToastr().error("Une erreur est survenue");
-            return;
-        }
+            if (!isApiRequestResultOk(result)) {
+                ToastService.getToastr().error("Une erreur est survenue");
+                return;
+            }
 
-        ToastService.getToastr().success("Le passage a bien été créé");
+            ToastService.getToastr().success("Le passage a bien été créé");
 
-        void fetchRunner();
-    }, [accessToken, runner, fetchRunner]);
+            void fetchRunner();
+        },
+        [accessToken, runner, fetchRunner],
+    );
 
-    const deletePassage = useCallback(async (passage: AdminProcessedPassage) => {
-        if (!runner || !accessToken) {
-            return;
-        }
+    const deletePassage = useCallback(
+        async (passage: AdminProcessedPassage) => {
+            if (!runner || !accessToken) {
+                return;
+            }
 
-        let confirmMessage = `Êtes vous sûr de vouloir supprimer le passage n°${passage.id} (${formatDateAsString(passage.processed.lapEndTime)}) ?`;
+            let confirmMessage = `Êtes vous sûr de vouloir supprimer le passage n°${passage.id} (${formatDateAsString(passage.processed.lapEndTime)}) ?`;
 
-        if (passage.detectionId !== null) {
-            confirmMessage += "\n\nAttention, le passage ayant été importé depuis le système de chronométrage, il sera réimporté si il y est toujours présent. Préférez masquer le passage plutôt que de le supprimer si vous souhaitez qu'il n'apparaisse plus au public.";
-        }
+            if (passage.detectionId !== null) {
+                confirmMessage +=
+                    "\n\nAttention, le passage ayant été importé depuis le système de chronométrage, il sera réimporté si il y est toujours présent. Préférez masquer le passage plutôt que de le supprimer si vous souhaitez qu'il n'apparaisse plus au public.";
+            }
 
-        if (!window.confirm(confirmMessage)) {
-            return;
-        }
+            if (!window.confirm(confirmMessage)) {
+                return;
+            }
 
-        const result = await deleteAdminRunnerPassage(accessToken, runner.id, passage.id);
+            const result = await deleteAdminRunnerPassage(
+                accessToken,
+                runner.id,
+                passage.id,
+            );
 
-        if (!isApiRequestResultOk(result)) {
-            ToastService.getToastr().error("Une erreur est survenue");
-            return;
-        }
+            if (!isApiRequestResultOk(result)) {
+                ToastService.getToastr().error("Une erreur est survenue");
+                return;
+            }
 
-        ToastService.getToastr().success("Le passage a été supprimé");
+            ToastService.getToastr().success("Le passage a été supprimé");
 
-        void fetchRunner();
-    }, [accessToken, runner, fetchRunner]);
+            void fetchRunner();
+        },
+        [accessToken, runner, fetchRunner],
+    );
 
     useEffect(() => {
         void fetchRaces();
@@ -228,53 +292,70 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
         void fetchRunner();
     }, [fetchRunner]);
 
-    const onSubmit = useCallback(async (e: React.FormEvent) => {
-        e.preventDefault();
+    const onSubmit = useCallback(
+        async (e: React.FormEvent) => {
+            e.preventDefault();
 
-        if (!runner || !accessToken) {
-            return;
-        }
+            if (!runner || !accessToken) {
+                return;
+            }
 
-        setIsSaving(true);
+            setIsSaving(true);
 
-        const idHasChanged = runnerId !== runner.id;
+            const idHasChanged = runnerId !== runner.id;
 
-        const body = {
-            id: runnerId,
-            firstname: runnerFirstname,
-            lastname: runnerLastname,
-            birthYear: parseInt(runnerBirthYear),
-            gender: runnerGender,
-            stopped: runnerStopped,
-            raceId: runnerRaceId,
-        };
+            const body = {
+                id: runnerId,
+                firstname: runnerFirstname,
+                lastname: runnerLastname,
+                birthYear: parseInt(runnerBirthYear),
+                gender: runnerGender,
+                stopped: runnerStopped,
+                raceId: runnerRaceId,
+            };
 
-        const result = await patchAdminRunner(accessToken, runner.id, body);
+            const result = await patchAdminRunner(accessToken, runner.id, body);
 
-        if (!isApiRequestResultOk(result)) {
-            ToastService.getToastr().error("Une erreur est survenue");
+            if (!isApiRequestResultOk(result)) {
+                ToastService.getToastr().error("Une erreur est survenue");
+                setIsSaving(false);
+                return;
+            }
+
+            ToastService.getToastr().success("Détails du coureur enregistrés");
+
+            if (idHasChanged) {
+                navigate(`/admin/runners/${runnerId}`, { replace: true });
+                return;
+            } else {
+                await fetchRunner();
+            }
+
             setIsSaving(false);
-            return;
-        }
-
-        ToastService.getToastr().success("Détails du coureur enregistrés");
-
-        if (idHasChanged) {
-            navigate(`/admin/runners/${runnerId}`, { replace: true });
-            return;
-        } else {
-            await fetchRunner();
-        }
-
-        setIsSaving(false);
-    }, [runner, accessToken, runnerId, runnerFirstname, runnerLastname, runnerBirthYear, runnerGender, runnerStopped, runnerRaceId, navigate, fetchRunner]);
+        },
+        [
+            runner,
+            accessToken,
+            runnerId,
+            runnerFirstname,
+            runnerLastname,
+            runnerBirthYear,
+            runnerGender,
+            runnerStopped,
+            runnerRaceId,
+            navigate,
+            fetchRunner,
+        ],
+    );
 
     const deleteRunner = useCallback(async () => {
         if (!runner || !accessToken) {
             return;
         }
 
-        if (!window.confirm("Êtes-vous sûr de vouloir supprimer ce coureur ?")) {
+        if (
+            !window.confirm("Êtes-vous sûr de vouloir supprimer ce coureur ?")
+        ) {
             return;
         }
 
@@ -290,13 +371,18 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
     }, [accessToken, navigate, runner]);
 
     if (runner === null) {
-        return (
-            <Navigate to="/admin/runners" />
-        );
+        return <Navigate to="/admin/runners" />;
     }
 
     return (
-        <Page id="admin-runner-details" title={runner === undefined ? "Chargement" : `Détails du coureur ${runner.firstname} ${runner.lastname}`}>
+        <Page
+            id="admin-runner-details"
+            title={
+                runner === undefined
+                    ? "Chargement"
+                    : `Détails du coureur ${runner.firstname} ${runner.lastname}`
+            }
+        >
             <Row>
                 <Col>
                     <Breadcrumbs>
@@ -304,13 +390,13 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
                         <Crumb url="/admin/runners" label="Coureurs" />
                         {(() => {
                             if (runner === undefined) {
-                                return (
-                                    <CircularLoader />
-                                );
+                                return <CircularLoader />;
                             }
 
                             return (
-                                <Crumb label={`${runner.lastname.toUpperCase()} ${runner.firstname}`} />
+                                <Crumb
+                                    label={`${runner.lastname.toUpperCase()} ${runner.firstname}`}
+                                />
                             );
                         })()}
                     </Breadcrumbs>
@@ -328,23 +414,28 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
                 <>
                     <Row>
                         <Col xxl={3} xl={4} lg={6} md={9} sm={12}>
-                            <RunnerDetailsForm onSubmit={e => { void onSubmit(e); }}
-                                               id={runnerId}
-                                               setId={setRunnerId}
-                                               firstname={runnerFirstname}
-                                               setFirstname={setRunnerFirstname}
-                                               lastname={runnerLastname}
-                                               setLastname={setRunnerLastname}
-                                               gender={runnerGender}
-                                               setGender={setRunnerGender}
-                                               birthYear={runnerBirthYear}
-                                               setBirthYear={setRunnerBirthYear}
-                                               stopped={runnerStopped}
-                                               setStopped={setRunnerStopped}
-                                               races={races}
-                                               raceId={runnerRaceId}
-                                               setRaceId={setRunnerRaceId}
-                                               submitButtonDisabled={isSaving || !unsavedChanges}
+                            <RunnerDetailsForm
+                                onSubmit={(e) => {
+                                    void onSubmit(e);
+                                }}
+                                id={runnerId}
+                                setId={setRunnerId}
+                                firstname={runnerFirstname}
+                                setFirstname={setRunnerFirstname}
+                                lastname={runnerLastname}
+                                setLastname={setRunnerLastname}
+                                gender={runnerGender}
+                                setGender={setRunnerGender}
+                                birthYear={runnerBirthYear}
+                                setBirthYear={setRunnerBirthYear}
+                                stopped={runnerStopped}
+                                setStopped={setRunnerStopped}
+                                races={races}
+                                raceId={runnerRaceId}
+                                setRaceId={setRunnerRaceId}
+                                submitButtonDisabled={
+                                    isSaving || !unsavedChanges
+                                }
                             />
                         </Col>
                     </Row>
@@ -353,12 +444,13 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
                         <Col className="mt-3">
                             <h3>Passages</h3>
 
-                            <RunnerDetailsPassages passages={runner.passages}
-                                                   runnerRace={runnerRace}
-                                                   updatePassageVisiblity={updatePassageVisiblity}
-                                                   updatePassage={updatePassage}
-                                                   saveNewPassage={saveNewPassage}
-                                                   deletePassage={deletePassage}
+                            <RunnerDetailsPassages
+                                passages={runner.passages}
+                                runnerRace={runnerRace}
+                                updatePassageVisiblity={updatePassageVisiblity}
+                                updatePassage={updatePassage}
+                                saveNewPassage={saveNewPassage}
+                                deletePassage={deletePassage}
                             />
                         </Col>
                     </Row>
@@ -367,10 +459,17 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
                         <Col className="mt-3">
                             <h3>Supprimer le coureur</h3>
 
-                            <p>Tous les passages liés à ce coureur seront également supprimés. Cette action est irréversible.</p>
+                            <p>
+                                Tous les passages liés à ce coureur seront
+                                également supprimés. Cette action est
+                                irréversible.
+                            </p>
 
-                            <button className="button red mt-3"
-                                    onClick={() => { void deleteRunner(); }}
+                            <button
+                                className="button red mt-3"
+                                onClick={() => {
+                                    void deleteRunner();
+                                }}
                             >
                                 Supprimer le coureur
                             </button>

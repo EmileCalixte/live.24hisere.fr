@@ -1,3 +1,4 @@
+import { Type } from "@nestjs/common/interfaces/type.interface";
 import { CreateUserCommand } from "./commands/createUser.command";
 import { CreatePasswordQuestionSet } from "./commands/questionSets/createPassword.questionSet";
 import { CurrentPasswordQuestionSet } from "./commands/questionSets/currentPassword.questionSet";
@@ -27,7 +28,6 @@ import { PasswordService } from "./services/password.service";
 import { RandomService } from "./services/random.service";
 import { ImportPassagesService } from "./tasks/importPassages.service";
 import { RaceIdExistsRule } from "./validation/rules/race/raceIdExists.rule";
-import { Type } from "@nestjs/common/interfaces/type.interface";
 
 type DependencyArray = Type[];
 
@@ -64,12 +64,7 @@ export const dependencies: Dependencies = {
         ],
     },
     services: {
-        app: [
-            AuthService,
-            DagFileService,
-            PasswordService,
-            RandomService,
-        ],
+        app: [AuthService, DagFileService, PasswordService, RandomService],
         database: [
             PrismaService,
             AccessTokenService,
@@ -81,16 +76,9 @@ export const dependencies: Dependencies = {
             UserService,
         ],
     },
-    tasks: [
-        ImportPassagesService,
-    ],
-    validationRules: [
-        RaceIdExistsRule,
-    ],
-    commands: [
-        CreateUserCommand,
-        UpdateUserPasswordCommand,
-    ],
+    tasks: [ImportPassagesService],
+    validationRules: [RaceIdExistsRule],
+    commands: [CreateUserCommand, UpdateUserPasswordCommand],
     questionSets: [
         CreatePasswordQuestionSet,
         CurrentPasswordQuestionSet,

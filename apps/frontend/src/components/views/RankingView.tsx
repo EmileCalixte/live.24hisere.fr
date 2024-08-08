@@ -1,7 +1,7 @@
-import "../../css/print-ranking-table.css";
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { RankingTimeMode } from "../../constants/rankingTimeMode";
+import "../../css/print-ranking-table.css";
 import { useCategoryQueryString } from "../../hooks/queryString/useCategoryQueryString";
 import { useGenderQueryString } from "../../hooks/queryString/useGenderQueryString";
 import { useRaceQueryString } from "../../hooks/queryString/useRaceQueryString";
@@ -11,12 +11,24 @@ import { useRanking } from "../../hooks/useRanking";
 import { useWindowDimensions } from "../../hooks/useWindowDimensions";
 import { getRaces } from "../../services/api/RaceService";
 import { getRaceRunners } from "../../services/api/RunnerService";
-import { type CategoriesDict, type CategoryShortCode } from "../../types/Category";
+import {
+    type CategoriesDict,
+    type CategoryShortCode,
+} from "../../types/Category";
 import { type GenderWithMixed } from "../../types/Gender";
-import { type RunnerWithProcessedData, type RunnerWithProcessedPassages } from "../../types/Runner";
-import { existingCategories, getCategoryCodeFromBirthYear } from "../../utils/ffaUtils";
+import {
+    type RunnerWithProcessedData,
+    type RunnerWithProcessedPassages,
+} from "../../types/Runner";
+import {
+    existingCategories,
+    getCategoryCodeFromBirthYear,
+} from "../../utils/ffaUtils";
 import { excludeKeys } from "../../utils/objectUtils";
-import { getProcessedPassagesFromPassages, getRunnerProcessedDataFromPassages } from "../../utils/passageUtils";
+import {
+    getProcessedPassagesFromPassages,
+    getRunnerProcessedDataFromPassages,
+} from "../../utils/passageUtils";
 import { getRacesSelectOptions } from "../../utils/raceUtils";
 import CircularLoader from "../ui/CircularLoader";
 import Select from "../ui/forms/Select";
@@ -28,7 +40,8 @@ import ResponsiveRankingTable from "../viewParts/ranking/rankingTable/responsive
 const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
 
 export default function RankingView(): React.ReactElement {
-    const { selectedGender, setGenderParam, deleteGenderParam } = useGenderQueryString();
+    const { selectedGender, setGenderParam, deleteGenderParam } =
+        useGenderQueryString();
 
     const { width: windowWidth } = useWindowDimensions();
 
@@ -60,25 +73,39 @@ export default function RankingView(): React.ReactElement {
 
     const runners = useIntervalApiRequest(fetchRunners).json?.runners;
 
-    const processedRunners = React.useMemo<Array<RunnerWithProcessedPassages & RunnerWithProcessedData> | undefined>(() => {
+    const processedRunners = React.useMemo<
+        Array<RunnerWithProcessedPassages & RunnerWithProcessedData> | undefined
+    >(() => {
         if (!runners || !selectedRace) {
             return;
         }
 
-        return runners.map(runner => ({
+        return runners.map((runner) => ({
             ...runner,
-            ...getRunnerProcessedDataFromPassages(selectedRace, runner.passages),
-            passages: getProcessedPassagesFromPassages(selectedRace, runner.passages),
+            ...getRunnerProcessedDataFromPassages(
+                selectedRace,
+                runner.passages,
+            ),
+            passages: getProcessedPassagesFromPassages(
+                selectedRace,
+                runner.passages,
+            ),
         }));
     }, [runners, selectedRace]);
 
-    const ranking = useRanking(selectedRace ?? undefined, processedRunners, rankingDate);
+    const ranking = useRanking(
+        selectedRace ?? undefined,
+        processedRunners,
+        rankingDate,
+    );
 
     const onRaceSelect = (e: React.ChangeEvent<HTMLSelectElement>): void => {
         setRaceParam(e.target.value);
     };
 
-    const onCategorySelect = (e: React.ChangeEvent<HTMLSelectElement>): void => {
+    const onCategorySelect = (
+        e: React.ChangeEvent<HTMLSelectElement>,
+    ): void => {
         if (e.target.value === "scratch") {
             deleteCategoryParam();
             return;
@@ -124,7 +151,9 @@ export default function RankingView(): React.ReactElement {
         const categoriesInRanking = new Set<CategoryShortCode>();
 
         for (const runner of ranking) {
-            categoriesInRanking.add(getCategoryCodeFromBirthYear(runner.birthYear));
+            categoriesInRanking.add(
+                getCategoryCodeFromBirthYear(runner.birthYear),
+            );
         }
 
         const categoriesToRemove: Array<keyof CategoriesDict> = [];
@@ -138,7 +167,8 @@ export default function RankingView(): React.ReactElement {
         return excludeKeys(existingCategories, categoriesToRemove);
     }, [ranking]);
 
-    const { selectedCategory, setCategoryParam, deleteCategoryParam } = useCategoryQueryString(selectedRace, categories);
+    const { selectedCategory, setCategoryParam, deleteCategoryParam } =
+        useCategoryQueryString(selectedRace, categories);
 
     return (
         <Page id="ranking" title="Classements">
@@ -150,11 +180,12 @@ export default function RankingView(): React.ReactElement {
 
             <Row className="hide-on-print mb-3">
                 <Col xxl={2} xl={3} lg={4} md={6} sm={9} xs={12}>
-                    <Select label="Course"
-                            options={racesOptions}
-                            onChange={onRaceSelect}
-                            value={selectedRace ? selectedRace.id : undefined}
-                            placeholderLabel="Sélectionnez une course"
+                    <Select
+                        label="Course"
+                        options={racesOptions}
+                        onChange={onRaceSelect}
+                        value={selectedRace ? selectedRace.id : undefined}
+                        placeholderLabel="Sélectionnez une course"
                     />
                 </Col>
             </Row>
@@ -171,32 +202,41 @@ export default function RankingView(): React.ReactElement {
                             selectedCategory={selectedCategory}
                             selectedGender={selectedGender}
                             selectedTimeMode={selectedTimeMode}
-                            currentRankingTime={selectedRankingTime ?? selectedRace.duration * 1000}
+                            currentRankingTime={
+                                selectedRankingTime ??
+                                selectedRace.duration * 1000
+                            }
                             maxRankingTime={selectedRace.duration * 1000}
                         />
                     </Row>
 
-                    {!ranking && (
-                        <CircularLoader />
-                    )}
+                    {!ranking && <CircularLoader />}
 
                     {ranking && (
                         <Row>
                             <Col>
-                                {windowWidth > RESPONSIVE_TABLE_MAX_WINDOW_WIDTH && (
+                                {windowWidth >
+                                    RESPONSIVE_TABLE_MAX_WINDOW_WIDTH && (
                                     <RankingTable
                                         race={selectedRace}
                                         ranking={ranking}
                                         tableCategory={selectedCategory}
                                         tableGender={selectedGender}
-                                        tableRaceDuration={selectedTimeMode === RankingTimeMode.AT ? selectedRankingTime : null}
+                                        tableRaceDuration={
+                                            selectedTimeMode ===
+                                            RankingTimeMode.AT
+                                                ? selectedRankingTime
+                                                : null
+                                        }
                                     />
                                 )}
 
-                                {windowWidth <= RESPONSIVE_TABLE_MAX_WINDOW_WIDTH && (
+                                {windowWidth <=
+                                    RESPONSIVE_TABLE_MAX_WINDOW_WIDTH && (
                                     <div>
                                         <div className="mb-3">
-                                            Cliquez sur un coureur pour consulter ses données de course
+                                            Cliquez sur un coureur pour
+                                            consulter ses données de course
                                         </div>
 
                                         <ResponsiveRankingTable
@@ -204,7 +244,12 @@ export default function RankingView(): React.ReactElement {
                                             ranking={ranking}
                                             tableCategory={selectedCategory}
                                             tableGender={selectedGender}
-                                            tableRaceDuration={selectedTimeMode === RankingTimeMode.AT ? selectedRankingTime : null}
+                                            tableRaceDuration={
+                                                selectedTimeMode ===
+                                                RankingTimeMode.AT
+                                                    ? selectedRankingTime
+                                                    : null
+                                            }
                                         />
                                     </div>
                                 )}

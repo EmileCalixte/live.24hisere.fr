@@ -9,7 +9,9 @@ function getWindowDimensions(): Dimensions2d {
 }
 
 export function useWindowDimensions(): Dimensions2d {
-    const [windowDimensions, setWindowDimensions] = useState<Dimensions2d>(getWindowDimensions());
+    const [windowDimensions, setWindowDimensions] = useState<Dimensions2d>(
+        getWindowDimensions(),
+    );
 
     useEffect(() => {
         function handleResize(): void {
@@ -18,7 +20,9 @@ export function useWindowDimensions(): Dimensions2d {
 
         window.addEventListener("resize", handleResize);
 
-        return () => { window.removeEventListener("resize", handleResize); };
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
     }, []);
 
     return windowDimensions;

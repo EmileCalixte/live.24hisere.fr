@@ -8,6 +8,10 @@ import { type ReactUseStateResultWithNonNullableSetter } from "../types/Utils";
  * ({@link https://stackoverflow.com/a/57180908/13208770})
  * @param initialState
  */
-export function useStateWithNonNullableSetter<S>(initialState: S | (() => S)): ReactUseStateResultWithNonNullableSetter<S> {
-    return useState<S>(initialState) as ReactUseStateResultWithNonNullableSetter<S>;
+export function useStateWithNonNullableSetter<S>(
+    initialState: S | (() => S),
+): ReactUseStateResultWithNonNullableSetter<S> {
+    return useState<S>(
+        initialState,
+    ) as ReactUseStateResultWithNonNullableSetter<S>;
 }

@@ -20,15 +20,19 @@ export default function CsvMapping({
     csvColumns,
     onValidateMapping,
 }: CsvMappingProps): React.ReactElement {
-    const csvColumnOptions: Array<SelectOption<number>> = csvColumns.map((column, index) => ({
-        label: column,
-        value: index,
-    }));
+    const csvColumnOptions: Array<SelectOption<number>> = csvColumns.map(
+        (column, index) => ({
+            label: column,
+            value: index,
+        }),
+    );
 
     function updateMapping(key: ImportCsvColumn, index: number): void {
         const newMapping = { ...mapping };
 
-        const existingKeyForIndex = getObjectKeys(newMapping).find(key => newMapping[key] === index);
+        const existingKeyForIndex = getObjectKeys(newMapping).find(
+            (key) => newMapping[key] === index,
+        );
 
         if (existingKeyForIndex) {
             newMapping[existingKeyForIndex] = null;
@@ -50,18 +54,22 @@ export default function CsvMapping({
                 <Row as="form" className="gap-2" onSubmit={onSubmit}>
                     {getObjectKeys(mapping).map((key) => (
                         <Col key={key} xs={12}>
-                            <Select label={key}
-                                    options={csvColumnOptions}
-                                    value={mapping[key] ?? undefined}
-                                    onChange={(e) => { updateMapping(key, parseInt(e.target.value)); }}
+                            <Select
+                                label={key}
+                                options={csvColumnOptions}
+                                value={mapping[key] ?? undefined}
+                                onChange={(e) => {
+                                    updateMapping(
+                                        key,
+                                        parseInt(e.target.value),
+                                    );
+                                }}
                             />
                         </Col>
                     ))}
 
                     <Col xs={12} className="mt-3">
-                        <button className="button"
-                                type="submit"
-                        >
+                        <button className="button" type="submit">
                             Valider le mapping
                         </button>
                     </Col>

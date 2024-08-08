@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
-
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 import ReactDOMServer from "react-dom/server";
@@ -8,7 +7,10 @@ import { useSpeedChartQueryString } from "../../../../hooks/queryString/useSpeed
 import { useWindowDimensions } from "../../../../hooks/useWindowDimensions";
 import CanvasjsReact from "../../../../lib/canvasjs/canvasjs.react";
 import { type Race } from "../../../../types/Race";
-import { type RunnerWithProcessedHours, type RunnerWithProcessedPassages } from "../../../../types/Runner";
+import {
+    type RunnerWithProcessedHours,
+    type RunnerWithProcessedPassages,
+} from "../../../../types/Runner";
 import { formatMsAsDuration } from "../../../../utils/utils";
 import { Checkbox } from "../../../ui/forms/Checkbox";
 
@@ -18,19 +20,23 @@ const DEFAULT_MIN_SPEED = 0;
 const DEFAULT_MAX_SPEED = 10;
 
 function getBaseXAxisInterval(raceDuration: number): number {
-    if (raceDuration <= 14400) { // up to 4h
+    if (raceDuration <= 14400) {
+        // up to 4h
         return Math.ceil(raceDuration / 60 / 24 / 10) * 10;
     }
 
-    if (raceDuration <= 21600) { // up to 6h
+    if (raceDuration <= 21600) {
+        // up to 6h
         return Math.ceil(raceDuration / 60 / 24 / 15) * 15;
     }
 
-    if (raceDuration <= 28800) { // up to 8h
+    if (raceDuration <= 28800) {
+        // up to 8h
         return Math.ceil(raceDuration / 60 / 24 / 20) * 20;
     }
 
-    if (raceDuration <= 43200) { // up to 12h
+    if (raceDuration <= 43200) {
+        // up to 12h
         return Math.ceil(raceDuration / 60 / 24 / 30) * 30;
     }
 
@@ -47,7 +53,11 @@ interface SpeedChartProps {
     averageSpeed: number;
 }
 
-export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartProps): React.ReactElement {
+export default function SpeedChart({
+    runner,
+    race,
+    averageSpeed,
+}: SpeedChartProps): React.ReactElement {
     const {
         displayEachLapSpeed,
         displayEachHourSpeed,
@@ -72,87 +82,170 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
         return baseInterval;
     }, [race.duration, windowWidth]);
 
-    const getTooltipContent = React.useCallback((e: any) => {
-        // const dataPoint = e.entries[0].dataPoint;
-        const dataSeriesIndex = e.entries[0].dataSeries.index;
+    const getTooltipContent = React.useCallback(
+        (e: any) => {
+            // const dataPoint = e.entries[0].dataPoint;
+            const dataSeriesIndex = e.entries[0].dataSeries.index;
 
-        if (dataSeriesIndex === 0 || dataSeriesIndex === 3) {
-            const passageIndex = Math.min(e.entries[0].index, runner.passages.length - 1);
+            if (dataSeriesIndex === 0 || dataSeriesIndex === 3) {
+                const passageIndex = Math.min(
+                    e.entries[0].index,
+                    runner.passages.length - 1,
+                );
 
-            const passage = runner.passages[passageIndex];
+                const passage = runner.passages[passageIndex];
 
-            return ReactDOMServer.renderToString(
-                <div>
-                    {passage.processed.lapNumber !== null && (
-                        <div style={{ marginBottom: "0.75em" }}>Tour {passage.processed.lapNumber}</div>
-                    )}
-
+                return ReactDOMServer.renderToString(
                     <div>
-                        De <strong>{formatMsAsDuration(passage.processed.lapStartRaceTime)}</strong> à <strong>{formatMsAsDuration(passage.processed.lapEndRaceTime)}</strong> :
-                    </div>
+                        {passage.processed.lapNumber !== null && (
+                            <div style={{ marginBottom: "0.75em" }}>
+                                Tour {passage.processed.lapNumber}
+                            </div>
+                        )}
 
+                        <div>
+                            De{" "}
+                            <strong>
+                                {formatMsAsDuration(
+                                    passage.processed.lapStartRaceTime,
+                                )}
+                            </strong>{" "}
+                            à{" "}
+                            <strong>
+                                {formatMsAsDuration(
+                                    passage.processed.lapEndRaceTime,
+                                )}
+                            </strong>{" "}
+                            :
+                        </div>
+
+                        <div>
+                            Durée :{" "}
+                            <strong>
+                                {formatMsAsDuration(
+                                    passage.processed.lapDuration,
+                                    false,
+                                )}
+                            </strong>
+                        </div>
+
+                        <div>
+                            Vitesse :{" "}
+                            <strong>
+                                {passage.processed.lapSpeed.toFixed(2)} km/h
+                            </strong>
+                        </div>
+
+                        <div>
+                            Allure :{" "}
+                            <strong>
+                                {formatMsAsDuration(
+                                    passage.processed.lapPace,
+                                    false,
+                                )}
+                                /km
+                            </strong>
+                        </div>
+
+                        <div style={{ marginTop: "0.75em" }}>
+                            De <strong>{formatMsAsDuration(0)}</strong> à{" "}
+                            <strong>
+                                {formatMsAsDuration(
+                                    passage.processed.lapEndRaceTime,
+                                )}
+                            </strong>{" "}
+                            :
+                        </div>
+
+                        <div>
+                            Vitesse moyenne :{" "}
+                            <strong>
+                                {passage.processed.averageSpeedSinceRaceStart.toFixed(
+                                    2,
+                                )}{" "}
+                                km/h
+                            </strong>
+                        </div>
+
+                        <div>
+                            Allure moyenne :{" "}
+                            <strong>
+                                {formatMsAsDuration(
+                                    passage.processed.averagePaceSinceRaceStart,
+                                    false,
+                                )}
+                                /km
+                            </strong>
+                        </div>
+                    </div>,
+                );
+            }
+
+            if (dataSeriesIndex === 1) {
+                const hourIndex = Math.min(
+                    Math.floor(e.entries[0].index / 2),
+                    runner.hours.length - 1,
+                );
+                const hour = runner.hours[hourIndex];
+
+                return ReactDOMServer.renderToString(
                     <div>
-                        Durée : <strong>{formatMsAsDuration(passage.processed.lapDuration, false)}</strong>
-                    </div>
+                        <div>
+                            De{" "}
+                            <strong>
+                                {formatMsAsDuration(hour.startRaceTime)}
+                            </strong>{" "}
+                            à{" "}
+                            <strong>
+                                {formatMsAsDuration(hour.endRaceTime)}
+                            </strong>{" "}
+                            :
+                        </div>
+                        <div>
+                            Vitesse moyenne :{" "}
+                            <strong>
+                                {hour.averageSpeed !== null
+                                    ? hour.averageSpeed.toFixed(2) + " km/h"
+                                    : "–"}
+                            </strong>
+                        </div>
+                        <div>
+                            Allure :{" "}
+                            <strong>
+                                {hour.averagePace !== null
+                                    ? formatMsAsDuration(
+                                          hour.averagePace,
+                                          false,
+                                      ) + "/km"
+                                    : "–"}
+                            </strong>
+                        </div>
+                    </div>,
+                );
+            }
 
+            if (dataSeriesIndex === 2) {
+                return ReactDOMServer.renderToString(
                     <div>
-                        Vitesse : <strong>{passage.processed.lapSpeed.toFixed(2)} km/h</strong>
-                    </div>
+                        Vitesse moyenne générale :{" "}
+                        <strong>{averageSpeed.toFixed(2)} km/h</strong>
+                    </div>,
+                );
+            }
 
-                    <div>
-                        Allure : <strong>{formatMsAsDuration(passage.processed.lapPace, false)}/km</strong>
-                    </div>
-
-                    <div style={{ marginTop: "0.75em" }}>
-                        De <strong>{formatMsAsDuration(0)}</strong> à <strong>{formatMsAsDuration(passage.processed.lapEndRaceTime)}</strong> :
-                    </div>
-
-                    <div>
-                        Vitesse moyenne : <strong>{passage.processed.averageSpeedSinceRaceStart.toFixed(2)} km/h</strong>
-                    </div>
-
-                    <div>
-                        Allure moyenne : <strong>{formatMsAsDuration(passage.processed.averagePaceSinceRaceStart, false)}/km</strong>
-                    </div>
-                </div>,
-            );
-        }
-
-        if (dataSeriesIndex === 1) {
-            const hourIndex = Math.min(Math.floor(e.entries[0].index / 2), runner.hours.length - 1);
-            const hour = runner.hours[hourIndex];
-
-            return ReactDOMServer.renderToString(
-                <div>
-                    <div>
-                        De <strong>{formatMsAsDuration(hour.startRaceTime)}</strong> à <strong>{formatMsAsDuration(hour.endRaceTime)}</strong> :
-                    </div>
-                    <div>
-                        Vitesse moyenne : <strong>{hour.averageSpeed !== null ? hour.averageSpeed.toFixed(2) + " km/h" : "–"}</strong>
-                    </div>
-                    <div>
-                        Allure : <strong>{hour.averagePace !== null ? formatMsAsDuration(hour.averagePace, false) + "/km" : "–"}</strong>
-                    </div>
-                </div>,
-            );
-        }
-
-        if (dataSeriesIndex === 2) {
-            return ReactDOMServer.renderToString(
-                <div>
-                    Vitesse moyenne générale : <strong>{averageSpeed.toFixed(2)} km/h</strong>
-                </div>,
-            );
-        }
-
-        return null;
-    }, [averageSpeed, runner]);
+            return null;
+        },
+        [averageSpeed, runner],
+    );
 
     const minSpeed = React.useMemo(() => {
         let minSpeed: number | undefined;
 
-        runner.passages.forEach(passage => {
-            if (minSpeed === undefined || passage.processed.lapSpeed < minSpeed) {
+        runner.passages.forEach((passage) => {
+            if (
+                minSpeed === undefined ||
+                passage.processed.lapSpeed < minSpeed
+            ) {
                 minSpeed = passage.processed.lapSpeed;
             }
         });
@@ -163,8 +256,11 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
     const maxSpeed = React.useMemo(() => {
         let maxSpeed: number | undefined;
 
-        runner.passages.forEach(passage => {
-            if (maxSpeed === undefined || passage.processed.lapSpeed > maxSpeed) {
+        runner.passages.forEach((passage) => {
+            if (
+                maxSpeed === undefined ||
+                passage.processed.lapSpeed > maxSpeed
+            ) {
                 maxSpeed = passage.processed.lapSpeed;
             }
         });
@@ -239,7 +335,8 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
                     legendMarkerType: "square",
                     dataPoints: [],
                 },
-                { // Necessary to avoid an infinite loop of CanvasJS
+                {
+                    // Necessary to avoid an infinite loop of CanvasJS
                     type: "line",
                     markerType: null,
                     showInLegend: false,
@@ -344,27 +441,41 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
                     <fieldset className="mb-3">
                         <legend className="mb-2">Éléments à afficher</legend>
 
-                        <Checkbox label="Vitesse à chaque tour"
-                                  checked={displayEachLapSpeed}
-                                  onChange={() => { toggleSearchParam(SearchParam.HIDE_LAP_SPEED); }}
+                        <Checkbox
+                            label="Vitesse à chaque tour"
+                            checked={displayEachLapSpeed}
+                            onChange={() => {
+                                toggleSearchParam(SearchParam.HIDE_LAP_SPEED);
+                            }}
                         />
 
-                        <Checkbox label="Vitesse moyenne à chaque heure"
-                                  className="mt-2"
-                                  checked={displayEachHourSpeed}
-                                  onChange={() => { toggleSearchParam(SearchParam.HIDE_HOUR_SPEED); }}
+                        <Checkbox
+                            label="Vitesse moyenne à chaque heure"
+                            className="mt-2"
+                            checked={displayEachHourSpeed}
+                            onChange={() => {
+                                toggleSearchParam(SearchParam.HIDE_HOUR_SPEED);
+                            }}
                         />
 
-                        <Checkbox label="Vitesse moyenne générale"
-                                  className="mt-2"
-                                  checked={displayAverageSpeed}
-                                  onChange={() => { toggleSearchParam(SearchParam.HIDE_AVG_SPEED); }}
+                        <Checkbox
+                            label="Vitesse moyenne générale"
+                            className="mt-2"
+                            checked={displayAverageSpeed}
+                            onChange={() => {
+                                toggleSearchParam(SearchParam.HIDE_AVG_SPEED);
+                            }}
                         />
 
-                        <Checkbox label="Évolution de la vitesse moyenne"
-                                  className="mt-2"
-                                  checked={displayAverageSpeedEvolution}
-                                  onChange={() => { toggleSearchParam(SearchParam.HIDE_AVG_SPEED_EVOLUTION); }}
+                        <Checkbox
+                            label="Évolution de la vitesse moyenne"
+                            className="mt-2"
+                            checked={displayAverageSpeedEvolution}
+                            onChange={() => {
+                                toggleSearchParam(
+                                    SearchParam.HIDE_AVG_SPEED_EVOLUTION,
+                                );
+                            }}
                         />
                     </fieldset>
                 </Col>

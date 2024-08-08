@@ -1,25 +1,34 @@
 import React, { createContext, useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
-import { BrowserRouter, Navigate, Route, Routes, useMatch } from "react-router-dom";
+import {
+    BrowserRouter,
+    Navigate,
+    Route,
+    Routes,
+    useMatch,
+} from "react-router-dom";
 import { APP_BASE_TITLE } from "../constants/app";
 import { getAppData } from "../services/api/AppDataService";
-import { getCurrentUserInfo, logout as performLogoutRequest } from "../services/api/AuthService";
+import {
+    getCurrentUserInfo,
+    logout as performLogoutRequest,
+} from "../services/api/AuthService";
+import ToastService from "../services/ToastService";
 import { type User } from "../types/User";
-import CircularLoader from "./ui/CircularLoader";
-import Header from "./ui/header/Header";
-import Footer from "./ui/footer/Footer";
-import DisabledAppView from "./views/DisabledAppView";
-import RankingView from "./views/RankingView";
-import RunnerDetailsView from "./views/RunnerDetailsView";
 import {
     EVENT_API_REQUEST_ENDED,
     EVENT_API_REQUEST_STARTED,
     isApiRequestResultOk,
 } from "../utils/apiUtils";
-import LoginView from "./views/LoginView";
-import Admin from "./views/admin/Admin";
 import { verbose } from "../utils/utils";
-import ToastService from "../services/ToastService";
+import CircularLoader from "./ui/CircularLoader";
+import Footer from "./ui/footer/Footer";
+import Header from "./ui/header/Header";
+import Admin from "./views/admin/Admin";
+import DisabledAppView from "./views/DisabledAppView";
+import LoginView from "./views/LoginView";
+import RankingView from "./views/RankingView";
+import RunnerDetailsView from "./views/RunnerDetailsView";
 
 interface AppContext {
     appData: {
@@ -113,8 +122,12 @@ export default function App(): React.ReactElement {
     const [lastUpdateTime, setLastUpdateTime] = useState(new Date());
     const [serverTimeOffset, setServerTimeOffset] = useState(0);
     const [isAppEnabled, setIsAppEnabled] = useState(false);
-    const [disabledAppMessage, setDisabledAppMessage] = useState<string | null>(null);
-    const [accessToken, setAccessToken] = useState<string | null>(localStorage.getItem("accessToken"));
+    const [disabledAppMessage, setDisabledAppMessage] = useState<string | null>(
+        null,
+    );
+    const [accessToken, setAccessToken] = useState<string | null>(
+        localStorage.getItem("accessToken"),
+    );
     const [user, setUser] = useState<User | null | undefined>(undefined); // If null, user is not logged in. If undefined, user info was not fetched yet
     const [redirect, setRedirect] = useState<string | null>(null); // Used to redirect the user to a specified location, for example when user logs out
 
@@ -122,11 +135,11 @@ export default function App(): React.ReactElement {
     const isAdminRoute = !!useMatch("/admin/*");
 
     const incrementFetchLevel = useCallback(() => {
-        setFetchLevel(level => level + 1);
+        setFetchLevel((level) => level + 1);
     }, []);
 
     const decrementFetchLevel = useCallback(() => {
-        setFetchLevel(level => Math.max(0, level - 1));
+        setFetchLevel((level) => Math.max(0, level - 1));
     }, []);
 
     const saveAccessToken = useCallback((token: string) => {
@@ -155,7 +168,9 @@ export default function App(): React.ReactElement {
         }
 
         if (!isApiRequestResultOk(result)) {
-            ToastService.getToastr().error("Impossible de récupérer les informations de l'application");
+            ToastService.getToastr().error(
+                "Impossible de récupérer les informations de l'application",
+            );
             return;
         }
 
@@ -215,15 +230,23 @@ export default function App(): React.ReactElement {
         window.addEventListener(EVENT_API_REQUEST_ENDED, decrementFetchLevel);
 
         return () => {
-            window.removeEventListener(EVENT_API_REQUEST_STARTED, incrementFetchLevel);
-            window.removeEventListener(EVENT_API_REQUEST_ENDED, decrementFetchLevel);
+            window.removeEventListener(
+                EVENT_API_REQUEST_STARTED,
+                incrementFetchLevel,
+            );
+            window.removeEventListener(
+                EVENT_API_REQUEST_ENDED,
+                decrementFetchLevel,
+            );
         };
     }, [incrementFetchLevel, decrementFetchLevel]);
 
     useEffect(() => {
         void fetchAppData();
 
-        const interval = setInterval(() => { void fetchAppData(); }, FETCH_APP_DATA_INTERVAL_TIME);
+        const interval = setInterval(() => {
+            void fetchAppData();
+        }, FETCH_APP_DATA_INTERVAL_TIME);
 
         return () => {
             clearInterval(interval);
@@ -272,7 +295,8 @@ export default function App(): React.ReactElement {
         },
     };
 
-    const showDisabledAppMessage = !user && !isAppEnabled && !isLoginRoute && !isAdminRoute;
+    const showDisabledAppMessage =
+        !user && !isAppEnabled && !isLoginRoute && !isAdminRoute;
 
     return (
         <div id="app">
@@ -289,16 +313,28 @@ export default function App(): React.ReactElement {
                             <DisabledAppView />
                         ) : (
                             <Routes>
-                                <Route path="/ranking" element={<RankingView />} />
-                                <Route path="/runner-details" element={<RunnerDetailsView />} />
-                                <Route path="/runner-details/:runnerId" element={<RunnerDetailsView />} />
+                                <Route
+                                    path="/ranking"
+                                    element={<RankingView />}
+                                />
+                                <Route
+                                    path="/runner-details"
+                                    element={<RunnerDetailsView />}
+                                />
+                                <Route
+                                    path="/runner-details/:runnerId"
+                                    element={<RunnerDetailsView />}
+                                />
 
                                 <Route path="/login" element={<LoginView />} />
 
                                 <Route path="/admin/*" element={<Admin />} />
 
                                 {/* Redirect any unresolved route to /ranking */}
-                                <Route path="*" element={<Navigate to="/ranking" replace />} />
+                                <Route
+                                    path="*"
+                                    element={<Navigate to="/ranking" replace />}
+                                />
                             </Routes>
                         )}
                     </main>

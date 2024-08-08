@@ -1,9 +1,9 @@
 import React, { useContext } from "react";
+import { appContext } from "../../App";
 import AdminHeader from "./AdminHeader";
 import FetchAppDataErrorHeader from "./FetchAppDataErrorHeader";
-import Navbar from "./Navbar";
-import { appContext } from "../../App";
 import HeaderFetchLoader from "./HeaderFetchLoader";
+import Navbar from "./Navbar";
 
 export default function Header(): React.ReactElement {
     const {
@@ -21,9 +21,7 @@ export default function Header(): React.ReactElement {
                     <img alt="Logo" src="/img/24hisere.svg" />
                 </div>
 
-                {(isAppEnabled || user) && (
-                    <Navbar />
-                )}
+                {(isAppEnabled || user) && <Navbar />}
 
                 <div className="flex-grow-1" />
 

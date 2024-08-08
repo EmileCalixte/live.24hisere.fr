@@ -1,5 +1,5 @@
-import clsx from "clsx";
 import React from "react";
+import clsx from "clsx";
 
 interface CheckboxProps {
     label: string;
@@ -19,10 +19,11 @@ export function Checkbox({
     return (
         <div className={clsx("inline-input-group", className)}>
             <label className="input-checkbox">
-                <input type="checkbox"
-                       name={name}
-                       checked={checked}
-                       onChange={onChange}
+                <input
+                    type="checkbox"
+                    name={name}
+                    checked={checked}
+                    onChange={onChange}
                 />
                 <span />
                 {label}

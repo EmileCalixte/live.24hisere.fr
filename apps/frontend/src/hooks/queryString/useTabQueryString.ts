@@ -8,7 +8,10 @@ interface UseTabQueryString<T extends string> {
     setTabParam: (tab: T) => void;
 }
 
-export function useTabQueryString<T extends string>(availableTabs: T[], defaultTab: typeof availableTabs[number]): UseTabQueryString<T> {
+export function useTabQueryString<T extends string>(
+    availableTabs: T[],
+    defaultTab: (typeof availableTabs)[number],
+): UseTabQueryString<T> {
     const { searchParams, setParams } = useQueryString();
 
     const searchParamsTab = searchParams.get(SearchParam.TAB);
@@ -21,9 +24,12 @@ export function useTabQueryString<T extends string>(availableTabs: T[], defaultT
         return searchParamsTab;
     }, [availableTabs, defaultTab, searchParamsTab]);
 
-    const setTabParam = React.useCallback((tab: T) => {
-        setParams({ [SearchParam.TAB]: tab });
-    }, [setParams]);
+    const setTabParam = React.useCallback(
+        (tab: T) => {
+            setParams({ [SearchParam.TAB]: tab });
+        },
+        [setParams],
+    );
 
     React.useEffect(() => {
         if (!inArray(searchParamsTab, availableTabs)) {

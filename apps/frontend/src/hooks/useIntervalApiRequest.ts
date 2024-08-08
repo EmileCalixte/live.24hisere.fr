@@ -1,5 +1,8 @@
 import React from "react";
-import { type ApiRequest, type ApiRequestResult } from "../types/api/ApiRequest";
+import {
+    type ApiRequest,
+    type ApiRequestResult,
+} from "../types/api/ApiRequest";
 
 export const DEFAULT_FETCH_INTERVAL = 20000;
 
@@ -12,7 +15,9 @@ export function useIntervalApiRequest<T extends ApiRequest>(
     fetchFunction: (() => Promise<ApiRequestResult<T>>) | undefined,
     fetchInterval = DEFAULT_FETCH_INTERVAL,
 ): UseIntervalApiRequest<T> {
-    const [result, setResult] = React.useState<ApiRequestResult<T> | undefined>(undefined);
+    const [result, setResult] = React.useState<ApiRequestResult<T> | undefined>(
+        undefined,
+    );
 
     const performApiRequest = React.useCallback(async (): Promise<void> => {
         if (!fetchFunction) {
@@ -25,9 +30,13 @@ export function useIntervalApiRequest<T extends ApiRequest>(
     React.useEffect(() => {
         void performApiRequest();
 
-        const interval = setInterval(() => { void performApiRequest(); }, fetchInterval);
+        const interval = setInterval(() => {
+            void performApiRequest();
+        }, fetchInterval);
 
-        return () => { clearInterval(interval); };
+        return () => {
+            clearInterval(interval);
+        };
     }, [performApiRequest, fetchInterval]);
 
     return {

@@ -26,14 +26,18 @@ export function isISO8601UTCDateString(value: unknown): boolean {
  * Checks if the string is a valid ISO 8601 UTC date.
  * If given value is not a string, then it returns false.
  */
-export function IsISO8601UTCDateString(validationOptions?: ValidationOptions): PropertyDecorator {
+export function IsISO8601UTCDateString(
+    validationOptions?: ValidationOptions,
+): PropertyDecorator {
     return ValidateBy(
         {
             name: IS_ISO8601_UTC_DATE_STRING,
             validator: {
                 validate: (value): boolean => isISO8601UTCDateString(value),
                 defaultMessage: buildMessage(
-                    eachPrefix => eachPrefix + "$property must be a valid ISO 8601 UTC date string",
+                    (eachPrefix) =>
+                        eachPrefix +
+                        "$property must be a valid ISO 8601 UTC date string",
                     validationOptions,
                 ),
             },

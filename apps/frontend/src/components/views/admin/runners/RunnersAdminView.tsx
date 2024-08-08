@@ -1,20 +1,26 @@
+import React, {
+    useCallback,
+    useContext,
+    useEffect,
+    useMemo,
+    useState,
+} from "react";
 import { faFileCsv, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import { getAdminRaces } from "../../../../services/api/RaceService";
 import { getAdminRunners } from "../../../../services/api/RunnerService";
+import ToastService from "../../../../services/ToastService";
 import { type AdminRace, type RaceDict } from "../../../../types/Race";
 import { type Runner } from "../../../../types/Runner";
+import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { getRaceDictFromRaces } from "../../../../utils/raceUtils";
-import ToastService from "../../../../services/ToastService";
+import { appContext } from "../../../App";
 import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../ui/breadcrumbs/Crumb";
-import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { isApiRequestResultOk } from "../../../../utils/apiUtils";
-import { appContext } from "../../../App";
-import Page from "../../../ui/Page";
 import CircularLoader from "../../../ui/CircularLoader";
-import { Link } from "react-router-dom";
+import Page from "../../../ui/Page";
 import RunnersTable from "../../../viewParts/admin/runners/RunnersTable";
 
 const RACE_SELECT_OPTION_ALL = "all";
@@ -47,7 +53,9 @@ export default function RunnersAdminView(): React.ReactElement {
         const result = await getAdminRaces(accessToken);
 
         if (!isApiRequestResultOk(result)) {
-            ToastService.getToastr().error("Impossible de récupérer la liste des courses");
+            ToastService.getToastr().error(
+                "Impossible de récupérer la liste des courses",
+            );
             return;
         }
 
@@ -62,7 +70,9 @@ export default function RunnersAdminView(): React.ReactElement {
         const result = await getAdminRunners(accessToken);
 
         if (!isApiRequestResultOk(result)) {
-            ToastService.getToastr().error("Impossible de récupérer la liste des coureurs");
+            ToastService.getToastr().error(
+                "Impossible de récupérer la liste des coureurs",
+            );
             return;
         }
 
@@ -78,7 +88,7 @@ export default function RunnersAdminView(): React.ReactElement {
             return runners;
         }
 
-        return runners.filter(runner => runner.raceId === selectedRaceId);
+        return runners.filter((runner) => runner.raceId === selectedRaceId);
     }, [runners, selectedRaceId]);
 
     useEffect(() => {
@@ -113,12 +123,21 @@ export default function RunnersAdminView(): React.ReactElement {
                     <Row>
                         <Col className="d-flex gap-2">
                             <Link to="/admin/runners/create" className="button">
-                                <FontAwesomeIcon icon={faPlus} className="me-2" />
+                                <FontAwesomeIcon
+                                    icon={faPlus}
+                                    className="me-2"
+                                />
                                 Ajouter un coureur
                             </Link>
 
-                            <Link to="/admin/runners/import-csv" className="button">
-                                <FontAwesomeIcon icon={faFileCsv} className="me-2" />
+                            <Link
+                                to="/admin/runners/import-csv"
+                                className="button"
+                            >
+                                <FontAwesomeIcon
+                                    icon={faFileCsv}
+                                    className="me-2"
+                                />
                                 Importer via fichier CSV
                             </Link>
                         </Col>
@@ -130,11 +149,14 @@ export default function RunnersAdminView(): React.ReactElement {
                                 <label htmlFor="admin-runners-race-select">
                                     Course
                                 </label>
-                                <select id="admin-runners-race-select"
-                                        className="input-select"
-                                        onChange={onSelectRace}
+                                <select
+                                    id="admin-runners-race-select"
+                                    className="input-select"
+                                    onChange={onSelectRace}
                                 >
-                                    <option value={RACE_SELECT_OPTION_ALL}>Toutes</option>
+                                    <option value={RACE_SELECT_OPTION_ALL}>
+                                        Toutes
+                                    </option>
 
                                     {(() => {
                                         if (races === false) {
@@ -147,13 +169,18 @@ export default function RunnersAdminView(): React.ReactElement {
 
                                         return (
                                             <>
-                                                {Object.entries(races).map(([raceId, race]) => {
-                                                    return (
-                                                        <option key={raceId} value={raceId}>
-                                                            {race.name}
-                                                        </option>
-                                                    );
-                                                })}
+                                                {Object.entries(races).map(
+                                                    ([raceId, race]) => {
+                                                        return (
+                                                            <option
+                                                                key={raceId}
+                                                                value={raceId}
+                                                            >
+                                                                {race.name}
+                                                            </option>
+                                                        );
+                                                    },
+                                                )}
                                             </>
                                         );
                                     })()}
@@ -169,7 +196,10 @@ export default function RunnersAdminView(): React.ReactElement {
                             )}
 
                             {displayedRunners.length > 0 && (
-                                <RunnersTable runners={displayedRunners} races={races} />
+                                <RunnersTable
+                                    runners={displayedRunners}
+                                    races={races}
+                                />
                             )}
                         </Col>
                     </Row>

@@ -29,18 +29,20 @@ export default function RankingSettingsTime({
     }, [currentRankingTime]);
 
     return (
-        <form className="inline-input-group d-flex"
-              style={{ visibility: isVisible ? "visible" : "hidden" }}
-              onSubmit={onSubmit}
+        <form
+            className="inline-input-group d-flex"
+            style={{ visibility: isVisible ? "visible" : "hidden" }}
+            onSubmit={onSubmit}
         >
-            <DurationInputs duration={time}
-                            setDuration={setTime}
-                            maxDuration={maxRankingTime}
-
+            <DurationInputs
+                duration={time}
+                setDuration={setTime}
+                maxDuration={maxRankingTime}
             />
-            <button className="button"
-                    disabled={time === currentRankingTime}
-                    style={{ marginLeft: 10 }}
+            <button
+                className="button"
+                disabled={time === currentRankingTime}
+                style={{ marginLeft: 10 }}
             >
                 OK
             </button>

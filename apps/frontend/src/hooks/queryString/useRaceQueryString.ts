@@ -8,7 +8,9 @@ interface UseRaceQueryString<T extends Race> {
     setRaceParam: (raceId: number | string) => void;
 }
 
-export function useRaceQueryString<T extends Race>(races: T[] | undefined): UseRaceQueryString<T> {
+export function useRaceQueryString<T extends Race>(
+    races: T[] | undefined,
+): UseRaceQueryString<T> {
     const { searchParams, setParams, deleteParams } = useQueryString();
 
     const searchParamsRace = searchParams.get(SearchParam.RACE);
@@ -18,12 +20,18 @@ export function useRaceQueryString<T extends Race>(races: T[] | undefined): UseR
             return null;
         }
 
-        return races?.find(race => race.id.toString() === searchParamsRace) ?? null;
+        return (
+            races?.find((race) => race.id.toString() === searchParamsRace) ??
+            null
+        );
     }, [races, searchParamsRace]);
 
-    const setRaceParam = React.useCallback((raceId: number | string) => {
-        setParams({ [SearchParam.RACE]: raceId.toString() });
-    }, [setParams]);
+    const setRaceParam = React.useCallback(
+        (raceId: number | string) => {
+            setParams({ [SearchParam.RACE]: raceId.toString() });
+        },
+        [setParams],
+    );
 
     React.useEffect(() => {
         if (races && searchParamsRace !== null && !selectedRace) {

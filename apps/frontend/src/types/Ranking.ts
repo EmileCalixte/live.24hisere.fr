@@ -1,6 +1,13 @@
-import { type RunnerWithProcessedData, type RunnerWithProcessedPassages } from "./Runner";
+import {
+    type RunnerWithProcessedData,
+    type RunnerWithProcessedPassages,
+} from "./Runner";
 
-export type RankingType = "scratchMixed" | "scratchGender" | "categoryMixed" | "categoryGender";
+export type RankingType =
+    | "scratchMixed"
+    | "scratchGender"
+    | "categoryMixed"
+    | "categoryGender";
 
 export interface RankingRunnerRanksObject {
     /**
@@ -98,7 +105,9 @@ export interface RankingRunnerGaps<T extends MinimalRankingRunnerInput> {
     previousRunner: RankingRunnerGapsObject<T>;
 }
 
-export type RankingRunner<T extends MinimalRankingRunnerInput = MinimalRankingRunnerInput> = T & {
+export type RankingRunner<
+    T extends MinimalRankingRunnerInput = MinimalRankingRunnerInput,
+> = T & {
     /**
      * The ranks of the runner on the rankings scratch, by category and by gender
      */
@@ -110,6 +119,9 @@ export type RankingRunner<T extends MinimalRankingRunnerInput = MinimalRankingRu
     gaps: RankingRunnerGaps<T>;
 };
 
-export type MinimalRankingRunnerInput = RunnerWithProcessedPassages & RunnerWithProcessedData;
+export type MinimalRankingRunnerInput = RunnerWithProcessedPassages &
+    RunnerWithProcessedData;
 
-export type Ranking<T extends MinimalRankingRunnerInput = MinimalRankingRunnerInput> = Array<RankingRunner<T>>;
+export type Ranking<
+    T extends MinimalRankingRunnerInput = MinimalRankingRunnerInput,
+> = Array<RankingRunner<T>>;

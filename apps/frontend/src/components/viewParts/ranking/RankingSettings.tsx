@@ -1,3 +1,4 @@
+import React, { useMemo } from "react";
 import { Col } from "react-bootstrap";
 import { CATEGORY_SCRATCH } from "../../../constants/category";
 import {
@@ -6,14 +7,16 @@ import {
     RANKING_TIME_MODE_OPTIONS,
 } from "../../../constants/forms";
 import { RankingTimeMode } from "../../../constants/rankingTimeMode";
-import { getCategoriesDictSelectOptions } from "../../../utils/categoryUtils";
-import { type CategoriesDict, type CategoryShortCode } from "../../../types/Category";
+import {
+    type CategoriesDict,
+    type CategoryShortCode,
+} from "../../../types/Category";
 import { type SelectOption } from "../../../types/Forms";
 import { type GenderWithMixed } from "../../../types/Gender";
+import { getCategoriesDictSelectOptions } from "../../../utils/categoryUtils";
 import RadioGroup from "../../ui/forms/RadioGroup";
 import Select from "../../ui/forms/Select";
 import RankingSettingsTime from "./RankingSettingsTime";
-import React, { useMemo } from "react";
 
 interface RankingSettingsProps {
     categories: CategoriesDict | null;
@@ -41,38 +44,49 @@ export default function RankingSettings({
     maxRankingTime,
 }: RankingSettingsProps): React.ReactElement {
     const categoriesOptions = useMemo<SelectOption[]>(() => {
-        return [CATEGORY_SCRATCH_SELECT_OPTION, ...getCategoriesDictSelectOptions(categories)];
+        return [
+            CATEGORY_SCRATCH_SELECT_OPTION,
+            ...getCategoriesDictSelectOptions(categories),
+        ];
     }, [categories]);
 
     return (
         <>
             <Col xxl={2} xl={3} lg={3} md={4} sm={6} xs={12}>
-                <Select label="Catégorie"
-                        options={categoriesOptions}
-                        value={selectedCategory ?? CATEGORY_SCRATCH}
-                        onChange={onCategorySelect}
+                <Select
+                    label="Catégorie"
+                    options={categoriesOptions}
+                    value={selectedCategory ?? CATEGORY_SCRATCH}
+                    onChange={onCategorySelect}
                 />
             </Col>
 
             <Col>
-                <RadioGroup legend="Genre"
-                            options={GENDER_WITH_MIXED_OPTIONS}
-                            value={selectedGender}
-                            onSelectOption={option => { onGenderSelect(option.value); }}
+                <RadioGroup
+                    legend="Genre"
+                    options={GENDER_WITH_MIXED_OPTIONS}
+                    value={selectedGender}
+                    onSelectOption={(option) => {
+                        onGenderSelect(option.value);
+                    }}
                 />
             </Col>
 
             <Col>
-                <RadioGroup legend="Heure"
-                            options={RANKING_TIME_MODE_OPTIONS}
-                            value={selectedTimeMode}
-                            onSelectOption={option => { setTimeMode(option.value); }}
+                <RadioGroup
+                    legend="Heure"
+                    options={RANKING_TIME_MODE_OPTIONS}
+                    value={selectedTimeMode}
+                    onSelectOption={(option) => {
+                        setTimeMode(option.value);
+                    }}
                 />
 
-                <RankingSettingsTime isVisible={selectedTimeMode === RankingTimeMode.AT}
-                                     currentRankingTime={currentRankingTime}
-                                     onRankingTimeSave={onRankingTimeSave}
-                                     maxRankingTime={maxRankingTime}
+                <RankingSettingsTime
+                    isVisible={selectedTimeMode === RankingTimeMode.AT}
+                    currentRankingTime={currentRankingTime}
+                    onRankingTimeSave={onRankingTimeSave}
+                    maxRankingTime={maxRankingTime}
                 />
             </Col>
         </>

@@ -1,12 +1,10 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaService } from "../prisma.service";
 import { Passage, Prisma } from "@prisma/client";
+import { PrismaService } from "../prisma.service";
 
 @Injectable()
 export class PassageService {
-    constructor(
-        private readonly prisma: PrismaService,
-    ) {}
+    constructor(private readonly prisma: PrismaService) {}
 
     async getAllPassages(): Promise<Passage[]> {
         return await this.prisma.passage.findMany();
@@ -20,7 +18,9 @@ export class PassageService {
         });
     }
 
-    async getPassage(passageWhereUniqueInput: Prisma.PassageWhereUniqueInput): Promise<Passage | null> {
+    async getPassage(
+        passageWhereUniqueInput: Prisma.PassageWhereUniqueInput,
+    ): Promise<Passage | null> {
         return await this.prisma.passage.findUnique({
             where: passageWhereUniqueInput,
         });
@@ -32,14 +32,19 @@ export class PassageService {
         });
     }
 
-    async updatePassage(id: Passage["id"], data: Omit<Prisma.PassageUpdateInput, "runner">): Promise<Passage> {
+    async updatePassage(
+        id: Passage["id"],
+        data: Omit<Prisma.PassageUpdateInput, "runner">,
+    ): Promise<Passage> {
         return await this.prisma.passage.update({
             where: { id },
             data,
         });
     }
 
-    async deletePassage(where: Prisma.PassageWhereUniqueInput): Promise<Passage> {
+    async deletePassage(
+        where: Prisma.PassageWhereUniqueInput,
+    ): Promise<Passage> {
         return await this.prisma.passage.delete({ where });
     }
 }

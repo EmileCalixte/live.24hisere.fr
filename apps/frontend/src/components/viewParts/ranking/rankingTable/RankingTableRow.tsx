@@ -28,20 +28,30 @@ export default function RankingTableRow({
 
     return (
         <tr>
-            <RankingTableRowNCells runner={runner} tableCategory={tableCategory} tableGender={tableGender} />
+            <RankingTableRowNCells
+                runner={runner}
+                tableCategory={tableCategory}
+                tableGender={tableGender}
+            />
             <td>{runner.id}</td>
             <td>
                 {runner.lastname.toUpperCase()} {runner.firstname}
                 {runner.stopped && <RankingTableRunnerStoppedBadge />}
             </td>
-            <td>{raceInitialDistance > 0 ? Math.max(0, runner.passages.length - 1) : runner.passages.length}</td>
+            <td>
+                {raceInitialDistance > 0
+                    ? Math.max(0, runner.passages.length - 1)
+                    : runner.passages.length}
+            </td>
             <td>{formatFloatNumber(runner.distance / 1000, 2)} km</td>
             <td>
                 {(() => {
                     if (runner.lastPassageTime === null) {
                         return NO_VALUE_PLACEHOLDER;
                     } else {
-                        return formatMsAsDuration(runner.lastPassageTime.raceTime);
+                        return formatMsAsDuration(
+                            runner.lastPassageTime.raceTime,
+                        );
                     }
                 })()}
             </td>
@@ -59,7 +69,11 @@ export default function RankingTableRow({
                 })()}
             </td>
             <td>
-                {formatGap(runner.gaps.firstRunner[getRankingType(tableCategory, tableGender)].gap) ?? NO_VALUE_PLACEHOLDER}
+                {formatGap(
+                    runner.gaps.firstRunner[
+                        getRankingType(tableCategory, tableGender)
+                    ].gap,
+                ) ?? NO_VALUE_PLACEHOLDER}
             </td>
 
             <td className="hide-on-print">

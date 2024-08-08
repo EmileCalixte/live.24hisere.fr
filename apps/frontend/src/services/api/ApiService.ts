@@ -1,6 +1,13 @@
 import config from "../../config/config";
-import { DEFAULT_HEADERS, DEFAULT_HEADERS_WITH_BODY, REQUEST_TIMEOUT } from "../../constants/api";
-import { type ApiRequest, type ApiRequestResult } from "../../types/api/ApiRequest";
+import {
+    DEFAULT_HEADERS,
+    DEFAULT_HEADERS_WITH_BODY,
+    REQUEST_TIMEOUT,
+} from "../../constants/api";
+import {
+    type ApiRequest,
+    type ApiRequestResult,
+} from "../../types/api/ApiRequest";
 import {
     addHeadersIfNotSet,
     EVENT_API_REQUEST_ENDED,
@@ -17,7 +24,9 @@ function getBackendFullUrl(shortUrl: string): string {
     return config.apiUrl + shortUrl;
 }
 
-function addDefaultHeaders(init: Omit<RequestInit, "headers"> & { headers: Headers }): void {
+function addDefaultHeaders(
+    init: Omit<RequestInit, "headers"> & { headers: Headers },
+): void {
     if (init.body) {
         addHeadersIfNotSet(init.headers, DEFAULT_HEADERS_WITH_BODY);
     }
@@ -48,16 +57,20 @@ export async function performApiRequest<T extends ApiRequest>(
     window.dispatchEvent(new CustomEvent(EVENT_API_REQUEST_STARTED));
 
     try {
-        const response = await Promise.race([
+        const response = (await Promise.race([
             new Promise((resolve, reject) => {
                 fetch(url, fetchInit).then(resolve).catch(reject);
             }),
             new Promise((resolve, reject) => {
                 setTimeout(() => {
-                    reject(Error(`Request ${method} ${url} timed out after ${REQUEST_TIMEOUT} ms`));
+                    reject(
+                        Error(
+                            `Request ${method} ${url} timed out after ${REQUEST_TIMEOUT} ms`,
+                        ),
+                    );
                 }, REQUEST_TIMEOUT);
             }),
-        ]) as Response;
+        ])) as Response;
 
         verbose(`${method} ${url} response code:`, response.status);
 

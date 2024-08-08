@@ -1,14 +1,14 @@
 import React from "react";
-import { createRoot } from "react-dom/client";
 import "bootstrap/dist/css/bootstrap-grid.css";
 import "bootstrap/dist/css/bootstrap-utilities.css";
-import "./css/index.css";
-import "./css/forms.css";
-import "./css/utils.css";
-import "toastr2/dist/toastr.min.css";
-import "./css/toastr-override.css";
+import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
+import "toastr2/dist/toastr.min.css";
 import App from "./components/App";
+import "./css/forms.css";
+import "./css/index.css";
+import "./css/toastr-override.css";
+import "./css/utils.css";
 
 const container = document.getElementById("root");
 

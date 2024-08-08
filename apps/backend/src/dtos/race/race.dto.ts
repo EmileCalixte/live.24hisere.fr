@@ -2,11 +2,16 @@ import {
     IsBoolean,
     IsInt,
     IsNotEmpty,
-    IsString, Max,
+    IsString,
+    Max,
     MaxLength,
     Min,
 } from "class-validator";
-import { RACE_MAX_DISTANCE, RACE_MAX_DURATION, RACE_NAME_MAX_LENGTH } from "../../constants/race.constants";
+import {
+    RACE_MAX_DISTANCE,
+    RACE_MAX_DURATION,
+    RACE_NAME_MAX_LENGTH,
+} from "../../constants/race.constants";
 import { FloatStringMax } from "../../validation/validators/floatString/FloatStringMax";
 import { FloatStringMin } from "../../validation/validators/floatString/FloatStringMin";
 import { IsFloatString } from "../../validation/validators/floatString/IsFloatString";

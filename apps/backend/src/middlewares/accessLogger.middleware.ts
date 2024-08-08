@@ -16,7 +16,9 @@ export class AccessLoggerMiddleware implements NestMiddleware {
             const contentLength = response.get("content-length");
             const duration = new Date().getTime() - startMs;
 
-            this.logger.log(`${method} ${url} - ${statusCode} (${duration} ms, length: ${contentLength ?? "unknown"}) - ${userAgent ?? "Unknown user-agent"} ${ip}`);
+            this.logger.log(
+                `${method} ${url} - ${statusCode} (${duration} ms, length: ${contentLength ?? "unknown"}) - ${userAgent ?? "Unknown user-agent"} ${ip}`,
+            );
         });
 
         next();

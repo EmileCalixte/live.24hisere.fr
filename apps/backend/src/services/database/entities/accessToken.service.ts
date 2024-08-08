@@ -12,7 +12,9 @@ export class AccessTokenService {
         private readonly randomService: RandomService,
     ) {}
 
-    async getAccessToken(accessTokenWhereUniqueInput: Prisma.AccessTokenWhereUniqueInput): Promise<AccessToken | null> {
+    async getAccessToken(
+        accessTokenWhereUniqueInput: Prisma.AccessTokenWhereUniqueInput,
+    ): Promise<AccessToken | null> {
         return await this.prisma.accessToken.findUnique({
             where: accessTokenWhereUniqueInput,
         });
@@ -28,14 +30,20 @@ export class AccessTokenService {
         });
     }
 
-    async deleteAccessToken(where: Prisma.AccessTokenWhereUniqueInput): Promise<AccessToken> {
+    async deleteAccessToken(
+        where: Prisma.AccessTokenWhereUniqueInput,
+    ): Promise<AccessToken> {
         return await this.prisma.accessToken.delete({ where });
     }
 
-    async deleteAccessTokens(where: Prisma.AccessTokenWhereInput): Promise<number> {
-        return (await this.prisma.accessToken.deleteMany({
-            where,
-        })).count;
+    async deleteAccessTokens(
+        where: Prisma.AccessTokenWhereInput,
+    ): Promise<number> {
+        return (
+            await this.prisma.accessToken.deleteMany({
+                where,
+            })
+        ).count;
     }
 
     isAccessTokenExpired(accessToken: AccessToken): boolean {

@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { type ProcessedPassage } from "../../src/types/Passage";
-import { getFastestLapPassage, getSlowestLapPassage } from "../../src/utils/passageUtils";
+import {
+    getFastestLapPassage,
+    getSlowestLapPassage,
+} from "../../src/utils/passageUtils";
 
 describe("Get fastest and slowest lap passages", () => {
     const emptyPassageArray: ProcessedPassage[] = [];
@@ -124,7 +127,9 @@ describe("Get fastest and slowest lap passages", () => {
         },
     ];
 
-    const onlyOnePassageWithLapNumberArray: [ProcessedPassage] = [fourPassagesWithLapNumberArray[0]];
+    const onlyOnePassageWithLapNumberArray: [ProcessedPassage] = [
+        fourPassagesWithLapNumberArray[0],
+    ];
 
     const fastestLapPassage = fourPassagesWithLapNumberArray[1];
     const slowestLapPassage = fourPassagesWithLapNumberArray[2];
@@ -135,16 +140,24 @@ describe("Get fastest and slowest lap passages", () => {
         });
 
         it("should return null if passage array does not contain any passage with a lap number", () => {
-            expect(getFastestLapPassage(onlyOnePassageWithoutLapNumberArray)).toEqual(null);
-            expect(getFastestLapPassage(twoPassagesWithoutLapNumberArray)).toEqual(null);
+            expect(
+                getFastestLapPassage(onlyOnePassageWithoutLapNumberArray),
+            ).toEqual(null);
+            expect(
+                getFastestLapPassage(twoPassagesWithoutLapNumberArray),
+            ).toEqual(null);
         });
 
         it("should return the passage if passage array contains only one passage with a lap number", () => {
-            expect(getFastestLapPassage(onlyOnePassageWithLapNumberArray)).toEqual(onlyOnePassageWithLapNumberArray[0]);
+            expect(
+                getFastestLapPassage(onlyOnePassageWithLapNumberArray),
+            ).toEqual(onlyOnePassageWithLapNumberArray[0]);
         });
 
         it("should return the fastest lap passage if passage array contains multiple passages with a lap number", () => {
-            expect(getFastestLapPassage(fourPassagesWithLapNumberArray)).toEqual(fastestLapPassage);
+            expect(
+                getFastestLapPassage(fourPassagesWithLapNumberArray),
+            ).toEqual(fastestLapPassage);
         });
     });
 
@@ -154,16 +167,24 @@ describe("Get fastest and slowest lap passages", () => {
         });
 
         it("should return null if passage array does not contain any passage with a lap number", () => {
-            expect(getSlowestLapPassage(onlyOnePassageWithoutLapNumberArray)).toEqual(null);
-            expect(getSlowestLapPassage(twoPassagesWithoutLapNumberArray)).toEqual(null);
+            expect(
+                getSlowestLapPassage(onlyOnePassageWithoutLapNumberArray),
+            ).toEqual(null);
+            expect(
+                getSlowestLapPassage(twoPassagesWithoutLapNumberArray),
+            ).toEqual(null);
         });
 
         it("should return the passage if passage array contains only one passage with a lap number", () => {
-            expect(getSlowestLapPassage(onlyOnePassageWithLapNumberArray)).toEqual(onlyOnePassageWithLapNumberArray[0]);
+            expect(
+                getSlowestLapPassage(onlyOnePassageWithLapNumberArray),
+            ).toEqual(onlyOnePassageWithLapNumberArray[0]);
         });
 
         it("should return the slowest lap passage if passage array contains multiple passages with a lap number", () => {
-            expect(getSlowestLapPassage(fourPassagesWithLapNumberArray)).toEqual(slowestLapPassage);
+            expect(
+                getSlowestLapPassage(fourPassagesWithLapNumberArray),
+            ).toEqual(slowestLapPassage);
         });
     });
 });

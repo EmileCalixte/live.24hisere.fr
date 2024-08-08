@@ -18,15 +18,16 @@ import { RaceDto } from "../../dtos/race/race.dto";
 import { UpdateRaceDto } from "../../dtos/race/updateRace.dto";
 import { AuthGuard } from "../../guards/auth.guard";
 import { RaceService } from "../../services/database/entities/race.service";
-import { AdminRaceResponse, AdminRacesResponse } from "../../types/responses/admin/Races";
+import {
+    AdminRaceResponse,
+    AdminRacesResponse,
+} from "../../types/responses/admin/Races";
 import { excludeKeys } from "../../utils/misc.utils";
 
 @Controller()
 @UseGuards(AuthGuard)
 export class RacesController {
-    constructor(
-        private readonly raceService: RaceService,
-    ) {}
+    constructor(private readonly raceService: RaceService) {}
 
     @Get("/admin/races")
     async getRaces(): Promise<AdminRacesResponse> {
@@ -43,7 +44,7 @@ export class RacesController {
 
         const race = await this.raceService.createRace({
             ...raceDto,
-            order: await this.raceService.getMaxOrder() + 1,
+            order: (await this.raceService.getMaxOrder()) + 1,
         });
 
         return {
@@ -74,7 +75,10 @@ export class RacesController {
     }
 
     @Patch("/admin/races/:raceId")
-    async updateRace(@Param("raceId") raceId: string, @Body() updateRaceDto: UpdateRaceDto): Promise<AdminRaceResponse> {
+    async updateRace(
+        @Param("raceId") raceId: string,
+        @Body() updateRaceDto: UpdateRaceDto,
+    ): Promise<AdminRaceResponse> {
         const id = Number(raceId);
 
         if (isNaN(id)) {
@@ -91,7 +95,10 @@ export class RacesController {
             await this.ensureRaceNameDoesNotExist(updateRaceDto.name);
         }
 
-        const updatedRace = await this.raceService.updateRace(id, updateRaceDto);
+        const updatedRace = await this.raceService.updateRace(
+            id,
+            updateRaceDto,
+        );
 
         return {
             race: updatedRace,
@@ -114,7 +121,9 @@ export class RacesController {
         }
 
         if (race.runnerCount > 0) {
-            throw new BadRequestException("Cannot delete a race if there are runners in it");
+            throw new BadRequestException(
+                "Cannot delete a race if there are runners in it",
+            );
         }
 
         await this.raceService.deleteRace({ id });
@@ -126,13 +135,15 @@ export class RacesController {
         const body = req.body;
 
         if (!Array.isArray(body)) {
-            throw new BadRequestException("Request body must be an array of race ids");
+            throw new BadRequestException(
+                "Request body must be an array of race ids",
+            );
         }
 
         let order = 0;
 
         const allRaces = await this.raceService.getAdminRaces();
-        const touchedRaceIds = new Set<typeof allRaces[number]["id"]>();
+        const touchedRaceIds = new Set<(typeof allRaces)[number]["id"]>();
         const updates: Array<Promise<unknown>> = [];
 
         // Update races whose id has been passed in body
@@ -141,7 +152,7 @@ export class RacesController {
                 continue;
             }
 
-            const race = allRaces.find(r => r.id === raceId);
+            const race = allRaces.find((r) => r.id === raceId);
 
             if (!race) {
                 continue;
@@ -169,7 +180,9 @@ export class RacesController {
         const existingRace = await this.raceService.getRace({ name });
 
         if (existingRace) {
-            throw new BadRequestException("A race with the same name already exists");
+            throw new BadRequestException(
+                "A race with the same name already exists",
+            );
         }
     }
 }

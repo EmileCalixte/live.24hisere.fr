@@ -24,7 +24,12 @@ export function isNullOrUndefined(value: unknown): value is null | undefined {
     return value === null || value === undefined;
 }
 
-export function formatDateAsString(date: Date, dateAndTimeSeparator = ", ", dateSeparator = "/", timeSeparator = ":"): string {
+export function formatDateAsString(
+    date: Date,
+    dateAndTimeSeparator = ", ",
+    dateSeparator = "/",
+    timeSeparator = ":",
+): string {
     if (!isDateValid(date)) {
         return date.toString();
     }
@@ -59,22 +64,30 @@ export function getTimeStringFromDate(date: Date, separator = ":"): string {
     return `${hours}${separator}${minutes}${separator}${seconds}`;
 }
 
-export function formatFloatNumber(number: number, decimalsCount: number): string {
+export function formatFloatNumber(
+    number: number,
+    decimalsCount: number,
+): string {
     return number.toFixed(decimalsCount);
 }
 
-export function formatMsAsDuration(ms: number, forceDisplayHours = true): string {
+export function formatMsAsDuration(
+    ms: number,
+    forceDisplayHours = true,
+): string {
     if (ms < 0) {
         return "−" + formatMsAsDuration((ms - 1000) * -1);
     }
 
     const seconds = Math.floor((ms / 1000) % 60);
     const minutes = Math.floor((ms / (1000 * 60)) % 60);
-    const hours = Math.floor((ms / (1000 * 60 * 60)));
+    const hours = Math.floor(ms / (1000 * 60 * 60));
 
-    const stringSeconds = (seconds < 10) ? "0" + seconds.toString() : seconds.toString();
-    const stringMinutes = (minutes < 10) ? "0" + minutes.toString() : minutes.toString();
-    const stringHours = (hours < 10) ? "0" + hours.toString() : hours.toString();
+    const stringSeconds =
+        seconds < 10 ? "0" + seconds.toString() : seconds.toString();
+    const stringMinutes =
+        minutes < 10 ? "0" + minutes.toString() : minutes.toString();
+    const stringHours = hours < 10 ? "0" + hours.toString() : hours.toString();
 
     if (!forceDisplayHours && hours === 0) {
         return stringMinutes + ":" + stringSeconds;
@@ -87,7 +100,10 @@ export function formatMsAsDuration(ms: number, forceDisplayHours = true): string
  * Prefix a number with 0's so that the integer part of the number has at least minDigits digits
  * @return {string|NaN}
  */
-export function prefixNumber(number: number, minDigits = 2): string | typeof NaN {
+export function prefixNumber(
+    number: number,
+    minDigits = 2,
+): string | typeof NaN {
     if (isNaN(number)) {
         return NaN;
     }
@@ -124,7 +140,10 @@ export function prefixNumber(number: number, minDigits = 2): string | typeof NaN
  * @param array the source array
  * @param indexKey The property name of the array objects that will become map keys. Each object should have a unique value for this property.
  */
-export function objectArrayToMap<T extends object, K extends keyof T>(array: T[], indexKey: K): Map<T[K], T> {
+export function objectArrayToMap<T extends object, K extends keyof T>(
+    array: T[],
+    indexKey: K,
+): Map<T[K], T> {
     const map = new Map<T[K], T>();
 
     for (const item of array) {

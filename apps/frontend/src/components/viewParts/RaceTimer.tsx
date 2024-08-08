@@ -1,7 +1,7 @@
 import React, { useContext, useMemo } from "react";
-import { isRaceFinished, isRaceStarted } from "../../utils/raceUtils";
 import { useRaceTime } from "../../hooks/useRaceTime";
 import { type Race } from "../../types/Race";
+import { isRaceFinished, isRaceStarted } from "../../utils/raceUtils";
 import { formatMsAsDuration } from "../../utils/utils";
 import { appContext } from "../App";
 
@@ -10,7 +10,10 @@ interface RaceTimerProps {
     allowNegative?: boolean;
 }
 
-export default function RaceTimer({ race, allowNegative = false }: RaceTimerProps): React.ReactElement {
+export default function RaceTimer({
+    race,
+    allowNegative = false,
+}: RaceTimerProps): React.ReactElement {
     const { serverTimeOffset } = useContext(appContext).appData;
 
     const raceTime = useRaceTime(race, serverTimeOffset);
@@ -27,7 +30,5 @@ export default function RaceTimer({ race, allowNegative = false }: RaceTimerProp
         return formatMsAsDuration(raceTime);
     }, [allowNegative, race, raceTime, serverTimeOffset]);
 
-    return (
-        <>{formattedRaceTime}</>
-    );
+    return <>{formattedRaceTime}</>;
 }

@@ -1,5 +1,16 @@
-import { BadRequestException, Controller, Delete, Get, NotFoundException, Param, UseGuards } from "@nestjs/common";
-import { AuthData, LoggedInUser } from "../../decorators/loggedInUser.decorator";
+import {
+    BadRequestException,
+    Controller,
+    Delete,
+    Get,
+    NotFoundException,
+    Param,
+    UseGuards,
+} from "@nestjs/common";
+import {
+    AuthData,
+    LoggedInUser,
+} from "../../decorators/loggedInUser.decorator";
 import { AuthGuard } from "../../guards/auth.guard";
 import { AccessTokenService } from "../../services/database/entities/accessToken.service";
 import { UserService } from "../../services/database/entities/user.service";
@@ -15,11 +26,13 @@ export class UsersController {
     ) {}
 
     @Get("/admin/users")
-    async getUsers(@LoggedInUser() { user: currentUser }: AuthData): Promise<UsersResponse> {
+    async getUsers(
+        @LoggedInUser() { user: currentUser }: AuthData,
+    ): Promise<UsersResponse> {
         const users = await this.userService.getUsers();
 
         return {
-            users: users.map(user => ({
+            users: users.map((user) => ({
                 ...excludeKeys(user, ["passwordHash"]),
                 isCurrentUser: currentUser.id === user.id,
             })),
@@ -27,7 +40,9 @@ export class UsersController {
     }
 
     @Delete("/admin/users/:userId/access-tokens")
-    async deleteUserAccessTokens(@Param("userId") userId: string): Promise<void> {
+    async deleteUserAccessTokens(
+        @Param("userId") userId: string,
+    ): Promise<void> {
         const id = Number(userId);
 
         if (isNaN(id)) {

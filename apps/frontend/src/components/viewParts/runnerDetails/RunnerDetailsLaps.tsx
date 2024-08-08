@@ -1,13 +1,20 @@
+import React from "react";
 import { faSortDown, faSortUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
 import { Col, Row } from "react-bootstrap";
-import { RUNNER_DETAILS_LAPS_SORT_COLUMNS, SortBy, SortDirection } from "../../../constants/sort";
+import {
+    RUNNER_DETAILS_LAPS_SORT_COLUMNS,
+    SortBy,
+    SortDirection,
+} from "../../../constants/sort";
 import { useSortQueryString } from "../../../hooks/queryString/useSortQueryString";
 import { useRaceTime } from "../../../hooks/useRaceTime";
 import { useWindowDimensions } from "../../../hooks/useWindowDimensions";
 import { type Race } from "../../../types/Race";
-import { type MinimalRankingRunnerInput, type RankingRunner } from "../../../types/Ranking";
+import {
+    type MinimalRankingRunnerInput,
+    type RankingRunner,
+} from "../../../types/Ranking";
 import { type RunnerWithProcessedPassages } from "../../../types/Runner";
 import { isRaceFinished, isRaceStarted } from "../../../utils/raceUtils";
 import { getOppositeSortDirection } from "../../../utils/sortUtils";
@@ -17,11 +24,16 @@ import { appContext } from "../../App";
 const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
 
 interface RunnerDetailsLapsProps {
-    runner: RankingRunner<MinimalRankingRunnerInput & RunnerWithProcessedPassages>;
+    runner: RankingRunner<
+        MinimalRankingRunnerInput & RunnerWithProcessedPassages
+    >;
     race: Race;
 }
 
-export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsProps): React.ReactElement {
+export default function RunnerDetailsLaps({
+    runner,
+    race,
+}: RunnerDetailsLapsProps): React.ReactElement {
     const { serverTimeOffset } = React.useContext(appContext).appData;
 
     const {
@@ -51,11 +63,17 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
         switch (sortColumn) {
             case SortBy.RACE_TIME:
                 passagesToDisplay.sort((passageA, passageB) => {
-                    if (passageA.processed.lapEndRaceTime < passageB.processed.lapEndRaceTime) {
+                    if (
+                        passageA.processed.lapEndRaceTime <
+                        passageB.processed.lapEndRaceTime
+                    ) {
                         return sortDirection === SortDirection.ASC ? -1 : 1;
                     }
 
-                    if (passageA.processed.lapEndRaceTime > passageB.processed.lapEndRaceTime) {
+                    if (
+                        passageA.processed.lapEndRaceTime >
+                        passageB.processed.lapEndRaceTime
+                    ) {
                         return sortDirection === SortDirection.ASC ? 1 : -1;
                     }
 
@@ -64,11 +82,17 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
                 break;
             case SortBy.LAP_SPEED:
                 passagesToDisplay.sort((passageA, passageB) => {
-                    if (passageA.processed.lapSpeed < passageB.processed.lapSpeed) {
+                    if (
+                        passageA.processed.lapSpeed <
+                        passageB.processed.lapSpeed
+                    ) {
                         return sortDirection === SortDirection.ASC ? -1 : 1;
                     }
 
-                    if (passageA.processed.lapSpeed > passageB.processed.lapSpeed) {
+                    if (
+                        passageA.processed.lapSpeed >
+                        passageB.processed.lapSpeed
+                    ) {
                         return sortDirection === SortDirection.ASC ? 1 : -1;
                     }
 
@@ -107,9 +131,7 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
                 <td>
                     <div>
                         <strong>Tour en cours</strong>
-
                         &nbsp;–&nbsp;
-
                         {formatMsAsDuration(raceTime)}
                     </div>
 
@@ -122,18 +144,21 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
         );
     }, [raceTime, currentLapTime]);
 
-    const updateSort = React.useCallback((e: React.MouseEvent<HTMLButtonElement>, clickedSortColumn: SortBy) => {
-        e.preventDefault();
+    const updateSort = React.useCallback(
+        (e: React.MouseEvent<HTMLButtonElement>, clickedSortColumn: SortBy) => {
+            e.preventDefault();
 
-        if (clickedSortColumn !== sortColumn) {
-            setSortColumnParam(clickedSortColumn);
-            setSortDirectionParam(SortDirection.ASC);
+            if (clickedSortColumn !== sortColumn) {
+                setSortColumnParam(clickedSortColumn);
+                setSortDirectionParam(SortDirection.ASC);
 
-            return;
-        }
+                return;
+            }
 
-        setSortDirectionParam(getOppositeSortDirection(sortDirection));
-    }, [setSortColumnParam, setSortDirectionParam, sortColumn, sortDirection]);
+            setSortDirectionParam(getOppositeSortDirection(sortDirection));
+        },
+        [setSortColumnParam, setSortDirectionParam, sortColumn, sortDirection],
+    );
 
     const onResponsiveSortButtonClick = React.useCallback(() => {
         if (sortColumn === SortBy.RACE_TIME) {
@@ -147,10 +172,15 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
         setSortDirectionParam(SortDirection.ASC);
     }, [setSortColumnParam, setSortDirectionParam, sortColumn]);
 
-    const showCurrentLap = isRaceStarted(race, serverTimeOffset) && !isRaceFinished(race, serverTimeOffset) && sortColumn === SortBy.RACE_TIME;
+    const showCurrentLap =
+        isRaceStarted(race, serverTimeOffset) &&
+        !isRaceFinished(race, serverTimeOffset) &&
+        sortColumn === SortBy.RACE_TIME;
 
-    const showCurrentLapAtTopOfTable = showCurrentLap && sortDirection === SortDirection.ASC;
-    const showCurrentLapAtBottomOfTable = showCurrentLap && sortDirection === SortDirection.DESC;
+    const showCurrentLapAtTopOfTable =
+        showCurrentLap && sortDirection === SortDirection.ASC;
+    const showCurrentLapAtBottomOfTable =
+        showCurrentLap && sortDirection === SortDirection.DESC;
 
     return (
         <Row>
@@ -165,17 +195,29 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
                                     <th>Nb. tours</th>
                                     <th>Distance</th>
                                     <th>
-                                        <button className="a"
-                                                onClick={e => { updateSort(e, SortBy.RACE_TIME); }}
+                                        <button
+                                            className="a"
+                                            onClick={(e) => {
+                                                updateSort(e, SortBy.RACE_TIME);
+                                            }}
                                         >
                                             Temps de course
-                                            {sortColumn === SortBy.RACE_TIME && (
+                                            {sortColumn ===
+                                                SortBy.RACE_TIME && (
                                                 <>
-                                                    {sortDirection === SortDirection.ASC && (
-                                                        <FontAwesomeIcon icon={faSortDown} className="ms-1" />
+                                                    {sortDirection ===
+                                                        SortDirection.ASC && (
+                                                        <FontAwesomeIcon
+                                                            icon={faSortDown}
+                                                            className="ms-1"
+                                                        />
                                                     )}
-                                                    {sortDirection === SortDirection.DESC && (
-                                                        <FontAwesomeIcon icon={faSortUp} className="ms-1" />
+                                                    {sortDirection ===
+                                                        SortDirection.DESC && (
+                                                        <FontAwesomeIcon
+                                                            icon={faSortUp}
+                                                            className="ms-1"
+                                                        />
                                                     )}
                                                 </>
                                             )}
@@ -183,17 +225,29 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
                                     </th>
                                     <th>Temps au tour</th>
                                     <th>
-                                        <button className="a"
-                                                onClick={e => { updateSort(e, SortBy.LAP_SPEED); }}
+                                        <button
+                                            className="a"
+                                            onClick={(e) => {
+                                                updateSort(e, SortBy.LAP_SPEED);
+                                            }}
                                         >
                                             Vitesse
-                                            {sortColumn === SortBy.LAP_SPEED && (
+                                            {sortColumn ===
+                                                SortBy.LAP_SPEED && (
                                                 <>
-                                                    {sortDirection === SortDirection.ASC && (
-                                                        <FontAwesomeIcon icon={faSortDown} className="ms-1" />
+                                                    {sortDirection ===
+                                                        SortDirection.ASC && (
+                                                        <FontAwesomeIcon
+                                                            icon={faSortDown}
+                                                            className="ms-1"
+                                                        />
                                                     )}
-                                                    {sortDirection === SortDirection.DESC && (
-                                                        <FontAwesomeIcon icon={faSortUp} className="ms-1" />
+                                                    {sortDirection ===
+                                                        SortDirection.DESC && (
+                                                        <FontAwesomeIcon
+                                                            icon={faSortUp}
+                                                            className="ms-1"
+                                                        />
                                                     )}
                                                 </>
                                             )}
@@ -205,7 +259,9 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
                                 </tr>
                             </thead>
                             <tbody>
-                                {showCurrentLapAtTopOfTable && <>{currentLapTableRow}</>}
+                                {showCurrentLapAtTopOfTable && (
+                                    <>{currentLapTableRow}</>
+                                )}
 
                                 {passagesToDisplay.map((passage, index) => (
                                     <tr key={index}>
@@ -213,30 +269,56 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
                                             {passage.processed.lapNumber ?? "–"}
                                         </td>
                                         <td>
-                                            {(passage.processed.totalDistance / 1000).toFixed(2)} km
+                                            {(
+                                                passage.processed
+                                                    .totalDistance / 1000
+                                            ).toFixed(2)}{" "}
+                                            km
                                         </td>
                                         <td>
-                                            {formatMsAsDuration(passage.processed.lapEndRaceTime)}
+                                            {formatMsAsDuration(
+                                                passage.processed
+                                                    .lapEndRaceTime,
+                                            )}
                                         </td>
                                         <td>
-                                            {formatMsAsDuration(passage.processed.lapDuration)}
+                                            {formatMsAsDuration(
+                                                passage.processed.lapDuration,
+                                            )}
                                         </td>
                                         <td>
-                                            {passage.processed.lapSpeed.toFixed(2)} km/h
+                                            {passage.processed.lapSpeed.toFixed(
+                                                2,
+                                            )}{" "}
+                                            km/h
                                         </td>
                                         <td>
-                                            {formatMsAsDuration(passage.processed.lapPace, false)}/km
+                                            {formatMsAsDuration(
+                                                passage.processed.lapPace,
+                                                false,
+                                            )}
+                                            /km
                                         </td>
                                         <td>
-                                            {passage.processed.averageSpeedSinceRaceStart.toFixed(2)} km/h
+                                            {passage.processed.averageSpeedSinceRaceStart.toFixed(
+                                                2,
+                                            )}{" "}
+                                            km/h
                                         </td>
                                         <td>
-                                            {formatMsAsDuration(passage.processed.averagePaceSinceRaceStart, false)}/km
+                                            {formatMsAsDuration(
+                                                passage.processed
+                                                    .averagePaceSinceRaceStart,
+                                                false,
+                                            )}
+                                            /km
                                         </td>
                                     </tr>
                                 ))}
 
-                                {showCurrentLapAtBottomOfTable && <>{currentLapTableRow}</>}
+                                {showCurrentLapAtBottomOfTable && (
+                                    <>{currentLapTableRow}</>
+                                )}
                             </tbody>
                         </table>
                     </div>
@@ -245,7 +327,10 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
                 {windowWidth <= RESPONSIVE_TABLE_MAX_WINDOW_WIDTH && (
                     <div>
                         <div className="mb-3">
-                            <button className="button" onClick={onResponsiveSortButtonClick}>
+                            <button
+                                className="button"
+                                onClick={onResponsiveSortButtonClick}
+                            >
                                 {sortColumn === SortBy.RACE_TIME && (
                                     <>Trier par vitesse</>
                                 )}
@@ -256,51 +341,88 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
                             </button>
                         </div>
 
-                        <table id="runner-laps-table" className="table responsive-runner-laps-table">
+                        <table
+                            id="runner-laps-table"
+                            className="table responsive-runner-laps-table"
+                        >
                             <tbody>
-                                {showCurrentLapAtTopOfTable && <>{currentLapResponsiveTableRow}</>}
+                                {showCurrentLapAtTopOfTable && (
+                                    <>{currentLapResponsiveTableRow}</>
+                                )}
 
                                 {passagesToDisplay.map((passage, index) => (
                                     <tr key={index}>
                                         <td>
                                             <div>
                                                 <strong>
-                                                    {passage.processed.lapNumber === null && (
+                                                    {passage.processed
+                                                        .lapNumber === null && (
                                                         <>Premier passage</>
                                                     )}
 
-                                                    {passage.processed.lapNumber !== null && (
-                                                        <>Tour {passage.processed.lapNumber}</>
+                                                    {passage.processed
+                                                        .lapNumber !== null && (
+                                                        <>
+                                                            Tour{" "}
+                                                            {
+                                                                passage
+                                                                    .processed
+                                                                    .lapNumber
+                                                            }
+                                                        </>
                                                     )}
                                                 </strong>
-
                                                 &nbsp;–&nbsp;
-
-                                                {formatMsAsDuration(passage.processed.lapEndRaceTime)}
+                                                {formatMsAsDuration(
+                                                    passage.processed
+                                                        .lapEndRaceTime,
+                                                )}
                                             </div>
 
                                             <div className="responsive-runner-laps-table-row-secondary-data">
                                                 Durée&nbsp;:&nbsp;
-                                                <strong>{formatMsAsDuration(passage.processed.lapDuration)}</strong>
-                                                <> </>
-                                                |<> </>
-                                                <strong>{passage.processed.lapSpeed.toFixed(2)} km/h</strong>
-                                                <> </>
-                                                |<> </>
-                                                {formatMsAsDuration(passage.processed.lapPace, false)}/km
+                                                <strong>
+                                                    {formatMsAsDuration(
+                                                        passage.processed
+                                                            .lapDuration,
+                                                    )}
+                                                </strong>
+                                                <> </>|<> </>
+                                                <strong>
+                                                    {passage.processed.lapSpeed.toFixed(
+                                                        2,
+                                                    )}{" "}
+                                                    km/h
+                                                </strong>
+                                                <> </>|<> </>
+                                                {formatMsAsDuration(
+                                                    passage.processed.lapPace,
+                                                    false,
+                                                )}
+                                                /km
                                             </div>
 
                                             <div className="responsive-runner-laps-table-row-secondary-data">
-                                                Depuis
-                                                départ&nbsp;:&nbsp; {passage.processed.averageSpeedSinceRaceStart.toFixed(2)} km/h
+                                                Depuis départ&nbsp;:&nbsp;{" "}
+                                                {passage.processed.averageSpeedSinceRaceStart.toFixed(
+                                                    2,
+                                                )}{" "}
+                                                km/h
                                                 <> </>|<> </>
-                                                {formatMsAsDuration(passage.processed.averagePaceSinceRaceStart, false)}/km
+                                                {formatMsAsDuration(
+                                                    passage.processed
+                                                        .averagePaceSinceRaceStart,
+                                                    false,
+                                                )}
+                                                /km
                                             </div>
                                         </td>
                                     </tr>
                                 ))}
 
-                                {showCurrentLapAtBottomOfTable && <>{currentLapResponsiveTableRow}</>}
+                                {showCurrentLapAtBottomOfTable && (
+                                    <>{currentLapResponsiveTableRow}</>
+                                )}
                             </tbody>
                         </table>
                     </div>

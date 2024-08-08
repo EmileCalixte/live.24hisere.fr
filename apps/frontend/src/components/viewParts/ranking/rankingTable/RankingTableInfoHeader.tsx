@@ -20,13 +20,15 @@ export default function RankingTableInfoHeader({
 }: RankingTableInfoHeaderProps): React.ReactElement {
     return (
         <td colSpan={42} className="ranking-table-info-header">
-            {race.name} : Classement {(() => {
+            {race.name} : Classement{" "}
+            {(() => {
                 if (tableCategory === null) {
                     return "scratch";
                 } else {
                     return tableCategory.toUpperCase();
                 }
-            })()} {(() => {
+            })()}{" "}
+            {(() => {
                 if (tableGender === GENDER_MIXED) {
                     return "mixte";
                 } else if (tableGender === Gender.M) {
@@ -36,7 +38,8 @@ export default function RankingTableInfoHeader({
                 } else {
                     return tableGender;
                 }
-            })()} {(() => {
+            })()}{" "}
+            {(() => {
                 if (tableRaceDuration !== null) {
                     return `à ${formatMsAsDuration(tableRaceDuration)} de course`;
                 }

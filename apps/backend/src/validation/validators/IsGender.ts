@@ -17,14 +17,18 @@ export function isGender(value: unknown): value is Gender {
  * Checks if the string is a valid gender.
  * If given value is not a string, then it returns false.
  */
-export function IsGender(validationOptions?: ValidationOptions): PropertyDecorator {
+export function IsGender(
+    validationOptions?: ValidationOptions,
+): PropertyDecorator {
     return ValidateBy(
         {
             name: IS_GENDER,
             validator: {
                 validate: isGender,
                 defaultMessage: buildMessage(
-                    eachPrefix => eachPrefix + `$property must be one of: ${getValidGendersAsString()}`,
+                    (eachPrefix) =>
+                        eachPrefix +
+                        `$property must be one of: ${getValidGendersAsString()}`,
                     validationOptions,
                 ),
             },
@@ -35,6 +39,6 @@ export function IsGender(validationOptions?: ValidationOptions): PropertyDecorat
 
 function getValidGendersAsString(): string {
     return Object.values(GENDER)
-        .map(gender => `'${gender}'`)
+        .map((gender) => `'${gender}'`)
         .join(", ");
 }

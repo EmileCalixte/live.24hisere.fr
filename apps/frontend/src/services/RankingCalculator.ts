@@ -10,7 +10,11 @@ import {
 } from "../types/Ranking";
 import { getCategoryCodeFromBirthYear } from "../utils/ffaUtils";
 import { getRunnerProcessedDataFromPassages } from "../utils/passageUtils";
-import { areRunnersEqual, getGapBetweenRunners, spaceshipRunners } from "../utils/runnerUtils";
+import {
+    areRunnersEqual,
+    getGapBetweenRunners,
+    spaceshipRunners,
+} from "../utils/runnerUtils";
 
 type CategoryGenderRanks = {
     [key in GenderWithMixed]: {
@@ -36,7 +40,8 @@ interface FirstRunnersByCategory<T extends MinimalRankingRunnerInput> {
 export class RankingCalculator<T extends MinimalRankingRunnerInput> {
     // Temporary objects to keep track of the current ranking for each category and each gender during ranking processing
     private currentRanksByCategory: CurrentRanksByCategory = {
-        scratch: { // Scratch includes all solo runners regardless of their category
+        scratch: {
+            // Scratch includes all solo runners regardless of their category
             mixed: { rank: 0, lastRunnerId: null },
             M: { rank: 0, lastRunnerId: null },
             F: { rank: 0, lastRunnerId: null },
@@ -59,11 +64,17 @@ export class RankingCalculator<T extends MinimalRankingRunnerInput> {
         private readonly runners: T[],
         rankingDate?: Date,
     ) {
-        this.runners = this.runners.filter(runner => runner.raceId === race.id);
+        this.runners = this.runners.filter(
+            (runner) => runner.raceId === race.id,
+        );
 
         if (rankingDate) {
-            this.runners = this.runners.map(runner => {
-                const passages = runner.passages.filter(passage => new Date(passage.time).getTime() < rankingDate.getTime());
+            this.runners = this.runners.map((runner) => {
+                const passages = runner.passages.filter(
+                    (passage) =>
+                        new Date(passage.time).getTime() <
+                        rankingDate.getTime(),
+                );
 
                 return {
                     ...runner,
@@ -87,7 +98,9 @@ export class RankingCalculator<T extends MinimalRankingRunnerInput> {
         const ranking: Ranking<T> = [];
 
         for (const runner of this.runners) {
-            const runnerCategoryCode = getCategoryCodeFromBirthYear(runner.birthYear);
+            const runnerCategoryCode = getCategoryCodeFromBirthYear(
+                runner.birthYear,
+            );
 
             const rankings: RankingRunnerRanks = {
                 actual: {
@@ -106,94 +119,183 @@ export class RankingCalculator<T extends MinimalRankingRunnerInput> {
 
             this.ensureCategoryCodeIsInCurrentRanks(runnerCategoryCode);
 
-            rankings.actual.scratchMixed = ++this.currentRanksByCategory.scratch.mixed.rank;
-            rankings.actual.scratchGender = ++this.currentRanksByCategory.scratch[runner.gender].rank;
-            rankings.actual.categoryMixed = ++this.currentRanksByCategory[runnerCategoryCode].mixed.rank;
-            rankings.actual.categoryGender = ++this.currentRanksByCategory[runnerCategoryCode][runner.gender].rank;
+            rankings.actual.scratchMixed = ++this.currentRanksByCategory.scratch
+                .mixed.rank;
+            rankings.actual.scratchGender = ++this.currentRanksByCategory
+                .scratch[runner.gender].rank;
+            rankings.actual.categoryMixed = ++this.currentRanksByCategory[
+                runnerCategoryCode
+            ].mixed.rank;
+            rankings.actual.categoryGender = ++this.currentRanksByCategory[
+                runnerCategoryCode
+            ][runner.gender].rank;
 
-            const scratchMixedFirstRunner = this.getFirstRunner("scratch", GENDER_MIXED);
-            const scratchGenderFirstRunner = this.getFirstRunner("scratch", runner.gender);
-            const categoryMixedFirstRunner = this.getFirstRunner(runnerCategoryCode, GENDER_MIXED);
-            const categoryGenderFirstRunner = this.getFirstRunner(runnerCategoryCode, runner.gender);
+            const scratchMixedFirstRunner = this.getFirstRunner(
+                "scratch",
+                GENDER_MIXED,
+            );
+            const scratchGenderFirstRunner = this.getFirstRunner(
+                "scratch",
+                runner.gender,
+            );
+            const categoryMixedFirstRunner = this.getFirstRunner(
+                runnerCategoryCode,
+                GENDER_MIXED,
+            );
+            const categoryGenderFirstRunner = this.getFirstRunner(
+                runnerCategoryCode,
+                runner.gender,
+            );
 
-            const scratchMixedPreviousRunner = this.getCurrentLastRunner("scratch", GENDER_MIXED, ranking);
-            const scratchGenderPreviousRunner = this.getCurrentLastRunner("scratch", runner.gender, ranking);
-            const categoryMixedPreviousRunner = this.getCurrentLastRunner(runnerCategoryCode, GENDER_MIXED, ranking);
-            const categoryGenderPreviousRunner = this.getCurrentLastRunner(runnerCategoryCode, runner.gender, ranking);
+            const scratchMixedPreviousRunner = this.getCurrentLastRunner(
+                "scratch",
+                GENDER_MIXED,
+                ranking,
+            );
+            const scratchGenderPreviousRunner = this.getCurrentLastRunner(
+                "scratch",
+                runner.gender,
+                ranking,
+            );
+            const categoryMixedPreviousRunner = this.getCurrentLastRunner(
+                runnerCategoryCode,
+                GENDER_MIXED,
+                ranking,
+            );
+            const categoryGenderPreviousRunner = this.getCurrentLastRunner(
+                runnerCategoryCode,
+                runner.gender,
+                ranking,
+            );
 
-            const scratchMixedPreviousRunnerEquality = scratchMixedPreviousRunner && areRunnersEqual(runner, scratchMixedPreviousRunner);
-            const scratchGenderPreviousRunnerEquality = scratchGenderPreviousRunner && areRunnersEqual(runner, scratchGenderPreviousRunner);
-            const categoryMixedPreviousRunnerEquality = categoryMixedPreviousRunner && areRunnersEqual(runner, categoryMixedPreviousRunner);
-            const categoryGenderPreviousRunnerEquality = categoryGenderPreviousRunner && areRunnersEqual(runner, categoryGenderPreviousRunner);
+            const scratchMixedPreviousRunnerEquality =
+                scratchMixedPreviousRunner &&
+                areRunnersEqual(runner, scratchMixedPreviousRunner);
+            const scratchGenderPreviousRunnerEquality =
+                scratchGenderPreviousRunner &&
+                areRunnersEqual(runner, scratchGenderPreviousRunner);
+            const categoryMixedPreviousRunnerEquality =
+                categoryMixedPreviousRunner &&
+                areRunnersEqual(runner, categoryMixedPreviousRunner);
+            const categoryGenderPreviousRunnerEquality =
+                categoryGenderPreviousRunner &&
+                areRunnersEqual(runner, categoryGenderPreviousRunner);
 
-            if (scratchMixedPreviousRunner && scratchMixedPreviousRunnerEquality) {
-                rankings.displayed.scratchMixed = scratchMixedPreviousRunner.ranks.displayed.scratchMixed;
+            if (
+                scratchMixedPreviousRunner &&
+                scratchMixedPreviousRunnerEquality
+            ) {
+                rankings.displayed.scratchMixed =
+                    scratchMixedPreviousRunner.ranks.displayed.scratchMixed;
             } else {
                 rankings.displayed.scratchMixed = rankings.actual.scratchMixed;
             }
 
-            if (scratchGenderPreviousRunner && scratchGenderPreviousRunnerEquality) {
-                rankings.displayed.scratchGender = scratchGenderPreviousRunner.ranks.displayed.scratchGender;
+            if (
+                scratchGenderPreviousRunner &&
+                scratchGenderPreviousRunnerEquality
+            ) {
+                rankings.displayed.scratchGender =
+                    scratchGenderPreviousRunner.ranks.displayed.scratchGender;
             } else {
-                rankings.displayed.scratchGender = rankings.actual.scratchGender;
+                rankings.displayed.scratchGender =
+                    rankings.actual.scratchGender;
             }
 
-            if (categoryMixedPreviousRunner && categoryMixedPreviousRunnerEquality) {
-                rankings.displayed.categoryMixed = categoryMixedPreviousRunner.ranks.displayed.categoryMixed;
+            if (
+                categoryMixedPreviousRunner &&
+                categoryMixedPreviousRunnerEquality
+            ) {
+                rankings.displayed.categoryMixed =
+                    categoryMixedPreviousRunner.ranks.displayed.categoryMixed;
             } else {
-                rankings.displayed.categoryMixed = rankings.actual.categoryMixed;
+                rankings.displayed.categoryMixed =
+                    rankings.actual.categoryMixed;
             }
 
-            if (categoryGenderPreviousRunner && categoryGenderPreviousRunnerEquality) {
-                rankings.displayed.categoryGender = categoryGenderPreviousRunner.ranks.displayed.categoryGender;
+            if (
+                categoryGenderPreviousRunner &&
+                categoryGenderPreviousRunnerEquality
+            ) {
+                rankings.displayed.categoryGender =
+                    categoryGenderPreviousRunner.ranks.displayed.categoryGender;
             } else {
-                rankings.displayed.categoryGender = rankings.actual.categoryGender;
+                rankings.displayed.categoryGender =
+                    rankings.actual.categoryGender;
             }
 
             const gaps: RankingRunnerGaps<T> = {
                 firstRunner: {
                     scratchMixed: {
                         runner: scratchMixedFirstRunner,
-                        gap: getGapBetweenRunners(scratchMixedFirstRunner ?? runner, runner),
+                        gap: getGapBetweenRunners(
+                            scratchMixedFirstRunner ?? runner,
+                            runner,
+                        ),
                     },
                     scratchGender: {
                         runner: scratchGenderFirstRunner,
-                        gap: getGapBetweenRunners(scratchGenderFirstRunner ?? runner, runner),
+                        gap: getGapBetweenRunners(
+                            scratchGenderFirstRunner ?? runner,
+                            runner,
+                        ),
                     },
                     categoryMixed: {
                         runner: categoryMixedFirstRunner,
-                        gap: getGapBetweenRunners(categoryMixedFirstRunner ?? runner, runner),
+                        gap: getGapBetweenRunners(
+                            categoryMixedFirstRunner ?? runner,
+                            runner,
+                        ),
                     },
                     categoryGender: {
                         runner: categoryGenderFirstRunner,
-                        gap: getGapBetweenRunners(categoryGenderFirstRunner ?? runner, runner),
+                        gap: getGapBetweenRunners(
+                            categoryGenderFirstRunner ?? runner,
+                            runner,
+                        ),
                     },
                 },
                 previousRunner: {
                     scratchMixed: {
                         runner: scratchMixedPreviousRunner,
-                        gap: getGapBetweenRunners(scratchMixedPreviousRunner ?? runner, runner),
+                        gap: getGapBetweenRunners(
+                            scratchMixedPreviousRunner ?? runner,
+                            runner,
+                        ),
                     },
                     scratchGender: {
                         runner: scratchGenderPreviousRunner,
-                        gap: getGapBetweenRunners(scratchGenderPreviousRunner ?? runner, runner),
+                        gap: getGapBetweenRunners(
+                            scratchGenderPreviousRunner ?? runner,
+                            runner,
+                        ),
                     },
                     categoryMixed: {
                         runner: categoryMixedPreviousRunner,
-                        gap: getGapBetweenRunners(categoryMixedPreviousRunner ?? runner, runner),
+                        gap: getGapBetweenRunners(
+                            categoryMixedPreviousRunner ?? runner,
+                            runner,
+                        ),
                     },
                     categoryGender: {
                         runner: categoryGenderPreviousRunner,
-                        gap: getGapBetweenRunners(categoryGenderPreviousRunner ?? runner, runner),
+                        gap: getGapBetweenRunners(
+                            categoryGenderPreviousRunner ?? runner,
+                            runner,
+                        ),
                     },
                 },
             };
 
             // Update current ranks object with current runner data for next iteration
             this.currentRanksByCategory.scratch.mixed.lastRunnerId = runner.id;
-            this.currentRanksByCategory.scratch[runner.gender].lastRunnerId = runner.id;
-            this.currentRanksByCategory[runnerCategoryCode].mixed.lastRunnerId = runner.id;
-            this.currentRanksByCategory[runnerCategoryCode][runner.gender].lastRunnerId = runner.id;
+            this.currentRanksByCategory.scratch[runner.gender].lastRunnerId =
+                runner.id;
+            this.currentRanksByCategory[runnerCategoryCode].mixed.lastRunnerId =
+                runner.id;
+            this.currentRanksByCategory[runnerCategoryCode][
+                runner.gender
+            ].lastRunnerId = runner.id;
 
             const rankingRunnner = {
                 ...runner,
@@ -228,7 +330,9 @@ export class RankingCalculator<T extends MinimalRankingRunnerInput> {
     }
 
     private updateFirstRunners(runner: Ranking<T>[number]): void {
-        const runnerCategoryCode = getCategoryCodeFromBirthYear(runner.birthYear);
+        const runnerCategoryCode = getCategoryCodeFromBirthYear(
+            runner.birthYear,
+        );
 
         if (!(runnerCategoryCode in this.firstRunnersByCategory)) {
             this.addCategoryCodeToFirstRunners(runnerCategoryCode);
@@ -247,13 +351,16 @@ export class RankingCalculator<T extends MinimalRankingRunnerInput> {
         }
 
         if (!this.firstRunnersByCategory[runnerCategoryCode][runner.gender]) {
-            this.firstRunnersByCategory[runnerCategoryCode][runner.gender] = runner;
+            this.firstRunnersByCategory[runnerCategoryCode][runner.gender] =
+                runner;
         }
     }
 
     private addCategoryCodeToFirstRunners(categoryCode: string): void {
         if (categoryCode in this.firstRunnersByCategory) {
-            throw new Error("Category already existing in first runners by category");
+            throw new Error(
+                "Category already existing in first runners by category",
+            );
         }
 
         this.firstRunnersByCategory[categoryCode] = {
@@ -263,7 +370,10 @@ export class RankingCalculator<T extends MinimalRankingRunnerInput> {
         };
     }
 
-    private getFirstRunner(category: string, gender: GenderWithMixed): Ranking<T>[number] | null {
+    private getFirstRunner(
+        category: string,
+        gender: GenderWithMixed,
+    ): Ranking<T>[number] | null {
         if (!(category in this.firstRunnersByCategory)) {
             return null;
         }
@@ -271,17 +381,22 @@ export class RankingCalculator<T extends MinimalRankingRunnerInput> {
         return this.firstRunnersByCategory[category][gender];
     }
 
-    private getCurrentLastRunner(category: string, gender: GenderWithMixed, ranking: Ranking<T>): Ranking<T>[number] | null {
+    private getCurrentLastRunner(
+        category: string,
+        gender: GenderWithMixed,
+        ranking: Ranking<T>,
+    ): Ranking<T>[number] | null {
         if (!(category in this.currentRanksByCategory)) {
             return null;
         }
 
-        const lastRunnerId = this.currentRanksByCategory[category][gender].lastRunnerId;
+        const lastRunnerId =
+            this.currentRanksByCategory[category][gender].lastRunnerId;
 
         if (!lastRunnerId) {
             return null;
         }
 
-        return ranking.find(runner => runner.id === lastRunnerId) ?? null;
+        return ranking.find((runner) => runner.id === lastRunnerId) ?? null;
     }
 }

@@ -1,24 +1,29 @@
-import { appContext } from "../../App";
 import React, { useCallback, useContext, useEffect, useRef } from "react";
+import { appContext } from "../../App";
 
 interface AdminHeaderUserDropdownProps {
     hideDropdown: () => void;
 }
 
-export default function AdminHeaderUserDropdown({ hideDropdown }: AdminHeaderUserDropdownProps): React.ReactElement {
+export default function AdminHeaderUserDropdown({
+    hideDropdown,
+}: AdminHeaderUserDropdownProps): React.ReactElement {
     const { logout } = useContext(appContext).user;
 
     const dropdownNode = useRef<HTMLDivElement>(null);
 
-    const onClickOutside = useCallback((e: MouseEvent) => {
-        if (!dropdownNode?.current) {
-            return;
-        }
+    const onClickOutside = useCallback(
+        (e: MouseEvent) => {
+            if (!dropdownNode?.current) {
+                return;
+            }
 
-        if (!dropdownNode.current.contains(e.target as Node)) {
-            hideDropdown();
-        }
-    }, [dropdownNode, hideDropdown]);
+            if (!dropdownNode.current.contains(e.target as Node)) {
+                hideDropdown();
+            }
+        },
+        [dropdownNode, hideDropdown],
+    );
 
     useEffect(() => {
         setTimeout(() => {

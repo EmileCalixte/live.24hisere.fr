@@ -1,27 +1,44 @@
-import { faArrowsUpDown, faCheck, faPlus } from "@fortawesome/free-solid-svg-icons";
+import React, {
+    useCallback,
+    useContext,
+    useEffect,
+    useMemo,
+    useState,
+} from "react";
+import {
+    faArrowsUpDown,
+    faCheck,
+    faPlus,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
-import { getAdminRaces, putAdminRaceOrder } from "../../../../services/api/RaceService";
+import { Link } from "react-router-dom";
+import {
+    getAdminRaces,
+    putAdminRaceOrder,
+} from "../../../../services/api/RaceService";
+import ToastService from "../../../../services/ToastService";
 import { type AdminRaceWithRunnerCount } from "../../../../types/Race";
-import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
-import Crumb from "../../../ui/breadcrumbs/Crumb";
-import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { appContext } from "../../../App";
-import Page from "../../../ui/Page";
+import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
+import Crumb from "../../../ui/breadcrumbs/Crumb";
 import CircularLoader from "../../../ui/CircularLoader";
-import { Link } from "react-router-dom";
+import Page from "../../../ui/Page";
 import RacesListItem from "../../../viewParts/admin/races/RacesListItem";
-import ToastService from "../../../../services/ToastService";
 
 export default function RacesAdminView(): React.ReactElement {
     const { accessToken } = useContext(appContext).user;
 
     // false = not fetched yet
-    const [races, setRaces] = useState<AdminRaceWithRunnerCount[] | false>(false);
+    const [races, setRaces] = useState<AdminRaceWithRunnerCount[] | false>(
+        false,
+    );
 
     // Used when user is reordering the list
-    const [sortingRaces, setSortingRaces] = useState<AdminRaceWithRunnerCount[] | false>(false);
+    const [sortingRaces, setSortingRaces] = useState<
+        AdminRaceWithRunnerCount[] | false
+    >(false);
     const [isSorting, setIsSorting] = useState(false);
 
     const [isSaving, setIsSaving] = useState(false);
@@ -34,7 +51,9 @@ export default function RacesAdminView(): React.ReactElement {
         const result = await getAdminRaces(accessToken);
 
         if (!isApiRequestResultOk(result)) {
-            ToastService.getToastr().error("Impossible de récupérer la liste des courses");
+            ToastService.getToastr().error(
+                "Impossible de récupérer la liste des courses",
+            );
             return;
         }
 
@@ -75,12 +94,14 @@ export default function RacesAdminView(): React.ReactElement {
 
         setIsSaving(true);
 
-        const raceIds = sortingRaces.map(race => race.id);
+        const raceIds = sortingRaces.map((race) => race.id);
 
         const result = await putAdminRaceOrder(accessToken, raceIds);
 
         if (!isApiRequestResultOk(result)) {
-            ToastService.getToastr().error("Impossible de sauvegarder l'ordre des courses");
+            ToastService.getToastr().error(
+                "Impossible de sauvegarder l'ordre des courses",
+            );
             setIsSaving(false);
             return;
         }
@@ -132,16 +153,17 @@ export default function RacesAdminView(): React.ReactElement {
                 </Col>
             </Row>
 
-            {races === false && (
-                <CircularLoader />
-            )}
+            {races === false && <CircularLoader />}
 
             {races !== false && (
                 <>
                     <Row>
                         <Col>
                             <Link to="/admin/races/create" className="button">
-                                <FontAwesomeIcon icon={faPlus} className="me-2" />
+                                <FontAwesomeIcon
+                                    icon={faPlus}
+                                    className="me-2"
+                                />
                                 Créer une course
                             </Link>
                         </Col>
@@ -149,33 +171,49 @@ export default function RacesAdminView(): React.ReactElement {
 
                     <Row>
                         <Col>
-                            {races.length === 0 && (
-                                <p>Aucune course</p>
-                            )}
+                            {races.length === 0 && <p>Aucune course</p>}
 
                             {races.length > 0 && (
                                 <>
                                     <Row className="mt-4">
                                         <Col>
                                             {!isSorting && (
-                                                <button className="button" onClick={() => { setIsSorting(true); }}>
-                                                    <FontAwesomeIcon icon={faArrowsUpDown} className="me-2" />
+                                                <button
+                                                    className="button"
+                                                    onClick={() => {
+                                                        setIsSorting(true);
+                                                    }}
+                                                >
+                                                    <FontAwesomeIcon
+                                                        icon={faArrowsUpDown}
+                                                        className="me-2"
+                                                    />
                                                     Changer l'ordre
                                                 </button>
                                             )}
 
                                             {isSorting && (
                                                 <>
-                                                    <button className="button red me-2"
-                                                            onClick={() => { setIsSorting(false); }}
-                                                            disabled={isSaving}
+                                                    <button
+                                                        className="button red me-2"
+                                                        onClick={() => {
+                                                            setIsSorting(false);
+                                                        }}
+                                                        disabled={isSaving}
                                                     >
                                                         Annuler
                                                     </button>
-                                                    <button className="button"
-                                                            onClick={() => { void saveSort(); }}
-                                                            disabled={isSaving}>
-                                                        <FontAwesomeIcon icon={faCheck} className="me-2" />
+                                                    <button
+                                                        className="button"
+                                                        onClick={() => {
+                                                            void saveSort();
+                                                        }}
+                                                        disabled={isSaving}
+                                                    >
+                                                        <FontAwesomeIcon
+                                                            icon={faCheck}
+                                                            className="me-2"
+                                                        />
                                                         Enregistrer
                                                     </button>
                                                 </>
@@ -186,21 +224,67 @@ export default function RacesAdminView(): React.ReactElement {
                                     <Row>
                                         <Col>
                                             <ul className="admin-list">
-                                                {(displayedRaces as AdminRaceWithRunnerCount[]).map((race, index) => {
+                                                {(
+                                                    displayedRaces as AdminRaceWithRunnerCount[]
+                                                ).map((race, index) => {
                                                     return (
-                                                        <li key={race.id}
-                                                            className={isSorting ? "draggable" : ""}
-                                                            draggable={isSorting}
-                                                            onDragStart={isSorting ? e => { onDragStart(e, index); } : undefined}
-                                                            onDragEnter={isSorting ? e => { onDragEnter(e, index); } : undefined}
-                                                            onDragOver={isSorting ? e => { e.preventDefault(); } : undefined}
-                                                            onDragEnd={isSorting ? onDragEnd : undefined}
+                                                        <li
+                                                            key={race.id}
+                                                            className={
+                                                                isSorting
+                                                                    ? "draggable"
+                                                                    : ""
+                                                            }
+                                                            draggable={
+                                                                isSorting
+                                                            }
+                                                            onDragStart={
+                                                                isSorting
+                                                                    ? (e) => {
+                                                                          onDragStart(
+                                                                              e,
+                                                                              index,
+                                                                          );
+                                                                      }
+                                                                    : undefined
+                                                            }
+                                                            onDragEnter={
+                                                                isSorting
+                                                                    ? (e) => {
+                                                                          onDragEnter(
+                                                                              e,
+                                                                              index,
+                                                                          );
+                                                                      }
+                                                                    : undefined
+                                                            }
+                                                            onDragOver={
+                                                                isSorting
+                                                                    ? (e) => {
+                                                                          e.preventDefault();
+                                                                      }
+                                                                    : undefined
+                                                            }
+                                                            onDragEnd={
+                                                                isSorting
+                                                                    ? onDragEnd
+                                                                    : undefined
+                                                            }
                                                         >
-                                                            <RacesListItem key={race.id}
-                                                                           race={race}
-                                                                           isSorting={isSorting}
-                                                                           isDragged={index === dragItemIndex}
-                                                                           isDraggedOver={index === dragOverItemIndex}
+                                                            <RacesListItem
+                                                                key={race.id}
+                                                                race={race}
+                                                                isSorting={
+                                                                    isSorting
+                                                                }
+                                                                isDragged={
+                                                                    index ===
+                                                                    dragItemIndex
+                                                                }
+                                                                isDraggedOver={
+                                                                    index ===
+                                                                    dragOverItemIndex
+                                                                }
                                                             />
                                                         </li>
                                                     );

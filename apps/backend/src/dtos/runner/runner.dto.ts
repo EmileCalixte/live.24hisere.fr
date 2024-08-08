@@ -1,5 +1,18 @@
-import { IsBoolean, IsDefined, IsInt, IsNotEmpty, IsString, Max, MaxLength, Min, Validate } from "class-validator";
-import { RUNNER_FIRSTNAME_MAX_LENGTH, RUNNER_LASTNAME_MAX_LENGTH } from "../../constants/runner.constants";
+import {
+    IsBoolean,
+    IsDefined,
+    IsInt,
+    IsNotEmpty,
+    IsString,
+    Max,
+    MaxLength,
+    Min,
+    Validate,
+} from "class-validator";
+import {
+    RUNNER_FIRSTNAME_MAX_LENGTH,
+    RUNNER_LASTNAME_MAX_LENGTH,
+} from "../../constants/runner.constants";
 import { Gender } from "../../types/Gender";
 import { RaceIdExistsRule } from "../../validation/rules/race/raceIdExists.rule";
 import { IsGender } from "../../validation/validators/IsGender";

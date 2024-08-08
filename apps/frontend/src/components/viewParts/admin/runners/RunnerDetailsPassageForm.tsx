@@ -43,24 +43,37 @@ export default function RunnerDetailsPassageForm({
 
             <Row>
                 <Col>
-                    <form onSubmit={(e) => { void onSubmit(e); }}>
-                        <DurationInputs legend="Temps de course"
-                                        duration={raceTime}
-                                        setDuration={setRaceTime}
+                    <form
+                        onSubmit={(e) => {
+                            void onSubmit(e);
+                        }}
+                    >
+                        <DurationInputs
+                            legend="Temps de course"
+                            duration={raceTime}
+                            setDuration={setRaceTime}
                         />
 
                         {time && (
-                            <p>
-                                Date et heure : {formatDateAsString(time)}
-                            </p>
+                            <p>Date et heure : {formatDateAsString(time)}</p>
                         )}
 
                         <div className="flex-space-between-container">
-                            <button className="button grey" type="button" onClick={() => { onClose(); }}>
+                            <button
+                                className="button grey"
+                                type="button"
+                                onClick={() => {
+                                    onClose();
+                                }}
+                            >
                                 Annuler
                             </button>
 
-                            <button className="button" type="submit" disabled={submitButtonDisabled}>
+                            <button
+                                className="button"
+                                type="submit"
+                                disabled={submitButtonDisabled}
+                            >
                                 Enregistrer
                             </button>
                         </div>

@@ -1,4 +1,8 @@
-import { type AdminRace, type AdminRaceWithRunnerCount, type RaceWithRunnerCount } from "../Race";
+import {
+    type AdminRace,
+    type AdminRaceWithRunnerCount,
+    type RaceWithRunnerCount,
+} from "../Race";
 import { type ApiRequest } from "./ApiRequest";
 
 export interface GetRacesApiRequest extends ApiRequest {

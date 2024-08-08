@@ -51,21 +51,12 @@
         "comma-dangle": "off",
         "@typescript-eslint/comma-dangle": [
             "error",
-            {
-                "arrays": "always-multiline",
-                "objects": "always-multiline",
-                "imports": "always-multiline",
-                "exports": "always-multiline",
-                "functions": "always-multiline",
-                "enums": "always-multiline"
-            }
+            "always-multiline"
         ],
 
         "quotes": "off",
         "jsx-quotes": ["error", "prefer-double"],
         "@typescript-eslint/quotes": ["error", "double"],
-
-        "operator-linebreak": ["error", "before"],
 
         "@typescript-eslint/space-before-function-paren": [
             "error",

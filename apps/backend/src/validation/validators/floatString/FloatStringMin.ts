@@ -17,14 +17,19 @@ export function floatStringMin(value: unknown, min: number): boolean {
 /**
  * Checks if the value is greater than or equal to the allowed minimum value.
  */
-export function FloatStringMin(minValue: number, validationOptions?: ValidationOptions): PropertyDecorator {
+export function FloatStringMin(
+    minValue: number,
+    validationOptions?: ValidationOptions,
+): PropertyDecorator {
     return ValidateBy(
         {
             name: FLOAT_STRING_MIN,
             validator: {
                 validate: (value): boolean => floatStringMin(value, minValue),
                 defaultMessage: buildMessage(
-                    eachPrefix => eachPrefix + "$property must not be less than $constraint1",
+                    (eachPrefix) =>
+                        eachPrefix +
+                        "$property must not be less than $constraint1",
                     validationOptions,
                 ),
             },

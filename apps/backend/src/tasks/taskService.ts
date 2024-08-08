@@ -17,7 +17,9 @@ export abstract class TaskService {
         const cronTime = this.getCronTime();
 
         if (cronTime === false) {
-            this.logger.log(`Interval for task ${this.getTaskName()} not defined, skipping`);
+            this.logger.log(
+                `Interval for task ${this.getTaskName()} not defined, skipping`,
+            );
             return;
         }
 
@@ -50,7 +52,9 @@ export abstract class TaskService {
 
     private executeTask(): void {
         if (this.executionInProgress && this.preventOverlapping) {
-            this.logger.log(`Previous execution is still in progress (started at ${this.previousExecutionStartTime?.toISOString() ?? "unknown time"}), skipping this one`);
+            this.logger.log(
+                `Previous execution is still in progress (started at ${this.previousExecutionStartTime?.toISOString() ?? "unknown time"}), skipping this one`,
+            );
             return;
         }
 
@@ -58,7 +62,7 @@ export abstract class TaskService {
         this.previousExecutionStartTime = new Date();
 
         this.task()
-            .catch(error => {
+            .catch((error) => {
                 this.logger.error(error);
             })
             .finally(() => {

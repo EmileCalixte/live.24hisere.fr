@@ -1,6 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { type AdminPassageWithRunnerId, type ProcessedPassage } from "../../../../types/Passage";
+import {
+    type AdminPassageWithRunnerId,
+    type ProcessedPassage,
+} from "../../../../types/Passage";
 import { type RaceDict } from "../../../../types/Race";
 import { type Runner } from "../../../../types/Runner";
 import { formatFloatNumber, formatMsAsDuration } from "../../../../utils/utils";
@@ -11,7 +14,11 @@ interface FastestLapsTableProps {
     runners: Runner[];
 }
 
-export default function FastestLapsTable({ passages, races, runners }: FastestLapsTableProps): React.ReactElement {
+export default function FastestLapsTable({
+    passages,
+    races,
+    runners,
+}: FastestLapsTableProps): React.ReactElement {
     return (
         <table className="table">
             <thead>
@@ -25,8 +32,10 @@ export default function FastestLapsTable({ passages, races, runners }: FastestLa
                 </tr>
             </thead>
             <tbody>
-                {passages.map(passage => {
-                    const runner = runners.find(ru => ru.id === passage.runnerId);
+                {passages.map((passage) => {
+                    const runner = runners.find(
+                        (ru) => ru.id === passage.runnerId,
+                    );
 
                     if (!runner) {
                         return null;
@@ -42,11 +51,12 @@ export default function FastestLapsTable({ passages, races, runners }: FastestLa
                                     {`${runner.id} – ${runner.firstname} ${runner.lastname}`}
                                 </Link>
                             </td>
+                            <td>{race?.name ?? <i>Course inconnue</i>}</td>
                             <td>
-                                {race?.name ?? <i>Course inconnue</i>}
-                            </td>
-                            <td>
-                                {formatMsAsDuration(passage.processed.lapDuration, false)}
+                                {formatMsAsDuration(
+                                    passage.processed.lapDuration,
+                                    false,
+                                )}
                             </td>
                             <td>
                                 {`${formatFloatNumber(passage.processed.lapSpeed, 2)} km/h`}

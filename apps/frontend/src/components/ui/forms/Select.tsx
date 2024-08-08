@@ -1,8 +1,9 @@
-import clsx from "clsx";
 import React from "react";
+import clsx from "clsx";
 import { type SelectOption } from "../../../types/Forms";
 
-export interface SelectProps<T extends SelectOption["value"]> extends React.SelectHTMLAttributes<HTMLSelectElement> {
+export interface SelectProps<T extends SelectOption["value"]>
+    extends React.SelectHTMLAttributes<HTMLSelectElement> {
     label: string;
     options: Array<SelectOption<T>>;
     isLoading?: boolean;
@@ -28,24 +29,27 @@ export default function Select<T extends SelectOption["value"]>({
         <div className={clsx("input-group", className)}>
             <label>
                 {label}
-                <select ref={selectRef}
-                        className="input-select"
-                        disabled={disabled || isLoading}
-                        value={isLoading ? "_loading" : value ?? "_placeholder"}
-                        {...props}
+                <select
+                    ref={selectRef}
+                    className="input-select"
+                    disabled={disabled || isLoading}
+                    value={isLoading ? "_loading" : (value ?? "_placeholder")}
+                    {...props}
                 >
-                    <option disabled hidden value="_placeholder">{placeholderLabel}</option>
-                    {isLoading
-                        ? (
-                            <option value="_loading">{loadingOptionLabel}</option>
-                        )
-                        : (
-                            <>
-                                {options.map((option, index) => (
-                                    <option key={index} value={option.value}>{option.label}</option>
-                                ))}
-                            </>
-                        )}
+                    <option disabled hidden value="_placeholder">
+                        {placeholderLabel}
+                    </option>
+                    {isLoading ? (
+                        <option value="_loading">{loadingOptionLabel}</option>
+                    ) : (
+                        <>
+                            {options.map((option, index) => (
+                                <option key={index} value={option.value}>
+                                    {option.label}
+                                </option>
+                            ))}
+                        </>
+                    )}
                 </select>
             </label>
         </div>

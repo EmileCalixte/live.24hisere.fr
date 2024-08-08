@@ -25,7 +25,8 @@
         font-size: 1.25em;
     }
 
-    table.table td, .table th {
+    table.table td,
+    .table th {
         padding: 3px !important;
         border-top: 1px solid #aaa !important;
         border-bottom: 1px solid #aaa !important;

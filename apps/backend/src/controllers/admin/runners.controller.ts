@@ -1,10 +1,13 @@
 import {
     BadRequestException,
     Body,
-    Controller, Delete,
-    Get, HttpCode,
+    Controller,
+    Delete,
+    Get,
+    HttpCode,
     NotFoundException,
-    Param, ParseArrayPipe,
+    Param,
+    ParseArrayPipe,
     Patch,
     Post,
     UseGuards,
@@ -14,9 +17,9 @@ import { UpdateRunnerDto } from "../../dtos/runner/updateRunner.dto";
 import { AuthGuard } from "../../guards/auth.guard";
 import { RunnerService } from "../../services/database/entities/runner.service";
 import {
-    AdminRunnerWithPassagesResponse,
-    AdminRunnersResponse,
     AdminRunnerResponse,
+    AdminRunnersResponse,
+    AdminRunnerWithPassagesResponse,
 } from "../../types/responses/admin/Runner";
 import { CountResponse } from "../../types/responses/Misc";
 import { excludeKeys } from "../../utils/misc.utils";
@@ -24,9 +27,7 @@ import { excludeKeys } from "../../utils/misc.utils";
 @Controller()
 @UseGuards(AuthGuard)
 export class RunnersController {
-    constructor(
-        private readonly runnerService: RunnerService,
-    ) {}
+    constructor(private readonly runnerService: RunnerService) {}
 
     @Get("/admin/runners")
     async getRunners(): Promise<AdminRunnersResponse> {
@@ -38,18 +39,25 @@ export class RunnersController {
     }
 
     @Post("/admin/runners")
-    async createRunner(@Body() runnerDto: RunnerDto): Promise<AdminRunnerWithPassagesResponse> {
+    async createRunner(
+        @Body() runnerDto: RunnerDto,
+    ): Promise<AdminRunnerWithPassagesResponse> {
         await this.ensureRunnerIdDoesNotExist(runnerDto.id);
 
-        const runner = await this.runnerService.createRunner(excludeKeys({
-            ...runnerDto,
-            birthYear: runnerDto.birthYear.toString(),
-            race: {
-                connect: {
-                    id: runnerDto.raceId,
+        const runner = await this.runnerService.createRunner(
+            excludeKeys(
+                {
+                    ...runnerDto,
+                    birthYear: runnerDto.birthYear.toString(),
+                    race: {
+                        connect: {
+                            id: runnerDto.raceId,
+                        },
+                    },
                 },
-            },
-        }, ["raceId"]));
+                ["raceId"],
+            ),
+        );
 
         return {
             runner: {
@@ -60,8 +68,14 @@ export class RunnersController {
     }
 
     @Post("/admin/runners-bulk")
-    async createRunnersBulk(@Body(new ParseArrayPipe({ items: RunnerDto })) runnerDtos: RunnerDto[]): Promise<CountResponse> {
-        await Promise.all(runnerDtos.map(async dto => { await this.ensureRunnerIdDoesNotExist(dto.id); }));
+    async createRunnersBulk(
+        @Body(new ParseArrayPipe({ items: RunnerDto })) runnerDtos: RunnerDto[],
+    ): Promise<CountResponse> {
+        await Promise.all(
+            runnerDtos.map(async (dto) => {
+                await this.ensureRunnerIdDoesNotExist(dto.id);
+            }),
+        );
 
         const ids = new Set();
 
@@ -73,10 +87,12 @@ export class RunnersController {
             ids.add(dto.id);
         }
 
-        const createdRunnersCount = await this.runnerService.createRunners(runnerDtos.map(dto => ({
-            ...dto,
-            birthYear: dto.birthYear.toString(),
-        })));
+        const createdRunnersCount = await this.runnerService.createRunners(
+            runnerDtos.map((dto) => ({
+                ...dto,
+                birthYear: dto.birthYear.toString(),
+            })),
+        );
 
         return {
             count: createdRunnersCount,
@@ -84,7 +100,9 @@ export class RunnersController {
     }
 
     @Get("/admin/runners/:runnerId")
-    async getRunner(@Param("runnerId") runnerId: string): Promise<AdminRunnerWithPassagesResponse> {
+    async getRunner(
+        @Param("runnerId") runnerId: string,
+    ): Promise<AdminRunnerWithPassagesResponse> {
         const id = Number(runnerId);
 
         if (isNaN(id)) {
@@ -103,7 +121,10 @@ export class RunnersController {
     }
 
     @Patch("/admin/runners/:runnerId")
-    async updateRunner(@Param("runnerId") runnerId: string, @Body() updateRunnerDto: UpdateRunnerDto): Promise<AdminRunnerResponse> {
+    async updateRunner(
+        @Param("runnerId") runnerId: string,
+        @Body() updateRunnerDto: UpdateRunnerDto,
+    ): Promise<AdminRunnerResponse> {
         const id = Number(runnerId);
 
         if (isNaN(id)) {
@@ -120,7 +141,8 @@ export class RunnersController {
             await this.ensureRunnerIdDoesNotExist(updateRunnerDto.id);
         }
 
-        const updateRunnerData: Parameters<RunnerService["updateRunner"]>[1] = excludeKeys(updateRunnerDto, ["raceId", "birthYear"]);
+        const updateRunnerData: Parameters<RunnerService["updateRunner"]>[1] =
+            excludeKeys(updateRunnerDto, ["raceId", "birthYear"]);
 
         if (updateRunnerDto.birthYear) {
             updateRunnerData.birthYear = updateRunnerDto.birthYear.toString();
@@ -134,7 +156,10 @@ export class RunnersController {
             delete updateRunnerData.birthYear;
         }
 
-        const updatedRunner = await this.runnerService.updateRunner(runner, updateRunnerData);
+        const updatedRunner = await this.runnerService.updateRunner(
+            runner,
+            updateRunnerData,
+        );
 
         return {
             runner: updatedRunner,
@@ -163,7 +188,9 @@ export class RunnersController {
         const existingRunner = await this.runnerService.getRunner({ id });
 
         if (existingRunner) {
-            throw new BadRequestException("A runner with the same ID already exists");
+            throw new BadRequestException(
+                "A runner with the same ID already exists",
+            );
         }
     }
 }

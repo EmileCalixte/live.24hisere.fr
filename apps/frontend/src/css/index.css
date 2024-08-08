@@ -1,8 +1,8 @@
 body {
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+        "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+        "Helvetica Neue", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 
@@ -10,7 +10,8 @@ body {
     color: #222;
 }
 
-a, button.a {
+a,
+button.a {
     color: #22aa22;
     text-decoration: underline;
     cursor: pointer;
@@ -129,7 +130,9 @@ a, button.a {
     margin-left: 10px;
     margin-right: 10px;
 
-    transition: color 0.1s ease-out, border 0.1s ease-out;
+    transition:
+        color 0.1s ease-out,
+        border 0.1s ease-out;
 }
 
 @media (max-width: 480px) {
@@ -153,12 +156,12 @@ a, button.a {
 }
 
 #app-header-main-section nav ul li a.active {
-    color: #33CC33;
+    color: #33cc33;
 }
 
 #app-header-main-section nav ul li a.active::after {
-    content: ' ';
-    border-bottom: 3px solid #33CC33;
+    content: " ";
+    border-bottom: 3px solid #33cc33;
     position: absolute;
     bottom: 0;
     left: 0;
@@ -380,7 +383,9 @@ table.table th .buttons-container {
     gap: 0.5em;
 }
 
-.admin-runner-passages-table tr.passage-hidden td:nth-child(n+3):nth-child(-n+4) {
+.admin-runner-passages-table
+    tr.passage-hidden
+    td:nth-child(n + 3):nth-child(-n + 4) {
     text-decoration: line-through;
 }
 
@@ -451,7 +456,7 @@ table.table th .buttons-container {
 
 @media (max-width: 460px) {
     .responsive-ranking-table {
-        font-size: 0.90em;
+        font-size: 0.9em;
     }
 }
 
@@ -492,7 +497,7 @@ table.table th .buttons-container {
 
 @media (max-width: 460px) {
     .responsive-runner-laps-table {
-        font-size: 0.90em;
+        font-size: 0.9em;
     }
 }
 

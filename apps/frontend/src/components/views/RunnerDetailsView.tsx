@@ -1,3 +1,4 @@
+import React from "react";
 import { faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
@@ -6,9 +7,9 @@ import {
     RUNNER_LAPS_TABLE_SEARCH_PARAMS,
     RUNNER_SPEED_CHART_SEARCH_PARAMS,
 } from "../../constants/searchParams";
+import { useQueryString } from "../../hooks/queryString/useQueryString";
 import { useTabQueryString } from "../../hooks/queryString/useTabQueryString";
 import { useIntervalApiRequest } from "../../hooks/useIntervalApiRequest";
-import { useQueryString } from "../../hooks/queryString/useQueryString";
 import { useRanking } from "../../hooks/useRanking";
 import { getRace } from "../../services/api/RaceService";
 import { getRaceRunners, getRunners } from "../../services/api/RunnerService";
@@ -17,20 +18,19 @@ import {
     type RunnerWithProcessedHours,
     type RunnerWithProcessedPassages,
 } from "../../types/Runner";
+import { generateXlsxFromData } from "../../utils/excelUtils";
 import {
     getProcessedHoursFromPassages,
     getProcessedPassagesFromPassages,
     getRunnerProcessedDataFromPassages,
 } from "../../utils/passageUtils";
+import { getDataForExcelExport } from "../../utils/runnerUtils";
 import CircularLoader from "../ui/CircularLoader";
 import Page from "../ui/Page";
-import RunnerDetailsRaceDetails from "../viewParts/runnerDetails/RunnerDetailsRaceDetails";
-import RunnerSelector from "../viewParts/runnerDetails/RunnerSelector";
-import React from "react";
-import RunnerDetailsStats from "../viewParts/runnerDetails/RunnerDetailsStats";
 import RunnerDetailsLaps from "../viewParts/runnerDetails/RunnerDetailsLaps";
-import { getDataForExcelExport } from "../../utils/runnerUtils";
-import { generateXlsxFromData } from "../../utils/excelUtils";
+import RunnerDetailsRaceDetails from "../viewParts/runnerDetails/RunnerDetailsRaceDetails";
+import RunnerDetailsStats from "../viewParts/runnerDetails/RunnerDetailsStats";
+import RunnerSelector from "../viewParts/runnerDetails/RunnerSelector";
 
 const enum Tab {
     Stats = "stats",
@@ -43,7 +43,10 @@ export default function RunnerDetailsView(): React.ReactElement {
     const navigate = useNavigate();
 
     const { deleteParams, prefixedQueryString } = useQueryString();
-    const { selectedTab, setTabParam } = useTabQueryString([Tab.Stats, Tab.Laps], Tab.Stats);
+    const { selectedTab, setTabParam } = useTabQueryString(
+        [Tab.Stats, Tab.Laps],
+        Tab.Stats,
+    );
 
     const runners = useIntervalApiRequest(getRunners).json?.runners;
 
@@ -52,7 +55,8 @@ export default function RunnerDetailsView(): React.ReactElement {
             return undefined;
         }
 
-        return runners?.find(runner => runner.id.toString() === runnerId)?.raceId;
+        return runners?.find((runner) => runner.id.toString() === runnerId)
+            ?.raceId;
     }, [runnerId, runners]);
 
     const fetchRace = React.useMemo(() => {
@@ -75,13 +79,23 @@ export default function RunnerDetailsView(): React.ReactElement {
 
     const raceRunners = useIntervalApiRequest(fetchRaceRunners).json?.runners;
 
-    const processedRaceRunners = React.useMemo<Array<RunnerWithProcessedPassages & RunnerWithProcessedHours & RunnerWithProcessedData> | undefined>(() => {
+    const processedRaceRunners = React.useMemo<
+        | Array<
+              RunnerWithProcessedPassages &
+                  RunnerWithProcessedHours &
+                  RunnerWithProcessedData
+          >
+        | undefined
+    >(() => {
         if (!raceRunners || !race) {
             return;
         }
 
-        return raceRunners.map(runner => {
-            const processedPassages = getProcessedPassagesFromPassages(race, runner.passages);
+        return raceRunners.map((runner) => {
+            const processedPassages = getProcessedPassagesFromPassages(
+                race,
+                runner.passages,
+            );
 
             return {
                 ...runner,
@@ -95,19 +109,25 @@ export default function RunnerDetailsView(): React.ReactElement {
     const ranking = useRanking(race, processedRaceRunners);
 
     const selectedRunner = React.useMemo(() => {
-        return ranking?.find(rankingRunner => rankingRunner.id.toString() === runnerId);
+        return ranking?.find(
+            (rankingRunner) => rankingRunner.id.toString() === runnerId,
+        );
     }, [ranking, runnerId]);
 
-    const onSelectRunner = React.useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-        navigate(`/runner-details/${e.target.value}${prefixedQueryString}`);
-    }, [navigate, prefixedQueryString]);
+    const onSelectRunner = React.useCallback(
+        (e: React.ChangeEvent<HTMLSelectElement>) => {
+            navigate(`/runner-details/${e.target.value}${prefixedQueryString}`);
+        },
+        [navigate, prefixedQueryString],
+    );
 
     const exportRunnerToXlsx = React.useCallback(() => {
         if (!selectedRunner) {
             return;
         }
 
-        const filename = `${selectedRunner.firstname} ${selectedRunner.lastname}`.trim();
+        const filename =
+            `${selectedRunner.firstname} ${selectedRunner.lastname}`.trim();
 
         generateXlsxFromData(getDataForExcelExport(selectedRunner), filename);
     }, [selectedRunner]);
@@ -117,7 +137,10 @@ export default function RunnerDetailsView(): React.ReactElement {
             return;
         }
 
-        if (runners.find(runner => runner.id.toString() === runnerId) === undefined) {
+        if (
+            runners.find((runner) => runner.id.toString() === runnerId) ===
+            undefined
+        ) {
             navigate("/runner-details");
         }
     }, [runners, runnerId, navigate, prefixedQueryString]);
@@ -133,7 +156,14 @@ export default function RunnerDetailsView(): React.ReactElement {
     }, [deleteParams, selectedTab]);
 
     return (
-        <Page id="runner-details" title={selectedRunner === undefined ? "Détails coureur" : `Détails coureur ${selectedRunner.firstname} ${selectedRunner.lastname}`}>
+        <Page
+            id="runner-details"
+            title={
+                selectedRunner === undefined
+                    ? "Détails coureur"
+                    : `Détails coureur ${selectedRunner.firstname} ${selectedRunner.lastname}`
+            }
+        >
             <Row className="hide-on-print">
                 <Col>
                     <h1>Détails coureur</h1>
@@ -142,9 +172,10 @@ export default function RunnerDetailsView(): React.ReactElement {
 
             <Row className="hide-on-print">
                 <Col>
-                    <RunnerSelector runners={runners}
-                                    onSelectRunner={onSelectRunner}
-                                    selectedRunnerId={runnerId}
+                    <RunnerSelector
+                        runners={runners}
+                        onSelectRunner={onSelectRunner}
+                        selectedRunnerId={runnerId}
                     />
                 </Col>
             </Row>
@@ -154,7 +185,8 @@ export default function RunnerDetailsView(): React.ReactElement {
                     <Row className="mt-3">
                         <Col className="mb-3">
                             <button className="a" onClick={exportRunnerToXlsx}>
-                                <FontAwesomeIcon icon={faFileExcel} /> Générer un fichier Excel
+                                <FontAwesomeIcon icon={faFileExcel} /> Générer
+                                un fichier Excel
                             </button>
                         </Col>
                     </Row>
@@ -163,19 +195,47 @@ export default function RunnerDetailsView(): React.ReactElement {
                         <Col>
                             <div className="runner-details-data-container">
                                 <ul className="tabs-container">
-                                    <li className={selectedTab === Tab.Stats ? "active" : ""}>
-                                        <button onClick={() => { setTabParam(Tab.Stats); }}>Statistiques</button>
+                                    <li
+                                        className={
+                                            selectedTab === Tab.Stats
+                                                ? "active"
+                                                : ""
+                                        }
+                                    >
+                                        <button
+                                            onClick={() => {
+                                                setTabParam(Tab.Stats);
+                                            }}
+                                        >
+                                            Statistiques
+                                        </button>
                                     </li>
-                                    <li className={selectedTab === Tab.Laps ? "active" : ""}>
-                                        <button onClick={() => { setTabParam(Tab.Laps); }}>Détails des tours</button>
+                                    <li
+                                        className={
+                                            selectedTab === Tab.Laps
+                                                ? "active"
+                                                : ""
+                                        }
+                                    >
+                                        <button
+                                            onClick={() => {
+                                                setTabParam(Tab.Laps);
+                                            }}
+                                        >
+                                            Détails des tours
+                                        </button>
                                     </li>
                                 </ul>
 
                                 <div className="card">
                                     {selectedRunner.stopped && (
                                         <div>
-                                            <p className="mt-3 mb-0"
-                                               style={{ fontWeight: "bold", color: "#db1616" }}
+                                            <p
+                                                className="mt-3 mb-0"
+                                                style={{
+                                                    fontWeight: "bold",
+                                                    color: "#db1616",
+                                                }}
                                             >
                                                 Coureur arrêté
                                             </p>
@@ -187,15 +247,31 @@ export default function RunnerDetailsView(): React.ReactElement {
                                             case Tab.Stats:
                                                 return (
                                                     <>
-                                                        <RunnerDetailsRaceDetails race={race} />
-                                                        {ranking
-                                                            ? <RunnerDetailsStats runner={selectedRunner} race={race} ranking={ranking} />
-                                                            : <CircularLoader />
-                                                        }
+                                                        <RunnerDetailsRaceDetails
+                                                            race={race}
+                                                        />
+                                                        {ranking ? (
+                                                            <RunnerDetailsStats
+                                                                runner={
+                                                                    selectedRunner
+                                                                }
+                                                                race={race}
+                                                                ranking={
+                                                                    ranking
+                                                                }
+                                                            />
+                                                        ) : (
+                                                            <CircularLoader />
+                                                        )}
                                                     </>
                                                 );
                                             case Tab.Laps:
-                                                return <RunnerDetailsLaps runner={selectedRunner} race={race} />;
+                                                return (
+                                                    <RunnerDetailsLaps
+                                                        runner={selectedRunner}
+                                                        race={race}
+                                                    />
+                                                );
                                             default:
                                                 return null;
                                         }

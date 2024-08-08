@@ -1,5 +1,5 @@
-import clsx from "clsx";
 import React from "react";
+import clsx from "clsx";
 import { type InputType } from "../../../types/Forms";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -27,7 +27,7 @@ export function Input({
 
         if (onChange) {
             const propsOnChange = onChange;
-            onChange = e => {
+            onChange = (e) => {
                 if (!e.target.validity.valid) {
                     return;
                 }
@@ -41,11 +41,12 @@ export function Input({
         <div className={clsx("input-group", className, hasError && "error")}>
             <label>
                 <span className={labelClassName}>{label}</span>
-                <input className="input"
-                       type={type}
-                       onChange={onChange}
-                       ref={inputRef}
-                       {...props}
+                <input
+                    className="input"
+                    type={type}
+                    onChange={onChange}
+                    ref={inputRef}
+                    {...props}
                 />
             </label>
         </div>

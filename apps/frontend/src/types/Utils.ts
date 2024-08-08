@@ -2,7 +2,10 @@ import type React from "react";
 
 export type ReactStateSetter<S> = React.Dispatch<React.SetStateAction<S>>;
 
-export type ReactUseStateResultWithNonNullableSetter<S> = [S, React.Dispatch<React.SetStateAction<NonNullable<S>>>];
+export type ReactUseStateResultWithNonNullableSetter<S> = [
+    S,
+    React.Dispatch<React.SetStateAction<NonNullable<S>>>,
+];
 
 /**
  * A string representing a date in ISO 8601 format.

@@ -1,7 +1,10 @@
-import DOMPurify from "dompurify";
 import React from "react";
+import DOMPurify from "dompurify";
 import { Col, Row } from "react-bootstrap";
-import { getDisabledAppData, patchDisabledAppData } from "../../../services/api/ConfigService";
+import {
+    getDisabledAppData,
+    patchDisabledAppData,
+} from "../../../services/api/ConfigService";
 import ToastService from "../../../services/ToastService";
 import { type DisabledAppData } from "../../../types/Config";
 import { isApiRequestResultOk } from "../../../utils/apiUtils";
@@ -18,7 +21,9 @@ export default function DisabledAppAdminView(): React.ReactElement {
         appData: { setIsAppEnabled: setAppDataIsAppEnabled },
     } = React.useContext(appContext);
 
-    const [disabledAppData, setDisabledAppData] = React.useState<DisabledAppData | false>(false);
+    const [disabledAppData, setDisabledAppData] = React.useState<
+        DisabledAppData | false
+    >(false);
 
     const [isAppEnabled, setIsAppEnabled] = React.useState(false);
     const [disabledAppMessage, setDisabledAppMessage] = React.useState("");
@@ -44,7 +49,9 @@ export default function DisabledAppAdminView(): React.ReactElement {
         const result = await getDisabledAppData(accessToken);
 
         if (!isApiRequestResultOk(result)) {
-            ToastService.getToastr().error("Impossible de récupérer les données d'accès à l'application");
+            ToastService.getToastr().error(
+                "Impossible de récupérer les données d'accès à l'application",
+            );
             return;
         }
 
@@ -55,34 +62,37 @@ export default function DisabledAppAdminView(): React.ReactElement {
         void fetchDisabledAppData();
     }, [fetchDisabledAppData]);
 
-    const onSubmit = React.useCallback(async (e: React.FormEvent) => {
-        e.preventDefault();
+    const onSubmit = React.useCallback(
+        async (e: React.FormEvent) => {
+            e.preventDefault();
 
-        if (!accessToken) {
-            return;
-        }
+            if (!accessToken) {
+                return;
+            }
 
-        setIsSaving(true);
+            setIsSaving(true);
 
-        const body = {
-            isAppEnabled,
-            disabledAppMessage,
-        };
+            const body = {
+                isAppEnabled,
+                disabledAppMessage,
+            };
 
-        const result = await patchDisabledAppData(accessToken, body);
+            const result = await patchDisabledAppData(accessToken, body);
 
-        if (!isApiRequestResultOk(result)) {
-            ToastService.getToastr().error("Une erreur est survenue");
+            if (!isApiRequestResultOk(result)) {
+                ToastService.getToastr().error("Une erreur est survenue");
+                setIsSaving(false);
+                return;
+            }
+
+            ToastService.getToastr().success("Paramètres enregistrés");
+
+            setDisabledAppData(result.json);
+            setAppDataIsAppEnabled(result.json.isAppEnabled);
             setIsSaving(false);
-            return;
-        }
-
-        ToastService.getToastr().success("Paramètres enregistrés");
-
-        setDisabledAppData(result.json);
-        setAppDataIsAppEnabled(result.json.isAppEnabled);
-        setIsSaving(false);
-    }, [accessToken, disabledAppMessage, isAppEnabled, setAppDataIsAppEnabled]);
+        },
+        [accessToken, disabledAppMessage, isAppEnabled, setAppDataIsAppEnabled],
+    );
 
     React.useEffect(() => {
         if (!disabledAppData) {
@@ -106,21 +116,32 @@ export default function DisabledAppAdminView(): React.ReactElement {
 
             <Row>
                 <Col>
-                    <form onSubmit={e => { void onSubmit(e); }}>
-                        <Checkbox label="Application active"
-                                  checked={isAppEnabled}
-                                  onChange={e => { setIsAppEnabled(e.target.checked); }}
+                    <form
+                        onSubmit={(e) => {
+                            void onSubmit(e);
+                        }}
+                    >
+                        <Checkbox
+                            label="Application active"
+                            checked={isAppEnabled}
+                            onChange={(e) => {
+                                setIsAppEnabled(e.target.checked);
+                            }}
                         />
 
-                        <TextArea label="Message affiché si application non active"
-                                  value={disabledAppMessage}
-                                  onChange={e => { setDisabledAppMessage(e.target.value); }}
-                                  className="mt-3"
+                        <TextArea
+                            label="Message affiché si application non active"
+                            value={disabledAppMessage}
+                            onChange={(e) => {
+                                setDisabledAppMessage(e.target.value);
+                            }}
+                            className="mt-3"
                         />
 
-                        <button className="button mt-3"
-                                type="submit"
-                                disabled={isSaving || !unsavedChanges}
+                        <button
+                            className="button mt-3"
+                            type="submit"
+                            disabled={isSaving || !unsavedChanges}
                         >
                             Enregistrer
                         </button>
@@ -133,10 +154,12 @@ export default function DisabledAppAdminView(): React.ReactElement {
                     <Col>
                         <p>Aperçu :</p>
 
-                        <div className="card" id="disabled-app-message-preview"
-                             dangerouslySetInnerHTML={{
-                                 __html: DOMPurify.sanitize(disabledAppMessage),
-                             }}
+                        <div
+                            className="card"
+                            id="disabled-app-message-preview"
+                            dangerouslySetInnerHTML={{
+                                __html: DOMPurify.sanitize(disabledAppMessage),
+                            }}
                         />
                     </Col>
                 </Row>

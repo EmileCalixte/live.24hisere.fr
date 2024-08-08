@@ -1,4 +1,8 @@
-import { type ApiRequest, type ApiRequestResult, type ApiRequestResultOk } from "../types/api/ApiRequest";
+import {
+    type ApiRequest,
+    type ApiRequestResult,
+    type ApiRequestResultOk,
+} from "../types/api/ApiRequest";
 
 export const EVENT_API_REQUEST_STARTED = "apiRequestStarted";
 export const EVENT_API_REQUEST_ENDED = "apiRequestEnded";
@@ -8,7 +12,10 @@ export const EVENT_API_REQUEST_ENDED = "apiRequestEnded";
  * @param headers The header collection
  * @param toAdd A record of headers to add if they are not present in the header collection
  */
-export function addHeadersIfNotSet(headers: Headers, toAdd: Record<string, string>): void {
+export function addHeadersIfNotSet(
+    headers: Headers,
+    toAdd: Record<string, string>,
+): void {
     Object.entries(toAdd).forEach(([headerName, headerValue]) => {
         if (!headers.has(headerName)) {
             headers.set(headerName, headerValue);
@@ -16,7 +23,9 @@ export function addHeadersIfNotSet(headers: Headers, toAdd: Record<string, strin
     });
 }
 
-export async function getResponseJson<T = unknown>(response: Response): Promise<T | undefined> {
+export async function getResponseJson<T = unknown>(
+    response: Response,
+): Promise<T | undefined> {
     if (response.status === 204) {
         return undefined;
     }

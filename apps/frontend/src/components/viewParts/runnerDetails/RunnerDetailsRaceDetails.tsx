@@ -8,7 +8,9 @@ interface RunnerDetailsRaceDetailsProps {
     race: Race;
 }
 
-export default function RunnerDetailsRaceDetails({ race }: RunnerDetailsRaceDetailsProps): React.ReactElement {
+export default function RunnerDetailsRaceDetails({
+    race,
+}: RunnerDetailsRaceDetailsProps): React.ReactElement {
     const raceInitialDistance = Number(race.initialDistance);
     const raceLapDistance = Number(race.lapDistance);
 
@@ -24,14 +26,20 @@ export default function RunnerDetailsRaceDetails({ race }: RunnerDetailsRaceDeta
 
                 <p>{race.name}</p>
 
-                <p><b><RaceTimer race={race} /></b> / {formattedRaceDuration}</p>
+                <p>
+                    <b>
+                        <RaceTimer race={race} />
+                    </b>{" "}
+                    / {formattedRaceDuration}
+                </p>
 
                 <p>
                     Distance tour : <strong>{raceLapDistance} m</strong>
                     <> </>
                     {raceInitialDistance > 0 && (
                         <>
-                            (distance avant le premier tour : {raceInitialDistance} m)
+                            (distance avant le premier tour :{" "}
+                            {raceInitialDistance} m)
                         </>
                     )}
                 </p>

@@ -4,7 +4,9 @@ import { type CategoriesDict } from "../types/Category";
  * Returns the category code from a birth year (valid until August 31st, 2024)
  * @see https://www.athle.fr/asp.net/main.html/html.aspx?htmlid=25
  */
-export function getCategoryCodeFromBirthYear(birthYear: number | string): string {
+export function getCategoryCodeFromBirthYear(
+    birthYear: number | string,
+): string {
     if (typeof birthYear === "string") {
         birthYear = Number(birthYear);
 
@@ -128,5 +130,7 @@ export function getCategoryNameFromCategoryCode(categoryCode: string): string {
 }
 
 export function getCategoryNameFromBirthYear(birthYear: number): string {
-    return getCategoryNameFromCategoryCode(getCategoryCodeFromBirthYear(birthYear));
+    return getCategoryNameFromCategoryCode(
+        getCategoryCodeFromBirthYear(birthYear),
+    );
 }

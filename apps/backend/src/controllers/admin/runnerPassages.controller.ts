@@ -27,7 +27,10 @@ export class RunnerPassagesController {
     ) {}
 
     @Post("/admin/runners/:runnerId/passages")
-    async getRunnerPassages(@Param("runnerId") runnerId: string, @Body() passageDto: PassageDto): Promise<AdminRunnerPassageResponse> {
+    async getRunnerPassages(
+        @Param("runnerId") runnerId: string,
+        @Body() passageDto: PassageDto,
+    ): Promise<AdminRunnerPassageResponse> {
         const id = Number(runnerId);
 
         if (isNaN(id)) {
@@ -77,7 +80,10 @@ export class RunnerPassagesController {
             throw new NotFoundException("Passage not found");
         }
 
-        const updatedPassage = await this.passageService.updatePassage(pId, updatePassageDto);
+        const updatedPassage = await this.passageService.updatePassage(
+            pId,
+            updatePassageDto,
+        );
 
         return {
             passage: excludeKeys(updatedPassage, ["runnerId"]),

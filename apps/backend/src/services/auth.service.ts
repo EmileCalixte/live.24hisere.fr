@@ -1,7 +1,12 @@
-import { ForbiddenException, Injectable, InternalServerErrorException, UnauthorizedException } from "@nestjs/common";
+import {
+    ForbiddenException,
+    Injectable,
+    InternalServerErrorException,
+    UnauthorizedException,
+} from "@nestjs/common";
 import { AccessToken, User } from "@prisma/client";
-import { UserService } from "./database/entities/user.service";
 import { AccessTokenService } from "./database/entities/accessToken.service";
+import { UserService } from "./database/entities/user.service";
 import { PasswordService } from "./password.service";
 
 const INVALID_CREDENTIALS_MESSAGE = "Invalid credentials";
@@ -24,7 +29,10 @@ export class AuthService {
             throw new ForbiddenException(INVALID_CREDENTIALS_MESSAGE);
         }
 
-        const isPasswordVerified = await this.passwordService.verifyPassword(user.passwordHash, password);
+        const isPasswordVerified = await this.passwordService.verifyPassword(
+            user.passwordHash,
+            password,
+        );
 
         if (!isPasswordVerified) {
             throw new ForbiddenException(INVALID_CREDENTIALS_MESSAGE);
@@ -34,7 +42,9 @@ export class AuthService {
     }
 
     async authenticateUser(token: string): Promise<User> {
-        const accessToken = await this.accessTokenService.getAccessToken({ token });
+        const accessToken = await this.accessTokenService.getAccessToken({
+            token,
+        });
 
         if (!accessToken) {
             throw new UnauthorizedException(INVALID_ACCESS_TOKEN_MESSAGE);
@@ -49,7 +59,9 @@ export class AuthService {
         });
 
         if (!user) {
-            throw new InternalServerErrorException(UNABLE_TO_AUTHENTICATE_MESSAGE);
+            throw new InternalServerErrorException(
+                UNABLE_TO_AUTHENTICATE_MESSAGE,
+            );
         }
 
         return user;

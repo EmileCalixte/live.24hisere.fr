@@ -3,6 +3,5 @@ export function booleanToString(value: boolean): string {
 }
 
 export function stringToBoolean(value: string): boolean {
-    return value !== ""
-        && value !== "0";
+    return value !== "" && value !== "0";
 }

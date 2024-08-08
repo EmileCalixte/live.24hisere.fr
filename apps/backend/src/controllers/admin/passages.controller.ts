@@ -8,12 +8,12 @@ import { isDefined } from "../../utils/misc.utils";
 @Controller()
 @UseGuards(AuthGuard)
 export class PassagesController {
-    constructor(
-        private readonly passageService: PassageService,
-    ) {}
+    constructor(private readonly passageService: PassageService) {}
 
     @Get("/admin/passages")
-    async getPassages(@Query("excludeHidden") excludeHidden: QueryParam): Promise<PassagesResponse> {
+    async getPassages(
+        @Query("excludeHidden") excludeHidden: QueryParam,
+    ): Promise<PassagesResponse> {
         const passages = isDefined(excludeHidden)
             ? await this.passageService.getAllPublicPassages()
             : await this.passageService.getAllPassages();

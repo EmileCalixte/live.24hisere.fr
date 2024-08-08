@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaService } from "../prisma.service";
 import { Misc, Prisma } from "@prisma/client";
-import { isDateValid } from "src/utils/date.utils";
 import { DateISOString } from "src/types/Date";
+import { isDateValid } from "src/utils/date.utils";
+import { PrismaService } from "../prisma.service";
 
 const KEY_LAST_UPDATE_TIME = "last_update_time";
 
@@ -12,8 +12,12 @@ export class MiscService {
 
     public async getLastUpdateTime(): Promise<Date | null>;
     public async getLastUpdateTime(asISOString: false): Promise<Date | null>;
-    public async getLastUpdateTime(asISOString: true): Promise<DateISOString | null>;
-    public async getLastUpdateTime(asISOString = false): Promise<Date | DateISOString | null> {
+    public async getLastUpdateTime(
+        asISOString: true,
+    ): Promise<DateISOString | null>;
+    public async getLastUpdateTime(
+        asISOString = false,
+    ): Promise<Date | DateISOString | null> {
         const misc = await this.getLine(KEY_LAST_UPDATE_TIME);
 
         if (!misc) {
@@ -33,13 +37,18 @@ export class MiscService {
         await this.saveLine(KEY_LAST_UPDATE_TIME, lastUpdateDate.toISOString());
     }
 
-    private async getLine(key: NonNullable<Prisma.MiscWhereUniqueInput["key"]>): Promise<Misc | null> {
+    private async getLine(
+        key: NonNullable<Prisma.MiscWhereUniqueInput["key"]>,
+    ): Promise<Misc | null> {
         return await this.prisma.misc.findUnique({
             where: { key },
         });
     }
 
-    private async saveLine(key: NonNullable<Prisma.MiscWhereUniqueInput["key"]>, value: Misc["value"]): Promise<Misc> {
+    private async saveLine(
+        key: NonNullable<Prisma.MiscWhereUniqueInput["key"]>,
+        value: Misc["value"],
+    ): Promise<Misc> {
         return await this.prisma.misc.upsert({
             where: {
                 key,

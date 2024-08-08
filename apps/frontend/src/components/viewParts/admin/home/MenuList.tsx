@@ -1,6 +1,12 @@
-import { faDownload, faFlagCheckered, faHand, faPersonRunning, faStopwatch } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
+import {
+    faDownload,
+    faFlagCheckered,
+    faHand,
+    faPersonRunning,
+    faStopwatch,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MenuItem from "./MenuItem";
 
 const menuItems: Array<{
@@ -38,7 +44,9 @@ const menuItems: Array<{
 export default function MenuList(): React.ReactElement {
     return (
         <ul className="admin-list">
-            {menuItems.map(({ url, icon, label }, key) => <MenuItem key={key} url={url} icon={icon} label={label} />)}
+            {menuItems.map(({ url, icon, label }, key) => (
+                <MenuItem key={key} url={url} icon={icon} label={label} />
+            ))}
         </ul>
     );
 }

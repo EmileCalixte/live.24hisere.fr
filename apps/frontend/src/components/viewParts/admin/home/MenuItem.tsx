@@ -7,16 +7,16 @@ interface MenuItemProps {
     icon: React.ReactElement;
 }
 
-export default function MenuItem({ url, label, icon }: MenuItemProps): React.ReactElement {
+export default function MenuItem({
+    url,
+    label,
+    icon,
+}: MenuItemProps): React.ReactElement {
     return (
         <li>
             <Link to={url}>
-                <div className="admin-list-link-icon">
-                    {icon}
-                </div>
-                <div className="admin-list-link-label">
-                    {label}
-                </div>
+                <div className="admin-list-link-icon">{icon}</div>
+                <div className="admin-list-link-label">{label}</div>
             </Link>
         </li>
     );

@@ -1,4 +1,9 @@
-import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from "@nestjs/common";
+import {
+    CanActivate,
+    ExecutionContext,
+    ForbiddenException,
+    Injectable,
+} from "@nestjs/common";
 import { User } from "@prisma/client";
 import { Request } from "express";
 import { AuthService } from "../services/auth.service";
@@ -15,7 +20,9 @@ export class AuthGuard implements CanActivate {
     constructor(private readonly authService: AuthService) {}
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
-        const request = context.switchToHttp().getRequest<RequestWithAuthenticatedUser>();
+        const request = context
+            .switchToHttp()
+            .getRequest<RequestWithAuthenticatedUser>();
         const token = this.getTokenFromHeaders(request);
 
         if (!token) {

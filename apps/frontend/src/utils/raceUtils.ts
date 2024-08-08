@@ -55,12 +55,15 @@ export function getDateFromRaceTime(race: Race, raceTime: number): Date {
  *
  * TODO delete false from races types
  */
-export function getRacesSelectOptions<T extends Race>(races: T[] | false | undefined, label?: (race: T) => string): SelectOption[] {
+export function getRacesSelectOptions<T extends Race>(
+    races: T[] | false | undefined,
+    label?: (race: T) => string,
+): SelectOption[] {
     if (!races) {
         return [];
     }
 
-    return races.map(race => ({
+    return races.map((race) => ({
         label: label ? label(race) : race.name,
         value: race.id,
     }));
@@ -71,7 +74,10 @@ export function getRacesSelectOptions<T extends Race>(races: T[] | false | undef
  * @param passageCount
  * @return The total distance in meters
  */
-export function getDistanceFromPassageCount(race: Race, passageCount: number): number {
+export function getDistanceFromPassageCount(
+    race: Race,
+    passageCount: number,
+): number {
     if (passageCount === 0) {
         return 0;
     }

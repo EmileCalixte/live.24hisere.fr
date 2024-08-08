@@ -52,7 +52,9 @@ export interface AdminRace extends Race {
     isPublic: boolean;
 }
 
-export interface AdminRaceWithRunnerCount extends AdminRace, RaceWithRunnerCount {}
+export interface AdminRaceWithRunnerCount
+    extends AdminRace,
+        RaceWithRunnerCount {}
 
 /**
  * An object whose key is a race ID and value is the corresponding race

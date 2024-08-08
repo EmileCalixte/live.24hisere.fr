@@ -4,16 +4,24 @@ import {
     type LoginApiRequest,
     type LogoutApiRequest,
 } from "../../types/api/AuthApiRequests";
-import { performApiRequest, performAuthenticatedApiRequest } from "./ApiService";
+import {
+    performApiRequest,
+    performAuthenticatedApiRequest,
+} from "./ApiService";
 
-export async function getCurrentUserInfo(accessToken: string): Promise<ApiRequestResult<GetCurrentUserInfoApiRequest>> {
+export async function getCurrentUserInfo(
+    accessToken: string,
+): Promise<ApiRequestResult<GetCurrentUserInfoApiRequest>> {
     return await performAuthenticatedApiRequest(
         "/auth/current-user-info",
         accessToken,
     );
 }
 
-export async function login(username: string, password: string): Promise<ApiRequestResult<LoginApiRequest>> {
+export async function login(
+    username: string,
+    password: string,
+): Promise<ApiRequestResult<LoginApiRequest>> {
     return await performApiRequest<LoginApiRequest>(
         "/auth/login",
         { username, password },
@@ -21,7 +29,9 @@ export async function login(username: string, password: string): Promise<ApiRequ
     );
 }
 
-export async function logout(accessToken: string): Promise<ApiRequestResult<LogoutApiRequest>> {
+export async function logout(
+    accessToken: string,
+): Promise<ApiRequestResult<LogoutApiRequest>> {
     return await performAuthenticatedApiRequest(
         "/auth/logout",
         accessToken,

@@ -41,10 +41,11 @@ export class CreateUserCommand extends CommandRunner {
 
     private async askUsername(): Promise<string> {
         while (true) {
-            const { username } = await this.inquirerService.ask<UsernameInquiry>(
-                USERNAME_QUESTION_SET,
-                undefined,
-            );
+            const { username } =
+                await this.inquirerService.ask<UsernameInquiry>(
+                    USERNAME_QUESTION_SET,
+                    undefined,
+                );
 
             const existingUser = await this.userService.getUser({ username });
 
@@ -59,10 +60,11 @@ export class CreateUserCommand extends CommandRunner {
 
     private async askPassword(): Promise<string> {
         while (true) {
-            const { password, confirmPassword } = await this.inquirerService.ask<CreatePasswordInquiry>(
-                CREATE_PASSWORD_QUESTION_SET,
-                undefined,
-            );
+            const { password, confirmPassword } =
+                await this.inquirerService.ask<CreatePasswordInquiry>(
+                    CREATE_PASSWORD_QUESTION_SET,
+                    undefined,
+                );
 
             if (password !== confirmPassword) {
                 console.log("Passwords do not match");

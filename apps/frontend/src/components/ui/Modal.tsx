@@ -1,7 +1,7 @@
+import React, { useEffect, useRef } from "react";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
-import React, { useEffect, useRef } from "react";
 
 interface ModalProps {
     children: React.ReactNode | React.ReactNode[];
@@ -9,7 +9,11 @@ interface ModalProps {
     className?: string;
 }
 
-export default function Modal({ children, close, className }: ModalProps): React.ReactElement {
+export default function Modal({
+    children,
+    close,
+    className,
+}: ModalProps): React.ReactElement {
     const dialogRef = useRef<HTMLDialogElement | null>(null);
     const modalContentRef = useRef<HTMLDivElement | null>(null);
 

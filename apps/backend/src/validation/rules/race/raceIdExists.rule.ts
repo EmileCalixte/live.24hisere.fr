@@ -1,13 +1,15 @@
 import { Injectable } from "@nestjs/common";
-import { ValidationArguments, ValidatorConstraint, ValidatorConstraintInterface } from "class-validator";
+import {
+    ValidationArguments,
+    ValidatorConstraint,
+    ValidatorConstraintInterface,
+} from "class-validator";
 import { RaceService } from "src/services/database/entities/race.service";
 
 @Injectable()
 @ValidatorConstraint({ name: "RaceExists", async: true })
 export class RaceIdExistsRule implements ValidatorConstraintInterface {
-    constructor(
-        private readonly raceService: RaceService,
-    ) {}
+    constructor(private readonly raceService: RaceService) {}
 
     async validate(value: unknown): Promise<boolean> {
         if (typeof value !== "number") {

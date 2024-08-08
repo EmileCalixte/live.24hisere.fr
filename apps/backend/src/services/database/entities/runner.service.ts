@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaService } from "../prisma.service";
 import { Prisma, Runner } from "@prisma/client";
 import {
     AdminRunnerWithPassages,
@@ -8,12 +7,11 @@ import {
     RunnerWithRaceAndPassages,
 } from "src/types/Runner";
 import { excludeKeys, pickKeys } from "src/utils/misc.utils";
+import { PrismaService } from "../prisma.service";
 
 @Injectable()
 export class RunnerService {
-    constructor(
-        private readonly prisma: PrismaService,
-    ) {}
+    constructor(private readonly prisma: PrismaService) {}
 
     async getRunners(where: Prisma.RunnerWhereInput = {}): Promise<Runner[]> {
         return await this.prisma.runner.findMany({
@@ -24,13 +22,17 @@ export class RunnerService {
         });
     }
 
-    async getRunner(where: Prisma.RunnerWhereUniqueInput): Promise<Runner | null> {
+    async getRunner(
+        where: Prisma.RunnerWhereUniqueInput,
+    ): Promise<Runner | null> {
         return await this.prisma.runner.findUnique({
             where,
         });
     }
 
-    async getAdminRunner(where: Prisma.RunnerWhereUniqueInput): Promise<AdminRunnerWithPassages | null> {
+    async getAdminRunner(
+        where: Prisma.RunnerWhereUniqueInput,
+    ): Promise<AdminRunnerWithPassages | null> {
         const runner = await this.prisma.runner.findUnique({
             where,
             include: {
@@ -44,7 +46,9 @@ export class RunnerService {
 
         return {
             ...runner,
-            passages: runner.passages.map(passage => excludeKeys(passage, ["runnerId"])),
+            passages: runner.passages.map((passage) =>
+                excludeKeys(passage, ["runnerId"]),
+            ),
         };
     }
 
@@ -61,7 +65,9 @@ export class RunnerService {
         });
     }
 
-    async getPublicRunnersOfRace(raceId: number): Promise<PublicRunnerWithPassages[]> {
+    async getPublicRunnersOfRace(
+        raceId: number,
+    ): Promise<PublicRunnerWithPassages[]> {
         return await this.prisma.runner.findMany({
             where: {
                 race: {
@@ -89,7 +95,9 @@ export class RunnerService {
         });
     }
 
-    async getPublicRunner(where: Prisma.RunnerWhereUniqueInput): Promise<PublicRunnerWithRaceAndPassages | null> {
+    async getPublicRunner(
+        where: Prisma.RunnerWhereUniqueInput,
+    ): Promise<PublicRunnerWithRaceAndPassages | null> {
         const runner = await this.prisma.runner.findUnique({
             where,
             include: {
@@ -117,7 +125,10 @@ export class RunnerService {
         return (await this.prisma.runner.createMany({ data })).count;
     }
 
-    async updateRunner(runner: Runner, data: Partial<Prisma.RunnerCreateInput & { id: number }>): Promise<Runner> {
+    async updateRunner(
+        runner: Runner,
+        data: Partial<Prisma.RunnerCreateInput & { id: number }>,
+    ): Promise<Runner> {
         // If runner ID is not changed, we can directly update the runner
         if (!data.id || data.id === runner.id) {
             return await this.prisma.runner.update({
@@ -166,11 +177,15 @@ export class RunnerService {
         });
     }
 
-    private getPublicRunnerWithRaceAndPassages(runner: RunnerWithRaceAndPassages): PublicRunnerWithRaceAndPassages {
+    private getPublicRunnerWithRaceAndPassages(
+        runner: RunnerWithRaceAndPassages,
+    ): PublicRunnerWithRaceAndPassages {
         return {
             ...runner,
             race: excludeKeys(runner.race, ["isPublic", "order"]),
-            passages: runner.passages.map(passage => pickKeys(passage, ["id", "time"])),
+            passages: runner.passages.map((passage) =>
+                pickKeys(passage, ["id", "time"]),
+            ),
         };
     }
 }

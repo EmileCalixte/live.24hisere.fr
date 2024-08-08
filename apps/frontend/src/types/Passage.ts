@@ -42,7 +42,9 @@ export interface AdminPassage extends Passage {
     isHidden: boolean;
 }
 
-export interface AdminPassageWithRunnerId extends PassageWithRunnerId, AdminPassage {}
+export interface AdminPassageWithRunnerId
+    extends PassageWithRunnerId,
+        AdminPassage {}
 
 /**
  * An object containing computed data about a runner passage

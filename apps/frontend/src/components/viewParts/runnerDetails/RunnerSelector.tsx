@@ -1,7 +1,7 @@
+import React from "react";
 import { type Runner } from "../../../types/Runner";
 import { spaceship } from "../../../utils/compareUtils";
 import { getRunnersSelectOptions } from "../../../utils/runnerUtils";
-import React from "react";
 import Select from "../../ui/forms/Select";
 
 interface RunnerSelectorProps {
@@ -10,7 +10,11 @@ interface RunnerSelectorProps {
     selectedRunnerId: string | undefined;
 }
 
-export default function RunnerSelector({ runners, onSelectRunner, selectedRunnerId }: RunnerSelectorProps): React.ReactElement {
+export default function RunnerSelector({
+    runners,
+    onSelectRunner,
+    selectedRunnerId,
+}: RunnerSelectorProps): React.ReactElement {
     const selectedRunnerExists = React.useMemo(() => {
         if (!runners) {
             return false;
@@ -22,7 +26,7 @@ export default function RunnerSelector({ runners, onSelectRunner, selectedRunner
 
         const searchedRunnerId = parseInt(selectedRunnerId);
 
-        const runner = runners.find(runner => {
+        const runner = runners.find((runner) => {
             return runner.id === searchedRunnerId;
         });
 
@@ -42,26 +46,33 @@ export default function RunnerSelector({ runners, onSelectRunner, selectedRunner
             return false;
         }
 
-        return [...runners].sort((a, b) => spaceship(
-            a.lastname + a.firstname + a.id,
-            b.lastname + b.firstname + b.id,
-        ));
+        return [...runners].sort((a, b) =>
+            spaceship(
+                a.lastname + a.firstname + a.id,
+                b.lastname + b.firstname + b.id,
+            ),
+        );
     }, [runners]);
 
     const selectOptions = [
         ...getRunnersSelectOptions(idSortedRunners),
-        ...getRunnersSelectOptions(nameSortedRunners, runner => `${runner.lastname.toUpperCase()} ${runner.firstname} – N° ${runner.id}`),
+        ...getRunnersSelectOptions(
+            nameSortedRunners,
+            (runner) =>
+                `${runner.lastname.toUpperCase()} ${runner.firstname} – N° ${runner.id}`,
+        ),
     ];
 
     return (
         <div className="runner-details-runner-selector-container">
-            <Select label="Coureur"
-                    options={selectOptions}
-                    isLoading={!idSortedRunners}
-                    loadingOptionLabel="Chargement des coureurs"
-                    placeholderLabel="Cliquez ici pour sélectionner un coureur"
-                    value={selectedRunnerExists ? selectedRunnerId : undefined}
-                    onChange={onSelectRunner}
+            <Select
+                label="Coureur"
+                options={selectOptions}
+                isLoading={!idSortedRunners}
+                loadingOptionLabel="Chargement des coureurs"
+                placeholderLabel="Cliquez ici pour sélectionner un coureur"
+                value={selectedRunnerExists ? selectedRunnerId : undefined}
+                onChange={onSelectRunner}
             />
         </div>
     );

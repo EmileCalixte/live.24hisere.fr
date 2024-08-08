@@ -11,17 +11,25 @@ interface OptionWithLoadingDotsProps {
 /**
  * @deprecated Causes blinking when select is opened on mobile
  */
-export default function OptionWithLoadingDots({ children }: OptionWithLoadingDotsProps): React.ReactElement {
+export default function OptionWithLoadingDots({
+    children,
+}: OptionWithLoadingDotsProps): React.ReactElement {
     const [dotCount, setDotCount] = useState(MAX_DOTS);
 
     const updateDotCount = useCallback(() => {
-        setDotCount(dotCount => dotCount >= MAX_DOTS ? MIN_DOTS : dotCount + 1);
+        setDotCount((dotCount) =>
+            dotCount >= MAX_DOTS ? MIN_DOTS : dotCount + 1,
+        );
     }, []);
 
     useEffect(() => {
-        const dotsInterval = setInterval(() => { updateDotCount(); }, UPDATE_DOT_COUNT_INTERVAL_TIME);
+        const dotsInterval = setInterval(() => {
+            updateDotCount();
+        }, UPDATE_DOT_COUNT_INTERVAL_TIME);
 
-        return () => { clearInterval(dotsInterval); };
+        return () => {
+            clearInterval(dotsInterval);
+        };
     }, [updateDotCount]);
 
     const dots = useMemo<string>(() => {
@@ -30,7 +38,8 @@ export default function OptionWithLoadingDots({ children }: OptionWithLoadingDot
 
     return (
         <option disabled>
-            {children}{dots}
+            {children}
+            {dots}
         </option>
     );
 }

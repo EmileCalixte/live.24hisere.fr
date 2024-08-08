@@ -1,16 +1,26 @@
+import React, {
+    useCallback,
+    useContext,
+    useEffect,
+    useMemo,
+    useState,
+} from "react";
 import { Col, Row } from "react-bootstrap";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { deleteAdminRace, getAdminRace, patchAdminRace } from "../../../../services/api/RaceService";
+import {
+    deleteAdminRace,
+    getAdminRace,
+    patchAdminRace,
+} from "../../../../services/api/RaceService";
+import ToastService from "../../../../services/ToastService";
 import { type AdminRaceWithRunnerCount } from "../../../../types/Race";
+import { isApiRequestResultOk } from "../../../../utils/apiUtils";
+import { formatDateForApi } from "../../../../utils/utils";
+import { appContext } from "../../../App";
 import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../ui/breadcrumbs/Crumb";
-import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import Page from "../../../ui/Page";
 import CircularLoader from "../../../ui/CircularLoader";
-import { isApiRequestResultOk } from "../../../../utils/apiUtils";
-import { appContext } from "../../../App";
-import { formatDateForApi } from "../../../../utils/utils";
-import ToastService from "../../../../services/ToastService";
+import Page from "../../../ui/Page";
 import RaceDetailsForm from "../../../viewParts/admin/races/RaceDetailsForm";
 
 export default function RaceDetailsAdminView(): React.ReactElement {
@@ -20,7 +30,9 @@ export default function RaceDetailsAdminView(): React.ReactElement {
 
     const { raceId: urlRaceId } = useParams();
 
-    const [race, setRace] = useState<AdminRaceWithRunnerCount | undefined | null>(undefined);
+    const [race, setRace] = useState<
+        AdminRaceWithRunnerCount | undefined | null
+    >(undefined);
 
     const [raceName, setRaceName] = useState("");
     const [initialDistance, setInitialDistance] = useState<number | string>(0);
@@ -44,7 +56,15 @@ export default function RaceDetailsAdminView(): React.ReactElement {
             duration === race.duration * 1000,
             isPublic === race.isPublic,
         ].includes(false);
-    }, [race, raceName, initialDistance, lapDistance, startTime, duration, isPublic]);
+    }, [
+        race,
+        raceName,
+        initialDistance,
+        lapDistance,
+        startTime,
+        duration,
+        isPublic,
+    ]);
 
     const fetchRace = useCallback(async () => {
         if (!urlRaceId || !accessToken) {
@@ -54,7 +74,9 @@ export default function RaceDetailsAdminView(): React.ReactElement {
         const result = await getAdminRace(accessToken, urlRaceId);
 
         if (!isApiRequestResultOk(result)) {
-            ToastService.getToastr().error("Impossible de récupérer les détails de la course");
+            ToastService.getToastr().error(
+                "Impossible de récupérer les détails de la course",
+            );
             setRace(null);
             return;
         }
@@ -116,7 +138,9 @@ export default function RaceDetailsAdminView(): React.ReactElement {
             return;
         }
 
-        if (!window.confirm("Êtes-vous sûr de vouloir supprimer cette course ?")) {
+        if (
+            !window.confirm("Êtes-vous sûr de vouloir supprimer cette course ?")
+        ) {
             return;
         }
 
@@ -132,13 +156,18 @@ export default function RaceDetailsAdminView(): React.ReactElement {
     }, [accessToken, navigate, race]);
 
     if (race === null) {
-        return (
-            <Navigate to="/admin/races" />
-        );
+        return <Navigate to="/admin/races" />;
     }
 
     return (
-        <Page id="admin-race-details" title={race === undefined ? "Chargement" : `Détails de la course ${race.name}`}>
+        <Page
+            id="admin-race-details"
+            title={
+                race === undefined
+                    ? "Chargement"
+                    : `Détails de la course ${race.name}`
+            }
+        >
             <Row>
                 <Col>
                     <Breadcrumbs>
@@ -146,14 +175,10 @@ export default function RaceDetailsAdminView(): React.ReactElement {
                         <Crumb url="/admin/races" label="Courses" />
                         {(() => {
                             if (race === undefined) {
-                                return (
-                                    <CircularLoader />
-                                );
+                                return <CircularLoader />;
                             }
 
-                            return (
-                                <Crumb label={race.name} />
-                            );
+                            return <Crumb label={race.name} />;
                         })()}
                     </Breadcrumbs>
                 </Col>
@@ -161,28 +186,29 @@ export default function RaceDetailsAdminView(): React.ReactElement {
 
             <Row>
                 <Col xxl={3} xl={4} lg={6} md={9} sm={12}>
-                    {race === undefined && (
-                        <CircularLoader />
-                    )}
+                    {race === undefined && <CircularLoader />}
 
                     {race !== undefined && (
                         <>
                             <Row>
                                 <Col>
-                                    <RaceDetailsForm onSubmit={onSubmit}
-                                                     name={raceName}
-                                                     setName={setRaceName}
-                                                     initialDistance={initialDistance}
-                                                     setInitialDistance={setInitialDistance}
-                                                     lapDistance={lapDistance}
-                                                     setLapDistance={setLapDistance}
-                                                     startTime={startTime}
-                                                     setStartTime={setStartTime}
-                                                     duration={duration}
-                                                     setDuration={setDuration}
-                                                     isPublic={isPublic}
-                                                     setIsPublic={setIsPublic}
-                                                     submitButtonDisabled={isSaving || !unsavedChanges}
+                                    <RaceDetailsForm
+                                        onSubmit={onSubmit}
+                                        name={raceName}
+                                        setName={setRaceName}
+                                        initialDistance={initialDistance}
+                                        setInitialDistance={setInitialDistance}
+                                        lapDistance={lapDistance}
+                                        setLapDistance={setLapDistance}
+                                        startTime={startTime}
+                                        setStartTime={setStartTime}
+                                        duration={duration}
+                                        setDuration={setDuration}
+                                        isPublic={isPublic}
+                                        setIsPublic={setIsPublic}
+                                        submitButtonDisabled={
+                                            isSaving || !unsavedChanges
+                                        }
                                     />
                                 </Col>
                             </Row>
@@ -192,14 +218,20 @@ export default function RaceDetailsAdminView(): React.ReactElement {
                                     <h3>Supprimer la course</h3>
 
                                     {race.runnerCount > 0 ? (
-                                        <p>La course ne peut pas être supprimée tant qu'elle contient des coureurs.</p>
+                                        <p>
+                                            La course ne peut pas être supprimée
+                                            tant qu'elle contient des coureurs.
+                                        </p>
                                     ) : (
                                         <p>Cette action est irréversible.</p>
                                     )}
 
-                                    <button className="button red mt-3"
-                                            disabled={race.runnerCount > 0}
-                                            onClick={() => { void deleteRace(); }}
+                                    <button
+                                        className="button red mt-3"
+                                        disabled={race.runnerCount > 0}
+                                        onClick={() => {
+                                            void deleteRace();
+                                        }}
                                     >
                                         Supprimer la course
                                     </button>

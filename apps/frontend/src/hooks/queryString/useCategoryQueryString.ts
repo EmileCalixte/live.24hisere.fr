@@ -1,7 +1,10 @@
 import React from "react";
 import { type NavigateOptions } from "react-router-dom";
 import { SearchParam } from "../../constants/searchParams";
-import { type CategoriesDict, type CategoryShortCode } from "../../types/Category";
+import {
+    type CategoriesDict,
+    type CategoryShortCode,
+} from "../../types/Category";
 import { type Race } from "../../types/Race";
 import { useQueryString } from "./useQueryString";
 
@@ -11,7 +14,10 @@ interface UseCategoryQueryString {
     deleteCategoryParam: () => void;
 }
 
-export function useCategoryQueryString(race: Race | null, categories: CategoriesDict | null): UseCategoryQueryString {
+export function useCategoryQueryString(
+    race: Race | null,
+    categories: CategoriesDict | null,
+): UseCategoryQueryString {
     const { searchParams, setParams, deleteParams } = useQueryString();
 
     const searchParamsCategory = searchParams.get(SearchParam.CATEGORY);
@@ -21,22 +27,37 @@ export function useCategoryQueryString(race: Race | null, categories: Categories
             return null;
         }
 
-        return Object.keys(categories).find(categoryCode => categoryCode === searchParamsCategory) ?? null;
+        return (
+            Object.keys(categories).find(
+                (categoryCode) => categoryCode === searchParamsCategory,
+            ) ?? null
+        );
     }, [categories, searchParamsCategory, race]);
 
-    const setCategoryParam = React.useCallback((categoryCode: string) => {
-        setParams({ [SearchParam.CATEGORY]: categoryCode });
-    }, [setParams]);
+    const setCategoryParam = React.useCallback(
+        (categoryCode: string) => {
+            setParams({ [SearchParam.CATEGORY]: categoryCode });
+        },
+        [setParams],
+    );
 
-    const deleteCategoryParam = React.useCallback((navigateOpts?: NavigateOptions) => {
-        deleteParams(SearchParam.CATEGORY, navigateOpts);
-    }, [deleteParams]);
+    const deleteCategoryParam = React.useCallback(
+        (navigateOpts?: NavigateOptions) => {
+            deleteParams(SearchParam.CATEGORY, navigateOpts);
+        },
+        [deleteParams],
+    );
 
     React.useEffect(() => {
         if (categories && searchParamsCategory !== null && !selectedCategory) {
             deleteCategoryParam({ replace: true });
         }
-    }, [categories, deleteCategoryParam, searchParamsCategory, selectedCategory]);
+    }, [
+        categories,
+        deleteCategoryParam,
+        searchParamsCategory,
+        selectedCategory,
+    ]);
 
     return {
         selectedCategory,

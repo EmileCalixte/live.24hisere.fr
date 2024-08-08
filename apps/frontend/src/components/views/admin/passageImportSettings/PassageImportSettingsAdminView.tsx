@@ -1,6 +1,9 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
-import { getPassageImportSettings, patchPassageImportSettings } from "../../../../services/api/ConfigService";
+import {
+    getPassageImportSettings,
+    patchPassageImportSettings,
+} from "../../../../services/api/ConfigService";
 import ToastService from "../../../../services/ToastService";
 import { type PassageImportSettings } from "../../../../types/Config";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
@@ -12,9 +15,12 @@ import { Input } from "../../../ui/forms/Input";
 import Page from "../../../ui/Page";
 
 export default function PassageImportSettingsAdminView(): React.ReactElement {
-    const { user: { accessToken } } = React.useContext(appContext);
+    const {
+        user: { accessToken },
+    } = React.useContext(appContext);
 
-    const [passageImportSettingsData, setPassageImportSettingsData] = React.useState<PassageImportSettings | false>(false);
+    const [passageImportSettingsData, setPassageImportSettingsData] =
+        React.useState<PassageImportSettings | false>(false);
 
     const [dagFileUrl, setDagFileUrl] = React.useState("");
 
@@ -36,7 +42,9 @@ export default function PassageImportSettingsAdminView(): React.ReactElement {
         const result = await getPassageImportSettings(accessToken);
 
         if (!isApiRequestResultOk(result)) {
-            ToastService.getToastr().error("Impossible de récupérer les paramètres d'import de passages");
+            ToastService.getToastr().error(
+                "Impossible de récupérer les paramètres d'import de passages",
+            );
             return;
         }
 
@@ -47,32 +55,35 @@ export default function PassageImportSettingsAdminView(): React.ReactElement {
         void fetchPassageImportData();
     }, [fetchPassageImportData]);
 
-    const onSubmit = React.useCallback(async (e: React.FormEvent) => {
-        e.preventDefault();
+    const onSubmit = React.useCallback(
+        async (e: React.FormEvent) => {
+            e.preventDefault();
 
-        if (!accessToken) {
-            return;
-        }
+            if (!accessToken) {
+                return;
+            }
 
-        setIsSaving(true);
+            setIsSaving(true);
 
-        const body = {
-            dagFileUrl: dagFileUrl || null,
-        };
+            const body = {
+                dagFileUrl: dagFileUrl || null,
+            };
 
-        const result = await patchPassageImportSettings(accessToken, body);
+            const result = await patchPassageImportSettings(accessToken, body);
 
-        if (!isApiRequestResultOk(result)) {
-            ToastService.getToastr().error("Une erreur est survenue");
+            if (!isApiRequestResultOk(result)) {
+                ToastService.getToastr().error("Une erreur est survenue");
+                setIsSaving(false);
+                return;
+            }
+
+            ToastService.getToastr().success("Paramètres enregistrés");
+
+            setPassageImportSettingsData(result.json);
             setIsSaving(false);
-            return;
-        }
-
-        ToastService.getToastr().success("Paramètres enregistrés");
-
-        setPassageImportSettingsData(result.json);
-        setIsSaving(false);
-    }, [accessToken, dagFileUrl]);
+        },
+        [accessToken, dagFileUrl],
+    );
 
     React.useEffect(() => {
         if (!passageImportSettingsData) {
@@ -85,7 +96,10 @@ export default function PassageImportSettingsAdminView(): React.ReactElement {
     const isDagFileUrlValid = !dagFileUrl || isValidUrl(dagFileUrl);
 
     return (
-        <Page id="admin-passage-import-settings" title="Paramètres d'import des passages">
+        <Page
+            id="admin-passage-import-settings"
+            title="Paramètres d'import des passages"
+        >
             <Row>
                 <Col>
                     <Breadcrumbs>
@@ -97,18 +111,28 @@ export default function PassageImportSettingsAdminView(): React.ReactElement {
 
             <Row>
                 <Col lg={6} md={9} sm={12}>
-                    <form onSubmit={(e) => {
-                        void onSubmit(e);
-                    }}>
-                        <Input label="URL du fichier DAG à importer"
-                               value={dagFileUrl}
-                               onChange={e => { setDagFileUrl(e.target.value.trim()); }}
-                               hasError={!isDagFileUrlValid}
+                    <form
+                        onSubmit={(e) => {
+                            void onSubmit(e);
+                        }}
+                    >
+                        <Input
+                            label="URL du fichier DAG à importer"
+                            value={dagFileUrl}
+                            onChange={(e) => {
+                                setDagFileUrl(e.target.value.trim());
+                            }}
+                            hasError={!isDagFileUrlValid}
                         />
 
-                        <button className="button mt-3"
-                                type="submit"
-                                disabled={isSaving || !unsavedChanges || !isDagFileUrlValid}
+                        <button
+                            className="button mt-3"
+                            type="submit"
+                            disabled={
+                                isSaving ||
+                                !unsavedChanges ||
+                                !isDagFileUrlValid
+                            }
                         >
                             Enregistrer
                         </button>

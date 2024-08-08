@@ -7,7 +7,10 @@ import { type RankingRunner } from "../../../../../types/Ranking";
 import { getCategoryCodeFromBirthYear } from "../../../../../utils/ffaUtils";
 import { getRankingType } from "../../../../../utils/rankingUtils";
 import { formatGap } from "../../../../../utils/runnerUtils";
-import { formatFloatNumber, formatMsAsDuration } from "../../../../../utils/utils";
+import {
+    formatFloatNumber,
+    formatMsAsDuration,
+} from "../../../../../utils/utils";
 import RankingTableRunnerStoppedBadge from "../RankingTableRunnerStoppedBadge";
 
 interface ResponsiveRankingTableRowProps {
@@ -44,11 +47,13 @@ export default function ResponsiveRankingTableRow({
             if (tableGender === GENDER_MIXED) {
                 return (
                     <>
-                        {runner.ranks.displayed.scratchGender} {runner.gender.toUpperCase()}
+                        {runner.ranks.displayed.scratchGender}{" "}
+                        {runner.gender.toUpperCase()}
                         &nbsp;|&nbsp;
                         {runner.ranks.displayed.categoryMixed} {runnerCategory}
                         &nbsp;|&nbsp;
-                        {runner.ranks.displayed.categoryGender} {runnerCategory}-{runner.gender.toUpperCase()}
+                        {runner.ranks.displayed.categoryGender} {runnerCategory}
+                        -{runner.gender.toUpperCase()}
                     </>
                 );
             }
@@ -59,7 +64,8 @@ export default function ResponsiveRankingTableRow({
                     &nbsp;|&nbsp;
                     {runner.ranks.displayed.categoryMixed} {runnerCategory}
                     &nbsp;|&nbsp;
-                    {runner.ranks.displayed.categoryGender} {runnerCategory}-{runner.gender.toUpperCase()}
+                    {runner.ranks.displayed.categoryGender} {runnerCategory}-
+                    {runner.gender.toUpperCase()}
                 </>
             );
         }
@@ -69,9 +75,11 @@ export default function ResponsiveRankingTableRow({
                 <>
                     {runner.ranks.displayed.scratchMixed}
                     &nbsp;|&nbsp;
-                    {runner.ranks.displayed.scratchGender} {runner.gender.toUpperCase()}
+                    {runner.ranks.displayed.scratchGender}{" "}
+                    {runner.gender.toUpperCase()}
                     &nbsp;|&nbsp;
-                    {runner.ranks.displayed.categoryGender} {runnerCategory}-{runner.gender.toUpperCase()}
+                    {runner.ranks.displayed.categoryGender} {runnerCategory}-
+                    {runner.gender.toUpperCase()}
                 </>
             );
         }
@@ -80,24 +88,33 @@ export default function ResponsiveRankingTableRow({
             <>
                 {runner.ranks.displayed.scratchMixed}
                 &nbsp;|&nbsp;
-                {runner.ranks.displayed.scratchGender} {runner.gender.toUpperCase()}
+                {runner.ranks.displayed.scratchGender}{" "}
+                {runner.gender.toUpperCase()}
                 &nbsp;|&nbsp;
                 {runner.ranks.displayed.categoryMixed} {runnerCategory}
             </>
         );
     }, [runner, tableCategory, tableGender, runnerCategory]);
 
-    const formattedGap = formatGap(runner.gaps.firstRunner[getRankingType(tableCategory, tableGender)].gap);
+    const formattedGap = formatGap(
+        runner.gaps.firstRunner[getRankingType(tableCategory, tableGender)].gap,
+    );
 
-    const displayedGap = formattedGap === null || formattedGap === "=" ? null : formattedGap;
+    const displayedGap =
+        formattedGap === null || formattedGap === "=" ? null : formattedGap;
 
     return (
         <tr>
-            <td><strong>{rowRanking}</strong></td>
+            <td>
+                <strong>{rowRanking}</strong>
+            </td>
             <td style={{ width: "100%" }}>
                 <Link to={`/runner-details/${runner.id}`}>
                     <div>
-                        <strong>{runner.lastname.toUpperCase()} {runner.firstname} – N°{runner.id}</strong>
+                        <strong>
+                            {runner.lastname.toUpperCase()} {runner.firstname} –
+                            N°{runner.id}
+                        </strong>
                         {runner.stopped && <RankingTableRunnerStoppedBadge />}
                     </div>
 
@@ -113,7 +130,6 @@ export default function ResponsiveRankingTableRow({
 
                     <div className="responsive-ranking-table-row-secondary-data-row">
                         {formatFloatNumber(runner.distance / 1000, 2)} km
-
                         {(() => {
                             if (runner.averageSpeed === null) {
                                 return null;
@@ -121,20 +137,25 @@ export default function ResponsiveRankingTableRow({
                                 return (
                                     <>
                                         &nbsp;–&nbsp;
-                                        {formatFloatNumber(runner.averageSpeed, 2)} km/h moy.
+                                        {formatFloatNumber(
+                                            runner.averageSpeed,
+                                            2,
+                                        )}{" "}
+                                        km/h moy.
                                     </>
                                 );
                             }
                         })()}
-
                         {(() => {
                             if (runner.lastPassageTime === null) {
                                 return null;
                             } else {
                                 return (
                                     <>
-                                        &nbsp;–&nbsp;
-                                        Dernier passage {formatMsAsDuration(runner.lastPassageTime.raceTime)}
+                                        &nbsp;–&nbsp; Dernier passage{" "}
+                                        {formatMsAsDuration(
+                                            runner.lastPassageTime.raceTime,
+                                        )}
                                     </>
                                 );
                             }

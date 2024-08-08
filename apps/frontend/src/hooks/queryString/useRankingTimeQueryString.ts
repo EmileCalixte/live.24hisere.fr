@@ -18,14 +18,18 @@ interface UseRankingTimeQueryString {
     setRankingTimeMemory: ReactStateSetter<number | null>;
 }
 
-export function useRankingTimeQueryString(race: Race | null): UseRankingTimeQueryString {
+export function useRankingTimeQueryString(
+    race: Race | null,
+): UseRankingTimeQueryString {
     const { searchParams, setParams, deleteParams } = useQueryString();
 
     const searchParamsTimeMode = searchParams.get(SearchParam.TIME_MODE);
     const searchParamsRankingTime = searchParams.get(SearchParam.RANKING_TIME);
 
     // To keep in memory the selected ranking time when the user selects current time ranking mode, in seconds
-    const [rankingTimeMemory, setRankingTimeMemory] = React.useState<number | null>(null);
+    const [rankingTimeMemory, setRankingTimeMemory] = React.useState<
+        number | null
+    >(null);
 
     const selectedTimeMode = React.useMemo<RankingTimeMode>(() => {
         if (searchParamsTimeMode === RankingTimeMode.AT) {
@@ -59,46 +63,64 @@ export function useRankingTimeQueryString(race: Race | null): UseRankingTimeQuer
             return;
         }
 
-        if (selectedTimeMode !== RankingTimeMode.AT || selectedRankingTime === null) {
+        if (
+            selectedTimeMode !== RankingTimeMode.AT ||
+            selectedRankingTime === null
+        ) {
             return;
         }
 
         return getDateFromRaceTime(race, selectedRankingTime);
     }, [race, selectedRankingTime, selectedTimeMode]);
 
-    const shouldResetRankingTime = React.useCallback((newRaceDuration: number) => {
-        if (rankingTimeMemory === null) {
-            return true;
-        }
+    const shouldResetRankingTime = React.useCallback(
+        (newRaceDuration: number) => {
+            if (rankingTimeMemory === null) {
+                return true;
+            }
 
-        if (rankingTimeMemory < 0) {
-            return true;
-        }
+            if (rankingTimeMemory < 0) {
+                return true;
+            }
 
-        if (race && rankingTimeMemory > newRaceDuration) {
-            return true;
-        }
+            if (race && rankingTimeMemory > newRaceDuration) {
+                return true;
+            }
 
-        // For better UX, if the user looks at the current time rankings, we want to reset the time inputs to the
-        // duration of the newly selected race
-        return selectedTimeMode === RankingTimeMode.NOW;
-    }, [rankingTimeMemory, race, selectedTimeMode]);
+            // For better UX, if the user looks at the current time rankings, we want to reset the time inputs to the
+            // duration of the newly selected race
+            return selectedTimeMode === RankingTimeMode.NOW;
+        },
+        [rankingTimeMemory, race, selectedTimeMode],
+    );
 
-    const setTimeModeParam = React.useCallback((timeMode: RankingTimeMode) => {
-        setParams({ [SearchParam.TIME_MODE]: timeMode });
-    }, [setParams]);
+    const setTimeModeParam = React.useCallback(
+        (timeMode: RankingTimeMode) => {
+            setParams({ [SearchParam.TIME_MODE]: timeMode });
+        },
+        [setParams],
+    );
 
     const deleteTimeModeParam = React.useCallback(() => {
         deleteParams(SearchParam.TIME_MODE);
     }, [deleteParams]);
 
-    const setRankingTimeParam = React.useCallback((time: number | string, navigateOpts?: NavigateOptions) => {
-        setParams({ [SearchParam.RANKING_TIME]: time.toString() }, navigateOpts);
-    }, [setParams]);
+    const setRankingTimeParam = React.useCallback(
+        (time: number | string, navigateOpts?: NavigateOptions) => {
+            setParams(
+                { [SearchParam.RANKING_TIME]: time.toString() },
+                navigateOpts,
+            );
+        },
+        [setParams],
+    );
 
-    const deleteRankingTimeParam = React.useCallback((navigateOpts?: NavigateOptions) => {
-        deleteParams(SearchParam.RANKING_TIME, navigateOpts);
-    }, [deleteParams]);
+    const deleteRankingTimeParam = React.useCallback(
+        (navigateOpts?: NavigateOptions) => {
+            deleteParams(SearchParam.RANKING_TIME, navigateOpts);
+        },
+        [deleteParams],
+    );
 
     React.useEffect(() => {
         if (!race) {
@@ -111,8 +133,8 @@ export function useRankingTimeQueryString(race: Race | null): UseRankingTimeQuer
                 setRankingTimeParam(race.duration, { replace: true });
             }
         }
-    // We want to run this effect only when race changes
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // We want to run this effect only when race changes
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [race]);
 
     React.useEffect(() => {
@@ -120,19 +142,37 @@ export function useRankingTimeQueryString(race: Race | null): UseRankingTimeQuer
             return;
         }
 
-        if (selectedTimeMode === RankingTimeMode.AT && !searchParams.has(SearchParam.RANKING_TIME)) {
-            setRankingTimeParam(rankingTimeMemory ?? race.duration, { replace: true });
+        if (
+            selectedTimeMode === RankingTimeMode.AT &&
+            !searchParams.has(SearchParam.RANKING_TIME)
+        ) {
+            setRankingTimeParam(rankingTimeMemory ?? race.duration, {
+                replace: true,
+            });
         }
-    }, [race, rankingTimeMemory, searchParams, selectedTimeMode, setRankingTimeParam]);
+    }, [
+        race,
+        rankingTimeMemory,
+        searchParams,
+        selectedTimeMode,
+        setRankingTimeParam,
+    ]);
 
     React.useEffect(() => {
-        if (selectedTimeMode !== RankingTimeMode.AT && searchParams.has(SearchParam.RANKING_TIME)) {
+        if (
+            selectedTimeMode !== RankingTimeMode.AT &&
+            searchParams.has(SearchParam.RANKING_TIME)
+        ) {
             deleteRankingTimeParam({ replace: true });
         }
     }, [deleteRankingTimeParam, searchParams, selectedTimeMode]);
 
     React.useEffect(() => {
-        if (selectedTimeMode !== RankingTimeMode.AT || !race || selectedRankingTime === null) {
+        if (
+            selectedTimeMode !== RankingTimeMode.AT ||
+            !race ||
+            selectedRankingTime === null
+        ) {
             return;
         }
 

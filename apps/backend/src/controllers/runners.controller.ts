@@ -1,7 +1,16 @@
-import { BadRequestException, Controller, Get, NotFoundException, Param } from "@nestjs/common";
+import {
+    BadRequestException,
+    Controller,
+    Get,
+    NotFoundException,
+    Param,
+} from "@nestjs/common";
 import { RaceService } from "../services/database/entities/race.service";
 import { RunnerService } from "../services/database/entities/runner.service";
-import { RaceRunnersResponse, RunnersResponse } from "../types/responses/Runners";
+import {
+    RaceRunnersResponse,
+    RunnersResponse,
+} from "../types/responses/Runners";
 
 @Controller()
 export class RunnersController {
@@ -20,7 +29,9 @@ export class RunnersController {
     }
 
     @Get("/races/:raceId/runners")
-    async getRaceRunners(@Param("raceId") raceId: string): Promise<RaceRunnersResponse> {
+    async getRaceRunners(
+        @Param("raceId") raceId: string,
+    ): Promise<RaceRunnersResponse> {
         const id = Number(raceId);
 
         if (isNaN(id)) {

@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from "react";
-import { type AdminRaceWithRunnerCount } from "../../../../types/Race";
 import ToastService from "../../../../services/ToastService";
+import { type AdminRaceWithRunnerCount } from "../../../../types/Race";
 import RunnerDetailsPassageForm from "./RunnerDetailsPassageForm";
 
 interface RunnerDetailsCreatePassageProps {
@@ -32,31 +32,37 @@ export default function RunnerDetailsCreatePassage({
         return new Date(raceStartTime.getTime() + passageRaceTime);
     }, [runnerRace, passageRaceTime]);
 
-    const onSubmit = useCallback(async (e: React.FormEvent) => {
-        e.preventDefault();
+    const onSubmit = useCallback(
+        async (e: React.FormEvent) => {
+            e.preventDefault();
 
-        if (!passageTime) {
-            ToastService.getToastr().error("Erreur : date et heure de départ de la course inconnues, impossible de calculer la date et l'heure du passage");
-            return;
-        }
+            if (!passageTime) {
+                ToastService.getToastr().error(
+                    "Erreur : date et heure de départ de la course inconnues, impossible de calculer la date et l'heure du passage",
+                );
+                return;
+            }
 
-        setIsSaving(true);
+            setIsSaving(true);
 
-        await savePassage(passageTime);
+            await savePassage(passageTime);
 
-        setIsSaving(false);
+            setIsSaving(false);
 
-        onClose();
-    }, [savePassage, passageTime, onClose]);
+            onClose();
+        },
+        [savePassage, passageTime, onClose],
+    );
 
     return (
-        <RunnerDetailsPassageForm raceTime={passageRaceTime}
-                                  setRaceTime={setPassageRaceTime}
-                                  time={passageTime}
-                                  modalTitle="Ajouter un passage"
-                                  onSubmit={onSubmit}
-                                  submitButtonDisabled={isSaving}
-                                  onClose={onClose}
+        <RunnerDetailsPassageForm
+            raceTime={passageRaceTime}
+            setRaceTime={setPassageRaceTime}
+            time={passageTime}
+            modalTitle="Ajouter un passage"
+            onSubmit={onSubmit}
+            submitButtonDisabled={isSaving}
+            onClose={onClose}
         />
     );
 }
