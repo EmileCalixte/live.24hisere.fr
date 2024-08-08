@@ -1,15 +1,15 @@
-import { type MiscService } from "../services/database/entities/misc.service";
-import { type RunnerService } from "../services/database/entities/runner.service";
-import { type HttpService } from "@nestjs/axios";
+import { MiscService } from "../services/database/entities/misc.service";
+import { RunnerService } from "../services/database/entities/runner.service";
+import { HttpService } from "@nestjs/axios";
 import { Injectable } from "@nestjs/common";
-import { type AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { catchError, firstValueFrom } from "rxjs";
 import { TaskService } from "./taskService";
-import { type SchedulerRegistry } from "@nestjs/schedule";
-import { type ConfigService } from "src/services/database/entities/config.service";
-import { type PassageService } from "src/services/database/entities/passage.service";
-import { type DagFileService } from "src/services/dagFile.service";
-import { type DagFileLineData } from "src/types/Dag";
+import { SchedulerRegistry } from "@nestjs/schedule";
+import { ConfigService } from "src/services/database/entities/config.service";
+import { PassageService } from "src/services/database/entities/passage.service";
+import { DagFileService } from "src/services/dagFile.service";
+import { DagFileLineData } from "src/types/Dag";
 
 @Injectable()
 export class ImportPassagesService extends TaskService {

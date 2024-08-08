@@ -1,5 +1,5 @@
 import { buildMessage, ValidateBy } from "class-validator";
-import { type ValidationOptions } from "class-validator/types/decorator/ValidationOptions";
+import { ValidationOptions } from "class-validator/types/decorator/ValidationOptions";
 import { isFloatString } from "./IsFloatString";
 
 export const FLOAT_STRING_MIN = "floatStringMin";

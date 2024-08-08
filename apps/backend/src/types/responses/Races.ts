@@ -1,4 +1,4 @@
-import { type PublicRaceWithRunnerCount } from "src/types/Race";
+import { PublicRaceWithRunnerCount } from "src/types/Race";
 
 export interface RacesResponse {
     races: PublicRaceWithRunnerCount[];

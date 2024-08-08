@@ -1,8 +1,8 @@
 import { Controller, Get, Query, UseGuards } from "@nestjs/common";
 import { AuthGuard } from "../../guards/auth.guard";
-import { type PassageService } from "../../services/database/entities/passage.service";
-import { type QueryParam } from "../../types/QueryParam";
-import { type PassagesResponse } from "../../types/responses/admin/Passages";
+import { PassageService } from "../../services/database/entities/passage.service";
+import { QueryParam } from "../../types/QueryParam";
+import { PassagesResponse } from "../../types/responses/admin/Passages";
 import { isDefined } from "../../utils/misc.utils";
 
 @Controller()

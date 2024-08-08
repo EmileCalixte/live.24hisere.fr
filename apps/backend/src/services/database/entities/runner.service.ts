@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
-import { type PrismaService } from "../prisma.service";
-import { type Prisma, type Runner } from "@prisma/client";
+import { PrismaService } from "../prisma.service";
+import { Prisma, Runner } from "@prisma/client";
 import {
-    type AdminRunnerWithPassages,
-    type PublicRunnerWithPassages,
-    type PublicRunnerWithRaceAndPassages,
-    type RunnerWithRaceAndPassages,
+    AdminRunnerWithPassages,
+    PublicRunnerWithPassages,
+    PublicRunnerWithRaceAndPassages,
+    RunnerWithRaceAndPassages,
 } from "src/types/Runner";
 import { excludeKeys, pickKeys } from "src/utils/misc.utils";
 

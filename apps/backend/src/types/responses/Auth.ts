@@ -1,4 +1,4 @@
-import { type DateISOString } from "src/types/Date";
+import { DateISOString } from "src/types/Date";
 
 export interface LoginResponse {
     accessToken: string;

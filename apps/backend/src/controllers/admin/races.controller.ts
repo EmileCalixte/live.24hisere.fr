@@ -10,15 +10,15 @@ import {
     Patch,
     Post,
     Put,
-    type RawBodyRequest,
+    RawBodyRequest,
     Req,
     UseGuards,
 } from "@nestjs/common";
-import { type RaceDto } from "../../dtos/race/race.dto";
-import { type UpdateRaceDto } from "../../dtos/race/updateRace.dto";
+import { RaceDto } from "../../dtos/race/race.dto";
+import { UpdateRaceDto } from "../../dtos/race/updateRace.dto";
 import { AuthGuard } from "../../guards/auth.guard";
-import { type RaceService } from "../../services/database/entities/race.service";
-import { type AdminRaceResponse, type AdminRacesResponse } from "../../types/responses/admin/Races";
+import { RaceService } from "../../services/database/entities/race.service";
+import { AdminRaceResponse, AdminRacesResponse } from "../../types/responses/admin/Races";
 import { excludeKeys } from "../../utils/misc.utils";
 
 @Controller()

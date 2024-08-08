@@ -1,4 +1,4 @@
-import { type Passage } from "@prisma/client";
+import { Passage } from "@prisma/client";
 
 /**
  * Public data of a passage

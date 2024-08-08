@@ -1,14 +1,14 @@
 import { Injectable } from "@nestjs/common";
-import { Command, CommandRunner, type InquirerService } from "nest-commander";
-import { type UserService } from "../services/database/entities/user.service";
-import { type PasswordService } from "../services/password.service";
+import { Command, CommandRunner, InquirerService } from "nest-commander";
+import { UserService } from "../services/database/entities/user.service";
+import { PasswordService } from "../services/password.service";
 import {
     CREATE_PASSWORD_QUESTION_SET,
-    type CreatePasswordInquiry,
+    CreatePasswordInquiry,
 } from "./questionSets/createPassword.questionSet";
 import {
     USERNAME_QUESTION_SET,
-    type UsernameInquiry,
+    UsernameInquiry,
 } from "./questionSets/username.questionSet";
 
 @Injectable()

@@ -1,5 +1,5 @@
 import { buildMessage, ValidateBy } from "class-validator";
-import { type ValidationOptions } from "class-validator/types/decorator/ValidationOptions";
+import { ValidationOptions } from "class-validator/types/decorator/ValidationOptions";
 
 const IS_FLOAT_STRING = "isFLoatString";
 

@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Patch, UseGuards } from "@nestjs/common";
-import { type UpdateDisabledAppDto } from "../../dtos/disabledApp/updateDisabledApp.dto";
-import { type UpdatePassageImportSettingsDto } from "../../dtos/passageImport/updatePassageImportSettings.dto";
+import { UpdateDisabledAppDto } from "../../dtos/disabledApp/updateDisabledApp.dto";
+import { UpdatePassageImportSettingsDto } from "../../dtos/passageImport/updatePassageImportSettings.dto";
 import { AuthGuard } from "../../guards/auth.guard";
-import { type ConfigService } from "../../services/database/entities/config.service";
-import { type AdminDisabledAppResponse, type AdminPassageImportSettingsResponse } from "../../types/responses/admin/Config";
+import { ConfigService } from "../../services/database/entities/config.service";
+import { AdminDisabledAppResponse, AdminPassageImportSettingsResponse } from "../../types/responses/admin/Config";
 import { isDefined, isNullOrUndefined } from "../../utils/misc.utils";
 
 @Controller()

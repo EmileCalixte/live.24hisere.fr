@@ -1,5 +1,5 @@
 import { Logger } from "@nestjs/common";
-import { type SchedulerRegistry } from "@nestjs/schedule";
+import { SchedulerRegistry } from "@nestjs/schedule";
 import { CronJob } from "cron";
 
 export abstract class TaskService {

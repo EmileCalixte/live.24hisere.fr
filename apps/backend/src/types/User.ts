@@ -1,4 +1,4 @@
-import { type User } from "@prisma/client";
+import { User } from "@prisma/client";
 
 /**
  * Admin data about a user

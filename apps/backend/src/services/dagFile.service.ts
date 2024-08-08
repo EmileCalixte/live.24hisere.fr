@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { type DagDetectionType, type DagFileLineData } from "src/types/Dag";
+import { DagDetectionType, DagFileLineData } from "src/types/Dag";
 import { isDateValid } from "src/utils/date.utils";
 
 @Injectable()

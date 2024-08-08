@@ -1,7 +1,7 @@
-import { type ConfigService } from "../services/database/entities/config.service";
-import { type MiscService } from "../services/database/entities/misc.service";
+import { ConfigService } from "../services/database/entities/config.service";
+import { MiscService } from "../services/database/entities/misc.service";
 import { Controller, Get } from "@nestjs/common";
-import { type AppDataResponse } from "../types/responses/AppData";
+import { AppDataResponse } from "../types/responses/AppData";
 
 @Controller()
 export class AppDataController {

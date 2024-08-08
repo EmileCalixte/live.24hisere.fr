@@ -1,5 +1,5 @@
-import { type Runner } from "@prisma/client";
-import { type AdminRunnerWithPassages } from "../../Runner";
+import { Runner } from "@prisma/client";
+import { AdminRunnerWithPassages } from "../../Runner";
 
 export interface AdminRunnersResponse {
     runners: Runner[];

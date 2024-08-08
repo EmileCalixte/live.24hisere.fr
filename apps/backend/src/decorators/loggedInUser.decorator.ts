@@ -1,5 +1,5 @@
-import { createParamDecorator, type ExecutionContext } from "@nestjs/common";
-import { type User } from "@prisma/client";
+import { createParamDecorator, ExecutionContext } from "@nestjs/common";
+import { User } from "@prisma/client";
 
 export interface AuthData {
     user: User;

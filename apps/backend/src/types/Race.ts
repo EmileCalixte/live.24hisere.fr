@@ -1,4 +1,4 @@
-import { type Race, type Runner } from "@prisma/client";
+import { Race, Runner } from "@prisma/client";
 
 /**
  * Public data of a race

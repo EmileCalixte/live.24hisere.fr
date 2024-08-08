@@ -1,8 +1,8 @@
 import { ForbiddenException, Injectable, InternalServerErrorException, UnauthorizedException } from "@nestjs/common";
-import { type AccessToken, type User } from "@prisma/client";
-import { type UserService } from "./database/entities/user.service";
-import { type AccessTokenService } from "./database/entities/accessToken.service";
-import { type PasswordService } from "./password.service";
+import { AccessToken, User } from "@prisma/client";
+import { UserService } from "./database/entities/user.service";
+import { AccessTokenService } from "./database/entities/accessToken.service";
+import { PasswordService } from "./password.service";
 
 const INVALID_CREDENTIALS_MESSAGE = "Invalid credentials";
 const INVALID_ACCESS_TOKEN_MESSAGE = "Access token is invalid";

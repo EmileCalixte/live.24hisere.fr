@@ -10,15 +10,15 @@ import {
     UseGuards,
 } from "@nestjs/common";
 import { RunnerDto } from "../../dtos/runner/runner.dto";
-import { type UpdateRunnerDto } from "../../dtos/runner/updateRunner.dto";
+import { UpdateRunnerDto } from "../../dtos/runner/updateRunner.dto";
 import { AuthGuard } from "../../guards/auth.guard";
-import { type RunnerService } from "../../services/database/entities/runner.service";
+import { RunnerService } from "../../services/database/entities/runner.service";
 import {
-    type AdminRunnerWithPassagesResponse,
-    type AdminRunnersResponse,
-    type AdminRunnerResponse,
+    AdminRunnerWithPassagesResponse,
+    AdminRunnersResponse,
+    AdminRunnerResponse,
 } from "../../types/responses/admin/Runner";
-import { type CountResponse } from "../../types/responses/Misc";
+import { CountResponse } from "../../types/responses/Misc";
 import { excludeKeys } from "../../utils/misc.utils";
 
 @Controller()

@@ -30,7 +30,10 @@
         {
             "files": ["apps/backend/**/*.*"],
             "rules": {
-                "react-hooks/rules-of-hooks": "off"
+                "react-hooks/rules-of-hooks": "off",
+
+                // Type import of NestJS module dependencies break dependency injection
+                "@typescript-eslint/consistent-type-imports": ["error", { "prefer":"no-type-imports" }]
             }
         }
     ],

@@ -1,4 +1,4 @@
-import { type AdminRunnerPassage } from "../../Passage";
+import { AdminRunnerPassage } from "../../Passage";
 
 export interface AdminRunnerPassageResponse {
     passage: AdminRunnerPassage;

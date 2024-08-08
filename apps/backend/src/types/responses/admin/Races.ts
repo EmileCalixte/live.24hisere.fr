@@ -1,4 +1,4 @@
-import { type AdminRaceWithRunnerCount } from "../../Race";
+import { AdminRaceWithRunnerCount } from "../../Race";
 
 export interface AdminRacesResponse {
     races: AdminRaceWithRunnerCount[];

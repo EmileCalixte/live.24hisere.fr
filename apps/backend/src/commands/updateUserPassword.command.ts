@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
-import { type User } from "@prisma/client";
-import { Command, CommandRunner, type InquirerService } from "nest-commander";
-import { type UserService } from "../services/database/entities/user.service";
-import { type PasswordService } from "../services/password.service";
-import { CREATE_PASSWORD_QUESTION_SET, type CreatePasswordInquiry } from "./questionSets/createPassword.questionSet";
-import { CURRENT_PASSWORD_QUESTION_SET, type CurrentPasswordInquiry } from "./questionSets/currentPassword.questionSet";
-import { USERNAME_QUESTION_SET, type UsernameInquiry } from "./questionSets/username.questionSet";
+import { User } from "@prisma/client";
+import { Command, CommandRunner, InquirerService } from "nest-commander";
+import { UserService } from "../services/database/entities/user.service";
+import { PasswordService } from "../services/password.service";
+import { CREATE_PASSWORD_QUESTION_SET, CreatePasswordInquiry } from "./questionSets/createPassword.questionSet";
+import { CURRENT_PASSWORD_QUESTION_SET, CurrentPasswordInquiry } from "./questionSets/currentPassword.questionSet";
+import { USERNAME_QUESTION_SET, UsernameInquiry } from "./questionSets/username.questionSet";
 
 @Injectable()
 @Command({

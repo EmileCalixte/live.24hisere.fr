@@ -1,5 +1,5 @@
-import { Injectable, Logger, type NestMiddleware } from "@nestjs/common";
-import { type NextFunction, type Request, type Response } from "express";
+import { Injectable, Logger, NestMiddleware } from "@nestjs/common";
+import { NextFunction, Request, Response } from "express";
 
 @Injectable()
 export class AccessLoggerMiddleware implements NestMiddleware {

@@ -1,5 +1,5 @@
 import { HttpModule } from "@nestjs/axios";
-import { type MiddlewareConsumer, Module } from "@nestjs/common";
+import { MiddlewareConsumer, Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { ScheduleModule } from "@nestjs/schedule";
 import { dependencies } from "./dependencies";

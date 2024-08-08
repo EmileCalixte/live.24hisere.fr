@@ -1,9 +1,9 @@
 import { BadRequestException, Controller, Delete, Get, NotFoundException, Param, UseGuards } from "@nestjs/common";
-import { type AuthData, LoggedInUser } from "../../decorators/loggedInUser.decorator";
+import { AuthData, LoggedInUser } from "../../decorators/loggedInUser.decorator";
 import { AuthGuard } from "../../guards/auth.guard";
-import { type AccessTokenService } from "../../services/database/entities/accessToken.service";
-import { type UserService } from "../../services/database/entities/user.service";
-import { type UsersResponse } from "../../types/responses/admin/Users";
+import { AccessTokenService } from "../../services/database/entities/accessToken.service";
+import { UserService } from "../../services/database/entities/user.service";
+import { UsersResponse } from "../../types/responses/admin/Users";
 import { excludeKeys } from "../../utils/misc.utils";
 
 @Controller()

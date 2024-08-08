@@ -27,7 +27,7 @@ import { PasswordService } from "./services/password.service";
 import { RandomService } from "./services/random.service";
 import { ImportPassagesService } from "./tasks/importPassages.service";
 import { RaceIdExistsRule } from "./validation/rules/race/raceIdExists.rule";
-import { type Type } from "@nestjs/common/interfaces/type.interface";
+import { Type } from "@nestjs/common/interfaces/type.interface";
 
 type DependencyArray = Type[];
 

@@ -1,5 +1,5 @@
 import { buildMessage, ValidateBy } from "class-validator";
-import { type ValidationOptions } from "class-validator/types/decorator/ValidationOptions";
+import { ValidationOptions } from "class-validator/types/decorator/ValidationOptions";
 import { isDateValid } from "../../utils/date.utils";
 
 export const IS_ISO8601_UTC_DATE_STRING = "isISO8601UTCDateString";

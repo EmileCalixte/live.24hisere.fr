@@ -1,12 +1,12 @@
 import { Injectable } from "@nestjs/common";
-import { type PrismaService } from "../prisma.service";
+import { PrismaService } from "../prisma.service";
 import { excludeKeys } from "src/utils/misc.utils";
 import {
-    type AdminRaceWithRunnerCount,
-    type PublicRaceWithRunnerCount,
-    type RaceAndRunners,
+    AdminRaceWithRunnerCount,
+    PublicRaceWithRunnerCount,
+    RaceAndRunners,
 } from "src/types/Race";
-import { type Prisma, type Race } from "@prisma/client";
+import { Prisma, Race } from "@prisma/client";
 
 @Injectable()
 export class RaceService {
