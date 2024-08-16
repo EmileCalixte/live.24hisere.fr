@@ -1,4 +1,5 @@
 import React, { createContext, useCallback, useEffect, useState } from "react";
+import { helloWorldUtils } from "@live24hisere/utils/test-utils";
 import { Helmet } from "react-helmet";
 import {
     BrowserRouter,
@@ -307,6 +308,7 @@ export default function App(): React.ReactElement {
                 <div id="app-content-wrapper">
                     <Header />
                     <main id="page-content" className="container-fluid">
+                        <h1>{helloWorldUtils.helloWorld()}</h1>
                         {isLoading ? (
                             <CircularLoader />
                         ) : showDisabledAppMessage ? (
