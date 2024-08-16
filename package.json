@@ -11,6 +11,7 @@
     "backend": "pnpm --filter @live24hisere/backend",
     "frontend": "pnpm --filter @live24hisere/frontend",
     "dev": "turbo run dev --parallel",
+    "build": "turbo run build",
     "format": "prettier \"{apps,packages}/**/*.{js,ts,jsx,tsx,css}\" --write",
     "lint-path": "eslint --ext ts,tsx --max-warnings=0",
     "lint": "pnpm lint-path .",
