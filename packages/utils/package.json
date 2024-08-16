@@ -1,18 +1,18 @@
 {
     "name": "@live24hisere/utils",
-    "type": "module",
-    "private": true,
     "scripts": {
-        "dev": "tsc --watch",
-        "build": "tsc"
+        "dev": "tsup --watch",
+        "build": "tsup"
     },
     "exports": {
         "./test-utils": {
             "types": "./src/test-utils/index.ts",
-            "default": "./dist/test-utils/index.js"
+            "import": "./dist/test-utils.mjs",
+            "require": "./dist/test-utils.js"
         }
     },
     "devDependencies": {
+        "tsup": "8.2.4",
         "typescript": "^5.6.3"
     }
 }
