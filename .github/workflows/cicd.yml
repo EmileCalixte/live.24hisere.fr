@@ -52,13 +52,8 @@ jobs:
 #          (cd backend && yarn test run) &
 #          wait
 
-      - name: Create frontend production builds
+      - name: Build apps
         run: pnpm build
-        working-directory: ./apps/frontend
-
-      - name: Create backend production builds
-        run: pnpm build
-        working-directory: ./apps/backend
 
       - name: Clean files
         run: |
