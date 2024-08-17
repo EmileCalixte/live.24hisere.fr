@@ -1,4 +1,4 @@
-import { helloWorldUtils } from "@live24hisere/utils/test-utils";
+import { helloWorldUtils, Toto } from "@live24hisere/utils/test-utils";
 import { Controller, Get } from "@nestjs/common";
 import { ConfigService } from "../services/database/entities/config.service";
 import { MiscService } from "../services/database/entities/misc.service";
@@ -20,12 +20,14 @@ export class AppDataController {
                 this.miscService.getLastUpdateTime(true),
             ]);
 
+        const text: Toto = "tata";
+
         return {
             currentTime: new Date().toISOString(),
             // isAppEnabled: isAppEnabled ?? false,
             isAppEnabled: false,
             // disabledAppMessage: isAppEnabled ? null : disabledAppMessage,
-            disabledAppMessage: helloWorldUtils.helloWorld(),
+            disabledAppMessage: helloWorldUtils.helloWorld(text),
             lastUpdateTime,
         };
     }
