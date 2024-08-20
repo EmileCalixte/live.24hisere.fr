@@ -5,6 +5,11 @@
         "build": "tsup"
     },
     "exports": {
+        ".": {
+            "types": "./utils.d.ts",
+            "import": "./dist/utils.mjs",
+            "require": "./dist/utils.js"
+        },
         "./test-utils": {
             "types": "./test-utils.d.ts",
             "import": "./dist/test-utils.mjs",
@@ -12,7 +17,7 @@
         }
     },
     "devDependencies": {
-        "tsup": "8.2.4",     
+        "tsup": "8.2.4",
         "typescript": "^5.5.4"
     }
 }

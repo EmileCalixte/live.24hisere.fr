@@ -1,13 +1,12 @@
+import { typeUtils } from '@live24hisere/utils';
+import { helloWorldUtils } from "@live24hisere/utils/test-utils";
 import { Body, Controller, Get, Patch, UseGuards } from "@nestjs/common";
 import { UpdateDisabledAppDto } from "../../dtos/disabledApp/updateDisabledApp.dto";
 import { UpdatePassageImportSettingsDto } from "../../dtos/passageImport/updatePassageImportSettings.dto";
 import { AuthGuard } from "../../guards/auth.guard";
 import { ConfigService } from "../../services/database/entities/config.service";
-import {
-    AdminDisabledAppResponse,
-    AdminPassageImportSettingsResponse,
-} from "../../types/responses/admin/Config";
-import { isDefined, isNullOrUndefined } from "../../utils/misc.utils";
+import { AdminDisabledAppResponse, AdminPassageImportSettingsResponse } from "../../types/responses/admin/Config";
+import { isDefined } from "../../utils/misc.utils";
 
 @Controller()
 @UseGuards(AuthGuard)
@@ -24,8 +23,9 @@ export class ConfigController {
         @Body() updateDisabledAppDto: UpdateDisabledAppDto,
     ): Promise<AdminDisabledAppResponse> {
         const promises = [];
+        console.log(helloWorldUtils.helloWorld());
 
-        if (!isNullOrUndefined(updateDisabledAppDto.isAppEnabled)) {
+        if (!typeUtils.isNullOrUndefined(updateDisabledAppDto.isAppEnabled)) {
             promises.push(
                 this.configService.setIsAppEnabled(
                     updateDisabledAppDto.isAppEnabled,
