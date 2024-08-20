@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { eq } from "drizzle-orm";
+import { typeUtils } from "@live24hisere/utils";
 import { TABLE_CONFIG } from "../../../../drizzle/schema";
 import { Config } from "../../../types/Config";
-import { booleanToString, stringToBoolean } from "../../../utils/db.utils";
 import { EntityService } from "../entity.service";
 
 const KEY_IMPORT_DAG_FILE_PATH = "import_dag_file_path";
@@ -35,11 +35,14 @@ export class ConfigService extends EntityService {
             return null;
         }
 
-        return stringToBoolean(config.value);
+        return typeUtils.stringToBoolean(config.value);
     }
 
     public async setIsAppEnabled(isAppEnabled: boolean): Promise<void> {
-        await this.saveLine(KEY_IS_APP_ENABLED, booleanToString(isAppEnabled));
+        await this.saveLine(
+            KEY_IS_APP_ENABLED,
+            typeUtils.booleanToString(isAppEnabled),
+        );
     }
 
     public async getDisabledAppMessage(): Promise<string | null> {

@@ -1,8 +1,8 @@
 import { HttpStatus, INestApplication } from "@nestjs/common";
 import request from "supertest";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { objectUtils } from "@live24hisere/utils";
 import { AdminRace, Race } from "../../src/types/Race";
-import { excludeKeys } from "../../src/utils/misc.utils";
 import { initApp } from "./_init";
 import { ADMIN_USER_ACCESS_TOKEN } from "./constants/accessToken";
 import { ISO8601_DATE_REGEX } from "./constants/dates";
@@ -323,7 +323,7 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
                     // Post a race without name
                     request(app.getHttpServer())
                         .post("/admin/races")
-                        .send(excludeKeys(raceToPost, ["name"]))
+                        .send(objectUtils.excludeKeys(raceToPost, ["name"]))
                         .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
 
                     // Post a race with an invalid name type
@@ -344,7 +344,9 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
                     // Post a race without start time
                     request(app.getHttpServer())
                         .post("/admin/races")
-                        .send(excludeKeys(raceToPost, ["startTime"]))
+                        .send(
+                            objectUtils.excludeKeys(raceToPost, ["startTime"]),
+                        )
                         .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
 
                     // Post a race with an invalid start time type
@@ -359,7 +361,7 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
                     // Post a race without duration
                     request(app.getHttpServer())
                         .post("/admin/races")
-                        .send(excludeKeys(raceToPost, ["duration"]))
+                        .send(objectUtils.excludeKeys(raceToPost, ["duration"]))
                         .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
 
                     // Post a race with an invalid duration type
@@ -383,7 +385,11 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
                     // Post a race without initial distance
                     request(app.getHttpServer())
                         .post("/admin/races")
-                        .send(excludeKeys(raceToPost, ["initialDistance"]))
+                        .send(
+                            objectUtils.excludeKeys(raceToPost, [
+                                "initialDistance",
+                            ]),
+                        )
                         .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
 
                     // Post a race with an invalid initial distance type
@@ -407,7 +413,11 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
                     // Post a race without lap distance
                     request(app.getHttpServer())
                         .post("/admin/races")
-                        .send(excludeKeys(raceToPost, ["lapDistance"]))
+                        .send(
+                            objectUtils.excludeKeys(raceToPost, [
+                                "lapDistance",
+                            ]),
+                        )
                         .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
 
                     // Post a race with an invalid lap distance type
@@ -431,7 +441,7 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
                     // Post a race without isPublic
                     request(app.getHttpServer())
                         .post("/admin/races")
-                        .send(excludeKeys(raceToPost, ["isPublic"]))
+                        .send(objectUtils.excludeKeys(raceToPost, ["isPublic"]))
                         .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
 
                     // Post a race with an invalid isPublic type

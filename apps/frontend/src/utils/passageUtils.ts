@@ -1,3 +1,4 @@
+import { compareUtils, dateUtils } from "@live24hisere/utils";
 import { HOUR_IN_MS } from "../constants/misc";
 import {
     type Passage,
@@ -9,17 +10,15 @@ import {
     type RunnerProcessedData,
     type RunnerProcessedHour,
 } from "../types/Runner";
-import { spaceship } from "./compareUtils";
 import { getPaceFromSpeed, getSpeed } from "./mathUtils";
 import { getDistanceFromPassageCount, getRaceTime } from "./raceUtils";
-import { isDateValid } from "./utils";
 
 /**
  * Returns passages sorted in ascending time order
  */
 export function getSortedPassages<T extends Passage>(passages: T[]): T[] {
     return passages.toSorted((passageA, passageB) =>
-        spaceship(
+        compareUtils.spaceship(
             new Date(passageA.time).getTime(),
             new Date(passageB.time).getTime(),
         ),
@@ -92,11 +91,11 @@ export function getProcessedPassagesFromPassages<T extends Passage>(
             : new Date(race.startTime);
         const lapEndTime = new Date(passage.time);
 
-        if (!isDateValid(lapStartTime)) {
+        if (!dateUtils.isDateValid(lapStartTime)) {
             throw new Error("Invalid passage start time");
         }
 
-        if (!isDateValid(lapEndTime)) {
+        if (!dateUtils.isDateValid(lapEndTime)) {
             throw new Error("Invalid passage end time");
         }
 

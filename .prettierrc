@@ -5,7 +5,7 @@
     "singleQuote": false,
     "tabWidth": 4,
     "trailingComma": "all",
-    "importOrder": ["^react$", "<THIRD_PARTY_MODULES>", "^[./]"],
+    "importOrder": ["^react$", "<THIRD_PARTY_MODULES>", "^@live24hisere/(.*)$", "^[./]"],
     "importOrderSortSpecifiers": true,
     "importOrderCaseInsensitive": true
 }

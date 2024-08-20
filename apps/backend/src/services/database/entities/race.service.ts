@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { and, asc, count, eq, getTableColumns, max } from "drizzle-orm";
+import { objectUtils } from "@live24hisere/utils";
 import { TABLE_RACE, TABLE_RUNNER } from "../../../../drizzle/schema";
 import { DrizzleTableColumns } from "../../../types/misc/Drizzle";
 import {
@@ -7,7 +8,6 @@ import {
     PublicRaceWithRunnerCount,
     Race,
 } from "../../../types/Race";
-import { isEmptyObject } from "../../../utils/object.utils";
 import { EntityService } from "../entity.service";
 
 @Injectable()
@@ -118,7 +118,7 @@ export class RaceService extends EntityService {
         raceId: number,
         newRaceData: Partial<Omit<Race, "id">>,
     ): Promise<AdminRaceWithRunnerCount> {
-        if (!isEmptyObject(newRaceData)) {
+        if (!objectUtils.isEmptyObject(newRaceData)) {
             const [resultSetHeader] = await this.db
                 .update(TABLE_RACE)
                 .set(newRaceData)

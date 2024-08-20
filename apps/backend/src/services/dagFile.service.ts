@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
+import { dateUtils } from "@live24hisere/utils";
 import { DagDetectionType, DagFileLineData } from "../types/Dag";
-import { isDateValid } from "../utils/date.utils";
 
 @Injectable()
 export class DagFileService {
@@ -21,7 +21,7 @@ export class DagFileService {
             passageDateTime: new Date(`${dateString}T${timeString}`),
         };
 
-        if (!isDateValid(data.passageDateTime)) {
+        if (!dateUtils.isDateValid(data.passageDateTime)) {
             throw new Error(`Unable to get a valid date from line: ${line}`);
         }
 

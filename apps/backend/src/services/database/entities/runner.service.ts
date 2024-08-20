@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { eq, getTableColumns } from "drizzle-orm";
+import { objectUtils } from "@live24hisere/utils";
 import {
     TABLE_PASSAGE,
     TABLE_RACE,
@@ -10,7 +11,6 @@ import {
     PublicRunnerWithPassages,
     Runner,
 } from "../../../types/Runner";
-import { assignDefined } from "../../../utils/object.utils";
 import { DrizzleService } from "../drizzle.service";
 import { EntityService } from "../entity.service";
 import { PassageService } from "./passage.service";
@@ -155,7 +155,10 @@ export class RunnerService extends EntityService {
 
         return await this.db.transaction(async (tx) => {
             // So first we create a new runner
-            const dataToInsert = assignDefined(runner, newRunnerData);
+            const dataToInsert = objectUtils.assignDefined(
+                runner,
+                newRunnerData,
+            );
 
             await tx.insert(TABLE_RUNNER).values(dataToInsert);
 

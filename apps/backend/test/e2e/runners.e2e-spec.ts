@@ -1,8 +1,8 @@
 import { HttpStatus, INestApplication } from "@nestjs/common";
 import request from "supertest";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { objectUtils } from "@live24hisere/utils";
 import { Runner } from "../../src/types/Runner";
-import { excludeKeys } from "../../src/utils/misc.utils";
 import { initApp } from "./_init";
 import { ADMIN_USER_ACCESS_TOKEN } from "./constants/accessToken";
 import { BIRTH_YEAR_REGEX } from "./constants/birthYear";
@@ -312,7 +312,7 @@ describe("Runner endpoints (e2e)", { concurrent: false }, () => {
                     // Post a runner without ID
                     request(app.getHttpServer())
                         .post("/admin/runners")
-                        .send(excludeKeys(runnerToPost, ["id"]))
+                        .send(objectUtils.excludeKeys(runnerToPost, ["id"]))
                         .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
 
                     // Post a runner with an invalid id type
@@ -336,7 +336,11 @@ describe("Runner endpoints (e2e)", { concurrent: false }, () => {
                     // Post a runner without firstname
                     request(app.getHttpServer())
                         .post("/admin/runners")
-                        .send(excludeKeys(runnerToPost, ["firstname"]))
+                        .send(
+                            objectUtils.excludeKeys(runnerToPost, [
+                                "firstname",
+                            ]),
+                        )
                         .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
 
                     // Post a runner with an invalid firstname type
@@ -358,7 +362,9 @@ describe("Runner endpoints (e2e)", { concurrent: false }, () => {
                     // Post a runner without lastname
                     request(app.getHttpServer())
                         .post("/admin/runners")
-                        .send(excludeKeys(runnerToPost, ["lastname"]))
+                        .send(
+                            objectUtils.excludeKeys(runnerToPost, ["lastname"]),
+                        )
                         .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
 
                     // Post a runner with an invalid lastname type
@@ -380,7 +386,9 @@ describe("Runner endpoints (e2e)", { concurrent: false }, () => {
                     // Post a runner without gender
                     request(app.getHttpServer())
                         .post("/admin/runners")
-                        .send(excludeKeys(runnerToPost, ["lastname"]))
+                        .send(
+                            objectUtils.excludeKeys(runnerToPost, ["lastname"]),
+                        )
                         .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
 
                     // Post a runner with an invalid gender type
@@ -398,7 +406,11 @@ describe("Runner endpoints (e2e)", { concurrent: false }, () => {
                     // Post a runner without birth year
                     request(app.getHttpServer())
                         .post("/admin/runners")
-                        .send(excludeKeys(runnerToPost, ["birthYear"]))
+                        .send(
+                            objectUtils.excludeKeys(runnerToPost, [
+                                "birthYear",
+                            ]),
+                        )
                         .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
 
                     // Post a runner with an invalid birth year type
@@ -425,7 +437,9 @@ describe("Runner endpoints (e2e)", { concurrent: false }, () => {
                     // Post a runner without stopped
                     request(app.getHttpServer())
                         .post("/admin/runners")
-                        .send(excludeKeys(runnerToPost, ["stopped"]))
+                        .send(
+                            objectUtils.excludeKeys(runnerToPost, ["stopped"]),
+                        )
                         .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
 
                     // Post a runner with an invalid stopped type
@@ -437,7 +451,7 @@ describe("Runner endpoints (e2e)", { concurrent: false }, () => {
                     // Post a runner without race ID
                     request(app.getHttpServer())
                         .post("/admin/runners")
-                        .send(excludeKeys(runnerToPost, ["raceId"]))
+                        .send(objectUtils.excludeKeys(runnerToPost, ["raceId"]))
                         .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
 
                     // Post a runner with an invalid race ID type

@@ -1,5 +1,5 @@
 import { customType, mysqlTable } from "drizzle-orm/mysql-core";
-import { formatDateForSql, isDateValid } from "../src/utils/date.utils";
+import { dateUtils } from "@live24hisere/utils";
 
 const TABLE_NAME_ACCESS_TOKEN = "access_token";
 const TABLE_NAME_CONFIG = "config";
@@ -28,11 +28,11 @@ const date = customType<{
     toDriver(value) {
         const date = new Date(value);
 
-        if (!isDateValid(date)) {
+        if (!dateUtils.isDateValid(date)) {
             throw new Error(`${value} is not a valid date string`);
         }
 
-        return formatDateForSql(date);
+        return dateUtils.formatDateForSql(date);
     },
     fromDriver(value) {
         // Map YYYY-MM-DD hh:mm:ss to ISO 8601 format (e.g.: 2024-04-06 09:00:03 => 2024-04-06T09:00:03.000Z)

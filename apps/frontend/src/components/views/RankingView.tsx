@@ -1,5 +1,6 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
+import { objectUtils } from "@live24hisere/utils";
 import { RankingTimeMode } from "../../constants/rankingTimeMode";
 import "../../css/print-ranking-table.css";
 import { useCategoryQueryString } from "../../hooks/queryString/useCategoryQueryString";
@@ -24,7 +25,6 @@ import {
     existingCategories,
     getCategoryCodeFromBirthYear,
 } from "../../utils/ffaUtils";
-import { excludeKeys } from "../../utils/objectUtils";
 import {
     getProcessedPassagesFromPassages,
     getRunnerProcessedDataFromPassages,
@@ -164,7 +164,7 @@ export default function RankingView(): React.ReactElement {
             }
         }
 
-        return excludeKeys(existingCategories, categoriesToRemove);
+        return objectUtils.excludeKeys(existingCategories, categoriesToRemove);
     }, [ranking]);
 
     const { selectedCategory, setCategoryParam, deleteCategoryParam } =
