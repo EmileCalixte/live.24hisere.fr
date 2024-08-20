@@ -1,3 +1,4 @@
+import { dateUtils } from "@live24hisere/utils";
 import config from "../config/config";
 
 export function verbose(...items: unknown[]): void {
@@ -12,17 +13,13 @@ export function formatDateForApi(date: Date): string {
     return date.toISOString();
 }
 
-export function isDateValid(date: Date): boolean {
-    return !isNaN(date.getTime());
-}
-
 export function formatDateAsString(
     date: Date,
     dateAndTimeSeparator = ", ",
     dateSeparator = "/",
     timeSeparator = ":",
 ): string {
-    if (!isDateValid(date)) {
+    if (!dateUtils.isDateValid(date)) {
         return date.toString();
     }
 
@@ -33,7 +30,7 @@ export function formatDateAsString(
 }
 
 export function getDateStringFromDate(date: Date, separator = "/"): string {
-    if (!isDateValid(date)) {
+    if (!dateUtils.isDateValid(date)) {
         return "";
     }
 
@@ -45,7 +42,7 @@ export function getDateStringFromDate(date: Date, separator = "/"): string {
 }
 
 export function getTimeStringFromDate(date: Date, separator = ":"): string {
-    if (!isDateValid(date)) {
+    if (!dateUtils.isDateValid(date)) {
         return "";
     }
 

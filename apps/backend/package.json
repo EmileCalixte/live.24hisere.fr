@@ -7,18 +7,13 @@
     "update-password": "node dist/cli.js update-user-password",
     "prisma": "prisma",
     "build": "nest build",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "dev": "pnpm prisma generate && pnpm start:dev",
     "start": "nest start",
     "start:dev": "pnpm nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "typecheck": "tsc --noEmit",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test": "exit 0"
   },
   "dependencies": {
     "@live24hisere/utils": "workspace:*",

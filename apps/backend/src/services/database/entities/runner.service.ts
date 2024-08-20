@@ -6,7 +6,7 @@ import {
     PublicRunnerWithRaceAndPassages,
     RunnerWithRaceAndPassages,
 } from "src/types/Runner";
-import { excludeKeys, pickKeys } from "src/utils/misc.utils";
+import { objectUtils } from "@live24hisere/utils";
 import { PrismaService } from "../prisma.service";
 
 @Injectable()
@@ -47,7 +47,7 @@ export class RunnerService {
         return {
             ...runner,
             passages: runner.passages.map((passage) =>
-                excludeKeys(passage, ["runnerId"]),
+                objectUtils.excludeKeys(passage, ["runnerId"]),
             ),
         };
     }
@@ -142,7 +142,7 @@ export class RunnerService {
             // So first we create a new runner
             const newRunner = await tx.runner.create({
                 data: {
-                    ...excludeKeys(runner, ["raceId"]),
+                    ...objectUtils.excludeKeys(runner, ["raceId"]),
                     ...data,
                     race: data.race ?? {
                         connect: {
@@ -182,9 +182,9 @@ export class RunnerService {
     ): PublicRunnerWithRaceAndPassages {
         return {
             ...runner,
-            race: excludeKeys(runner.race, ["isPublic", "order"]),
+            race: objectUtils.excludeKeys(runner.race, ["isPublic", "order"]),
             passages: runner.passages.map((passage) =>
-                pickKeys(passage, ["id", "time"]),
+                objectUtils.pickKeys(passage, ["id", "time"]),
             ),
         };
     }

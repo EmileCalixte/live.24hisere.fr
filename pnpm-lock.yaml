@@ -289,6 +289,9 @@ importers:
       typescript:
         specifier: ^5.5.4
         version: 5.5.4
+      vitest:
+        specifier: ^2.0.5
+        version: 2.0.5(@types/node@20.14.15)(jsdom@24.1.1)(terser@5.31.1)
 
 packages:
 

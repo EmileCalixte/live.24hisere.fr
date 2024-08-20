@@ -34,13 +34,3 @@ export function pickKeys<T extends object, K extends keyof T>(
 
     return result as Pick<T, K>;
 }
-
-/**
- * Returns true if a value is not undefined
- * @param value
- */
-export function isDefined<T = unknown>(
-    value: T | null,
-): value is NonNullable<T> | null {
-    return value !== undefined;
-}

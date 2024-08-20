@@ -2,6 +2,7 @@
     "name": "@live24hisere/utils",
     "scripts": {
         "dev": "tsup --watch",
+        "test": "vitest run",
         "build": "tsup"
     },
     "exports": {
@@ -18,6 +19,7 @@
     },
     "devDependencies": {
         "tsup": "8.2.4",
-        "typescript": "^5.5.4"
+        "typescript": "^5.5.4",
+        "vitest": "^2.0.5"
     }
 }

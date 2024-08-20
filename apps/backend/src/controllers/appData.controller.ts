@@ -1,5 +1,5 @@
-import { helloWorldUtils, Toto } from "@live24hisere/utils/test-utils";
 import { Controller, Get } from "@nestjs/common";
+import { helloWorldUtils, Toto } from "@live24hisere/utils/test-utils";
 import { ConfigService } from "../services/database/entities/config.service";
 import { MiscService } from "../services/database/entities/misc.service";
 import { AppDataResponse } from "../types/responses/AppData";

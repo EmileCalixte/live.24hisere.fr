@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { Misc, Prisma } from "@prisma/client";
 import { DateISOString } from "src/types/Date";
-import { isDateValid } from "src/utils/date.utils";
+import { dateUtils } from "@live24hisere/utils";
 import { PrismaService } from "../prisma.service";
 
 const KEY_LAST_UPDATE_TIME = "last_update_time";
@@ -26,7 +26,7 @@ export class MiscService {
 
         const date = new Date(misc.value);
 
-        if (!isDateValid(date)) {
+        if (!dateUtils.isDateValid(date)) {
             return null;
         }
 

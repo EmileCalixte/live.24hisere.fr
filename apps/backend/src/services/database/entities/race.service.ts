@@ -5,7 +5,7 @@ import {
     PublicRaceWithRunnerCount,
     RaceAndRunners,
 } from "src/types/Race";
-import { excludeKeys } from "src/utils/misc.utils";
+import { objectUtils } from "@live24hisere/utils";
 import { PrismaService } from "../prisma.service";
 
 @Injectable()
@@ -128,20 +128,20 @@ export class RaceService {
     }
 
     private getAdminRaceFromRace<T extends Race>(race: T): Omit<T, "order"> {
-        return excludeKeys(race, ["order"]);
+        return objectUtils.excludeKeys(race, ["order"]);
     }
 
     private getPublicRaceFromRace<T extends Race>(
         race: T,
     ): Omit<T, "isPublic" | "order"> {
-        return excludeKeys(race, ["isPublic", "order"]);
+        return objectUtils.excludeKeys(race, ["isPublic", "order"]);
     }
 
     private getRaceWithRunnerCountFromRaceWithRunners<
         T extends { runners: R[] },
         R,
     >(race: T): Omit<T, "runners"> & { runnerCount: number } {
-        return excludeKeys(
+        return objectUtils.excludeKeys(
             {
                 ...race,
                 runnerCount: race.runners.length,

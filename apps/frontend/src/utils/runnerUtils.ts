@@ -1,3 +1,4 @@
+import { compareUtils, dateUtils } from "@live24hisere/utils";
 import { type SelectOption } from "../types/Forms";
 import { type Passage, type PassageWithRunnerId } from "../types/Passage";
 import { type RankingRunnerGap } from "../types/Ranking";
@@ -7,9 +8,8 @@ import {
     type RunnerWithProcessedData,
     type RunnerWithProcessedPassages,
 } from "../types/Runner";
-import { spaceship } from "./compareUtils";
 import { getSortedPassages } from "./passageUtils";
-import { formatMsAsDuration, isDateValid } from "./utils";
+import { formatMsAsDuration } from "./utils";
 
 export function getRunnersWithPassagesFromRunnersAndPassages<
     T extends Runner,
@@ -23,7 +23,7 @@ export function getRunnersWithPassagesFromRunnersAndPassages<
     for (const passage of passages) {
         const passageTime = new Date(passage.time);
 
-        if (!isDateValid(passageTime)) {
+        if (!dateUtils.isDateValid(passageTime)) {
             continue;
         }
 
@@ -140,20 +140,20 @@ export function formatGap(
 export function spaceshipRunners(
     runner1: RunnerWithPassages & RunnerWithProcessedData,
     runner2: RunnerWithPassages & RunnerWithProcessedData,
-): ReturnType<typeof spaceship> {
+): ReturnType<typeof compareUtils.spaceship> {
     const runner1PassageCount = runner1.passages.length;
     const runner2PassageCount = runner2.passages.length;
 
     if (runner1PassageCount === runner2PassageCount) {
         // When two runners have completed the same number of laps,
         // the one who has completed them the fastest is considered to be faster than the other.
-        return spaceship(
+        return compareUtils.spaceship(
             runner1.lastPassageTime?.raceTime,
             runner2.lastPassageTime?.raceTime,
         );
     }
 
-    return spaceship(runner2PassageCount, runner1PassageCount);
+    return compareUtils.spaceship(runner2PassageCount, runner1PassageCount);
 }
 
 /**

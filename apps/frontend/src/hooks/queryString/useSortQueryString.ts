@@ -1,8 +1,8 @@
 import React from "react";
+import { arrayUtils } from "@live24hisere/utils";
 import { SearchParam } from "../../constants/searchParams";
 import { type SortBy, SortDirection } from "../../constants/sort";
 import { useQueryString } from "./useQueryString";
-import { arrayUtils } from "@live24hisere/utils";
 
 interface UseSortQueryString<T extends SortBy[]> {
     sortColumn: T[number];
@@ -21,7 +21,10 @@ function isValidSortColumn<T extends SortBy[]>(
 function isValidSortDirection(
     sortDirection: string | null,
 ): sortDirection is SortDirection {
-    return arrayUtils.inArray(sortDirection, [SortDirection.ASC, SortDirection.DESC]);
+    return arrayUtils.inArray(sortDirection, [
+        SortDirection.ASC,
+        SortDirection.DESC,
+    ]);
 }
 
 export function useSortQueryString<T extends SortBy[]>(

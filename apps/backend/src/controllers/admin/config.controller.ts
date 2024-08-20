@@ -1,12 +1,14 @@
+import { Body, Controller, Get, Patch, UseGuards } from "@nestjs/common";
 import { typeUtils } from "@live24hisere/utils";
 import { helloWorldUtils } from "@live24hisere/utils/test-utils";
-import { Body, Controller, Get, Patch, UseGuards } from "@nestjs/common";
 import { UpdateDisabledAppDto } from "../../dtos/disabledApp/updateDisabledApp.dto";
 import { UpdatePassageImportSettingsDto } from "../../dtos/passageImport/updatePassageImportSettings.dto";
 import { AuthGuard } from "../../guards/auth.guard";
 import { ConfigService } from "../../services/database/entities/config.service";
-import { AdminDisabledAppResponse, AdminPassageImportSettingsResponse } from "../../types/responses/admin/Config";
-import { isDefined } from "../../utils/misc.utils";
+import {
+    AdminDisabledAppResponse,
+    AdminPassageImportSettingsResponse,
+} from "../../types/responses/admin/Config";
 
 @Controller()
 @UseGuards(AuthGuard)
@@ -33,7 +35,11 @@ export class ConfigController {
             );
         }
 
-        if (!typeUtils.isNullOrUndefined(updateDisabledAppDto.disabledAppMessage)) {
+        if (
+            !typeUtils.isNullOrUndefined(
+                updateDisabledAppDto.disabledAppMessage,
+            )
+        ) {
             promises.push(
                 this.configService.setDisabledAppMessage(
                     updateDisabledAppDto.disabledAppMessage,
@@ -55,7 +61,7 @@ export class ConfigController {
     async updatePassageImportSettings(
         @Body() updatePassageImportSettingsDto: UpdatePassageImportSettingsDto,
     ): Promise<AdminPassageImportSettingsResponse> {
-        if (isDefined(updatePassageImportSettingsDto.dagFileUrl)) {
+        if (typeUtils.isDefined(updatePassageImportSettingsDto.dagFileUrl)) {
             await this.configService.setImportDagFilePath(
                 updatePassageImportSettingsDto.dagFileUrl,
             );
