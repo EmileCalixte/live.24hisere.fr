@@ -6,7 +6,7 @@
     },
     "exports": {
         ".": {
-            "types": "./utils.d.ts",
+            "types": "./index.d.ts",
             "import": "./dist/utils.mjs",
             "require": "./dist/utils.js"
         },
