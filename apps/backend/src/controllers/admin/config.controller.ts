@@ -1,4 +1,4 @@
-import { typeUtils } from '@live24hisere/utils';
+import { typeUtils } from "@live24hisere/utils";
 import { helloWorldUtils } from "@live24hisere/utils/test-utils";
 import { Body, Controller, Get, Patch, UseGuards } from "@nestjs/common";
 import { UpdateDisabledAppDto } from "../../dtos/disabledApp/updateDisabledApp.dto";
@@ -33,7 +33,7 @@ export class ConfigController {
             );
         }
 
-        if (!isNullOrUndefined(updateDisabledAppDto.disabledAppMessage)) {
+        if (!typeUtils.isNullOrUndefined(updateDisabledAppDto.disabledAppMessage)) {
             promises.push(
                 this.configService.setDisabledAppMessage(
                     updateDisabledAppDto.disabledAppMessage,
