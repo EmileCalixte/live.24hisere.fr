@@ -1,4 +1,4 @@
-import { isNullOrUndefined } from "./utils";
+import {typeUtils} from "@live24hisere/utils";
 
 type Comparable = string | number | bigint | boolean | Date | null | undefined;
 
@@ -11,15 +11,15 @@ type SpaceshipResult = -1 | 0 | 1;
  * @return {SpaceshipResult} -1 if `a` is greater than `b`, 1 if `b` is greater than `a`, 0 in other cases
  */
 export function spaceship(a: Comparable, b: Comparable): SpaceshipResult {
-    if (isNullOrUndefined(a) && isNullOrUndefined(b)) {
+    if (typeUtils.isNullOrUndefined(a) && typeUtils.isNullOrUndefined(b)) {
         return 0;
     }
 
-    if (isNullOrUndefined(a)) {
+    if (typeUtils.isNullOrUndefined(a)) {
         return -1;
     }
 
-    if (isNullOrUndefined(b)) {
+    if (typeUtils.isNullOrUndefined(b)) {
         return 1;
     }
 
