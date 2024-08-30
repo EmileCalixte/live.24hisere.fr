@@ -1,8 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { type GenderWithMixed } from "@live24hisere/types";
+import {
+    type CategoryShortCode,
+    type GenderWithMixed,
+} from "@live24hisere/types";
 import { NO_VALUE_PLACEHOLDER } from "../../../../constants/misc";
-import { type CategoryShortCode } from "../../../../types/Category";
 import { type Race } from "../../../../types/Race";
 import { type RankingRunner } from "../../../../types/Ranking";
 import { getRankingType } from "../../../../utils/rankingUtils";

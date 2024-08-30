@@ -9,7 +9,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { Col, Row } from "react-bootstrap";
-import { type AdminProcessedPassage } from "../../../../types/Passage";
+import { type AdminProcessedPassage } from "@live24hisere/types";
 import { type AdminRaceWithRunnerCount } from "../../../../types/Race";
 import {
     formatDateAsString,

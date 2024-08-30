@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from "react";
+import { type AdminProcessedPassage } from "@live24hisere/types";
 import ToastService from "../../../../services/ToastService";
-import { type AdminProcessedPassage } from "../../../../types/Passage";
 import { type AdminRaceWithRunnerCount } from "../../../../types/Race";
 import RunnerDetailsPassageForm from "./RunnerDetailsPassageForm";
 

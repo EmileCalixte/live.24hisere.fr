@@ -3,7 +3,7 @@ import { type NavigateOptions } from "react-router-dom";
 import { RankingTimeMode } from "../../constants/rankingTimeMode";
 import { SearchParam } from "../../constants/searchParams";
 import { type Race } from "../../types/Race";
-import { type ReactStateSetter } from "../../types/Utils";
+import { type ReactStateSetter } from "../../types/ReactUtils";
 import { getDateFromRaceTime } from "../../utils/raceUtils";
 import { useQueryString } from "./useQueryString";
 

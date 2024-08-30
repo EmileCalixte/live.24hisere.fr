@@ -1,4 +1,4 @@
-import type { DateISOString } from "@live24hisere/types";
+import { type DateISOString } from "./Date";
 
 /**
  * An object representing a passage of a runner at the timing point
@@ -114,15 +114,15 @@ export interface PassageProcessedData {
 /**
  * An object representing a passage of a runner at the timing point with additionnal data about the corresponding lap
  */
-export interface ProcessedPassage extends Passage {
+export type ProcessedPassage<TPassage extends Passage = Passage> = TPassage & {
     /**
      * An object containing additionnal data about the corresponding lap
      */
     processed: PassageProcessedData;
-}
+};
 
 /**
  * An object representing a passage of a runner at the timing point with additional admin info and additional data
  * about the corresponding lap
  */
-export interface AdminProcessedPassage extends AdminPassage, ProcessedPassage {}
+export type AdminProcessedPassage = ProcessedPassage<AdminPassage>;

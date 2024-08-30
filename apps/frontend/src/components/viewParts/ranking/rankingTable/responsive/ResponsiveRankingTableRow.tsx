@@ -1,7 +1,9 @@
 import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { type GenderWithMixed } from "@live24hisere/types";
-import { type CategoryShortCode } from "../../../../../types/Category";
+import {
+    type CategoryShortCode,
+    type GenderWithMixed,
+} from "@live24hisere/types";
 import { type RankingRunner } from "../../../../../types/Ranking";
 import { getCategoryCodeFromBirthYear } from "../../../../../utils/ffaUtils";
 import { getRankingType } from "../../../../../utils/rankingUtils";

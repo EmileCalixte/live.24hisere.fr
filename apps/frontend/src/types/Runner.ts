@@ -1,10 +1,9 @@
-import { type Gender } from "@live24hisere/types";
 import {
     type AdminPassage,
-    type AdminProcessedPassage,
+    type Gender,
     type Passage,
     type ProcessedPassage,
-} from "./Passage";
+} from "@live24hisere/types";
 import { type Race } from "./Race";
 
 /**
@@ -124,11 +123,12 @@ export type RunnerWithProcessedData = Runner & RunnerProcessedData;
 /**
  * An object representing a runner with his passages
  */
-export interface RunnerWithPassages extends Runner {
+export interface RunnerWithPassages<TPassage extends Passage = Passage>
+    extends Runner {
     /**
      * The list of the runner's passages
      */
-    passages: Passage[];
+    passages: TPassage[];
 }
 
 /**
@@ -144,32 +144,26 @@ export interface RunnerWithAdminPassages extends Runner {
 /**
  * An object representing a runner with his passages and with additional data on the passages
  */
-export interface RunnerWithProcessedPassages extends Runner {
+export type RunnerWithProcessedPassages<
+    TRunner extends Runner = Runner,
+    TPassage extends ProcessedPassage = ProcessedPassage,
+> = TRunner & {
     /**
      * The list of the runner's passages with additional data
      */
-    passages: ProcessedPassage[];
-}
-
-/**
- * An object representing a runner with passages and with additional admin info and additional data on the passages
- */
-export interface RunnerWithAdminProcessedPassages extends Runner {
-    /**
-     * The list of the runner's passages with additional admin info and additional data
-     */
-    passages: AdminProcessedPassage[];
-}
+    passages: TPassage[];
+};
 
 /**
  * An object representing a runner with the information of his race hours
  */
-export interface RunnerWithProcessedHours extends Runner {
-    /**
-     * The race hours of the runner
-     */
-    hours: RunnerProcessedHour[];
-}
+export type RunnerWithProcessedHours<TRunner extends Runner = Runner> =
+    TRunner & {
+        /**
+         * The race hours of the runner
+         */
+        hours: RunnerProcessedHour[];
+    };
 
 /**
  * An object representing a runner with additional data about his race

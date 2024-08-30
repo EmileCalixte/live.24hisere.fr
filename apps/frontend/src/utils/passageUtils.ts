@@ -1,10 +1,6 @@
+import { type Passage, type ProcessedPassage } from "@live24hisere/types";
 import { compareUtils, dateUtils } from "@live24hisere/utils";
 import { HOUR_IN_MS } from "../constants/misc";
-import {
-    type Passage,
-    type PassageProcessedData,
-    type ProcessedPassage,
-} from "../types/Passage";
 import { type Race } from "../types/Race";
 import {
     type RunnerProcessedData,
@@ -16,7 +12,9 @@ import { getDistanceFromPassageCount, getRaceTime } from "./raceUtils";
 /**
  * Returns passages sorted in ascending time order
  */
-export function getSortedPassages<T extends Passage>(passages: T[]): T[] {
+export function getSortedPassages<TPassage extends Passage>(
+    passages: TPassage[],
+): TPassage[] {
     return passages.toSorted((passageA, passageB) =>
         compareUtils.spaceship(
             new Date(passageA.time).getTime(),
@@ -58,15 +56,14 @@ export function getRunnerProcessedDataFromPassages(
     };
 }
 
-export function getProcessedPassagesFromPassages<T extends Passage>(
+export function getProcessedPassagesFromPassages<TPassage extends Passage>(
     race: Race,
-    passages: T[],
-): Array<T & { processed: PassageProcessedData }> {
+    passages: TPassage[],
+): Array<ProcessedPassage<TPassage>> {
     const raceInitialDistance = Number(race.initialDistance);
     const raceLapDistance = Number(race.lapDistance);
 
-    const processedPassages: Array<T & { processed: PassageProcessedData }> =
-        [];
+    const processedPassages: Array<ProcessedPassage<TPassage>> = [];
 
     let totalDistance = 0;
 
@@ -259,8 +256,8 @@ export function getSlowestLapPassage(
  * @return Passages that are entirely or partially in the interval
  */
 export function getRunnerLapsInInterval<
-    T extends ProcessedPassage = ProcessedPassage,
->(passages: T[], intervalStart: Date, intervalEnd: Date): T[] {
+    TPassage extends ProcessedPassage = ProcessedPassage,
+>(passages: TPassage[], intervalStart: Date, intervalEnd: Date): TPassage[] {
     return passages.filter((passage) => {
         // lap END time is BEFORE interval
         if (passage.processed.lapEndTime.getTime() < intervalStart.getTime()) {

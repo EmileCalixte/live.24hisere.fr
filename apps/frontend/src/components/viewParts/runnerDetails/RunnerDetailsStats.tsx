@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { Col, Row } from "react-bootstrap";
+import { type ProcessedPassage } from "@live24hisere/types";
 import { NO_VALUE_PLACEHOLDER } from "../../../constants/misc";
-import { type ProcessedPassage } from "../../../types/Passage";
 import { type Race } from "../../../types/Race";
 import { type Ranking, type RankingRunner } from "../../../types/Ranking";
 import { type RunnerWithProcessedHours } from "../../../types/Runner";
@@ -64,6 +64,7 @@ export default function RunnerDetailsStats({
         () => getFastestLapPassage(runner.passages),
         [runner],
     );
+
     const slowestLapPassage = useMemo<ProcessedPassage | null>(
         () => getSlowestLapPassage(runner.passages),
         [runner],
