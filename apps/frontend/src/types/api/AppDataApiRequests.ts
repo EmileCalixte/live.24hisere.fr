@@ -1,4 +1,4 @@
-import { type DateISOString } from "../Utils";
+import type { DateISOString } from "@live24hisere/types";
 import { type ApiRequest } from "./ApiRequest";
 
 export interface GetAppDataApiRequest extends ApiRequest {

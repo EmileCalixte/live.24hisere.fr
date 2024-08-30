@@ -1,5 +1,6 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
+import { type GenderWithMixed } from "@live24hisere/types";
 import { objectUtils } from "@live24hisere/utils";
 import { RankingTimeMode } from "../../constants/rankingTimeMode";
 import "../../css/print-ranking-table.css";
@@ -16,7 +17,6 @@ import {
     type CategoriesDict,
     type CategoryShortCode,
 } from "../../types/Category";
-import { type GenderWithMixed } from "../../types/Gender";
 import {
     type RunnerWithProcessedData,
     type RunnerWithProcessedPassages,

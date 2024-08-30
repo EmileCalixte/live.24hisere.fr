@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { Misc, Prisma } from "@prisma/client";
-import { DateISOString } from "src/types/Date";
+import { DateISOString } from "@live24hisere/types";
 import { dateUtils } from "@live24hisere/utils";
 import { PrismaService } from "../prisma.service";
 

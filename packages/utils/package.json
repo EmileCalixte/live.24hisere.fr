@@ -17,6 +17,9 @@
             "require": "./dist/test-utils.js"
         }
     },
+    "dependencies": {
+        "@live24hisere/types": "workspace:*"
+    },
     "devDependencies": {
         "tsup": "8.2.4",
         "typescript": "^5.5.4",

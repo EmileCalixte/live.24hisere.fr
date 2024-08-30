@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { Col, Row } from "react-bootstrap";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { Gender } from "../../../../constants/gender";
+import { Gender } from "@live24hisere/types";
 import { getAdminRaces } from "../../../../services/api/RaceService";
 import {
     deleteAdminRunner,

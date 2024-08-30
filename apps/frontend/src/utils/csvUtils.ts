@@ -1,5 +1,6 @@
 import Papa from "papaparse";
-import { Gender } from "../constants/gender";
+import { Gender } from "@live24hisere/types";
+import { genderUtils } from "@live24hisere/utils";
 import { ImportCsvColumn } from "../constants/importCsv";
 import {
     DD_MM_YYYY_NON_STRICT_REGEX,
@@ -9,7 +10,6 @@ import {
     YYYY_REGEX,
 } from "../constants/misc";
 import { type RunnerFromCsv, type RunnersCsvMapping } from "../types/ImportCsv";
-import { isValidGender } from "./genderUtils";
 
 export async function parseCsv(
     file: File,
@@ -77,7 +77,7 @@ export function getRunnerFromCsv(
         gender = Gender.F;
     }
 
-    if (!isValidGender(gender)) {
+    if (!genderUtils.isValidGender(gender)) {
         gender = undefined;
     }
 

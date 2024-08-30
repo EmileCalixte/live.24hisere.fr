@@ -1,4 +1,4 @@
-import { DateISOString } from "src/types/Date";
+import { DateISOString } from "@live24hisere/types";
 
 export interface LoginResponse {
     accessToken: string;

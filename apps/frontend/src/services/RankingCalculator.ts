@@ -1,5 +1,4 @@
-import { GENDER_MIXED } from "../constants/gender";
-import { type GenderWithMixed } from "../types/Gender";
+import { type GenderWithMixed } from "@live24hisere/types";
 import { type Race } from "../types/Race";
 import {
     type MinimalRankingRunnerInput,
@@ -132,7 +131,7 @@ export class RankingCalculator<T extends MinimalRankingRunnerInput> {
 
             const scratchMixedFirstRunner = this.getFirstRunner(
                 "scratch",
-                GENDER_MIXED,
+                "mixed",
             );
             const scratchGenderFirstRunner = this.getFirstRunner(
                 "scratch",
@@ -140,7 +139,7 @@ export class RankingCalculator<T extends MinimalRankingRunnerInput> {
             );
             const categoryMixedFirstRunner = this.getFirstRunner(
                 runnerCategoryCode,
-                GENDER_MIXED,
+                "mixed",
             );
             const categoryGenderFirstRunner = this.getFirstRunner(
                 runnerCategoryCode,
@@ -149,7 +148,7 @@ export class RankingCalculator<T extends MinimalRankingRunnerInput> {
 
             const scratchMixedPreviousRunner = this.getCurrentLastRunner(
                 "scratch",
-                GENDER_MIXED,
+                "mixed",
                 ranking,
             );
             const scratchGenderPreviousRunner = this.getCurrentLastRunner(
@@ -159,7 +158,7 @@ export class RankingCalculator<T extends MinimalRankingRunnerInput> {
             );
             const categoryMixedPreviousRunner = this.getCurrentLastRunner(
                 runnerCategoryCode,
-                GENDER_MIXED,
+                "mixed",
                 ranking,
             );
             const categoryGenderPreviousRunner = this.getCurrentLastRunner(
