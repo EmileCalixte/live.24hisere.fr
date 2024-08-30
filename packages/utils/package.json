@@ -18,6 +18,7 @@
         }
     },
     "dependencies": {
+        "@live24hisere/types": "workspace:^",
         "type-fest": "^4.26.1"
     },
     "devDependencies": {

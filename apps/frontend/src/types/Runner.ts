@@ -1,4 +1,4 @@
-import { type Gender } from "../constants/gender";
+import { type Gender } from "@live24hisere/types";
 import {
     type AdminPassage,
     type AdminProcessedPassage,

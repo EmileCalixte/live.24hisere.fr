@@ -1,8 +1,7 @@
 import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { GENDER_MIXED } from "../../../../../constants/gender";
+import { type GenderWithMixed } from "@live24hisere/types";
 import { type CategoryShortCode } from "../../../../../types/Category";
-import { type GenderWithMixed } from "../../../../../types/Gender";
 import { type RankingRunner } from "../../../../../types/Ranking";
 import { getCategoryCodeFromBirthYear } from "../../../../../utils/ffaUtils";
 import { getRankingType } from "../../../../../utils/rankingUtils";
@@ -28,14 +27,14 @@ export default function ResponsiveRankingTableRow({
 
     const rowRanking = useMemo(() => {
         if (tableCategory === null) {
-            if (tableGender === GENDER_MIXED) {
+            if (tableGender === "mixed") {
                 return runner.ranks.displayed.scratchMixed;
             }
 
             return runner.ranks.displayed.scratchGender;
         }
 
-        if (tableGender === GENDER_MIXED) {
+        if (tableGender === "mixed") {
             return runner.ranks.displayed.categoryMixed;
         }
 
@@ -44,7 +43,7 @@ export default function ResponsiveRankingTableRow({
 
     const rowSecondaryRankings = useMemo(() => {
         if (tableCategory === null) {
-            if (tableGender === GENDER_MIXED) {
+            if (tableGender === "mixed") {
                 return (
                     <>
                         {runner.ranks.displayed.scratchGender}{" "}
@@ -70,7 +69,7 @@ export default function ResponsiveRankingTableRow({
             );
         }
 
-        if (tableGender === GENDER_MIXED) {
+        if (tableGender === "mixed") {
             return (
                 <>
                     {runner.ranks.displayed.scratchMixed}

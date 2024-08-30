@@ -8,9 +8,9 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { Col, Row } from "react-bootstrap";
+import { type Gender } from "@live24hisere/types";
 import { stringUtils } from "@live24hisere/utils";
 import { GENDER_OPTIONS } from "../../../../constants/forms";
-import { type Gender } from "../../../../constants/gender";
 import { ImportCsvColumn } from "../../../../constants/importCsv";
 import { getAdminRaces } from "../../../../services/api/RaceService";
 import {

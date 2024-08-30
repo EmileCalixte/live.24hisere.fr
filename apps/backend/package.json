@@ -23,6 +23,7 @@
         "test:e2e": "vitest run --config ./vitest.config.e2e.ts"
     },
     "dependencies": {
+        "@live24hisere/types": "workspace:^",
         "@live24hisere/utils": "workspace:^",
         "@nestjs/axios": "^3.1.0",
         "@nestjs/common": "^10.4.5",

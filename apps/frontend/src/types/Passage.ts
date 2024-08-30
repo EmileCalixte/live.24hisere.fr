@@ -1,4 +1,4 @@
-import { type DateISOString } from "./Utils";
+import type { DateISOString } from "@live24hisere/types";
 
 /**
  * An object representing a passage of a runner at the timing point

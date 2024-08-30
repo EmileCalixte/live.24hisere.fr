@@ -1,7 +1,6 @@
 import React from "react";
-import { Gender, GENDER_MIXED } from "../../../../constants/gender";
+import { Gender, type GenderWithMixed } from "@live24hisere/types";
 import { type CategoryShortCode } from "../../../../types/Category";
-import { type GenderWithMixed } from "../../../../types/Gender";
 import { type Race } from "../../../../types/Race";
 import { formatMsAsDuration } from "../../../../utils/utils";
 
@@ -29,7 +28,7 @@ export default function RankingTableInfoHeader({
                 }
             })()}{" "}
             {(() => {
-                if (tableGender === GENDER_MIXED) {
+                if (tableGender === "mixed") {
                     return "mixte";
                 } else if (tableGender === Gender.M) {
                     return "hommes";

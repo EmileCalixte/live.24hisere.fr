@@ -1,7 +1,6 @@
+import { Gender, type GenderWithMixed } from "@live24hisere/types";
 import { type SelectOption } from "../types/Forms";
-import { type GenderWithMixed } from "../types/Gender";
 import { CATEGORY_SCRATCH } from "./category";
-import { Gender } from "./gender";
 import { RankingTimeMode } from "./rankingTimeMode";
 
 export const CATEGORY_SCRATCH_SELECT_OPTION: SelectOption = {

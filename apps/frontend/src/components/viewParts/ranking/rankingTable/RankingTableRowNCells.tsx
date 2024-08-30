@@ -1,7 +1,6 @@
 import React from "react";
-import { GENDER_MIXED } from "../../../../constants/gender";
+import { type GenderWithMixed } from "@live24hisere/types";
 import { type CategoryShortCode } from "../../../../types/Category";
-import { type GenderWithMixed } from "../../../../types/Gender";
 import { type RankingRunner } from "../../../../types/Ranking";
 import { getCategoryCodeFromBirthYear } from "../../../../utils/ffaUtils";
 
@@ -19,7 +18,7 @@ export default function RankingTableRowNCells({
     const runnerCategory = getCategoryCodeFromBirthYear(runner.birthYear);
 
     if (tableCategory === null) {
-        if (tableGender === GENDER_MIXED) {
+        if (tableGender === "mixed") {
             return (
                 <>
                     <td>
@@ -59,7 +58,7 @@ export default function RankingTableRowNCells({
             );
         }
     } else {
-        if (tableGender === GENDER_MIXED) {
+        if (tableGender === "mixed") {
             return (
                 <>
                     <td>
