@@ -1,4 +1,4 @@
-import { type AdminPassage } from "../Passage";
+import { type AdminPassage } from "@live24hisere/types";
 import {
     type Runner,
     type RunnerWithAdminPassages,

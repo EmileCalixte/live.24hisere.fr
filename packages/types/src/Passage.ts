@@ -1,9 +1,9 @@
-import type { DateISOString } from "@live24hisere/types";
+import { type DateISOString } from "./Date";
 
 /**
  * An object representing a passage of a runner at the timing point
  */
-export interface Passage {
+export interface PublicPassage {
     /**
      * The passage ID
      */
@@ -15,7 +15,7 @@ export interface Passage {
     time: DateISOString;
 }
 
-export interface PassageWithRunnerId extends Passage {
+export interface PublicPassageWithRunnerId extends PublicPassage {
     /**
      * The ID of the runner of the passage
      */
@@ -25,7 +25,7 @@ export interface PassageWithRunnerId extends Passage {
 /**
  * An object representing a passage of a runner at the timing point with additional admin info
  */
-export interface AdminPassage extends Passage {
+export interface AdminPassage extends PublicPassage {
     /**
      * Not null if the passage comes from a detection of the timing system
      */
@@ -43,7 +43,7 @@ export interface AdminPassage extends Passage {
 }
 
 export interface AdminPassageWithRunnerId
-    extends PassageWithRunnerId,
+    extends PublicPassageWithRunnerId,
         AdminPassage {}
 
 /**
@@ -114,15 +114,17 @@ export interface PassageProcessedData {
 /**
  * An object representing a passage of a runner at the timing point with additionnal data about the corresponding lap
  */
-export interface ProcessedPassage extends Passage {
+export type PublicProcessedPassage<
+    TPassage extends PublicPassage = PublicPassage,
+> = TPassage & {
     /**
      * An object containing additionnal data about the corresponding lap
      */
     processed: PassageProcessedData;
-}
+};
 
 /**
  * An object representing a passage of a runner at the timing point with additional admin info and additional data
  * about the corresponding lap
  */
-export interface AdminProcessedPassage extends AdminPassage, ProcessedPassage {}
+export type AdminProcessedPassage = PublicProcessedPassage<AdminPassage>;

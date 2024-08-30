@@ -1,10 +1,9 @@
+import {
+    type PublicPassage,
+    type PublicProcessedPassage,
+} from "@live24hisere/types";
 import { compareUtils, dateUtils } from "@live24hisere/utils";
 import { HOUR_IN_MS } from "../constants/misc";
-import {
-    type Passage,
-    type PassageProcessedData,
-    type ProcessedPassage,
-} from "../types/Passage";
 import { type Race } from "../types/Race";
 import {
     type RunnerProcessedData,
@@ -16,7 +15,9 @@ import { getDistanceFromPassageCount, getRaceTime } from "./raceUtils";
 /**
  * Returns passages sorted in ascending time order
  */
-export function getSortedPassages<T extends Passage>(passages: T[]): T[] {
+export function getSortedPassages<TPassage extends PublicPassage>(
+    passages: TPassage[],
+): TPassage[] {
     return passages.toSorted((passageA, passageB) =>
         compareUtils.spaceship(
             new Date(passageA.time).getTime(),
@@ -27,7 +28,7 @@ export function getSortedPassages<T extends Passage>(passages: T[]): T[] {
 
 export function getRunnerProcessedDataFromPassages(
     race: Race,
-    passages: Passage[],
+    passages: PublicPassage[],
 ): RunnerProcessedData {
     if (!passages.length) {
         return {
@@ -58,15 +59,13 @@ export function getRunnerProcessedDataFromPassages(
     };
 }
 
-export function getProcessedPassagesFromPassages<T extends Passage>(
-    race: Race,
-    passages: T[],
-): Array<T & { processed: PassageProcessedData }> {
+export function getProcessedPassagesFromPassages<
+    TPassage extends PublicPassage,
+>(race: Race, passages: TPassage[]): Array<PublicProcessedPassage<TPassage>> {
     const raceInitialDistance = Number(race.initialDistance);
     const raceLapDistance = Number(race.lapDistance);
 
-    const processedPassages: Array<T & { processed: PassageProcessedData }> =
-        [];
+    const processedPassages: Array<PublicProcessedPassage<TPassage>> = [];
 
     let totalDistance = 0;
 
@@ -145,7 +144,7 @@ export function getProcessedPassagesFromPassages<T extends Passage>(
  */
 export function getProcessedHoursFromPassages(
     race: Race,
-    passages: ProcessedPassage[],
+    passages: PublicProcessedPassage[],
 ): RunnerProcessedHour[] {
     const hours: RunnerProcessedHour[] = [];
 
@@ -201,9 +200,9 @@ export function getProcessedHoursFromPassages(
 }
 
 export function getFastestLapPassage(
-    passages: ProcessedPassage[],
-): ProcessedPassage | null {
-    let fastestLapPassage: ProcessedPassage | null = null;
+    passages: PublicProcessedPassage[],
+): PublicProcessedPassage | null {
+    let fastestLapPassage: PublicProcessedPassage | null = null;
 
     for (const passage of passages) {
         if (passage.processed.lapNumber === null) {
@@ -227,9 +226,9 @@ export function getFastestLapPassage(
 }
 
 export function getSlowestLapPassage(
-    passages: ProcessedPassage[],
-): ProcessedPassage | null {
-    let slowestLapPassage: ProcessedPassage | null = null;
+    passages: PublicProcessedPassage[],
+): PublicProcessedPassage | null {
+    let slowestLapPassage: PublicProcessedPassage | null = null;
 
     for (const passage of passages) {
         if (passage.processed.lapNumber === null) {
@@ -259,8 +258,8 @@ export function getSlowestLapPassage(
  * @return Passages that are entirely or partially in the interval
  */
 export function getRunnerLapsInInterval<
-    T extends ProcessedPassage = ProcessedPassage,
->(passages: T[], intervalStart: Date, intervalEnd: Date): T[] {
+    TPassage extends PublicProcessedPassage = PublicProcessedPassage,
+>(passages: TPassage[], intervalStart: Date, intervalEnd: Date): TPassage[] {
     return passages.filter((passage) => {
         // lap END time is BEFORE interval
         if (passage.processed.lapEndTime.getTime() < intervalStart.getTime()) {
@@ -277,7 +276,7 @@ export function getRunnerLapsInInterval<
 }
 
 export function getAverageSpeedInInterval(
-    passages: ProcessedPassage[],
+    passages: PublicProcessedPassage[],
     intervalStart: Date,
     intervalEnd: Date,
 ): number {

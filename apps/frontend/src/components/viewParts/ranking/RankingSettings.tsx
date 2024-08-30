@@ -1,6 +1,10 @@
 import React, { useMemo } from "react";
 import { Col } from "react-bootstrap";
-import { type GenderWithMixed } from "@live24hisere/types";
+import {
+    type CategoriesDict,
+    type CategoryShortCode,
+    type GenderWithMixed,
+} from "@live24hisere/types";
 import { CATEGORY_SCRATCH } from "../../../constants/category";
 import {
     CATEGORY_SCRATCH_SELECT_OPTION,
@@ -8,10 +12,6 @@ import {
     RANKING_TIME_MODE_OPTIONS,
 } from "../../../constants/forms";
 import { RankingTimeMode } from "../../../constants/rankingTimeMode";
-import {
-    type CategoriesDict,
-    type CategoryShortCode,
-} from "../../../types/Category";
 import { type SelectOption } from "../../../types/Forms";
 import { getCategoriesDictSelectOptions } from "../../../utils/categoryUtils";
 import RadioGroup from "../../ui/forms/RadioGroup";

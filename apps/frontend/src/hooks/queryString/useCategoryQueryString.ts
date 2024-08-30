@@ -1,10 +1,10 @@
 import React from "react";
 import { type NavigateOptions } from "react-router-dom";
-import { SearchParam } from "../../constants/searchParams";
 import {
     type CategoriesDict,
     type CategoryShortCode,
-} from "../../types/Category";
+} from "@live24hisere/types";
+import { SearchParam } from "../../constants/searchParams";
 import { type Race } from "../../types/Race";
 import { useQueryString } from "./useQueryString";
 

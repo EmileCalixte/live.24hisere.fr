@@ -1,6 +1,9 @@
 import React from "react";
-import { Gender, type GenderWithMixed } from "@live24hisere/types";
-import { type CategoryShortCode } from "../../../../types/Category";
+import {
+    type CategoryShortCode,
+    Gender,
+    type GenderWithMixed,
+} from "@live24hisere/types";
 import { type Race } from "../../../../types/Race";
 import { formatMsAsDuration } from "../../../../utils/utils";
 

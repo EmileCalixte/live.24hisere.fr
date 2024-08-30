@@ -1,6 +1,8 @@
 import React, { type ReactNode } from "react";
-import { type GenderWithMixed } from "@live24hisere/types";
-import { type CategoryShortCode } from "../../../../types/Category";
+import {
+    type CategoryShortCode,
+    type GenderWithMixed,
+} from "@live24hisere/types";
 import { type Race } from "../../../../types/Race";
 import { type Ranking, type RankingRunner } from "../../../../types/Ranking";
 import { getCategoryCodeFromBirthYear } from "../../../../utils/ffaUtils";

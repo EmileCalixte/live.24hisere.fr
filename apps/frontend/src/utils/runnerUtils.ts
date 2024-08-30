@@ -1,6 +1,9 @@
+import {
+    type PublicPassage,
+    type PublicPassageWithRunnerId,
+} from "@live24hisere/types";
 import { compareUtils, dateUtils } from "@live24hisere/utils";
 import { type SelectOption } from "../types/Forms";
-import { type Passage, type PassageWithRunnerId } from "../types/Passage";
 import { type RankingRunnerGap } from "../types/Ranking";
 import {
     type Runner,
@@ -12,13 +15,16 @@ import { getSortedPassages } from "./passageUtils";
 import { formatMsAsDuration } from "./utils";
 
 export function getRunnersWithPassagesFromRunnersAndPassages<
-    T extends Runner,
-    U extends PassageWithRunnerId,
->(runners: T[], passages: U[]): Array<T & { passages: U[] }> {
+    TRunner extends Runner,
+    TPassage extends PublicPassageWithRunnerId,
+>(
+    runners: TRunner[],
+    passages: TPassage[],
+): Array<RunnerWithPassages<TPassage>> {
     /**
      * A map with runner ID as key and array of passages as value
      */
-    const runnerPassages = new Map<number, U[]>();
+    const runnerPassages = new Map<number, TPassage[]>();
 
     for (const passage of passages) {
         const passageTime = new Date(passage.time);
@@ -43,9 +49,9 @@ export function getRunnersWithPassagesFromRunnersAndPassages<
 }
 
 export function getRunnerWithPassagesFromRunnerAndPassages<
-    T extends Runner,
-    U extends Passage,
->(runner: T, passages: U[]): T & { passages: U[] } {
+    TRunner extends Runner,
+    TPassage extends PublicPassage,
+>(runner: TRunner, passages: TPassage[]): TRunner & { passages: TPassage[] } {
     return {
         ...runner,
         passages: getSortedPassages(passages),

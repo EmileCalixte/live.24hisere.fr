@@ -2,14 +2,14 @@ import React from "react";
 import { Link } from "react-router-dom";
 import {
     type AdminPassageWithRunnerId,
-    type ProcessedPassage,
-} from "../../../../types/Passage";
+    type PublicProcessedPassage,
+} from "@live24hisere/types";
 import { type RaceDict } from "../../../../types/Race";
 import { type Runner } from "../../../../types/Runner";
 import { formatFloatNumber, formatMsAsDuration } from "../../../../utils/utils";
 
 interface FastestLapsTableProps {
-    passages: Array<AdminPassageWithRunnerId & ProcessedPassage>;
+    passages: Array<PublicProcessedPassage<AdminPassageWithRunnerId>>;
     races: RaceDict;
     runners: Runner[];
 }

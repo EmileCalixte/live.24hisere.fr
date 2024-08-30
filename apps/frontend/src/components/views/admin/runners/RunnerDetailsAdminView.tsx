@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { Col, Row } from "react-bootstrap";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { Gender } from "@live24hisere/types";
+import { type AdminProcessedPassage, Gender } from "@live24hisere/types";
 import { getAdminRaces } from "../../../../services/api/RaceService";
 import {
     deleteAdminRunner,
@@ -18,10 +18,9 @@ import {
     postAdminRunnerPassage,
 } from "../../../../services/api/RunnerService";
 import ToastService from "../../../../services/ToastService";
-import { type AdminProcessedPassage } from "../../../../types/Passage";
 import { type AdminRaceWithRunnerCount } from "../../../../types/Race";
 import {
-    type RunnerWithAdminProcessedPassages,
+    type RunnerWithProcessedPassages,
     type RunnerWithRace,
 } from "../../../../types/Runner";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
@@ -47,7 +46,9 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
     );
 
     const [runner, setRunner] = useState<
-        (RunnerWithRace & RunnerWithAdminProcessedPassages) | undefined | null
+        | RunnerWithProcessedPassages<RunnerWithRace, AdminProcessedPassage>
+        | undefined
+        | null
     >(undefined);
 
     const [runnerId, setRunnerId] = useState(0);
