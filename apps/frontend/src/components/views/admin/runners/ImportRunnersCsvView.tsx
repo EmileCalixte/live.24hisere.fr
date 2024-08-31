@@ -8,8 +8,14 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { Col, Row } from "react-bootstrap";
+import {
+    type AdminRace,
+    type Gender,
+    type PublicRunner,
+    type RaceDict,
+} from "@live24hisere/types";
+import { stringUtils } from "@live24hisere/utils";
 import { GENDER_OPTIONS } from "../../../../constants/forms";
-import { type Gender } from "../../../../constants/gender";
 import { ImportCsvColumn } from "../../../../constants/importCsv";
 import { getAdminRaces } from "../../../../services/api/RaceService";
 import {
@@ -23,12 +29,9 @@ import {
     type RunnerFromCsv,
     type RunnersCsvMapping,
 } from "../../../../types/ImportCsv";
-import type { AdminRace, RaceDict } from "../../../../types/Race";
-import type { Runner } from "../../../../types/Runner";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { getRunnerFromCsv, parseCsv } from "../../../../utils/csvUtils";
 import { getRaceDictFromRaces } from "../../../../utils/raceUtils";
-import { harmonizeName } from "../../../../utils/stringUtils";
 import { appContext } from "../../../App";
 import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../ui/breadcrumbs/Crumb";
@@ -80,7 +83,7 @@ export default function ImportRunnersCsvView(): React.ReactElement {
     } = React.useContext(appContext);
 
     // false = not fetched yet
-    const [runners, setRunners] = React.useState<Runner[] | false>(false);
+    const [runners, setRunners] = React.useState<PublicRunner[] | false>(false);
 
     // false = not fetched yet
     const [races, setRaces] = React.useState<RaceDict<AdminRace> | false>(
@@ -334,10 +337,10 @@ export default function ImportRunnersCsvView(): React.ReactElement {
                 runner: {
                     ...runner,
                     firstname: runner.firstname
-                        ? harmonizeName(runner.firstname)
+                        ? stringUtils.harmonizeName(runner.firstname)
                         : "",
                     lastname: runner.lastname
-                        ? harmonizeName(runner.lastname)
+                        ? stringUtils.harmonizeName(runner.lastname)
                         : "",
                 },
             })),

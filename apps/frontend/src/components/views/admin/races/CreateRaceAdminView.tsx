@@ -7,12 +7,12 @@ import React, {
 } from "react";
 import { Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { type AdminRace } from "@live24hisere/types";
 import {
     getAdminRaces,
     postAdminRace,
 } from "../../../../services/api/RaceService";
 import ToastService from "../../../../services/ToastService";
-import { type AdminRace } from "../../../../types/Race";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { getRacesSelectOptions } from "../../../../utils/raceUtils";
 import { formatDateForApi } from "../../../../utils/utils";

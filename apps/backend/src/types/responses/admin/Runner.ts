@@ -1,5 +1,9 @@
 import { Runner } from "@prisma/client";
-import { AdminRunnerWithPassages } from "../../Runner";
+import {
+    AdminPassage,
+    PublicRunner,
+    RunnerWithPassages,
+} from "@live24hisere/types";
 
 export interface AdminRunnersResponse {
     runners: Runner[];
@@ -10,5 +14,5 @@ export interface AdminRunnerResponse {
 }
 
 export interface AdminRunnerWithPassagesResponse {
-    runner: AdminRunnerWithPassages;
+    runner: RunnerWithPassages<PublicRunner, AdminPassage>;
 }

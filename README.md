@@ -90,15 +90,7 @@ pnpm backend update-password
 
 ## Tests
 
-### Backend
-
-TODO ;)
-
-### Frontend
-
-```sh
-pnpm frontend test run
-```
+```pnpm test```
 
 ## Installation en production
 

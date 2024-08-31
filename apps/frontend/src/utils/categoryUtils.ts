@@ -1,4 +1,7 @@
-import { type CategoriesDict, type CategoryShortCode } from "../types/Category";
+import {
+    type CategoriesDict,
+    type CategoryShortCode,
+} from "@live24hisere/types";
 import { type SelectOption } from "../types/Forms";
 
 export function getCategoriesDictSelectOptions<T extends CategoriesDict>(

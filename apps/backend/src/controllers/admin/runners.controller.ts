@@ -12,6 +12,7 @@ import {
     Post,
     UseGuards,
 } from "@nestjs/common";
+import { objectUtils } from "@live24hisere/utils";
 import { RunnerDto } from "../../dtos/runner/runner.dto";
 import { UpdateRunnerDto } from "../../dtos/runner/updateRunner.dto";
 import { AuthGuard } from "../../guards/auth.guard";
@@ -22,7 +23,6 @@ import {
     AdminRunnerWithPassagesResponse,
 } from "../../types/responses/admin/Runner";
 import { CountResponse } from "../../types/responses/Misc";
-import { excludeKeys } from "../../utils/misc.utils";
 
 @Controller()
 @UseGuards(AuthGuard)
@@ -45,7 +45,7 @@ export class RunnersController {
         await this.ensureRunnerIdDoesNotExist(runnerDto.id);
 
         const runner = await this.runnerService.createRunner(
-            excludeKeys(
+            objectUtils.excludeKeys(
                 {
                     ...runnerDto,
                     birthYear: runnerDto.birthYear.toString(),
@@ -142,7 +142,7 @@ export class RunnersController {
         }
 
         const updateRunnerData: Parameters<RunnerService["updateRunner"]>[1] =
-            excludeKeys(updateRunnerDto, ["raceId", "birthYear"]);
+            objectUtils.excludeKeys(updateRunnerDto, ["raceId", "birthYear"]);
 
         if (updateRunnerDto.birthYear) {
             updateRunnerData.birthYear = updateRunnerDto.birthYear.toString();

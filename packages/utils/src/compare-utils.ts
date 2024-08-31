@@ -1,4 +1,4 @@
-import { isNullOrUndefined } from "./utils";
+import { isNullOrUndefined } from "./type-utils";
 
 type Comparable = string | number | bigint | boolean | Date | null | undefined;
 

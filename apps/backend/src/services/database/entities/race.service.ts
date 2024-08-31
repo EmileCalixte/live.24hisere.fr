@@ -2,10 +2,10 @@ import { Injectable } from "@nestjs/common";
 import { Prisma, Race } from "@prisma/client";
 import {
     AdminRaceWithRunnerCount,
-    PublicRaceWithRunnerCount,
-    RaceAndRunners,
-} from "src/types/Race";
-import { excludeKeys } from "src/utils/misc.utils";
+    RaceWithRunnerCount,
+    RaceWithRunners,
+} from "@live24hisere/types";
+import { objectUtils } from "@live24hisere/utils";
 import { PrismaService } from "../prisma.service";
 
 @Injectable()
@@ -40,7 +40,7 @@ export class RaceService {
         );
     }
 
-    async getPublicRaces(): Promise<PublicRaceWithRunnerCount[]> {
+    async getPublicRaces(): Promise<RaceWithRunnerCount[]> {
         const races = await this.getRacesWithRunners({ isPublic: true });
 
         return races
@@ -52,7 +52,7 @@ export class RaceService {
 
     async getPublicRace(
         where: Prisma.RaceWhereUniqueInput,
-    ): Promise<PublicRaceWithRunnerCount | null> {
+    ): Promise<RaceWithRunnerCount | null> {
         const race = await this.getRaceWithRunners({
             ...where,
             isPublic: true,
@@ -104,7 +104,7 @@ export class RaceService {
 
     private async getRacesWithRunners(
         where: Prisma.RaceWhereInput = {},
-    ): Promise<RaceAndRunners[]> {
+    ): Promise<RaceWithRunners[]> {
         return await this.prisma.race.findMany({
             where,
             include: {
@@ -118,7 +118,7 @@ export class RaceService {
 
     private async getRaceWithRunners(
         where: Prisma.RaceWhereUniqueInput,
-    ): Promise<RaceAndRunners | null> {
+    ): Promise<RaceWithRunners | null> {
         return await this.prisma.race.findUnique({
             where,
             include: {
@@ -128,20 +128,20 @@ export class RaceService {
     }
 
     private getAdminRaceFromRace<T extends Race>(race: T): Omit<T, "order"> {
-        return excludeKeys(race, ["order"]);
+        return objectUtils.excludeKeys(race, ["order"]);
     }
 
     private getPublicRaceFromRace<T extends Race>(
         race: T,
     ): Omit<T, "isPublic" | "order"> {
-        return excludeKeys(race, ["isPublic", "order"]);
+        return objectUtils.excludeKeys(race, ["isPublic", "order"]);
     }
 
     private getRaceWithRunnerCountFromRaceWithRunners<
         T extends { runners: R[] },
         R,
     >(race: T): Omit<T, "runners"> & { runnerCount: number } {
-        return excludeKeys(
+        return objectUtils.excludeKeys(
             {
                 ...race,
                 runnerCount: race.runners.length,

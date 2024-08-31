@@ -1,6 +1,6 @@
 import React from "react";
+import { arrayUtils } from "@live24hisere/utils";
 import { SearchParam } from "../../constants/searchParams";
-import { inArray } from "../../utils/arrayUtils";
 import { useQueryString } from "./useQueryString";
 
 interface UseTabQueryString<T extends string> {
@@ -17,7 +17,7 @@ export function useTabQueryString<T extends string>(
     const searchParamsTab = searchParams.get(SearchParam.TAB);
 
     const selectedTab = React.useMemo<T>(() => {
-        if (!inArray(searchParamsTab, availableTabs)) {
+        if (!arrayUtils.inArray(searchParamsTab, availableTabs)) {
             return defaultTab;
         }
 
@@ -32,7 +32,7 @@ export function useTabQueryString<T extends string>(
     );
 
     React.useEffect(() => {
-        if (!inArray(searchParamsTab, availableTabs)) {
+        if (!arrayUtils.inArray(searchParamsTab, availableTabs)) {
             setParams({ [SearchParam.TAB]: defaultTab }, { replace: true });
         }
     }, [availableTabs, defaultTab, searchParamsTab, setParams]);

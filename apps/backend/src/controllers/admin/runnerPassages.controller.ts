@@ -10,13 +10,13 @@ import {
     Post,
     UseGuards,
 } from "@nestjs/common";
+import { objectUtils } from "@live24hisere/utils";
 import { PassageDto } from "../../dtos/passage/passage.dto";
 import { UpdatePassageDto } from "../../dtos/passage/updatePassage.dto";
 import { AuthGuard } from "../../guards/auth.guard";
 import { PassageService } from "../../services/database/entities/passage.service";
 import { RunnerService } from "../../services/database/entities/runner.service";
 import { AdminRunnerPassageResponse } from "../../types/responses/admin/RunnerPassage";
-import { excludeKeys } from "../../utils/misc.utils";
 
 @Controller()
 @UseGuards(AuthGuard)
@@ -53,7 +53,7 @@ export class RunnerPassagesController {
         });
 
         return {
-            passage: excludeKeys(passage, ["runnerId"]),
+            passage: objectUtils.excludeKeys(passage, ["runnerId"]),
         };
     }
 
@@ -86,7 +86,7 @@ export class RunnerPassagesController {
         );
 
         return {
-            passage: excludeKeys(updatedPassage, ["runnerId"]),
+            passage: objectUtils.excludeKeys(updatedPassage, ["runnerId"]),
         };
     }
 

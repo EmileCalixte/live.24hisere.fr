@@ -1,16 +1,16 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
+import {
+    type AdminPassageWithRunnerId,
+    type ProcessedPassage,
+    type PublicRunner,
+    type RaceDict,
+} from "@live24hisere/types";
 import { getAdminPassages } from "../../../services/api/PassageService";
 import { getAdminRaces } from "../../../services/api/RaceService";
 import { getAdminRunners } from "../../../services/api/RunnerService";
 import ToastService from "../../../services/ToastService";
 import { type SelectOption } from "../../../types/Forms";
-import {
-    type AdminPassageWithRunnerId,
-    type ProcessedPassage,
-} from "../../../types/Passage";
-import { type RaceDict } from "../../../types/Race";
-import { type Runner } from "../../../types/Runner";
 import { isApiRequestResultOk } from "../../../utils/apiUtils";
 import { getProcessedPassagesFromPassages } from "../../../utils/passageUtils";
 import { getRaceDictFromRaces } from "../../../utils/raceUtils";
@@ -28,7 +28,7 @@ type RunnerSortedPassages = Record<number, AdminPassageWithRunnerId[]>;
 
 type RunnerSortedProcessedPassages = Record<
     number,
-    Array<AdminPassageWithRunnerId & ProcessedPassage>
+    Array<ProcessedPassage<AdminPassageWithRunnerId>>
 >;
 
 const ITEMS_PER_PAGE = 100;
@@ -48,7 +48,7 @@ export default function FastestLapsAdminView(): React.ReactElement {
     const [races, setRaces] = React.useState<RaceDict | false>(false);
 
     // false = not fetched yet
-    const [runners, setRunners] = React.useState<Runner[] | false>(false);
+    const [runners, setRunners] = React.useState<PublicRunner[] | false>(false);
 
     const [
         displayOnlyOneFastestLapPerRunner,
@@ -219,14 +219,14 @@ export default function FastestLapsAdminView(): React.ReactElement {
     }, [runnerSortedPassages, races, runners]);
 
     const speedSortedProcessedPassages = React.useMemo<
-        Array<AdminPassageWithRunnerId & ProcessedPassage> | false
+        Array<ProcessedPassage<AdminPassageWithRunnerId>> | false
     >(() => {
         if (!runnerSortedProcessedPassages) {
             return false;
         }
 
         const sortedProcessedPassages: Array<
-            AdminPassageWithRunnerId & ProcessedPassage
+            ProcessedPassage<AdminPassageWithRunnerId>
         > = [];
 
         for (const runnerId in runnerSortedProcessedPassages) {
@@ -256,7 +256,7 @@ export default function FastestLapsAdminView(): React.ReactElement {
     }, [runnerSortedProcessedPassages]);
 
     const passagesToDisplay = React.useMemo<
-        Array<AdminPassageWithRunnerId & ProcessedPassage> | false
+        Array<ProcessedPassage<AdminPassageWithRunnerId>> | false
     >(() => {
         if (!speedSortedProcessedPassages) {
             return false;
@@ -305,13 +305,13 @@ export default function FastestLapsAdminView(): React.ReactElement {
     }, [passagesToDisplay]);
 
     const passagesInPage = React.useMemo<
-        Array<AdminPassageWithRunnerId & ProcessedPassage> | false
+        Array<ProcessedPassage<AdminPassageWithRunnerId>> | false
     >(() => {
         if (!passagesToDisplay) {
             return false;
         }
 
-        const passages: Array<AdminPassageWithRunnerId & ProcessedPassage> = [];
+        const passages: Array<ProcessedPassage<AdminPassageWithRunnerId>> = [];
 
         for (
             let i = ITEMS_PER_PAGE * (page - 1);
@@ -411,7 +411,7 @@ export default function FastestLapsAdminView(): React.ReactElement {
                             <FastestLapsTable
                                 passages={passagesInPage}
                                 races={races as RaceDict}
-                                runners={runners as Runner[]}
+                                runners={runners as PublicRunner[]}
                             />
                         </Col>
                     </Row>

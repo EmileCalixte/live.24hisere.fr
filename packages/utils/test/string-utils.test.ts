@@ -3,7 +3,7 @@ import {
     capitalizeWords,
     harmonizeName,
     isValidUrl,
-} from "../../src/utils/stringUtils";
+} from "../src/string-utils";
 
 describe("Capitalize words", () => {
     it("should capitalize a simple sentence", () => {

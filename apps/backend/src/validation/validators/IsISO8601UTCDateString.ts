@@ -1,6 +1,6 @@
 import { buildMessage, ValidateBy } from "class-validator";
 import { ValidationOptions } from "class-validator/types/decorator/ValidationOptions";
-import { isDateValid } from "../../utils/date.utils";
+import { dateUtils } from "@live24hisere/utils";
 
 export const IS_ISO8601_UTC_DATE_STRING = "isISO8601UTCDateString";
 
@@ -11,7 +11,7 @@ export function isISO8601UTCDateString(value: unknown): boolean {
 
     const date = new Date(value);
 
-    if (!isDateValid(date)) {
+    if (!dateUtils.isDateValid(date)) {
         return false;
     }
 

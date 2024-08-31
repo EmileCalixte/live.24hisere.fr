@@ -1,7 +1,7 @@
 import { buildMessage, ValidateBy } from "class-validator";
 import { ValidationOptions } from "class-validator/types/decorator/ValidationOptions";
-import { GENDER } from "../../constants/gender.constants";
-import { Gender } from "../../types/Gender";
+import { Gender } from "@live24hisere/types";
+import { genderUtils } from "@live24hisere/utils";
 
 const IS_GENDER = "isGender";
 
@@ -10,7 +10,7 @@ export function isGender(value: unknown): value is Gender {
         return false;
     }
 
-    return value in GENDER;
+    return genderUtils.isValidGender(value);
 }
 
 /**
@@ -38,7 +38,7 @@ export function IsGender(
 }
 
 function getValidGendersAsString(): string {
-    return Object.values(GENDER)
+    return Object.values(Gender)
         .map((gender) => `'${gender}'`)
         .join(", ");
 }

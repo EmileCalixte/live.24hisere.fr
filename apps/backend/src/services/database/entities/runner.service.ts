@@ -1,12 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import { Prisma, Runner } from "@prisma/client";
 import {
-    AdminRunnerWithPassages,
-    PublicRunnerWithPassages,
-    PublicRunnerWithRaceAndPassages,
+    AdminPassage,
+    PublicRunner,
+    RunnerWithPassages,
     RunnerWithRaceAndPassages,
-} from "src/types/Runner";
-import { excludeKeys, pickKeys } from "src/utils/misc.utils";
+} from "@live24hisere/types";
+import { objectUtils } from "@live24hisere/utils";
 import { PrismaService } from "../prisma.service";
 
 @Injectable()
@@ -32,7 +32,7 @@ export class RunnerService {
 
     async getAdminRunner(
         where: Prisma.RunnerWhereUniqueInput,
-    ): Promise<AdminRunnerWithPassages | null> {
+    ): Promise<RunnerWithPassages<PublicRunner, AdminPassage> | null> {
         const runner = await this.prisma.runner.findUnique({
             where,
             include: {
@@ -47,7 +47,7 @@ export class RunnerService {
         return {
             ...runner,
             passages: runner.passages.map((passage) =>
-                excludeKeys(passage, ["runnerId"]),
+                objectUtils.excludeKeys(passage, ["runnerId"]),
             ),
         };
     }
@@ -67,7 +67,7 @@ export class RunnerService {
 
     async getPublicRunnersOfRace(
         raceId: number,
-    ): Promise<PublicRunnerWithPassages[]> {
+    ): Promise<RunnerWithPassages[]> {
         return await this.prisma.runner.findMany({
             where: {
                 race: {
@@ -97,7 +97,7 @@ export class RunnerService {
 
     async getPublicRunner(
         where: Prisma.RunnerWhereUniqueInput,
-    ): Promise<PublicRunnerWithRaceAndPassages | null> {
+    ): Promise<RunnerWithRaceAndPassages | null> {
         const runner = await this.prisma.runner.findUnique({
             where,
             include: {
@@ -142,7 +142,7 @@ export class RunnerService {
             // So first we create a new runner
             const newRunner = await tx.runner.create({
                 data: {
-                    ...excludeKeys(runner, ["raceId"]),
+                    ...objectUtils.excludeKeys(runner, ["raceId"]),
                     ...data,
                     race: data.race ?? {
                         connect: {
@@ -178,13 +178,13 @@ export class RunnerService {
     }
 
     private getPublicRunnerWithRaceAndPassages(
-        runner: RunnerWithRaceAndPassages,
-    ): PublicRunnerWithRaceAndPassages {
+        runner: RunnerWithRaceAndPassages<Runner>,
+    ): RunnerWithRaceAndPassages {
         return {
             ...runner,
-            race: excludeKeys(runner.race, ["isPublic", "order"]),
+            race: objectUtils.excludeKeys(runner.race, ["isPublic", "order"]),
             passages: runner.passages.map((passage) =>
-                pickKeys(passage, ["id", "time"]),
+                objectUtils.pickKeys(passage, ["id", "time"]),
             ),
         };
     }
