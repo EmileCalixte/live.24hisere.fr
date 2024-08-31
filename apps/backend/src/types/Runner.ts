@@ -3,7 +3,7 @@ import {
     Passage,
     PublicPassageOfRunner,
 } from "./Passage";
-import { PublicRace, Race } from "./Race";
+import { PublicRace } from "./Race";
 
 export interface Runner {
     id: number;
@@ -19,7 +19,7 @@ export interface Runner {
  * Runner with additional data about his race
  */
 export interface RunnerWithRace extends Runner {
-    race: Race;
+    race: PublicRace;
 }
 
 /**

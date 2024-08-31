@@ -3,13 +3,13 @@ import { Col, Row } from "react-bootstrap";
 import {
     type AdminPassageWithRunnerId,
     type PublicProcessedPassage,
+    type RaceDict,
 } from "@live24hisere/types";
 import { getAdminPassages } from "../../../services/api/PassageService";
 import { getAdminRaces } from "../../../services/api/RaceService";
 import { getAdminRunners } from "../../../services/api/RunnerService";
 import ToastService from "../../../services/ToastService";
 import { type SelectOption } from "../../../types/Forms";
-import { type RaceDict } from "../../../types/Race";
 import { type Runner } from "../../../types/Runner";
 import { isApiRequestResultOk } from "../../../utils/apiUtils";
 import { getProcessedPassagesFromPassages } from "../../../utils/passageUtils";

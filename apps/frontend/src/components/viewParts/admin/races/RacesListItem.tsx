@@ -7,7 +7,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
-import { type AdminRaceWithRunnerCount } from "../../../../types/Race";
+import { type AdminRaceWithRunnerCount } from "@live24hisere/types";
 import RaceTimer from "../../RaceTimer";
 
 interface RacesListItemProps {

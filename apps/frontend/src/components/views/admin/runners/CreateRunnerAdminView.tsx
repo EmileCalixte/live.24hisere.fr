@@ -1,12 +1,11 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { Gender } from "@live24hisere/types";
+import { type AdminRaceWithRunnerCount, Gender } from "@live24hisere/types";
 import { useStateWithNonNullableSetter } from "../../../../hooks/useStateWithNonNullableSetter";
 import { getAdminRaces } from "../../../../services/api/RaceService";
 import { postAdminRunner } from "../../../../services/api/RunnerService";
 import ToastService from "../../../../services/ToastService";
-import { type AdminRaceWithRunnerCount } from "../../../../types/Race";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { appContext } from "../../../App";
 import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";

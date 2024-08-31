@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import {
     type AdminPassageWithRunnerId,
     type PublicProcessedPassage,
+    type RaceDict,
 } from "@live24hisere/types";
-import { type RaceDict } from "../../../../types/Race";
 import { type Runner } from "../../../../types/Runner";
 import { formatFloatNumber, formatMsAsDuration } from "../../../../utils/utils";
 

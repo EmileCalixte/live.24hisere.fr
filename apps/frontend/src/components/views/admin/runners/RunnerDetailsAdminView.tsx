@@ -7,7 +7,11 @@ import React, {
 } from "react";
 import { Col, Row } from "react-bootstrap";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { type AdminProcessedPassage, Gender } from "@live24hisere/types";
+import {
+    type AdminProcessedPassage,
+    type AdminRaceWithRunnerCount,
+    Gender,
+} from "@live24hisere/types";
 import { getAdminRaces } from "../../../../services/api/RaceService";
 import {
     deleteAdminRunner,
@@ -18,7 +22,6 @@ import {
     postAdminRunnerPassage,
 } from "../../../../services/api/RunnerService";
 import ToastService from "../../../../services/ToastService";
-import { type AdminRaceWithRunnerCount } from "../../../../types/Race";
 import {
     type RunnerWithProcessedPassages,
     type RunnerWithRace,

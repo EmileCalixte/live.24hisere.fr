@@ -3,8 +3,8 @@ import {
     type Gender,
     type PublicPassage,
     type PublicProcessedPassage,
+    type Race,
 } from "@live24hisere/types";
-import { type Race } from "./Race";
 
 /**
  * An object containing the information of a runner's race hour

@@ -3,8 +3,8 @@ import {
     type CategoryShortCode,
     Gender,
     type GenderWithMixed,
+    type Race,
 } from "@live24hisere/types";
-import { type Race } from "../../../../types/Race";
 import { formatMsAsDuration } from "../../../../utils/utils";
 
 interface RankingTableInfoHeaderProps {

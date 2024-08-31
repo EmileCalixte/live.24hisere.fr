@@ -1,10 +1,10 @@
 import {
     type PublicPassage,
     type PublicProcessedPassage,
+    type Race,
 } from "@live24hisere/types";
 import { compareUtils, dateUtils } from "@live24hisere/utils";
 import { HOUR_IN_MS } from "../constants/misc";
-import { type Race } from "../types/Race";
 import {
     type RunnerProcessedData,
     type RunnerProcessedHour,

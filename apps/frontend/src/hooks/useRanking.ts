@@ -1,14 +1,14 @@
 import { useMemo } from "react";
+import { type Race } from "@live24hisere/types";
 import { RankingCalculator } from "../services/RankingCalculator";
-import { type Race } from "../types/Race";
 import { type MinimalRankingRunnerInput, type Ranking } from "../types/Ranking";
 
-export function useRanking<T extends MinimalRankingRunnerInput>(
+export function useRanking<TRunner extends MinimalRankingRunnerInput>(
     race: Race | undefined,
-    runners: T[] | undefined,
+    runners: TRunner[] | undefined,
     rankingDate?: Date,
-): Ranking<T> | null {
-    return useMemo<Ranking<T> | null>(() => {
+): Ranking<TRunner> | null {
+    return useMemo<Ranking<TRunner> | null>(() => {
         if (!race || !runners) {
             return null;
         }
