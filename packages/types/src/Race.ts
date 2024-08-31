@@ -1,4 +1,4 @@
-import type { DateISOString } from "@live24hisere/types";
+import { type DateISOString } from "./Date";
 
 /**
  * An object representing a race
@@ -59,4 +59,4 @@ export interface AdminRaceWithRunnerCount
 /**
  * An object whose key is a race ID and value is the corresponding race
  */
-export type RaceDict<T extends Race = Race> = Record<string, T>;
+export type RaceDict<TRace extends Race = Race> = Record<string, TRace>;

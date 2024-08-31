@@ -7,13 +7,13 @@ import React, {
 } from "react";
 import { Col, Row } from "react-bootstrap";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { type AdminRaceWithRunnerCount } from "@live24hisere/types";
 import {
     deleteAdminRace,
     getAdminRace,
     patchAdminRace,
 } from "../../../../services/api/RaceService";
 import ToastService from "../../../../services/ToastService";
-import { type AdminRaceWithRunnerCount } from "../../../../types/Race";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { formatDateForApi } from "../../../../utils/utils";
 import { appContext } from "../../../App";

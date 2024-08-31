@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 import {
     type CategoryShortCode,
     type GenderWithMixed,
+    type Race,
 } from "@live24hisere/types";
 import { NO_VALUE_PLACEHOLDER } from "../../../../constants/misc";
-import { type Race } from "../../../../types/Race";
 import { type RankingRunner } from "../../../../types/Ranking";
 import { getRankingType } from "../../../../utils/rankingUtils";
 import { formatGap } from "../../../../utils/runnerUtils";

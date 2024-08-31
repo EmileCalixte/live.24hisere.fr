@@ -2,8 +2,8 @@ import React, { type ReactNode } from "react";
 import {
     type CategoryShortCode,
     type GenderWithMixed,
+    type Race,
 } from "@live24hisere/types";
-import { type Race } from "../../../../types/Race";
 import { type Ranking, type RankingRunner } from "../../../../types/Ranking";
 import { getCategoryCodeFromBirthYear } from "../../../../utils/ffaUtils";
 import RankingTableInfoHeader from "./RankingTableInfoHeader";

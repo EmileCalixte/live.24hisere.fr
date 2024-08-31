@@ -1,8 +1,7 @@
 import React, { useMemo } from "react";
 import { Col, Row } from "react-bootstrap";
-import { type ProcessedPassage } from "@live24hisere/types";
+import { type ProcessedPassage, type Race } from "@live24hisere/types";
 import { NO_VALUE_PLACEHOLDER } from "../../../constants/misc";
-import { type Race } from "../../../types/Race";
 import { type Ranking, type RankingRunner } from "../../../types/Ranking";
 import { type RunnerWithProcessedHours } from "../../../types/Runner";
 import { getPaceFromSpeed } from "../../../utils/mathUtils";

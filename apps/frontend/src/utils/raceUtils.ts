@@ -1,5 +1,5 @@
+import { type Race, type RaceDict } from "@live24hisere/types";
 import { type SelectOption } from "../types/Forms";
-import { type Race, type RaceDict } from "../types/Race";
 
 /**
  * @param race
@@ -55,9 +55,9 @@ export function getDateFromRaceTime(race: Race, raceTime: number): Date {
  *
  * TODO delete false from races types
  */
-export function getRacesSelectOptions<T extends Race>(
-    races: T[] | false | undefined,
-    label?: (race: T) => string,
+export function getRacesSelectOptions<TRace extends Race>(
+    races: TRace[] | false | undefined,
+    label?: (race: TRace) => string,
 ): SelectOption[] {
     if (!races) {
         return [];
@@ -92,8 +92,10 @@ export function getDistanceFromPassageCount(
     return lapDistance * passageCount;
 }
 
-export function getRaceDictFromRaces<T extends Race>(races: T[]): RaceDict<T> {
-    const raceDict: RaceDict<T> = {};
+export function getRaceDictFromRaces<TRace extends Race>(
+    races: TRace[],
+): RaceDict<TRace> {
+    const raceDict: RaceDict<TRace> = {};
 
     for (const race of races) {
         raceDict[race.id] = race;

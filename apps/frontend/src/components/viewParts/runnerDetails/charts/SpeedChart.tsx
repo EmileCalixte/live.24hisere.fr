@@ -2,11 +2,11 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 import ReactDOMServer from "react-dom/server";
+import { type Race } from "@live24hisere/types";
 import { SearchParam } from "../../../../constants/searchParams";
 import { useSpeedChartQueryString } from "../../../../hooks/queryString/useSpeedChartQueryString";
 import { useWindowDimensions } from "../../../../hooks/useWindowDimensions";
 import CanvasjsReact from "../../../../lib/canvasjs/canvasjs.react";
-import { type Race } from "../../../../types/Race";
 import {
     type RunnerWithProcessedHours,
     type RunnerWithProcessedPassages,

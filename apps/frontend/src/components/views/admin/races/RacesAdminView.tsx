@@ -13,12 +13,12 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { type AdminRaceWithRunnerCount } from "@live24hisere/types";
 import {
     getAdminRaces,
     putAdminRaceOrder,
 } from "../../../../services/api/RaceService";
 import ToastService from "../../../../services/ToastService";
-import { type AdminRaceWithRunnerCount } from "../../../../types/Race";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { appContext } from "../../../App";
 import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";

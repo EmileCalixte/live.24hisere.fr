@@ -3,9 +3,9 @@ import { type NavigateOptions } from "react-router-dom";
 import {
     type CategoriesDict,
     type CategoryShortCode,
+    type Race,
 } from "@live24hisere/types";
 import { SearchParam } from "../../constants/searchParams";
-import { type Race } from "../../types/Race";
 import { useQueryString } from "./useQueryString";
 
 interface UseCategoryQueryString {

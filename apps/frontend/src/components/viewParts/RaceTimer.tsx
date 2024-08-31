@@ -1,6 +1,6 @@
 import React, { useContext, useMemo } from "react";
+import { type Race } from "@live24hisere/types";
 import { useRaceTime } from "../../hooks/useRaceTime";
-import { type Race } from "../../types/Race";
 import { isRaceFinished, isRaceStarted } from "../../utils/raceUtils";
 import { formatMsAsDuration } from "../../utils/utils";
 import { appContext } from "../App";

@@ -1,8 +1,8 @@
 import React from "react";
 import { type NavigateOptions } from "react-router-dom";
+import { type Race } from "@live24hisere/types";
 import { RankingTimeMode } from "../../constants/rankingTimeMode";
 import { SearchParam } from "../../constants/searchParams";
-import { type Race } from "../../types/Race";
 import { type ReactStateSetter } from "../../types/ReactUtils";
 import { getDateFromRaceTime } from "../../utils/raceUtils";
 import { useQueryString } from "./useQueryString";

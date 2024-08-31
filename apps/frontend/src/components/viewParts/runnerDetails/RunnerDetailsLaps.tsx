@@ -2,6 +2,7 @@ import React from "react";
 import { faSortDown, faSortUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
+import { type Race } from "@live24hisere/types";
 import {
     RUNNER_DETAILS_LAPS_SORT_COLUMNS,
     SortBy,
@@ -10,7 +11,6 @@ import {
 import { useSortQueryString } from "../../../hooks/queryString/useSortQueryString";
 import { useRaceTime } from "../../../hooks/useRaceTime";
 import { useWindowDimensions } from "../../../hooks/useWindowDimensions";
-import { type Race } from "../../../types/Race";
 import {
     type MinimalRankingRunnerInput,
     type RankingRunner,

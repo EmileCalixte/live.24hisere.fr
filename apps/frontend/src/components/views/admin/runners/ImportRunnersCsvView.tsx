@@ -8,7 +8,11 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { Col, Row } from "react-bootstrap";
-import { type Gender } from "@live24hisere/types";
+import {
+    type AdminRace,
+    type Gender,
+    type RaceDict,
+} from "@live24hisere/types";
 import { stringUtils } from "@live24hisere/utils";
 import { GENDER_OPTIONS } from "../../../../constants/forms";
 import { ImportCsvColumn } from "../../../../constants/importCsv";
@@ -24,7 +28,6 @@ import {
     type RunnerFromCsv,
     type RunnersCsvMapping,
 } from "../../../../types/ImportCsv";
-import type { AdminRace, RaceDict } from "../../../../types/Race";
 import type { Runner } from "../../../../types/Runner";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { getRunnerFromCsv, parseCsv } from "../../../../utils/csvUtils";
