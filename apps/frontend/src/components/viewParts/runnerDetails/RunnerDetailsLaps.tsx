@@ -2,7 +2,10 @@ import React from "react";
 import { faSortDown, faSortUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
-import { type Race } from "@live24hisere/types";
+import {
+    type PublicRace,
+    type RunnerWithProcessedPassages,
+} from "@live24hisere/types";
 import {
     RUNNER_DETAILS_LAPS_SORT_COLUMNS,
     SortBy,
@@ -15,7 +18,6 @@ import {
     type MinimalRankingRunnerInput,
     type RankingRunner,
 } from "../../../types/Ranking";
-import { type RunnerWithProcessedPassages } from "../../../types/Runner";
 import { isRaceFinished, isRaceStarted } from "../../../utils/raceUtils";
 import { getOppositeSortDirection } from "../../../utils/sortUtils";
 import { formatMsAsDuration } from "../../../utils/utils";
@@ -27,7 +29,7 @@ interface RunnerDetailsLapsProps {
     runner: RankingRunner<
         MinimalRankingRunnerInput & RunnerWithProcessedPassages
     >;
-    race: Race;
+    race: PublicRace;
 }
 
 export default function RunnerDetailsLaps({

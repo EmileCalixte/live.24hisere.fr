@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { Prisma, Runner } from "@prisma/client";
 import {
-    AdminRunnerWithPassages,
-    PublicRunnerWithPassages,
-    PublicRunnerWithRaceAndPassages,
+    AdminPassage,
+    PublicRunner,
+    RunnerWithPassages,
     RunnerWithRaceAndPassages,
-} from "src/types/Runner";
+} from "@live24hisere/types";
 import { objectUtils } from "@live24hisere/utils";
 import { PrismaService } from "../prisma.service";
 
@@ -32,7 +32,7 @@ export class RunnerService {
 
     async getAdminRunner(
         where: Prisma.RunnerWhereUniqueInput,
-    ): Promise<AdminRunnerWithPassages | null> {
+    ): Promise<RunnerWithPassages<PublicRunner, AdminPassage> | null> {
         const runner = await this.prisma.runner.findUnique({
             where,
             include: {
@@ -67,7 +67,7 @@ export class RunnerService {
 
     async getPublicRunnersOfRace(
         raceId: number,
-    ): Promise<PublicRunnerWithPassages[]> {
+    ): Promise<RunnerWithPassages[]> {
         return await this.prisma.runner.findMany({
             where: {
                 race: {
@@ -97,7 +97,7 @@ export class RunnerService {
 
     async getPublicRunner(
         where: Prisma.RunnerWhereUniqueInput,
-    ): Promise<PublicRunnerWithRaceAndPassages | null> {
+    ): Promise<RunnerWithRaceAndPassages | null> {
         const runner = await this.prisma.runner.findUnique({
             where,
             include: {
@@ -178,8 +178,8 @@ export class RunnerService {
     }
 
     private getPublicRunnerWithRaceAndPassages(
-        runner: RunnerWithRaceAndPassages,
-    ): PublicRunnerWithRaceAndPassages {
+        runner: RunnerWithRaceAndPassages<Runner>,
+    ): RunnerWithRaceAndPassages {
         return {
             ...runner,
             race: objectUtils.excludeKeys(runner.race, ["isPublic", "order"]),

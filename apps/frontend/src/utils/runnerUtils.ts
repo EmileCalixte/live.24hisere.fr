@@ -1,23 +1,24 @@
-import { type Passage, type PassageWithRunnerId } from "@live24hisere/types";
-import { compareUtils, dateUtils } from "@live24hisere/utils";
-import { type SelectOption } from "../types/Forms";
-import { type RankingRunnerGap } from "../types/Ranking";
 import {
-    type Runner,
+    type PassageWithRunnerId,
+    type PublicPassage,
+    type PublicRunner,
     type RunnerWithPassages,
     type RunnerWithProcessedData,
     type RunnerWithProcessedPassages,
-} from "../types/Runner";
+} from "@live24hisere/types";
+import { compareUtils, dateUtils } from "@live24hisere/utils";
+import { type SelectOption } from "../types/Forms";
+import { type RankingRunnerGap } from "../types/Ranking";
 import { getSortedPassages } from "./passageUtils";
 import { formatMsAsDuration } from "./utils";
 
 export function getRunnersWithPassagesFromRunnersAndPassages<
-    TRunner extends Runner,
+    TRunner extends PublicRunner,
     TPassage extends PassageWithRunnerId,
 >(
     runners: TRunner[],
     passages: TPassage[],
-): Array<RunnerWithPassages<TPassage>> {
+): Array<RunnerWithPassages<TRunner, TPassage>> {
     /**
      * A map with runner ID as key and array of passages as value
      */
@@ -46,8 +47,8 @@ export function getRunnersWithPassagesFromRunnersAndPassages<
 }
 
 export function getRunnerWithPassagesFromRunnerAndPassages<
-    TRunner extends Runner,
-    TPassage extends Passage,
+    TRunner extends PublicRunner,
+    TPassage extends PublicPassage,
 >(runner: TRunner, passages: TPassage[]): TRunner & { passages: TPassage[] } {
     return {
         ...runner,
@@ -174,9 +175,9 @@ export function areRunnersEqual(
  * @param runners
  * @param label an optional callback function to format the label
  */
-export function getRunnersSelectOptions<T extends Runner>(
-    runners: T[] | false,
-    label?: (runner: T) => string,
+export function getRunnersSelectOptions<TRunner extends PublicRunner>(
+    runners: TRunner[] | false,
+    label?: (runner: TRunner) => string,
 ): SelectOption[] {
     if (!runners) {
         return [];

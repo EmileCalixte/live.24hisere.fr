@@ -2,7 +2,7 @@ import React, { type ReactNode } from "react";
 import {
     type CategoryShortCode,
     type GenderWithMixed,
-    type Race,
+    type PublicRace,
 } from "@live24hisere/types";
 import { type Ranking, type RankingRunner } from "../../../../types/Ranking";
 import { getCategoryCodeFromBirthYear } from "../../../../utils/ffaUtils";
@@ -10,7 +10,7 @@ import RankingTableInfoHeader from "./RankingTableInfoHeader";
 import RankingTableRow from "./RankingTableRow";
 
 interface RankingTableProps {
-    race: Race;
+    race: PublicRace;
     ranking: Ranking;
     tableCategory: CategoryShortCode | null;
     tableGender: GenderWithMixed;

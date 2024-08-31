@@ -1,9 +1,12 @@
 import React, { useMemo } from "react";
 import { Col, Row } from "react-bootstrap";
-import { type ProcessedPassage, type Race } from "@live24hisere/types";
+import {
+    type ProcessedPassage,
+    type PublicRace,
+    type RunnerWithProcessedHours,
+} from "@live24hisere/types";
 import { NO_VALUE_PLACEHOLDER } from "../../../constants/misc";
 import { type Ranking, type RankingRunner } from "../../../types/Ranking";
-import { type RunnerWithProcessedHours } from "../../../types/Runner";
 import { getPaceFromSpeed } from "../../../utils/mathUtils";
 import {
     getFastestLapPassage,
@@ -15,7 +18,7 @@ import RunnerDetailsStatsRankingTable from "./RunnerDetailsStatsRankingTable";
 
 interface RunnerDetailsStatsProps {
     runner: RankingRunner & RunnerWithProcessedHours;
-    race: Race;
+    race: PublicRace;
     ranking: Ranking;
 }
 

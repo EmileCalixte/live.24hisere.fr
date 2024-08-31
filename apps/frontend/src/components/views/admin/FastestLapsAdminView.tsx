@@ -3,6 +3,7 @@ import { Col, Row } from "react-bootstrap";
 import {
     type AdminPassageWithRunnerId,
     type ProcessedPassage,
+    type PublicRunner,
     type RaceDict,
 } from "@live24hisere/types";
 import { getAdminPassages } from "../../../services/api/PassageService";
@@ -10,7 +11,6 @@ import { getAdminRaces } from "../../../services/api/RaceService";
 import { getAdminRunners } from "../../../services/api/RunnerService";
 import ToastService from "../../../services/ToastService";
 import { type SelectOption } from "../../../types/Forms";
-import { type Runner } from "../../../types/Runner";
 import { isApiRequestResultOk } from "../../../utils/apiUtils";
 import { getProcessedPassagesFromPassages } from "../../../utils/passageUtils";
 import { getRaceDictFromRaces } from "../../../utils/raceUtils";
@@ -48,7 +48,7 @@ export default function FastestLapsAdminView(): React.ReactElement {
     const [races, setRaces] = React.useState<RaceDict | false>(false);
 
     // false = not fetched yet
-    const [runners, setRunners] = React.useState<Runner[] | false>(false);
+    const [runners, setRunners] = React.useState<PublicRunner[] | false>(false);
 
     const [
         displayOnlyOneFastestLapPerRunner,
@@ -411,7 +411,7 @@ export default function FastestLapsAdminView(): React.ReactElement {
                             <FastestLapsTable
                                 passages={passagesInPage}
                                 races={races as RaceDict}
-                                runners={runners as Runner[]}
+                                runners={runners as PublicRunner[]}
                             />
                         </Col>
                     </Row>

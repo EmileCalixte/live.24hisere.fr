@@ -3,29 +3,40 @@ import { type DateISOString } from "./Date";
 /**
  * An object representing a passage of a runner at the timing point
  */
-export interface Passage {
+export interface PublicPassage<
+    TimeAsString extends boolean | undefined = undefined,
+> {
     /**
      * The passage ID
      */
     id: number;
 
     /**
-     * A string representing the passage time
+     * The passage date and time
      */
-    time: DateISOString;
+    time: TimeAsString extends undefined
+        ? DateISOString | Date
+        : TimeAsString extends true
+          ? DateISOString
+          : Date;
 }
 
-export interface PassageWithRunnerId extends Passage {
+export type PassageWithRunnerId<
+    TPassage extends PublicPassage = PublicPassage,
+> = TPassage & {
     /**
      * The ID of the runner of the passage
      */
     runnerId: number;
-}
+};
 
 /**
  * An object representing a passage of a runner at the timing point with additional admin info
  */
-export interface AdminPassage extends Passage {
+export type AdminPassage<
+    TPassage extends PublicPassage = PublicPassage,
+    ImportTimeAsString extends boolean | undefined = undefined,
+> = TPassage & {
     /**
      * Not null if the passage comes from a detection of the timing system
      */
@@ -34,17 +45,21 @@ export interface AdminPassage extends Passage {
     /**
      * Not null if the passage comes from a detection of the timing system
      */
-    importTime: DateISOString | null;
+    importTime: null | ImportTimeAsString extends undefined
+        ? DateISOString | Date
+        : ImportTimeAsString extends true
+          ? DateISOString
+          : Date;
 
     /**
      * Whether the passage is hidden from public view (if true, the passage is ignored for rankings and statistics)
      */
     isHidden: boolean;
-}
+};
 
-export interface AdminPassageWithRunnerId
-    extends PassageWithRunnerId,
-        AdminPassage {}
+export type AdminPassageWithRunnerId<
+    TPassage extends AdminPassage = AdminPassage,
+> = PassageWithRunnerId<TPassage>;
 
 /**
  * An object containing computed data about a runner passage
@@ -114,12 +129,13 @@ export interface PassageProcessedData {
 /**
  * An object representing a passage of a runner at the timing point with additionnal data about the corresponding lap
  */
-export type ProcessedPassage<TPassage extends Passage = Passage> = TPassage & {
-    /**
-     * An object containing additionnal data about the corresponding lap
-     */
-    processed: PassageProcessedData;
-};
+export type ProcessedPassage<TPassage extends PublicPassage = PublicPassage> =
+    TPassage & {
+        /**
+         * An object containing additionnal data about the corresponding lap
+         */
+        processed: PassageProcessedData;
+    };
 
 /**
  * An object representing a passage of a runner at the timing point with additional admin info and additional data

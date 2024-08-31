@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import {
     type CategoryShortCode,
     type GenderWithMixed,
-    type Race,
+    type PublicRace,
 } from "@live24hisere/types";
 import { NO_VALUE_PLACEHOLDER } from "../../../../constants/misc";
 import { type RankingRunner } from "../../../../types/Ranking";
@@ -14,7 +14,7 @@ import RankingTableRowNCells from "./RankingTableRowNCells";
 import RankingTableRunnerStoppedBadge from "./RankingTableRunnerStoppedBadge";
 
 interface RankingTableRowProps {
-    race: Race;
+    race: PublicRace;
     runner: RankingRunner;
     tableCategory: CategoryShortCode | null;
     tableGender: GenderWithMixed;

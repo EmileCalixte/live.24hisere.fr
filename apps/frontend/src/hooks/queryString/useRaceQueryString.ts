@@ -1,14 +1,14 @@
 import React from "react";
-import { type Race } from "@live24hisere/types";
+import { type PublicRace } from "@live24hisere/types";
 import { SearchParam } from "../../constants/searchParams";
 import { useQueryString } from "./useQueryString";
 
-interface UseRaceQueryString<TRace extends Race> {
+interface UseRaceQueryString<TRace extends PublicRace> {
     selectedRace: TRace | null;
     setRaceParam: (raceId: number | string) => void;
 }
 
-export function useRaceQueryString<TRace extends Race>(
+export function useRaceQueryString<TRace extends PublicRace>(
     races: TRace[] | undefined,
 ): UseRaceQueryString<TRace> {
     const { searchParams, setParams, deleteParams } = useQueryString();

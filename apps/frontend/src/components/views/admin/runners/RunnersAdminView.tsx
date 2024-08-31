@@ -9,11 +9,14 @@ import { faFileCsv, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { type AdminRace, type RaceDict } from "@live24hisere/types";
+import {
+    type AdminRace,
+    type PublicRunner,
+    type RaceDict,
+} from "@live24hisere/types";
 import { getAdminRaces } from "../../../../services/api/RaceService";
 import { getAdminRunners } from "../../../../services/api/RunnerService";
 import ToastService from "../../../../services/ToastService";
-import { type Runner } from "../../../../types/Runner";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { getRaceDictFromRaces } from "../../../../utils/raceUtils";
 import { appContext } from "../../../App";
@@ -29,7 +32,7 @@ export default function RunnersAdminView(): React.ReactElement {
     const { accessToken } = useContext(appContext).user;
 
     // false = not fetched yet
-    const [runners, setRunners] = useState<Runner[] | false>(false);
+    const [runners, setRunners] = useState<PublicRunner[] | false>(false);
 
     // false = not fetched yet
     const [races, setRaces] = useState<RaceDict<AdminRace> | false>(false);
@@ -79,7 +82,7 @@ export default function RunnersAdminView(): React.ReactElement {
         setRunners(result.json.runners);
     }, [accessToken]);
 
-    const displayedRunners = useMemo<Runner[] | false>(() => {
+    const displayedRunners = useMemo<PublicRunner[] | false>(() => {
         if (!runners) {
             return false;
         }

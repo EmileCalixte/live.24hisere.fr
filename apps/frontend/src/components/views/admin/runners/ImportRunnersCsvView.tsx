@@ -11,6 +11,7 @@ import { Col, Row } from "react-bootstrap";
 import {
     type AdminRace,
     type Gender,
+    type PublicRunner,
     type RaceDict,
 } from "@live24hisere/types";
 import { stringUtils } from "@live24hisere/utils";
@@ -28,7 +29,6 @@ import {
     type RunnerFromCsv,
     type RunnersCsvMapping,
 } from "../../../../types/ImportCsv";
-import type { Runner } from "../../../../types/Runner";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { getRunnerFromCsv, parseCsv } from "../../../../utils/csvUtils";
 import { getRaceDictFromRaces } from "../../../../utils/raceUtils";
@@ -83,7 +83,7 @@ export default function ImportRunnersCsvView(): React.ReactElement {
     } = React.useContext(appContext);
 
     // false = not fetched yet
-    const [runners, setRunners] = React.useState<Runner[] | false>(false);
+    const [runners, setRunners] = React.useState<PublicRunner[] | false>(false);
 
     // false = not fetched yet
     const [races, setRaces] = React.useState<RaceDict<AdminRace> | false>(

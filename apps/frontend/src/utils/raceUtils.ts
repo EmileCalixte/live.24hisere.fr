@@ -1,4 +1,4 @@
-import { type Race, type RaceDict } from "@live24hisere/types";
+import { type PublicRace, type RaceDict } from "@live24hisere/types";
 import { type SelectOption } from "../types/Forms";
 
 /**
@@ -6,7 +6,7 @@ import { type SelectOption } from "../types/Forms";
  * @param date
  * @return The race time in ms
  */
-export function getRaceTime(race: Race, date: Date): number {
+export function getRaceTime(race: PublicRace, date: Date): number {
     return date.getTime() - new Date(race.startTime).getTime();
 }
 
@@ -15,7 +15,10 @@ export function getRaceTime(race: Race, date: Date): number {
  * @param serverTimeOffset in ms
  * @return The race time in ms
  */
-export function getCurrentRaceTime(race: Race, serverTimeOffset = 0): number {
+export function getCurrentRaceTime(
+    race: PublicRace,
+    serverTimeOffset = 0,
+): number {
     return getRaceTime(race, new Date(Date.now() + serverTimeOffset));
 }
 
@@ -24,7 +27,7 @@ export function getCurrentRaceTime(race: Race, serverTimeOffset = 0): number {
  * @param race
  * @param serverTimeOffset in ms
  */
-export function isRaceStarted(race: Race, serverTimeOffset = 0): boolean {
+export function isRaceStarted(race: PublicRace, serverTimeOffset = 0): boolean {
     return getCurrentRaceTime(race, serverTimeOffset) >= 0;
 }
 
@@ -33,7 +36,10 @@ export function isRaceStarted(race: Race, serverTimeOffset = 0): boolean {
  * @param race
  * @param serverTimeOffset in ms
  */
-export function isRaceFinished(race: Race, serverTimeOffset = 0): boolean {
+export function isRaceFinished(
+    race: PublicRace,
+    serverTimeOffset = 0,
+): boolean {
     return getCurrentRaceTime(race, serverTimeOffset) > race.duration * 1000;
 }
 
@@ -42,7 +48,7 @@ export function isRaceFinished(race: Race, serverTimeOffset = 0): boolean {
  * @param race
  * @param raceTime in ms
  */
-export function getDateFromRaceTime(race: Race, raceTime: number): Date {
+export function getDateFromRaceTime(race: PublicRace, raceTime: number): Date {
     const raceStartDate = new Date(race.startTime);
 
     return new Date(raceStartDate.getTime() + raceTime);
@@ -55,7 +61,7 @@ export function getDateFromRaceTime(race: Race, raceTime: number): Date {
  *
  * TODO delete false from races types
  */
-export function getRacesSelectOptions<TRace extends Race>(
+export function getRacesSelectOptions<TRace extends PublicRace>(
     races: TRace[] | false | undefined,
     label?: (race: TRace) => string,
 ): SelectOption[] {
@@ -75,7 +81,7 @@ export function getRacesSelectOptions<TRace extends Race>(
  * @return The total distance in meters
  */
 export function getDistanceFromPassageCount(
-    race: Race,
+    race: PublicRace,
     passageCount: number,
 ): number {
     if (passageCount === 0) {
@@ -92,7 +98,7 @@ export function getDistanceFromPassageCount(
     return lapDistance * passageCount;
 }
 
-export function getRaceDictFromRaces<TRace extends Race>(
+export function getRaceDictFromRaces<TRace extends PublicRace>(
     races: TRace[],
 ): RaceDict<TRace> {
     const raceDict: RaceDict<TRace> = {};

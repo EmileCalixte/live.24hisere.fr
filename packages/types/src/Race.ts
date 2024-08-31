@@ -1,9 +1,12 @@
 import { type DateISOString } from "./Date";
+import { type PublicRunner } from "./Runner";
 
 /**
  * An object representing a race
  */
-export interface Race {
+export interface PublicRace<
+    DateAsString extends boolean | undefined = undefined,
+> {
     /**
      * The race ID
      */
@@ -15,9 +18,13 @@ export interface Race {
     name: string;
 
     /**
-     * A string representing the start time of the race, format `${YYYY}-${MM}-${DD}T{hh}:${ii}:${ss}Z`
+     * Yhe start date and time of the race
      */
-    startTime: DateISOString;
+    startTime: DateAsString extends undefined
+        ? DateISOString | Date
+        : DateAsString extends true
+          ? DateISOString
+          : Date;
 
     /**
      * The duration of the race, in seconds
@@ -35,28 +42,38 @@ export interface Race {
     lapDistance: string;
 }
 
-export interface RaceWithRunnerCount extends Race {
-    /**
-     * The number of runners participating in the race
-     */
-    runnerCount: number;
-}
-
 /**
  * An object representing a race with additional admin properties
  */
-export interface AdminRace extends Race {
+export type AdminRace<TRace extends PublicRace = PublicRace> = TRace & {
     /**
      * Whether the race is publicly displayed or not
      */
     isPublic: boolean;
-}
+};
 
-export interface AdminRaceWithRunnerCount
-    extends AdminRace,
-        RaceWithRunnerCount {}
+export type RaceWithRunners<
+    TRace extends PublicRace = PublicRace,
+    TRunner extends PublicRunner = PublicRunner,
+> = TRace & {
+    runners: TRunner[];
+};
+
+export type RaceWithRunnerCount<TRace extends PublicRace = PublicRace> =
+    TRace & {
+        /**
+         * The number of runners participating in the race
+         */
+        runnerCount: number;
+    };
+
+export type AdminRaceWithRunnerCount<TRace extends AdminRace = AdminRace> =
+    RaceWithRunnerCount<TRace>;
 
 /**
  * An object whose key is a race ID and value is the corresponding race
  */
-export type RaceDict<TRace extends Race = Race> = Record<string, TRace>;
+export type RaceDict<TRace extends PublicRace = PublicRace> = Record<
+    string,
+    TRace
+>;

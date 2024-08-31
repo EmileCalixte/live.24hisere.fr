@@ -1,21 +1,19 @@
 import {
-    type Passage,
     type ProcessedPassage,
-    type Race,
+    type PublicPassage,
+    type PublicRace,
+    type RunnerProcessedData,
+    type RunnerProcessedHour,
 } from "@live24hisere/types";
 import { compareUtils, dateUtils } from "@live24hisere/utils";
 import { HOUR_IN_MS } from "../constants/misc";
-import {
-    type RunnerProcessedData,
-    type RunnerProcessedHour,
-} from "../types/Runner";
 import { getPaceFromSpeed, getSpeed } from "./mathUtils";
 import { getDistanceFromPassageCount, getRaceTime } from "./raceUtils";
 
 /**
  * Returns passages sorted in ascending time order
  */
-export function getSortedPassages<TPassage extends Passage>(
+export function getSortedPassages<TPassage extends PublicPassage>(
     passages: TPassage[],
 ): TPassage[] {
     return passages.toSorted((passageA, passageB) =>
@@ -27,8 +25,8 @@ export function getSortedPassages<TPassage extends Passage>(
 }
 
 export function getRunnerProcessedDataFromPassages(
-    race: Race,
-    passages: Passage[],
+    race: PublicRace,
+    passages: PublicPassage[],
 ): RunnerProcessedData {
     if (!passages.length) {
         return {
@@ -59,10 +57,9 @@ export function getRunnerProcessedDataFromPassages(
     };
 }
 
-export function getProcessedPassagesFromPassages<TPassage extends Passage>(
-    race: Race,
-    passages: TPassage[],
-): Array<ProcessedPassage<TPassage>> {
+export function getProcessedPassagesFromPassages<
+    TPassage extends PublicPassage,
+>(race: PublicRace, passages: TPassage[]): Array<ProcessedPassage<TPassage>> {
     const raceInitialDistance = Number(race.initialDistance);
     const raceLapDistance = Number(race.lapDistance);
 
@@ -144,7 +141,7 @@ export function getProcessedPassagesFromPassages<TPassage extends Passage>(
  * @param passages the list of passages sorted in ascending time order
  */
 export function getProcessedHoursFromPassages(
-    race: Race,
+    race: PublicRace,
     passages: ProcessedPassage[],
 ): RunnerProcessedHour[] {
     const hours: RunnerProcessedHour[] = [];

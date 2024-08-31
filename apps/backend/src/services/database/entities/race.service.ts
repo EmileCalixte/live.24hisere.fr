@@ -2,9 +2,9 @@ import { Injectable } from "@nestjs/common";
 import { Prisma, Race } from "@prisma/client";
 import {
     AdminRaceWithRunnerCount,
-    PublicRaceWithRunnerCount,
-    RaceAndRunners,
-} from "src/types/Race";
+    RaceWithRunnerCount,
+    RaceWithRunners,
+} from "@live24hisere/types";
 import { objectUtils } from "@live24hisere/utils";
 import { PrismaService } from "../prisma.service";
 
@@ -40,7 +40,7 @@ export class RaceService {
         );
     }
 
-    async getPublicRaces(): Promise<PublicRaceWithRunnerCount[]> {
+    async getPublicRaces(): Promise<RaceWithRunnerCount[]> {
         const races = await this.getRacesWithRunners({ isPublic: true });
 
         return races
@@ -52,7 +52,7 @@ export class RaceService {
 
     async getPublicRace(
         where: Prisma.RaceWhereUniqueInput,
-    ): Promise<PublicRaceWithRunnerCount | null> {
+    ): Promise<RaceWithRunnerCount | null> {
         const race = await this.getRaceWithRunners({
             ...where,
             isPublic: true,
@@ -104,7 +104,7 @@ export class RaceService {
 
     private async getRacesWithRunners(
         where: Prisma.RaceWhereInput = {},
-    ): Promise<RaceAndRunners[]> {
+    ): Promise<RaceWithRunners[]> {
         return await this.prisma.race.findMany({
             where,
             include: {
@@ -118,7 +118,7 @@ export class RaceService {
 
     private async getRaceWithRunners(
         where: Prisma.RaceWhereUniqueInput,
-    ): Promise<RaceAndRunners | null> {
+    ): Promise<RaceWithRunners | null> {
         return await this.prisma.race.findUnique({
             where,
             include: {

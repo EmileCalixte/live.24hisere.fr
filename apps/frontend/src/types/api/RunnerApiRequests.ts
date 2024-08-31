@@ -1,16 +1,15 @@
-import { type AdminPassage } from "@live24hisere/types";
 import {
-    type Runner,
-    type RunnerWithAdminPassages,
+    type AdminPassage,
+    type PublicRunner,
     type RunnerWithPassages,
-} from "../Runner";
+} from "@live24hisere/types";
 import { type ApiRequest } from "./ApiRequest";
 
 export interface GetRunnersApiRequest extends ApiRequest {
     payload: never;
 
     response: {
-        runners: Runner[];
+        runners: PublicRunner[];
     };
 }
 
@@ -26,7 +25,7 @@ export interface GetAdminRunnersApiRequest extends ApiRequest {
     payload: never;
 
     response: {
-        runners: Runner[];
+        runners: PublicRunner[];
     };
 }
 
@@ -34,15 +33,15 @@ export interface GetAdminRunnerApiRequest extends ApiRequest {
     payload: never;
 
     response: {
-        runner: RunnerWithAdminPassages;
+        runner: RunnerWithPassages<PublicRunner, AdminPassage>;
     };
 }
 
 export interface PostAdminRunnerApiRequest extends ApiRequest {
-    payload: Omit<Runner, "birthYear"> & { birthYear: number };
+    payload: Omit<PublicRunner, "birthYear"> & { birthYear: number };
 
     response: {
-        runner: RunnerWithAdminPassages;
+        runner: RunnerWithPassages<PublicRunner, AdminPassage>;
     };
 }
 
@@ -58,7 +57,7 @@ export interface PatchAdminRunnerApiRequest extends ApiRequest {
     payload: Partial<PostAdminRunnerApiRequest["payload"]>;
 
     response: {
-        runner: Runner;
+        runner: PublicRunner;
     };
 }
 

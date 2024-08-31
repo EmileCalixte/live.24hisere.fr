@@ -3,15 +3,15 @@ import { Link } from "react-router-dom";
 import {
     type AdminPassageWithRunnerId,
     type ProcessedPassage,
+    type PublicRunner,
     type RaceDict,
 } from "@live24hisere/types";
-import { type Runner } from "../../../../types/Runner";
 import { formatFloatNumber, formatMsAsDuration } from "../../../../utils/utils";
 
 interface FastestLapsTableProps {
     passages: Array<ProcessedPassage<AdminPassageWithRunnerId>>;
     races: RaceDict;
-    runners: Runner[];
+    runners: PublicRunner[];
 }
 
 export default function FastestLapsTable({

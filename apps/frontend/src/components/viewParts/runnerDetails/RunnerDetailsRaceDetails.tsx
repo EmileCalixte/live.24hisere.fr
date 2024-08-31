@@ -1,11 +1,11 @@
 import React, { useMemo } from "react";
 import { Col, Row } from "react-bootstrap";
-import { type Race } from "@live24hisere/types";
+import { type PublicRace } from "@live24hisere/types";
 import { formatMsAsDuration } from "../../../utils/utils";
 import RaceTimer from "../RaceTimer";
 
 interface RunnerDetailsRaceDetailsProps {
-    race: Race;
+    race: PublicRace;
 }
 
 export default function RunnerDetailsRaceDetails({

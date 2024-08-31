@@ -1,5 +1,5 @@
-import { AdminRunnerPassage } from "../../Passage";
+import { AdminPassage } from "@live24hisere/types";
 
 export interface AdminRunnerPassageResponse {
-    passage: AdminRunnerPassage;
+    passage: AdminPassage;
 }

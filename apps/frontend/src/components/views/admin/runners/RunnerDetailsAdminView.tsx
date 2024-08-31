@@ -11,6 +11,8 @@ import {
     type AdminProcessedPassage,
     type AdminRaceWithRunnerCount,
     Gender,
+    type RunnerWithProcessedPassages,
+    type RunnerWithRace,
 } from "@live24hisere/types";
 import { getAdminRaces } from "../../../../services/api/RaceService";
 import {
@@ -22,10 +24,6 @@ import {
     postAdminRunnerPassage,
 } from "../../../../services/api/RunnerService";
 import ToastService from "../../../../services/ToastService";
-import {
-    type RunnerWithProcessedPassages,
-    type RunnerWithRace,
-} from "../../../../types/Runner";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { getProcessedPassagesFromPassages } from "../../../../utils/passageUtils";
 import { formatDateAsString, formatDateForApi } from "../../../../utils/utils";
