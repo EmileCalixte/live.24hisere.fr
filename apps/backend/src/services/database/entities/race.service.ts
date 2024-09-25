@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { Prisma, Race } from "@prisma/client";
+import { convertPrismaTypeToType } from "src/utils/prisma.utils";
 import {
     AdminRaceWithRunnerCount,
     RaceWithRunnerCount,
@@ -62,8 +63,10 @@ export class RaceService {
             return null;
         }
 
-        return this.getPublicRaceFromRace(
-            this.getRaceWithRunnerCountFromRaceWithRunners(race),
+        return convertPrismaTypeToType(
+            this.getPublicRaceFromRace(
+                this.getRaceWithRunnerCountFromRaceWithRunners(race),
+            ),
         );
     }
 
@@ -93,8 +96,10 @@ export class RaceService {
             },
         });
 
-        return this.getAdminRaceFromRace(
-            this.getRaceWithRunnerCountFromRaceWithRunners(updatedRace),
+        return convertPrismaTypeToType(
+            this.getAdminRaceFromRace(
+                this.getRaceWithRunnerCountFromRaceWithRunners(updatedRace),
+            ),
         );
     }
 
@@ -105,7 +110,7 @@ export class RaceService {
     private async getRacesWithRunners(
         where: Prisma.RaceWhereInput = {},
     ): Promise<RaceWithRunners[]> {
-        return await this.prisma.race.findMany({
+        const races = await this.prisma.race.findMany({
             where,
             include: {
                 runners: true,
@@ -114,33 +119,47 @@ export class RaceService {
                 order: "asc",
             },
         });
+
+        // TODO FIXTYPE (Gender)
+        return races.map(
+            (race) => convertPrismaTypeToType(race) as RaceWithRunners,
+        );
     }
 
     private async getRaceWithRunners(
         where: Prisma.RaceWhereUniqueInput,
     ): Promise<RaceWithRunners | null> {
-        return await this.prisma.race.findUnique({
+        const race = await this.prisma.race.findUnique({
             where,
             include: {
                 runners: true,
             },
         });
+
+        if (!race) {
+            return null;
+        }
+
+        // TODO FIXTYPE (Gender)
+        return convertPrismaTypeToType(race) as RaceWithRunners;
     }
 
-    private getAdminRaceFromRace<T extends Race>(race: T): Omit<T, "order"> {
+    private getAdminRaceFromRace<TRace extends Race>(
+        race: TRace,
+    ): Omit<TRace, "order"> {
         return objectUtils.excludeKeys(race, ["order"]);
     }
 
-    private getPublicRaceFromRace<T extends Race>(
-        race: T,
-    ): Omit<T, "isPublic" | "order"> {
+    private getPublicRaceFromRace<TRace extends Race>(
+        race: TRace,
+    ): Omit<TRace, "isPublic" | "order"> {
         return objectUtils.excludeKeys(race, ["isPublic", "order"]);
     }
 
     private getRaceWithRunnerCountFromRaceWithRunners<
-        T extends { runners: R[] },
-        R,
-    >(race: T): Omit<T, "runners"> & { runnerCount: number } {
+        TRace extends { runners: TRunner[] },
+        TRunner,
+    >(race: TRace): Omit<TRace, "runners"> & { runnerCount: number } {
         return objectUtils.excludeKeys(
             {
                 ...race,
