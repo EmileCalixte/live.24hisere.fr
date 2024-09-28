@@ -6,6 +6,7 @@
     "create-user": "node dist/cli.js create-user",
     "update-password": "node dist/cli.js update-user-password",
     "prisma": "prisma",
+    "drizzle-kit": "drizzle-kit",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "dev": "pnpm prisma generate && pnpm start:dev",
