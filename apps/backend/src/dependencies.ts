@@ -24,6 +24,7 @@ import { RaceService } from "./services/database/entities/race.service";
 import { RunnerService } from "./services/database/entities/runner.service";
 import { UserService } from "./services/database/entities/user.service";
 import { PrismaService } from "./services/database/prisma.service";
+import { EnvService } from "./services/env.service";
 import { PasswordService } from "./services/password.service";
 import { RandomService } from "./services/random.service";
 import { ImportPassagesService } from "./tasks/importPassages.service";
@@ -64,7 +65,13 @@ export const dependencies: Dependencies = {
         ],
     },
     services: {
-        app: [AuthService, DagFileService, PasswordService, RandomService],
+        app: [
+            AuthService,
+            DagFileService,
+            EnvService,
+            PasswordService,
+            RandomService,
+        ],
         database: [
             PrismaService,
             AccessTokenService,
