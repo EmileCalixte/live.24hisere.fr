@@ -4,7 +4,8 @@ import {
     InternalServerErrorException,
     UnauthorizedException,
 } from "@nestjs/common";
-import { AccessToken, User } from "@prisma/client";
+import { User } from "@prisma/client";
+import { AccessToken } from "src/types/AccessToken";
 import { AccessTokenService } from "./database/entities/accessToken.service";
 import { UserService } from "./database/entities/user.service";
 import { PasswordService } from "./password.service";
@@ -23,7 +24,7 @@ export class AuthService {
     ) {}
 
     async login(username: string, password: string): Promise<AccessToken> {
-        const user = await this.userService.getUser({ username });
+        const user = await this.userService.getUserByUsername(username);
 
         if (!user) {
             throw new ForbiddenException(INVALID_CREDENTIALS_MESSAGE);
@@ -38,13 +39,12 @@ export class AuthService {
             throw new ForbiddenException(INVALID_CREDENTIALS_MESSAGE);
         }
 
-        return await this.accessTokenService.createAccessToken(user);
+        return await this.accessTokenService.createAccessTokenForUser(user);
     }
 
     async authenticateUser(token: string): Promise<User> {
-        const accessToken = await this.accessTokenService.getAccessToken({
-            token,
-        });
+        const accessToken =
+            await this.accessTokenService.getAccessTokenByStringToken(token);
 
         if (!accessToken) {
             throw new UnauthorizedException(INVALID_ACCESS_TOKEN_MESSAGE);
@@ -54,9 +54,7 @@ export class AuthService {
             throw new UnauthorizedException(EXPIRED_ACCESS_TOKEN_MESSAGE);
         }
 
-        const user = await this.userService.getUser({
-            id: accessToken.userId,
-        });
+        const user = await this.userService.getUserById(accessToken.userId);
 
         if (!user) {
             throw new InternalServerErrorException(

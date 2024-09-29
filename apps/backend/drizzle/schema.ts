@@ -18,7 +18,7 @@ const TABLE_NAME_USER = "user";
 
 const DEFAULT_DATE_PARAMS: MySqlDatetimeConfig = {
     fsp: 0,
-    mode: "string",
+    mode: "string", // To get dates as string instead of Date objects
 };
 
 export const config = mysqlTable(TABLE_NAME_CONFIG, {

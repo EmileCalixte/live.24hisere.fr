@@ -39,7 +39,7 @@ export class UpdateUserPasswordCommand extends CommandRunner {
         const passwordHash =
             await this.passwordService.hashPassword(newPassword);
 
-        await this.userService.editUser(user, { passwordHash });
+        await this.userService.updateUser(user.id, { passwordHash });
 
         console.log("Password updated successfully");
     }
@@ -52,7 +52,7 @@ export class UpdateUserPasswordCommand extends CommandRunner {
                     undefined,
                 );
 
-            const user = await this.userService.getUser({ username });
+            const user = await this.userService.getUserByUsername(username);
 
             if (!user) {
                 console.log("User not found");
