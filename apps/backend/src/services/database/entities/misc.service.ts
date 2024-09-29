@@ -1,15 +1,15 @@
 import { Injectable } from "@nestjs/common";
-import { Misc, Prisma } from "@prisma/client";
+import { eq } from "drizzle-orm";
+import { misc } from "drizzle/schema";
 import { DateISOString } from "src/types/Date";
+import { Misc } from "src/types/Misc";
 import { isDateValid } from "src/utils/date.utils";
-import { PrismaService } from "../prisma.service";
+import { EntityService } from "../entity.service";
 
 const KEY_LAST_UPDATE_TIME = "last_update_time";
 
 @Injectable()
-export class MiscService {
-    constructor(private readonly prisma: PrismaService) {}
-
+export class MiscService extends EntityService {
     public async getLastUpdateTime(): Promise<Date | null>;
     public async getLastUpdateTime(asISOString: false): Promise<Date | null>;
     public async getLastUpdateTime(
@@ -37,29 +37,35 @@ export class MiscService {
         await this.saveLine(KEY_LAST_UPDATE_TIME, lastUpdateDate.toISOString());
     }
 
-    private async getLine(
-        key: NonNullable<Prisma.MiscWhereUniqueInput["key"]>,
-    ): Promise<Misc | null> {
-        return await this.prisma.misc.findUnique({
-            where: { key },
-        });
+    private async getLine(key: string): Promise<Misc | null> {
+        const miscs = await this.db
+            .select()
+            .from(misc)
+            .where(eq(misc.key, key));
+
+        return this.getUniqueResult(miscs);
     }
 
-    private async saveLine(
-        key: NonNullable<Prisma.MiscWhereUniqueInput["key"]>,
-        value: Misc["value"],
-    ): Promise<Misc> {
-        return await this.prisma.misc.upsert({
-            where: {
-                key,
-            },
-            update: {
-                value,
-            },
-            create: {
-                key,
-                value,
-            },
-        });
+    /**
+     * Updates a line or create it if it doesn't exist
+     * @param key The key of the line to save
+     * @param value The value to save
+     * @returns The created or updated line
+     */
+    private async saveLine(key: string, value: string): Promise<Misc> {
+        await this.db
+            .insert(misc)
+            .values({ key, value })
+            .onDuplicateKeyUpdate({ set: { value } });
+
+        const newLine = await this.getLine(key);
+
+        if (!newLine) {
+            throw new Error(
+                `Failed to get updated misc data from database (key: ${key})`,
+            );
+        }
+
+        return newLine;
     }
 }

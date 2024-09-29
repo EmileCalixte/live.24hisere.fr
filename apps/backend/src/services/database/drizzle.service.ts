@@ -1,4 +1,9 @@
-import { Injectable, OnModuleDestroy, OnModuleInit } from "@nestjs/common";
+import {
+    Injectable,
+    Logger,
+    OnModuleDestroy,
+    OnModuleInit,
+} from "@nestjs/common";
 import { drizzle, MySql2Database } from "drizzle-orm/mysql2";
 import mysql from "mysql2/promise";
 import * as schema from "../../../drizzle/schema";
@@ -6,15 +11,21 @@ import { EnvService } from "../env.service";
 
 @Injectable()
 export class DrizzleService implements OnModuleInit, OnModuleDestroy {
+    private readonly logger = new Logger("DrizzleService");
+
     constructor(private readonly envService: EnvService) {}
 
     private connection: mysql.Pool;
     private db: MySql2Database<typeof schema>;
 
     onModuleInit(): void {
+        this.logger.log("Initializing database connection...");
+
         this.initConnection();
 
         this.db = drizzle(this.connection, { schema, mode: "default" });
+
+        this.logger.log("Database connection established");
     }
 
     async onModuleDestroy(): Promise<void> {

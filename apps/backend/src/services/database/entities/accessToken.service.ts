@@ -13,7 +13,7 @@ export const ACCESS_TOKEN_LIFETIME = 4 * 60 * 60 * 1000;
 @Injectable()
 export class AccessTokenService extends EntityService {
     constructor(
-        protected readonly drizzleService: DrizzleService,
+        drizzleService: DrizzleService,
         private readonly randomService: RandomService,
     ) {
         super(drizzleService);

@@ -1,5 +1,7 @@
+import { Injectable } from "@nestjs/common";
 import { DrizzleService } from "./drizzle.service";
 
+@Injectable()
 export abstract class EntityService {
     constructor(protected readonly drizzleService: DrizzleService) {}
 
