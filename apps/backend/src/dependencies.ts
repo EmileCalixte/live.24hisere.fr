@@ -1,5 +1,6 @@
 import { Type } from "@nestjs/common/interfaces/type.interface";
 import { CreateUserCommand } from "./commands/createUser.command";
+import { MigrateCommand } from "./commands/db/migrate.command";
 import { CreatePasswordQuestionSet } from "./commands/questionSets/createPassword.questionSet";
 import { CurrentPasswordQuestionSet } from "./commands/questionSets/currentPassword.questionSet";
 import { UsernameQuestionSet } from "./commands/questionSets/username.questionSet";
@@ -16,6 +17,7 @@ import { RacesController } from "./controllers/races.controller";
 import { RunnersController } from "./controllers/runners.controller";
 import { AuthService } from "./services/auth.service";
 import { DagFileService } from "./services/dagFile.service";
+import { DrizzleService } from "./services/database/drizzle.service";
 import { AccessTokenService } from "./services/database/entities/accessToken.service";
 import { ConfigService } from "./services/database/entities/config.service";
 import { MiscService } from "./services/database/entities/misc.service";
@@ -74,6 +76,7 @@ export const dependencies: Dependencies = {
         ],
         database: [
             PrismaService,
+            DrizzleService,
             AccessTokenService,
             ConfigService,
             MiscService,
@@ -85,7 +88,7 @@ export const dependencies: Dependencies = {
     },
     tasks: [ImportPassagesService],
     validationRules: [RaceIdExistsRule],
-    commands: [CreateUserCommand, UpdateUserPasswordCommand],
+    commands: [CreateUserCommand, UpdateUserPasswordCommand, MigrateCommand],
     questionSets: [
         CreatePasswordQuestionSet,
         CurrentPasswordQuestionSet,

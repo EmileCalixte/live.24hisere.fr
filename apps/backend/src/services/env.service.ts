@@ -4,6 +4,10 @@ import { NODE_ENV_PRODUCTION } from "src/constants/env.constants";
 const REQUIRED_ENVIRONMENT_VARIABLES = [
     "TZ",
     "FRONTEND_URL",
+    "DB_NAME",
+    "DB_HOST",
+    "DB_USERNAME",
+    "DB_PASSWORD",
     "DATABASE_URL",
     "SHADOW_DATABASE_URL",
 ] as const;
