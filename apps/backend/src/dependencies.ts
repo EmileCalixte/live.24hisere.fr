@@ -25,7 +25,6 @@ import { PassageService } from "./services/database/entities/passage.service";
 import { RaceService } from "./services/database/entities/race.service";
 import { RunnerService } from "./services/database/entities/runner.service";
 import { UserService } from "./services/database/entities/user.service";
-import { PrismaService } from "./services/database/prisma.service";
 import { EnvService } from "./services/env.service";
 import { PasswordService } from "./services/password.service";
 import { RandomService } from "./services/random.service";
@@ -75,7 +74,6 @@ export const dependencies: Dependencies = {
             RandomService,
         ],
         database: [
-            PrismaService,
             DrizzleService,
             AccessTokenService,
             ConfigService,

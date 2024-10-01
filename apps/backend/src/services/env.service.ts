@@ -8,8 +8,6 @@ const REQUIRED_ENVIRONMENT_VARIABLES = [
     "DB_HOST",
     "DB_USERNAME",
     "DB_PASSWORD",
-    "DATABASE_URL",
-    "SHADOW_DATABASE_URL",
 ] as const;
 
 /**

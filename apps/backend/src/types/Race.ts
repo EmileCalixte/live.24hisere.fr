@@ -1,5 +1,5 @@
-import { Runner } from "@prisma/client";
 import { DateISOString } from "./Date";
+import { Runner } from "./Runner";
 
 export interface Race {
     id: number;

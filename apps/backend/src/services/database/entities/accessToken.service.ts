@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
-import { User } from "@prisma/client";
 import { eq } from "drizzle-orm";
 import { TABLE_ACCESS_TOKEN } from "drizzle/schema";
 import { AccessToken } from "src/types/AccessToken";
+import { User } from "src/types/User";
 import { fixDrizzleDates } from "src/utils/drizzle.utils";
 import { HEXADECIMAL, RandomService } from "../../random.service";
 import { DrizzleService } from "../drizzle.service";

@@ -1,6 +1,9 @@
-import { Passage, Race } from "@prisma/client";
-import { AdminPassageOfRunner, PublicPassageOfRunner } from "./Passage";
-import { PublicRace } from "./Race";
+import {
+    AdminPassageOfRunner,
+    Passage,
+    PublicPassageOfRunner,
+} from "./Passage";
+import { PublicRace, Race } from "./Race";
 
 export interface Runner {
     id: number;

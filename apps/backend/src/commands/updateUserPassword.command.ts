@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { User } from "@prisma/client";
 import { Command, CommandRunner, InquirerService } from "nest-commander";
+import { User } from "src/types/User";
 import { UserService } from "../services/database/entities/user.service";
 import { PasswordService } from "../services/password.service";
 import {
