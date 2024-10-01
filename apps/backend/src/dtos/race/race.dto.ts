@@ -29,7 +29,7 @@ export class RaceDto {
 
     @IsISO8601UTCDateString()
     @IsNotEmpty()
-    startTime: Date;
+    startTime: string;
 
     @IsNotEmpty()
     @IsInt()

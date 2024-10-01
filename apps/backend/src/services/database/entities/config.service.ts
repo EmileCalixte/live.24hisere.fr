@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { eq } from "drizzle-orm";
-import { config } from "drizzle/schema";
+import { TABLE_CONFIG } from "drizzle/schema";
 import { Config } from "src/types/Config";
 import { booleanToString, stringToBoolean } from "../../../utils/db.utils";
 import { EntityService } from "../entity.service";
@@ -55,8 +55,8 @@ export class ConfigService extends EntityService {
     private async getLine(key: string): Promise<Config | null> {
         const configs = await this.db
             .select()
-            .from(config)
-            .where(eq(config.key, key));
+            .from(TABLE_CONFIG)
+            .where(eq(TABLE_CONFIG.key, key));
 
         return this.getUniqueResult(configs);
     }
@@ -69,7 +69,7 @@ export class ConfigService extends EntityService {
      */
     private async saveLine(key: string, value: string): Promise<Config> {
         await this.db
-            .insert(config)
+            .insert(TABLE_CONFIG)
             .values({ key, value })
             .onDuplicateKeyUpdate({ set: { value } });
 
@@ -91,8 +91,8 @@ export class ConfigService extends EntityService {
      */
     private async deleteLine(key: string): Promise<boolean> {
         const [resultSetHeader] = await this.db
-            .delete(config)
-            .where(eq(config.key, key));
+            .delete(TABLE_CONFIG)
+            .where(eq(TABLE_CONFIG.key, key));
 
         return !!resultSetHeader.affectedRows;
     }

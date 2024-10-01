@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { eq } from "drizzle-orm";
-import { misc } from "drizzle/schema";
+import { TABLE_MISC } from "drizzle/schema";
 import { DateISOString } from "src/types/Date";
 import { Misc } from "src/types/Misc";
 import { isDateValid } from "src/utils/date.utils";
@@ -40,8 +40,8 @@ export class MiscService extends EntityService {
     private async getLine(key: string): Promise<Misc | null> {
         const miscs = await this.db
             .select()
-            .from(misc)
-            .where(eq(misc.key, key));
+            .from(TABLE_MISC)
+            .where(eq(TABLE_MISC.key, key));
 
         return this.getUniqueResult(miscs);
     }
@@ -54,7 +54,7 @@ export class MiscService extends EntityService {
      */
     private async saveLine(key: string, value: string): Promise<Misc> {
         await this.db
-            .insert(misc)
+            .insert(TABLE_MISC)
             .values({ key, value })
             .onDuplicateKeyUpdate({ set: { value } });
 

@@ -29,7 +29,7 @@ export class RacesController {
             throw new BadRequestException("Race ID must be a number");
         }
 
-        const race = await this.raceService.getPublicRace({ id });
+        const race = await this.raceService.getPublicRaceById(id);
 
         if (!race) {
             throw new NotFoundException("Race not found");

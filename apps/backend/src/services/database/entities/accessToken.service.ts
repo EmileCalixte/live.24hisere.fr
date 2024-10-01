@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { User } from "@prisma/client";
 import { eq } from "drizzle-orm";
-import { accessToken } from "drizzle/schema";
+import { TABLE_ACCESS_TOKEN } from "drizzle/schema";
 import { AccessToken } from "src/types/AccessToken";
 import { fixDrizzleDates } from "src/utils/drizzle.utils";
 import { HEXADECIMAL, RandomService } from "../../random.service";
@@ -24,8 +24,8 @@ export class AccessTokenService extends EntityService {
     ): Promise<AccessToken | null> {
         const accessTokens = await this.db
             .select()
-            .from(accessToken)
-            .where(eq(accessToken.token, stringToken));
+            .from(TABLE_ACCESS_TOKEN)
+            .where(eq(TABLE_ACCESS_TOKEN.token, stringToken));
 
         const token = this.getUniqueResult(accessTokens);
 
@@ -35,7 +35,7 @@ export class AccessTokenService extends EntityService {
     async createAccessTokenForUser(user: User): Promise<AccessToken> {
         const stringToken = this.randomService.getRandomString(32, HEXADECIMAL);
 
-        await this.db.insert(accessToken).values({
+        await this.db.insert(TABLE_ACCESS_TOKEN).values({
             userId: user.id,
             token: stringToken,
             expirationDate: this.getTokenExpirationDateFromNow(),
@@ -58,8 +58,8 @@ export class AccessTokenService extends EntityService {
      */
     async deleteAccessTokenByStringToken(token: string): Promise<boolean> {
         const [resultSetHeader] = await this.db
-            .delete(accessToken)
-            .where(eq(accessToken.token, token));
+            .delete(TABLE_ACCESS_TOKEN)
+            .where(eq(TABLE_ACCESS_TOKEN.token, token));
 
         return !!resultSetHeader.affectedRows;
     }
@@ -71,8 +71,8 @@ export class AccessTokenService extends EntityService {
      */
     async deleteUserAccessTokens(user: User): Promise<number> {
         const [resultSetHeader] = await this.db
-            .delete(accessToken)
-            .where(eq(accessToken.userId, user.id));
+            .delete(TABLE_ACCESS_TOKEN)
+            .where(eq(TABLE_ACCESS_TOKEN.userId, user.id));
 
         return resultSetHeader.affectedRows;
     }

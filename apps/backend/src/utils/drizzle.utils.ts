@@ -1,10 +1,16 @@
-export type FixDrizzleDates<T extends object> = {
-    [K in keyof T]: T[K] extends Date
-        ? string
-        : T[K] extends object
-          ? FixDrizzleDates<T[K]>
-          : T[K];
-};
+export type FixDrizzleDates<T> = T extends object
+    ? {
+          [K in keyof T]: T[K] extends Date
+              ? string
+              : T[K] extends Date | null
+                ? string | null
+                : T[K] extends Array<infer U>
+                  ? Array<FixDrizzleDates<U>>
+                  : T[K] extends object
+                    ? FixDrizzleDates<T[K]>
+                    : T[K];
+      }
+    : T;
 
 /**
  * A utility type function to fix the Drizzle types of entities containing dates

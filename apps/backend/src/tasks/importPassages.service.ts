@@ -99,17 +99,14 @@ export class ImportPassagesService extends TaskService {
     private async importPassageFromDagLineData(
         data: DagFileLineData,
     ): Promise<boolean> {
-        const existingPassage = await this.passageService.getPassage({
-            detectionId: data.detectionId,
-        });
+        const existingPassage =
+            await this.passageService.getPassageByDetectionId(data.detectionId);
 
         if (existingPassage) {
             return false;
         }
 
-        const runner = await this.runnerService.getRunner({
-            id: data.runnerId,
-        });
+        const runner = await this.runnerService.getRunnerById(data.runnerId);
 
         if (!runner) {
             this.logger.verbose(
@@ -124,13 +121,9 @@ export class ImportPassagesService extends TaskService {
 
         await this.passageService.createPassage({
             detectionId: data.detectionId,
-            importTime: new Date(),
-            runner: {
-                connect: {
-                    id: runner.id,
-                },
-            },
-            time: data.passageDateTime,
+            importTime: new Date().toISOString(),
+            runnerId: runner.id,
+            time: data.passageDateTime.toString(),
             isHidden: false,
         });
 

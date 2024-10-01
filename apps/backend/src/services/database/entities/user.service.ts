@@ -1,20 +1,20 @@
 import { Injectable } from "@nestjs/common";
 import { eq } from "drizzle-orm";
-import { user } from "drizzle/schema";
+import { TABLE_USER } from "drizzle/schema";
 import { User } from "src/types/User";
 import { EntityService } from "../entity.service";
 
 @Injectable()
 export class UserService extends EntityService {
     async getUsers(): Promise<User[]> {
-        return await this.db.query.user.findMany();
+        return await this.db.query.TABLE_USER.findMany();
     }
 
     async getUserById(userId: number): Promise<User | null> {
         const users = await this.db
             .select()
-            .from(user)
-            .where(eq(user.id, userId));
+            .from(TABLE_USER)
+            .where(eq(TABLE_USER.id, userId));
 
         return this.getUniqueResult(users);
     }
@@ -22,19 +22,32 @@ export class UserService extends EntityService {
     async getUserByUsername(username: string): Promise<User | null> {
         const users = await this.db
             .select()
-            .from(user)
-            .where(eq(user.username, username));
+            .from(TABLE_USER)
+            .where(eq(TABLE_USER.username, username));
 
         return this.getUniqueResult(users);
     }
 
     async createUser(userData: Omit<User, "id">): Promise<User> {
-        await this.db.insert(user).values(userData);
+        const result = await this.db
+            .insert(TABLE_USER)
+            .values(userData)
+            .$returningId();
 
-        const newUser = await this.getUserByUsername(userData.username);
+        const userId = this.getUniqueResult(result)?.id;
+
+        if (userId === undefined) {
+            throw new Error(
+                "Failed to insert a runner in database (no ID returned)",
+            );
+        }
+
+        const newUser = await this.getUserById(userId);
 
         if (!newUser) {
-            throw new Error("Failed to insert a user in database");
+            throw new Error(
+                `Failed to get created user data in database (created user ID: ${userId})`,
+            );
         }
 
         return newUser;
@@ -45,9 +58,9 @@ export class UserService extends EntityService {
         newUserData: Partial<Omit<User, "id">>,
     ): Promise<User> {
         const [resultSetHeader] = await this.db
-            .update(user)
+            .update(TABLE_USER)
             .set(newUserData)
-            .where(eq(user.id, userId));
+            .where(eq(TABLE_USER.id, userId));
 
         if (resultSetHeader.affectedRows === 0) {
             throw new Error(`User with ID ${userId} not found in database`);
@@ -57,7 +70,7 @@ export class UserService extends EntityService {
 
         if (!newUser) {
             throw new Error(
-                `Failed to get updated user data from database (updated user ID: ${userId}`,
+                `Failed to get updated user data from database (updated user ID: ${userId})`,
             );
         }
 

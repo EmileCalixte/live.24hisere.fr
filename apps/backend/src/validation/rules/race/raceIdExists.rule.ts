@@ -16,7 +16,7 @@ export class RaceIdExistsRule implements ValidatorConstraintInterface {
             return false;
         }
 
-        const race = await this.raceService.getRace({ id: value });
+        const race = await this.raceService.getRaceById(value);
 
         return !!race;
     }
