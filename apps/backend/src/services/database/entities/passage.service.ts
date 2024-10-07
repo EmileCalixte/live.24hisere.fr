@@ -7,7 +7,6 @@ import {
     Passage,
     PublicPassageOfRunner,
 } from "src/types/Passage";
-import { fixDrizzleDates } from "src/utils/drizzle.utils";
 import { EntityService } from "../entity.service";
 
 @Injectable()
@@ -18,9 +17,7 @@ export class PassageService extends EntityService {
             .from(TABLE_PASSAGE)
             .where(eq(TABLE_PASSAGE.id, passageId));
 
-        const passage = this.getUniqueResult(passages);
-
-        return passage ? fixDrizzleDates(passage) : null;
+        return this.getUniqueResult(passages);
     }
 
     async getPassageByDetectionId(
@@ -31,41 +28,33 @@ export class PassageService extends EntityService {
             .from(TABLE_PASSAGE)
             .where(eq(TABLE_PASSAGE.detectionId, detectionId));
 
-        const passage = this.getUniqueResult(passages);
-
-        return passage ? fixDrizzleDates(passage) : null;
+        return this.getUniqueResult(passages);
     }
 
     async getAllPassages(): Promise<Passage[]> {
-        const passages = await this.db.query.TABLE_PASSAGE.findMany();
-
-        return fixDrizzleDates(passages);
+        return await this.db.query.TABLE_PASSAGE.findMany();
     }
 
     async getAllPublicPassages(): Promise<Passage[]> {
-        const passages = await this.db
+        return await this.db
             .select()
             .from(TABLE_PASSAGE)
             .where(eq(TABLE_PASSAGE.isHidden, false));
-
-        return fixDrizzleDates(passages);
     }
 
     async getAdminPassagesByRunnerId(
         runnerId: number,
     ): Promise<AdminPassageOfRunner[]> {
-        const passages = await this.db
+        return await this.db
             .select(this.getAdminPassageColumns())
             .from(TABLE_PASSAGE)
             .where(eq(TABLE_PASSAGE.runnerId, runnerId));
-
-        return fixDrizzleDates(passages);
     }
 
     async getPublicPassagesByRunnerId(
         runnerId: number,
     ): Promise<PublicPassageOfRunner[]> {
-        const passages = await this.db
+        return await this.db
             .select(this.getPublicPassageColumns())
             .from(TABLE_PASSAGE)
             .where(
@@ -74,8 +63,6 @@ export class PassageService extends EntityService {
                     eq(TABLE_PASSAGE.isHidden, false),
                 ),
             );
-
-        return fixDrizzleDates(passages);
     }
 
     async createPassage(passageData: Omit<Passage, "id">): Promise<Passage> {

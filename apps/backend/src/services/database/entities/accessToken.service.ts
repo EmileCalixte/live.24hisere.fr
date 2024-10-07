@@ -3,7 +3,6 @@ import { eq } from "drizzle-orm";
 import { TABLE_ACCESS_TOKEN } from "drizzle/schema";
 import { AccessToken } from "src/types/AccessToken";
 import { User } from "src/types/User";
-import { fixDrizzleDates } from "src/utils/drizzle.utils";
 import { HEXADECIMAL, RandomService } from "../../random.service";
 import { DrizzleService } from "../drizzle.service";
 import { EntityService } from "../entity.service";
@@ -27,9 +26,7 @@ export class AccessTokenService extends EntityService {
             .from(TABLE_ACCESS_TOKEN)
             .where(eq(TABLE_ACCESS_TOKEN.token, stringToken));
 
-        const token = this.getUniqueResult(accessTokens);
-
-        return token ? fixDrizzleDates(token) : null;
+        return this.getUniqueResult(accessTokens);
     }
 
     async createAccessTokenForUser(user: User): Promise<AccessToken> {
@@ -38,7 +35,7 @@ export class AccessTokenService extends EntityService {
         await this.db.insert(TABLE_ACCESS_TOKEN).values({
             userId: user.id,
             token: stringToken,
-            expirationDate: this.getTokenExpirationDateFromNow(),
+            expirationDate: this.getTokenExpirationDateFromNow().toISOString(),
         });
 
         const newAccessToken =

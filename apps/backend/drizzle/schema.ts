@@ -3,7 +3,6 @@ import {
     datetime,
     decimal,
     int,
-    MySqlDatetimeConfig,
     mysqlTable,
     varchar,
 } from "drizzle-orm/mysql-core";
@@ -16,10 +15,10 @@ const TABLE_NAME_RACE = "race";
 const TABLE_NAME_RUNNER = "runner";
 const TABLE_NAME_USER = "user";
 
-const DEFAULT_DATE_PARAMS: MySqlDatetimeConfig = {
+const DEFAULT_DATE_PARAMS = {
     fsp: 0,
     mode: "string", // To get dates as string instead of Date objects
-};
+} as const;
 
 export const TABLE_CONFIG = mysqlTable(TABLE_NAME_CONFIG, {
     key: varchar("key", { length: 255 }).primaryKey(),

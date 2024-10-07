@@ -7,7 +7,6 @@ import {
     PublicRaceWithRunnerCount,
     Race,
 } from "src/types/Race";
-import { fixDrizzleDates } from "src/utils/drizzle.utils";
 import { EntityService } from "../entity.service";
 
 @Injectable()
@@ -18,9 +17,7 @@ export class RaceService extends EntityService {
             .from(TABLE_RACE)
             .where(eq(TABLE_RACE.id, raceId));
 
-        const race = this.getUniqueResult(races);
-
-        return race ? fixDrizzleDates(race) : null;
+        return this.getUniqueResult(races);
     }
 
     async getRaceByName(raceName: string): Promise<Race | null> {
@@ -29,13 +26,11 @@ export class RaceService extends EntityService {
             .from(TABLE_RACE)
             .where(eq(TABLE_RACE.name, raceName));
 
-        const race = this.getUniqueResult(races);
-
-        return race ? fixDrizzleDates(race) : null;
+        return this.getUniqueResult(races);
     }
 
     async getAdminRaces(): Promise<AdminRaceWithRunnerCount[]> {
-        const races = await this.db
+        return await this.db
             .select({
                 ...this.getAdminRaceColumns(),
                 runnerCount: count(TABLE_RUNNER.id),
@@ -44,8 +39,6 @@ export class RaceService extends EntityService {
             .leftJoin(TABLE_RUNNER, eq(TABLE_RUNNER.raceId, TABLE_RACE.id))
             .groupBy(TABLE_RACE.id)
             .where(eq(TABLE_RACE.isPublic, true));
-
-        return fixDrizzleDates(races);
     }
 
     async getAdminRaceById(
@@ -61,13 +54,11 @@ export class RaceService extends EntityService {
             .groupBy(TABLE_RACE.id)
             .where(eq(TABLE_RACE.id, raceId));
 
-        const race = this.getUniqueResult(races);
-
-        return race ? fixDrizzleDates(race) : null;
+        return this.getUniqueResult(races);
     }
 
     async getPublicRaces(): Promise<PublicRaceWithRunnerCount[]> {
-        const races = await this.db
+        return await this.db
             .select({
                 ...this.getPublicRaceColumns(),
                 runnerCount: count(TABLE_RUNNER.id),
@@ -76,8 +67,6 @@ export class RaceService extends EntityService {
             .leftJoin(TABLE_RUNNER, eq(TABLE_RUNNER.raceId, TABLE_RACE.id))
             .groupBy(TABLE_RACE.id)
             .where(eq(TABLE_RACE.isPublic, true));
-
-        return fixDrizzleDates(races);
     }
 
     async getPublicRaceById(
@@ -95,9 +84,7 @@ export class RaceService extends EntityService {
                 and(eq(TABLE_RACE.id, raceId), eq(TABLE_RACE.isPublic, true)),
             );
 
-        const race = this.getUniqueResult(races);
-
-        return race ? fixDrizzleDates(race) : null;
+        return this.getUniqueResult(races);
     }
 
     async createRace(raceData: Omit<Race, "id">): Promise<Race> {
