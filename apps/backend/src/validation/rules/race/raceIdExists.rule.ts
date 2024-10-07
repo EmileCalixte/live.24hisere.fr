@@ -4,7 +4,7 @@ import {
     ValidatorConstraint,
     ValidatorConstraintInterface,
 } from "class-validator";
-import { RaceService } from "src/services/database/entities/race.service";
+import { RaceService } from "../../../services/database/entities/race.service";
 
 @Injectable()
 @ValidatorConstraint({ name: "RaceExists", async: true })

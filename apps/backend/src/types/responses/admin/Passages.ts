@@ -1,4 +1,4 @@
-import { Passage } from "src/types/Passage";
+import { Passage } from "../../Passage";
 
 export interface PassagesResponse {
     passages: Passage[];

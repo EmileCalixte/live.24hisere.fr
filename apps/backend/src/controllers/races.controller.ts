@@ -5,8 +5,8 @@ import {
     NotFoundException,
     Param,
 } from "@nestjs/common";
-import { RaceService } from "src/services/database/entities/race.service";
-import { RaceResponse, RacesResponse } from "src/types/responses/Races";
+import { RaceService } from "../services/database/entities/race.service";
+import { RaceResponse, RacesResponse } from "../types/responses/Races";
 
 @Controller()
 export class RacesController {

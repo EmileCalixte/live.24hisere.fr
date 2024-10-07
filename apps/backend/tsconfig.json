@@ -6,7 +6,6 @@
     "experimentalDecorators": true,
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./",
     "noEmit": false
   },
   "include": [

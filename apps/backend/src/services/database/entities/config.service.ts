@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { eq } from "drizzle-orm";
-import { TABLE_CONFIG } from "drizzle/schema";
-import { Config } from "src/types/Config";
+import { TABLE_CONFIG } from "../../../../drizzle/schema";
+import { Config } from "../../../types/Config";
 import { booleanToString, stringToBoolean } from "../../../utils/db.utils";
 import { EntityService } from "../entity.service";
 

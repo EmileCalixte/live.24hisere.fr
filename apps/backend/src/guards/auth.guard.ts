@@ -5,8 +5,8 @@ import {
     Injectable,
 } from "@nestjs/common";
 import { Request } from "express";
-import { User } from "src/types/User";
 import { AuthService } from "../services/auth.service";
+import { User } from "../types/User";
 
 const ACCESS_TOKEN_MUST_BE_PROVIDED_MESSAGE = "Access token must be provided";
 

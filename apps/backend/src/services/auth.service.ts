@@ -4,8 +4,8 @@ import {
     InternalServerErrorException,
     UnauthorizedException,
 } from "@nestjs/common";
-import { AccessToken } from "src/types/AccessToken";
-import { User } from "src/types/User";
+import { AccessToken } from "../types/AccessToken";
+import { User } from "../types/User";
 import { AccessTokenService } from "./database/entities/accessToken.service";
 import { UserService } from "./database/entities/user.service";
 import { PasswordService } from "./password.service";

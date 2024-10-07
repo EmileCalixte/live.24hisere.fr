@@ -3,12 +3,12 @@ import { Injectable } from "@nestjs/common";
 import { SchedulerRegistry } from "@nestjs/schedule";
 import { AxiosError } from "axios";
 import { catchError, firstValueFrom } from "rxjs";
-import { DagFileService } from "src/services/dagFile.service";
-import { ConfigService } from "src/services/database/entities/config.service";
-import { PassageService } from "src/services/database/entities/passage.service";
-import { DagFileLineData } from "src/types/Dag";
+import { DagFileService } from "../services/dagFile.service";
+import { ConfigService } from "../services/database/entities/config.service";
 import { MiscService } from "../services/database/entities/misc.service";
+import { PassageService } from "../services/database/entities/passage.service";
 import { RunnerService } from "../services/database/entities/runner.service";
+import { DagFileLineData } from "../types/Dag";
 import { TaskService } from "./taskService";
 
 @Injectable()

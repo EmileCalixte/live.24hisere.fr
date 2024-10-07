@@ -1,12 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import { and, eq, getTableColumns } from "drizzle-orm";
-import { TABLE_PASSAGE } from "drizzle/schema";
-import { DrizzleTableColumns } from "src/types/misc/Drizzle";
+import { TABLE_PASSAGE } from "../../../../drizzle/schema";
+import { DrizzleTableColumns } from "../../../types/misc/Drizzle";
 import {
     AdminPassageOfRunner,
     Passage,
     PublicPassageOfRunner,
-} from "src/types/Passage";
+} from "../../../types/Passage";
 import { EntityService } from "../entity.service";
 
 @Injectable()

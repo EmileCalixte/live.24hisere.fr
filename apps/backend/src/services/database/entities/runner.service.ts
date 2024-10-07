@@ -1,15 +1,19 @@
 import { Injectable } from "@nestjs/common";
 import { eq, getTableColumns } from "drizzle-orm";
-import { TABLE_PASSAGE, TABLE_RACE, TABLE_RUNNER } from "drizzle/schema";
-import { PassageService } from "src/services/database/entities/passage.service";
+import {
+    TABLE_PASSAGE,
+    TABLE_RACE,
+    TABLE_RUNNER,
+} from "../../../../drizzle/schema";
 import {
     AdminRunnerWithPassages,
     PublicRunnerWithPassages,
     Runner,
-} from "src/types/Runner";
-import { assignDefined } from "src/utils/object.utils";
+} from "../../../types/Runner";
+import { assignDefined } from "../../../utils/object.utils";
 import { DrizzleService } from "../drizzle.service";
 import { EntityService } from "../entity.service";
+import { PassageService } from "./passage.service";
 
 @Injectable()
 export class RunnerService extends EntityService {
@@ -73,8 +77,11 @@ export class RunnerService extends EntityService {
             .where(eq(TABLE_RUNNER.raceId, raceId));
 
         const runnerPassages = await Promise.all(
-            runners.map((runner) =>
-                this.passageService.getPublicPassagesByRunnerId(runner.id),
+            runners.map(
+                async (runner) =>
+                    await this.passageService.getPublicPassagesByRunnerId(
+                        runner.id,
+                    ),
             ),
         );
 

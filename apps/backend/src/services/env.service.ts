@@ -1,5 +1,5 @@
 import { Injectable, Logger, OnModuleInit } from "@nestjs/common";
-import { NODE_ENV_PRODUCTION } from "src/constants/env.constants";
+import { NODE_ENV_PRODUCTION } from "../constants/env.constants";
 
 const REQUIRED_ENVIRONMENT_VARIABLES = [
     "TZ",
