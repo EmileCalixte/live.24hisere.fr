@@ -1,4 +1,5 @@
-import { mysqlTable } from "drizzle-orm/mysql-core";
+import { customType, mysqlTable } from "drizzle-orm/mysql-core";
+import { isDateValid } from "../src/utils/date.utils";
 
 const TABLE_NAME_ACCESS_TOKEN = "access_token";
 const TABLE_NAME_CONFIG = "config";
@@ -10,8 +11,36 @@ const TABLE_NAME_USER = "user";
 
 const DEFAULT_DATE_PARAMS = {
     fsp: 0,
-    mode: "string", // To get dates as string instead of Date objects
 } as const;
+
+/**
+ * A custom date type that handles dates in ISO 8601 format instead of default YYYY-MM-DD hh:mm:ss
+ */
+const date = customType<{
+    data: string;
+    driverData: string;
+    config: { fsp: number };
+}>({
+    dataType(config) {
+        const precision = config?.fsp !== undefined ? `(${config.fsp})` : "";
+        return `datetime${precision}`;
+    },
+    toDriver(value) {
+        // TODO test this
+
+        const date = new Date(value);
+
+        if (!isDateValid(date)) {
+            throw new Error(`${value} is not a valid date string`);
+        }
+
+        return date.toISOString();
+    },
+    fromDriver(value) {
+        // Map YYYY-MM-DD hh:mm:ss to ISO 8601 format (e.g.: 2024-04-06 09:00:03 => 2024-04-06T09:00:03.000Z)
+        return new Date(value).toISOString();
+    },
+});
 
 export const TABLE_CONFIG = mysqlTable(TABLE_NAME_CONFIG, (t) => ({
     key: t.varchar({ length: 255 }).primaryKey(),
@@ -26,7 +55,7 @@ export const TABLE_MISC = mysqlTable(TABLE_NAME_MISC, (t) => ({
 export const TABLE_RACE = mysqlTable(TABLE_NAME_RACE, (t) => ({
     id: t.int().primaryKey().autoincrement(),
     name: t.varchar({ length: 50 }).notNull().unique(),
-    startTime: t.datetime(DEFAULT_DATE_PARAMS).notNull(),
+    startTime: date(DEFAULT_DATE_PARAMS).notNull(),
     duration: t.int({ unsigned: true }).notNull(),
     initialDistance: t.decimal({ precision: 10, scale: 3 }).notNull(),
     lapDistance: t.decimal({ precision: 10, scale: 3 }).notNull(),
@@ -50,12 +79,12 @@ export const TABLE_RUNNER = mysqlTable(TABLE_NAME_RUNNER, (t) => ({
 export const TABLE_PASSAGE = mysqlTable(TABLE_NAME_PASSAGE, (t) => ({
     id: t.int().primaryKey().autoincrement(),
     detectionId: t.int().unique(), // Not null if the passage comes from a detection of the timing system
-    importTime: t.datetime(DEFAULT_DATE_PARAMS), // same
+    importTime: date(DEFAULT_DATE_PARAMS), // same
     runnerId: t
         .int()
         .references(() => TABLE_RUNNER.id)
         .notNull(),
-    time: t.datetime(DEFAULT_DATE_PARAMS).notNull(),
+    time: date(DEFAULT_DATE_PARAMS).notNull(),
     isHidden: t.boolean().notNull(),
 }));
 
@@ -71,5 +100,5 @@ export const TABLE_ACCESS_TOKEN = mysqlTable(TABLE_NAME_ACCESS_TOKEN, (t) => ({
         .int()
         .references(() => TABLE_USER.id)
         .notNull(),
-    expirationDate: t.datetime(DEFAULT_DATE_PARAMS).notNull(),
+    expirationDate: date(DEFAULT_DATE_PARAMS).notNull(),
 }));
