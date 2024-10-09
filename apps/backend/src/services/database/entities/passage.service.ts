@@ -68,7 +68,6 @@ export class PassageService extends EntityService {
     async createPassage(passageData: Omit<Passage, "id">): Promise<Passage> {
         const result = await this.db
             .insert(TABLE_PASSAGE)
-            // @ts-ignore Wrong date type (Drizzle bug)
             .values(passageData)
             .$returningId();
 
@@ -97,7 +96,6 @@ export class PassageService extends EntityService {
     ): Promise<Passage> {
         const [resultSetHeader] = await this.db
             .update(TABLE_PASSAGE)
-            // @ts-ignore Wrong date type (Drizzle bug)
             .set(newPassageData)
             .where(eq(TABLE_PASSAGE.id, passageId));
 

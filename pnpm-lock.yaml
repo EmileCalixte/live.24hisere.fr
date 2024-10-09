@@ -113,6 +113,9 @@ importers:
       rxjs:
         specifier: ^7.2.0
         version: 7.8.1
+      type-fest:
+        specifier: ^4.26.1
+        version: 4.26.1
     devDependencies:
       '@nestjs/cli':
         specifier: ^10.4.5
@@ -141,6 +144,9 @@ importers:
       jest:
         specifier: 29.7.0
         version: 29.7.0(@types/node@20.16.5)(ts-node@10.9.2(@swc/core@1.6.6)(@types/node@20.16.5)(typescript@5.6.2))
+      jest-extended:
+        specifier: ^4.0.2
+        version: 4.0.2(jest@29.7.0(@types/node@20.16.5)(ts-node@10.9.2(@swc/core@1.6.6)(@types/node@20.16.5)(typescript@5.6.2)))
       prettier:
         specifier: ^3.3.3
         version: 3.3.3
@@ -3494,6 +3500,15 @@ packages:
     resolution: {integrity: sha512-DOSwCRqXirTOyheM+4d5YZOrWcdu0LNZ87ewUoywbcb2XR4wKgqiG8vNeYwhjFMbEkfju7wx2GYH0P2gevGvFw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
 
+  jest-extended@4.0.2:
+    resolution: {integrity: sha512-FH7aaPgtGYHc9mRjriS0ZEHYM5/W69tLrFTIdzm+yJgeoCmmrSB/luSfMSqWP9O29QWHPEmJ4qmU6EwsZideog==}
+    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
+    peerDependencies:
+      jest: '>=27.2.5'
+    peerDependenciesMeta:
+      jest:
+        optional: true
+
   jest-get-type@29.6.3:
     resolution: {integrity: sha512-zrteXnqYxfQh7l5FHyL38jL39di8H8rHoecLH3JNxH3BwOrBsNeabdap5e0I23lD4HHI8W5VFBZqG4Eaq5LNcw==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -4861,6 +4876,10 @@ packages:
   type-fest@0.21.3:
     resolution: {integrity: sha512-t0rzBq87m3fVcduHDUFhKmyyX+9eo6WQjZvf51Ea/M0Q7+T374Jp1aUiyUl0GKxp8M/OETVHSDvmkyPgvX+X2w==}
     engines: {node: '>=10'}
+
+  type-fest@4.26.1:
+    resolution: {integrity: sha512-yOGpmOAL7CkKe/91I5O3gPICmJNLJ1G4zFYVAsRHg7M64biSnPtRj0WNQt++bRkjYOqjWXrhnUw1utzmVErAdg==}
+    engines: {node: '>=16'}
 
   type-is@1.6.18:
     resolution: {integrity: sha512-TkRKr9sUTxEH8MdfuCSP7VizJyzRNMjj2J2do2Jr3Kym598JVdEksuzPQCnlFPW4ky9Q+iA+ma9BGm06XQBy8g==}
@@ -8711,6 +8730,13 @@ snapshots:
       jest-mock: 29.7.0
       jest-util: 29.7.0
 
+  jest-extended@4.0.2(jest@29.7.0(@types/node@20.16.5)(ts-node@10.9.2(@swc/core@1.6.6)(@types/node@20.16.5)(typescript@5.6.2))):
+    dependencies:
+      jest-diff: 29.7.0
+      jest-get-type: 29.6.3
+    optionalDependencies:
+      jest: 29.7.0(@types/node@20.16.5)(ts-node@10.9.2(@swc/core@1.6.6)(@types/node@20.16.5)(typescript@5.6.2))
+
   jest-get-type@29.6.3: {}
 
   jest-haste-map@29.7.0:
@@ -10202,6 +10228,8 @@ snapshots:
   type-fest@0.20.2: {}
 
   type-fest@0.21.3: {}
+
+  type-fest@4.26.1: {}
 
   type-is@1.6.18:
     dependencies:

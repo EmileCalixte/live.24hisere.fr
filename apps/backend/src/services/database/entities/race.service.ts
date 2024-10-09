@@ -90,7 +90,6 @@ export class RaceService extends EntityService {
     async createRace(raceData: Omit<Race, "id">): Promise<Race> {
         const result = await this.db
             .insert(TABLE_RACE)
-            // @ts-ignore Wrong date type (Drizzle bug)
             .values(raceData)
             .$returningId();
 
@@ -119,7 +118,6 @@ export class RaceService extends EntityService {
     ): Promise<AdminRaceWithRunnerCount> {
         const [resultSetHeader] = await this.db
             .update(TABLE_RACE)
-            // @ts-ignore Wrong date type (Drizzle bug)
             .set(newRaceData)
             .where(eq(TABLE_RACE.id, raceId));
 

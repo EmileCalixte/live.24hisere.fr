@@ -1,3 +1,5 @@
+import { Entries } from "type-fest";
+
 export function assignDefined<T extends object>(
     target: T,
     ...sources: Array<Partial<T>>
@@ -15,4 +17,11 @@ export function assignDefined<T extends object>(
     }
 
     return newTarget;
+}
+
+/**
+ * Alternative to Object.entries which infers entries type
+ */
+export function entries<T extends object>(object: T): Entries<T> {
+    return Object.entries(object) as Entries<T>;
 }
