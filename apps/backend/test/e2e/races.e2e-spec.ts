@@ -4,10 +4,13 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { Race } from "../../src/types/Race";
 import { initApp } from "./_init";
 import { ISO8601_DATE_REGEX } from "./constants/dates";
-import { ERROR_MESSAGE_RACE_NOT_FOUND } from "./constants/errors";
-import { notFoundBody } from "./utils/errors";
+import {
+    ERROR_MESSAGE_RACE_ID_MUST_BE_NUMBER,
+    ERROR_MESSAGE_RACE_NOT_FOUND,
+} from "./constants/errors";
+import { badRequestBody, notFoundBody } from "./utils/errors";
 
-describe("RaceController (e2e)", () => {
+describe("RacesController (e2e)", () => {
     let app: INestApplication;
 
     beforeEach(async () => {
@@ -53,17 +56,24 @@ describe("RaceController (e2e)", () => {
     });
 
     it("Get a race (GET /races/{id})", async () => {
-        const [response, nonPublicResponse, notFoundResponse] =
-            await Promise.all([
-                // Get existing public race
-                request(app.getHttpServer()).get("/races/1"),
+        const [
+            response,
+            nonPublicResponse,
+            notFoundResponse,
+            invalidIdResponse,
+        ] = await Promise.all([
+            // Get existing public race
+            request(app.getHttpServer()).get("/races/1"),
 
-                // Get non-public race
-                request(app.getHttpServer()).get("/races/5"),
+            // Get non-public race
+            request(app.getHttpServer()).get("/races/5"),
 
-                // Get non-existing race
-                request(app.getHttpServer()).get("/races/10"),
-            ]);
+            // Get non-existing race
+            request(app.getHttpServer()).get("/races/10"),
+
+            // Invalid ID format
+            request(app.getHttpServer()).get("/races/invalid"),
+        ]);
 
         expect(response.statusCode).toBe(HttpStatus.OK);
 
@@ -99,5 +109,13 @@ describe("RaceController (e2e)", () => {
 
             expect(json).toEqual(notFoundBody(ERROR_MESSAGE_RACE_NOT_FOUND));
         }
+
+        expect(invalidIdResponse.statusCode).toBe(HttpStatus.BAD_REQUEST);
+
+        const invalidIdJson = JSON.parse(invalidIdResponse.text);
+
+        expect(invalidIdJson).toEqual(
+            badRequestBody(ERROR_MESSAGE_RACE_ID_MUST_BE_NUMBER),
+        );
     });
 });

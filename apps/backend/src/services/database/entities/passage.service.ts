@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { and, eq, getTableColumns } from "drizzle-orm";
+import { and, asc, eq, getTableColumns } from "drizzle-orm";
 import { TABLE_PASSAGE } from "../../../../drizzle/schema";
 import { DrizzleTableColumns } from "../../../types/misc/Drizzle";
 import {
@@ -32,14 +32,17 @@ export class PassageService extends EntityService {
     }
 
     async getAllPassages(): Promise<Passage[]> {
-        return await this.db.query.TABLE_PASSAGE.findMany();
+        return await this.db.query.TABLE_PASSAGE.findMany({
+            orderBy: [asc(TABLE_PASSAGE.time)],
+        });
     }
 
     async getAllPublicPassages(): Promise<Passage[]> {
         return await this.db
             .select()
             .from(TABLE_PASSAGE)
-            .where(eq(TABLE_PASSAGE.isHidden, false));
+            .where(eq(TABLE_PASSAGE.isHidden, false))
+            .orderBy(asc(TABLE_PASSAGE.time));
     }
 
     async getAdminPassagesByRunnerId(
@@ -48,7 +51,8 @@ export class PassageService extends EntityService {
         return await this.db
             .select(this.getAdminPassageColumns())
             .from(TABLE_PASSAGE)
-            .where(eq(TABLE_PASSAGE.runnerId, runnerId));
+            .where(eq(TABLE_PASSAGE.runnerId, runnerId))
+            .orderBy(asc(TABLE_PASSAGE.time));
     }
 
     async getPublicPassagesByRunnerId(
@@ -62,7 +66,8 @@ export class PassageService extends EntityService {
                     eq(TABLE_PASSAGE.runnerId, runnerId),
                     eq(TABLE_PASSAGE.isHidden, false),
                 ),
-            );
+            )
+            .orderBy(asc(TABLE_PASSAGE.time));
     }
 
     async createPassage(passageData: Omit<Passage, "id">): Promise<Passage> {

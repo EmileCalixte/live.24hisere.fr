@@ -6,3 +6,4 @@ export const ERROR_MESSAGE_ACCESS_TOKEN_INVALID = "Access token is invalid";
 export const ERROR_MESSAGE_ACCESS_TOKEN_EXPIRED = "Access token has expired";
 
 export const ERROR_MESSAGE_RACE_NOT_FOUND = "Race not found";
+export const ERROR_MESSAGE_RACE_ID_MUST_BE_NUMBER = "Race ID must be a number";

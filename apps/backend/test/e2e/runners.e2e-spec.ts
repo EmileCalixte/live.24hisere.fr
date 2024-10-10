@@ -7,7 +7,7 @@ import { ISO8601_DATE_REGEX } from "./constants/dates";
 import { ERROR_MESSAGE_RACE_NOT_FOUND } from "./constants/errors";
 import { notFoundBody } from "./utils/errors";
 
-describe("RunnerController (e2e)", () => {
+describe("RunnersController (e2e)", () => {
     let app: INestApplication;
 
     beforeEach(async () => {
@@ -92,12 +92,27 @@ describe("RunnerController (e2e)", () => {
             expect(runner.raceId).toBeNumber();
             expect(runner.passages).toBeArray();
 
+            let previousPassageTime: Date | null = null;
+
             for (const passage of runner.passages) {
                 expect(passage).toContainAllKeys(["id", "time"]);
 
                 expect(passage.id).toBeNumber();
                 expect(passage.time).toBeDateString();
                 expect(passage.time).toMatch(ISO8601_DATE_REGEX);
+
+                const passageTime = new Date(passage.time);
+
+                if (
+                    previousPassageTime !== null &&
+                    previousPassageTime.getTime() > passageTime.getTime()
+                ) {
+                    throw new Error(
+                        `Passages are not ordered by time (passage time: ${passageTime.toISOString()}, previous passage time: ${previousPassageTime.toISOString()}`,
+                    );
+                }
+
+                previousPassageTime = passageTime;
             }
         }
 
