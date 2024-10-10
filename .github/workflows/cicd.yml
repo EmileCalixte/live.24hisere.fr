@@ -37,10 +37,6 @@ jobs:
       - name: Install JS dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Generate Prisma client
-        run: pnpm prisma generate
-        working-directory: ./apps/backend
-
       - name: Run ESLint
         run: pnpm lint
 

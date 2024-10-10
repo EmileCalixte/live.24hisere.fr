@@ -1,55 +1,83 @@
 import { Injectable } from "@nestjs/common";
-import { AccessToken, Prisma, User } from "@prisma/client";
+import { eq } from "drizzle-orm";
+import { TABLE_ACCESS_TOKEN } from "../../../../drizzle/schema";
+import { AccessToken } from "../../../types/AccessToken";
+import { User } from "../../../types/User";
 import { HEXADECIMAL, RandomService } from "../../random.service";
-import { PrismaService } from "../prisma.service";
+import { DrizzleService } from "../drizzle.service";
+import { EntityService } from "../entity.service";
 
 export const ACCESS_TOKEN_LIFETIME = 4 * 60 * 60 * 1000;
 
 @Injectable()
-export class AccessTokenService {
+export class AccessTokenService extends EntityService {
     constructor(
-        private readonly prisma: PrismaService,
+        drizzleService: DrizzleService,
         private readonly randomService: RandomService,
-    ) {}
+    ) {
+        super(drizzleService);
+    }
 
-    async getAccessToken(
-        accessTokenWhereUniqueInput: Prisma.AccessTokenWhereUniqueInput,
+    async getAccessTokenByStringToken(
+        stringToken: string,
     ): Promise<AccessToken | null> {
-        return await this.prisma.accessToken.findUnique({
-            where: accessTokenWhereUniqueInput,
+        const accessTokens = await this.db
+            .select()
+            .from(TABLE_ACCESS_TOKEN)
+            .where(eq(TABLE_ACCESS_TOKEN.token, stringToken));
+
+        return this.getUniqueResult(accessTokens);
+    }
+
+    async createAccessTokenForUser(user: User): Promise<AccessToken> {
+        const stringToken = this.randomService.getRandomString(32, HEXADECIMAL);
+
+        await this.db.insert(TABLE_ACCESS_TOKEN).values({
+            userId: user.id,
+            token: stringToken,
+            expirationDate: this.getTokenExpirationDateFromNow().toISOString(),
         });
+
+        const newAccessToken =
+            await this.getAccessTokenByStringToken(stringToken);
+
+        if (!newAccessToken) {
+            throw new Error("Failed to insert an access token in database");
+        }
+
+        return newAccessToken;
     }
 
-    async createAccessToken(user: User): Promise<AccessToken> {
-        return await this.prisma.accessToken.create({
-            data: {
-                userId: user.id,
-                token: this.randomService.getRandomString(32, HEXADECIMAL),
-                expirationDate: this.getTokenExpirationDateFromNow(),
-            },
-        });
+    /**
+     * Deletes an access token
+     * @param token The token to delete
+     * @returns true if the token was found and deleted, false otherwise
+     */
+    async deleteAccessTokenByStringToken(token: string): Promise<boolean> {
+        const [resultSetHeader] = await this.db
+            .delete(TABLE_ACCESS_TOKEN)
+            .where(eq(TABLE_ACCESS_TOKEN.token, token));
+
+        return !!resultSetHeader.affectedRows;
     }
 
-    async deleteAccessToken(
-        where: Prisma.AccessTokenWhereUniqueInput,
-    ): Promise<AccessToken> {
-        return await this.prisma.accessToken.delete({ where });
-    }
+    /**
+     * Deletes all access tokens of a user
+     * @param user The user
+     * @returns number of deleted access tokens
+     */
+    async deleteUserAccessTokens(user: User): Promise<number> {
+        const [resultSetHeader] = await this.db
+            .delete(TABLE_ACCESS_TOKEN)
+            .where(eq(TABLE_ACCESS_TOKEN.userId, user.id));
 
-    async deleteAccessTokens(
-        where: Prisma.AccessTokenWhereInput,
-    ): Promise<number> {
-        return (
-            await this.prisma.accessToken.deleteMany({
-                where,
-            })
-        ).count;
+        return resultSetHeader.affectedRows;
     }
 
     isAccessTokenExpired(accessToken: AccessToken): boolean {
         const now = new Date();
 
-        return now.getTime() > accessToken.expirationDate.getTime();
+        return now.getTime() > new Date(accessToken.expirationDate).getTime();
     }
 
     private getTokenExpirationDateFromNow(): Date {

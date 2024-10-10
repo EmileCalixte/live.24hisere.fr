@@ -1,11 +1,20 @@
-import { Passage } from "@prisma/client";
+import { DateISOString } from "./Date";
+
+export interface Passage {
+    id: number;
+    detectionId: number | null;
+    importTime: DateISOString | null;
+    runnerId: number;
+    time: DateISOString;
+    isHidden: boolean;
+}
 
 /**
  * Public data of a passage
  */
-export type PublicPassage = Pick<Passage, "id" | "time">;
+export type PublicPassageOfRunner = Pick<Passage, "id" | "time">;
 
 /**
  * Admin data of a runner's passage
  */
-export type AdminRunnerPassage = Omit<Passage, "runnerId">;
+export type AdminPassageOfRunner = Omit<Passage, "runnerId">;

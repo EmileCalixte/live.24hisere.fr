@@ -1,16 +1,16 @@
 import { Injectable } from "@nestjs/common";
-import { Config, Prisma } from "@prisma/client";
+import { eq } from "drizzle-orm";
+import { TABLE_CONFIG } from "../../../../drizzle/schema";
+import { Config } from "../../../types/Config";
 import { booleanToString, stringToBoolean } from "../../../utils/db.utils";
-import { PrismaService } from "../prisma.service";
+import { EntityService } from "../entity.service";
 
 const KEY_IMPORT_DAG_FILE_PATH = "import_dag_file_path";
 const KEY_IS_APP_ENABLED = "is_app_enabled";
 const KEY_DISABLED_APP_MESSAGE = "disabled_app_message";
 
 @Injectable()
-export class ConfigService {
-    constructor(private readonly prisma: PrismaService) {}
-
+export class ConfigService extends EntityService {
     public async getImportDagFilePath(): Promise<string | null> {
         const config = await this.getLine(KEY_IMPORT_DAG_FILE_PATH);
 
@@ -52,37 +52,48 @@ export class ConfigService {
         await this.saveLine(KEY_DISABLED_APP_MESSAGE, message);
     }
 
-    private async getLine(
-        key: NonNullable<Prisma.ConfigWhereUniqueInput["key"]>,
-    ): Promise<Config | null> {
-        return await this.prisma.config.findUnique({
-            where: { key },
-        });
+    private async getLine(key: string): Promise<Config | null> {
+        const configs = await this.db
+            .select()
+            .from(TABLE_CONFIG)
+            .where(eq(TABLE_CONFIG.key, key));
+
+        return this.getUniqueResult(configs);
     }
 
-    private async saveLine(
-        key: NonNullable<Prisma.ConfigWhereUniqueInput["key"]>,
-        value: Config["value"],
-    ): Promise<Config> {
-        return await this.prisma.config.upsert({
-            where: {
-                key,
-            },
-            update: {
-                value,
-            },
-            create: {
-                key,
-                value,
-            },
-        });
+    /**
+     * Updates a line or create it if it doesn't exist
+     * @param key The key of the line to save
+     * @param value The value to save
+     * @returns The created or updated line
+     */
+    private async saveLine(key: string, value: string): Promise<Config> {
+        await this.db
+            .insert(TABLE_CONFIG)
+            .values({ key, value })
+            .onDuplicateKeyUpdate({ set: { value } });
+
+        const newLine = await this.getLine(key);
+
+        if (!newLine) {
+            throw new Error(
+                `Failed to get updated config data from database (key: ${key})`,
+            );
+        }
+
+        return newLine;
     }
 
-    private async deleteLine(
-        key: NonNullable<Prisma.ConfigWhereUniqueInput["key"]>,
-    ): Promise<void> {
-        await this.prisma.config.delete({
-            where: { key },
-        });
+    /**
+     * Deletes a line
+     * @param key The key of the line to delete
+     * @returns true if the line was found and deleted, false otherwise
+     */
+    private async deleteLine(key: string): Promise<boolean> {
+        const [resultSetHeader] = await this.db
+            .delete(TABLE_CONFIG)
+            .where(eq(TABLE_CONFIG.key, key));
+
+        return !!resultSetHeader.affectedRows;
     }
 }

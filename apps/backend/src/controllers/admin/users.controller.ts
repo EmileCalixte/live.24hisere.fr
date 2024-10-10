@@ -49,12 +49,12 @@ export class UsersController {
             throw new BadRequestException("UserId must be a number");
         }
 
-        const user = await this.userService.getUser({ id });
+        const user = await this.userService.getUserById(id);
 
         if (!user) {
             throw new NotFoundException("Runner not found");
         }
 
-        await this.accessTokenService.deleteAccessTokens({ userId: id });
+        await this.accessTokenService.deleteUserAccessTokens(user);
     }
 }

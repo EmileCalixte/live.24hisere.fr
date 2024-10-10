@@ -4,9 +4,9 @@ import {
     ForbiddenException,
     Injectable,
 } from "@nestjs/common";
-import { User } from "@prisma/client";
 import { Request } from "express";
 import { AuthService } from "../services/auth.service";
+import { User } from "../types/User";
 
 const ACCESS_TOKEN_MUST_BE_PROVIDED_MESSAGE = "Access token must be provided";
 

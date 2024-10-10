@@ -2,6 +2,7 @@ import { HttpStatus, ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { useContainer } from "class-validator";
 import { AppModule } from "./app.module";
+import { NODE_ENV_DEVELOPMENT } from "./constants/env.constants";
 
 async function bootstrap(): Promise<void> {
     const app = await NestFactory.create(AppModule);
@@ -18,7 +19,7 @@ async function bootstrap(): Promise<void> {
     app.enableCors({
         methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
         origin:
-            process.env.NODE_ENV === "development"
+            process.env.NODE_ENV === NODE_ENV_DEVELOPMENT
                 ? "*"
                 : (process.env.FRONTEND_URL ?? " "),
         allowedHeaders: ["Authorization", "Content-Type"],

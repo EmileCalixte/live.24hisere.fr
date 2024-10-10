@@ -5,8 +5,8 @@ import {
     NotFoundException,
     Param,
 } from "@nestjs/common";
-import { RaceService } from "src/services/database/entities/race.service";
-import { RaceResponse, RacesResponse } from "src/types/responses/Races";
+import { RaceService } from "../services/database/entities/race.service";
+import { RaceResponse, RacesResponse } from "../types/responses/Races";
 
 @Controller()
 export class RacesController {
@@ -29,7 +29,7 @@ export class RacesController {
             throw new BadRequestException("Race ID must be a number");
         }
 
-        const race = await this.raceService.getPublicRace({ id });
+        const race = await this.raceService.getPublicRaceById(id);
 
         if (!race) {
             throw new NotFoundException("Race not found");

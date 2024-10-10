@@ -37,7 +37,7 @@ export class RunnerPassagesController {
             throw new BadRequestException("RunnerId must be a number");
         }
 
-        const runner = await this.runnerService.getRunner({ id });
+        const runner = await this.runnerService.getRunnerById(id);
 
         if (!runner) {
             throw new NotFoundException("Runner not found");
@@ -45,11 +45,9 @@ export class RunnerPassagesController {
 
         const passage = await this.passageService.createPassage({
             ...passageDto,
-            runner: {
-                connect: {
-                    id: runner.id,
-                },
-            },
+            runnerId: runner.id,
+            detectionId: null,
+            importTime: null,
         });
 
         return {
@@ -74,7 +72,7 @@ export class RunnerPassagesController {
             throw new BadRequestException("PassageId must be a number");
         }
 
-        const passage = await this.passageService.getPassage({ id: pId });
+        const passage = await this.passageService.getPassageById(pId);
 
         if (!passage || passage.runnerId !== rId) {
             throw new NotFoundException("Passage not found");
@@ -107,12 +105,12 @@ export class RunnerPassagesController {
             throw new BadRequestException("PassageId must be a number");
         }
 
-        const passage = await this.passageService.getPassage({ id: pId });
+        const passage = await this.passageService.getPassageById(pId);
 
         if (!passage || passage.runnerId !== rId) {
             throw new NotFoundException("Passage not found");
         }
 
-        await this.passageService.deletePassage({ id: pId });
+        await this.passageService.deletePassage(pId);
     }
 }

@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
-import { User } from "@prisma/client";
 import { Command, CommandRunner, InquirerService } from "nest-commander";
 import { UserService } from "../services/database/entities/user.service";
 import { PasswordService } from "../services/password.service";
+import { User } from "../types/User";
 import {
     CREATE_PASSWORD_QUESTION_SET,
     CreatePasswordInquiry,
@@ -39,7 +39,7 @@ export class UpdateUserPasswordCommand extends CommandRunner {
         const passwordHash =
             await this.passwordService.hashPassword(newPassword);
 
-        await this.userService.editUser(user, { passwordHash });
+        await this.userService.updateUser(user.id, { passwordHash });
 
         console.log("Password updated successfully");
     }
@@ -52,7 +52,7 @@ export class UpdateUserPasswordCommand extends CommandRunner {
                     undefined,
                 );
 
-            const user = await this.userService.getUser({ username });
+            const user = await this.userService.getUserByUsername(username);
 
             if (!user) {
                 console.log("User not found");
