@@ -106,9 +106,7 @@ describe("RunnerController (e2e)", () => {
 
             const json = JSON.parse(response.text);
 
-            expect(json).toContainAllEntries(
-                Object.entries(notFoundBody(ERROR_MESSAGE_RACE_NOT_FOUND)),
-            );
+            expect(json).toEqual(notFoundBody(ERROR_MESSAGE_RACE_NOT_FOUND));
         }
     });
 });

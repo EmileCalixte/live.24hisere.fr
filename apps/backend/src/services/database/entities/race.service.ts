@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { and, count, eq, getTableColumns, max } from "drizzle-orm";
+import { and, asc, count, eq, getTableColumns, max } from "drizzle-orm";
 import { TABLE_RACE, TABLE_RUNNER } from "../../../../drizzle/schema";
 import { DrizzleTableColumns } from "../../../types/misc/Drizzle";
 import {
@@ -37,8 +37,8 @@ export class RaceService extends EntityService {
             })
             .from(TABLE_RACE)
             .leftJoin(TABLE_RUNNER, eq(TABLE_RUNNER.raceId, TABLE_RACE.id))
-            .groupBy(TABLE_RACE.id)
-            .where(eq(TABLE_RACE.isPublic, true));
+            .orderBy(asc(TABLE_RACE.order))
+            .groupBy(TABLE_RACE.id);
     }
 
     async getAdminRaceById(
@@ -65,6 +65,7 @@ export class RaceService extends EntityService {
             })
             .from(TABLE_RACE)
             .leftJoin(TABLE_RUNNER, eq(TABLE_RUNNER.raceId, TABLE_RACE.id))
+            .orderBy(asc(TABLE_RACE.order))
             .groupBy(TABLE_RACE.id)
             .where(eq(TABLE_RACE.isPublic, true));
     }

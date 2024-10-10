@@ -65,10 +65,8 @@ describe("AuthController (e2e)", () => {
 
         const noAccessTokenJson = JSON.parse(noAccessTokenResponse.text);
 
-        expect(noAccessTokenJson).toContainAllEntries(
-            Object.entries(
-                forbiddenBody(ERROR_MESSAGE_ACCESS_TOKEN_NOT_PROVIDED),
-            ),
+        expect(noAccessTokenJson).toEqual(
+            forbiddenBody(ERROR_MESSAGE_ACCESS_TOKEN_NOT_PROVIDED),
         );
 
         for (const response of [unknownTokenResponse, expiredTokenResponse]) {
@@ -77,18 +75,14 @@ describe("AuthController (e2e)", () => {
 
         const unknownTokenJson = JSON.parse(unknownTokenResponse.text);
 
-        expect(unknownTokenJson).toContainAllEntries(
-            Object.entries(
-                unauthorizedBody(ERROR_MESSAGE_ACCESS_TOKEN_INVALID),
-            ),
+        expect(unknownTokenJson).toEqual(
+            unauthorizedBody(ERROR_MESSAGE_ACCESS_TOKEN_INVALID),
         );
 
         const expiredTokenJson = JSON.parse(expiredTokenResponse.text);
 
-        expect(expiredTokenJson).toContainAllEntries(
-            Object.entries(
-                unauthorizedBody(ERROR_MESSAGE_ACCESS_TOKEN_EXPIRED),
-            ),
+        expect(expiredTokenJson).toEqual(
+            unauthorizedBody(ERROR_MESSAGE_ACCESS_TOKEN_EXPIRED),
         );
     });
 
@@ -156,10 +150,8 @@ describe("AuthController (e2e)", () => {
 
             const json = JSON.parse(response.text);
 
-            expect(json).toContainAllEntries(
-                Object.entries(
-                    forbiddenBody(ERROR_MESSAGE_INVALID_CREDENTIALS),
-                ),
+            expect(json).toEqual(
+                forbiddenBody(ERROR_MESSAGE_INVALID_CREDENTIALS),
             );
         }
 
@@ -221,10 +213,8 @@ describe("AuthController (e2e)", () => {
 
             const json = JSON.parse(response.text);
 
-            expect(json).toContainAllEntries(
-                Object.entries(
-                    unauthorizedBody(ERROR_MESSAGE_ACCESS_TOKEN_INVALID),
-                ),
+            expect(json).toEqual(
+                unauthorizedBody(ERROR_MESSAGE_ACCESS_TOKEN_INVALID),
             );
         }
     });

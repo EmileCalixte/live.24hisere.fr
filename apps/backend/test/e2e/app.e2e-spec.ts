@@ -24,8 +24,8 @@ describe("AppDataController (e2e)", () => {
 
         const json = JSON.parse(response.text);
 
-        expect(json).toContainAllEntries(
-            Object.entries(notFoundBody("Cannot GET /this-route-doesnt-exist")),
+        expect(json).toEqual(
+            notFoundBody("Cannot GET /this-route-doesnt-exist"),
         );
     });
 

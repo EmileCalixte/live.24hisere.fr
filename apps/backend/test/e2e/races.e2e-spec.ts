@@ -1,6 +1,7 @@
 import { HttpStatus, INestApplication } from "@nestjs/common";
 import request from "supertest";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { Race } from "../../src/types/Race";
 import { initApp } from "./_init";
 import { ISO8601_DATE_REGEX } from "./constants/dates";
 import { ERROR_MESSAGE_RACE_NOT_FOUND } from "./constants/errors";
@@ -25,7 +26,6 @@ describe("RaceController (e2e)", () => {
         const json = JSON.parse(response.text);
 
         expect(json.races).toBeArray();
-        expect(json.races.length).toBe(4);
 
         for (const race of json.races) {
             expect(race).toContainAllKeys([
@@ -47,6 +47,9 @@ describe("RaceController (e2e)", () => {
             expect(race.lapDistance).toBeString();
             expect(race.runnerCount).toBeNumber();
         }
+
+        // Test races order and test that private race is not present
+        expect(json.races.map((race: Race) => race.id)).toEqual([1, 4, 3, 2]);
     });
 
     it("Get a race (GET /races/{id})", async () => {
@@ -94,9 +97,7 @@ describe("RaceController (e2e)", () => {
 
             const json = JSON.parse(response.text);
 
-            expect(json).toContainAllEntries(
-                Object.entries(notFoundBody(ERROR_MESSAGE_RACE_NOT_FOUND)),
-            );
+            expect(json).toEqual(notFoundBody(ERROR_MESSAGE_RACE_NOT_FOUND));
         }
     });
 });
