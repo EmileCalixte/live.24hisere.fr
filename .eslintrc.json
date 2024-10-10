@@ -35,12 +35,6 @@
                 // Type import of NestJS module dependencies break dependency injection
                 "@typescript-eslint/consistent-type-imports": ["error", { "prefer":"no-type-imports" }]
             }
-        },
-        {
-            "files": ["apps/backend/test/**/*.ts"],
-            "env": {
-                "jest": true
-            }
         }
     ],
     "rules": {

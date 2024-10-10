@@ -1,5 +1,6 @@
 import { HttpStatus, INestApplication } from "@nestjs/common";
 import request from "supertest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { initApp } from "./_init";
 import { ISO8601_DATE_REGEX } from "./constants/dates";
 import { ERROR_MESSAGE_RACE_NOT_FOUND } from "./constants/errors";
