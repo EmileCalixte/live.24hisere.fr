@@ -19,9 +19,9 @@ describe("RunnersController (e2e)", () => {
     });
 
     it("Get runner list (GET /runners)", async () => {
-        const response = await request(app.getHttpServer()).get("/runners");
-
-        expect(response.statusCode).toBe(HttpStatus.OK);
+        const response = await request(app.getHttpServer())
+            .get("/runners")
+            .expect(HttpStatus.OK);
 
         const json = JSON.parse(response.text);
 
@@ -54,16 +54,20 @@ describe("RunnersController (e2e)", () => {
         const [response, nonPublicResponse, notFoundResponse] =
             await Promise.all([
                 // Get runners of an existing public race
-                request(app.getHttpServer()).get("/races/1/runners"),
+                request(app.getHttpServer())
+                    .get("/races/1/runners")
+                    .expect(HttpStatus.OK),
 
                 // Get runners of a non-public race
-                request(app.getHttpServer()).get("/races/5/runners"),
+                request(app.getHttpServer())
+                    .get("/races/5/runners")
+                    .expect(HttpStatus.NOT_FOUND),
 
                 // Get runners of a non-existing race
-                request(app.getHttpServer()).get("/races/10/runners"),
+                request(app.getHttpServer())
+                    .get("/races/10/runners")
+                    .expect(HttpStatus.NOT_FOUND),
             ]);
-
-        expect(response.statusCode).toBe(HttpStatus.OK);
 
         const json = JSON.parse(response.text);
 
@@ -117,8 +121,6 @@ describe("RunnersController (e2e)", () => {
         }
 
         for (const response of [nonPublicResponse, notFoundResponse]) {
-            expect(response.statusCode).toBe(HttpStatus.NOT_FOUND);
-
             const json = JSON.parse(response.text);
 
             expect(json).toEqual(notFoundBody(ERROR_MESSAGE_RACE_NOT_FOUND));

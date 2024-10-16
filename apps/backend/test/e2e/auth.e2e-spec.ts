@@ -14,9 +14,9 @@ import {
     ERROR_MESSAGE_ACCESS_TOKEN_NOT_PROVIDED,
     ERROR_MESSAGE_INVALID_CREDENTIALS,
 } from "./constants/errors";
-import { forbiddenBody, unauthorizedBody } from "./utils/errors";
+import { unauthorizedBody } from "./utils/errors";
 
-describe("AuthController (e2e)", () => {
+describe("AuthController (e2e)", { concurrent: false }, () => {
     let app: INestApplication;
 
     beforeEach(async () => {
@@ -37,7 +37,8 @@ describe("AuthController (e2e)", () => {
             // Get current user info with valid access token
             request(app.getHttpServer())
                 .get("/auth/current-user-info")
-                .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
+                .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
+                .expect(HttpStatus.OK),
 
             // Get current user info without access token
             request(app.getHttpServer()).get("/auth/current-user-info"),
@@ -53,25 +54,25 @@ describe("AuthController (e2e)", () => {
                 .set("Authorization", EXPIRED_ADMIN_USER_ACCESS_TOKEN),
         ]);
 
-        expect(response.statusCode).toBe(HttpStatus.OK);
-
         const json = JSON.parse(response.text);
 
         expect(json.user).toContainAllKeys(["username"]);
 
         expect(json.user.username).toBe("Admin");
 
-        expect(noAccessTokenResponse.statusCode).toBe(HttpStatus.FORBIDDEN);
+        for (const response of [
+            noAccessTokenResponse,
+            unknownTokenResponse,
+            expiredTokenResponse,
+        ]) {
+            expect(response.statusCode).toBe(HttpStatus.UNAUTHORIZED);
+        }
 
         const noAccessTokenJson = JSON.parse(noAccessTokenResponse.text);
 
         expect(noAccessTokenJson).toEqual(
-            forbiddenBody(ERROR_MESSAGE_ACCESS_TOKEN_NOT_PROVIDED),
+            unauthorizedBody(ERROR_MESSAGE_ACCESS_TOKEN_NOT_PROVIDED),
         );
-
-        for (const response of [unknownTokenResponse, expiredTokenResponse]) {
-            expect(response.statusCode).toBe(HttpStatus.UNAUTHORIZED);
-        }
 
         const unknownTokenJson = JSON.parse(unknownTokenResponse.text);
 
@@ -86,7 +87,10 @@ describe("AuthController (e2e)", () => {
         );
     });
 
-    it("Login and logout (POST /auth/login - POST /auth/logout)", async () => {
+    let accessToken1: string;
+    let accessToken2: string;
+
+    it("Login (POST /auth/login)", async () => {
         const validCredentials = {
             username: "Test",
             password: "test",
@@ -146,19 +150,18 @@ describe("AuthController (e2e)", () => {
         }
 
         for (const response of [unknownUserResponse, invalidPasswordResponse]) {
-            expect(response.statusCode).toBe(HttpStatus.FORBIDDEN);
+            expect(response.statusCode).toBe(HttpStatus.UNAUTHORIZED);
 
             const json = JSON.parse(response.text);
 
             expect(json).toEqual(
-                forbiddenBody(ERROR_MESSAGE_INVALID_CREDENTIALS),
+                unauthorizedBody(ERROR_MESSAGE_INVALID_CREDENTIALS),
             );
         }
 
-        const [accessToken1, accessToken2] = [
-            loginResponse1,
-            loginResponse2,
-        ].map((response) => JSON.parse(response.text).accessToken);
+        [accessToken1, accessToken2] = [loginResponse1, loginResponse2].map(
+            (response) => JSON.parse(response.text).accessToken,
+        );
 
         const userInfoResponses = await Promise.all([
             request(app.getHttpServer())
@@ -172,7 +175,9 @@ describe("AuthController (e2e)", () => {
         for (const response of userInfoResponses) {
             expect(response.statusCode).toBe(HttpStatus.OK);
         }
+    });
 
+    it("Logout (POST /auth/logout)", async () => {
         // Send a logout request that deletes access token
         const logoutResponses = await Promise.all([
             request(app.getHttpServer())

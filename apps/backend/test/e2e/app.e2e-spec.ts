@@ -16,11 +16,9 @@ describe("AppDataController (e2e)", () => {
     });
 
     it("Get unknown route (GET /this-route-doesnt-exist)", async () => {
-        const response = await request(app.getHttpServer()).get(
-            "/this-route-doesnt-exist",
-        );
-
-        expect(response.statusCode).toBe(HttpStatus.NOT_FOUND);
+        const response = await request(app.getHttpServer())
+            .get("/this-route-doesnt-exist")
+            .expect(HttpStatus.NOT_FOUND);
 
         const json = JSON.parse(response.text);
 
@@ -30,9 +28,9 @@ describe("AppDataController (e2e)", () => {
     });
 
     it("Get app data (GET /app-data)", async () => {
-        const response = await request(app.getHttpServer()).get("/app-data");
-
-        expect(response.statusCode).toBe(HttpStatus.OK);
+        const response = await request(app.getHttpServer())
+            .get("/app-data")
+            .expect(HttpStatus.OK);
 
         const json = JSON.parse(response.text);
 

@@ -1,5 +1,4 @@
 import {
-    ForbiddenException,
     Injectable,
     InternalServerErrorException,
     UnauthorizedException,
@@ -27,7 +26,7 @@ export class AuthService {
         const user = await this.userService.getUserByUsername(username);
 
         if (!user) {
-            throw new ForbiddenException(INVALID_CREDENTIALS_MESSAGE);
+            throw new UnauthorizedException(INVALID_CREDENTIALS_MESSAGE);
         }
 
         const isPasswordVerified = await this.passwordService.verifyPassword(
@@ -36,7 +35,7 @@ export class AuthService {
         );
 
         if (!isPasswordVerified) {
-            throw new ForbiddenException(INVALID_CREDENTIALS_MESSAGE);
+            throw new UnauthorizedException(INVALID_CREDENTIALS_MESSAGE);
         }
 
         return await this.accessTokenService.createAccessTokenForUser(user);

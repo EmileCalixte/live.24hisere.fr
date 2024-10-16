@@ -19,13 +19,6 @@ export function unauthorizedBody(message: string): ErrorJson {
 }
 
 /**
- * Returns expected JSON for a 403 Forbidden error
- */
-export function forbiddenBody(message: string): ErrorJson {
-    return getErrorObject(message, "Forbidden", 403);
-}
-
-/**
  * Returns expected JSON for a 404 Not Found error
  */
 export function notFoundBody(message: string): ErrorJson {

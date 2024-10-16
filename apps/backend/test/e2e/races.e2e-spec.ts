@@ -27,9 +27,9 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
 
     describe("RacesController (e2e)", () => {
         it("Get race list (GET /races)", async () => {
-            const response = await request(app.getHttpServer()).get("/races");
-
-            expect(response.statusCode).toBe(HttpStatus.OK);
+            const response = await request(app.getHttpServer())
+                .get("/races")
+                .expect(HttpStatus.OK);
 
             const json = JSON.parse(response.text);
 
@@ -70,19 +70,25 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
                 invalidIdResponse,
             ] = await Promise.all([
                 // Get existing public race
-                request(app.getHttpServer()).get("/races/1"),
+                request(app.getHttpServer())
+                    .get("/races/1")
+                    .expect(HttpStatus.OK),
 
                 // Get non-public race
-                request(app.getHttpServer()).get("/races/5"),
+                request(app.getHttpServer())
+                    .get("/races/5")
+                    .expect(HttpStatus.NOT_FOUND),
 
                 // Get non-existing race
-                request(app.getHttpServer()).get("/races/10"),
+                request(app.getHttpServer())
+                    .get("/races/10")
+                    .expect(HttpStatus.NOT_FOUND),
 
                 // Invalid ID format
-                request(app.getHttpServer()).get("/races/invalid"),
+                request(app.getHttpServer())
+                    .get("/races/invalid")
+                    .expect(HttpStatus.BAD_REQUEST),
             ]);
-
-            expect(response.statusCode).toBe(HttpStatus.OK);
 
             const json = JSON.parse(response.text);
 
@@ -110,16 +116,12 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
             expect(race.runnerCount).toBeNumber();
 
             for (const response of [nonPublicResponse, notFoundResponse]) {
-                expect(response.statusCode).toBe(HttpStatus.NOT_FOUND);
-
                 const json = JSON.parse(response.text);
 
                 expect(json).toEqual(
                     notFoundBody(ERROR_MESSAGE_RACE_NOT_FOUND),
                 );
             }
-
-            expect(invalidIdResponse.statusCode).toBe(HttpStatus.BAD_REQUEST);
 
             const invalidIdJson = JSON.parse(invalidIdResponse.text);
 
@@ -143,9 +145,8 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
         it("Get race list (GET /admin/races)", async () => {
             const response = await request(app.getHttpServer())
                 .get("/admin/races")
-                .set("Authorization", ADMIN_USER_ACCESS_TOKEN);
-
-            expect(response.statusCode).toBe(HttpStatus.OK);
+                .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
+                .expect(HttpStatus.OK);
 
             const json = JSON.parse(response.text);
 
@@ -190,27 +191,29 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
                 // Get existing public race
                 request(app.getHttpServer())
                     .get("/admin/races/1")
-                    .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
+                    .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
+                    .expect(HttpStatus.OK),
 
                 // Get non-public race
                 request(app.getHttpServer())
                     .get("/admin/races/5")
-                    .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
+                    .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
+                    .expect(HttpStatus.OK),
 
                 // Get non-existing race
                 request(app.getHttpServer())
                     .get("/admin/races/10")
-                    .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
+                    .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
+                    .expect(HttpStatus.NOT_FOUND),
 
                 // Invalid ID format
                 request(app.getHttpServer())
                     .get("/admin/races/invalid")
-                    .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
+                    .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
+                    .expect(HttpStatus.BAD_REQUEST),
             ]);
 
             for (const response of [publicResponse, nonPublicResponse]) {
-                expect(response.statusCode).toBe(HttpStatus.OK);
-
                 const json = JSON.parse(response.text);
 
                 const race = json.race;
@@ -239,15 +242,11 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
                 expect(race.runnerCount).toBeNumber();
             }
 
-            expect(notFoundResponse.statusCode).toBe(HttpStatus.NOT_FOUND);
-
             const notFoundJson = JSON.parse(notFoundResponse.text);
 
             expect(notFoundJson).toEqual(
                 notFoundBody(ERROR_MESSAGE_RACE_NOT_FOUND),
             );
-
-            expect(invalidIdResponse.statusCode).toBe(HttpStatus.BAD_REQUEST);
 
             const invalidIdJson = JSON.parse(invalidIdResponse.text);
 
@@ -261,9 +260,8 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
                 const response = await request(app.getHttpServer())
                     .put("/admin/races-order")
                     .send([5, 1, 3, 4, 2])
-                    .set("Authorization", ADMIN_USER_ACCESS_TOKEN);
-
-                expect(response.statusCode).toBe(HttpStatus.NO_CONTENT);
+                    .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
+                    .expect(HttpStatus.NO_CONTENT);
 
                 expect(response.text).toBeEmpty();
 
@@ -284,9 +282,8 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
                 const response = await request(app.getHttpServer())
                     .put("/admin/races-order")
                     .send([1, 4, 3, 2])
-                    .set("Authorization", ADMIN_USER_ACCESS_TOKEN);
-
-                expect(response.statusCode).toBe(HttpStatus.NO_CONTENT);
+                    .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
+                    .expect(HttpStatus.NO_CONTENT);
 
                 expect(response.text).toBeEmpty();
 
@@ -472,9 +469,8 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
                 const response = await request(app.getHttpServer())
                     .post("/admin/races")
                     .send(raceToPost)
-                    .set("Authorization", ADMIN_USER_ACCESS_TOKEN);
-
-                expect(response.statusCode).toBe(HttpStatus.CREATED);
+                    .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
+                    .expect(HttpStatus.CREATED);
 
                 const json = JSON.parse(response.text);
 
@@ -506,9 +502,8 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
                 const response = await request(app.getHttpServer())
                     .post("/admin/races")
                     .send(raceToPost)
-                    .set("Authorization", ADMIN_USER_ACCESS_TOKEN);
-
-                expect(response.statusCode).toBe(HttpStatus.BAD_REQUEST);
+                    .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
+                    .expect(HttpStatus.BAD_REQUEST);
 
                 const json = JSON.parse(response.text);
 
@@ -554,9 +549,8 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
                     app.getHttpServer(),
                 )
                     .get(`/admin/races/${createdRaceId}`)
-                    .set("Authorization", ADMIN_USER_ACCESS_TOKEN);
-
-                expect(afterAddRunnerResponse.statusCode).toBe(HttpStatus.OK);
+                    .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
+                    .expect(HttpStatus.OK);
 
                 const afterAddRunnerJson = JSON.parse(
                     afterAddRunnerResponse.text,
@@ -729,9 +723,8 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
                     const response = await request(app.getHttpServer())
                         .patch(`/admin/races/${createdRaceId}`)
                         .send(titi.patchValues)
-                        .set("Authorization", ADMIN_USER_ACCESS_TOKEN);
-
-                    expect(response.statusCode).toBe(HttpStatus.OK);
+                        .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
+                        .expect(HttpStatus.OK);
 
                     const json = JSON.parse(response.text);
 
@@ -746,9 +739,8 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
             it("Ensure that the race cannot be deleted if it contains runners", async () => {
                 const response = await request(app.getHttpServer())
                     .delete(`/admin/races/${createdRaceId}`)
-                    .set("Authorization", ADMIN_USER_ACCESS_TOKEN);
-
-                expect(response.statusCode).toBe(HttpStatus.BAD_REQUEST);
+                    .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
+                    .expect(HttpStatus.BAD_REQUEST);
 
                 const json = JSON.parse(response.text);
 
@@ -769,18 +761,17 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
             it("Delete race", async () => {
                 const response = await request(app.getHttpServer())
                     .delete(`/admin/races/${createdRaceId}`)
-                    .set("Authorization", ADMIN_USER_ACCESS_TOKEN);
+                    .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
+                    .expect(HttpStatus.NO_CONTENT);
 
-                expect(response.statusCode).toBe(HttpStatus.NO_CONTENT);
                 expect(response.text).toBeEmpty();
             });
 
             it("Try to delete the same race again", async () => {
                 const response = await request(app.getHttpServer())
                     .delete(`/admin/races/${createdRaceId}`)
-                    .set("Authorization", ADMIN_USER_ACCESS_TOKEN);
-
-                expect(response.statusCode).toBe(HttpStatus.NOT_FOUND);
+                    .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
+                    .expect(HttpStatus.NOT_FOUND);
 
                 const json = JSON.parse(response.text);
 

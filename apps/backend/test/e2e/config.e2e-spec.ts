@@ -15,10 +15,10 @@ describe("Admin ConfigController (e2e)", () => {
         await app.close();
     });
 
-    it("Test Disabled App", async () => {
+    describe("Test Disabled App (GET-PATCH /admin/disabled-app)", async () => {
         const disabledAppMessage = `Test disabled app message ${Date.now()}`;
 
-        {
+        it("Get current disabled app settings", async () => {
             const response = await request(app.getHttpServer())
                 .get("/admin/disabled-app")
                 .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
@@ -37,10 +37,10 @@ describe("Admin ConfigController (e2e)", () => {
                 null,
             ]);
             expect(json.disabledAppMessage).not.toBe(disabledAppMessage);
-        }
+        });
 
-        {
-            await request(app.getHttpServer())
+        it("Update disabled app message but app is enabled", async () => {
+            const response = await request(app.getHttpServer())
                 .patch("/admin/disabled-app")
                 .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
                 .send({
@@ -49,6 +49,13 @@ describe("Admin ConfigController (e2e)", () => {
                 })
                 .expect(HttpStatus.OK);
 
+            const json = JSON.parse(response.text);
+
+            expect(json.isAppEnabled).toBe(true);
+            expect(json.disabledAppMessage).toBe(disabledAppMessage);
+        });
+
+        it("Get disabled app settings after update", async () => {
             const response = await request(app.getHttpServer())
                 .get("/admin/disabled-app")
                 .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
@@ -58,9 +65,9 @@ describe("Admin ConfigController (e2e)", () => {
 
             expect(json.isAppEnabled).toBe(true);
             expect(json.disabledAppMessage).toBe(disabledAppMessage);
-        }
+        });
 
-        {
+        it("Check that disabled app message is not present in app data", async () => {
             const response = await request(app.getHttpServer())
                 .get("/app-data")
                 .expect(HttpStatus.OK);
@@ -69,10 +76,10 @@ describe("Admin ConfigController (e2e)", () => {
 
             expect(json.isAppEnabled).toBe(true);
             expect(json.disabledAppMessage).toBe(null);
-        }
+        });
 
-        {
-            await request(app.getHttpServer())
+        it("Disable app", async () => {
+            const response = await request(app.getHttpServer())
                 .patch("/admin/disabled-app")
                 .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
                 .send({
@@ -80,6 +87,13 @@ describe("Admin ConfigController (e2e)", () => {
                 })
                 .expect(HttpStatus.OK);
 
+            const json = JSON.parse(response.text);
+
+            expect(json.isAppEnabled).toBe(false);
+            expect(json.disabledAppMessage).toBe(disabledAppMessage);
+        });
+
+        it("Check that disabled app message is present in app data", async () => {
             const response = await request(app.getHttpServer())
                 .get("/app-data")
                 .expect(HttpStatus.OK);
@@ -88,13 +102,13 @@ describe("Admin ConfigController (e2e)", () => {
 
             expect(json.isAppEnabled).toBe(false);
             expect(json.disabledAppMessage).toBe(disabledAppMessage);
-        }
+        });
     });
 
-    it("Test passage import settings", async () => {
+    describe("Test passage import settings (GET-PATCH /admin/passage-import)", async () => {
         const dagFileUrl = `http://dag-file.test/${Date.now()}`;
 
-        {
+        it("Get current passage import settings", async () => {
             const response = await request(app.getHttpServer())
                 .get("/admin/passage-import")
                 .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
@@ -106,15 +120,21 @@ describe("Admin ConfigController (e2e)", () => {
 
             expect(json.dagFileUrl).toBeString();
             expect(json.dagFileUrl).not.toBe(dagFileUrl);
-        }
+        });
 
-        {
-            await request(app.getHttpServer())
+        it("Update passage import URL", async () => {
+            const response = await request(app.getHttpServer())
                 .patch("/admin/passage-import")
                 .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
                 .send({ dagFileUrl })
                 .expect(HttpStatus.OK);
 
+            const json = JSON.parse(response.text);
+
+            expect(json.dagFileUrl).toBe(dagFileUrl);
+        });
+
+        it("Get passage import data after URL update", async () => {
             const response = await request(app.getHttpServer())
                 .get("/admin/passage-import")
                 .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
@@ -123,6 +143,6 @@ describe("Admin ConfigController (e2e)", () => {
             const json = JSON.parse(response.text);
 
             expect(json.dagFileUrl).toBe(dagFileUrl);
-        }
+        });
     });
 });
