@@ -25,3 +25,7 @@ export function assignDefined<T extends object>(
 export function entries<T extends object>(object: T): Entries<T> {
     return Object.entries(object) as Entries<T>;
 }
+
+export function isEmptyObject(object: object): object is Record<string, never> {
+    return Object.keys(object).length < 1;
+}

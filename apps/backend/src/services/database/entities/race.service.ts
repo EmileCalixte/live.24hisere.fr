@@ -7,6 +7,7 @@ import {
     PublicRaceWithRunnerCount,
     Race,
 } from "../../../types/Race";
+import { isEmptyObject } from "../../../utils/object.utils";
 import { EntityService } from "../entity.service";
 
 @Injectable()
@@ -117,13 +118,15 @@ export class RaceService extends EntityService {
         raceId: number,
         newRaceData: Partial<Omit<Race, "id">>,
     ): Promise<AdminRaceWithRunnerCount> {
-        const [resultSetHeader] = await this.db
-            .update(TABLE_RACE)
-            .set(newRaceData)
-            .where(eq(TABLE_RACE.id, raceId));
+        if (!isEmptyObject(newRaceData)) {
+            const [resultSetHeader] = await this.db
+                .update(TABLE_RACE)
+                .set(newRaceData)
+                .where(eq(TABLE_RACE.id, raceId));
 
-        if (resultSetHeader.affectedRows === 0) {
-            throw new Error(`Race with ID ${raceId} not found in database`);
+            if (resultSetHeader.affectedRows === 0) {
+                throw new Error(`Race with ID ${raceId} not found in database`);
+            }
         }
 
         const newRace = await this.getAdminRaceById(raceId);

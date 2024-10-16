@@ -7,3 +7,7 @@ export const ERROR_MESSAGE_ACCESS_TOKEN_EXPIRED = "Access token has expired";
 
 export const ERROR_MESSAGE_RACE_NOT_FOUND = "Race not found";
 export const ERROR_MESSAGE_RACE_ID_MUST_BE_NUMBER = "Race ID must be a number";
+export const ERROR_MESSAGE_RACE_NAME_ALREADY_EXISTS =
+    "A race with the same name already exists";
+export const ERROR_MESSAGE_CANNOT_DELETE_RACE_WITH_RUNNERS =
+    "Cannot delete a race if there are runners in it";
