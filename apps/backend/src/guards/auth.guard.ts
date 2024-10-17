@@ -1,12 +1,12 @@
 import {
     CanActivate,
     ExecutionContext,
-    ForbiddenException,
     Injectable,
+    UnauthorizedException,
 } from "@nestjs/common";
-import { User } from "@prisma/client";
 import { Request } from "express";
 import { AuthService } from "../services/auth.service";
+import { User } from "../types/User";
 
 const ACCESS_TOKEN_MUST_BE_PROVIDED_MESSAGE = "Access token must be provided";
 
@@ -26,7 +26,9 @@ export class AuthGuard implements CanActivate {
         const token = this.getTokenFromHeaders(request);
 
         if (!token) {
-            throw new ForbiddenException(ACCESS_TOKEN_MUST_BE_PROVIDED_MESSAGE);
+            throw new UnauthorizedException(
+                ACCESS_TOKEN_MUST_BE_PROVIDED_MESSAGE,
+            );
         }
 
         /**

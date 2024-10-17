@@ -63,7 +63,7 @@ export class RacesController {
             throw new BadRequestException("Race ID must be a number");
         }
 
-        const race = await this.raceService.getAdminRace({ id });
+        const race = await this.raceService.getAdminRaceById(id);
 
         if (!race) {
             throw new NotFoundException("Race not found");
@@ -85,7 +85,7 @@ export class RacesController {
             throw new BadRequestException("Race ID must be a number");
         }
 
-        const race = await this.raceService.getAdminRace({ id });
+        const race = await this.raceService.getAdminRaceById(id);
 
         if (!race) {
             throw new NotFoundException("Race not found");
@@ -114,7 +114,7 @@ export class RacesController {
             throw new BadRequestException("Race ID must be a number");
         }
 
-        const race = await this.raceService.getAdminRace({ id });
+        const race = await this.raceService.getAdminRaceById(id);
 
         if (!race) {
             throw new NotFoundException("Race not found");
@@ -126,7 +126,7 @@ export class RacesController {
             );
         }
 
-        await this.raceService.deleteRace({ id });
+        await this.raceService.deleteRace(id);
     }
 
     @Put("/admin/races-order")
@@ -177,7 +177,7 @@ export class RacesController {
     }
 
     private async ensureRaceNameDoesNotExist(name: string): Promise<void> {
-        const existingRace = await this.raceService.getRace({ name });
+        const existingRace = await this.raceService.getRaceByName(name);
 
         if (existingRace) {
             throw new BadRequestException(

@@ -47,7 +47,8 @@ export class CreateUserCommand extends CommandRunner {
                     undefined,
                 );
 
-            const existingUser = await this.userService.getUser({ username });
+            const existingUser =
+                await this.userService.getUserByUsername(username);
 
             if (existingUser) {
                 console.log("A user with this name already exists");

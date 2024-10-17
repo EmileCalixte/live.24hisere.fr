@@ -8,13 +8,17 @@ export function isFloatString(value: unknown): value is string {
         return false;
     }
 
+    if (!value.match(/^\d+(\.\d+)?$/)) {
+        return false;
+    }
+
     const valueAsNumber = parseFloat(value);
 
     if (isNaN(valueAsNumber)) {
         return false;
     }
 
-    return valueAsNumber.toString() === value;
+    return true;
 }
 
 /**

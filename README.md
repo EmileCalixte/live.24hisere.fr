@@ -49,16 +49,16 @@ Identifiants du serveur MariaDB du container docker `database` :
 
 Un jeu de données est chargé automatiquement lors du lancement du docker-compose à partir du/des fichiers SQL contenus dans le répertoire `/sql`.
 
-La commande suivante permet de créer une migration et mettre à jour la structure de la base de données à partir de la structure de données définie dans `apps/backend/prisma/schema.prisma` :
+La commande suivante permet de créer une migration à partir de la structure de données définie dans `apps/backend/drizzle/schema.ts` :
 
 ```sh
-pnpm backend prisma migrate dev --name <nom migration>
+pnpm backend createmigration <nom migration>
 ```
 
-La commande suivante permet de générer le client Prisma à partir de la structure de données définie dans `apps/backend/prisma/schema.prisma` :
+La commande suivante permet d'exécuter les migrations pour mettre à jour la structure de la base de données :
 
 ```sh
-pnpm backend prisma generate
+pnpm backend migrate
 ```
 
 ## Import des données

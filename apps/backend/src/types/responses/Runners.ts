@@ -1,5 +1,4 @@
-import { Runner } from "@prisma/client";
-import { PublicRunnerWithPassages } from "../Runner";
+import { PublicRunnerWithPassages, Runner } from "../Runner";
 
 export interface RunnersResponse {
     runners: Runner[];

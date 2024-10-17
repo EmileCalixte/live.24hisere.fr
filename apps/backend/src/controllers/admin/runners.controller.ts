@@ -31,7 +31,7 @@ export class RunnersController {
 
     @Get("/admin/runners")
     async getRunners(): Promise<AdminRunnersResponse> {
-        const runners = await this.runnerService.getRunners();
+        const runners = await this.runnerService.getAdminRunners();
 
         return {
             runners,
@@ -44,20 +44,10 @@ export class RunnersController {
     ): Promise<AdminRunnerWithPassagesResponse> {
         await this.ensureRunnerIdDoesNotExist(runnerDto.id);
 
-        const runner = await this.runnerService.createRunner(
-            excludeKeys(
-                {
-                    ...runnerDto,
-                    birthYear: runnerDto.birthYear.toString(),
-                    race: {
-                        connect: {
-                            id: runnerDto.raceId,
-                        },
-                    },
-                },
-                ["raceId"],
-            ),
-        );
+        const runner = await this.runnerService.createRunner({
+            ...runnerDto,
+            birthYear: runnerDto.birthYear.toString(),
+        });
 
         return {
             runner: {
@@ -106,10 +96,10 @@ export class RunnersController {
         const id = Number(runnerId);
 
         if (isNaN(id)) {
-            throw new BadRequestException("RunnerId must be a number");
+            throw new BadRequestException("Runner ID must be a number");
         }
 
-        const runner = await this.runnerService.getAdminRunner({ id });
+        const runner = await this.runnerService.getAdminRunnerById(id);
 
         if (!runner) {
             throw new NotFoundException("Runner not found");
@@ -128,10 +118,10 @@ export class RunnersController {
         const id = Number(runnerId);
 
         if (isNaN(id)) {
-            throw new BadRequestException("RunnerId must be a number");
+            throw new BadRequestException("Runner ID must be a number");
         }
 
-        const runner = await this.runnerService.getRunner({ id });
+        const runner = await this.runnerService.getRunnerById(id);
 
         if (!runner) {
             throw new NotFoundException("Runner not found");
@@ -142,14 +132,10 @@ export class RunnersController {
         }
 
         const updateRunnerData: Parameters<RunnerService["updateRunner"]>[1] =
-            excludeKeys(updateRunnerDto, ["raceId", "birthYear"]);
+            excludeKeys(updateRunnerDto, ["birthYear"]);
 
         if (updateRunnerDto.birthYear) {
             updateRunnerData.birthYear = updateRunnerDto.birthYear.toString();
-        }
-
-        if (updateRunnerDto.raceId) {
-            updateRunnerData.race = { connect: { id: updateRunnerDto.raceId } };
         }
 
         if (updateRunnerData.birthYear === undefined) {
@@ -157,7 +143,7 @@ export class RunnersController {
         }
 
         const updatedRunner = await this.runnerService.updateRunner(
-            runner,
+            runner.id,
             updateRunnerData,
         );
 
@@ -172,20 +158,20 @@ export class RunnersController {
         const id = Number(runnerId);
 
         if (isNaN(id)) {
-            throw new BadRequestException("RunnerId must be a number");
+            throw new BadRequestException("Runner ID must be a number");
         }
 
-        const runner = await this.runnerService.getRunner({ id });
+        const runner = await this.runnerService.getRunnerById(id);
 
         if (!runner) {
             throw new NotFoundException("Runner not found");
         }
 
-        await this.runnerService.deleteRunner({ id });
+        await this.runnerService.deleteRunner(id);
     }
 
     private async ensureRunnerIdDoesNotExist(id: number): Promise<void> {
-        const existingRunner = await this.runnerService.getRunner({ id });
+        const existingRunner = await this.runnerService.getRunnerById(id);
 
         if (existingRunner) {
             throw new BadRequestException(
