@@ -15040,7 +15040,9 @@ INSERT INTO `runner` (`id`, `firstname`, `lastname`, `gender`, `birth_year`, `st
 (1207, 'Firstname1207', 'Lastname1207', 'M', '2000', 1, 2),
 (1208, 'Firstname1208', 'Lastname1208', 'M', '2003', 1, 2),
 (1209, 'Firstname1209', 'Lastname1209', 'M', '1949', 0, 2),
-(1210, 'Firstname1210', 'Lastname1210', 'F', '1964', 1, 2);
+(1210, 'Firstname1210', 'Lastname1210', 'F', '1964', 1, 2),
+(2001, 'Firstname2001', 'Lastname2001', 'M', '1970', 1, 5),
+(2002, 'Firstname2002', 'Lastname2002', 'F', '1970', 1, 5);
 
 -- --------------------------------------------------------
 

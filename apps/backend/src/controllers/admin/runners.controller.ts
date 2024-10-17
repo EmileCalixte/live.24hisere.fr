@@ -96,7 +96,7 @@ export class RunnersController {
         const id = Number(runnerId);
 
         if (isNaN(id)) {
-            throw new BadRequestException("RunnerId must be a number");
+            throw new BadRequestException("Runner ID must be a number");
         }
 
         const runner = await this.runnerService.getAdminRunnerById(id);
@@ -118,7 +118,7 @@ export class RunnersController {
         const id = Number(runnerId);
 
         if (isNaN(id)) {
-            throw new BadRequestException("RunnerId must be a number");
+            throw new BadRequestException("Runner ID must be a number");
         }
 
         const runner = await this.runnerService.getRunnerById(id);
@@ -158,7 +158,7 @@ export class RunnersController {
         const id = Number(runnerId);
 
         if (isNaN(id)) {
-            throw new BadRequestException("RunnerId must be a number");
+            throw new BadRequestException("Runner ID must be a number");
         }
 
         const runner = await this.runnerService.getRunnerById(id);

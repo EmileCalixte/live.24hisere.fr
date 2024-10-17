@@ -329,14 +329,14 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
                     // Post a race with an invalid name type
                     request(app.getHttpServer())
                         .post("/admin/races")
-                        .send({ ...excludeKeys(raceToPost, ["name"]), name: 4 })
+                        .send({ ...raceToPost, name: 4 })
                         .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
 
                     // Post a race with a too long name
                     request(app.getHttpServer())
                         .post("/admin/races")
                         .send({
-                            ...excludeKeys(raceToPost, ["name"]),
+                            ...raceToPost,
                             name: "51 characters 51 characters 51 characters 51 charac",
                         })
                         .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
@@ -351,7 +351,7 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
                     request(app.getHttpServer())
                         .post("/admin/races")
                         .send({
-                            ...excludeKeys(raceToPost, ["startTime"]),
+                            ...raceToPost,
                             startTime: "2020-01-01 00:00:00",
                         })
                         .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
@@ -366,7 +366,7 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
                     request(app.getHttpServer())
                         .post("/admin/races")
                         .send({
-                            ...excludeKeys(raceToPost, ["duration"]),
+                            ...raceToPost,
                             duration: "invalid",
                         })
                         .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
@@ -375,7 +375,7 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
                     request(app.getHttpServer())
                         .post("/admin/races")
                         .send({
-                            ...excludeKeys(raceToPost, ["duration"]),
+                            ...raceToPost,
                             duration: -1,
                         })
                         .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
@@ -390,7 +390,7 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
                     request(app.getHttpServer())
                         .post("/admin/races")
                         .send({
-                            ...excludeKeys(raceToPost, ["initialDistance"]),
+                            ...raceToPost,
                             initialDistance: 1234,
                         })
                         .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
@@ -399,7 +399,7 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
                     request(app.getHttpServer())
                         .post("/admin/races")
                         .send({
-                            ...excludeKeys(raceToPost, ["initialDistance"]),
+                            ...raceToPost,
                             initialDistance: "-1",
                         })
                         .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
@@ -414,7 +414,7 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
                     request(app.getHttpServer())
                         .post("/admin/races")
                         .send({
-                            ...excludeKeys(raceToPost, ["lapDistance"]),
+                            ...raceToPost,
                             lapDistance: 1234,
                         })
                         .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
@@ -423,7 +423,7 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
                     request(app.getHttpServer())
                         .post("/admin/races")
                         .send({
-                            ...excludeKeys(raceToPost, ["lapDistance"]),
+                            ...raceToPost,
                             lapDistance: "-1",
                         })
                         .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
@@ -438,7 +438,7 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
                     request(app.getHttpServer())
                         .post("/admin/races")
                         .send({
-                            ...excludeKeys(raceToPost, ["isPublic"]),
+                            ...raceToPost,
                             isPublic: 1,
                         })
                         .set("Authorization", ADMIN_USER_ACCESS_TOKEN),

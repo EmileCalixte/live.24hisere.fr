@@ -1,3 +1,4 @@
+import { Type } from "class-transformer";
 import {
     IsBoolean,
     IsDefined,
@@ -41,6 +42,7 @@ export class RunnerDto {
     @IsNotEmpty()
     @Min(1900)
     @Max(new Date().getFullYear())
+    @Type(() => Number) // Allow input to be a string and convert it to number with the `Number` constructor
     birthYear: number;
 
     @IsBoolean()
