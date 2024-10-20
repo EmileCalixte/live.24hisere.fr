@@ -159,7 +159,12 @@ export class RunnerService extends EntityService {
 
             await tx.insert(TABLE_RUNNER).values(dataToInsert);
 
-            const newRunner = await this.getRunnerById(dataToInsert.id);
+            const newRunner = this.getUniqueResult(
+                await tx
+                    .select()
+                    .from(TABLE_RUNNER)
+                    .where(eq(TABLE_RUNNER.id, dataToInsert.id)),
+            );
 
             if (!newRunner) {
                 throw new Error(
@@ -168,15 +173,13 @@ export class RunnerService extends EntityService {
             }
 
             // Then we change passage runnerIds
-            await this.db
+            await tx
                 .update(TABLE_PASSAGE)
                 .set({ runnerId: newRunner.id })
                 .where(eq(TABLE_PASSAGE.runnerId, runnerId));
 
             // Finally we delete the old runner
-            await this.db
-                .delete(TABLE_RUNNER)
-                .where(eq(TABLE_RUNNER.id, runnerId));
+            await tx.delete(TABLE_RUNNER).where(eq(TABLE_RUNNER.id, runnerId));
 
             return newRunner;
         });
