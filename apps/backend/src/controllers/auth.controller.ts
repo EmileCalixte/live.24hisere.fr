@@ -32,7 +32,7 @@ export class AuthController {
 
         return {
             accessToken: accessToken.token,
-            expirationTime: accessToken.expirationDate.toISOString(),
+            expirationTime: accessToken.expirationDate,
         };
     }
 
@@ -40,7 +40,9 @@ export class AuthController {
     @Post("/auth/logout")
     @HttpCode(204)
     async logout(@LoggedInUser() { accessToken }: AuthData): Promise<void> {
-        await this.accessTokenService.deleteAccessToken({ token: accessToken });
+        await this.accessTokenService.deleteAccessTokenByStringToken(
+            accessToken,
+        );
     }
 
     @UseGuards(AuthGuard)

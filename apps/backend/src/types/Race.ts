@@ -1,4 +1,16 @@
-import { Race, Runner } from "@prisma/client";
+import { DateISOString } from "./Date";
+import { Runner } from "./Runner";
+
+export interface Race {
+    id: number;
+    name: string;
+    startTime: DateISOString;
+    duration: number;
+    initialDistance: string;
+    lapDistance: string;
+    order: number;
+    isPublic: boolean;
+}
 
 /**
  * Public data of a race
