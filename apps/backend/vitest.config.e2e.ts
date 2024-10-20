@@ -6,6 +6,7 @@ export default defineConfig({
         root: "./",
         include: ["test/e2e/**/*.e2e-spec.ts"],
         setupFiles: ["./vitest.setup.ts"],
+        fileParallelism: false,
     },
     plugins: [
         // This is required to build the test files with SWC

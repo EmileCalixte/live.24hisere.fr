@@ -10,6 +10,11 @@ on:
   push:
     branches: [ master ]
 
+env:
+  TEST_DB_NAME: live_test
+  TEST_DB_USER: admin
+  TEST_DB_PASSWORD: admin
+
 jobs:
   build:
     if: github.event.pull_request.draft == false
@@ -21,7 +26,7 @@ jobs:
         run: apt-get update
 
       - name: Install misc tools
-        run: apt-get install -y curl git zip unzip
+        run: apt-get install -y curl git zip unzip systemd
 
       - name: Install Node.js 20
         run: |
@@ -31,8 +36,22 @@ jobs:
       - name: Enable corepack to use pnpm
         run: corepack enable
 
+      - name: Install MariaDB # For e2e tests
+        run: |
+          apt-get install -y mariadb-server mariadb-client
+          service mariadb start
+
       - name: Check out repository code
         uses: actions/checkout@v4
+
+      - name: Setup test database
+        run: |
+          mysql --execute "CREATE DATABASE $TEST_DB_NAME;"
+          mysql --execute "CREATE USER '$TEST_DB_USER'@'localhost' IDENTIFIED BY '$TEST_DB_PASSWORD';"
+          mysql --execute "GRANT ALL PRIVILEGES ON $TEST_DB_NAME.* TO '$TEST_DB_USER'@'localhost';"
+          mysql --execute "FLUSH PRIVILEGES;"
+          mysql --user $TEST_DB_USER --password=$TEST_DB_PASSWORD --database $TEST_DB_NAME --execute "SOURCE ./sql/live.sql;"
+          mysql --user $TEST_DB_USER --password=$TEST_DB_PASSWORD --database $TEST_DB_NAME --execute "SOURCE ./sql/test-database-data.sql;"
 
       - name: Install JS dependencies
         run: pnpm install --frozen-lockfile
@@ -42,6 +61,13 @@ jobs:
 
       - name: Build apps
         run: pnpm build
+
+      - name: Run tests
+        run: pnpm test run
+        working-directory: ./apps/frontend
+
+      - name: Run e2e tests
+        run: pnpm backend test:e2e
 
       - name: Run tests on all packages
         run: pnpm test
