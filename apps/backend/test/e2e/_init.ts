@@ -1,4 +1,9 @@
-import { HttpStatus, INestApplication, ValidationPipe } from "@nestjs/common";
+import {
+    HttpStatus,
+    INestApplication,
+    Logger,
+    ValidationPipe,
+} from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { useContainer } from "class-validator";
 import { AppModule } from "../../src/app.module";
@@ -22,6 +27,8 @@ export async function initApp(): Promise<INestApplication> {
     useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
     await app.init();
+
+    app.useLogger(new Logger());
 
     return app;
 }
