@@ -16,14 +16,6 @@ export function isDateValid(date: Date): boolean {
     return !isNaN(date.getTime());
 }
 
-/**
- * Returns true if value is null or undefined
- * @param value
- */
-export function isNullOrUndefined(value: unknown): value is null | undefined {
-    return value === null || value === undefined;
-}
-
 export function formatDateAsString(
     date: Date,
     dateAndTimeSeparator = ", ",

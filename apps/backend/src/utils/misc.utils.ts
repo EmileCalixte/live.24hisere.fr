@@ -36,14 +36,6 @@ export function pickKeys<T extends object, K extends keyof T>(
 }
 
 /**
- * Returns true if value is null or undefined
- * @param value
- */
-export function isNullOrUndefined(value: unknown): value is null | undefined {
-    return value === null || value === undefined;
-}
-
-/**
  * Returns true if a value is not undefined
  * @param value
  */
