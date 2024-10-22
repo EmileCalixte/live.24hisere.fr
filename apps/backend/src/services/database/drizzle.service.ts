@@ -23,7 +23,8 @@ export class DrizzleService implements OnModuleInit, OnModuleDestroy {
 
         this.initConnection();
 
-        this.db = drizzle(this.connection, {
+        this.db = drizzle({
+            client: this.connection,
             schema,
             mode: "default",
             casing: "snake_case",
