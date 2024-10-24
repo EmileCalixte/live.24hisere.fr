@@ -11,6 +11,8 @@
     "backend": "pnpm --filter @live24hisere/backend",
     "frontend": "pnpm --filter @live24hisere/frontend",
     "dev": "turbo run dev --parallel",
+    "test": "turbo run test --parallel",
+    "build": "turbo run build",
     "format": "prettier \"{apps,packages}/**/*.{js,ts,jsx,tsx,css}\" --write",
     "lint-path": "eslint --ext ts,tsx --max-warnings=0",
     "lint": "pnpm lint-path .",
@@ -41,7 +43,7 @@
     "lint-staged": "^15.2.10",
     "prettier": "^3.3.3",
     "turbo": "^2.2.1",
-    "typescript": "~5.6.3"
+    "typescript": "^5.6.3"
   },
   "packageManager": "pnpm@9.3.0"
 }

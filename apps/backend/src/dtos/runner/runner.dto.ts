@@ -13,8 +13,8 @@ import {
 import {
     RUNNER_FIRSTNAME_MAX_LENGTH,
     RUNNER_LASTNAME_MAX_LENGTH,
-} from "../../constants/runner.constants";
-import { Gender } from "../../types/Gender";
+} from "@live24hisere/constants/runners";
+import { Gender } from "@live24hisere/types";
 import { RaceIdExistsRule } from "../../validation/rules/race/raceIdExists.rule";
 import { IsGender } from "../../validation/validators/IsGender";
 

@@ -8,7 +8,7 @@ import { ConfigService } from "../services/database/entities/config.service";
 import { MiscService } from "../services/database/entities/misc.service";
 import { PassageService } from "../services/database/entities/passage.service";
 import { RunnerService } from "../services/database/entities/runner.service";
-import { DagFileLineData } from "../types/Dag";
+import { DagFileLineData } from "../types/dag";
 import { TaskService } from "./taskService";
 
 @Injectable()

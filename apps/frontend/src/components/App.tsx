@@ -7,6 +7,8 @@ import {
     Routes,
     useMatch,
 } from "react-router-dom";
+import { type PublicUser } from "@live24hisere/types";
+import { helloWorldUtils, type Toto } from "@live24hisere/utils/test-utils";
 import { APP_BASE_TITLE } from "../constants/app";
 import { getAppData } from "../services/api/AppDataService";
 import {
@@ -14,7 +16,6 @@ import {
     logout as performLogoutRequest,
 } from "../services/api/AuthService";
 import ToastService from "../services/ToastService";
-import { type User } from "../types/User";
 import {
     EVENT_API_REQUEST_ENDED,
     EVENT_API_REQUEST_STARTED,
@@ -81,9 +82,9 @@ interface AppContext {
         /**
          * The user logged in. If undefined, user info was not fetched yet.
          */
-        user: User | null | undefined;
+        user: PublicUser | null | undefined;
 
-        setUser: (user: User | null | undefined) => void;
+        setUser: (user: PublicUser | null | undefined) => void;
 
         logout: () => void;
     };
@@ -115,6 +116,8 @@ export const appContext = createContext<AppContext>({
 // Fetch app data every 20 seconds
 const FETCH_APP_DATA_INTERVAL_TIME = 20 * 1000;
 
+const text: Toto = "toto";
+
 export default function App(): React.ReactElement {
     const [isLoading, setIsLoading] = useState(true);
     const [fetchLevel, setFetchLevel] = useState(0);
@@ -128,7 +131,7 @@ export default function App(): React.ReactElement {
     const [accessToken, setAccessToken] = useState<string | null>(
         localStorage.getItem("accessToken"),
     );
-    const [user, setUser] = useState<User | null | undefined>(undefined); // If null, user is not logged in. If undefined, user info was not fetched yet
+    const [user, setUser] = useState<PublicUser | null | undefined>(undefined); // If null, user is not logged in. If undefined, user info was not fetched yet
     const [redirect, setRedirect] = useState<string | null>(null); // Used to redirect the user to a specified location, for example when user logs out
 
     const isLoginRoute = !!useMatch("/login");
@@ -307,6 +310,7 @@ export default function App(): React.ReactElement {
                 <div id="app-content-wrapper">
                     <Header />
                     <main id="page-content" className="container-fluid">
+                        <h1>{helloWorldUtils.helloWorld(text)}</h1>
                         {isLoading ? (
                             <CircularLoader />
                         ) : showDisabledAppMessage ? (

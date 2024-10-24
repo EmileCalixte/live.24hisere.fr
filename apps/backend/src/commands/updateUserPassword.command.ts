@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { Command, CommandRunner, InquirerService } from "nest-commander";
+import { User } from "@live24hisere/types";
 import { UserService } from "../services/database/entities/user.service";
 import { PasswordService } from "../services/password.service";
-import { User } from "../types/User";
 import {
     CREATE_PASSWORD_QUESTION_SET,
     CreatePasswordInquiry,

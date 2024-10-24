@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { type ProcessedPassage } from "../../src/types/Passage";
+import { type ProcessedPassage } from "@live24hisere/types";
 import {
     getFastestLapPassage,
     getSlowestLapPassage,

@@ -1,4 +1,4 @@
-import { DateISOString } from "../Date";
+import { DateISOString } from "@live24hisere/types/utils";
 
 export interface AppDataResponse {
     /**

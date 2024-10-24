@@ -1,4 +1,5 @@
 import React from "react";
+import { GENDER } from "@live24hisere/constants/runners";
 import { NO_VALUE_PLACEHOLDER } from "../../../constants/misc";
 import {
     type Ranking,
@@ -22,7 +23,7 @@ export default function RunnerDetailsStatsRankingTable({
     ranking,
 }: RunnerDetailsStatsGapsTableProps): React.ReactElement {
     const categoryCode = getCategoryCodeFromBirthYear(runner.birthYear);
-    const genderString = runner.gender === "F" ? "Féminin" : "Masculin";
+    const genderString = runner.gender === GENDER.F ? "Féminin" : "Masculin";
 
     const scratchMixedRunnerCount = ranking.length;
 

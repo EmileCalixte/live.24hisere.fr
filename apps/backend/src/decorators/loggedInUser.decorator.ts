@@ -1,5 +1,5 @@
 import { createParamDecorator, ExecutionContext } from "@nestjs/common";
-import { User } from "../types/User";
+import { User } from "@live24hisere/types";
 
 export interface AuthData {
     user: User;

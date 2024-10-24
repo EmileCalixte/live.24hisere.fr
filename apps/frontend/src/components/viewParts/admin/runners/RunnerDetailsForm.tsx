@@ -1,8 +1,10 @@
 import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
+import {
+    type AdminRaceWithRunnerCount,
+    type Gender,
+} from "@live24hisere/types";
 import { GENDER_OPTIONS } from "../../../../constants/forms";
-import { type Gender } from "../../../../constants/gender";
-import { type AdminRaceWithRunnerCount } from "../../../../types/Race";
 import { getCategoryNameFromBirthYear } from "../../../../utils/ffaUtils";
 import { getRacesSelectOptions } from "../../../../utils/raceUtils";
 import { Checkbox } from "../../../ui/forms/Checkbox";

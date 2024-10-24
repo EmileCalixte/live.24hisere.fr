@@ -1,15 +1,16 @@
 import React, { useCallback } from "react";
-import { GENDER_MIXED } from "../../../../../constants/gender";
-import { type CategoryShortCode } from "../../../../../types/Category";
-import { type GenderWithMixed } from "../../../../../types/Gender";
-import { type Race } from "../../../../../types/Race";
+import {
+    type CategoryShortCode,
+    type GenderWithMixed,
+    type PublicRace,
+} from "@live24hisere/types";
 import { type Ranking, type RankingRunner } from "../../../../../types/Ranking";
 import { getCategoryCodeFromBirthYear } from "../../../../../utils/ffaUtils";
 import RankingTableInfoHeader from "../RankingTableInfoHeader";
 import ResponsiveRankingTableRow from "./ResponsiveRankingTableRow";
 
 interface ResponsiveRankingTableProps {
-    race: Race;
+    race: PublicRace;
     ranking: Ranking;
     tableCategory: CategoryShortCode | null;
     tableGender: GenderWithMixed;
@@ -35,7 +36,7 @@ export default function ResponsiveRankingTable({
                 }
             }
 
-            if (tableGender !== GENDER_MIXED) {
+            if (tableGender !== "mixed") {
                 if (
                     tableGender.toUpperCase() !==
                     rankingRunner.gender.toUpperCase()

@@ -4,6 +4,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import {
+    type RunnerWithProcessedData,
+    type RunnerWithProcessedHours,
+    type RunnerWithProcessedPassages,
+} from "@live24hisere/types";
+import {
     RUNNER_LAPS_TABLE_SEARCH_PARAMS,
     RUNNER_SPEED_CHART_SEARCH_PARAMS,
 } from "../../constants/searchParams";
@@ -13,11 +18,6 @@ import { useIntervalApiRequest } from "../../hooks/useIntervalApiRequest";
 import { useRanking } from "../../hooks/useRanking";
 import { getRace } from "../../services/api/RaceService";
 import { getRaceRunners, getRunners } from "../../services/api/RunnerService";
-import {
-    type RunnerWithProcessedData,
-    type RunnerWithProcessedHours,
-    type RunnerWithProcessedPassages,
-} from "../../types/Runner";
 import { generateXlsxFromData } from "../../utils/excelUtils";
 import {
     getProcessedHoursFromPassages,

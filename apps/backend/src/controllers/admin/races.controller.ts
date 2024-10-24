@@ -22,7 +22,6 @@ import {
     AdminRaceResponse,
     AdminRacesResponse,
 } from "../../types/responses/admin/Races";
-import { excludeKeys } from "../../utils/misc.utils";
 
 @Controller()
 @UseGuards(AuthGuard)
@@ -47,12 +46,7 @@ export class RacesController {
             order: (await this.raceService.getMaxOrder()) + 1,
         });
 
-        return {
-            race: {
-                ...excludeKeys(race, ["order"]),
-                runnerCount: 0,
-            },
-        };
+        return { race };
     }
 
     @Get("/admin/races/:raceId")

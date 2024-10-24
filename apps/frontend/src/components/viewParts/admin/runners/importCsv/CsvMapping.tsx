@@ -3,7 +3,7 @@ import { Col, Row } from "react-bootstrap";
 import { type ImportCsvColumn } from "../../../../../constants/importCsv";
 import { type SelectOption } from "../../../../../types/Forms";
 import { type RunnersCsvMapping } from "../../../../../types/ImportCsv";
-import { type ReactStateSetter } from "../../../../../types/Utils";
+import { type ReactStateSetter } from "../../../../../types/ReactUtils";
 import { getObjectKeys } from "../../../../../utils/utils";
 import Select from "../../../../ui/forms/Select";
 

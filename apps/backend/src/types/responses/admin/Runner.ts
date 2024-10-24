@@ -1,4 +1,4 @@
-import { AdminRunnerWithPassages, Runner } from "../../Runner";
+import { AdminPassage, Runner, RunnerWithPassages } from "@live24hisere/types";
 
 export interface AdminRunnersResponse {
     runners: Runner[];
@@ -9,5 +9,5 @@ export interface AdminRunnerResponse {
 }
 
 export interface AdminRunnerWithPassagesResponse {
-    runner: AdminRunnerWithPassages;
+    runner: RunnerWithPassages<Runner, AdminPassage>;
 }

@@ -1,5 +1,13 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
+import {
+    type CategoriesDict,
+    type CategoryShortCode,
+    type GenderWithMixed,
+    type RunnerWithProcessedData,
+    type RunnerWithProcessedPassages,
+} from "@live24hisere/types";
+import { objectUtils } from "@live24hisere/utils";
 import { RankingTimeMode } from "../../constants/rankingTimeMode";
 import "../../css/print-ranking-table.css";
 import { useCategoryQueryString } from "../../hooks/queryString/useCategoryQueryString";
@@ -12,19 +20,9 @@ import { useWindowDimensions } from "../../hooks/useWindowDimensions";
 import { getRaces } from "../../services/api/RaceService";
 import { getRaceRunners } from "../../services/api/RunnerService";
 import {
-    type CategoriesDict,
-    type CategoryShortCode,
-} from "../../types/Category";
-import { type GenderWithMixed } from "../../types/Gender";
-import {
-    type RunnerWithProcessedData,
-    type RunnerWithProcessedPassages,
-} from "../../types/Runner";
-import {
     existingCategories,
     getCategoryCodeFromBirthYear,
 } from "../../utils/ffaUtils";
-import { excludeKeys } from "../../utils/objectUtils";
 import {
     getProcessedPassagesFromPassages,
     getRunnerProcessedDataFromPassages,
@@ -164,7 +162,7 @@ export default function RankingView(): React.ReactElement {
             }
         }
 
-        return excludeKeys(existingCategories, categoriesToRemove);
+        return objectUtils.excludeKeys(existingCategories, categoriesToRemove);
     }, [ranking]);
 
     const { selectedCategory, setCategoryParam, deleteCategoryParam } =

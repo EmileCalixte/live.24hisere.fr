@@ -1,4 +1,4 @@
-import { type CategoriesDict } from "../types/Category";
+import { type CategoriesDict } from "@live24hisere/types";
 
 /**
  * Returns the category code from a birth year (valid until August 31st, 2024)

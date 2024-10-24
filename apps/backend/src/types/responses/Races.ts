@@ -1,9 +1,9 @@
-import { PublicRaceWithRunnerCount } from "../Race";
+import { RaceWithRunnerCount } from "@live24hisere/types";
 
 export interface RacesResponse {
-    races: PublicRaceWithRunnerCount[];
+    races: RaceWithRunnerCount[];
 }
 
 export interface RaceResponse {
-    race: PublicRaceWithRunnerCount;
+    race: RaceWithRunnerCount;
 }
