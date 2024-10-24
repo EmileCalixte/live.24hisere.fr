@@ -9,10 +9,15 @@
             "types": "./index.d.ts",
             "import": "./dist/types.mjs",
             "require": "./dist/types.js"
+        },
+        "./utils": {
+            "types": "./utils.d.ts",
+            "import": "./dist/utils.mjs",
+            "require": "./dist/utils.js"
         }
     },
     "devDependencies": {
-        "tsup": "8.2.4",
-        "typescript": "^5.5.4"
+        "tsup": "^8.3.0",
+        "typescript": "^5.6.3"
     }
 }

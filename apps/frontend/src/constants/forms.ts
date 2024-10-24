@@ -1,3 +1,4 @@
+import { GENDER } from "@live24hisere/constants/runners";
 import { type Gender, type GenderWithMixed } from "@live24hisere/types";
 import { type SelectOption } from "../types/Forms";
 import { CATEGORY_SCRATCH } from "./category";
@@ -9,8 +10,8 @@ export const CATEGORY_SCRATCH_SELECT_OPTION: SelectOption = {
 };
 
 export const GENDER_OPTIONS: Array<SelectOption<Gender>> = [
-    { label: "Homme", value: "M" },
-    { label: "Femme", value: "F" },
+    { label: "Homme", value: GENDER.M },
+    { label: "Femme", value: GENDER.F },
 ];
 
 export const GENDER_WITH_MIXED_OPTIONS: Array<SelectOption<GenderWithMixed>> = [

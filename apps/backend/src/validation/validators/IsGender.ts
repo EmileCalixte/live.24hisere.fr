@@ -1,8 +1,8 @@
 import { buildMessage, ValidateBy } from "class-validator";
 import { ValidationOptions } from "class-validator/types/decorator/ValidationOptions";
+import { GENDERS } from "@live24hisere/constants/runners";
 import { Gender } from "@live24hisere/types";
 import { genderUtils } from "@live24hisere/utils";
-import { GENDERS } from "../../constants/runner.constants";
 
 const IS_GENDER = "isGender";
 

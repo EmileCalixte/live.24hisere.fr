@@ -2,8 +2,8 @@ import { Controller, Get, Query, UseGuards } from "@nestjs/common";
 import { typeUtils } from "@live24hisere/utils";
 import { AuthGuard } from "../../guards/auth.guard";
 import { PassageService } from "../../services/database/entities/passage.service";
-import { QueryParam } from "../../types/QueryParam";
 import { PassagesResponse } from "../../types/responses/admin/Passages";
+import { QueryParam } from "../../types/utils/query";
 
 @Controller()
 @UseGuards(AuthGuard)

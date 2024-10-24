@@ -1,4 +1,4 @@
-import { DateISOString } from "@live24hisere/types";
+import { type DateISOString } from "./utils/dates";
 
 export interface AccessToken {
     token: string;

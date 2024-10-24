@@ -6,7 +6,7 @@ import {
     PublicPassage,
 } from "@live24hisere/types";
 import { TABLE_PASSAGE } from "../../../../drizzle/schema";
-import { DrizzleTableColumns } from "../../../types/misc/Drizzle";
+import { DrizzleTableColumns } from "../../../types/utils/drizzle";
 import { EntityService } from "../entity.service";
 
 @Injectable()

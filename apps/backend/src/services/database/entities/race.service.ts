@@ -8,7 +8,7 @@ import {
 } from "@live24hisere/types";
 import { objectUtils } from "@live24hisere/utils";
 import { TABLE_RACE, TABLE_RUNNER } from "../../../../drizzle/schema";
-import { DrizzleTableColumns } from "../../../types/misc/Drizzle";
+import { DrizzleTableColumns } from "../../../types/utils/drizzle";
 import { EntityService } from "../entity.service";
 
 @Injectable()

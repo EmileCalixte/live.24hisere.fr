@@ -1,5 +1,5 @@
-import { type DateISOString } from "./Date";
 import { type Runner } from "./Runner";
+import { type DateISOString } from "./utils/dates";
 
 /**
  * An object representing a race

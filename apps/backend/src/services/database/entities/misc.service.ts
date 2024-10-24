@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { eq } from "drizzle-orm";
-import { DateISOString } from "@live24hisere/types";
+import { DateISOString } from "@live24hisere/types/utils";
 import { dateUtils } from "@live24hisere/utils";
 import { TABLE_MISC } from "../../../../drizzle/schema";
 import { Misc } from "../../../types/Misc";

@@ -1,6 +1,6 @@
 export function inArray<TItem, TElement extends TItem = TItem>(
     item: TItem | null | undefined,
-    array: TElement[],
+    array: readonly TElement[],
 ): item is TElement {
     if (item === null || item === undefined) {
         return false;

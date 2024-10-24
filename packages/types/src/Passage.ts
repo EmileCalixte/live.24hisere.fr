@@ -1,4 +1,4 @@
-import { type DateISOString } from "./Date";
+import { type DateISOString } from "./utils/dates";
 
 /**
  * An object representing a passage of a runner at the timing point

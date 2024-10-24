@@ -10,11 +10,11 @@ import {
     Min,
     Validate,
 } from "class-validator";
-import { Gender } from "@live24hisere/types";
 import {
     RUNNER_FIRSTNAME_MAX_LENGTH,
     RUNNER_LASTNAME_MAX_LENGTH,
-} from "../../constants/runner.constants";
+} from "@live24hisere/constants/runners";
+import { Gender } from "@live24hisere/types";
 import { RaceIdExistsRule } from "../../validation/rules/race/raceIdExists.rule";
 import { IsGender } from "../../validation/validators/IsGender";
 

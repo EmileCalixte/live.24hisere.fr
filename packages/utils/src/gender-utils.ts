@@ -1,5 +1,6 @@
+import { GENDERS } from "@live24hisere/constants/runners";
 import { type Gender } from "@live24hisere/types";
-import { typeUtils } from ".";
+import { arrayUtils, typeUtils } from ".";
 
 export function isValidGender(
     value: string | null | undefined,
@@ -8,5 +9,5 @@ export function isValidGender(
         return false;
     }
 
-    return ["M", "F"].includes(value);
+    return arrayUtils.inArray(value, GENDERS);
 }

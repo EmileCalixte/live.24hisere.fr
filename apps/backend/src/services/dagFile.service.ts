@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { dateUtils } from "@live24hisere/utils";
-import { DagDetectionType, DagFileLineData } from "../types/Dag";
+import { DagDetectionType, DagFileLineData } from "../types/dag";
 
 @Injectable()
 export class DagFileService {

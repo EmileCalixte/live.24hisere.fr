@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { Col, Row } from "react-bootstrap";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { GENDER } from "@live24hisere/constants/runners";
 import {
     type AdminProcessedPassage,
     type AdminRaceWithRunnerCount,
@@ -55,7 +56,7 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
     const [runnerId, setRunnerId] = useState(0);
     const [runnerFirstname, setRunnerFirstname] = useState("");
     const [runnerLastname, setRunnerLastname] = useState("");
-    const [runnerGender, setRunnerGender] = useState<Gender>("M");
+    const [runnerGender, setRunnerGender] = useState<Gender>(GENDER.M);
     const [runnerBirthYear, setRunnerBirthYear] = useState("0");
     const [runnerStopped, setRunnerStopped] = useState(false);
     const [runnerRaceId, setRunnerRaceId] = useState(0);

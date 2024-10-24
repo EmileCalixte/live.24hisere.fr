@@ -1,4 +1,5 @@
 import Papa from "papaparse";
+import { GENDER } from "@live24hisere/constants/runners";
 import { genderUtils } from "@live24hisere/utils";
 import { ImportCsvColumn } from "../constants/importCsv";
 import {
@@ -71,9 +72,9 @@ export function getRunnerFromCsv(
     }
 
     if (gender === "male") {
-        gender = "M";
+        gender = GENDER.M;
     } else if (gender === "female") {
-        gender = "F";
+        gender = GENDER.F;
     }
 
     if (!genderUtils.isValidGender(gender)) {

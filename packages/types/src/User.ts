@@ -5,6 +5,11 @@ export interface User {
 }
 
 /**
+ * Public data about a user
+ */
+export type PublicUser = Pick<User, "username">;
+
+/**
  * Admin data about a user
  */
 export type AdminUser = Omit<User, "passwordHash">;

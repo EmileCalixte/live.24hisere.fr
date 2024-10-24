@@ -1,6 +1,7 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { GENDER } from "@live24hisere/constants/runners";
 import {
     type AdminRaceWithRunnerCount,
     type Gender,
@@ -28,7 +29,7 @@ export default function CreateRunnerAdminView(): React.ReactElement {
     const [id, setId] = useState(1);
     const [firstname, setFirstname] = useState("");
     const [lastname, setLastname] = useState("");
-    const [gender, setGender] = useState<Gender>("M");
+    const [gender, setGender] = useState<Gender>(GENDER.M);
     const [birthYear, setBirthYear] = useState(
         (new Date().getFullYear() - 30).toString(),
     );

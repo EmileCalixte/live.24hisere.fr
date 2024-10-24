@@ -1,4 +1,5 @@
 import { customType, mysqlTable } from "drizzle-orm/mysql-core";
+import { GENDERS } from "@live24hisere/constants/runners";
 import { dateUtils } from "@live24hisere/utils";
 
 const TABLE_NAME_ACCESS_TOKEN = "access_token";
@@ -65,7 +66,7 @@ export const TABLE_RUNNER = mysqlTable(TABLE_NAME_RUNNER, (t) => ({
     id: t.int().primaryKey(),
     firstname: t.varchar({ length: 255 }).notNull(),
     lastname: t.varchar({ length: 255 }).notNull(),
-    gender: t.varchar({ length: 1, enum: ["M", "F"] }).notNull(),
+    gender: t.varchar({ length: 1, enum: GENDERS }).notNull(),
     birthYear: t.varchar({ length: 4 }).notNull(),
     stopped: t.boolean().notNull(),
     raceId: t
