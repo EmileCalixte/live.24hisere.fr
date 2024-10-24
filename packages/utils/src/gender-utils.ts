@@ -8,5 +8,5 @@ export function isValidGender(
         return false;
     }
 
-    return value in ["M", "F"];
+    return ["M", "F"].includes(value);
 }
