@@ -10,7 +10,9 @@ import { Navigate, useNavigate, useParams } from "react-router-dom";
 import {
     type AdminProcessedPassage,
     type AdminRaceWithRunnerCount,
-    Gender,
+    type Gender,
+    type RunnerWithProcessedPassages,
+    type RunnerWithRace,
 } from "@live24hisere/types";
 import { getAdminRaces } from "../../../../services/api/RaceService";
 import {
@@ -22,10 +24,6 @@ import {
     postAdminRunnerPassage,
 } from "../../../../services/api/RunnerService";
 import ToastService from "../../../../services/ToastService";
-import {
-    type RunnerWithProcessedPassages,
-    type RunnerWithRace,
-} from "../../../../types/Runner";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { getProcessedPassagesFromPassages } from "../../../../utils/passageUtils";
 import { formatDateAsString, formatDateForApi } from "../../../../utils/utils";
@@ -57,7 +55,7 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
     const [runnerId, setRunnerId] = useState(0);
     const [runnerFirstname, setRunnerFirstname] = useState("");
     const [runnerLastname, setRunnerLastname] = useState("");
-    const [runnerGender, setRunnerGender] = useState<Gender>(Gender.M);
+    const [runnerGender, setRunnerGender] = useState<Gender>("M");
     const [runnerBirthYear, setRunnerBirthYear] = useState("0");
     const [runnerStopped, setRunnerStopped] = useState(false);
     const [runnerRaceId, setRunnerRaceId] = useState(0);

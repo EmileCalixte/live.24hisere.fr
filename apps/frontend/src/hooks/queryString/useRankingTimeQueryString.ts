@@ -1,6 +1,6 @@
 import React from "react";
 import { type NavigateOptions } from "react-router-dom";
-import { type Race } from "@live24hisere/types";
+import { type PublicRace } from "@live24hisere/types";
 import { RankingTimeMode } from "../../constants/rankingTimeMode";
 import { SearchParam } from "../../constants/searchParams";
 import { type ReactStateSetter } from "../../types/ReactUtils";
@@ -19,7 +19,7 @@ interface UseRankingTimeQueryString {
 }
 
 export function useRankingTimeQueryString(
-    race: Race | null,
+    race: PublicRace | null,
 ): UseRankingTimeQueryString {
     const { searchParams, setParams, deleteParams } = useQueryString();
 

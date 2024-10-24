@@ -9,11 +9,14 @@ import { faFileCsv, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { type AdminRace, type RaceDict } from "@live24hisere/types";
+import {
+    type AdminRace,
+    type RaceDict,
+    type Runner,
+} from "@live24hisere/types";
 import { getAdminRaces } from "../../../../services/api/RaceService";
 import { getAdminRunners } from "../../../../services/api/RunnerService";
 import ToastService from "../../../../services/ToastService";
-import { type Runner } from "../../../../types/Runner";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { getRaceDictFromRaces } from "../../../../utils/raceUtils";
 import { appContext } from "../../../App";

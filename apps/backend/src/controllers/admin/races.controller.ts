@@ -14,7 +14,6 @@ import {
     Req,
     UseGuards,
 } from "@nestjs/common";
-import { objectUtils } from "@live24hisere/utils";
 import { RaceDto } from "../../dtos/race/race.dto";
 import { UpdateRaceDto } from "../../dtos/race/updateRace.dto";
 import { AuthGuard } from "../../guards/auth.guard";
@@ -47,12 +46,7 @@ export class RacesController {
             order: (await this.raceService.getMaxOrder()) + 1,
         });
 
-        return {
-            race: {
-                ...objectUtils.excludeKeys(race, ["order"]),
-                runnerCount: 0,
-            },
-        };
+        return { race };
     }
 
     @Get("/admin/races/:raceId")

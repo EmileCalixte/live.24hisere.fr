@@ -1,17 +1,19 @@
 import { Injectable } from "@nestjs/common";
 import { and, asc, eq, getTableColumns } from "drizzle-orm";
+import {
+    AdminPassage,
+    AdminPassageWithRunnerId,
+    PublicPassage,
+} from "@live24hisere/types";
 import { TABLE_PASSAGE } from "../../../../drizzle/schema";
 import { DrizzleTableColumns } from "../../../types/misc/Drizzle";
-import {
-    AdminPassageOfRunner,
-    Passage,
-    PublicPassageOfRunner,
-} from "../../../types/Passage";
 import { EntityService } from "../entity.service";
 
 @Injectable()
 export class PassageService extends EntityService {
-    async getPassageById(passageId: number): Promise<Passage | null> {
+    async getPassageById(
+        passageId: number,
+    ): Promise<AdminPassageWithRunnerId | null> {
         const passages = await this.db
             .select()
             .from(TABLE_PASSAGE)
@@ -22,7 +24,7 @@ export class PassageService extends EntityService {
 
     async getPassageByDetectionId(
         detectionId: number,
-    ): Promise<Passage | null> {
+    ): Promise<AdminPassageWithRunnerId | null> {
         const passages = await this.db
             .select()
             .from(TABLE_PASSAGE)
@@ -31,13 +33,13 @@ export class PassageService extends EntityService {
         return this.getUniqueResult(passages);
     }
 
-    async getAllPassages(): Promise<Passage[]> {
+    async getAllPassages(): Promise<AdminPassageWithRunnerId[]> {
         return await this.db.query.TABLE_PASSAGE.findMany({
             orderBy: [asc(TABLE_PASSAGE.time)],
         });
     }
 
-    async getAllPublicPassages(): Promise<Passage[]> {
+    async getAllPublicPassages(): Promise<AdminPassageWithRunnerId[]> {
         return await this.db
             .select()
             .from(TABLE_PASSAGE)
@@ -47,7 +49,7 @@ export class PassageService extends EntityService {
 
     async getAdminPassagesByRunnerId(
         runnerId: number,
-    ): Promise<AdminPassageOfRunner[]> {
+    ): Promise<AdminPassage[]> {
         return await this.db
             .select(this.getAdminPassageColumns())
             .from(TABLE_PASSAGE)
@@ -57,7 +59,7 @@ export class PassageService extends EntityService {
 
     async getPublicPassagesByRunnerId(
         runnerId: number,
-    ): Promise<PublicPassageOfRunner[]> {
+    ): Promise<PublicPassage[]> {
         return await this.db
             .select(this.getPublicPassageColumns())
             .from(TABLE_PASSAGE)
@@ -70,7 +72,9 @@ export class PassageService extends EntityService {
             .orderBy(asc(TABLE_PASSAGE.time));
     }
 
-    async createPassage(passageData: Omit<Passage, "id">): Promise<Passage> {
+    async createPassage(
+        passageData: Omit<AdminPassageWithRunnerId, "id">,
+    ): Promise<AdminPassageWithRunnerId> {
         const result = await this.db
             .insert(TABLE_PASSAGE)
             .values(passageData)
@@ -97,8 +101,8 @@ export class PassageService extends EntityService {
 
     async updatePassage(
         passageId: number,
-        newPassageData: Partial<Omit<Passage, "id">>,
-    ): Promise<Passage> {
+        newPassageData: Partial<Omit<AdminPassage, "id">>,
+    ): Promise<AdminPassageWithRunnerId> {
         const [resultSetHeader] = await this.db
             .update(TABLE_PASSAGE)
             .set(newPassageData)

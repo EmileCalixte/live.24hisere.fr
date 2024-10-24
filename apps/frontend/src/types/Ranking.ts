@@ -1,7 +1,7 @@
 import {
     type RunnerWithProcessedData,
     type RunnerWithProcessedPassages,
-} from "./Runner";
+} from "@live24hisere/types";
 
 export type RankingType =
     | "scratchMixed"

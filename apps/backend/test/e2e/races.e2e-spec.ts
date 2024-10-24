@@ -1,8 +1,8 @@
 import { HttpStatus, INestApplication } from "@nestjs/common";
 import request from "supertest";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { AdminRace, PublicRace } from "@live24hisere/types";
 import { objectUtils } from "@live24hisere/utils";
-import { AdminRace, Race } from "../../src/types/Race";
 import { initApp } from "./_init";
 import { ADMIN_USER_ACCESS_TOKEN } from "./constants/accessToken";
 import { ISO8601_DATE_REGEX } from "./constants/dates";
@@ -57,7 +57,7 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
             }
 
             // Test races order and test that private race is not present
-            expect(json.races.map((race: Race) => race.id)).toEqual([
+            expect(json.races.map((race: PublicRace) => race.id)).toEqual([
                 1, 4, 3, 2,
             ]);
         });
@@ -176,7 +176,7 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
             }
 
             // Test races order and test that private race is present
-            expect(json.races.map((race: Race) => race.id)).toEqual([
+            expect(json.races.map((race: AdminRace) => race.id)).toEqual([
                 1, 4, 3, 2, 5,
             ]);
         });
@@ -273,7 +273,7 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
 
                 expect(json.races).toBeArray();
 
-                expect(json.races.map((race: Race) => race.id)).toEqual([
+                expect(json.races.map((race: AdminRace) => race.id)).toEqual([
                     5, 1, 3, 4, 2,
                 ]);
             });
@@ -295,7 +295,7 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
 
                 expect(json.races).toBeArray();
 
-                expect(json.races.map((race: Race) => race.id)).toEqual([
+                expect(json.races.map((race: AdminRace) => race.id)).toEqual([
                     1, 4, 3, 2, 5,
                 ]);
             });
@@ -530,7 +530,7 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
                 const json = JSON.parse(response.text);
 
                 // Test races order and test that the new race is present
-                expect(json.races.map((race: Race) => race.id)).toEqual([
+                expect(json.races.map((race: AdminRace) => race.id)).toEqual([
                     1,
                     4,
                     3,

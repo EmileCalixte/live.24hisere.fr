@@ -1,26 +1,24 @@
 import {
+    type PassageWithRunnerId,
     type PublicPassage,
-    type PublicPassageWithRunnerId,
-} from "@live24hisere/types";
-import { compareUtils, dateUtils } from "@live24hisere/utils";
-import { type SelectOption } from "../types/Forms";
-import { type RankingRunnerGap } from "../types/Ranking";
-import {
     type Runner,
     type RunnerWithPassages,
     type RunnerWithProcessedData,
     type RunnerWithProcessedPassages,
-} from "../types/Runner";
+} from "@live24hisere/types";
+import { compareUtils, dateUtils } from "@live24hisere/utils";
+import { type SelectOption } from "../types/Forms";
+import { type RankingRunnerGap } from "../types/Ranking";
 import { getSortedPassages } from "./passageUtils";
 import { formatMsAsDuration } from "./utils";
 
 export function getRunnersWithPassagesFromRunnersAndPassages<
     TRunner extends Runner,
-    TPassage extends PublicPassageWithRunnerId,
+    TPassage extends PassageWithRunnerId,
 >(
     runners: TRunner[],
     passages: TPassage[],
-): Array<RunnerWithPassages<TPassage>> {
+): Array<RunnerWithPassages<TRunner, TPassage>> {
     /**
      * A map with runner ID as key and array of passages as value
      */
@@ -177,9 +175,9 @@ export function areRunnersEqual(
  * @param runners
  * @param label an optional callback function to format the label
  */
-export function getRunnersSelectOptions<T extends Runner>(
-    runners: T[] | false,
-    label?: (runner: T) => string,
+export function getRunnersSelectOptions<TRunner extends Runner>(
+    runners: TRunner[] | false,
+    label?: (runner: TRunner) => string,
 ): SelectOption[] {
     if (!runners) {
         return [];

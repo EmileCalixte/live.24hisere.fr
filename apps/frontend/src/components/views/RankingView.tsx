@@ -4,6 +4,8 @@ import {
     type CategoriesDict,
     type CategoryShortCode,
     type GenderWithMixed,
+    type RunnerWithProcessedData,
+    type RunnerWithProcessedPassages,
 } from "@live24hisere/types";
 import { objectUtils } from "@live24hisere/utils";
 import { RankingTimeMode } from "../../constants/rankingTimeMode";
@@ -17,10 +19,6 @@ import { useRanking } from "../../hooks/useRanking";
 import { useWindowDimensions } from "../../hooks/useWindowDimensions";
 import { getRaces } from "../../services/api/RaceService";
 import { getRaceRunners } from "../../services/api/RunnerService";
-import {
-    type RunnerWithProcessedData,
-    type RunnerWithProcessedPassages,
-} from "../../types/Runner";
 import {
     existingCategories,
     getCategoryCodeFromBirthYear,

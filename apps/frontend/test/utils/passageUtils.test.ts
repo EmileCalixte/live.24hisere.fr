@@ -1,14 +1,14 @@
 import { describe, expect, it } from "vitest";
-import { type PublicProcessedPassage } from "@live24hisere/types";
+import { type ProcessedPassage } from "@live24hisere/types";
 import {
     getFastestLapPassage,
     getSlowestLapPassage,
 } from "../../src/utils/passageUtils";
 
 describe("Get fastest and slowest lap passages", () => {
-    const emptyPassageArray: PublicProcessedPassage[] = [];
+    const emptyPassageArray: ProcessedPassage[] = [];
 
-    const onlyOnePassageWithoutLapNumberArray: [PublicProcessedPassage] = [
+    const onlyOnePassageWithoutLapNumberArray: [ProcessedPassage] = [
         {
             id: 125,
             time: "2024-04-06T07:02:32.000Z",
@@ -30,7 +30,7 @@ describe("Get fastest and slowest lap passages", () => {
     ];
 
     // Should never happen, but we want to test this case anyway
-    const twoPassagesWithoutLapNumberArray: PublicProcessedPassage[] = [
+    const twoPassagesWithoutLapNumberArray: ProcessedPassage[] = [
         ...onlyOnePassageWithoutLapNumberArray,
         {
             id: 144,
@@ -52,7 +52,7 @@ describe("Get fastest and slowest lap passages", () => {
         },
     ];
 
-    const fourPassagesWithLapNumberArray: PublicProcessedPassage[] = [
+    const fourPassagesWithLapNumberArray: ProcessedPassage[] = [
         {
             id: 518,
             time: "2024-04-06T07:27:20.000Z",
@@ -127,7 +127,7 @@ describe("Get fastest and slowest lap passages", () => {
         },
     ];
 
-    const onlyOnePassageWithLapNumberArray: [PublicProcessedPassage] = [
+    const onlyOnePassageWithLapNumberArray: [ProcessedPassage] = [
         fourPassagesWithLapNumberArray[0],
     ];
 

@@ -1,4 +1,4 @@
-import { type GenderWithMixed, type Race } from "@live24hisere/types";
+import { type GenderWithMixed, type PublicRace } from "@live24hisere/types";
 import {
     type MinimalRankingRunnerInput,
     type Ranking,
@@ -58,7 +58,7 @@ export class RankingCalculator<TRunner extends MinimalRankingRunnerInput> {
     };
 
     constructor(
-        race: Race,
+        race: PublicRace,
         private readonly runners: TRunner[],
         rankingDate?: Date,
     ) {

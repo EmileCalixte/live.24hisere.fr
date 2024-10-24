@@ -1,9 +1,10 @@
 import { type DateISOString } from "./Date";
+import { type Runner } from "./Runner";
 
 /**
  * An object representing a race
  */
-export interface Race {
+export interface PublicRace {
     /**
      * The race ID
      */
@@ -15,7 +16,7 @@ export interface Race {
     name: string;
 
     /**
-     * A string representing the start time of the race, format `${YYYY}-${MM}-${DD}T{hh}:${ii}:${ss}Z`
+     * A string representing the start date and time of the race
      */
     startTime: DateISOString;
 
@@ -35,28 +36,45 @@ export interface Race {
     lapDistance: string;
 }
 
-export interface RaceWithRunnerCount extends Race {
-    /**
-     * The number of runners participating in the race
-     */
-    runnerCount: number;
-}
-
 /**
  * An object representing a race with additional admin properties
  */
-export interface AdminRace extends Race {
+export type AdminRace<TRace extends PublicRace = PublicRace> = TRace & {
     /**
      * Whether the race is publicly displayed or not
      */
     isPublic: boolean;
-}
+};
 
-export interface AdminRaceWithRunnerCount
-    extends AdminRace,
-        RaceWithRunnerCount {}
+export type AdminRaceWithOrder<TRace extends AdminRace = AdminRace> = TRace & {
+    /**
+     * Number used to order races
+     */
+    order: number;
+};
+
+export type RaceWithRunners<
+    TRace extends PublicRace = PublicRace,
+    TRunner extends Runner = Runner,
+> = TRace & {
+    runners: TRunner[];
+};
+
+export type RaceWithRunnerCount<TRace extends PublicRace = PublicRace> =
+    TRace & {
+        /**
+         * The number of runners participating in the race
+         */
+        runnerCount: number;
+    };
+
+export type AdminRaceWithRunnerCount<TRace extends AdminRace = AdminRace> =
+    RaceWithRunnerCount<TRace>;
 
 /**
  * An object whose key is a race ID and value is the corresponding race
  */
-export type RaceDict<TRace extends Race = Race> = Record<string, TRace>;
+export type RaceDict<TRace extends PublicRace = PublicRace> = Record<
+    string,
+    TRace
+>;

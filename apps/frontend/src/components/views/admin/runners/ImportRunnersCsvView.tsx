@@ -12,6 +12,7 @@ import {
     type AdminRace,
     type Gender,
     type RaceDict,
+    type Runner,
 } from "@live24hisere/types";
 import { stringUtils } from "@live24hisere/utils";
 import { GENDER_OPTIONS } from "../../../../constants/forms";
@@ -28,7 +29,6 @@ import {
     type RunnerFromCsv,
     type RunnersCsvMapping,
 } from "../../../../types/ImportCsv";
-import type { Runner } from "../../../../types/Runner";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { getRunnerFromCsv, parseCsv } from "../../../../utils/csvUtils";
 import { getRaceDictFromRaces } from "../../../../utils/raceUtils";

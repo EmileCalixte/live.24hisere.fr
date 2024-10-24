@@ -1,9 +1,8 @@
-import { type AdminPassage } from "@live24hisere/types";
 import {
+    type AdminPassage,
     type Runner,
-    type RunnerWithAdminPassages,
     type RunnerWithPassages,
-} from "../Runner";
+} from "@live24hisere/types";
 import { type ApiRequest } from "./ApiRequest";
 
 export interface GetRunnersApiRequest extends ApiRequest {
@@ -34,7 +33,7 @@ export interface GetAdminRunnerApiRequest extends ApiRequest {
     payload: never;
 
     response: {
-        runner: RunnerWithAdminPassages;
+        runner: RunnerWithPassages<Runner, AdminPassage>;
     };
 }
 
@@ -42,7 +41,7 @@ export interface PostAdminRunnerApiRequest extends ApiRequest {
     payload: Omit<Runner, "birthYear"> & { birthYear: number };
 
     response: {
-        runner: RunnerWithAdminPassages;
+        runner: RunnerWithPassages<Runner, AdminPassage>;
     };
 }
 

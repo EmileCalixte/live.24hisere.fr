@@ -1,14 +1,13 @@
 import React from "react";
 import {
     type CategoryShortCode,
-    Gender,
     type GenderWithMixed,
-    type Race,
+    type PublicRace,
 } from "@live24hisere/types";
 import { formatMsAsDuration } from "../../../../utils/utils";
 
 interface RankingTableInfoHeaderProps {
-    race: Race;
+    race: PublicRace;
     tableCategory: CategoryShortCode | null;
     tableGender: GenderWithMixed;
     tableRaceDuration: number | null;
@@ -33,9 +32,9 @@ export default function RankingTableInfoHeader({
             {(() => {
                 if (tableGender === "mixed") {
                     return "mixte";
-                } else if (tableGender === Gender.M) {
+                } else if (tableGender === "M") {
                     return "hommes";
-                } else if (tableGender === Gender.F) {
+                } else if (tableGender === "F") {
                     return "femmes";
                 } else {
                     return tableGender;

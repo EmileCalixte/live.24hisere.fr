@@ -3,7 +3,7 @@ import { type NavigateOptions } from "react-router-dom";
 import {
     type CategoriesDict,
     type CategoryShortCode,
-    type Race,
+    type PublicRace,
 } from "@live24hisere/types";
 import { SearchParam } from "../../constants/searchParams";
 import { useQueryString } from "./useQueryString";
@@ -15,7 +15,7 @@ interface UseCategoryQueryString {
 }
 
 export function useCategoryQueryString(
-    race: Race | null,
+    race: PublicRace | null,
     categories: CategoriesDict | null,
 ): UseCategoryQueryString {
     const { searchParams, setParams, deleteParams } = useQueryString();

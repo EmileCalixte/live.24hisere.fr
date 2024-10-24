@@ -1,4 +1,4 @@
-import { Gender } from "@live24hisere/types";
+import { type Gender } from "@live24hisere/types";
 import { typeUtils } from ".";
 
 export function isValidGender(
@@ -8,5 +8,5 @@ export function isValidGender(
         return false;
     }
 
-    return value in Gender;
+    return value in ["M", "F"];
 }

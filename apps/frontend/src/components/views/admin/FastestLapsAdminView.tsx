@@ -2,15 +2,15 @@ import React from "react";
 import { Col, Row } from "react-bootstrap";
 import {
     type AdminPassageWithRunnerId,
-    type PublicProcessedPassage,
+    type ProcessedPassage,
     type RaceDict,
+    type Runner,
 } from "@live24hisere/types";
 import { getAdminPassages } from "../../../services/api/PassageService";
 import { getAdminRaces } from "../../../services/api/RaceService";
 import { getAdminRunners } from "../../../services/api/RunnerService";
 import ToastService from "../../../services/ToastService";
 import { type SelectOption } from "../../../types/Forms";
-import { type Runner } from "../../../types/Runner";
 import { isApiRequestResultOk } from "../../../utils/apiUtils";
 import { getProcessedPassagesFromPassages } from "../../../utils/passageUtils";
 import { getRaceDictFromRaces } from "../../../utils/raceUtils";
@@ -28,7 +28,7 @@ type RunnerSortedPassages = Record<number, AdminPassageWithRunnerId[]>;
 
 type RunnerSortedProcessedPassages = Record<
     number,
-    Array<PublicProcessedPassage<AdminPassageWithRunnerId>>
+    Array<ProcessedPassage<AdminPassageWithRunnerId>>
 >;
 
 const ITEMS_PER_PAGE = 100;
@@ -219,14 +219,14 @@ export default function FastestLapsAdminView(): React.ReactElement {
     }, [runnerSortedPassages, races, runners]);
 
     const speedSortedProcessedPassages = React.useMemo<
-        Array<PublicProcessedPassage<AdminPassageWithRunnerId>> | false
+        Array<ProcessedPassage<AdminPassageWithRunnerId>> | false
     >(() => {
         if (!runnerSortedProcessedPassages) {
             return false;
         }
 
         const sortedProcessedPassages: Array<
-            PublicProcessedPassage<AdminPassageWithRunnerId>
+            ProcessedPassage<AdminPassageWithRunnerId>
         > = [];
 
         for (const runnerId in runnerSortedProcessedPassages) {
@@ -256,7 +256,7 @@ export default function FastestLapsAdminView(): React.ReactElement {
     }, [runnerSortedProcessedPassages]);
 
     const passagesToDisplay = React.useMemo<
-        Array<PublicProcessedPassage<AdminPassageWithRunnerId>> | false
+        Array<ProcessedPassage<AdminPassageWithRunnerId>> | false
     >(() => {
         if (!speedSortedProcessedPassages) {
             return false;
@@ -305,15 +305,13 @@ export default function FastestLapsAdminView(): React.ReactElement {
     }, [passagesToDisplay]);
 
     const passagesInPage = React.useMemo<
-        Array<PublicProcessedPassage<AdminPassageWithRunnerId>> | false
+        Array<ProcessedPassage<AdminPassageWithRunnerId>> | false
     >(() => {
         if (!passagesToDisplay) {
             return false;
         }
 
-        const passages: Array<
-            PublicProcessedPassage<AdminPassageWithRunnerId>
-        > = [];
+        const passages: Array<ProcessedPassage<AdminPassageWithRunnerId>> = [];
 
         for (
             let i = ITEMS_PER_PAGE * (page - 1);

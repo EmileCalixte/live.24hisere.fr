@@ -1,8 +1,8 @@
 import { HttpStatus, INestApplication } from "@nestjs/common";
 import request from "supertest";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { Runner } from "@live24hisere/types";
 import { objectUtils } from "@live24hisere/utils";
-import { Runner } from "../../src/types/Runner";
 import { initApp } from "./_init";
 import { ADMIN_USER_ACCESS_TOKEN } from "./constants/accessToken";
 import { BIRTH_YEAR_REGEX } from "./constants/birthYear";
