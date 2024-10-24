@@ -3,7 +3,7 @@ import { type NavigateOptions } from "react-router-dom";
 import { type PublicRace } from "@live24hisere/types";
 import { RankingTimeMode } from "../../constants/rankingTimeMode";
 import { SearchParam } from "../../constants/searchParams";
-import { type ReactStateSetter } from "../../types/ReactUtils";
+import { type ReactStateSetter } from "../../types/utils/react";
 import { getDateFromRaceTime } from "../../utils/raceUtils";
 import { useQueryString } from "./useQueryString";
 

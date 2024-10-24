@@ -1,3 +1,4 @@
+import { ONE_HOUR_IN_MILLISECONDS } from "@live24hisere/constants/utils";
 import {
     type ProcessedPassage,
     type PublicPassage,
@@ -6,7 +7,6 @@ import {
     type RunnerProcessedHour,
 } from "@live24hisere/types";
 import { compareUtils, dateUtils } from "@live24hisere/utils";
-import { HOUR_IN_MS } from "../constants/misc";
 import { getPaceFromSpeed, getSpeed } from "./mathUtils";
 import { getDistanceFromPassageCount, getRaceTime } from "./raceUtils";
 
@@ -152,10 +152,10 @@ export function getProcessedHoursFromPassages(
     for (
         let hourStartRaceTime = 0;
         hourStartRaceTime <= raceDurationMs;
-        hourStartRaceTime += HOUR_IN_MS
+        hourStartRaceTime += ONE_HOUR_IN_MILLISECONDS
     ) {
         const hourEndRaceTime = Math.min(
-            hourStartRaceTime + HOUR_IN_MS - 1,
+            hourStartRaceTime + ONE_HOUR_IN_MILLISECONDS - 1,
             raceDurationMs,
         );
         const hourStartTime = new Date(
