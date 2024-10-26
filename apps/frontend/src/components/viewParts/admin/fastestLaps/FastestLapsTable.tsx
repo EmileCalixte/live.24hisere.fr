@@ -5,7 +5,7 @@ import {
     type ProcessedPassage,
     type RaceDict,
     type Runner,
-} from "@live24hisere/types";
+} from "@live24hisere/core/types";
 import { formatFloatNumber, formatMsAsDuration } from "../../../../utils/utils";
 
 interface FastestLapsTableProps {

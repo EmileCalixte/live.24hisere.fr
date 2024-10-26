@@ -7,8 +7,7 @@ import {
     Routes,
     useMatch,
 } from "react-router-dom";
-import { type PublicUser } from "@live24hisere/types";
-import { helloWorldUtils, type Toto } from "@live24hisere/utils/test-utils";
+import { type PublicUser } from "@live24hisere/core/types";
 import { APP_BASE_TITLE } from "../constants/app";
 import { getAppData } from "../services/api/AppDataService";
 import {
@@ -115,8 +114,6 @@ export const appContext = createContext<AppContext>({
 
 // Fetch app data every 20 seconds
 const FETCH_APP_DATA_INTERVAL_TIME = 20 * 1000;
-
-const text: Toto = "toto";
 
 export default function App(): React.ReactElement {
     const [isLoading, setIsLoading] = useState(true);
@@ -310,7 +307,6 @@ export default function App(): React.ReactElement {
                 <div id="app-content-wrapper">
                     <Header />
                     <main id="page-content" className="container-fluid">
-                        <h1>{helloWorldUtils.helloWorld(text)}</h1>
                         {isLoading ? (
                             <CircularLoader />
                         ) : showDisabledAppMessage ? (

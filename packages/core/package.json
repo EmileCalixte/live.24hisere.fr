@@ -1,19 +1,19 @@
 {
-    "name": "@live24hisere/types",
+    "name": "@live24hisere/core",
     "scripts": {
         "dev": "tsup --watch",
         "build": "tsup"
     },
     "exports": {
-        ".": {
-            "types": "./index.d.ts",
+        "./constants": {
+            "types": "./constants.d.ts",
+            "import": "./dist/constants.mjs",
+            "require": "./dist/constants.js"
+        },
+        "./types": {
+            "types": "./types.d.ts",
             "import": "./dist/types.mjs",
             "require": "./dist/types.js"
-        },
-        "./utils": {
-            "types": "./utils.d.ts",
-            "import": "./dist/utils.mjs",
-            "require": "./dist/utils.js"
         }
     },
     "devDependencies": {

@@ -3,7 +3,7 @@ import {
     InternalServerErrorException,
     UnauthorizedException,
 } from "@nestjs/common";
-import { AccessToken, User } from "@live24hisere/types";
+import { AccessToken, User } from "@live24hisere/core/types";
 import { AccessTokenService } from "./database/entities/accessToken.service";
 import { UserService } from "./database/entities/user.service";
 import { PasswordService } from "./password.service";

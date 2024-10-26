@@ -1,11 +1,11 @@
-import { ONE_HOUR_IN_MILLISECONDS } from "@live24hisere/constants/utils";
+import { ONE_HOUR_IN_MILLISECONDS } from "@live24hisere/core/constants";
 import {
     type ProcessedPassage,
     type PublicPassage,
     type PublicRace,
     type RunnerProcessedData,
     type RunnerProcessedHour,
-} from "@live24hisere/types";
+} from "@live24hisere/core/types";
 import { compareUtils, dateUtils } from "@live24hisere/utils";
 import { getPaceFromSpeed, getSpeed } from "./mathUtils";
 import { getDistanceFromPassageCount, getRaceTime } from "./raceUtils";

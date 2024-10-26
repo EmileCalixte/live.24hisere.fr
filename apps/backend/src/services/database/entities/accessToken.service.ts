@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { eq } from "drizzle-orm";
-import { AccessToken, User } from "@live24hisere/types";
+import { AccessToken, User } from "@live24hisere/core/types";
 import { TABLE_ACCESS_TOKEN } from "../../../../drizzle/schema";
 import { HEXADECIMAL, RandomService } from "../../random.service";
 import { DrizzleService } from "../drizzle.service";

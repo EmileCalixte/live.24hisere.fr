@@ -13,7 +13,7 @@ import {
     type AdminRace,
     type RaceDict,
     type Runner,
-} from "@live24hisere/types";
+} from "@live24hisere/core/types";
 import { getAdminRaces } from "../../../../services/api/RaceService";
 import { getAdminRunners } from "../../../../services/api/RunnerService";
 import ToastService from "../../../../services/ToastService";

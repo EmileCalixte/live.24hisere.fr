@@ -1,7 +1,7 @@
 import { HttpStatus, INestApplication } from "@nestjs/common";
 import request from "supertest";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { AdminPassageWithRunnerId } from "@live24hisere/types";
+import { AdminPassageWithRunnerId } from "@live24hisere/core/types";
 import { initApp } from "./_init";
 import { ADMIN_USER_ACCESS_TOKEN } from "./constants/accessToken";
 import { ISO8601_DATE_REGEX } from "./constants/dates";

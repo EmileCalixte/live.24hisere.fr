@@ -4,7 +4,7 @@ import {
     type CategoriesDict,
     type CategoryShortCode,
     type GenderWithMixed,
-} from "@live24hisere/types";
+} from "@live24hisere/core/types";
 import { CATEGORY_SCRATCH } from "../../../constants/category";
 import {
     CATEGORY_SCRATCH_SELECT_OPTION,

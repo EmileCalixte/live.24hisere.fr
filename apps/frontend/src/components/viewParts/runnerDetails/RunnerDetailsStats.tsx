@@ -4,7 +4,7 @@ import {
     type ProcessedPassage,
     type PublicRace,
     type RunnerWithProcessedHours,
-} from "@live24hisere/types";
+} from "@live24hisere/core/types";
 import { NO_VALUE_PLACEHOLDER } from "../../../constants/misc";
 import { type Ranking, type RankingRunner } from "../../../types/Ranking";
 import { getPaceFromSpeed } from "../../../utils/mathUtils";

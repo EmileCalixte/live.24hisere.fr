@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import {
     type AdminRaceWithRunnerCount,
     type Gender,
-} from "@live24hisere/types";
+} from "@live24hisere/core/types";
 import { GENDER_OPTIONS } from "../../../../constants/forms";
 import { getCategoryNameFromBirthYear } from "../../../../utils/ffaUtils";
 import { getRacesSelectOptions } from "../../../../utils/raceUtils";

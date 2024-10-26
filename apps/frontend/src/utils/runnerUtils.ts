@@ -5,7 +5,7 @@ import {
     type RunnerWithPassages,
     type RunnerWithProcessedData,
     type RunnerWithProcessedPassages,
-} from "@live24hisere/types";
+} from "@live24hisere/core/types";
 import { compareUtils, dateUtils } from "@live24hisere/utils";
 import { type SelectOption } from "../types/Forms";
 import { type RankingRunnerGap } from "../types/Ranking";

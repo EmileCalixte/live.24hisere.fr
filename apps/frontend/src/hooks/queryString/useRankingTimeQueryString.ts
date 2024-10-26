@@ -1,6 +1,6 @@
 import React from "react";
 import { type NavigateOptions } from "react-router-dom";
-import { type PublicRace } from "@live24hisere/types";
+import { type PublicRace } from "@live24hisere/core/types";
 import { RankingTimeMode } from "../../constants/rankingTimeMode";
 import { SearchParam } from "../../constants/searchParams";
 import { type ReactStateSetter } from "../../types/utils/react";

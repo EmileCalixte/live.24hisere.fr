@@ -1,12 +1,12 @@
 import Papa from "papaparse";
-import { GENDER } from "@live24hisere/constants/runners";
 import {
     DD_MM_YYYY_NON_STRICT_REGEX,
     DD_SLASH_MM_SLASH_YYYY_NON_STRICT_REGEX,
+    GENDER,
     NUMERIC_REGEX,
     YYYY_MM_DD_NON_STRICT_REGEX,
     YYYY_REGEX,
-} from "@live24hisere/constants/utils";
+} from "@live24hisere/core/constants";
 import { genderUtils } from "@live24hisere/utils";
 import { ImportCsvColumn } from "../constants/importCsv";
 import { type RunnerFromCsv, type RunnersCsvMapping } from "../types/ImportCsv";

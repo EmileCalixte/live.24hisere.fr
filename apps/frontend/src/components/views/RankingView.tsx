@@ -6,7 +6,7 @@ import {
     type GenderWithMixed,
     type RunnerWithProcessedData,
     type RunnerWithProcessedPassages,
-} from "@live24hisere/types";
+} from "@live24hisere/core/types";
 import { objectUtils } from "@live24hisere/utils";
 import { RankingTimeMode } from "../../constants/rankingTimeMode";
 import "../../css/print-ranking-table.css";

@@ -5,7 +5,7 @@ import { Col, Row } from "react-bootstrap";
 import {
     type PublicRace,
     type RunnerWithProcessedPassages,
-} from "@live24hisere/types";
+} from "@live24hisere/core/types";
 import {
     RUNNER_DETAILS_LAPS_SORT_COLUMNS,
     SortBy,

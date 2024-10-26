@@ -5,7 +5,7 @@ import {
     AdminRaceWithRunnerCount,
     PublicRace,
     RaceWithRunnerCount,
-} from "@live24hisere/types";
+} from "@live24hisere/core/types";
 import { objectUtils } from "@live24hisere/utils";
 import { TABLE_RACE, TABLE_RUNNER } from "../../../../drizzle/schema";
 import { DrizzleTableColumns } from "../../../types/utils/drizzle";

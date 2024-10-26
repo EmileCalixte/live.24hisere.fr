@@ -7,14 +7,14 @@ import React, {
 } from "react";
 import { Col, Row } from "react-bootstrap";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { GENDER } from "@live24hisere/constants/runners";
+import { GENDER } from "@live24hisere/core/constants";
 import {
     type AdminProcessedPassage,
     type AdminRaceWithRunnerCount,
     type Gender,
     type RunnerWithProcessedPassages,
     type RunnerWithRace,
-} from "@live24hisere/types";
+} from "@live24hisere/core/types";
 import { getAdminRaces } from "../../../../services/api/RaceService";
 import {
     deleteAdminRunner,

@@ -4,7 +4,7 @@ import {
     type CategoryShortCode,
     type GenderWithMixed,
     type PublicRace,
-} from "@live24hisere/types";
+} from "@live24hisere/core/types";
 import { NO_VALUE_PLACEHOLDER } from "../../../../constants/misc";
 import { type RankingRunner } from "../../../../types/Ranking";
 import { getRankingType } from "../../../../utils/rankingUtils";

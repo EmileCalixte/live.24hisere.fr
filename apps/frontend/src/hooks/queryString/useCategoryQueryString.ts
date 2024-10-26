@@ -4,7 +4,7 @@ import {
     type CategoriesDict,
     type CategoryShortCode,
     type PublicRace,
-} from "@live24hisere/types";
+} from "@live24hisere/core/types";
 import { SearchParam } from "../../constants/searchParams";
 import { useQueryString } from "./useQueryString";
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { type Runner } from "@live24hisere/types";
+import { type Runner } from "@live24hisere/core/types";
 import { compareUtils } from "@live24hisere/utils";
 import { getRunnersSelectOptions } from "../../../utils/runnerUtils";
 import Select from "../../ui/forms/Select";

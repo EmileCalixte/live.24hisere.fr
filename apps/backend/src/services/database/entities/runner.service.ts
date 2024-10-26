@@ -1,6 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { eq, getTableColumns } from "drizzle-orm";
-import { AdminPassage, Runner, RunnerWithPassages } from "@live24hisere/types";
+import {
+    AdminPassage,
+    Runner,
+    RunnerWithPassages,
+} from "@live24hisere/core/types";
 import { objectUtils } from "@live24hisere/utils";
 import {
     TABLE_PASSAGE,

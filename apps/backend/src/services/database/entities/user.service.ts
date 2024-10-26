@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { eq } from "drizzle-orm";
-import { User } from "@live24hisere/types";
+import { User } from "@live24hisere/core/types";
 import { TABLE_USER } from "../../../../drizzle/schema";
 import { EntityService } from "../entity.service";
 

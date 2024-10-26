@@ -5,7 +5,7 @@ import {
     UnauthorizedException,
 } from "@nestjs/common";
 import { Request } from "express";
-import { User } from "@live24hisere/types";
+import { User } from "@live24hisere/core/types";
 import { AuthService } from "../services/auth.service";
 
 const ACCESS_TOKEN_MUST_BE_PROVIDED_MESSAGE = "Access token must be provided";

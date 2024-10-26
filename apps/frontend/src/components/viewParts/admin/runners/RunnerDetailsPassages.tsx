@@ -12,7 +12,7 @@ import { Col, Row } from "react-bootstrap";
 import {
     type AdminProcessedPassage,
     type AdminRaceWithRunnerCount,
-} from "@live24hisere/types";
+} from "@live24hisere/core/types";
 import {
     formatDateAsString,
     formatMsAsDuration,

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import {
     type CategoryShortCode,
     type GenderWithMixed,
-} from "@live24hisere/types";
+} from "@live24hisere/core/types";
 import { type RankingRunner } from "../../../../../types/Ranking";
 import { getCategoryCodeFromBirthYear } from "../../../../../utils/ffaUtils";
 import { getRankingType } from "../../../../../utils/rankingUtils";

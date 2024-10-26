@@ -1,6 +1,6 @@
 import React from "react";
 import { type NavigateOptions } from "react-router-dom";
-import { type GenderWithMixed } from "@live24hisere/types";
+import { type GenderWithMixed } from "@live24hisere/core/types";
 import { genderUtils } from "@live24hisere/utils";
 import { SearchParam } from "../../constants/searchParams";
 import { useQueryString } from "./useQueryString";

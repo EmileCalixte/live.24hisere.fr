@@ -1,5 +1,5 @@
-import { GENDER } from "@live24hisere/constants/runners";
-import { type Gender, type GenderWithMixed } from "@live24hisere/types";
+import { GENDER } from "@live24hisere/core/constants";
+import { type Gender, type GenderWithMixed } from "@live24hisere/core/types";
 import { type SelectOption } from "../types/Forms";
 import { CATEGORY_SCRATCH } from "./category";
 import { RankingTimeMode } from "./rankingTimeMode";

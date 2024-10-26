@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { Col, Row } from "react-bootstrap";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { type AdminRaceWithRunnerCount } from "@live24hisere/types";
+import { type AdminRaceWithRunnerCount } from "@live24hisere/core/types";
 import {
     deleteAdminRace,
     getAdminRace,

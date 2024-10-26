@@ -1,4 +1,8 @@
-import { AdminPassage, Runner, RunnerWithPassages } from "@live24hisere/types";
+import {
+    AdminPassage,
+    Runner,
+    RunnerWithPassages,
+} from "@live24hisere/core/types";
 
 export interface AdminRunnersResponse {
     runners: Runner[];

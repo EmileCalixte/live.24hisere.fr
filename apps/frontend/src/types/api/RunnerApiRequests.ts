@@ -2,7 +2,7 @@ import {
     type AdminPassage,
     type Runner,
     type RunnerWithPassages,
-} from "@live24hisere/types";
+} from "@live24hisere/core/types";
 import { type ApiRequest } from "./ApiRequest";
 
 export interface GetRunnersApiRequest extends ApiRequest {

@@ -1,4 +1,4 @@
-import { AdminRace, RaceWithRunnerCount } from "@live24hisere/types";
+import { AdminRace, RaceWithRunnerCount } from "@live24hisere/core/types";
 
 export interface AdminRacesResponse {
     races: Array<RaceWithRunnerCount<AdminRace>>;

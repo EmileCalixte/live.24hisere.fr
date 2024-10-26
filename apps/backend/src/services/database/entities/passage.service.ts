@@ -4,7 +4,7 @@ import {
     AdminPassage,
     AdminPassageWithRunnerId,
     PublicPassage,
-} from "@live24hisere/types";
+} from "@live24hisere/core/types";
 import { TABLE_PASSAGE } from "../../../../drizzle/schema";
 import { DrizzleTableColumns } from "../../../types/utils/drizzle";
 import { EntityService } from "../entity.service";

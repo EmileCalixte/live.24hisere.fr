@@ -1,10 +1,10 @@
 import React from "react";
-import { GENDER } from "@live24hisere/constants/runners";
+import { GENDER } from "@live24hisere/core/constants";
 import {
     type CategoryShortCode,
     type GenderWithMixed,
     type PublicRace,
-} from "@live24hisere/types";
+} from "@live24hisere/core/types";
 import { formatMsAsDuration } from "../../../../utils/utils";
 
 interface RankingTableInfoHeaderProps {

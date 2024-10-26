@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { type RaceDict, type Runner } from "@live24hisere/types";
+import { type RaceDict, type Runner } from "@live24hisere/core/types";
 import { getCategoryCodeFromBirthYear } from "../../../../utils/ffaUtils";
 import CircularLoader from "../../../ui/CircularLoader";
 

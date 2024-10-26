@@ -1,4 +1,4 @@
-import { type Gender } from "@live24hisere/types";
+import { type Gender } from "@live24hisere/core/types";
 import { type ImportCsvColumn } from "../constants/importCsv";
 
 export type RunnersCsvMapping = Record<ImportCsvColumn, number | null>;

@@ -1,5 +1,5 @@
 import React from "react";
-import { GENDER } from "@live24hisere/constants/runners";
+import { GENDER } from "@live24hisere/core/constants";
 import { NO_VALUE_PLACEHOLDER } from "../../../constants/misc";
 import {
     type Ranking,

@@ -1,4 +1,4 @@
-import { Runner, RunnerWithPassages } from "@live24hisere/types";
+import { Runner, RunnerWithPassages } from "@live24hisere/core/types";
 
 export interface RunnersResponse {
     runners: Runner[];

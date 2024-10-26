@@ -1,5 +1,5 @@
 import { customType, mysqlTable } from "drizzle-orm/mysql-core";
-import { GENDERS } from "@live24hisere/constants/runners";
+import { GENDERS } from "@live24hisere/core/constants";
 import { dateUtils } from "@live24hisere/utils";
 
 const TABLE_NAME_ACCESS_TOKEN = "access_token";

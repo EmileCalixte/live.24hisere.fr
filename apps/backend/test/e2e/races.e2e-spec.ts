@@ -1,7 +1,7 @@
 import { HttpStatus, INestApplication } from "@nestjs/common";
 import request from "supertest";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { AdminRace, PublicRace } from "@live24hisere/types";
+import { AdminRace, PublicRace } from "@live24hisere/core/types";
 import { objectUtils } from "@live24hisere/utils";
 import { initApp } from "./_init";
 import { ADMIN_USER_ACCESS_TOKEN } from "./constants/accessToken";

@@ -1,7 +1,7 @@
 import {
     type CategoriesDict,
     type CategoryShortCode,
-} from "@live24hisere/types";
+} from "@live24hisere/core/types";
 import { type SelectOption } from "../types/Forms";
 
 export function getCategoriesDictSelectOptions<T extends CategoriesDict>(

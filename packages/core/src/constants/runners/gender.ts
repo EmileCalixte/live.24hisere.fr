@@ -1,5 +1,5 @@
-import { type Gender } from "@live24hisere/types";
-import { type UnionTypeRecord } from "@live24hisere/types/utils";
+import { type Gender } from "../../types/Gender";
+import { type UnionTypeRecord } from "../../types/utils/objects";
 
 export const GENDER: UnionTypeRecord<Gender> = {
     M: "M",

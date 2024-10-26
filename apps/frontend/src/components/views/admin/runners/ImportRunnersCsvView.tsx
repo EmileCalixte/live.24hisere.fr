@@ -13,7 +13,7 @@ import {
     type Gender,
     type RaceDict,
     type Runner,
-} from "@live24hisere/types";
+} from "@live24hisere/core/types";
 import { stringUtils } from "@live24hisere/utils";
 import { GENDER_OPTIONS } from "../../../../constants/forms";
 import { ImportCsvColumn } from "../../../../constants/importCsv";

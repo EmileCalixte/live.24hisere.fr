@@ -1,4 +1,7 @@
-import { type GenderWithMixed, type PublicRace } from "@live24hisere/types";
+import {
+    type GenderWithMixed,
+    type PublicRace,
+} from "@live24hisere/core/types";
 import {
     type MinimalRankingRunnerInput,
     type Ranking,

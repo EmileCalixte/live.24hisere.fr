@@ -2,7 +2,7 @@ import {
     type AdminRace,
     type AdminRaceWithRunnerCount,
     type RaceWithRunnerCount,
-} from "@live24hisere/types";
+} from "@live24hisere/core/types";
 import { type ApiRequest } from "./ApiRequest";
 
 export interface GetRacesApiRequest extends ApiRequest {

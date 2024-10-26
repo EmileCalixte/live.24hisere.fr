@@ -11,7 +11,7 @@ import {
     RACE_MAX_DISTANCE,
     RACE_MAX_DURATION,
     RACE_NAME_MAX_LENGTH,
-} from "@live24hisere/constants/races";
+} from "@live24hisere/core/constants";
 import { FloatStringMax } from "../../validation/validators/floatString/FloatStringMax";
 import { FloatStringMin } from "../../validation/validators/floatString/FloatStringMin";
 import { IsFloatString } from "../../validation/validators/floatString/IsFloatString";

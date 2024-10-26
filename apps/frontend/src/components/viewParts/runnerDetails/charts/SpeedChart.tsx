@@ -6,7 +6,7 @@ import {
     type PublicRace,
     type RunnerWithProcessedHours,
     type RunnerWithProcessedPassages,
-} from "@live24hisere/types";
+} from "@live24hisere/core/types";
 import { SearchParam } from "../../../../constants/searchParams";
 import { useSpeedChartQueryString } from "../../../../hooks/queryString/useSpeedChartQueryString";
 import { useWindowDimensions } from "../../../../hooks/useWindowDimensions";

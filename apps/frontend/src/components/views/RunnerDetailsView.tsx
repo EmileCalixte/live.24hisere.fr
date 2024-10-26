@@ -7,7 +7,7 @@ import {
     type RunnerWithProcessedData,
     type RunnerWithProcessedHours,
     type RunnerWithProcessedPassages,
-} from "@live24hisere/types";
+} from "@live24hisere/core/types";
 import {
     RUNNER_LAPS_TABLE_SEARCH_PARAMS,
     RUNNER_SPEED_CHART_SEARCH_PARAMS,
