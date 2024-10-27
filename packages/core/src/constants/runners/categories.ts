@@ -3,7 +3,7 @@
  */
 export const ALL_CATEGORIES = {
     BB: "Baby Athlé",
-    EA: "École d'Athlétisme",
+    EA: "Éveil Athlétique",
     PO: "Poussins",
     BE: "Benjamins",
     MI: "Minimes",
@@ -11,7 +11,7 @@ export const ALL_CATEGORIES = {
     JU: "Juniors",
     ES: "Espoirs",
     SE: "Seniors",
-    VE: "Masters",
+    MA: "Masters",
     M0: "Masters 0",
     M1: "Masters 1",
     M2: "Masters 2",
