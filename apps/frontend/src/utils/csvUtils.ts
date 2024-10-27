@@ -32,7 +32,9 @@ export function getRunnerFromCsv(
     csvRow: string[],
     mapping: RunnersCsvMapping,
 ): Partial<RunnerFromCsv> {
-    let id: number | string | undefined =
+    const runnerFromCsv: Partial<RunnerFromCsv> = {};
+
+    const id: number | string | undefined =
         mapping[ImportCsvColumn.ID] !== null
             ? csvRow[mapping[ImportCsvColumn.ID]]?.trim()
             : undefined;
@@ -54,9 +56,15 @@ export function getRunnerFromCsv(
             : undefined;
 
     if (id?.match(NUMERIC_REGEX)) {
-        id = parseInt(id);
-    } else {
-        id = undefined;
+        runnerFromCsv.id = parseInt(id);
+    }
+
+    if (firstname) {
+        runnerFromCsv.firstname = firstname;
+    }
+
+    if (lastname) {
+        runnerFromCsv.lastname = lastname;
     }
 
     if (birthYear?.match(DD_MM_YYYY_NON_STRICT_REGEX)) {
@@ -67,8 +75,8 @@ export function getRunnerFromCsv(
         birthYear = birthYear?.split("-")[0];
     }
 
-    if (!birthYear?.match(YYYY_REGEX)) {
-        birthYear = undefined;
+    if (birthYear?.match(YYYY_REGEX)) {
+        runnerFromCsv.birthYear = birthYear;
     }
 
     if (gender === "male") {
@@ -77,15 +85,9 @@ export function getRunnerFromCsv(
         gender = GENDER.F;
     }
 
-    if (!genderUtils.isValidGender(gender)) {
-        gender = undefined;
+    if (genderUtils.isValidGender(gender)) {
+        runnerFromCsv.gender = gender;
     }
 
-    return {
-        id,
-        firstname,
-        lastname,
-        birthYear,
-        gender,
-    };
+    return runnerFromCsv;
 }

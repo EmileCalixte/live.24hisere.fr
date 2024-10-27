@@ -1,9 +1,9 @@
 import React, { useMemo } from "react";
 import { Col } from "react-bootstrap";
 import {
-    type CategoriesDict,
     type CategoryShortCode,
     type GenderWithMixed,
+    type PartialCategoriesDict,
 } from "@live24hisere/core/types";
 import { CATEGORY_SCRATCH } from "../../../constants/category";
 import {
@@ -19,7 +19,7 @@ import Select from "../../ui/forms/Select";
 import RankingSettingsTime from "./RankingSettingsTime";
 
 interface RankingSettingsProps {
-    categories: CategoriesDict | null;
+    categories: PartialCategoriesDict | null;
     onCategorySelect: (e: React.ChangeEvent<HTMLSelectElement>) => void;
     onGenderSelect: (gender: GenderWithMixed) => void;
     setTimeMode: (timeMode: RankingTimeMode) => void;
@@ -43,7 +43,9 @@ export default function RankingSettings({
     currentRankingTime,
     maxRankingTime,
 }: RankingSettingsProps): React.ReactElement {
-    const categoriesOptions = useMemo<SelectOption[]>(() => {
+    const categoriesOptions = useMemo<
+        Array<SelectOption<CategoryShortCode | "scratch">>
+    >(() => {
         return [
             CATEGORY_SCRATCH_SELECT_OPTION,
             ...getCategoriesDictSelectOptions(categories),

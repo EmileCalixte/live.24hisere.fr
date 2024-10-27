@@ -1,13 +1,15 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
+import { ALL_CATEGORIES } from "@live24hisere/core/constants";
 import {
-    type CategoriesDict,
     type CategoryShortCode,
+    type FullCategoriesDict,
     type GenderWithMixed,
+    type PartialCategoriesDict,
     type RunnerWithProcessedData,
     type RunnerWithProcessedPassages,
 } from "@live24hisere/core/types";
-import { objectUtils } from "@live24hisere/utils";
+import { categoryUtils, objectUtils } from "@live24hisere/utils";
 import { RankingTimeMode } from "../../constants/rankingTimeMode";
 import "../../css/print-ranking-table.css";
 import { useCategoryQueryString } from "../../hooks/queryString/useCategoryQueryString";
@@ -19,10 +21,6 @@ import { useRanking } from "../../hooks/useRanking";
 import { useWindowDimensions } from "../../hooks/useWindowDimensions";
 import { getRaces } from "../../services/api/RaceService";
 import { getRaceRunners } from "../../services/api/RunnerService";
-import {
-    existingCategories,
-    getCategoryCodeFromBirthYear,
-} from "../../utils/ffaUtils";
 import {
     getProcessedPassagesFromPassages,
     getRunnerProcessedDataFromPassages,
@@ -141,7 +139,7 @@ export default function RankingView(): React.ReactElement {
         setRankingTimeMemory(timeToSave);
     };
 
-    const categories = React.useMemo<CategoriesDict | null>(() => {
+    const categories = React.useMemo<PartialCategoriesDict | null>(() => {
         if (!ranking) {
             return null;
         }
@@ -150,19 +148,19 @@ export default function RankingView(): React.ReactElement {
 
         for (const runner of ranking) {
             categoriesInRanking.add(
-                getCategoryCodeFromBirthYear(runner.birthYear),
+                categoryUtils.getCategoryCodeFromBirthYear(runner.birthYear),
             );
         }
 
-        const categoriesToRemove: Array<keyof CategoriesDict> = [];
+        const categoriesToRemove: Array<keyof FullCategoriesDict> = [];
 
-        for (const categoryCode in existingCategories) {
+        for (const categoryCode of objectUtils.keys(ALL_CATEGORIES)) {
             if (!categoriesInRanking.has(categoryCode)) {
                 categoriesToRemove.push(categoryCode);
             }
         }
 
-        return objectUtils.excludeKeys(existingCategories, categoriesToRemove);
+        return objectUtils.excludeKeys(ALL_CATEGORIES, categoriesToRemove);
     }, [ranking]);
 
     const { selectedCategory, setCategoryParam, deleteCategoryParam } =

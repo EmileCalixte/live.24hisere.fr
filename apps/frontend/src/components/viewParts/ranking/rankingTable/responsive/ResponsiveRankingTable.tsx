@@ -4,8 +4,8 @@ import {
     type GenderWithMixed,
     type PublicRace,
 } from "@live24hisere/core/types";
+import { categoryUtils } from "@live24hisere/utils";
 import { type Ranking, type RankingRunner } from "../../../../../types/Ranking";
-import { getCategoryCodeFromBirthYear } from "../../../../../utils/ffaUtils";
 import RankingTableInfoHeader from "../RankingTableInfoHeader";
 import ResponsiveRankingTableRow from "./ResponsiveRankingTableRow";
 
@@ -26,7 +26,7 @@ export default function ResponsiveRankingTable({
 }: ResponsiveRankingTableProps): React.ReactElement {
     const getRankingTableRow = useCallback(
         (rankingRunner: RankingRunner) => {
-            const runnerCategory = getCategoryCodeFromBirthYear(
+            const runnerCategory = categoryUtils.getCategoryCodeFromBirthYear(
                 rankingRunner.birthYear,
             );
 

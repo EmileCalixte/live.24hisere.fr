@@ -1,4 +1,4 @@
-import { type Entries } from "type-fest";
+import { type Entries } from "@live24hisere/core/types";
 
 /**
  * Returns a copy of an object without the specified keys
@@ -57,10 +57,17 @@ export function assignDefined<T extends object>(
 }
 
 /**
- * Alternative to Object.entries which infers entries type
+ * Wrapper to Object.entries which infers entries type
  */
 export function entries<T extends object>(object: T): Entries<T> {
     return Object.entries(object) as Entries<T>;
+}
+
+/**
+ * Wrapper of Object.keys which infers keys type
+ */
+export function keys<T extends object>(object: T): Array<keyof T> {
+    return Object.keys(object) as Array<keyof T>;
 }
 
 export function isEmptyObject(object: object): object is Record<string, never> {

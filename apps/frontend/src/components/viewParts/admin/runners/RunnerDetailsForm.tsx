@@ -4,8 +4,8 @@ import {
     type AdminRaceWithRunnerCount,
     type Gender,
 } from "@live24hisere/core/types";
+import { categoryUtils } from "@live24hisere/utils";
 import { GENDER_OPTIONS } from "../../../../constants/forms";
-import { getCategoryNameFromBirthYear } from "../../../../utils/ffaUtils";
 import { getRacesSelectOptions } from "../../../../utils/raceUtils";
 import { Checkbox } from "../../../ui/forms/Checkbox";
 import { Input } from "../../../ui/forms/Input";
@@ -115,7 +115,9 @@ export default function RunnerDetailsForm({
             <div className="mt-1">
                 <span>
                     Catégorie :{" "}
-                    {getCategoryNameFromBirthYear(parseInt(birthYear))}
+                    {categoryUtils.getCategoryNameFromBirthYear(
+                        parseInt(birthYear),
+                    )}
                 </span>
             </div>
 

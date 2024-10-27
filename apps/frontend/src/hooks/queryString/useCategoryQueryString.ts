@@ -1,10 +1,11 @@
 import React from "react";
 import { type NavigateOptions } from "react-router-dom";
 import {
-    type CategoriesDict,
     type CategoryShortCode,
+    type PartialCategoriesDict,
     type PublicRace,
 } from "@live24hisere/core/types";
+import { objectUtils } from "@live24hisere/utils";
 import { SearchParam } from "../../constants/searchParams";
 import { useQueryString } from "./useQueryString";
 
@@ -16,7 +17,7 @@ interface UseCategoryQueryString {
 
 export function useCategoryQueryString(
     race: PublicRace | null,
-    categories: CategoriesDict | null,
+    categories: PartialCategoriesDict | null,
 ): UseCategoryQueryString {
     const { searchParams, setParams, deleteParams } = useQueryString();
 
@@ -28,9 +29,11 @@ export function useCategoryQueryString(
         }
 
         return (
-            Object.keys(categories).find(
-                (categoryCode) => categoryCode === searchParamsCategory,
-            ) ?? null
+            objectUtils
+                .keys(categories)
+                .find(
+                    (categoryCode) => categoryCode === searchParamsCategory,
+                ) ?? null
         );
     }, [categories, searchParamsCategory, race]);
 

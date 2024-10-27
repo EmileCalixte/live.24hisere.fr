@@ -3,8 +3,8 @@ import {
     type CategoryShortCode,
     type GenderWithMixed,
 } from "@live24hisere/core/types";
+import { categoryUtils } from "@live24hisere/utils";
 import { type RankingRunner } from "../../../../types/Ranking";
-import { getCategoryCodeFromBirthYear } from "../../../../utils/ffaUtils";
 
 interface RankingTableRowNCellsProps {
     runner: RankingRunner;
@@ -17,7 +17,9 @@ export default function RankingTableRowNCells({
     tableCategory,
     tableGender,
 }: RankingTableRowNCellsProps): React.ReactElement {
-    const runnerCategory = getCategoryCodeFromBirthYear(runner.birthYear);
+    const runnerCategory = categoryUtils.getCategoryCodeFromBirthYear(
+        runner.birthYear,
+    );
 
     if (tableCategory === null) {
         if (tableGender === "mixed") {

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { type RaceDict, type Runner } from "@live24hisere/core/types";
-import { getCategoryCodeFromBirthYear } from "../../../../utils/ffaUtils";
+import { categoryUtils } from "@live24hisere/utils";
 import CircularLoader from "../../../ui/CircularLoader";
 
 interface RunnersTableProps {
@@ -38,7 +38,9 @@ export default function RunnersTable({
                             <td>{runner.gender}</td>
                             <td>{runner.birthYear}</td>
                             <td>
-                                {getCategoryCodeFromBirthYear(runner.birthYear)}
+                                {categoryUtils.getCategoryCodeFromBirthYear(
+                                    runner.birthYear,
+                                )}
                             </td>
                             <td>
                                 {(() => {

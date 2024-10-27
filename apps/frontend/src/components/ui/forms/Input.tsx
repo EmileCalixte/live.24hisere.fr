@@ -5,7 +5,7 @@ import { type InputType } from "../../../types/Forms";
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     label: string;
     type?: InputType;
-    value?: string | number;
+    value?: string | number | undefined;
     className?: string;
     labelClassName?: string;
     hasError?: boolean;

@@ -4,7 +4,7 @@ import { type SelectOption } from "../types/Forms";
 import { CATEGORY_SCRATCH } from "./category";
 import { RankingTimeMode } from "./rankingTimeMode";
 
-export const CATEGORY_SCRATCH_SELECT_OPTION: SelectOption = {
+export const CATEGORY_SCRATCH_SELECT_OPTION: SelectOption<"scratch"> = {
     label: "Scratch (toutes catégories)",
     value: CATEGORY_SCRATCH,
 };

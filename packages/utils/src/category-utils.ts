@@ -1,4 +1,5 @@
-import { type CategoriesDict } from "@live24hisere/core/types";
+import { ALL_CATEGORIES } from "@live24hisere/core/constants";
+import { type CategoryShortCode } from "@live24hisere/core/types";
 
 /**
  * Returns the category code from a birth year (valid until August 31st, 2024)
@@ -6,7 +7,7 @@ import { type CategoriesDict } from "@live24hisere/core/types";
  */
 export function getCategoryCodeFromBirthYear(
     birthYear: number | string,
-): string {
+): CategoryShortCode {
     if (typeof birthYear === "string") {
         birthYear = Number(birthYear);
 
@@ -94,42 +95,21 @@ export function getCategoryCodeFromBirthYear(
     return "M10";
 }
 
-/**
- * List of existing FFA categories (see https://www.athle.fr/asp.net/main.html/html.aspx?htmlid=25)
- */
-export const existingCategories: CategoriesDict = {
-    BB: "Baby Athlé",
-    EA: "École d'Athlétisme",
-    PO: "Poussins",
-    BE: "Benjamins",
-    MI: "Minimes",
-    CA: "Cadets",
-    JU: "Juniors",
-    ES: "Espoirs",
-    SE: "Seniors",
-    VE: "Masters",
-    M0: "Masters 0",
-    M1: "Masters 1",
-    M2: "Masters 2",
-    M3: "Masters 3",
-    M4: "Masters 4",
-    M5: "Masters 5",
-    M6: "Masters 6",
-    M7: "Masters 7",
-    M8: "Masters 8",
-    M9: "Masters 9",
-    M10: "Masters 10",
-};
+export function isCategoryCode(value: string): value is CategoryShortCode {
+    return value in ALL_CATEGORIES;
+}
 
 export function getCategoryNameFromCategoryCode(categoryCode: string): string {
-    if (categoryCode in existingCategories) {
-        return existingCategories[categoryCode];
+    if (isCategoryCode(categoryCode)) {
+        return ALL_CATEGORIES[categoryCode];
     }
 
     return categoryCode;
 }
 
-export function getCategoryNameFromBirthYear(birthYear: number): string {
+export function getCategoryNameFromBirthYear(
+    birthYear: number | string,
+): string {
     return getCategoryNameFromCategoryCode(
         getCategoryCodeFromBirthYear(birthYear),
     );

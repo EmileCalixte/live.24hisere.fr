@@ -2,6 +2,7 @@ import {
     type GenderWithMixed,
     type PublicRace,
 } from "@live24hisere/core/types";
+import { categoryUtils } from "@live24hisere/utils";
 import {
     type MinimalRankingRunnerInput,
     type Ranking,
@@ -9,7 +10,6 @@ import {
     type RankingRunnerGaps,
     type RankingRunnerRanks,
 } from "../types/Ranking";
-import { getCategoryCodeFromBirthYear } from "../utils/ffaUtils";
 import { getRunnerProcessedDataFromPassages } from "../utils/passageUtils";
 import {
     areRunnersEqual,
@@ -99,9 +99,8 @@ export class RankingCalculator<TRunner extends MinimalRankingRunnerInput> {
         const ranking: Ranking<TRunner> = [];
 
         for (const runner of this.runners) {
-            const runnerCategoryCode = getCategoryCodeFromBirthYear(
-                runner.birthYear,
-            );
+            const runnerCategoryCode =
+                categoryUtils.getCategoryCodeFromBirthYear(runner.birthYear);
 
             const rankings: RankingRunnerRanks = {
                 actual: {
@@ -331,7 +330,7 @@ export class RankingCalculator<TRunner extends MinimalRankingRunnerInput> {
     }
 
     private updateFirstRunners(runner: Ranking<TRunner>[number]): void {
-        const runnerCategoryCode = getCategoryCodeFromBirthYear(
+        const runnerCategoryCode = categoryUtils.getCategoryCodeFromBirthYear(
             runner.birthYear,
         );
 

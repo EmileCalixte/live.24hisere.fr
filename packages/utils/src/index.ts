@@ -1,4 +1,5 @@
 export * as arrayUtils from "./array-utils.js";
+export * as categoryUtils from "./category-utils.js";
 export * as compareUtils from "./compare-utils.js";
 export * as dateUtils from "./date-utils.js";
 export * as genderUtils from "./gender-utils.js";

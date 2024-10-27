@@ -1,12 +1,12 @@
 import React from "react";
 import { GENDER } from "@live24hisere/core/constants";
+import { categoryUtils } from "@live24hisere/utils";
 import { NO_VALUE_PLACEHOLDER } from "../../../constants/misc";
 import {
     type Ranking,
     type RankingRunner,
     type RankingRunnerGap,
 } from "../../../types/Ranking";
-import { getCategoryCodeFromBirthYear } from "../../../utils/ffaUtils";
 import { formatGap } from "../../../utils/runnerUtils";
 
 interface RunnerDetailsStatsGapsTableProps {
@@ -22,7 +22,9 @@ export default function RunnerDetailsStatsRankingTable({
     runner,
     ranking,
 }: RunnerDetailsStatsGapsTableProps): React.ReactElement {
-    const categoryCode = getCategoryCodeFromBirthYear(runner.birthYear);
+    const categoryCode = categoryUtils.getCategoryCodeFromBirthYear(
+        runner.birthYear,
+    );
     const genderString = runner.gender === GENDER.F ? "Féminin" : "Masculin";
 
     const scratchMixedRunnerCount = ranking.length;
@@ -36,8 +38,9 @@ export default function RunnerDetailsStatsRankingTable({
     const categoryMixedRunnerCount = React.useMemo(() => {
         return ranking.filter(
             (rankingRunner) =>
-                getCategoryCodeFromBirthYear(rankingRunner.birthYear) ===
-                categoryCode,
+                categoryUtils.getCategoryCodeFromBirthYear(
+                    rankingRunner.birthYear,
+                ) === categoryCode,
         ).length;
     }, [ranking, categoryCode]);
 
@@ -45,8 +48,9 @@ export default function RunnerDetailsStatsRankingTable({
         return ranking.filter(
             (rankingRunner) =>
                 rankingRunner.gender === runner.gender &&
-                getCategoryCodeFromBirthYear(rankingRunner.birthYear) ===
-                    categoryCode,
+                categoryUtils.getCategoryCodeFromBirthYear(
+                    rankingRunner.birthYear,
+                ) === categoryCode,
         ).length;
     }, [categoryCode, ranking, runner.gender]);
 
