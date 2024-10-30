@@ -9,7 +9,6 @@ import {
     PatchPassageImportSettingsAdminApiRequest,
 } from "@live24hisere/core/types";
 import { typeUtils } from "@live24hisere/utils";
-import { helloWorldUtils } from "@live24hisere/utils/test-utils";
 import { UpdateDisabledAppDto } from "../../dtos/disabledApp/updateDisabledApp.dto";
 import { UpdatePassageImportSettingsDto } from "../../dtos/passageImport/updatePassageImportSettings.dto";
 import { AuthGuard } from "../../guards/auth.guard";
@@ -32,7 +31,6 @@ export class ConfigController {
         @Body() updateDisabledAppDto: UpdateDisabledAppDto,
     ): Promise<ApiResponse<PatchDisabledAppDataAdminApiRequest>> {
         const promises = [];
-        console.log(helloWorldUtils.helloWorld());
 
         if (!typeUtils.isNullOrUndefined(updateDisabledAppDto.isAppEnabled)) {
             promises.push(

@@ -10,11 +10,6 @@
             "types": "./index.d.ts",
             "import": "./dist/utils.mjs",
             "require": "./dist/utils.js"
-        },
-        "./test-utils": {
-            "types": "./test-utils.d.ts",
-            "import": "./dist/test-utils.mjs",
-            "require": "./dist/test-utils.js"
         }
     },
     "dependencies": {
