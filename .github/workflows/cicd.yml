@@ -40,11 +40,11 @@ jobs:
       - name: Run ESLint
         run: pnpm lint
 
-      - name: Run tests on all packages
-        run: pnpm test
-
       - name: Build apps
         run: pnpm build
+
+      - name: Run tests on all packages
+        run: pnpm test
 
       - name: Clean files
         run: |
