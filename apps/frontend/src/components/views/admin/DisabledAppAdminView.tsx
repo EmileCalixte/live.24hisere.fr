@@ -5,7 +5,7 @@ import { type DisabledAppData } from "@live24hisere/core/types";
 import {
     getDisabledAppData,
     patchDisabledAppData,
-} from "../../../services/api/ConfigService";
+} from "../../../services/api/configService";
 import ToastService from "../../../services/ToastService";
 import { isApiRequestResultOk } from "../../../utils/apiUtils";
 import { appContext } from "../../App";

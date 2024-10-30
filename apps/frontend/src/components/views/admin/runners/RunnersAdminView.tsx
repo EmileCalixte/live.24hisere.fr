@@ -14,8 +14,8 @@ import {
     type RaceDict,
     type Runner,
 } from "@live24hisere/core/types";
-import { getAdminRaces } from "../../../../services/api/RaceService";
-import { getAdminRunners } from "../../../../services/api/RunnerService";
+import { getAdminRaces } from "../../../../services/api/raceService";
+import { getAdminRunners } from "../../../../services/api/runnerService";
 import ToastService from "../../../../services/ToastService";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { getRaceDictFromRaces } from "../../../../utils/raceUtils";

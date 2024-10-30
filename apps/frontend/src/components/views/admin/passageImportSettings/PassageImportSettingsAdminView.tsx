@@ -5,7 +5,7 @@ import { stringUtils } from "@live24hisere/utils";
 import {
     getPassageImportSettings,
     patchPassageImportSettings,
-} from "../../../../services/api/ConfigService";
+} from "../../../../services/api/configService";
 import ToastService from "../../../../services/ToastService";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { appContext } from "../../../App";

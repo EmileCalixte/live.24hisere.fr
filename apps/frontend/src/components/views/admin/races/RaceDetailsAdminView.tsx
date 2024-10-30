@@ -12,7 +12,7 @@ import {
     deleteAdminRace,
     getAdminRace,
     patchAdminRace,
-} from "../../../../services/api/RaceService";
+} from "../../../../services/api/raceService";
 import ToastService from "../../../../services/ToastService";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { formatDateForApi } from "../../../../utils/utils";

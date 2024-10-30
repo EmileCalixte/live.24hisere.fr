@@ -7,7 +7,7 @@ import {
 import {
     performApiRequest,
     performAuthenticatedApiRequest,
-} from "./ApiService";
+} from "./apiService";
 
 export async function getCurrentUserInfo(
     accessToken: string,

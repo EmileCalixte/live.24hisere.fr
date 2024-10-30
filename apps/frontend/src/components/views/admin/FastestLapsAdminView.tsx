@@ -6,9 +6,9 @@ import {
     type RaceDict,
     type Runner,
 } from "@live24hisere/core/types";
-import { getAdminPassages } from "../../../services/api/PassageService";
-import { getAdminRaces } from "../../../services/api/RaceService";
-import { getAdminRunners } from "../../../services/api/RunnerService";
+import { getAdminPassages } from "../../../services/api/passageService";
+import { getAdminRaces } from "../../../services/api/raceService";
+import { getAdminRunners } from "../../../services/api/runnerService";
 import ToastService from "../../../services/ToastService";
 import { type SelectOption } from "../../../types/Forms";
 import { isApiRequestResultOk } from "../../../utils/apiUtils";

@@ -9,11 +9,11 @@ import {
 } from "react-router-dom";
 import { type PublicUser } from "@live24hisere/core/types";
 import { APP_BASE_TITLE } from "../constants/app";
-import { getAppData } from "../services/api/AppDataService";
+import { getAppData } from "../services/api/appDataService";
 import {
     getCurrentUserInfo,
     logout as performLogoutRequest,
-} from "../services/api/AuthService";
+} from "../services/api/authService";
 import ToastService from "../services/ToastService";
 import {
     EVENT_API_REQUEST_ENDED,

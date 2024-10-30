@@ -2,7 +2,7 @@ import {
     type ApiRequestResult,
     type GetAllPassagesAdminApiRequest,
 } from "@live24hisere/core/types";
-import { performAuthenticatedApiRequest } from "./ApiService";
+import { performAuthenticatedApiRequest } from "./apiService";
 
 export async function getAdminPassages(
     accessToken: string,

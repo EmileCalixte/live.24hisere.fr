@@ -16,8 +16,8 @@ import { useQueryString } from "../../hooks/queryString/useQueryString";
 import { useTabQueryString } from "../../hooks/queryString/useTabQueryString";
 import { useIntervalApiRequest } from "../../hooks/useIntervalApiRequest";
 import { useRanking } from "../../hooks/useRanking";
-import { getRace } from "../../services/api/RaceService";
-import { getRaceRunners, getRunners } from "../../services/api/RunnerService";
+import { getRace } from "../../services/api/raceService";
+import { getRaceRunners, getRunners } from "../../services/api/runnerService";
 import { generateXlsxFromData } from "../../utils/excelUtils";
 import {
     getProcessedHoursFromPassages,

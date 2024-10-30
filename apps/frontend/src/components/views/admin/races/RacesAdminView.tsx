@@ -17,7 +17,7 @@ import { type AdminRaceWithRunnerCount } from "@live24hisere/core/types";
 import {
     getAdminRaces,
     putAdminRaceOrder,
-} from "../../../../services/api/RaceService";
+} from "../../../../services/api/raceService";
 import ToastService from "../../../../services/ToastService";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { appContext } from "../../../App";

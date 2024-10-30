@@ -5,7 +5,7 @@ import {
     type PatchDisabledAppDataAdminApiRequest,
     type PatchPassageImportSettingsAdminApiRequest,
 } from "@live24hisere/core/types";
-import { performAuthenticatedApiRequest } from "./ApiService";
+import { performAuthenticatedApiRequest } from "./apiService";
 
 export async function getDisabledAppData(
     accessToken: string,

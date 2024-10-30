@@ -19,8 +19,8 @@ import { useRankingTimeQueryString } from "../../hooks/queryString/useRankingTim
 import { useIntervalApiRequest } from "../../hooks/useIntervalApiRequest";
 import { useRanking } from "../../hooks/useRanking";
 import { useWindowDimensions } from "../../hooks/useWindowDimensions";
-import { getRaces } from "../../services/api/RaceService";
-import { getRaceRunners } from "../../services/api/RunnerService";
+import { getRaces } from "../../services/api/raceService";
+import { getRaceRunners } from "../../services/api/runnerService";
 import {
     getProcessedPassagesFromPassages,
     getRunnerProcessedDataFromPassages,

@@ -7,8 +7,8 @@ import {
     type Gender,
 } from "@live24hisere/core/types";
 import { useStateWithNonNullableSetter } from "../../../../hooks/useStateWithNonNullableSetter";
-import { getAdminRaces } from "../../../../services/api/RaceService";
-import { postAdminRunner } from "../../../../services/api/RunnerService";
+import { getAdminRaces } from "../../../../services/api/raceService";
+import { postAdminRunner } from "../../../../services/api/runnerService";
 import ToastService from "../../../../services/ToastService";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { appContext } from "../../../App";

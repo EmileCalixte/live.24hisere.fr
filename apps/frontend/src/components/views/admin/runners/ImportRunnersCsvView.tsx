@@ -18,11 +18,11 @@ import {
 import { stringUtils } from "@live24hisere/utils";
 import { GENDER_OPTIONS } from "../../../../constants/forms";
 import { ImportCsvColumn } from "../../../../constants/importCsv";
-import { getAdminRaces } from "../../../../services/api/RaceService";
+import { getAdminRaces } from "../../../../services/api/raceService";
 import {
     getAdminRunners,
     postAdminRunnersBulk,
-} from "../../../../services/api/RunnerService";
+} from "../../../../services/api/runnerService";
 import ToastService from "../../../../services/ToastService";
 import { type SelectOption } from "../../../../types/Forms";
 import {

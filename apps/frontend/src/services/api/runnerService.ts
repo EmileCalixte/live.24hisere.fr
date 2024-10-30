@@ -15,7 +15,7 @@ import {
 import {
     performApiRequest,
     performAuthenticatedApiRequest,
-} from "./ApiService";
+} from "./apiService";
 
 export async function getRunners(): Promise<
     ApiRequestResult<GetRunnersApiRequest>

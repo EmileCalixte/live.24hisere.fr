@@ -11,7 +11,7 @@ import { type AdminRace } from "@live24hisere/core/types";
 import {
     getAdminRaces,
     postAdminRace,
-} from "../../../../services/api/RaceService";
+} from "../../../../services/api/raceService";
 import ToastService from "../../../../services/ToastService";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { getRacesSelectOptions } from "../../../../utils/raceUtils";
