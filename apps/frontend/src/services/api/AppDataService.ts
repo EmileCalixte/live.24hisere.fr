@@ -1,5 +1,7 @@
-import { type ApiRequestResult } from "../../types/api/ApiRequest";
-import { type GetAppDataApiRequest } from "../../types/api/AppDataApiRequests";
+import {
+    type ApiRequestResult,
+    type GetAppDataApiRequest,
+} from "@live24hisere/core/types";
 import { performApiRequest } from "./ApiService";
 
 export async function getAppData(): Promise<

@@ -1,6 +1,10 @@
 import { PartialType } from "@nestjs/mapped-types";
+import { PatchPassageImportSettingsAdminApiRequest } from "@live24hisere/core/types";
 import { PassageImportSettingsDto } from "./passageImportSettings.dto";
 
-export class UpdatePassageImportSettingsDto extends PartialType(
-    PassageImportSettingsDto,
-) {}
+type PatchPassageImportSettingsPayload =
+    PatchPassageImportSettingsAdminApiRequest["payload"];
+
+export class UpdatePassageImportSettingsDto
+    extends PartialType(PassageImportSettingsDto)
+    implements PatchPassageImportSettingsPayload {}

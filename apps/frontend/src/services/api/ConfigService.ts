@@ -1,16 +1,16 @@
-import { type ApiRequestResult } from "../../types/api/ApiRequest";
 import {
-    type GetDisabledAppDataApiRequest,
-    type GetPassageImportSettingsApiRequest,
-    type PatchDisabledAppDataApiRequest,
-    type PatchPassageImportSettingsApiRequest,
-} from "../../types/api/ConfigApiRequest";
+    type ApiRequestResult,
+    type GetDisabledAppDataAdminApiRequest,
+    type GetPassageImportSettingsAdminApiRequest,
+    type PatchDisabledAppDataAdminApiRequest,
+    type PatchPassageImportSettingsAdminApiRequest,
+} from "@live24hisere/core/types";
 import { performAuthenticatedApiRequest } from "./ApiService";
 
 export async function getDisabledAppData(
     accessToken: string,
-): Promise<ApiRequestResult<GetDisabledAppDataApiRequest>> {
-    return await performAuthenticatedApiRequest<GetDisabledAppDataApiRequest>(
+): Promise<ApiRequestResult<GetDisabledAppDataAdminApiRequest>> {
+    return await performAuthenticatedApiRequest<GetDisabledAppDataAdminApiRequest>(
         "/admin/disabled-app",
         accessToken,
     );
@@ -18,9 +18,9 @@ export async function getDisabledAppData(
 
 export async function patchDisabledAppData(
     accessToken: string,
-    data: PatchDisabledAppDataApiRequest["payload"],
-): Promise<ApiRequestResult<PatchDisabledAppDataApiRequest>> {
-    return await performAuthenticatedApiRequest<PatchDisabledAppDataApiRequest>(
+    data: PatchDisabledAppDataAdminApiRequest["payload"],
+): Promise<ApiRequestResult<PatchDisabledAppDataAdminApiRequest>> {
+    return await performAuthenticatedApiRequest<PatchDisabledAppDataAdminApiRequest>(
         "/admin/disabled-app",
         accessToken,
         data,
@@ -30,8 +30,8 @@ export async function patchDisabledAppData(
 
 export async function getPassageImportSettings(
     accessToken: string,
-): Promise<ApiRequestResult<GetPassageImportSettingsApiRequest>> {
-    return await performAuthenticatedApiRequest<GetPassageImportSettingsApiRequest>(
+): Promise<ApiRequestResult<GetPassageImportSettingsAdminApiRequest>> {
+    return await performAuthenticatedApiRequest<GetPassageImportSettingsAdminApiRequest>(
         "/admin/passage-import",
         accessToken,
     );
@@ -39,8 +39,8 @@ export async function getPassageImportSettings(
 
 export async function patchPassageImportSettings(
     accessToken: string,
-    data: PatchPassageImportSettingsApiRequest["payload"],
-): Promise<ApiRequestResult<PatchPassageImportSettingsApiRequest>> {
+    data: PatchPassageImportSettingsAdminApiRequest["payload"],
+): Promise<ApiRequestResult<PatchPassageImportSettingsAdminApiRequest>> {
     return await performAuthenticatedApiRequest(
         "/admin/passage-import",
         accessToken,

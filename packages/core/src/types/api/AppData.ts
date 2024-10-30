@@ -1,4 +1,4 @@
-import type { DateISOString } from "@live24hisere/core/types";
+import { type DateISOString } from "../utils";
 import { type ApiRequest } from "./ApiRequest";
 
 export interface GetAppDataApiRequest extends ApiRequest {
@@ -23,6 +23,6 @@ export interface GetAppDataApiRequest extends ApiRequest {
         /**
          * Date and time the runners' data was exported from the timing system
          */
-        lastUpdateTime: DateISOString;
+        lastUpdateTime: DateISOString | null;
     };
 }

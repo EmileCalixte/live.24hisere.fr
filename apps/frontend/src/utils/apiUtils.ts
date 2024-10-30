@@ -2,7 +2,7 @@ import {
     type ApiRequest,
     type ApiRequestResult,
     type ApiRequestResultOk,
-} from "../types/api/ApiRequest";
+} from "@live24hisere/core/types";
 
 export const EVENT_API_REQUEST_STARTED = "apiRequestStarted";
 export const EVENT_API_REQUEST_ENDED = "apiRequestEnded";

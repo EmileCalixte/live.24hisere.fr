@@ -2,7 +2,7 @@ import {
     type AdminRace,
     type AdminRaceWithRunnerCount,
     type RaceWithRunnerCount,
-} from "@live24hisere/core/types";
+} from "../Race";
 import { type ApiRequest } from "./ApiRequest";
 
 export interface GetRacesApiRequest extends ApiRequest {
@@ -21,7 +21,7 @@ export interface GetRaceApiRequest extends ApiRequest {
     };
 }
 
-export interface GetAdminRacesApiRequest extends ApiRequest {
+export interface GetRacesAdminApiRequest extends ApiRequest {
     payload: never;
 
     response: {
@@ -29,7 +29,7 @@ export interface GetAdminRacesApiRequest extends ApiRequest {
     };
 }
 
-export interface GetAdminRaceApiRequest extends ApiRequest {
+export interface GetRaceAdminApiRequest extends ApiRequest {
     payload: never;
 
     response: {
@@ -37,7 +37,7 @@ export interface GetAdminRaceApiRequest extends ApiRequest {
     };
 }
 
-export interface PostAdminRaceApiRequest extends ApiRequest {
+export interface PostRaceAdminApiRequest extends ApiRequest {
     payload: Omit<AdminRace, "id">;
 
     response: {
@@ -45,21 +45,21 @@ export interface PostAdminRaceApiRequest extends ApiRequest {
     };
 }
 
-export interface PatchAdminRaceApiRequest extends ApiRequest {
-    payload: Partial<PostAdminRaceApiRequest["payload"]>;
+export interface PatchRaceAdminApiRequest extends ApiRequest {
+    payload: Partial<PostRaceAdminApiRequest["payload"]>;
 
     response: {
         race: AdminRaceWithRunnerCount;
     };
 }
 
-export interface DeleteAdminRaceApiRequest extends ApiRequest {
+export interface DeleteRaceAdminApiRequest extends ApiRequest {
     payload: never;
 
     response: never;
 }
 
-export interface PutAdminRaceOrderApiRequest extends ApiRequest {
+export interface PutRaceOrderAdminApiRequest extends ApiRequest {
     payload: number[];
 
     response: never;

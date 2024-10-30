@@ -1,12 +1,12 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
+import { type PassageImportSettings } from "@live24hisere/core/types";
 import { stringUtils } from "@live24hisere/utils";
 import {
     getPassageImportSettings,
     patchPassageImportSettings,
 } from "../../../../services/api/ConfigService";
 import ToastService from "../../../../services/ToastService";
-import { type PassageImportSettings } from "../../../../types/Config";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { appContext } from "../../../App";
 import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";

@@ -1,13 +1,13 @@
+import {
+    type ApiRequest,
+    type ApiRequestResult,
+} from "@live24hisere/core/types";
 import config from "../../config/config";
 import {
     DEFAULT_HEADERS,
     DEFAULT_HEADERS_WITH_BODY,
     REQUEST_TIMEOUT,
 } from "../../constants/api";
-import {
-    type ApiRequest,
-    type ApiRequestResult,
-} from "../../types/api/ApiRequest";
 import {
     addHeadersIfNotSet,
     EVENT_API_REQUEST_ENDED,

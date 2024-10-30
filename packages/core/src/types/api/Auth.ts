@@ -18,7 +18,6 @@ export interface LoginApiRequest extends ApiRequest {
 
     response: {
         accessToken: string;
-
         expirationTime: string;
     };
 }

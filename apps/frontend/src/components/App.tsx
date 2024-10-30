@@ -179,7 +179,7 @@ export default function App(): React.ReactElement {
         setIsAppEnabled(result.json.isAppEnabled);
         setDisabledAppMessage(result.json.disabledAppMessage);
 
-        setLastUpdateTime(new Date(result.json.lastUpdateTime));
+        setLastUpdateTime(new Date(result.json.lastUpdateTime ?? 0));
 
         const serverTime = new Date(result.json.currentTime);
         const clientTime = new Date();

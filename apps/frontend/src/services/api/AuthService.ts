@@ -1,9 +1,9 @@
-import { type ApiRequestResult } from "../../types/api/ApiRequest";
 import {
+    type ApiRequestResult,
     type GetCurrentUserInfoApiRequest,
     type LoginApiRequest,
     type LogoutApiRequest,
-} from "../../types/api/AuthApiRequests";
+} from "@live24hisere/core/types";
 import {
     performApiRequest,
     performAuthenticatedApiRequest,

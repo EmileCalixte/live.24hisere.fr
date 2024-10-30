@@ -11,6 +11,7 @@ import { Col, Row } from "react-bootstrap";
 import {
     type AdminRace,
     type Gender,
+    type PostRunnersBulkAdminApiRequest,
     type RaceDict,
     type Runner,
 } from "@live24hisere/core/types";
@@ -23,7 +24,6 @@ import {
     postAdminRunnersBulk,
 } from "../../../../services/api/RunnerService";
 import ToastService from "../../../../services/ToastService";
-import { type PostAdminRunnersBulkApiRequest } from "../../../../types/api/RunnerApiRequests";
 import { type SelectOption } from "../../../../types/Forms";
 import {
     type RunnerFromCsv,
@@ -394,7 +394,7 @@ export default function ImportRunnersCsvView(): React.ReactElement {
             return;
         }
 
-        const body: PostAdminRunnersBulkApiRequest["payload"] = (
+        const body: PostRunnersBulkAdminApiRequest["payload"] = (
             runners as Array<RunnerToImport<RunnerFromCsv>>
         ).map(({ runner }) => ({
             ...runner,

@@ -12,17 +12,19 @@ import {
     Post,
     UseGuards,
 } from "@nestjs/common";
+import {
+    ApiResponse,
+    GetRunnerAdminApiRequest,
+    GetRunnersAdminApiRequest,
+    PatchRunnerAdminApiRequest,
+    PostRunnerAdminApiRequest,
+    PostRunnersBulkAdminApiRequest,
+} from "@live24hisere/core/types";
 import { objectUtils } from "@live24hisere/utils";
 import { RunnerDto } from "../../dtos/runner/runner.dto";
 import { UpdateRunnerDto } from "../../dtos/runner/updateRunner.dto";
 import { AuthGuard } from "../../guards/auth.guard";
 import { RunnerService } from "../../services/database/entities/runner.service";
-import {
-    AdminRunnerResponse,
-    AdminRunnersResponse,
-    AdminRunnerWithPassagesResponse,
-} from "../../types/responses/admin/Runner";
-import { CountResponse } from "../../types/responses/Misc";
 
 @Controller()
 @UseGuards(AuthGuard)
@@ -30,7 +32,7 @@ export class RunnersController {
     constructor(private readonly runnerService: RunnerService) {}
 
     @Get("/admin/runners")
-    async getRunners(): Promise<AdminRunnersResponse> {
+    async getRunners(): Promise<ApiResponse<GetRunnersAdminApiRequest>> {
         const runners = await this.runnerService.getAdminRunners();
 
         return {
@@ -41,7 +43,7 @@ export class RunnersController {
     @Post("/admin/runners")
     async createRunner(
         @Body() runnerDto: RunnerDto,
-    ): Promise<AdminRunnerWithPassagesResponse> {
+    ): Promise<ApiResponse<PostRunnerAdminApiRequest>> {
         await this.ensureRunnerIdDoesNotExist(runnerDto.id);
 
         const runner = await this.runnerService.createRunner({
@@ -60,7 +62,7 @@ export class RunnersController {
     @Post("/admin/runners-bulk")
     async createRunnersBulk(
         @Body(new ParseArrayPipe({ items: RunnerDto })) runnerDtos: RunnerDto[],
-    ): Promise<CountResponse> {
+    ): Promise<ApiResponse<PostRunnersBulkAdminApiRequest>> {
         await Promise.all(
             runnerDtos.map(async (dto) => {
                 await this.ensureRunnerIdDoesNotExist(dto.id);
@@ -92,7 +94,7 @@ export class RunnersController {
     @Get("/admin/runners/:runnerId")
     async getRunner(
         @Param("runnerId") runnerId: string,
-    ): Promise<AdminRunnerWithPassagesResponse> {
+    ): Promise<ApiResponse<GetRunnerAdminApiRequest>> {
         const id = Number(runnerId);
 
         if (isNaN(id)) {
@@ -114,7 +116,7 @@ export class RunnersController {
     async updateRunner(
         @Param("runnerId") runnerId: string,
         @Body() updateRunnerDto: UpdateRunnerDto,
-    ): Promise<AdminRunnerResponse> {
+    ): Promise<ApiResponse<PatchRunnerAdminApiRequest>> {
         const id = Number(runnerId);
 
         if (isNaN(id)) {

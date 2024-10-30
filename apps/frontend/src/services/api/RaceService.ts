@@ -1,14 +1,14 @@
-import { type ApiRequestResult } from "../../types/api/ApiRequest";
 import {
-    type DeleteAdminRaceApiRequest,
-    type GetAdminRaceApiRequest,
-    type GetAdminRacesApiRequest,
+    type ApiRequestResult,
+    type DeleteRaceAdminApiRequest,
+    type GetRaceAdminApiRequest,
     type GetRaceApiRequest,
+    type GetRacesAdminApiRequest,
     type GetRacesApiRequest,
-    type PatchAdminRaceApiRequest,
-    type PostAdminRaceApiRequest,
-    type PutAdminRaceOrderApiRequest,
-} from "../../types/api/RaceApiRequests";
+    type PatchRaceAdminApiRequest,
+    type PostRaceAdminApiRequest,
+    type PutRaceOrderAdminApiRequest,
+} from "@live24hisere/core/types";
 import {
     performApiRequest,
     performAuthenticatedApiRequest,
@@ -28,8 +28,8 @@ export async function getRace(
 
 export async function getAdminRaces(
     accessToken: string,
-): Promise<ApiRequestResult<GetAdminRacesApiRequest>> {
-    return await performAuthenticatedApiRequest<GetAdminRacesApiRequest>(
+): Promise<ApiRequestResult<GetRacesAdminApiRequest>> {
+    return await performAuthenticatedApiRequest<GetRacesAdminApiRequest>(
         "/admin/races",
         accessToken,
     );
@@ -38,8 +38,8 @@ export async function getAdminRaces(
 export async function getAdminRace(
     accessToken: string,
     raceId: number | string,
-): Promise<ApiRequestResult<GetAdminRaceApiRequest>> {
-    return await performAuthenticatedApiRequest<GetAdminRaceApiRequest>(
+): Promise<ApiRequestResult<GetRaceAdminApiRequest>> {
+    return await performAuthenticatedApiRequest<GetRaceAdminApiRequest>(
         `/admin/races/${raceId}`,
         accessToken,
     );
@@ -47,9 +47,9 @@ export async function getAdminRace(
 
 export async function postAdminRace(
     accessToken: string,
-    race: PostAdminRaceApiRequest["payload"],
-): Promise<ApiRequestResult<PostAdminRaceApiRequest>> {
-    return await performAuthenticatedApiRequest<PostAdminRaceApiRequest>(
+    race: PostRaceAdminApiRequest["payload"],
+): Promise<ApiRequestResult<PostRaceAdminApiRequest>> {
+    return await performAuthenticatedApiRequest<PostRaceAdminApiRequest>(
         "/admin/races",
         accessToken,
         race,
@@ -62,9 +62,9 @@ export async function postAdminRace(
 export async function patchAdminRace(
     accessToken: string,
     raceId: number | string,
-    race: PatchAdminRaceApiRequest["payload"],
-): Promise<ApiRequestResult<PatchAdminRaceApiRequest>> {
-    return await performAuthenticatedApiRequest<PatchAdminRaceApiRequest>(
+    race: PatchRaceAdminApiRequest["payload"],
+): Promise<ApiRequestResult<PatchRaceAdminApiRequest>> {
+    return await performAuthenticatedApiRequest<PatchRaceAdminApiRequest>(
         `/admin/races/${raceId}`,
         accessToken,
         race,
@@ -75,8 +75,8 @@ export async function patchAdminRace(
 export async function deleteAdminRace(
     accessToken: string,
     raceId: number | string,
-): Promise<ApiRequestResult<DeleteAdminRaceApiRequest>> {
-    return await performAuthenticatedApiRequest<DeleteAdminRaceApiRequest>(
+): Promise<ApiRequestResult<DeleteRaceAdminApiRequest>> {
+    return await performAuthenticatedApiRequest<DeleteRaceAdminApiRequest>(
         `/admin/races/${raceId}`,
         accessToken,
         undefined,
@@ -86,9 +86,9 @@ export async function deleteAdminRace(
 
 export async function putAdminRaceOrder(
     accessToken: string,
-    raceOrder: PutAdminRaceOrderApiRequest["payload"],
-): Promise<ApiRequestResult<PutAdminRaceOrderApiRequest>> {
-    return await performAuthenticatedApiRequest<PutAdminRaceOrderApiRequest>(
+    raceOrder: PutRaceOrderAdminApiRequest["payload"],
+): Promise<ApiRequestResult<PutRaceOrderAdminApiRequest>> {
+    return await performAuthenticatedApiRequest<PutRaceOrderAdminApiRequest>(
         "/admin/races-order",
         accessToken,
         raceOrder,

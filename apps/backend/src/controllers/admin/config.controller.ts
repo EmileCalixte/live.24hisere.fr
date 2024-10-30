@@ -1,14 +1,19 @@
 import { Body, Controller, Get, Patch, UseGuards } from "@nestjs/common";
+import {
+    ApiResponse,
+    DisabledAppData,
+    GetDisabledAppDataAdminApiRequest,
+    GetPassageImportSettingsAdminApiRequest,
+    PassageImportSettings,
+    PatchDisabledAppDataAdminApiRequest,
+    PatchPassageImportSettingsAdminApiRequest,
+} from "@live24hisere/core/types";
 import { typeUtils } from "@live24hisere/utils";
 import { helloWorldUtils } from "@live24hisere/utils/test-utils";
 import { UpdateDisabledAppDto } from "../../dtos/disabledApp/updateDisabledApp.dto";
 import { UpdatePassageImportSettingsDto } from "../../dtos/passageImport/updatePassageImportSettings.dto";
 import { AuthGuard } from "../../guards/auth.guard";
 import { ConfigService } from "../../services/database/entities/config.service";
-import {
-    AdminDisabledAppResponse,
-    AdminPassageImportSettingsResponse,
-} from "../../types/responses/admin/Config";
 
 @Controller()
 @UseGuards(AuthGuard)
@@ -16,14 +21,16 @@ export class ConfigController {
     constructor(private readonly configService: ConfigService) {}
 
     @Get("/admin/disabled-app")
-    async getDisabledApp(): Promise<AdminDisabledAppResponse> {
+    async getDisabledApp(): Promise<
+        ApiResponse<GetDisabledAppDataAdminApiRequest>
+    > {
         return await this.getDisabledAppData();
     }
 
     @Patch("/admin/disabled-app")
     async updateDisabledApp(
         @Body() updateDisabledAppDto: UpdateDisabledAppDto,
-    ): Promise<AdminDisabledAppResponse> {
+    ): Promise<ApiResponse<PatchDisabledAppDataAdminApiRequest>> {
         const promises = [];
         console.log(helloWorldUtils.helloWorld());
 
@@ -53,14 +60,16 @@ export class ConfigController {
     }
 
     @Get("/admin/passage-import")
-    async getPassageImportSettings(): Promise<AdminPassageImportSettingsResponse> {
+    async getPassageImportSettings(): Promise<
+        ApiResponse<GetPassageImportSettingsAdminApiRequest>
+    > {
         return await this.getPassageImportSettingsData();
     }
 
     @Patch("/admin/passage-import")
     async updatePassageImportSettings(
         @Body() updatePassageImportSettingsDto: UpdatePassageImportSettingsDto,
-    ): Promise<AdminPassageImportSettingsResponse> {
+    ): Promise<ApiResponse<PatchPassageImportSettingsAdminApiRequest>> {
         if (typeUtils.isDefined(updatePassageImportSettingsDto.dagFileUrl)) {
             await this.configService.setImportDagFilePath(
                 updatePassageImportSettingsDto.dagFileUrl,
@@ -70,7 +79,7 @@ export class ConfigController {
         return await this.getPassageImportSettingsData();
     }
 
-    private async getDisabledAppData(): Promise<AdminDisabledAppResponse> {
+    private async getDisabledAppData(): Promise<DisabledAppData> {
         const [isAppEnabled, disabledAppMessage] = await Promise.all([
             this.configService.getIsAppEnabled(),
             this.configService.getDisabledAppMessage(),
@@ -82,7 +91,7 @@ export class ConfigController {
         };
     }
 
-    private async getPassageImportSettingsData(): Promise<AdminPassageImportSettingsResponse> {
+    private async getPassageImportSettingsData(): Promise<PassageImportSettings> {
         const dagFileUrl = await this.configService.getImportDagFilePath();
 
         return {
