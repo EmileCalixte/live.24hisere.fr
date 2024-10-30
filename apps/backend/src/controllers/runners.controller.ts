@@ -5,12 +5,13 @@ import {
     NotFoundException,
     Param,
 } from "@nestjs/common";
+import {
+    ApiResponse,
+    GetRaceRunnersApiRequest,
+    GetRunnersApiRequest,
+} from "@live24hisere/core/types";
 import { RaceService } from "../services/database/entities/race.service";
 import { RunnerService } from "../services/database/entities/runner.service";
-import {
-    RaceRunnersResponse,
-    RunnersResponse,
-} from "../types/responses/Runners";
 
 @Controller()
 export class RunnersController {
@@ -20,7 +21,7 @@ export class RunnersController {
     ) {}
 
     @Get("/runners")
-    async getRunners(): Promise<RunnersResponse> {
+    async getRunners(): Promise<ApiResponse<GetRunnersApiRequest>> {
         const runners = await this.runnerService.getPublicRunners();
 
         return {
@@ -31,7 +32,7 @@ export class RunnersController {
     @Get("/races/:raceId/runners")
     async getRaceRunners(
         @Param("raceId") raceId: string,
-    ): Promise<RaceRunnersResponse> {
+    ): Promise<ApiResponse<GetRaceRunnersApiRequest>> {
         const id = Number(raceId);
 
         if (isNaN(id)) {

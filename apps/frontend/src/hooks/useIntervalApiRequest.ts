@@ -2,7 +2,7 @@ import React from "react";
 import {
     type ApiRequest,
     type ApiRequestResult,
-} from "../types/api/ApiRequest";
+} from "@live24hisere/core/types";
 
 export const DEFAULT_FETCH_INTERVAL = 20000;
 

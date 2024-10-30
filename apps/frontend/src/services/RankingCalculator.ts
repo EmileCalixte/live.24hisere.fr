@@ -1,6 +1,8 @@
-import { GENDER_MIXED } from "../constants/gender";
-import { type GenderWithMixed } from "../types/Gender";
-import { type Race } from "../types/Race";
+import {
+    type GenderWithMixed,
+    type PublicRace,
+} from "@live24hisere/core/types";
+import { categoryUtils } from "@live24hisere/utils";
 import {
     type MinimalRankingRunnerInput,
     type Ranking,
@@ -8,7 +10,6 @@ import {
     type RankingRunnerGaps,
     type RankingRunnerRanks,
 } from "../types/Ranking";
-import { getCategoryCodeFromBirthYear } from "../utils/ffaUtils";
 import { getRunnerProcessedDataFromPassages } from "../utils/passageUtils";
 import {
     areRunnersEqual,
@@ -23,8 +24,8 @@ type CategoryGenderRanks = {
     };
 };
 
-type CategoryGenderFirstRunners<T extends MinimalRankingRunnerInput> = {
-    [key in GenderWithMixed]: RankingRunner<T> | null;
+type CategoryGenderFirstRunners<TRunner extends MinimalRankingRunnerInput> = {
+    [key in GenderWithMixed]: RankingRunner<TRunner> | null;
 };
 
 interface CurrentRanksByCategory {
@@ -32,12 +33,12 @@ interface CurrentRanksByCategory {
     [key: string]: CategoryGenderRanks;
 }
 
-interface FirstRunnersByCategory<T extends MinimalRankingRunnerInput> {
-    scratch: CategoryGenderFirstRunners<T>;
-    [key: string]: CategoryGenderFirstRunners<T>;
+interface FirstRunnersByCategory<TRunner extends MinimalRankingRunnerInput> {
+    scratch: CategoryGenderFirstRunners<TRunner>;
+    [key: string]: CategoryGenderFirstRunners<TRunner>;
 }
 
-export class RankingCalculator<T extends MinimalRankingRunnerInput> {
+export class RankingCalculator<TRunner extends MinimalRankingRunnerInput> {
     // Temporary objects to keep track of the current ranking for each category and each gender during ranking processing
     private currentRanksByCategory: CurrentRanksByCategory = {
         scratch: {
@@ -50,7 +51,7 @@ export class RankingCalculator<T extends MinimalRankingRunnerInput> {
     };
 
     // Temporary objects to keep in memory the first runners of each ranking
-    private firstRunnersByCategory: FirstRunnersByCategory<T> = {
+    private firstRunnersByCategory: FirstRunnersByCategory<TRunner> = {
         scratch: {
             mixed: null,
             M: null,
@@ -60,8 +61,8 @@ export class RankingCalculator<T extends MinimalRankingRunnerInput> {
     };
 
     constructor(
-        race: Race,
-        private readonly runners: T[],
+        race: PublicRace,
+        private readonly runners: TRunner[],
         rankingDate?: Date,
     ) {
         this.runners = this.runners.filter(
@@ -87,20 +88,19 @@ export class RankingCalculator<T extends MinimalRankingRunnerInput> {
         this.runners = this.runners.sort(spaceshipRunners);
     }
 
-    public getRanking(): Ranking<T> {
+    public getRanking(): Ranking<TRunner> {
         return this.computeRanks();
     }
 
     /**
      * Compute detailed ranking for each runner's category and gender
      */
-    private computeRanks(): Ranking<T> {
-        const ranking: Ranking<T> = [];
+    private computeRanks(): Ranking<TRunner> {
+        const ranking: Ranking<TRunner> = [];
 
         for (const runner of this.runners) {
-            const runnerCategoryCode = getCategoryCodeFromBirthYear(
-                runner.birthYear,
-            );
+            const runnerCategoryCode =
+                categoryUtils.getCategoryCodeFromBirthYear(runner.birthYear);
 
             const rankings: RankingRunnerRanks = {
                 actual: {
@@ -132,7 +132,7 @@ export class RankingCalculator<T extends MinimalRankingRunnerInput> {
 
             const scratchMixedFirstRunner = this.getFirstRunner(
                 "scratch",
-                GENDER_MIXED,
+                "mixed",
             );
             const scratchGenderFirstRunner = this.getFirstRunner(
                 "scratch",
@@ -140,7 +140,7 @@ export class RankingCalculator<T extends MinimalRankingRunnerInput> {
             );
             const categoryMixedFirstRunner = this.getFirstRunner(
                 runnerCategoryCode,
-                GENDER_MIXED,
+                "mixed",
             );
             const categoryGenderFirstRunner = this.getFirstRunner(
                 runnerCategoryCode,
@@ -149,7 +149,7 @@ export class RankingCalculator<T extends MinimalRankingRunnerInput> {
 
             const scratchMixedPreviousRunner = this.getCurrentLastRunner(
                 "scratch",
-                GENDER_MIXED,
+                "mixed",
                 ranking,
             );
             const scratchGenderPreviousRunner = this.getCurrentLastRunner(
@@ -159,7 +159,7 @@ export class RankingCalculator<T extends MinimalRankingRunnerInput> {
             );
             const categoryMixedPreviousRunner = this.getCurrentLastRunner(
                 runnerCategoryCode,
-                GENDER_MIXED,
+                "mixed",
                 ranking,
             );
             const categoryGenderPreviousRunner = this.getCurrentLastRunner(
@@ -224,7 +224,7 @@ export class RankingCalculator<T extends MinimalRankingRunnerInput> {
                     rankings.actual.categoryGender;
             }
 
-            const gaps: RankingRunnerGaps<T> = {
+            const gaps: RankingRunnerGaps<TRunner> = {
                 firstRunner: {
                     scratchMixed: {
                         runner: scratchMixedFirstRunner,
@@ -329,8 +329,8 @@ export class RankingCalculator<T extends MinimalRankingRunnerInput> {
         };
     }
 
-    private updateFirstRunners(runner: Ranking<T>[number]): void {
-        const runnerCategoryCode = getCategoryCodeFromBirthYear(
+    private updateFirstRunners(runner: Ranking<TRunner>[number]): void {
+        const runnerCategoryCode = categoryUtils.getCategoryCodeFromBirthYear(
             runner.birthYear,
         );
 
@@ -373,7 +373,7 @@ export class RankingCalculator<T extends MinimalRankingRunnerInput> {
     private getFirstRunner(
         category: string,
         gender: GenderWithMixed,
-    ): Ranking<T>[number] | null {
+    ): Ranking<TRunner>[number] | null {
         if (!(category in this.firstRunnersByCategory)) {
             return null;
         }
@@ -384,8 +384,8 @@ export class RankingCalculator<T extends MinimalRankingRunnerInput> {
     private getCurrentLastRunner(
         category: string,
         gender: GenderWithMixed,
-        ranking: Ranking<T>,
-    ): Ranking<T>[number] | null {
+        ranking: Ranking<TRunner>,
+    ): Ranking<TRunner>[number] | null {
         if (!(category in this.currentRanksByCategory)) {
             return null;
         }

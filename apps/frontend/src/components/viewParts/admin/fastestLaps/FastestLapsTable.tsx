@@ -3,13 +3,13 @@ import { Link } from "react-router-dom";
 import {
     type AdminPassageWithRunnerId,
     type ProcessedPassage,
-} from "../../../../types/Passage";
-import { type RaceDict } from "../../../../types/Race";
-import { type Runner } from "../../../../types/Runner";
+    type RaceDict,
+    type Runner,
+} from "@live24hisere/core/types";
 import { formatFloatNumber, formatMsAsDuration } from "../../../../utils/utils";
 
 interface FastestLapsTableProps {
-    passages: Array<AdminPassageWithRunnerId & ProcessedPassage>;
+    passages: Array<ProcessedPassage<AdminPassageWithRunnerId>>;
     races: RaceDict;
     runners: Runner[];
 }

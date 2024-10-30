@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { type Race } from "../types/Race";
+import { type PublicRace } from "@live24hisere/core/types";
 import { getCurrentRaceTime } from "../utils/raceUtils";
 
 const UPDATE_RACE_TIME_INTERVAL = 1000;
 
-export function useRaceTime(race: Race, serverTimeOffset = 0): number {
+export function useRaceTime(race: PublicRace, serverTimeOffset = 0): number {
     const [raceTime, setRaceTime] = useState<number>(
         getCurrentRaceTime(race, serverTimeOffset),
     );

@@ -1,21 +1,21 @@
 import React from "react";
+import { type PublicRace } from "@live24hisere/core/types";
 import { SearchParam } from "../../constants/searchParams";
-import { type Race } from "../../types/Race";
 import { useQueryString } from "./useQueryString";
 
-interface UseRaceQueryString<T extends Race> {
-    selectedRace: T | null;
+interface UseRaceQueryString<TRace extends PublicRace> {
+    selectedRace: TRace | null;
     setRaceParam: (raceId: number | string) => void;
 }
 
-export function useRaceQueryString<T extends Race>(
-    races: T[] | undefined,
-): UseRaceQueryString<T> {
+export function useRaceQueryString<TRace extends PublicRace>(
+    races: TRace[] | undefined,
+): UseRaceQueryString<TRace> {
     const { searchParams, setParams, deleteParams } = useQueryString();
 
     const searchParamsRace = searchParams.get(SearchParam.RACE);
 
-    const selectedRace = React.useMemo<T | null>(() => {
+    const selectedRace = React.useMemo<TRace | null>(() => {
         if (searchParamsRace === null) {
             return null;
         }

@@ -7,14 +7,14 @@ import {
     Routes,
     useMatch,
 } from "react-router-dom";
+import { type PublicUser } from "@live24hisere/core/types";
 import { APP_BASE_TITLE } from "../constants/app";
-import { getAppData } from "../services/api/AppDataService";
+import { getAppData } from "../services/api/appDataService";
 import {
     getCurrentUserInfo,
     logout as performLogoutRequest,
-} from "../services/api/AuthService";
+} from "../services/api/authService";
 import ToastService from "../services/ToastService";
-import { type User } from "../types/User";
 import {
     EVENT_API_REQUEST_ENDED,
     EVENT_API_REQUEST_STARTED,
@@ -81,9 +81,9 @@ interface AppContext {
         /**
          * The user logged in. If undefined, user info was not fetched yet.
          */
-        user: User | null | undefined;
+        user: PublicUser | null | undefined;
 
-        setUser: (user: User | null | undefined) => void;
+        setUser: (user: PublicUser | null | undefined) => void;
 
         logout: () => void;
     };
@@ -128,7 +128,7 @@ export default function App(): React.ReactElement {
     const [accessToken, setAccessToken] = useState<string | null>(
         localStorage.getItem("accessToken"),
     );
-    const [user, setUser] = useState<User | null | undefined>(undefined); // If null, user is not logged in. If undefined, user info was not fetched yet
+    const [user, setUser] = useState<PublicUser | null | undefined>(undefined); // If null, user is not logged in. If undefined, user info was not fetched yet
     const [redirect, setRedirect] = useState<string | null>(null); // Used to redirect the user to a specified location, for example when user logs out
 
     const isLoginRoute = !!useMatch("/login");
@@ -179,7 +179,7 @@ export default function App(): React.ReactElement {
         setIsAppEnabled(result.json.isAppEnabled);
         setDisabledAppMessage(result.json.disabledAppMessage);
 
-        setLastUpdateTime(new Date(result.json.lastUpdateTime));
+        setLastUpdateTime(new Date(result.json.lastUpdateTime ?? 0));
 
         const serverTime = new Date(result.json.currentTime);
         const clientTime = new Date();

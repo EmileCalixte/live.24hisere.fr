@@ -1,4 +1,4 @@
-import { type GenderWithMixed } from "../types/Gender";
+import { type GenderWithMixed } from "@live24hisere/core/types";
 import { type RankingType } from "../types/Ranking";
 
 export function getRankingType(

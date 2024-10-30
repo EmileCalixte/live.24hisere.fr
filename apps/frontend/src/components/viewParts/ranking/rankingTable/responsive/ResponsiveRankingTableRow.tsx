@@ -1,10 +1,11 @@
 import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { GENDER_MIXED } from "../../../../../constants/gender";
-import { type CategoryShortCode } from "../../../../../types/Category";
-import { type GenderWithMixed } from "../../../../../types/Gender";
+import {
+    type CategoryShortCode,
+    type GenderWithMixed,
+} from "@live24hisere/core/types";
+import { categoryUtils } from "@live24hisere/utils";
 import { type RankingRunner } from "../../../../../types/Ranking";
-import { getCategoryCodeFromBirthYear } from "../../../../../utils/ffaUtils";
 import { getRankingType } from "../../../../../utils/rankingUtils";
 import { formatGap } from "../../../../../utils/runnerUtils";
 import {
@@ -24,18 +25,20 @@ export default function ResponsiveRankingTableRow({
     tableCategory,
     tableGender,
 }: ResponsiveRankingTableRowProps): React.ReactElement {
-    const runnerCategory = getCategoryCodeFromBirthYear(runner.birthYear);
+    const runnerCategory = categoryUtils.getCategoryCodeFromBirthYear(
+        runner.birthYear,
+    );
 
     const rowRanking = useMemo(() => {
         if (tableCategory === null) {
-            if (tableGender === GENDER_MIXED) {
+            if (tableGender === "mixed") {
                 return runner.ranks.displayed.scratchMixed;
             }
 
             return runner.ranks.displayed.scratchGender;
         }
 
-        if (tableGender === GENDER_MIXED) {
+        if (tableGender === "mixed") {
             return runner.ranks.displayed.categoryMixed;
         }
 
@@ -44,7 +47,7 @@ export default function ResponsiveRankingTableRow({
 
     const rowSecondaryRankings = useMemo(() => {
         if (tableCategory === null) {
-            if (tableGender === GENDER_MIXED) {
+            if (tableGender === "mixed") {
                 return (
                     <>
                         {runner.ranks.displayed.scratchGender}{" "}
@@ -70,7 +73,7 @@ export default function ResponsiveRankingTableRow({
             );
         }
 
-        if (tableGender === GENDER_MIXED) {
+        if (tableGender === "mixed") {
             return (
                 <>
                     {runner.ranks.displayed.scratchMixed}

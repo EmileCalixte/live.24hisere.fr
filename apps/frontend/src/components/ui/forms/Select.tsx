@@ -9,7 +9,7 @@ export interface SelectProps<T extends SelectOption["value"]>
     isLoading?: boolean;
     loadingOptionLabel?: string;
     placeholderLabel?: string;
-    value?: SelectOption["value"];
+    value?: SelectOption["value"] | undefined;
     selectRef?: React.LegacyRef<HTMLSelectElement>;
 }
 

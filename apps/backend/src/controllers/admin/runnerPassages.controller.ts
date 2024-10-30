@@ -10,13 +10,17 @@ import {
     Post,
     UseGuards,
 } from "@nestjs/common";
+import {
+    ApiResponse,
+    PatchRunnerPassageAdminApiRequest,
+    PostRunnerPassageAdminApiRequest,
+} from "@live24hisere/core/types";
+import { objectUtils } from "@live24hisere/utils";
 import { PassageDto } from "../../dtos/passage/passage.dto";
 import { UpdatePassageDto } from "../../dtos/passage/updatePassage.dto";
 import { AuthGuard } from "../../guards/auth.guard";
 import { PassageService } from "../../services/database/entities/passage.service";
 import { RunnerService } from "../../services/database/entities/runner.service";
-import { AdminRunnerPassageResponse } from "../../types/responses/admin/RunnerPassage";
-import { excludeKeys } from "../../utils/misc.utils";
 
 @Controller()
 @UseGuards(AuthGuard)
@@ -30,7 +34,7 @@ export class RunnerPassagesController {
     async getRunnerPassages(
         @Param("runnerId") runnerId: string,
         @Body() passageDto: PassageDto,
-    ): Promise<AdminRunnerPassageResponse> {
+    ): Promise<ApiResponse<PostRunnerPassageAdminApiRequest>> {
         const id = Number(runnerId);
 
         if (isNaN(id)) {
@@ -51,7 +55,7 @@ export class RunnerPassagesController {
         });
 
         return {
-            passage: excludeKeys(passage, ["runnerId"]),
+            passage: objectUtils.excludeKeys(passage, ["runnerId"]),
         };
     }
 
@@ -60,7 +64,7 @@ export class RunnerPassagesController {
         @Param("runnerId") runnerId: string,
         @Param("passageId") passageId: string,
         @Body() updatePassageDto: UpdatePassageDto,
-    ): Promise<AdminRunnerPassageResponse> {
+    ): Promise<ApiResponse<PatchRunnerPassageAdminApiRequest>> {
         const rId = Number(runnerId);
         const pId = Number(passageId);
 
@@ -84,7 +88,7 @@ export class RunnerPassagesController {
         );
 
         return {
-            passage: excludeKeys(updatedPassage, ["runnerId"]),
+            passage: objectUtils.excludeKeys(updatedPassage, ["runnerId"]),
         };
     }
 

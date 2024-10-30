@@ -6,15 +6,16 @@ import {
     Post,
     UseGuards,
 } from "@nestjs/common";
+import {
+    ApiResponse,
+    GetCurrentUserInfoApiRequest,
+    LoginApiRequest,
+} from "@live24hisere/core/types";
 import { AuthData, LoggedInUser } from "../decorators/loggedInUser.decorator";
 import { LoginDto } from "../dtos/auth/login.dto";
 import { AuthGuard } from "../guards/auth.guard";
 import { AuthService } from "../services/auth.service";
 import { AccessTokenService } from "../services/database/entities/accessToken.service";
-import {
-    CurrentUserInfoResponse,
-    LoginResponse,
-} from "../types/responses/Auth";
 
 @Controller()
 export class AuthController {
@@ -24,7 +25,9 @@ export class AuthController {
     ) {}
 
     @Post("/auth/login")
-    async login(@Body() loginDto: LoginDto): Promise<LoginResponse> {
+    async login(
+        @Body() loginDto: LoginDto,
+    ): Promise<ApiResponse<LoginApiRequest>> {
         const accessToken = await this.authService.login(
             loginDto.username,
             loginDto.password,
@@ -49,7 +52,7 @@ export class AuthController {
     @Get("/auth/current-user-info")
     async getCurrentUserInfo(
         @LoggedInUser() { user }: AuthData,
-    ): Promise<CurrentUserInfoResponse> {
+    ): Promise<ApiResponse<GetCurrentUserInfoApiRequest>> {
         return {
             user: {
                 username: user.username,

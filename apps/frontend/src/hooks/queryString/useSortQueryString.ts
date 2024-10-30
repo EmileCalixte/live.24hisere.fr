@@ -1,7 +1,7 @@
 import React from "react";
+import { arrayUtils } from "@live24hisere/utils";
 import { SearchParam } from "../../constants/searchParams";
 import { type SortBy, SortDirection } from "../../constants/sort";
-import { inArray } from "../../utils/arrayUtils";
 import { useQueryString } from "./useQueryString";
 
 interface UseSortQueryString<T extends SortBy[]> {
@@ -15,13 +15,16 @@ function isValidSortColumn<T extends SortBy[]>(
     sortColumn: string | null,
     availableColumns: T,
 ): sortColumn is T[number] {
-    return inArray(sortColumn, availableColumns);
+    return arrayUtils.inArray(sortColumn, availableColumns);
 }
 
 function isValidSortDirection(
     sortDirection: string | null,
 ): sortDirection is SortDirection {
-    return inArray(sortDirection, [SortDirection.ASC, SortDirection.DESC]);
+    return arrayUtils.inArray(sortDirection, [
+        SortDirection.ASC,
+        SortDirection.DESC,
+    ]);
 }
 
 export function useSortQueryString<T extends SortBy[]>(

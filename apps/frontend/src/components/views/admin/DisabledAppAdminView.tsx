@@ -1,12 +1,12 @@
 import React from "react";
 import DOMPurify from "dompurify";
 import { Col, Row } from "react-bootstrap";
+import { type DisabledAppData } from "@live24hisere/core/types";
 import {
     getDisabledAppData,
     patchDisabledAppData,
-} from "../../../services/api/ConfigService";
+} from "../../../services/api/configService";
 import ToastService from "../../../services/ToastService";
-import { type DisabledAppData } from "../../../types/Config";
 import { isApiRequestResultOk } from "../../../utils/apiUtils";
 import { appContext } from "../../App";
 import Breadcrumbs from "../../ui/breadcrumbs/Breadcrumbs";

@@ -1,7 +1,7 @@
 import { HttpStatus, INestApplication } from "@nestjs/common";
 import request from "supertest";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { Passage } from "../../src/types/Passage";
+import { AdminPassageWithRunnerId } from "@live24hisere/core/types";
 import { initApp } from "./_init";
 import { ADMIN_USER_ACCESS_TOKEN } from "./constants/accessToken";
 import { ISO8601_DATE_REGEX } from "./constants/dates";
@@ -83,10 +83,10 @@ describe("Admin PassagesController (e2e)", () => {
             }
         }
 
-        const allPublicPassages: Passage[] = JSON.parse(
+        const allPublicPassages: AdminPassageWithRunnerId[] = JSON.parse(
             withoutHiddenPassagesResponse.text,
         ).passages;
-        const allPassages: Passage[] = JSON.parse(
+        const allPassages: AdminPassageWithRunnerId[] = JSON.parse(
             withHiddenPassagesResponse.text,
         ).passages;
 

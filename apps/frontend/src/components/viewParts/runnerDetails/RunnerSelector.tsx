@@ -1,6 +1,6 @@
 import React from "react";
-import { type Runner } from "../../../types/Runner";
-import { spaceship } from "../../../utils/compareUtils";
+import { type Runner } from "@live24hisere/core/types";
+import { compareUtils } from "@live24hisere/utils";
 import { getRunnersSelectOptions } from "../../../utils/runnerUtils";
 import Select from "../../ui/forms/Select";
 
@@ -38,7 +38,7 @@ export default function RunnerSelector({
             return false;
         }
 
-        return [...runners].sort((a, b) => spaceship(a.id, b.id));
+        return [...runners].sort((a, b) => compareUtils.spaceship(a.id, b.id));
     }, [runners]);
 
     const nameSortedRunners = React.useMemo<Runner[] | false>(() => {
@@ -47,7 +47,7 @@ export default function RunnerSelector({
         }
 
         return [...runners].sort((a, b) =>
-            spaceship(
+            compareUtils.spaceship(
                 a.lastname + a.firstname + a.id,
                 b.lastname + b.firstname + b.id,
             ),

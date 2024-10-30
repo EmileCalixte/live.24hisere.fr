@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { Navigate } from "react-router-dom";
-import { login } from "../../services/api/AuthService";
+import { login } from "../../services/api/authService";
 import ToastService from "../../services/ToastService";
 import { isApiRequestResultOk } from "../../utils/apiUtils";
 import { appContext } from "../App";

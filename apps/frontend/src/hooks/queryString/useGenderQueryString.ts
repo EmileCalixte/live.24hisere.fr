@@ -1,8 +1,8 @@
 import React from "react";
 import { type NavigateOptions } from "react-router-dom";
+import { type GenderWithMixed } from "@live24hisere/core/types";
+import { genderUtils } from "@live24hisere/utils";
 import { SearchParam } from "../../constants/searchParams";
-import type { GenderWithMixed } from "../../types/Gender";
-import { isValidGender } from "../../utils/genderUtils";
 import { useQueryString } from "./useQueryString";
 
 interface UseGenderQueryString {
@@ -17,7 +17,7 @@ export function useGenderQueryString(): UseGenderQueryString {
     const searchParamsGender = searchParams.get(SearchParam.GENDER);
 
     const selectedGender = React.useMemo<GenderWithMixed>(() => {
-        if (isValidGender(searchParamsGender)) {
+        if (genderUtils.isValidGender(searchParamsGender)) {
             return searchParamsGender;
         }
 
@@ -39,7 +39,7 @@ export function useGenderQueryString(): UseGenderQueryString {
     );
 
     React.useEffect(() => {
-        if (!isValidGender(selectedGender)) {
+        if (!genderUtils.isValidGender(selectedGender)) {
             deleteGenderParam({ replace: true });
         }
     });

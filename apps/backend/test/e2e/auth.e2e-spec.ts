@@ -1,7 +1,7 @@
 import { HttpStatus, INestApplication } from "@nestjs/common";
 import request from "supertest";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { urlEncode } from "../../src/utils/url.utils";
+import { urlUtils } from "@live24hisere/utils";
 import { initApp } from "./_init";
 import {
     ADMIN_USER_ACCESS_TOKEN,
@@ -116,25 +116,25 @@ describe("AuthController (e2e)", { concurrent: false }, () => {
             request(app.getHttpServer())
                 .post("/auth/login")
                 .type("form")
-                .send(urlEncode(validCredentials)),
+                .send(urlUtils.encode(validCredentials)),
 
             // Get another access token
             request(app.getHttpServer())
                 .post("/auth/login")
                 .type("form")
-                .send(urlEncode(validCredentials)),
+                .send(urlUtils.encode(validCredentials)),
 
             // Try to login with an unknown username
             request(app.getHttpServer())
                 .post("/auth/login")
                 .type("form")
-                .send(urlEncode(invalidUsernameCredentials)),
+                .send(urlUtils.encode(invalidUsernameCredentials)),
 
             // Try to login with a known username but invalid password
             request(app.getHttpServer())
                 .post("/auth/login")
                 .type("form")
-                .send(urlEncode(invalidPasswordCredentials)),
+                .send(urlUtils.encode(invalidPasswordCredentials)),
         ]);
 
         for (const response of [loginResponse1, loginResponse2]) {

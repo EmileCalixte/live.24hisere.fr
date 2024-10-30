@@ -1,12 +1,12 @@
 import React, { useContext, useMemo } from "react";
+import { type PublicRace } from "@live24hisere/core/types";
 import { useRaceTime } from "../../hooks/useRaceTime";
-import { type Race } from "../../types/Race";
 import { isRaceFinished, isRaceStarted } from "../../utils/raceUtils";
 import { formatMsAsDuration } from "../../utils/utils";
 import { appContext } from "../App";
 
 interface RaceTimerProps {
-    race: Race;
+    race: PublicRace;
     allowNegative?: boolean;
 }
 

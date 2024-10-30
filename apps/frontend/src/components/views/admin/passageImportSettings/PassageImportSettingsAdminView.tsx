@@ -1,13 +1,13 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
+import { type PassageImportSettings } from "@live24hisere/core/types";
+import { stringUtils } from "@live24hisere/utils";
 import {
     getPassageImportSettings,
     patchPassageImportSettings,
-} from "../../../../services/api/ConfigService";
+} from "../../../../services/api/configService";
 import ToastService from "../../../../services/ToastService";
-import { type PassageImportSettings } from "../../../../types/Config";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
-import { isValidUrl } from "../../../../utils/stringUtils";
 import { appContext } from "../../../App";
 import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
 import Crumb from "../../../ui/breadcrumbs/Crumb";
@@ -93,7 +93,7 @@ export default function PassageImportSettingsAdminView(): React.ReactElement {
         setDagFileUrl(passageImportSettingsData.dagFileUrl ?? "");
     }, [passageImportSettingsData]);
 
-    const isDagFileUrlValid = !dagFileUrl || isValidUrl(dagFileUrl);
+    const isDagFileUrlValid = !dagFileUrl || stringUtils.isValidUrl(dagFileUrl);
 
     return (
         <Page

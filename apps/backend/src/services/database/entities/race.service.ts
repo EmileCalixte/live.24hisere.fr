@@ -1,18 +1,19 @@
 import { Injectable } from "@nestjs/common";
 import { and, asc, count, eq, getTableColumns, max } from "drizzle-orm";
-import { TABLE_RACE, TABLE_RUNNER } from "../../../../drizzle/schema";
-import { DrizzleTableColumns } from "../../../types/misc/Drizzle";
 import {
+    AdminRaceWithOrder,
     AdminRaceWithRunnerCount,
-    PublicRaceWithRunnerCount,
-    Race,
-} from "../../../types/Race";
-import { isEmptyObject } from "../../../utils/object.utils";
+    PublicRace,
+    RaceWithRunnerCount,
+} from "@live24hisere/core/types";
+import { objectUtils } from "@live24hisere/utils";
+import { TABLE_RACE, TABLE_RUNNER } from "../../../../drizzle/schema";
+import { DrizzleTableColumns } from "../../../types/utils/drizzle";
 import { EntityService } from "../entity.service";
 
 @Injectable()
 export class RaceService extends EntityService {
-    async getRaceById(raceId: number): Promise<Race | null> {
+    async getRaceById(raceId: number): Promise<PublicRace | null> {
         const races = await this.db
             .select()
             .from(TABLE_RACE)
@@ -21,7 +22,7 @@ export class RaceService extends EntityService {
         return this.getUniqueResult(races);
     }
 
-    async getRaceByName(raceName: string): Promise<Race | null> {
+    async getRaceByName(raceName: string): Promise<PublicRace | null> {
         const races = await this.db
             .select()
             .from(TABLE_RACE)
@@ -58,7 +59,7 @@ export class RaceService extends EntityService {
         return this.getUniqueResult(races);
     }
 
-    async getPublicRaces(): Promise<PublicRaceWithRunnerCount[]> {
+    async getPublicRaces(): Promise<RaceWithRunnerCount[]> {
         return await this.db
             .select({
                 ...this.getPublicRaceColumns(),
@@ -73,7 +74,7 @@ export class RaceService extends EntityService {
 
     async getPublicRaceById(
         raceId: number,
-    ): Promise<PublicRaceWithRunnerCount | null> {
+    ): Promise<RaceWithRunnerCount | null> {
         const races = await this.db
             .select({
                 ...this.getPublicRaceColumns(),
@@ -89,7 +90,9 @@ export class RaceService extends EntityService {
         return this.getUniqueResult(races);
     }
 
-    async createRace(raceData: Omit<Race, "id">): Promise<Race> {
+    async createRace(
+        raceData: Omit<AdminRaceWithOrder, "id">,
+    ): Promise<AdminRaceWithRunnerCount> {
         const result = await this.db
             .insert(TABLE_RACE)
             .values(raceData)
@@ -103,7 +106,7 @@ export class RaceService extends EntityService {
             );
         }
 
-        const newRace = await this.getRaceById(raceId);
+        const newRace = await this.getAdminRaceById(raceId);
 
         if (!newRace) {
             throw new Error(
@@ -116,9 +119,9 @@ export class RaceService extends EntityService {
 
     async updateRace(
         raceId: number,
-        newRaceData: Partial<Omit<Race, "id">>,
+        newRaceData: Partial<Omit<AdminRaceWithOrder, "id">>,
     ): Promise<AdminRaceWithRunnerCount> {
-        if (!isEmptyObject(newRaceData)) {
+        if (!objectUtils.isEmptyObject(newRaceData)) {
             const [resultSetHeader] = await this.db
                 .update(TABLE_RACE)
                 .set(newRaceData)

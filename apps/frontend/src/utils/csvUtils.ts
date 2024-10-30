@@ -1,15 +1,15 @@
 import Papa from "papaparse";
-import { Gender } from "../constants/gender";
-import { ImportCsvColumn } from "../constants/importCsv";
 import {
     DD_MM_YYYY_NON_STRICT_REGEX,
     DD_SLASH_MM_SLASH_YYYY_NON_STRICT_REGEX,
+    GENDER,
     NUMERIC_REGEX,
     YYYY_MM_DD_NON_STRICT_REGEX,
     YYYY_REGEX,
-} from "../constants/misc";
+} from "@live24hisere/core/constants";
+import { genderUtils } from "@live24hisere/utils";
+import { ImportCsvColumn } from "../constants/importCsv";
 import { type RunnerFromCsv, type RunnersCsvMapping } from "../types/ImportCsv";
-import { isValidGender } from "./genderUtils";
 
 export async function parseCsv(
     file: File,
@@ -32,7 +32,9 @@ export function getRunnerFromCsv(
     csvRow: string[],
     mapping: RunnersCsvMapping,
 ): Partial<RunnerFromCsv> {
-    let id: number | string | undefined =
+    const runnerFromCsv: Partial<RunnerFromCsv> = {};
+
+    const id: number | string | undefined =
         mapping[ImportCsvColumn.ID] !== null
             ? csvRow[mapping[ImportCsvColumn.ID]]?.trim()
             : undefined;
@@ -54,9 +56,15 @@ export function getRunnerFromCsv(
             : undefined;
 
     if (id?.match(NUMERIC_REGEX)) {
-        id = parseInt(id);
-    } else {
-        id = undefined;
+        runnerFromCsv.id = parseInt(id);
+    }
+
+    if (firstname) {
+        runnerFromCsv.firstname = firstname;
+    }
+
+    if (lastname) {
+        runnerFromCsv.lastname = lastname;
     }
 
     if (birthYear?.match(DD_MM_YYYY_NON_STRICT_REGEX)) {
@@ -67,25 +75,19 @@ export function getRunnerFromCsv(
         birthYear = birthYear?.split("-")[0];
     }
 
-    if (!birthYear?.match(YYYY_REGEX)) {
-        birthYear = undefined;
+    if (birthYear?.match(YYYY_REGEX)) {
+        runnerFromCsv.birthYear = birthYear;
     }
 
     if (gender === "male") {
-        gender = Gender.M;
+        gender = GENDER.M;
     } else if (gender === "female") {
-        gender = Gender.F;
+        gender = GENDER.F;
     }
 
-    if (!isValidGender(gender)) {
-        gender = undefined;
+    if (genderUtils.isValidGender(gender)) {
+        runnerFromCsv.gender = gender;
     }
 
-    return {
-        id,
-        firstname,
-        lastname,
-        birthYear,
-        gender,
-    };
+    return runnerFromCsv;
 }

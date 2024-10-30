@@ -1,12 +1,15 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { Gender } from "../../../../constants/gender";
+import { GENDER } from "@live24hisere/core/constants";
+import {
+    type AdminRaceWithRunnerCount,
+    type Gender,
+} from "@live24hisere/core/types";
 import { useStateWithNonNullableSetter } from "../../../../hooks/useStateWithNonNullableSetter";
-import { getAdminRaces } from "../../../../services/api/RaceService";
-import { postAdminRunner } from "../../../../services/api/RunnerService";
+import { getAdminRaces } from "../../../../services/api/raceService";
+import { postAdminRunner } from "../../../../services/api/runnerService";
 import ToastService from "../../../../services/ToastService";
-import { type AdminRaceWithRunnerCount } from "../../../../types/Race";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { appContext } from "../../../App";
 import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
@@ -26,7 +29,7 @@ export default function CreateRunnerAdminView(): React.ReactElement {
     const [id, setId] = useState(1);
     const [firstname, setFirstname] = useState("");
     const [lastname, setLastname] = useState("");
-    const [gender, setGender] = useState<Gender>(Gender.M);
+    const [gender, setGender] = useState<Gender>(GENDER.M);
     const [birthYear, setBirthYear] = useState(
         (new Date().getFullYear() - 30).toString(),
     );

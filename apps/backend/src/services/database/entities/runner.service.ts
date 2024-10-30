@@ -1,16 +1,16 @@
 import { Injectable } from "@nestjs/common";
 import { eq, getTableColumns } from "drizzle-orm";
 import {
+    AdminPassage,
+    Runner,
+    RunnerWithPassages,
+} from "@live24hisere/core/types";
+import { objectUtils } from "@live24hisere/utils";
+import {
     TABLE_PASSAGE,
     TABLE_RACE,
     TABLE_RUNNER,
 } from "../../../../drizzle/schema";
-import {
-    AdminRunnerWithPassages,
-    PublicRunnerWithPassages,
-    Runner,
-} from "../../../types/Runner";
-import { assignDefined } from "../../../utils/object.utils";
 import { DrizzleService } from "../drizzle.service";
 import { EntityService } from "../entity.service";
 import { PassageService } from "./passage.service";
@@ -39,7 +39,7 @@ export class RunnerService extends EntityService {
 
     async getAdminRunnerById(
         runnerId: number,
-    ): Promise<AdminRunnerWithPassages | null> {
+    ): Promise<RunnerWithPassages<Runner, AdminPassage> | null> {
         const [runners, passages] = await Promise.all([
             this.db
                 .select()
@@ -70,7 +70,7 @@ export class RunnerService extends EntityService {
 
     async getPublicRunnersOfRace(
         raceId: number,
-    ): Promise<PublicRunnerWithPassages[]> {
+    ): Promise<RunnerWithPassages[]> {
         const runners = await this.db
             .select({ ...getTableColumns(TABLE_RUNNER) })
             .from(TABLE_RUNNER)
@@ -155,7 +155,10 @@ export class RunnerService extends EntityService {
 
         return await this.db.transaction(async (tx) => {
             // So first we create a new runner
-            const dataToInsert = assignDefined(runner, newRunnerData);
+            const dataToInsert = objectUtils.assignDefined(
+                runner,
+                newRunnerData,
+            );
 
             await tx.insert(TABLE_RUNNER).values(dataToInsert);
 

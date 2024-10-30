@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { eq } from "drizzle-orm";
+import { DateISOString } from "@live24hisere/core/types";
+import { dateUtils } from "@live24hisere/utils";
 import { TABLE_MISC } from "../../../../drizzle/schema";
-import { DateISOString } from "../../../types/Date";
 import { Misc } from "../../../types/Misc";
-import { isDateValid } from "../../../utils/date.utils";
 import { EntityService } from "../entity.service";
 
 const KEY_LAST_UPDATE_TIME = "last_update_time";
@@ -26,7 +26,7 @@ export class MiscService extends EntityService {
 
         const date = new Date(misc.value);
 
-        if (!isDateValid(date)) {
+        if (!dateUtils.isDateValid(date)) {
             return null;
         }
 

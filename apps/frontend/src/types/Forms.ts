@@ -5,7 +5,9 @@ export type InputType = Extract<
     "text" | "email" | "password" | "number" | "file"
 >;
 
-export interface SelectOption<T extends string | number = string | number> {
+export interface SelectOption<
+    TValue extends string | number = string | number,
+> {
     label: string;
-    value: T;
+    value: TValue;
 }

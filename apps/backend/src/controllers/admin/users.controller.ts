@@ -7,6 +7,8 @@ import {
     Param,
     UseGuards,
 } from "@nestjs/common";
+import { ApiResponse, GetUsersAdminApiRequest } from "@live24hisere/core/types";
+import { objectUtils } from "@live24hisere/utils";
 import {
     AuthData,
     LoggedInUser,
@@ -14,8 +16,6 @@ import {
 import { AuthGuard } from "../../guards/auth.guard";
 import { AccessTokenService } from "../../services/database/entities/accessToken.service";
 import { UserService } from "../../services/database/entities/user.service";
-import { UsersResponse } from "../../types/responses/admin/Users";
-import { excludeKeys } from "../../utils/misc.utils";
 
 @Controller()
 @UseGuards(AuthGuard)
@@ -28,12 +28,12 @@ export class UsersController {
     @Get("/admin/users")
     async getUsers(
         @LoggedInUser() { user: currentUser }: AuthData,
-    ): Promise<UsersResponse> {
+    ): Promise<ApiResponse<GetUsersAdminApiRequest>> {
         const users = await this.userService.getUsers();
 
         return {
             users: users.map((user) => ({
-                ...excludeKeys(user, ["passwordHash"]),
+                ...objectUtils.excludeKeys(user, ["passwordHash"]),
                 isCurrentUser: currentUser.id === user.id,
             })),
         };

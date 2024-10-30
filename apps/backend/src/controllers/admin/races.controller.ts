@@ -14,15 +14,17 @@ import {
     Req,
     UseGuards,
 } from "@nestjs/common";
+import {
+    ApiResponse,
+    GetRaceAdminApiRequest,
+    GetRacesAdminApiRequest,
+    PatchRaceAdminApiRequest,
+    PostRaceAdminApiRequest,
+} from "@live24hisere/core/types";
 import { RaceDto } from "../../dtos/race/race.dto";
 import { UpdateRaceDto } from "../../dtos/race/updateRace.dto";
 import { AuthGuard } from "../../guards/auth.guard";
 import { RaceService } from "../../services/database/entities/race.service";
-import {
-    AdminRaceResponse,
-    AdminRacesResponse,
-} from "../../types/responses/admin/Races";
-import { excludeKeys } from "../../utils/misc.utils";
 
 @Controller()
 @UseGuards(AuthGuard)
@@ -30,7 +32,7 @@ export class RacesController {
     constructor(private readonly raceService: RaceService) {}
 
     @Get("/admin/races")
-    async getRaces(): Promise<AdminRacesResponse> {
+    async getRaces(): Promise<ApiResponse<GetRacesAdminApiRequest>> {
         const races = await this.raceService.getAdminRaces();
 
         return {
@@ -39,7 +41,9 @@ export class RacesController {
     }
 
     @Post("/admin/races")
-    async createRace(@Body() raceDto: RaceDto): Promise<AdminRaceResponse> {
+    async createRace(
+        @Body() raceDto: RaceDto,
+    ): Promise<ApiResponse<PostRaceAdminApiRequest>> {
         await this.ensureRaceNameDoesNotExist(raceDto.name);
 
         const race = await this.raceService.createRace({
@@ -47,16 +51,13 @@ export class RacesController {
             order: (await this.raceService.getMaxOrder()) + 1,
         });
 
-        return {
-            race: {
-                ...excludeKeys(race, ["order"]),
-                runnerCount: 0,
-            },
-        };
+        return { race };
     }
 
     @Get("/admin/races/:raceId")
-    async getRace(@Param("raceId") raceId: string): Promise<AdminRaceResponse> {
+    async getRace(
+        @Param("raceId") raceId: string,
+    ): Promise<ApiResponse<GetRaceAdminApiRequest>> {
         const id = Number(raceId);
 
         if (isNaN(id)) {
@@ -78,7 +79,7 @@ export class RacesController {
     async updateRace(
         @Param("raceId") raceId: string,
         @Body() updateRaceDto: UpdateRaceDto,
-    ): Promise<AdminRaceResponse> {
+    ): Promise<ApiResponse<PatchRaceAdminApiRequest>> {
         const id = Number(raceId);
 
         if (isNaN(id)) {

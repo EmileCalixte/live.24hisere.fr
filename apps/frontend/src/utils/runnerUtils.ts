@@ -1,29 +1,33 @@
-import { type SelectOption } from "../types/Forms";
-import { type Passage, type PassageWithRunnerId } from "../types/Passage";
-import { type RankingRunnerGap } from "../types/Ranking";
 import {
+    type PassageWithRunnerId,
+    type PublicPassage,
     type Runner,
     type RunnerWithPassages,
     type RunnerWithProcessedData,
     type RunnerWithProcessedPassages,
-} from "../types/Runner";
-import { spaceship } from "./compareUtils";
+} from "@live24hisere/core/types";
+import { compareUtils, dateUtils } from "@live24hisere/utils";
+import { type SelectOption } from "../types/Forms";
+import { type RankingRunnerGap } from "../types/Ranking";
 import { getSortedPassages } from "./passageUtils";
-import { formatMsAsDuration, isDateValid } from "./utils";
+import { formatMsAsDuration } from "./utils";
 
 export function getRunnersWithPassagesFromRunnersAndPassages<
-    T extends Runner,
-    U extends PassageWithRunnerId,
->(runners: T[], passages: U[]): Array<T & { passages: U[] }> {
+    TRunner extends Runner,
+    TPassage extends PassageWithRunnerId,
+>(
+    runners: TRunner[],
+    passages: TPassage[],
+): Array<RunnerWithPassages<TRunner, TPassage>> {
     /**
      * A map with runner ID as key and array of passages as value
      */
-    const runnerPassages = new Map<number, U[]>();
+    const runnerPassages = new Map<number, TPassage[]>();
 
     for (const passage of passages) {
         const passageTime = new Date(passage.time);
 
-        if (!isDateValid(passageTime)) {
+        if (!dateUtils.isDateValid(passageTime)) {
             continue;
         }
 
@@ -43,9 +47,9 @@ export function getRunnersWithPassagesFromRunnersAndPassages<
 }
 
 export function getRunnerWithPassagesFromRunnerAndPassages<
-    T extends Runner,
-    U extends Passage,
->(runner: T, passages: U[]): T & { passages: U[] } {
+    TRunner extends Runner,
+    TPassage extends PublicPassage,
+>(runner: TRunner, passages: TPassage[]): TRunner & { passages: TPassage[] } {
     return {
         ...runner,
         passages: getSortedPassages(passages),
@@ -140,20 +144,20 @@ export function formatGap(
 export function spaceshipRunners(
     runner1: RunnerWithPassages & RunnerWithProcessedData,
     runner2: RunnerWithPassages & RunnerWithProcessedData,
-): ReturnType<typeof spaceship> {
+): ReturnType<typeof compareUtils.spaceship> {
     const runner1PassageCount = runner1.passages.length;
     const runner2PassageCount = runner2.passages.length;
 
     if (runner1PassageCount === runner2PassageCount) {
         // When two runners have completed the same number of laps,
         // the one who has completed them the fastest is considered to be faster than the other.
-        return spaceship(
+        return compareUtils.spaceship(
             runner1.lastPassageTime?.raceTime,
             runner2.lastPassageTime?.raceTime,
         );
     }
 
-    return spaceship(runner2PassageCount, runner1PassageCount);
+    return compareUtils.spaceship(runner2PassageCount, runner1PassageCount);
 }
 
 /**
@@ -171,9 +175,9 @@ export function areRunnersEqual(
  * @param runners
  * @param label an optional callback function to format the label
  */
-export function getRunnersSelectOptions<T extends Runner>(
-    runners: T[] | false,
-    label?: (runner: T) => string,
+export function getRunnersSelectOptions<TRunner extends Runner>(
+    runners: TRunner[] | false,
+    label?: (runner: TRunner) => string,
 ): SelectOption[] {
     if (!runners) {
         return [];

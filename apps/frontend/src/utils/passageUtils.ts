@@ -1,25 +1,23 @@
-import { HOUR_IN_MS } from "../constants/misc";
+import { ONE_HOUR_IN_MILLISECONDS } from "@live24hisere/core/constants";
 import {
-    type Passage,
-    type PassageProcessedData,
     type ProcessedPassage,
-} from "../types/Passage";
-import { type Race } from "../types/Race";
-import {
+    type PublicPassage,
+    type PublicRace,
     type RunnerProcessedData,
     type RunnerProcessedHour,
-} from "../types/Runner";
-import { spaceship } from "./compareUtils";
+} from "@live24hisere/core/types";
+import { compareUtils, dateUtils } from "@live24hisere/utils";
 import { getPaceFromSpeed, getSpeed } from "./mathUtils";
 import { getDistanceFromPassageCount, getRaceTime } from "./raceUtils";
-import { isDateValid } from "./utils";
 
 /**
  * Returns passages sorted in ascending time order
  */
-export function getSortedPassages<T extends Passage>(passages: T[]): T[] {
+export function getSortedPassages<TPassage extends PublicPassage>(
+    passages: TPassage[],
+): TPassage[] {
     return passages.toSorted((passageA, passageB) =>
-        spaceship(
+        compareUtils.spaceship(
             new Date(passageA.time).getTime(),
             new Date(passageB.time).getTime(),
         ),
@@ -27,8 +25,8 @@ export function getSortedPassages<T extends Passage>(passages: T[]): T[] {
 }
 
 export function getRunnerProcessedDataFromPassages(
-    race: Race,
-    passages: Passage[],
+    race: PublicRace,
+    passages: PublicPassage[],
 ): RunnerProcessedData {
     if (!passages.length) {
         return {
@@ -59,15 +57,13 @@ export function getRunnerProcessedDataFromPassages(
     };
 }
 
-export function getProcessedPassagesFromPassages<T extends Passage>(
-    race: Race,
-    passages: T[],
-): Array<T & { processed: PassageProcessedData }> {
+export function getProcessedPassagesFromPassages<
+    TPassage extends PublicPassage,
+>(race: PublicRace, passages: TPassage[]): Array<ProcessedPassage<TPassage>> {
     const raceInitialDistance = Number(race.initialDistance);
     const raceLapDistance = Number(race.lapDistance);
 
-    const processedPassages: Array<T & { processed: PassageProcessedData }> =
-        [];
+    const processedPassages: Array<ProcessedPassage<TPassage>> = [];
 
     let totalDistance = 0;
 
@@ -92,11 +88,11 @@ export function getProcessedPassagesFromPassages<T extends Passage>(
             : new Date(race.startTime);
         const lapEndTime = new Date(passage.time);
 
-        if (!isDateValid(lapStartTime)) {
+        if (!dateUtils.isDateValid(lapStartTime)) {
             throw new Error("Invalid passage start time");
         }
 
-        if (!isDateValid(lapEndTime)) {
+        if (!dateUtils.isDateValid(lapEndTime)) {
             throw new Error("Invalid passage end time");
         }
 
@@ -145,7 +141,7 @@ export function getProcessedPassagesFromPassages<T extends Passage>(
  * @param passages the list of passages sorted in ascending time order
  */
 export function getProcessedHoursFromPassages(
-    race: Race,
+    race: PublicRace,
     passages: ProcessedPassage[],
 ): RunnerProcessedHour[] {
     const hours: RunnerProcessedHour[] = [];
@@ -156,10 +152,10 @@ export function getProcessedHoursFromPassages(
     for (
         let hourStartRaceTime = 0;
         hourStartRaceTime <= raceDurationMs;
-        hourStartRaceTime += HOUR_IN_MS
+        hourStartRaceTime += ONE_HOUR_IN_MILLISECONDS
     ) {
         const hourEndRaceTime = Math.min(
-            hourStartRaceTime + HOUR_IN_MS - 1,
+            hourStartRaceTime + ONE_HOUR_IN_MILLISECONDS - 1,
             raceDurationMs,
         );
         const hourStartTime = new Date(
@@ -201,10 +197,10 @@ export function getProcessedHoursFromPassages(
     return hours;
 }
 
-export function getFastestLapPassage(
-    passages: ProcessedPassage[],
-): ProcessedPassage | null {
-    let fastestLapPassage: ProcessedPassage | null = null;
+export function getFastestLapPassage<
+    TPassage extends ProcessedPassage = ProcessedPassage,
+>(passages: TPassage[]): TPassage | null {
+    let fastestLapPassage: TPassage | null = null;
 
     for (const passage of passages) {
         if (passage.processed.lapNumber === null) {
@@ -227,10 +223,10 @@ export function getFastestLapPassage(
     return fastestLapPassage;
 }
 
-export function getSlowestLapPassage(
-    passages: ProcessedPassage[],
-): ProcessedPassage | null {
-    let slowestLapPassage: ProcessedPassage | null = null;
+export function getSlowestLapPassage<
+    TPassage extends ProcessedPassage = ProcessedPassage,
+>(passages: TPassage[]): TPassage | null {
+    let slowestLapPassage: TPassage | null = null;
 
     for (const passage of passages) {
         if (passage.processed.lapNumber === null) {
@@ -260,8 +256,8 @@ export function getSlowestLapPassage(
  * @return Passages that are entirely or partially in the interval
  */
 export function getRunnerLapsInInterval<
-    T extends ProcessedPassage = ProcessedPassage,
->(passages: T[], intervalStart: Date, intervalEnd: Date): T[] {
+    TPassage extends ProcessedPassage = ProcessedPassage,
+>(passages: TPassage[], intervalStart: Date, intervalEnd: Date): TPassage[] {
     return passages.filter((passage) => {
         // lap END time is BEFORE interval
         if (passage.processed.lapEndTime.getTime() < intervalStart.getTime()) {

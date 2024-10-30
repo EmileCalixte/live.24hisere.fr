@@ -40,21 +40,11 @@ jobs:
       - name: Run ESLint
         run: pnpm lint
 
-      - name: Run tests
-        run: pnpm test run
-        working-directory: ./apps/frontend
-#        run: |
-#          (cd frontend && yarn test run) &
-#          (cd backend && yarn test run) &
-#          wait
-
-      - name: Create frontend production builds
+      - name: Build apps
         run: pnpm build
-        working-directory: ./apps/frontend
 
-      - name: Create backend production builds
-        run: pnpm build
-        working-directory: ./apps/backend
+      - name: Run tests on all packages
+        run: pnpm test
 
       - name: Clean files
         run: |

@@ -1,5 +1,10 @@
 import React, { useMemo } from "react";
 import { Col } from "react-bootstrap";
+import {
+    type CategoryShortCode,
+    type GenderWithMixed,
+    type PartialCategoriesDict,
+} from "@live24hisere/core/types";
 import { CATEGORY_SCRATCH } from "../../../constants/category";
 import {
     CATEGORY_SCRATCH_SELECT_OPTION,
@@ -7,19 +12,14 @@ import {
     RANKING_TIME_MODE_OPTIONS,
 } from "../../../constants/forms";
 import { RankingTimeMode } from "../../../constants/rankingTimeMode";
-import {
-    type CategoriesDict,
-    type CategoryShortCode,
-} from "../../../types/Category";
 import { type SelectOption } from "../../../types/Forms";
-import { type GenderWithMixed } from "../../../types/Gender";
 import { getCategoriesDictSelectOptions } from "../../../utils/categoryUtils";
 import RadioGroup from "../../ui/forms/RadioGroup";
 import Select from "../../ui/forms/Select";
 import RankingSettingsTime from "./RankingSettingsTime";
 
 interface RankingSettingsProps {
-    categories: CategoriesDict | null;
+    categories: PartialCategoriesDict | null;
     onCategorySelect: (e: React.ChangeEvent<HTMLSelectElement>) => void;
     onGenderSelect: (gender: GenderWithMixed) => void;
     setTimeMode: (timeMode: RankingTimeMode) => void;
@@ -43,7 +43,9 @@ export default function RankingSettings({
     currentRankingTime,
     maxRankingTime,
 }: RankingSettingsProps): React.ReactElement {
-    const categoriesOptions = useMemo<SelectOption[]>(() => {
+    const categoriesOptions = useMemo<
+        Array<SelectOption<CategoryShortCode | "scratch">>
+    >(() => {
         return [
             CATEGORY_SCRATCH_SELECT_OPTION,
             ...getCategoriesDictSelectOptions(categories),

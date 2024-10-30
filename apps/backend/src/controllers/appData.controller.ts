@@ -1,7 +1,7 @@
 import { Controller, Get } from "@nestjs/common";
+import { ApiResponse, GetAppDataApiRequest } from "@live24hisere/core/types";
 import { ConfigService } from "../services/database/entities/config.service";
 import { MiscService } from "../services/database/entities/misc.service";
-import { AppDataResponse } from "../types/responses/AppData";
 
 @Controller()
 export class AppDataController {
@@ -11,7 +11,7 @@ export class AppDataController {
     ) {}
 
     @Get("/app-data")
-    async getAppData(): Promise<AppDataResponse> {
+    async getAppData(): Promise<ApiResponse<GetAppDataApiRequest>> {
         const [isAppEnabled, disabledAppMessage, lastUpdateTime] =
             await Promise.all([
                 this.configService.getIsAppEnabled(),
