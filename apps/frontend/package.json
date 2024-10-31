@@ -12,7 +12,6 @@
         "@live24hisere/core": "workspace:^",
         "@live24hisere/utils": "workspace:^",
         "@types/dompurify": "^3.0.5",
-        "@types/jest": "^29.5.14",
         "@types/latinize": "^0.2.18",
         "@types/node": "^20.16.13",
         "@types/papaparse": "^5.3.15",

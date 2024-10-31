@@ -204,9 +204,6 @@ importers:
       '@types/dompurify':
         specifier: ^3.0.5
         version: 3.0.5
-      '@types/jest':
-        specifier: ^29.5.14
-        version: 29.5.14
       '@types/latinize':
         specifier: ^0.2.18
         version: 0.2.18
@@ -1807,9 +1804,6 @@ packages:
 
   '@types/istanbul-reports@3.0.4':
     resolution: {integrity: sha512-pk2B1NWalF9toCRu6gjBzR69syFjP4Od8WRAX+0mmf9lAjCRicLOWc+ZrxZHx/0XRjotgkF9t6iaMJ+aXcOdZQ==}
-
-  '@types/jest@29.5.14':
-    resolution: {integrity: sha512-ZN+4sdnLUbo8EVvVc2ao0GFW6oVrQRPn4K2lglySj7APvSrgzxHiNNK99us4WDMi57xxA2yggblIAMNhXOotLQ==}
 
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
@@ -6329,6 +6323,7 @@ snapshots:
   '@jest/expect-utils@29.7.0':
     dependencies:
       jest-get-type: 29.6.3
+    optional: true
 
   '@jest/expect@29.7.0':
     dependencies:
@@ -6444,6 +6439,7 @@ snapshots:
       '@types/node': 20.16.13
       '@types/yargs': 17.0.32
       chalk: 4.1.2
+    optional: true
 
   '@jridgewell/gen-mapping@0.3.5':
     dependencies:
@@ -6979,20 +6975,18 @@ snapshots:
       '@types/through': 0.0.33
       rxjs: 7.8.1
 
-  '@types/istanbul-lib-coverage@2.0.6': {}
+  '@types/istanbul-lib-coverage@2.0.6':
+    optional: true
 
   '@types/istanbul-lib-report@3.0.3':
     dependencies:
       '@types/istanbul-lib-coverage': 2.0.6
+    optional: true
 
   '@types/istanbul-reports@3.0.4':
     dependencies:
       '@types/istanbul-lib-report': 3.0.3
-
-  '@types/jest@29.5.14':
-    dependencies:
-      expect: 29.7.0
-      pretty-format: 29.7.0
+    optional: true
 
   '@types/json-schema@7.0.15': {}
 
@@ -7048,7 +7042,8 @@ snapshots:
       '@types/node': 20.16.13
       '@types/send': 0.17.4
 
-  '@types/stack-utils@2.0.3': {}
+  '@types/stack-utils@2.0.3':
+    optional: true
 
   '@types/superagent@8.1.7':
     dependencies:
@@ -7071,11 +7066,13 @@ snapshots:
 
   '@types/warning@3.0.3': {}
 
-  '@types/yargs-parser@21.0.3': {}
+  '@types/yargs-parser@21.0.3':
+    optional: true
 
   '@types/yargs@17.0.32':
     dependencies:
       '@types/yargs-parser': 21.0.3
+    optional: true
 
   '@typescript-eslint/eslint-plugin@7.18.0(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.6.3))(eslint@8.57.1)(typescript@5.6.3)':
     dependencies:
@@ -7711,7 +7708,8 @@ snapshots:
 
   chrome-trace-event@1.0.4: {}
 
-  ci-info@3.9.0: {}
+  ci-info@3.9.0:
+    optional: true
 
   cjs-module-lexer@1.3.1:
     optional: true
@@ -8284,7 +8282,8 @@ snapshots:
 
   escape-string-regexp@1.0.5: {}
 
-  escape-string-regexp@2.0.0: {}
+  escape-string-regexp@2.0.0:
+    optional: true
 
   escape-string-regexp@4.0.0: {}
 
@@ -8540,6 +8539,7 @@ snapshots:
       jest-matcher-utils: 29.7.0
       jest-message-util: 29.7.0
       jest-util: 29.7.0
+    optional: true
 
   express@4.21.1:
     dependencies:
@@ -9325,6 +9325,7 @@ snapshots:
       jest-diff: 29.7.0
       jest-get-type: 29.6.3
       pretty-format: 29.7.0
+    optional: true
 
   jest-message-util@29.7.0:
     dependencies:
@@ -9337,6 +9338,7 @@ snapshots:
       pretty-format: 29.7.0
       slash: 3.0.0
       stack-utils: 2.0.6
+    optional: true
 
   jest-mock@29.7.0:
     dependencies:
@@ -9463,6 +9465,7 @@ snapshots:
       ci-info: 3.9.0
       graceful-fs: 4.2.11
       picomatch: 2.3.1
+    optional: true
 
   jest-validate@29.7.0:
     dependencies:
@@ -10503,6 +10506,7 @@ snapshots:
   stack-utils@2.0.6:
     dependencies:
       escape-string-regexp: 2.0.0
+    optional: true
 
   stackback@0.0.2: {}
 
