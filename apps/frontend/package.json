@@ -13,7 +13,7 @@
         "@live24hisere/utils": "workspace:^",
         "@types/dompurify": "^3.0.5",
         "@types/latinize": "^0.2.18",
-        "@types/node": "^20.16.13",
+        "@types/node": "^20.17.4",
         "@types/papaparse": "^5.3.15",
         "@types/react": "^18.3.12",
         "@types/react-dom": "^18.3.1",
