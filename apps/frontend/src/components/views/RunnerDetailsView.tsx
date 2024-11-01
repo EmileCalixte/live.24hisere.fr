@@ -1,5 +1,5 @@
 import React from "react";
-import { faFileExcel } from "@fortawesome/free-solid-svg-icons";
+import { faCircleInfo, faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
@@ -27,6 +27,7 @@ import {
 import { getDataForExcelExport } from "../../utils/runnerUtils";
 import CircularLoader from "../ui/CircularLoader";
 import Page from "../ui/Page";
+import RunnerStoppedTooltip from "../ui/tooltips/RunnerStoppedTooltip";
 import RunnerDetailsLaps from "../viewParts/runnerDetails/RunnerDetailsLaps";
 import RunnerDetailsRaceDetails from "../viewParts/runnerDetails/RunnerDetailsRaceDetails";
 import RunnerDetailsStats from "../viewParts/runnerDetails/RunnerDetailsStats";
@@ -238,6 +239,14 @@ export default function RunnerDetailsView(): React.ReactElement {
                                                 }}
                                             >
                                                 Coureur arrêté
+                                                <RunnerStoppedTooltip className="ms-2">
+                                                    <FontAwesomeIcon
+                                                        icon={faCircleInfo}
+                                                        style={{
+                                                            fontSize: "0.85em",
+                                                        }}
+                                                    />
+                                                </RunnerStoppedTooltip>
                                             </p>
                                         </div>
                                     )}

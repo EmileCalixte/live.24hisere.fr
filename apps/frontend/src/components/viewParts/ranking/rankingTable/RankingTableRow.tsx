@@ -10,8 +10,8 @@ import { type RankingRunner } from "../../../../types/Ranking";
 import { getRankingType } from "../../../../utils/rankingUtils";
 import { formatGap } from "../../../../utils/runnerUtils";
 import { formatFloatNumber, formatMsAsDuration } from "../../../../utils/utils";
+import RunnerStoppedBadge from "../../../ui/badges/RunnerStoppedBadge";
 import RankingTableRowNCells from "./RankingTableRowNCells";
-import RankingTableRunnerStoppedBadge from "./RankingTableRunnerStoppedBadge";
 
 interface RankingTableRowProps {
     race: PublicRace;
@@ -38,7 +38,7 @@ export default function RankingTableRow({
             <td>{runner.id}</td>
             <td>
                 {runner.lastname.toUpperCase()} {runner.firstname}
-                {runner.stopped && <RankingTableRunnerStoppedBadge />}
+                {runner.stopped && <RunnerStoppedBadge />}
             </td>
             <td>
                 {raceInitialDistance > 0
