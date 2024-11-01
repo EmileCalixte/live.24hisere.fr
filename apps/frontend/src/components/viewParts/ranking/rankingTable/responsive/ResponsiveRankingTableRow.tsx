@@ -12,7 +12,7 @@ import {
     formatFloatNumber,
     formatMsAsDuration,
 } from "../../../../../utils/utils";
-import RankingTableRunnerStoppedBadge from "../RankingTableRunnerStoppedBadge";
+import RunnerStoppedBadge from "../../../../ui/badges/RunnerStoppedBadge";
 
 interface ResponsiveRankingTableRowProps {
     runner: RankingRunner;
@@ -118,7 +118,7 @@ export default function ResponsiveRankingTableRow({
                             {runner.lastname.toUpperCase()} {runner.firstname} –
                             N°{runner.id}
                         </strong>
-                        {runner.stopped && <RankingTableRunnerStoppedBadge />}
+                        {runner.stopped && <RunnerStoppedBadge />}
                     </div>
 
                     {displayedGap && (
