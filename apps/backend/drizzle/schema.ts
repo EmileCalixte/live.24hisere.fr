@@ -4,6 +4,7 @@ import { dateUtils } from "@live24hisere/utils";
 
 const TABLE_NAME_ACCESS_TOKEN = "access_token";
 const TABLE_NAME_CONFIG = "config";
+const TABLE_NAME_EDITION = "edition";
 const TABLE_NAME_MISC = "misc";
 const TABLE_NAME_PASSAGE = "passage";
 const TABLE_NAME_RACE = "race";
@@ -51,8 +52,19 @@ export const TABLE_MISC = mysqlTable(TABLE_NAME_MISC, (t) => ({
   value: t.varchar({ length: 5000 }).notNull(),
 }));
 
+export const TABLE_EDITION = mysqlTable(TABLE_NAME_EDITION, (t) => ({
+  id: t.int().primaryKey().autoincrement(),
+  name: t.varchar({ length: 50 }).notNull().unique(),
+  order: t.int().notNull(),
+  isPublic: t.boolean().notNull(),
+}));
+
 export const TABLE_RACE = mysqlTable(TABLE_NAME_RACE, (t) => ({
   id: t.int().primaryKey().autoincrement(),
+  editionId: t
+    .int()
+    .references(() => TABLE_EDITION.id)
+    .notNull(),
   name: t.varchar({ length: 50 }).notNull().unique(),
   startTime: date(DEFAULT_DATE_PARAMS).notNull(),
   duration: t.int({ unsigned: true }).notNull(),

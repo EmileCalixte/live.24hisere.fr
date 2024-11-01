@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : database
--- Généré le : jeu. 10 oct. 2024 à 18:35
+-- Généré le : ven. 01 nov. 2024 à 19:28
 -- Version du serveur : 10.6.14-MariaDB-1:10.6.14+maria~ubu2004
 -- Version de PHP : 8.2.20
 
@@ -52,6 +52,26 @@ INSERT INTO `config` (`key`, `value`) VALUES
 ('disabled_app_message', '<h1>Application désactivée</h1><p>Application désactivée (message de test)</p>'),
 ('import_dag_file_path', 'http://localhost:8081/dag-file.txt'),
 ('is_app_enabled', '1');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `edition`
+--
+
+CREATE TABLE `edition` (
+  `id` int(11) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `order` int(11) NOT NULL,
+  `is_public` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `edition`
+--
+
+INSERT INTO `edition` (`id`, `name`, `order`, `is_public`) VALUES
+(1, '2024 - 7ème édition', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -14852,6 +14872,7 @@ INSERT INTO `passage` (`id`, `detection_id`, `import_time`, `runner_id`, `time`,
 
 CREATE TABLE `race` (
   `id` int(11) NOT NULL,
+  `edition_id` int(11) NOT NULL,
   `name` varchar(50) NOT NULL,
   `start_time` datetime NOT NULL,
   `duration` int(10) UNSIGNED NOT NULL,
@@ -14865,12 +14886,12 @@ CREATE TABLE `race` (
 -- Déchargement des données de la table `race`
 --
 
-INSERT INTO `race` (`id`, `name`, `start_time`, `duration`, `initial_distance`, `lap_distance`, `order`, `is_public`) VALUES
-(1, '24 Heures', '2024-04-06 07:00:03', 86400, 523.123, 1001.234, 0, 1),
-(2, '12 Heures', '2024-04-06 19:00:03', 43200, 0.000, 1001.234, 3, 1),
-(3, '6 Heures', '2024-04-06 08:00:00', 21600, 0.000, 1001.234, 2, 1),
-(4, '3 Heures', '2024-04-06 11:00:00', 10800, 0.000, 1001.234, 1, 1),
-(5, 'Course privée', '2024-04-06 00:00:00', 86400, 0.000, 1001.234, 4, 0);
+INSERT INTO `race` (`id`, `edition_id`, `name`, `start_time`, `duration`, `initial_distance`, `lap_distance`, `order`, `is_public`) VALUES
+(1, 1, '24 Heures', '2024-04-06 07:00:03', 86400, 523.123, 1001.234, 0, 1),
+(2, 1, '12 Heures', '2024-04-06 19:00:03', 43200, 0.000, 1001.234, 3, 1),
+(3, 1, '6 Heures', '2024-04-06 08:00:00', 21600, 0.000, 1001.234, 2, 1),
+(4, 1, '3 Heures', '2024-04-06 11:00:00', 10800, 0.000, 1001.234, 1, 1),
+(5, 1, 'Course privée', '2024-04-06 00:00:00', 86400, 0.000, 1001.234, 4, 0);
 
 -- --------------------------------------------------------
 
@@ -15080,7 +15101,8 @@ CREATE TABLE `__drizzle_migrations` (
 --
 
 INSERT INTO `__drizzle_migrations` (`id`, `hash`, `created_at`) VALUES
-(1, 'be56cb5324a4e8a26247e1a6ffc674fa893d8512a6cb848e664f97646c8f8d35', 1727603690954);
+(1, 'be56cb5324a4e8a26247e1a6ffc674fa893d8512a6cb848e664f97646c8f8d35', 1727603690954),
+(2, '51942c706fda030e67d1777c3a9ea4b6d91bd4c06ec0582912c58b0b04026535', 1730486745147);
 
 --
 -- Index pour les tables déchargées
@@ -15098,6 +15120,13 @@ ALTER TABLE `access_token`
 --
 ALTER TABLE `config`
   ADD PRIMARY KEY (`key`);
+
+--
+-- Index pour la table `edition`
+--
+ALTER TABLE `edition`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `edition_name_unique` (`name`);
 
 --
 -- Index pour la table `misc`
@@ -15118,7 +15147,8 @@ ALTER TABLE `passage`
 --
 ALTER TABLE `race`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `race_name_unique` (`name`);
+  ADD UNIQUE KEY `race_name_unique` (`name`),
+  ADD KEY `race_edition_id_edition_id_fk` (`edition_id`);
 
 --
 -- Index pour la table `runner`
@@ -15145,6 +15175,12 @@ ALTER TABLE `__drizzle_migrations`
 --
 
 --
+-- AUTO_INCREMENT pour la table `edition`
+--
+ALTER TABLE `edition`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT pour la table `passage`
 --
 ALTER TABLE `passage`
@@ -15166,7 +15202,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT pour la table `__drizzle_migrations`
 --
 ALTER TABLE `__drizzle_migrations`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Contraintes pour les tables déchargées
@@ -15183,6 +15219,12 @@ ALTER TABLE `access_token`
 --
 ALTER TABLE `passage`
   ADD CONSTRAINT `passage_runner_id_runner_id_fk` FOREIGN KEY (`runner_id`) REFERENCES `runner` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Contraintes pour la table `race`
+--
+ALTER TABLE `race`
+  ADD CONSTRAINT `race_edition_id_edition_id_fk` FOREIGN KEY (`edition_id`) REFERENCES `edition` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Contraintes pour la table `runner`
