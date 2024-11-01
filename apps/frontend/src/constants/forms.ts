@@ -5,21 +5,21 @@ import { CATEGORY_SCRATCH } from "./category";
 import { RankingTimeMode } from "./rankingTimeMode";
 
 export const CATEGORY_SCRATCH_SELECT_OPTION: SelectOption<"scratch"> = {
-    label: "Scratch (toutes catégories)",
-    value: CATEGORY_SCRATCH,
+  label: "Scratch (toutes catégories)",
+  value: CATEGORY_SCRATCH,
 };
 
 export const GENDER_OPTIONS: Array<SelectOption<Gender>> = [
-    { label: "Homme", value: GENDER.M },
-    { label: "Femme", value: GENDER.F },
+  { label: "Homme", value: GENDER.M },
+  { label: "Femme", value: GENDER.F },
 ];
 
 export const GENDER_WITH_MIXED_OPTIONS: Array<SelectOption<GenderWithMixed>> = [
-    { label: "Mixte", value: "mixed" },
-    ...GENDER_OPTIONS,
+  { label: "Mixte", value: "mixed" },
+  ...GENDER_OPTIONS,
 ];
 
 export const RANKING_TIME_MODE_OPTIONS: Array<SelectOption<RankingTimeMode>> = [
-    { label: "Classement actuel", value: RankingTimeMode.NOW },
-    { label: "Au temps de course", value: RankingTimeMode.AT },
+  { label: "Classement actuel", value: RankingTimeMode.NOW },
+  { label: "Au temps de course", value: RankingTimeMode.AT },
 ];

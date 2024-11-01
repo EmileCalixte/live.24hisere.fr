@@ -5,24 +5,24 @@ import { appContext } from "../App";
 import Page from "../ui/Page";
 
 export default function DisabledAppView(): React.ReactElement {
-    const {
-        appData: { disabledAppMessage },
-    } = useContext(appContext);
+  const {
+    appData: { disabledAppMessage },
+  } = useContext(appContext);
 
-    const message = disabledAppMessage ?? "<p>Suivi live désactivé</p>";
+  const message = disabledAppMessage ?? "<p>Suivi live désactivé</p>";
 
-    return (
-        <Page id="disabled-app" title="Application désactivée">
-            <Row>
-                <Col>
-                    <div
-                        className="card mt-3"
-                        dangerouslySetInnerHTML={{
-                            __html: DOMPurify.sanitize(message),
-                        }}
-                    />
-                </Col>
-            </Row>
-        </Page>
-    );
+  return (
+    <Page id="disabled-app" title="Application désactivée">
+      <Row>
+        <Col>
+          <div
+            className="card mt-3"
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(message),
+            }}
+          />
+        </Col>
+      </Row>
+    </Page>
+  );
 }

@@ -1,8 +1,4 @@
-import {
-    type ApiRequest,
-    type ApiRequestResult,
-    type ApiRequestResultOk,
-} from "@live24hisere/core/types";
+import { type ApiRequest, type ApiRequestResult, type ApiRequestResultOk } from "@live24hisere/core/types";
 
 export const EVENT_API_REQUEST_STARTED = "apiRequestStarted";
 export const EVENT_API_REQUEST_ENDED = "apiRequestEnded";
@@ -12,32 +8,27 @@ export const EVENT_API_REQUEST_ENDED = "apiRequestEnded";
  * @param headers The header collection
  * @param toAdd A record of headers to add if they are not present in the header collection
  */
-export function addHeadersIfNotSet(
-    headers: Headers,
-    toAdd: Record<string, string>,
-): void {
-    Object.entries(toAdd).forEach(([headerName, headerValue]) => {
-        if (!headers.has(headerName)) {
-            headers.set(headerName, headerValue);
-        }
-    });
+export function addHeadersIfNotSet(headers: Headers, toAdd: Record<string, string>): void {
+  Object.entries(toAdd).forEach(([headerName, headerValue]) => {
+    if (!headers.has(headerName)) {
+      headers.set(headerName, headerValue);
+    }
+  });
 }
 
-export async function getResponseJson<T = unknown>(
-    response: Response,
-): Promise<T | undefined> {
-    if (response.status === 204) {
-        return undefined;
-    }
+export async function getResponseJson<T = unknown>(response: Response): Promise<T | undefined> {
+  if (response.status === 204) {
+    return undefined;
+  }
 
-    return await response.json();
+  return await response.json();
 }
 
 /**
  * Returns true if the api request result was OK.
  */
 export function isApiRequestResultOk<T extends ApiRequest>(
-    result: ApiRequestResult<T>,
+  result: ApiRequestResult<T>,
 ): result is ApiRequestResultOk<T> {
-    return result.isOk;
+  return result.isOk;
 }

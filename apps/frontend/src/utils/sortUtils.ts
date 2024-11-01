@@ -1,11 +1,9 @@
 import { SortDirection } from "../constants/sort";
 
-export function getOppositeSortDirection(
-    sortDirection: SortDirection,
-): SortDirection {
-    if (sortDirection === SortDirection.ASC) {
-        return SortDirection.DESC;
-    }
+export function getOppositeSortDirection(sortDirection: SortDirection): SortDirection {
+  if (sortDirection === SortDirection.ASC) {
+    return SortDirection.DESC;
+  }
 
-    return SortDirection.ASC;
+  return SortDirection.ASC;
 }

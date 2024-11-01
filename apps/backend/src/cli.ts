@@ -3,7 +3,7 @@ import { CommandFactory } from "nest-commander";
 import { CliModule } from "./cli.module";
 
 async function bootstrap(): Promise<void> {
-    await CommandFactory.run(CliModule, new Logger());
+  await CommandFactory.run(CliModule, new Logger());
 }
 
 void bootstrap();

@@ -10,78 +10,71 @@ export const ACCESS_TOKEN_LIFETIME = 4 * 60 * 60 * 1000;
 
 @Injectable()
 export class AccessTokenService extends EntityService {
-    constructor(
-        drizzleService: DrizzleService,
-        private readonly randomService: RandomService,
-    ) {
-        super(drizzleService);
+  constructor(
+    drizzleService: DrizzleService,
+    private readonly randomService: RandomService,
+  ) {
+    super(drizzleService);
+  }
+
+  async getAccessTokenByStringToken(stringToken: string): Promise<AccessToken | null> {
+    const accessTokens = await this.db
+      .select()
+      .from(TABLE_ACCESS_TOKEN)
+      .where(eq(TABLE_ACCESS_TOKEN.token, stringToken));
+
+    return this.getUniqueResult(accessTokens);
+  }
+
+  async createAccessTokenForUser(user: User): Promise<AccessToken> {
+    const stringToken = this.randomService.getRandomString(32, HEXADECIMAL);
+
+    await this.db.insert(TABLE_ACCESS_TOKEN).values({
+      userId: user.id,
+      token: stringToken,
+      expirationDate: this.getTokenExpirationDateFromNow().toISOString(),
+    });
+
+    const newAccessToken = await this.getAccessTokenByStringToken(stringToken);
+
+    if (!newAccessToken) {
+      throw new Error("Failed to insert an access token in database");
     }
 
-    async getAccessTokenByStringToken(
-        stringToken: string,
-    ): Promise<AccessToken | null> {
-        const accessTokens = await this.db
-            .select()
-            .from(TABLE_ACCESS_TOKEN)
-            .where(eq(TABLE_ACCESS_TOKEN.token, stringToken));
+    return newAccessToken;
+  }
 
-        return this.getUniqueResult(accessTokens);
-    }
+  /**
+   * Deletes an access token
+   * @param token The token to delete
+   * @returns true if the token was found and deleted, false otherwise
+   */
+  async deleteAccessTokenByStringToken(token: string): Promise<boolean> {
+    const [resultSetHeader] = await this.db.delete(TABLE_ACCESS_TOKEN).where(eq(TABLE_ACCESS_TOKEN.token, token));
 
-    async createAccessTokenForUser(user: User): Promise<AccessToken> {
-        const stringToken = this.randomService.getRandomString(32, HEXADECIMAL);
+    return !!resultSetHeader.affectedRows;
+  }
 
-        await this.db.insert(TABLE_ACCESS_TOKEN).values({
-            userId: user.id,
-            token: stringToken,
-            expirationDate: this.getTokenExpirationDateFromNow().toISOString(),
-        });
+  /**
+   * Deletes all access tokens of a user
+   * @param user The user
+   * @returns number of deleted access tokens
+   */
+  async deleteUserAccessTokens(user: User): Promise<number> {
+    const [resultSetHeader] = await this.db.delete(TABLE_ACCESS_TOKEN).where(eq(TABLE_ACCESS_TOKEN.userId, user.id));
 
-        const newAccessToken =
-            await this.getAccessTokenByStringToken(stringToken);
+    return resultSetHeader.affectedRows;
+  }
 
-        if (!newAccessToken) {
-            throw new Error("Failed to insert an access token in database");
-        }
+  isAccessTokenExpired(accessToken: AccessToken): boolean {
+    const now = new Date();
 
-        return newAccessToken;
-    }
+    return now.getTime() > new Date(accessToken.expirationDate).getTime();
+  }
 
-    /**
-     * Deletes an access token
-     * @param token The token to delete
-     * @returns true if the token was found and deleted, false otherwise
-     */
-    async deleteAccessTokenByStringToken(token: string): Promise<boolean> {
-        const [resultSetHeader] = await this.db
-            .delete(TABLE_ACCESS_TOKEN)
-            .where(eq(TABLE_ACCESS_TOKEN.token, token));
+  private getTokenExpirationDateFromNow(): Date {
+    const now = new Date();
 
-        return !!resultSetHeader.affectedRows;
-    }
-
-    /**
-     * Deletes all access tokens of a user
-     * @param user The user
-     * @returns number of deleted access tokens
-     */
-    async deleteUserAccessTokens(user: User): Promise<number> {
-        const [resultSetHeader] = await this.db
-            .delete(TABLE_ACCESS_TOKEN)
-            .where(eq(TABLE_ACCESS_TOKEN.userId, user.id));
-
-        return resultSetHeader.affectedRows;
-    }
-
-    isAccessTokenExpired(accessToken: AccessToken): boolean {
-        const now = new Date();
-
-        return now.getTime() > new Date(accessToken.expirationDate).getTime();
-    }
-
-    private getTokenExpirationDateFromNow(): Date {
-        const now = new Date();
-
-        return new Date(now.getTime() + ACCESS_TOKEN_LIFETIME);
-    }
+    return new Date(now.getTime() + ACCESS_TOKEN_LIFETIME);
+  }
 }

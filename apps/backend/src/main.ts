@@ -5,29 +5,26 @@ import { AppModule } from "./app.module";
 import { NODE_ENV_DEVELOPMENT } from "./constants/env.constants";
 
 async function bootstrap(): Promise<void> {
-    const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule);
 
-    app.useGlobalPipes(
-        new ValidationPipe({
-            errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+  app.useGlobalPipes(
+    new ValidationPipe({
+      errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
 
-            // Prevent unwanted properties in request body by only taking into account properties listed in DTOs
-            whitelist: true,
-        }),
-    );
+      // Prevent unwanted properties in request body by only taking into account properties listed in DTOs
+      whitelist: true,
+    }),
+  );
 
-    app.enableCors({
-        methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-        origin:
-            process.env.NODE_ENV === NODE_ENV_DEVELOPMENT
-                ? "*"
-                : (process.env.FRONTEND_URL ?? " "),
-        allowedHeaders: ["Authorization", "Content-Type"],
-    });
+  app.enableCors({
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    origin: process.env.NODE_ENV === NODE_ENV_DEVELOPMENT ? "*" : (process.env.FRONTEND_URL ?? " "),
+    allowedHeaders: ["Authorization", "Content-Type"],
+  });
 
-    useContainer(app.select(AppModule), { fallbackOnErrors: true });
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
-    await app.listen(8000);
+  await app.listen(8000);
 }
 
 void bootstrap();

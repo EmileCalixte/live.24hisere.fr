@@ -4,6 +4,4 @@ import { RaceDto } from "./race.dto";
 
 type PatchRacePayload = PatchRaceAdminApiRequest["payload"];
 
-export class UpdateRaceDto
-    extends PartialType(RaceDto)
-    implements PatchRacePayload {}
+export class UpdateRaceDto extends PartialType(RaceDto) implements PatchRacePayload {}

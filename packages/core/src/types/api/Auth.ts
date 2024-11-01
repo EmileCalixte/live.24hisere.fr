@@ -1,29 +1,29 @@
 import { type ApiRequest } from "./ApiRequest";
 
 export interface GetCurrentUserInfoApiRequest extends ApiRequest {
-    payload: never;
+  payload: never;
 
-    response: {
-        user: {
-            username: string;
-        };
+  response: {
+    user: {
+      username: string;
     };
+  };
 }
 
 export interface LoginApiRequest extends ApiRequest {
-    payload: {
-        username: string;
-        password: string;
-    };
+  payload: {
+    username: string;
+    password: string;
+  };
 
-    response: {
-        accessToken: string;
-        expirationTime: string;
-    };
+  response: {
+    accessToken: string;
+    expirationTime: string;
+  };
 }
 
 export interface LogoutApiRequest extends ApiRequest {
-    payload: never;
+  payload: never;
 
-    response: never;
+  response: never;
 }

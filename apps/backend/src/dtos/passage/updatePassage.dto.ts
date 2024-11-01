@@ -4,6 +4,4 @@ import { PassageDto } from "./passage.dto";
 
 type PatchPassagePayload = PatchRunnerPassageAdminApiRequest["payload"];
 
-export class UpdatePassageDto
-    extends PartialType(PassageDto)
-    implements PatchPassagePayload {}
+export class UpdatePassageDto extends PartialType(PassageDto) implements PatchPassagePayload {}

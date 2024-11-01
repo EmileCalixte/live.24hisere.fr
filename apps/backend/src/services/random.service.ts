@@ -10,24 +10,17 @@ const ALL_CASE_AND_DIGITS = ALL_CASE + DIGITS;
 
 @Injectable()
 export class RandomService {
-    getRandomString(
-        length: number,
-        availableCharacters: string = ALL_CASE_AND_DIGITS,
-    ): string {
-        const randomStringCharacters: string[] = [];
+  getRandomString(length: number, availableCharacters: string = ALL_CASE_AND_DIGITS): string {
+    const randomStringCharacters: string[] = [];
 
-        for (let i = 0; i < length; ++i) {
-            randomStringCharacters.push(
-                availableCharacters[
-                    this.getRandomInt(0, availableCharacters.length)
-                ],
-            );
-        }
-
-        return randomStringCharacters.join("");
+    for (let i = 0; i < length; ++i) {
+      randomStringCharacters.push(availableCharacters[this.getRandomInt(0, availableCharacters.length)]);
     }
 
-    getRandomInt(min: number, max: number): number {
-        return crypto.randomInt(min, max);
-    }
+    return randomStringCharacters.join("");
+  }
+
+  getRandomInt(min: number, max: number): number {
+    return crypto.randomInt(min, max);
+  }
 }

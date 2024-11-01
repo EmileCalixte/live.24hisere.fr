@@ -1,7 +1,7 @@
 export interface User {
-    id: number;
-    username: string;
-    passwordHash: string;
+  id: number;
+  username: string;
+  passwordHash: string;
 }
 
 /**

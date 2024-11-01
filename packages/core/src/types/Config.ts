@@ -1,9 +1,9 @@
 export interface DisabledAppData {
-    isAppEnabled: boolean;
+  isAppEnabled: boolean;
 
-    disabledAppMessage: string | null;
+  disabledAppMessage: string | null;
 }
 
 export interface PassageImportSettings {
-    dagFileUrl: string | null;
+  dagFileUrl: string | null;
 }

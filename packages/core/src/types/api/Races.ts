@@ -1,66 +1,62 @@
-import {
-    type AdminRace,
-    type AdminRaceWithRunnerCount,
-    type RaceWithRunnerCount,
-} from "../Race";
+import { type AdminRace, type AdminRaceWithRunnerCount, type RaceWithRunnerCount } from "../Race";
 import { type ApiRequest } from "./ApiRequest";
 
 export interface GetRacesApiRequest extends ApiRequest {
-    payload: never;
+  payload: never;
 
-    response: {
-        races: RaceWithRunnerCount[];
-    };
+  response: {
+    races: RaceWithRunnerCount[];
+  };
 }
 
 export interface GetRaceApiRequest extends ApiRequest {
-    payload: never;
+  payload: never;
 
-    response: {
-        race: RaceWithRunnerCount;
-    };
+  response: {
+    race: RaceWithRunnerCount;
+  };
 }
 
 export interface GetRacesAdminApiRequest extends ApiRequest {
-    payload: never;
+  payload: never;
 
-    response: {
-        races: AdminRaceWithRunnerCount[];
-    };
+  response: {
+    races: AdminRaceWithRunnerCount[];
+  };
 }
 
 export interface GetRaceAdminApiRequest extends ApiRequest {
-    payload: never;
+  payload: never;
 
-    response: {
-        race: AdminRaceWithRunnerCount;
-    };
+  response: {
+    race: AdminRaceWithRunnerCount;
+  };
 }
 
 export interface PostRaceAdminApiRequest extends ApiRequest {
-    payload: Omit<AdminRace, "id">;
+  payload: Omit<AdminRace, "id">;
 
-    response: {
-        race: AdminRaceWithRunnerCount;
-    };
+  response: {
+    race: AdminRaceWithRunnerCount;
+  };
 }
 
 export interface PatchRaceAdminApiRequest extends ApiRequest {
-    payload: Partial<PostRaceAdminApiRequest["payload"]>;
+  payload: Partial<PostRaceAdminApiRequest["payload"]>;
 
-    response: {
-        race: AdminRaceWithRunnerCount;
-    };
+  response: {
+    race: AdminRaceWithRunnerCount;
+  };
 }
 
 export interface DeleteRaceAdminApiRequest extends ApiRequest {
-    payload: never;
+  payload: never;
 
-    response: never;
+  response: never;
 }
 
 export interface PutRaceOrderAdminApiRequest extends ApiRequest {
-    payload: number[];
+  payload: number[];
 
-    response: never;
+  response: never;
 }

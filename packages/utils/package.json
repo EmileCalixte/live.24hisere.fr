@@ -1,24 +1,24 @@
 {
-    "name": "@live24hisere/utils",
-    "scripts": {
-        "dev": "tsup --watch",
-        "test": "vitest run",
-        "build": "tsup"
-    },
-    "exports": {
-        ".": {
-            "types": "./index.d.ts",
-            "import": "./dist/utils.mjs",
-            "require": "./dist/utils.js"
-        }
-    },
-    "dependencies": {
-        "@live24hisere/core": "workspace:^",
-        "type-fest": "^4.26.1"
-    },
-    "devDependencies": {
-        "tsup": "8.2.4",
-        "typescript": "^5.6.3",
-        "vitest": "^2.1.4"
+  "name": "@live24hisere/utils",
+  "scripts": {
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "build": "tsup"
+  },
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./dist/utils.mjs",
+      "require": "./dist/utils.js"
     }
+  },
+  "dependencies": {
+    "@live24hisere/core": "workspace:^",
+    "type-fest": "^4.26.1"
+  },
+  "devDependencies": {
+    "tsup": "8.2.4",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.4"
+  }
 }

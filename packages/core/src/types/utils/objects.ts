@@ -1,5 +1,5 @@
 export type UnionTypeRecord<T extends string> = {
-    [K in T]: K;
+  [K in T]: K;
 };
 
 /**
@@ -29,19 +29,18 @@ export type UnionTypeRecord<T extends string> = {
  * type Example7 = ObjectValueType<Example, "optionalStringOrUndefined">; // string | undefined (with exactOptionalPropertyTypes: true), string (with exactOptionalPropertyTypes: false)
  * ```
  */
-export type ObjectValueType<
-    TObject extends object,
-    TKey extends keyof TObject,
-> = Required<{ [P in TKey]: TObject[TKey] }>[TKey];
+export type ObjectValueType<TObject extends object, TKey extends keyof TObject> = Required<{
+  [P in TKey]: TObject[TKey];
+}>[TKey];
 
 /**
  * Returns the type of the entries returned by Object.entries on an object of type TObject
  */
 export type Entries<TObject extends object> = Array<
-    Exclude<
-        {
-            [K in keyof TObject]: [K, ObjectValueType<TObject, K>];
-        }[keyof TObject],
-        undefined
-    >
+  Exclude<
+    {
+      [K in keyof TObject]: [K, ObjectValueType<TObject, K>];
+    }[keyof TObject],
+    undefined
+  >
 >;
