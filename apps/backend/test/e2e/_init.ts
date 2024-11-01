@@ -4,24 +4,24 @@ import { useContainer } from "class-validator";
 import { AppModule } from "../../src/app.module";
 
 export async function initApp(): Promise<INestApplication> {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-        imports: [AppModule],
-    }).compile();
+  const moduleFixture: TestingModule = await Test.createTestingModule({
+    imports: [AppModule],
+  }).compile();
 
-    const app = moduleFixture.createNestApplication();
+  const app = moduleFixture.createNestApplication();
 
-    app.useGlobalPipes(
-        new ValidationPipe({
-            errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+  app.useGlobalPipes(
+    new ValidationPipe({
+      errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
 
-            // Prevent unwanted properties in request body by only taking into account properties listed in DTOs
-            whitelist: true,
-        }),
-    );
+      // Prevent unwanted properties in request body by only taking into account properties listed in DTOs
+      whitelist: true,
+    }),
+  );
 
-    useContainer(app.select(AppModule), { fallbackOnErrors: true });
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
-    await app.init();
+  await app.init();
 
-    return app;
+  return app;
 }

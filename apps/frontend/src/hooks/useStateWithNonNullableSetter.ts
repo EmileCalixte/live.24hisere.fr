@@ -9,9 +9,7 @@ import { type ReactUseStateResultWithNonNullableSetter } from "../types/utils/re
  * @param initialState
  */
 export function useStateWithNonNullableSetter<S>(
-    initialState: S | (() => S),
+  initialState: S | (() => S),
 ): ReactUseStateResultWithNonNullableSetter<S> {
-    return useState<S>(
-        initialState,
-    ) as ReactUseStateResultWithNonNullableSetter<S>;
+  return useState<S>(initialState) as ReactUseStateResultWithNonNullableSetter<S>;
 }

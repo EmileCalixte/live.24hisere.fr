@@ -35,12 +35,8 @@
           "name": "access_token_user_id_user_id_fk",
           "tableFrom": "access_token",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -48,9 +44,7 @@
       "compositePrimaryKeys": {
         "access_token_token": {
           "name": "access_token_token",
-          "columns": [
-            "token"
-          ]
+          "columns": ["token"]
         }
       },
       "uniqueConstraints": {}
@@ -78,9 +72,7 @@
       "compositePrimaryKeys": {
         "config_key": {
           "name": "config_key",
-          "columns": [
-            "key"
-          ]
+          "columns": ["key"]
         }
       },
       "uniqueConstraints": {}
@@ -108,9 +100,7 @@
       "compositePrimaryKeys": {
         "misc_key": {
           "name": "misc_key",
-          "columns": [
-            "key"
-          ]
+          "columns": ["key"]
         }
       },
       "uniqueConstraints": {}
@@ -167,12 +157,8 @@
           "name": "passage_runner_id_runner_id_fk",
           "tableFrom": "passage",
           "tableTo": "runner",
-          "columnsFrom": [
-            "runner_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["runner_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -180,17 +166,13 @@
       "compositePrimaryKeys": {
         "passage_id": {
           "name": "passage_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {
         "passage_detection_id_unique": {
           "name": "passage_detection_id_unique",
-          "columns": [
-            "detection_id"
-          ]
+          "columns": ["detection_id"]
         }
       }
     },
@@ -259,17 +241,13 @@
       "compositePrimaryKeys": {
         "race_id": {
           "name": "race_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {
         "race_name_unique": {
           "name": "race_name_unique",
-          "columns": [
-            "name"
-          ]
+          "columns": ["name"]
         }
       }
     },
@@ -332,12 +310,8 @@
           "name": "runner_race_id_race_id_fk",
           "tableFrom": "runner",
           "tableTo": "race",
-          "columnsFrom": [
-            "race_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["race_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -345,9 +319,7 @@
       "compositePrimaryKeys": {
         "runner_id": {
           "name": "runner_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {}
@@ -382,17 +354,13 @@
       "compositePrimaryKeys": {
         "user_id": {
           "name": "user_id",
-          "columns": [
-            "id"
-          ]
+          "columns": ["id"]
         }
       },
       "uniqueConstraints": {
         "user_username_unique": {
           "name": "user_username_unique",
-          "columns": [
-            "username"
-          ]
+          "columns": ["username"]
         }
       }
     }

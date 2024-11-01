@@ -1,171 +1,136 @@
 import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
-import {
-    type CategoryShortCode,
-    type GenderWithMixed,
-} from "@live24hisere/core/types";
+import { type CategoryShortCode, type GenderWithMixed } from "@live24hisere/core/types";
 import { categoryUtils } from "@live24hisere/utils";
 import { type RankingRunner } from "../../../../../types/Ranking";
 import { getRankingType } from "../../../../../utils/rankingUtils";
 import { formatGap } from "../../../../../utils/runnerUtils";
-import {
-    formatFloatNumber,
-    formatMsAsDuration,
-} from "../../../../../utils/utils";
+import { formatFloatNumber, formatMsAsDuration } from "../../../../../utils/utils";
 import RunnerStoppedBadge from "../../../../ui/badges/RunnerStoppedBadge";
 
 interface ResponsiveRankingTableRowProps {
-    runner: RankingRunner;
-    tableCategory: CategoryShortCode | null;
-    tableGender: GenderWithMixed;
+  runner: RankingRunner;
+  tableCategory: CategoryShortCode | null;
+  tableGender: GenderWithMixed;
 }
 
 export default function ResponsiveRankingTableRow({
-    runner,
-    tableCategory,
-    tableGender,
+  runner,
+  tableCategory,
+  tableGender,
 }: ResponsiveRankingTableRowProps): React.ReactElement {
-    const runnerCategory = categoryUtils.getCategoryCodeFromBirthYear(
-        runner.birthYear,
-    );
+  const runnerCategory = categoryUtils.getCategoryCodeFromBirthYear(runner.birthYear);
 
-    const rowRanking = useMemo(() => {
-        if (tableCategory === null) {
-            if (tableGender === "mixed") {
-                return runner.ranks.displayed.scratchMixed;
-            }
+  const rowRanking = useMemo(() => {
+    if (tableCategory === null) {
+      if (tableGender === "mixed") {
+        return runner.ranks.displayed.scratchMixed;
+      }
 
-            return runner.ranks.displayed.scratchGender;
-        }
+      return runner.ranks.displayed.scratchGender;
+    }
 
-        if (tableGender === "mixed") {
-            return runner.ranks.displayed.categoryMixed;
-        }
+    if (tableGender === "mixed") {
+      return runner.ranks.displayed.categoryMixed;
+    }
 
-        return runner.ranks.displayed.categoryGender;
-    }, [runner, tableCategory, tableGender]);
+    return runner.ranks.displayed.categoryGender;
+  }, [runner, tableCategory, tableGender]);
 
-    const rowSecondaryRankings = useMemo(() => {
-        if (tableCategory === null) {
-            if (tableGender === "mixed") {
-                return (
-                    <>
-                        {runner.ranks.displayed.scratchGender}{" "}
-                        {runner.gender.toUpperCase()}
-                        &nbsp;|&nbsp;
-                        {runner.ranks.displayed.categoryMixed} {runnerCategory}
-                        &nbsp;|&nbsp;
-                        {runner.ranks.displayed.categoryGender} {runnerCategory}
-                        -{runner.gender.toUpperCase()}
-                    </>
-                );
-            }
-
-            return (
-                <>
-                    {runner.ranks.displayed.scratchMixed}
-                    &nbsp;|&nbsp;
-                    {runner.ranks.displayed.categoryMixed} {runnerCategory}
-                    &nbsp;|&nbsp;
-                    {runner.ranks.displayed.categoryGender} {runnerCategory}-
-                    {runner.gender.toUpperCase()}
-                </>
-            );
-        }
-
-        if (tableGender === "mixed") {
-            return (
-                <>
-                    {runner.ranks.displayed.scratchMixed}
-                    &nbsp;|&nbsp;
-                    {runner.ranks.displayed.scratchGender}{" "}
-                    {runner.gender.toUpperCase()}
-                    &nbsp;|&nbsp;
-                    {runner.ranks.displayed.categoryGender} {runnerCategory}-
-                    {runner.gender.toUpperCase()}
-                </>
-            );
-        }
-
+  const rowSecondaryRankings = useMemo(() => {
+    if (tableCategory === null) {
+      if (tableGender === "mixed") {
         return (
-            <>
-                {runner.ranks.displayed.scratchMixed}
-                &nbsp;|&nbsp;
-                {runner.ranks.displayed.scratchGender}{" "}
-                {runner.gender.toUpperCase()}
-                &nbsp;|&nbsp;
-                {runner.ranks.displayed.categoryMixed} {runnerCategory}
-            </>
+          <>
+            {runner.ranks.displayed.scratchGender} {runner.gender.toUpperCase()}
+            &nbsp;|&nbsp;
+            {runner.ranks.displayed.categoryMixed} {runnerCategory}
+            &nbsp;|&nbsp;
+            {runner.ranks.displayed.categoryGender} {runnerCategory}-{runner.gender.toUpperCase()}
+          </>
         );
-    }, [runner, tableCategory, tableGender, runnerCategory]);
+      }
 
-    const formattedGap = formatGap(
-        runner.gaps.firstRunner[getRankingType(tableCategory, tableGender)].gap,
-    );
+      return (
+        <>
+          {runner.ranks.displayed.scratchMixed}
+          &nbsp;|&nbsp;
+          {runner.ranks.displayed.categoryMixed} {runnerCategory}
+          &nbsp;|&nbsp;
+          {runner.ranks.displayed.categoryGender} {runnerCategory}-{runner.gender.toUpperCase()}
+        </>
+      );
+    }
 
-    const displayedGap =
-        formattedGap === null || formattedGap === "=" ? null : formattedGap;
+    if (tableGender === "mixed") {
+      return (
+        <>
+          {runner.ranks.displayed.scratchMixed}
+          &nbsp;|&nbsp;
+          {runner.ranks.displayed.scratchGender} {runner.gender.toUpperCase()}
+          &nbsp;|&nbsp;
+          {runner.ranks.displayed.categoryGender} {runnerCategory}-{runner.gender.toUpperCase()}
+        </>
+      );
+    }
 
     return (
-        <tr>
-            <td>
-                <strong>{rowRanking}</strong>
-            </td>
-            <td style={{ width: "100%" }}>
-                <Link to={`/runner-details/${runner.id}`}>
-                    <div>
-                        <strong>
-                            {runner.lastname.toUpperCase()} {runner.firstname} –
-                            N°{runner.id}
-                        </strong>
-                        {runner.stopped && <RunnerStoppedBadge />}
-                    </div>
-
-                    {displayedGap && (
-                        <div className="responsive-ranking-table-row-secondary-data-row">
-                            {displayedGap}
-                        </div>
-                    )}
-
-                    <div className="responsive-ranking-table-row-secondary-data-row">
-                        {rowSecondaryRankings}
-                    </div>
-
-                    <div className="responsive-ranking-table-row-secondary-data-row">
-                        {formatFloatNumber(runner.distance / 1000, 2)} km
-                        {(() => {
-                            if (runner.averageSpeed === null) {
-                                return null;
-                            } else {
-                                return (
-                                    <>
-                                        &nbsp;–&nbsp;
-                                        {formatFloatNumber(
-                                            runner.averageSpeed,
-                                            2,
-                                        )}{" "}
-                                        km/h moy.
-                                    </>
-                                );
-                            }
-                        })()}
-                        {(() => {
-                            if (runner.lastPassageTime === null) {
-                                return null;
-                            } else {
-                                return (
-                                    <>
-                                        &nbsp;–&nbsp; Dernier passage{" "}
-                                        {formatMsAsDuration(
-                                            runner.lastPassageTime.raceTime,
-                                        )}
-                                    </>
-                                );
-                            }
-                        })()}
-                    </div>
-                </Link>
-            </td>
-        </tr>
+      <>
+        {runner.ranks.displayed.scratchMixed}
+        &nbsp;|&nbsp;
+        {runner.ranks.displayed.scratchGender} {runner.gender.toUpperCase()}
+        &nbsp;|&nbsp;
+        {runner.ranks.displayed.categoryMixed} {runnerCategory}
+      </>
     );
+  }, [runner, tableCategory, tableGender, runnerCategory]);
+
+  const formattedGap = formatGap(runner.gaps.firstRunner[getRankingType(tableCategory, tableGender)].gap);
+
+  const displayedGap = formattedGap === null || formattedGap === "=" ? null : formattedGap;
+
+  return (
+    <tr>
+      <td>
+        <strong>{rowRanking}</strong>
+      </td>
+      <td style={{ width: "100%" }}>
+        <Link to={`/runner-details/${runner.id}`}>
+          <div>
+            <strong>
+              {runner.lastname.toUpperCase()} {runner.firstname} – N°{runner.id}
+            </strong>
+            {runner.stopped && <RunnerStoppedBadge />}
+          </div>
+
+          {displayedGap && <div className="responsive-ranking-table-row-secondary-data-row">{displayedGap}</div>}
+
+          <div className="responsive-ranking-table-row-secondary-data-row">{rowSecondaryRankings}</div>
+
+          <div className="responsive-ranking-table-row-secondary-data-row">
+            {formatFloatNumber(runner.distance / 1000, 2)} km
+            {(() => {
+              if (runner.averageSpeed === null) {
+                return null;
+              } else {
+                return (
+                  <>
+                    &nbsp;–&nbsp;
+                    {formatFloatNumber(runner.averageSpeed, 2)} km/h moy.
+                  </>
+                );
+              }
+            })()}
+            {(() => {
+              if (runner.lastPassageTime === null) {
+                return null;
+              } else {
+                return <>&nbsp;–&nbsp; Dernier passage {formatMsAsDuration(runner.lastPassageTime.raceTime)}</>;
+              }
+            })()}
+          </div>
+        </Link>
+      </td>
+    </tr>
+  );
 }

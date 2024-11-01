@@ -1,10 +1,10 @@
 import {
-    type PassageWithRunnerId,
-    type PublicPassage,
-    type Runner,
-    type RunnerWithPassages,
-    type RunnerWithProcessedData,
-    type RunnerWithProcessedPassages,
+  type PassageWithRunnerId,
+  type PublicPassage,
+  type Runner,
+  type RunnerWithPassages,
+  type RunnerWithProcessedData,
+  type RunnerWithProcessedPassages,
 } from "@live24hisere/core/types";
 import { compareUtils, dateUtils } from "@live24hisere/utils";
 import { type SelectOption } from "../types/Forms";
@@ -13,47 +13,41 @@ import { getSortedPassages } from "./passageUtils";
 import { formatMsAsDuration } from "./utils";
 
 export function getRunnersWithPassagesFromRunnersAndPassages<
-    TRunner extends Runner,
-    TPassage extends PassageWithRunnerId,
->(
-    runners: TRunner[],
-    passages: TPassage[],
-): Array<RunnerWithPassages<TRunner, TPassage>> {
-    /**
-     * A map with runner ID as key and array of passages as value
-     */
-    const runnerPassages = new Map<number, TPassage[]>();
+  TRunner extends Runner,
+  TPassage extends PassageWithRunnerId,
+>(runners: TRunner[], passages: TPassage[]): Array<RunnerWithPassages<TRunner, TPassage>> {
+  /**
+   * A map with runner ID as key and array of passages as value
+   */
+  const runnerPassages = new Map<number, TPassage[]>();
 
-    for (const passage of passages) {
-        const passageTime = new Date(passage.time);
+  for (const passage of passages) {
+    const passageTime = new Date(passage.time);
 
-        if (!dateUtils.isDateValid(passageTime)) {
-            continue;
-        }
-
-        if (runnerPassages.has(passage.runnerId)) {
-            runnerPassages.get(passage.runnerId)?.push(passage);
-        } else {
-            runnerPassages.set(passage.runnerId, [passage]);
-        }
+    if (!dateUtils.isDateValid(passageTime)) {
+      continue;
     }
 
-    return runners.map((runner) =>
-        getRunnerWithPassagesFromRunnerAndPassages(
-            runner,
-            runnerPassages.get(runner.id) ?? [],
-        ),
-    );
+    if (runnerPassages.has(passage.runnerId)) {
+      runnerPassages.get(passage.runnerId)?.push(passage);
+    } else {
+      runnerPassages.set(passage.runnerId, [passage]);
+    }
+  }
+
+  return runners.map((runner) =>
+    getRunnerWithPassagesFromRunnerAndPassages(runner, runnerPassages.get(runner.id) ?? []),
+  );
 }
 
-export function getRunnerWithPassagesFromRunnerAndPassages<
-    TRunner extends Runner,
-    TPassage extends PublicPassage,
->(runner: TRunner, passages: TPassage[]): TRunner & { passages: TPassage[] } {
-    return {
-        ...runner,
-        passages: getSortedPassages(passages),
-    };
+export function getRunnerWithPassagesFromRunnerAndPassages<TRunner extends Runner, TPassage extends PublicPassage>(
+  runner: TRunner,
+  passages: TPassage[],
+): TRunner & { passages: TPassage[] } {
+  return {
+    ...runner,
+    passages: getSortedPassages(passages),
+  };
 }
 
 /**
@@ -62,79 +56,72 @@ export function getRunnerWithPassagesFromRunnerAndPassages<
  * @param runner2 Must be the lowest-ranking runner
  */
 export function getGapBetweenRunners(
-    runner1: RunnerWithProcessedPassages & RunnerWithProcessedData,
-    runner2: RunnerWithProcessedPassages & RunnerWithProcessedData,
+  runner1: RunnerWithProcessedPassages & RunnerWithProcessedData,
+  runner2: RunnerWithProcessedPassages & RunnerWithProcessedData,
 ): RankingRunnerGap | null {
-    if (Object.is(runner1, runner2)) {
-        return null;
-    }
+  if (Object.is(runner1, runner2)) {
+    return null;
+  }
 
-    const runner1PassageCount = runner1.passages.length;
-    const runner2PassageCount = runner2.passages.length;
+  const runner1PassageCount = runner1.passages.length;
+  const runner2PassageCount = runner2.passages.length;
 
-    if (runner1PassageCount === 0) {
-        return null;
-    }
+  if (runner1PassageCount === 0) {
+    return null;
+  }
 
-    if (runner2PassageCount === 0) {
-        const runner1LastPassage =
-            runner1.passages[runner1.passages.length - 1];
-
-        return {
-            laps: runner1LastPassage.processed.lapNumber ?? 0,
-            time: runner1LastPassage.processed.lapEndRaceTime,
-        };
-    }
-
-    const passageCountDifference = runner1PassageCount - runner2PassageCount;
-
-    const runner2LastPassage = runner2.passages[runner2.passages.length - 1];
-
-    const runner1SameLapNumberPassage = runner1.passages.find(
-        (passage) =>
-            passage.processed.lapNumber ===
-            runner2LastPassage.processed.lapNumber,
-    );
-
-    if (!runner1SameLapNumberPassage) {
-        throw new Error("Runner 1");
-    }
-
-    const passageTimeGap =
-        runner2LastPassage.processed.lapEndRaceTime -
-        runner1SameLapNumberPassage.processed.lapEndRaceTime;
+  if (runner2PassageCount === 0) {
+    const runner1LastPassage = runner1.passages[runner1.passages.length - 1];
 
     return {
-        laps: passageCountDifference,
-        time: passageTimeGap,
+      laps: runner1LastPassage.processed.lapNumber ?? 0,
+      time: runner1LastPassage.processed.lapEndRaceTime,
     };
+  }
+
+  const passageCountDifference = runner1PassageCount - runner2PassageCount;
+
+  const runner2LastPassage = runner2.passages[runner2.passages.length - 1];
+
+  const runner1SameLapNumberPassage = runner1.passages.find(
+    (passage) => passage.processed.lapNumber === runner2LastPassage.processed.lapNumber,
+  );
+
+  if (!runner1SameLapNumberPassage) {
+    throw new Error("Runner 1");
+  }
+
+  const passageTimeGap =
+    runner2LastPassage.processed.lapEndRaceTime - runner1SameLapNumberPassage.processed.lapEndRaceTime;
+
+  return {
+    laps: passageCountDifference,
+    time: passageTimeGap,
+  };
 }
 
-export function formatGap(
-    gap: RankingRunnerGap | null,
-    exhaustive: boolean = false,
-): string | null {
-    if (!gap) {
-        return null;
-    }
+export function formatGap(gap: RankingRunnerGap | null, exhaustive: boolean = false): string | null {
+  if (!gap) {
+    return null;
+  }
 
-    if (gap.time === 0) {
-        return "=";
-    }
+  if (gap.time === 0) {
+    return "=";
+  }
 
-    const timeGap = `+${formatMsAsDuration(gap.time, false)}`;
+  const timeGap = `+${formatMsAsDuration(gap.time, false)}`;
 
-    if (gap.laps === 0) {
-        return timeGap;
-    }
+  if (gap.laps === 0) {
+    return timeGap;
+  }
 
-    const lapsGap = `+${gap.laps} ${gap.laps > 1 ? "tours" : "tour"}`;
+  const lapsGap = `+${gap.laps} ${gap.laps > 1 ? "tours" : "tour"}`;
 
-    if (!exhaustive) {
-        return lapsGap;
-    }
+  if (!exhaustive) {
+    return lapsGap;
+  }
 
-    return `${lapsGap} (${timeGap})`;
+  return `${lapsGap} (${timeGap})`;
 }
 
 /**
@@ -142,32 +129,29 @@ export function formatGap(
  * Returns -1 if `runner1` is faster, 1 if `runner2` is faster and 0 if the runners are equal
  */
 export function spaceshipRunners(
-    runner1: RunnerWithPassages & RunnerWithProcessedData,
-    runner2: RunnerWithPassages & RunnerWithProcessedData,
+  runner1: RunnerWithPassages & RunnerWithProcessedData,
+  runner2: RunnerWithPassages & RunnerWithProcessedData,
 ): ReturnType<typeof compareUtils.spaceship> {
-    const runner1PassageCount = runner1.passages.length;
-    const runner2PassageCount = runner2.passages.length;
+  const runner1PassageCount = runner1.passages.length;
+  const runner2PassageCount = runner2.passages.length;
 
-    if (runner1PassageCount === runner2PassageCount) {
-        // When two runners have completed the same number of laps,
-        // the one who has completed them the fastest is considered to be faster than the other.
-        return compareUtils.spaceship(
-            runner1.lastPassageTime?.raceTime,
-            runner2.lastPassageTime?.raceTime,
-        );
-    }
+  if (runner1PassageCount === runner2PassageCount) {
+    // When two runners have completed the same number of laps,
+    // the one who has completed them the fastest is considered to be faster than the other.
+    return compareUtils.spaceship(runner1.lastPassageTime?.raceTime, runner2.lastPassageTime?.raceTime);
+  }
 
-    return compareUtils.spaceship(runner2PassageCount, runner1PassageCount);
+  return compareUtils.spaceship(runner2PassageCount, runner1PassageCount);
 }
 
 /**
  * Returns true if two runners are equal (same number of laps and last passage at the same time)
  */
 export function areRunnersEqual(
-    runner1: RunnerWithPassages & RunnerWithProcessedData,
-    runner2: RunnerWithPassages & RunnerWithProcessedData,
+  runner1: RunnerWithPassages & RunnerWithProcessedData,
+  runner2: RunnerWithPassages & RunnerWithProcessedData,
 ): boolean {
-    return spaceshipRunners(runner1, runner2) === 0;
+  return spaceshipRunners(runner1, runner2) === 0;
 }
 
 /**
@@ -176,56 +160,40 @@ export function areRunnersEqual(
  * @param label an optional callback function to format the label
  */
 export function getRunnersSelectOptions<TRunner extends Runner>(
-    runners: TRunner[] | false,
-    label?: (runner: TRunner) => string,
+  runners: TRunner[] | false,
+  label?: (runner: TRunner) => string,
 ): SelectOption[] {
-    if (!runners) {
-        return [];
-    }
+  if (!runners) {
+    return [];
+  }
 
-    return runners.map((runner) => ({
-        label: label
-            ? label(runner)
-            : `N° ${runner.id} – ${runner.lastname.toUpperCase()} ${runner.firstname}`,
-        value: runner.id,
-    }));
+  return runners.map((runner) => ({
+    label: label ? label(runner) : `N° ${runner.id} – ${runner.lastname.toUpperCase()} ${runner.firstname}`,
+    value: runner.id,
+  }));
 }
 
 /**
  * Returns runner data ready for excel export
  */
-export function getDataForExcelExport(
-    runner: RunnerWithProcessedPassages,
-): object[] {
-    const excelData: object[] = [];
+export function getDataForExcelExport(runner: RunnerWithProcessedPassages): object[] {
+  const excelData: object[] = [];
 
-    runner.passages.forEach((passage) => {
-        excelData.push({
-            Tours: passage.processed.lapNumber,
-            "Temps total": formatMsAsDuration(passage.processed.lapEndRaceTime),
-            "Temps total (s)": Math.round(
-                passage.processed.lapEndRaceTime / 1000,
-            ),
-            "Distance totale (m)": passage.processed.totalDistance,
-            "Temps tour": formatMsAsDuration(
-                passage.processed.lapDuration,
-                false,
-            ),
-            "Temps tour (s)": Math.round(passage.processed.lapDuration / 1000),
-            "Distance tour (m)": passage.processed.lapDistance,
-            "Vitesse tour (km/h)": passage.processed.lapSpeed,
-            "Allure tour (min/km)": formatMsAsDuration(
-                passage.processed.lapPace,
-                false,
-            ),
-            "Vitesse moyenne depuis départ (km/h)":
-                passage.processed.averageSpeedSinceRaceStart,
-            "Allure moyenne depuis départ (min/km)": formatMsAsDuration(
-                passage.processed.averagePaceSinceRaceStart,
-                false,
-            ),
-        });
+  runner.passages.forEach((passage) => {
+    excelData.push({
+      Tours: passage.processed.lapNumber,
+      "Temps total": formatMsAsDuration(passage.processed.lapEndRaceTime),
+      "Temps total (s)": Math.round(passage.processed.lapEndRaceTime / 1000),
+      "Distance totale (m)": passage.processed.totalDistance,
+      "Temps tour": formatMsAsDuration(passage.processed.lapDuration, false),
+      "Temps tour (s)": Math.round(passage.processed.lapDuration / 1000),
+      "Distance tour (m)": passage.processed.lapDistance,
+      "Vitesse tour (km/h)": passage.processed.lapSpeed,
+      "Allure tour (min/km)": formatMsAsDuration(passage.processed.lapPace, false),
+      "Vitesse moyenne depuis départ (km/h)": passage.processed.averageSpeedSinceRaceStart,
+      "Allure moyenne depuis départ (min/km)": formatMsAsDuration(passage.processed.averagePaceSinceRaceStart, false),
     });
+  });
 
-    return excelData;
+  return excelData;
 }

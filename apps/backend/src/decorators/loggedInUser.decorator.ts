@@ -2,8 +2,8 @@ import { createParamDecorator, ExecutionContext } from "@nestjs/common";
 import { User } from "@live24hisere/core/types";
 
 export interface AuthData {
-    user: User;
-    accessToken: string;
+  user: User;
+  accessToken: string;
 }
 
 type RequestWithAuthData = Request & AuthData;
@@ -13,13 +13,11 @@ type RequestWithAuthData = Request & AuthData;
  *
  * This decorator should be used only in controllers using the {@link AuthGuard}
  */
-export const LoggedInUser = createParamDecorator(
-    (data: unknown, ctx: ExecutionContext): AuthData => {
-        const request: RequestWithAuthData = ctx.switchToHttp().getRequest();
+export const LoggedInUser = createParamDecorator((data: unknown, ctx: ExecutionContext): AuthData => {
+  const request: RequestWithAuthData = ctx.switchToHttp().getRequest();
 
-        return {
-            user: request.user,
-            accessToken: request.accessToken,
-        };
-    },
-);
+  return {
+    user: request.user,
+    accessToken: request.accessToken,
+  };
+});

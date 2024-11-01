@@ -34,62 +34,47 @@ import { RaceIdExistsRule } from "./validation/rules/race/raceIdExists.rule";
 type DependencyArray = Type[];
 
 export interface Dependencies {
-    controllers: {
-        public: DependencyArray;
-        admin: DependencyArray;
-    };
-    services: {
-        app: DependencyArray;
-        database: DependencyArray;
-    };
-    tasks: DependencyArray;
-    validationRules: DependencyArray;
-    commands: DependencyArray;
-    questionSets: DependencyArray;
+  controllers: {
+    public: DependencyArray;
+    admin: DependencyArray;
+  };
+  services: {
+    app: DependencyArray;
+    database: DependencyArray;
+  };
+  tasks: DependencyArray;
+  validationRules: DependencyArray;
+  commands: DependencyArray;
+  questionSets: DependencyArray;
 }
 
 export const dependencies: Dependencies = {
-    controllers: {
-        public: [
-            AppDataController,
-            AuthController,
-            RacesController,
-            RunnersController,
-        ],
-        admin: [
-            ConfigController,
-            PassagesController,
-            RacesControllerAdmin,
-            RunnerPassagesController,
-            RunnersControllerAdmin,
-            UsersController,
-        ],
-    },
-    services: {
-        app: [
-            AuthService,
-            DagFileService,
-            EnvService,
-            PasswordService,
-            RandomService,
-        ],
-        database: [
-            DrizzleService,
-            AccessTokenService,
-            ConfigService,
-            MiscService,
-            PassageService,
-            RaceService,
-            RunnerService,
-            UserService,
-        ],
-    },
-    tasks: [ImportPassagesService],
-    validationRules: [RaceIdExistsRule],
-    commands: [CreateUserCommand, UpdateUserPasswordCommand, MigrateCommand],
-    questionSets: [
-        CreatePasswordQuestionSet,
-        CurrentPasswordQuestionSet,
-        UsernameQuestionSet,
+  controllers: {
+    public: [AppDataController, AuthController, RacesController, RunnersController],
+    admin: [
+      ConfigController,
+      PassagesController,
+      RacesControllerAdmin,
+      RunnerPassagesController,
+      RunnersControllerAdmin,
+      UsersController,
     ],
+  },
+  services: {
+    app: [AuthService, DagFileService, EnvService, PasswordService, RandomService],
+    database: [
+      DrizzleService,
+      AccessTokenService,
+      ConfigService,
+      MiscService,
+      PassageService,
+      RaceService,
+      RunnerService,
+      UserService,
+    ],
+  },
+  tasks: [ImportPassagesService],
+  validationRules: [RaceIdExistsRule],
+  commands: [CreateUserCommand, UpdateUserPasswordCommand, MigrateCommand],
+  questionSets: [CreatePasswordQuestionSet, CurrentPasswordQuestionSet, UsernameQuestionSet],
 };

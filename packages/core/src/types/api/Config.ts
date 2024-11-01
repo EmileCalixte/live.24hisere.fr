@@ -2,25 +2,25 @@ import { type DisabledAppData, type PassageImportSettings } from "../Config";
 import { type ApiRequest } from "./ApiRequest";
 
 export interface GetDisabledAppDataAdminApiRequest extends ApiRequest {
-    payload: never;
+  payload: never;
 
-    response: DisabledAppData;
+  response: DisabledAppData;
 }
 
 export interface PatchDisabledAppDataAdminApiRequest extends ApiRequest {
-    payload: Partial<DisabledAppData>;
+  payload: Partial<DisabledAppData>;
 
-    response: DisabledAppData;
+  response: DisabledAppData;
 }
 
 export interface GetPassageImportSettingsAdminApiRequest extends ApiRequest {
-    payload: never;
+  payload: never;
 
-    response: PassageImportSettings;
+  response: PassageImportSettings;
 }
 
 export interface PatchPassageImportSettingsAdminApiRequest extends ApiRequest {
-    payload: Partial<PassageImportSettings>;
+  payload: Partial<PassageImportSettings>;
 
-    response: PassageImportSettings;
+  response: PassageImportSettings;
 }

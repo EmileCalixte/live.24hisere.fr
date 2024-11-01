@@ -1,7 +1,7 @@
 import { IsString, IsUrl } from "class-validator";
 
 export class PassageImportSettingsDto {
-    @IsString()
-    @IsUrl()
-    dagFileUrl: string;
+  @IsString()
+  @IsUrl()
+  dagFileUrl: string;
 }

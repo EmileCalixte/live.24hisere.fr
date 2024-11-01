@@ -5,10 +5,8 @@ import { entries } from "./object-utils";
  * @param params The params to encode
  * @returns The url-encoded string
  */
-export function encode(
-    params: Record<string, string | number | boolean>,
-): string {
-    return entries(params)
-        .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
-        .join("&");
+export function encode(params: Record<string, string | number | boolean>): string {
+  return entries(params)
+    .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+    .join("&");
 }

@@ -3,63 +3,63 @@ import { type Runner, type RunnerWithPassages } from "../Runner";
 import { type ApiRequest } from "./ApiRequest";
 
 export interface GetRunnersApiRequest extends ApiRequest {
-    payload: never;
+  payload: never;
 
-    response: {
-        runners: Runner[];
-    };
+  response: {
+    runners: Runner[];
+  };
 }
 
 export interface GetRaceRunnersApiRequest extends ApiRequest {
-    payload: never;
+  payload: never;
 
-    response: {
-        runners: RunnerWithPassages[];
-    };
+  response: {
+    runners: RunnerWithPassages[];
+  };
 }
 
 export interface GetRunnersAdminApiRequest extends ApiRequest {
-    payload: never;
+  payload: never;
 
-    response: {
-        runners: Runner[];
-    };
+  response: {
+    runners: Runner[];
+  };
 }
 
 export interface GetRunnerAdminApiRequest extends ApiRequest {
-    payload: never;
+  payload: never;
 
-    response: {
-        runner: RunnerWithPassages<Runner, AdminPassage>;
-    };
+  response: {
+    runner: RunnerWithPassages<Runner, AdminPassage>;
+  };
 }
 
 export interface PostRunnerAdminApiRequest extends ApiRequest {
-    payload: Omit<Runner, "birthYear"> & { birthYear: number };
+  payload: Omit<Runner, "birthYear"> & { birthYear: number };
 
-    response: {
-        runner: RunnerWithPassages<Runner, AdminPassage>;
-    };
+  response: {
+    runner: RunnerWithPassages<Runner, AdminPassage>;
+  };
 }
 
 export interface PostRunnersBulkAdminApiRequest extends ApiRequest {
-    payload: Array<PostRunnerAdminApiRequest["payload"]>;
+  payload: Array<PostRunnerAdminApiRequest["payload"]>;
 
-    response: {
-        count: number;
-    };
+  response: {
+    count: number;
+  };
 }
 
 export interface PatchRunnerAdminApiRequest extends ApiRequest {
-    payload: Partial<PostRunnerAdminApiRequest["payload"]>;
+  payload: Partial<PostRunnerAdminApiRequest["payload"]>;
 
-    response: {
-        runner: Runner;
-    };
+  response: {
+    runner: Runner;
+  };
 }
 
 export interface DeleteRunnerAdminApiRequest extends ApiRequest {
-    payload: never;
+  payload: never;
 
-    response: never;
+  response: never;
 }

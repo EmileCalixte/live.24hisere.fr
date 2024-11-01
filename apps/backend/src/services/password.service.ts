@@ -8,16 +8,16 @@ const TIME_COST = 4;
 
 @Injectable()
 export class PasswordService {
-    async hashPassword(password: string): Promise<string> {
-        return await argon2.hash(password, {
-            type: argon2id,
-            parallelism: PARALLELISM,
-            memoryCost: MEMORY_COST,
-            timeCost: TIME_COST,
-        });
-    }
+  async hashPassword(password: string): Promise<string> {
+    return await argon2.hash(password, {
+      type: argon2id,
+      parallelism: PARALLELISM,
+      memoryCost: MEMORY_COST,
+      timeCost: TIME_COST,
+    });
+  }
 
-    async verifyPassword(hash: string, password: string): Promise<boolean> {
-        return await argon2.verify(hash, password);
-    }
+  async verifyPassword(hash: string, password: string): Promise<boolean> {
+    return await argon2.verify(hash, password);
+  }
 }

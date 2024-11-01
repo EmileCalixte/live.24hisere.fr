@@ -13,120 +13,97 @@ import { TaskService } from "./taskService";
 
 @Injectable()
 export class ImportPassagesService extends TaskService {
-    private static readonly taskName = "import-passages";
-    private static readonly intervalEnvVar = "IMPORT_PASSAGES_TASK_CRON";
+  private static readonly taskName = "import-passages";
+  private static readonly intervalEnvVar = "IMPORT_PASSAGES_TASK_CRON";
 
-    constructor(
-        private readonly configService: ConfigService,
-        private readonly miscService: MiscService,
-        private readonly dagFileService: DagFileService,
-        private readonly httpService: HttpService,
-        private readonly passageService: PassageService,
-        private readonly runnerService: RunnerService,
-        protected readonly schedulerRegistry: SchedulerRegistry,
-    ) {
-        super(schedulerRegistry);
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly miscService: MiscService,
+    private readonly dagFileService: DagFileService,
+    private readonly httpService: HttpService,
+    private readonly passageService: PassageService,
+    private readonly runnerService: RunnerService,
+    protected readonly schedulerRegistry: SchedulerRegistry,
+  ) {
+    super(schedulerRegistry);
+  }
+
+  protected getIntervalEnvVarName(): string {
+    return ImportPassagesService.intervalEnvVar;
+  }
+
+  protected getTaskName(): string {
+    return ImportPassagesService.taskName;
+  }
+
+  protected async task(): Promise<void> {
+    const dagFileUrl = await this.configService.getImportDagFilePath();
+
+    if (!dagFileUrl) {
+      this.logger.log("URL to dag file not defined, skipping passages import");
+      return;
     }
 
-    protected getIntervalEnvVarName(): string {
-        return ImportPassagesService.intervalEnvVar;
+    this.logger.log(`Importing passages from dag file located at ${dagFileUrl}`);
+
+    const { data } = await firstValueFrom(
+      this.httpService.get<string>(dagFileUrl).pipe(
+        catchError((error: AxiosError) => {
+          throw new Error(`An error occurred while fetching dag file: ${error.message}`);
+        }),
+      ),
+    );
+
+    this.logger.log(`Successfully downloaded DAG file: ${data.length} bytes`);
+
+    await this.importPassagesFromDagFileContent(data);
+
+    await this.miscService.saveLastUpdateTime(new Date());
+
+    this.logger.log("Done");
+  }
+
+  private async importPassagesFromDagFileContent(dagFileContent: string): Promise<void> {
+    const lines = dagFileContent
+      .split(/(\r\n|\n|\r)/)
+      .map((line) => line.trim())
+      .filter((line) => line.length > 0);
+
+    this.logger.log(`Processing ${lines.length} lines`);
+
+    const dagData = lines.map((line) => this.dagFileService.getDataFromDagFileLine(line));
+
+    const results = await Promise.all(dagData.map(async (data) => await this.importPassageFromDagLineData(data)));
+
+    const importedPassageCount = results.filter(Boolean).length;
+
+    this.logger.log(`Imported ${importedPassageCount} passages`);
+  }
+
+  private async importPassageFromDagLineData(data: DagFileLineData): Promise<boolean> {
+    const existingPassage = await this.passageService.getPassageByDetectionId(data.detectionId);
+
+    if (existingPassage) {
+      return false;
     }
 
-    protected getTaskName(): string {
-        return ImportPassagesService.taskName;
+    const runner = await this.runnerService.getRunnerById(data.runnerId);
+
+    if (!runner) {
+      this.logger.verbose(`Runner with ID ${data.runnerId} not found, skipping detection with ID ${data.detectionId}`);
+      return false;
     }
 
-    protected async task(): Promise<void> {
-        const dagFileUrl = await this.configService.getImportDagFilePath();
+    this.logger.verbose(`Importing passage with detection ID ${data.detectionId}`);
 
-        if (!dagFileUrl) {
-            this.logger.log(
-                "URL to dag file not defined, skipping passages import",
-            );
-            return;
-        }
+    await this.passageService.createPassage({
+      detectionId: data.detectionId,
+      importTime: new Date().toISOString(),
+      runnerId: runner.id,
+      time: data.passageDateTime.toString(),
+      isHidden: false,
+    });
 
-        this.logger.log(
-            `Importing passages from dag file located at ${dagFileUrl}`,
-        );
-
-        const { data } = await firstValueFrom(
-            this.httpService.get<string>(dagFileUrl).pipe(
-                catchError((error: AxiosError) => {
-                    throw new Error(
-                        `An error occurred while fetching dag file: ${error.message}`,
-                    );
-                }),
-            ),
-        );
-
-        this.logger.log(
-            `Successfully downloaded DAG file: ${data.length} bytes`,
-        );
-
-        await this.importPassagesFromDagFileContent(data);
-
-        await this.miscService.saveLastUpdateTime(new Date());
-
-        this.logger.log("Done");
-    }
-
-    private async importPassagesFromDagFileContent(
-        dagFileContent: string,
-    ): Promise<void> {
-        const lines = dagFileContent
-            .split(/(\r\n|\n|\r)/)
-            .map((line) => line.trim())
-            .filter((line) => line.length > 0);
-
-        this.logger.log(`Processing ${lines.length} lines`);
-
-        const dagData = lines.map((line) =>
-            this.dagFileService.getDataFromDagFileLine(line),
-        );
-
-        const results = await Promise.all(
-            dagData.map(
-                async (data) => await this.importPassageFromDagLineData(data),
-            ),
-        );
-
-        const importedPassageCount = results.filter(Boolean).length;
-
-        this.logger.log(`Imported ${importedPassageCount} passages`);
-    }
-
-    private async importPassageFromDagLineData(
-        data: DagFileLineData,
-    ): Promise<boolean> {
-        const existingPassage =
-            await this.passageService.getPassageByDetectionId(data.detectionId);
-
-        if (existingPassage) {
-            return false;
-        }
-
-        const runner = await this.runnerService.getRunnerById(data.runnerId);
-
-        if (!runner) {
-            this.logger.verbose(
-                `Runner with ID ${data.runnerId} not found, skipping detection with ID ${data.detectionId}`,
-            );
-            return false;
-        }
-
-        this.logger.verbose(
-            `Importing passage with detection ID ${data.detectionId}`,
-        );
-
-        await this.passageService.createPassage({
-            detectionId: data.detectionId,
-            importTime: new Date().toISOString(),
-            runnerId: runner.id,
-            time: data.passageDateTime.toString(),
-            isHidden: false,
-        });
-
-        return true;
-    }
+    return true;
+  }
 }

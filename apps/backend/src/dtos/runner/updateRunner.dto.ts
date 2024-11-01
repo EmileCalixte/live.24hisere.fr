@@ -4,6 +4,4 @@ import { RunnerDto } from "./runner.dto";
 
 type PatchRunnerPayload = PatchRunnerAdminApiRequest["payload"];
 
-export class UpdateRunnerDto
-    extends PartialType(RunnerDto)
-    implements PatchRunnerPayload {}
+export class UpdateRunnerDto extends PartialType(RunnerDto) implements PatchRunnerPayload {}

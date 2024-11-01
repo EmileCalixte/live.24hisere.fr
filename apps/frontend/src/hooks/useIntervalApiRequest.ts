@@ -1,46 +1,41 @@
 import React from "react";
-import {
-    type ApiRequest,
-    type ApiRequestResult,
-} from "@live24hisere/core/types";
+import { type ApiRequest, type ApiRequestResult } from "@live24hisere/core/types";
 
 export const DEFAULT_FETCH_INTERVAL = 20000;
 
 interface UseIntervalApiRequest<T extends ApiRequest> {
-    result: ApiRequestResult<T> | undefined;
-    json: ApiRequestResult<T>["json"];
+  result: ApiRequestResult<T> | undefined;
+  json: ApiRequestResult<T>["json"];
 }
 
 export function useIntervalApiRequest<T extends ApiRequest>(
-    fetchFunction: (() => Promise<ApiRequestResult<T>>) | undefined,
-    fetchInterval = DEFAULT_FETCH_INTERVAL,
+  fetchFunction: (() => Promise<ApiRequestResult<T>>) | undefined,
+  fetchInterval = DEFAULT_FETCH_INTERVAL,
 ): UseIntervalApiRequest<T> {
-    const [result, setResult] = React.useState<ApiRequestResult<T> | undefined>(
-        undefined,
-    );
+  const [result, setResult] = React.useState<ApiRequestResult<T> | undefined>(undefined);
 
-    const performApiRequest = React.useCallback(async (): Promise<void> => {
-        if (!fetchFunction) {
-            return;
-        }
+  const performApiRequest = React.useCallback(async (): Promise<void> => {
+    if (!fetchFunction) {
+      return;
+    }
 
-        setResult(await fetchFunction());
-    }, [fetchFunction]);
+    setResult(await fetchFunction());
+  }, [fetchFunction]);
 
-    React.useEffect(() => {
-        void performApiRequest();
+  React.useEffect(() => {
+    void performApiRequest();
 
-        const interval = setInterval(() => {
-            void performApiRequest();
-        }, fetchInterval);
+    const interval = setInterval(() => {
+      void performApiRequest();
+    }, fetchInterval);
 
-        return () => {
-            clearInterval(interval);
-        };
-    }, [performApiRequest, fetchInterval]);
-
-    return {
-        result,
-        json: result?.json,
+    return () => {
+      clearInterval(interval);
     };
+  }, [performApiRequest, fetchInterval]);
+
+  return {
+    result,
+    json: result?.json,
+  };
 }

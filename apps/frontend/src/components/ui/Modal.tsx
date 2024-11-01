@@ -4,74 +4,70 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 
 interface ModalProps {
-    children: React.ReactNode | React.ReactNode[];
-    close: () => void;
-    className?: string;
+  children: React.ReactNode | React.ReactNode[];
+  close: () => void;
+  className?: string;
 }
 
-export default function Modal({
-    children,
-    close,
-    className,
-}: ModalProps): React.ReactElement {
-    const dialogRef = useRef<HTMLDialogElement | null>(null);
-    const modalContentRef = useRef<HTMLDivElement | null>(null);
+export default function Modal({ children, close, className }: ModalProps): React.ReactElement {
+  const dialogRef = useRef<HTMLDialogElement | null>(null);
+  const modalContentRef = useRef<HTMLDivElement | null>(null);
 
-    useEffect(() => {
-        const ref = dialogRef;
+  useEffect(() => {
+    const ref = dialogRef;
 
-        if (ref.current?.open) {
-            return;
+    if (ref.current?.open) {
+      return;
+    }
+
+    ref.current?.showModal();
+
+    // Call props close function on click outside modal
+    function onClick(e: MouseEvent): void {
+      if (e.target === null || !(e.target instanceof Element)) {
+        return;
+      }
+
+      let target: Element | ParentNode | null = e.target;
+
+      do {
+        if (target === modalContentRef.current) {
+          return;
         }
 
-        ref.current?.showModal();
+        target = target.parentNode;
+      } while (target);
 
-        // Call props close function on click outside modal
-        function onClick(e: MouseEvent): void {
-            if (e.target === null || !(e.target instanceof Element)) {
-                return;
-            }
+      close();
+    }
 
-            let target: Element | ParentNode | null = e.target;
+    // The 'close' event is triggered when HTML dialog is closed via .close() method or Esc key
+    // If user closes modal using "esc", we want to call the close function in props, which should unmount this component
+    function onClose(): void {
+      close();
+    }
 
-            do {
-                if (target === modalContentRef.current) {
-                    return;
-                }
+    ref.current?.addEventListener("close", onClose);
 
-                target = target.parentNode;
-            } while (target);
+    setTimeout(() => {
+      window.addEventListener("click", onClick);
+    }, 0);
 
-            close();
-        }
+    return () => {
+      window.removeEventListener("click", onClick);
+      ref.current?.removeEventListener("close", onClose);
+    };
+  }, [close, dialogRef, modalContentRef]);
 
-        // The 'close' event is triggered when HTML dialog is closed via .close() method or Esc key
-        // If user closes modal using "esc", we want to call the close function in props, which should unmount this component
-        function onClose(): void {
-            close();
-        }
+  return (
+    <dialog ref={dialogRef} className={clsx("modal", className)}>
+      <div ref={modalContentRef} className="modal-content">
+        <button className="close-button" onClick={close}>
+          <FontAwesomeIcon icon={faXmark} />
+        </button>
 
-        ref.current?.addEventListener("close", onClose);
-
-        setTimeout(() => {
-            window.addEventListener("click", onClick);
-        }, 0);
-
-        return () => {
-            window.removeEventListener("click", onClick);
-            ref.current?.removeEventListener("close", onClose);
-        };
-    }, [close, dialogRef, modalContentRef]);
-
-    return (
-        <dialog ref={dialogRef} className={clsx("modal", className)}>
-            <div ref={modalContentRef} className="modal-content">
-                <button className="close-button" onClick={close}>
-                    <FontAwesomeIcon icon={faXmark} />
-                </button>
-
-                {children}
-            </div>
-        </dialog>
-    );
+        {children}
+      </div>
+    </dialog>
+  );
 }
