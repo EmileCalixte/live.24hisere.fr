@@ -36,6 +36,7 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
       for (const race of json.races) {
         expect(race).toContainAllKeys([
           "id",
+          "editionId",
           "name",
           "startTime",
           "duration",
@@ -81,6 +82,7 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
 
       expect(race).toContainAllKeys([
         "id",
+        "editionId",
         "name",
         "startTime",
         "duration",
@@ -111,16 +113,6 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
   });
 
   describe("Admin RacesController (e2e)", () => {
-    let app: INestApplication;
-
-    beforeEach(async () => {
-      app = await initApp();
-    });
-
-    afterEach(async () => {
-      await app.close();
-    });
-
     it("Get race list (GET /admin/races)", async () => {
       const response = await request(app.getHttpServer())
         .get("/admin/races")
@@ -134,6 +126,7 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
       for (const race of json.races) {
         expect(race).toContainAllKeys([
           "id",
+          "editionId",
           "name",
           "startTime",
           "duration",
@@ -194,6 +187,7 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
 
         expect(race).toContainAllKeys([
           "id",
+          "editionId",
           "name",
           "startTime",
           "duration",
@@ -266,6 +260,7 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
     });
 
     const raceToPost: Omit<AdminRace, "id"> = {
+      editionId: 7,
       name: "Test e2e race",
       startTime: "2021-02-03T04:05:06.000Z",
       duration: 123456,
@@ -281,6 +276,24 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
         const responses = await Promise.all([
           // Post a race without body
           request(app.getHttpServer()).post("/admin/races").set("Authorization", ADMIN_USER_ACCESS_TOKEN),
+
+          // Post a race without edition ID
+          request(app.getHttpServer())
+            .post("/admin/races")
+            .send(objectUtils.excludeKeys(raceToPost, ["editionId"]))
+            .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
+
+          // Post a race with an invalid edition ID type
+          request(app.getHttpServer())
+            .post("/admin/races")
+            .send({ ...raceToPost, editionId: "invalid" })
+            .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
+
+          // Post a race with a non-existing edition ID
+          request(app.getHttpServer())
+            .post("/admin/races")
+            .send({ ...raceToPost, editionId: 123 })
+            .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
 
           // Post a race without name
           request(app.getHttpServer())
@@ -432,6 +445,7 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
 
         expect(createdRace).toContainAllKeys([
           "id",
+          "editionId",
           "name",
           "startTime",
           "duration",
@@ -504,6 +518,18 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
     describe("Edit a race (PATCH /admin/races/{id})", async () => {
       it("Test invalid PATCH bodies", async () => {
         const responses = await Promise.all([
+          // Patch a race with an invalid edition ID type
+          request(app.getHttpServer())
+            .patch(`/admin/races/${createdRaceId}`)
+            .send({ editionId: "invalid" })
+            .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
+
+          // Patch a race with a non-existing edition ID
+          request(app.getHttpServer())
+            .patch(`/admin/races/${createdRaceId}`)
+            .send({ editionId: 123 })
+            .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
+
           // Patch a race with an invalid name type
           request(app.getHttpServer())
             .patch(`/admin/races/${createdRaceId}`)
@@ -599,6 +625,10 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
       it("Test valid PATCH bodies", async () => {
         const values = [
           {
+            patchValues: { editionId: 2 },
+            expectedValues: { editionId: 2 },
+          },
+          {
             patchValues: { name: "Edited race name" },
             expectedValues: { name: "Edited race name" },
           },
@@ -634,6 +664,7 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
           },
           {
             patchValues: {
+              editionId: 3,
               name: "Edited again",
               isPublic: false,
               startTime: "2023-04-05T06:07:08.000Z",
@@ -642,6 +673,7 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
               lapDistance: "2020.20",
             },
             expectedValues: {
+              editionId: 3,
               name: "Edited again",
               isPublic: false,
               startTime: "2023-04-05T06:07:08.000Z",

@@ -6,6 +6,7 @@ import { CurrentPasswordQuestionSet } from "./commands/questionSets/currentPassw
 import { UsernameQuestionSet } from "./commands/questionSets/username.questionSet";
 import { UpdateUserPasswordCommand } from "./commands/updateUserPassword.command";
 import { ConfigController } from "./controllers/admin/config.controller";
+import { EditionsController as EditionsControllerAdmin } from "./controllers/admin/editions.controller";
 import { PassagesController } from "./controllers/admin/passages.controller";
 import { RacesController as RacesControllerAdmin } from "./controllers/admin/races.controller";
 import { RunnerPassagesController } from "./controllers/admin/runnerPassages.controller";
@@ -13,6 +14,7 @@ import { RunnersController as RunnersControllerAdmin } from "./controllers/admin
 import { UsersController } from "./controllers/admin/users.controller";
 import { AppDataController } from "./controllers/appData.controller";
 import { AuthController } from "./controllers/auth.controller";
+import { EditionsController } from "./controllers/editions.controller";
 import { RacesController } from "./controllers/races.controller";
 import { RunnersController } from "./controllers/runners.controller";
 import { AuthService } from "./services/auth.service";
@@ -20,6 +22,7 @@ import { DagFileService } from "./services/dagFile.service";
 import { DrizzleService } from "./services/database/drizzle.service";
 import { AccessTokenService } from "./services/database/entities/accessToken.service";
 import { ConfigService } from "./services/database/entities/config.service";
+import { EditionService } from "./services/database/entities/edition.service";
 import { MiscService } from "./services/database/entities/misc.service";
 import { PassageService } from "./services/database/entities/passage.service";
 import { RaceService } from "./services/database/entities/race.service";
@@ -29,6 +32,7 @@ import { EnvService } from "./services/env.service";
 import { PasswordService } from "./services/password.service";
 import { RandomService } from "./services/random.service";
 import { ImportPassagesService } from "./tasks/importPassages.service";
+import { EditionIdExistsRule } from "./validation/rules/edition/editionIdExists.rule";
 import { RaceIdExistsRule } from "./validation/rules/race/raceIdExists.rule";
 
 type DependencyArray = Type[];
@@ -50,9 +54,10 @@ export interface Dependencies {
 
 export const dependencies: Dependencies = {
   controllers: {
-    public: [AppDataController, AuthController, RacesController, RunnersController],
+    public: [AppDataController, AuthController, EditionsController, RacesController, RunnersController],
     admin: [
       ConfigController,
+      EditionsControllerAdmin,
       PassagesController,
       RacesControllerAdmin,
       RunnerPassagesController,
@@ -66,6 +71,7 @@ export const dependencies: Dependencies = {
       DrizzleService,
       AccessTokenService,
       ConfigService,
+      EditionService,
       MiscService,
       PassageService,
       RaceService,
@@ -74,7 +80,7 @@ export const dependencies: Dependencies = {
     ],
   },
   tasks: [ImportPassagesService],
-  validationRules: [RaceIdExistsRule],
+  validationRules: [EditionIdExistsRule, RaceIdExistsRule],
   commands: [CreateUserCommand, UpdateUserPasswordCommand, MigrateCommand],
   questionSets: [CreatePasswordQuestionSet, CurrentPasswordQuestionSet, UsernameQuestionSet],
 };

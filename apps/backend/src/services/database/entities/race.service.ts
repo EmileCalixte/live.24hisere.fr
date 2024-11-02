@@ -1,11 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { and, asc, count, eq, getTableColumns, max } from "drizzle-orm";
-import {
-  AdminRaceWithOrder,
-  AdminRaceWithRunnerCount,
-  PublicRace,
-  RaceWithRunnerCount,
-} from "@live24hisere/core/types";
+import { AdminRaceWithOrder, AdminRaceWithRunnerCount, RaceWithRunnerCount } from "@live24hisere/core/types";
 import { objectUtils } from "@live24hisere/utils";
 import { TABLE_RACE, TABLE_RUNNER } from "../../../../drizzle/schema";
 import { DrizzleTableColumns } from "../../../types/utils/drizzle";
@@ -13,18 +8,6 @@ import { EntityService } from "../entity.service";
 
 @Injectable()
 export class RaceService extends EntityService {
-  async getRaceById(raceId: number): Promise<PublicRace | null> {
-    const races = await this.db.select().from(TABLE_RACE).where(eq(TABLE_RACE.id, raceId));
-
-    return this.getUniqueResult(races);
-  }
-
-  async getRaceByName(raceName: string): Promise<PublicRace | null> {
-    const races = await this.db.select().from(TABLE_RACE).where(eq(TABLE_RACE.name, raceName));
-
-    return this.getUniqueResult(races);
-  }
-
   async getAdminRaces(): Promise<AdminRaceWithRunnerCount[]> {
     return await this.db
       .select({
@@ -47,6 +30,20 @@ export class RaceService extends EntityService {
       .leftJoin(TABLE_RUNNER, eq(TABLE_RUNNER.raceId, TABLE_RACE.id))
       .groupBy(TABLE_RACE.id)
       .where(eq(TABLE_RACE.id, raceId));
+
+    return this.getUniqueResult(races);
+  }
+
+  async getAdminRaceByName(raceName: string): Promise<AdminRaceWithRunnerCount | null> {
+    const races = await this.db
+      .select({
+        ...this.getAdminRaceColumns(),
+        runnerCount: count(TABLE_RUNNER.id),
+      })
+      .from(TABLE_RACE)
+      .leftJoin(TABLE_RUNNER, eq(TABLE_RUNNER.raceId, TABLE_RACE.id))
+      .groupBy(TABLE_RACE.id)
+      .where(eq(TABLE_RACE.name, raceName));
 
     return this.getUniqueResult(races);
   }

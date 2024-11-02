@@ -71,7 +71,13 @@ CREATE TABLE `edition` (
 --
 
 INSERT INTO `edition` (`id`, `name`, `order`, `is_public`) VALUES
-(1, '2024 - 7ème édition', 0, 1);
+(1, '2016 - 1ère édition', 1, 1),
+(2, '2017 - 2ème édition', 2, 1),
+(3, '2018 - 3ème édition', 3, 1),
+(4, '2019 - 4ème édition', 4, 1),
+(5, '2022 - 5ème édition', 5, 1),
+(6, '2023 - 6ème édition', 6, 1),
+(7, '2024 - 7ème édition', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -15178,7 +15184,7 @@ ALTER TABLE `__drizzle_migrations`
 -- AUTO_INCREMENT pour la table `edition`
 --
 ALTER TABLE `edition`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT pour la table `passage`

@@ -11,6 +11,11 @@ export interface PublicRace {
   id: number;
 
   /**
+   * The ID of the edition the race belongs to
+   */
+  editionId: number;
+
+  /**
    * The name of the race
    */
   name: string;
