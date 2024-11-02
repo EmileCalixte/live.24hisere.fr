@@ -14,8 +14,7 @@ import Header from "./ui/header/Header";
 import Admin from "./views/admin/Admin";
 import DisabledAppView from "./views/DisabledAppView";
 import LoginView from "./views/LoginView";
-import RankingView from "./views/RankingView";
-import RunnerDetailsView from "./views/RunnerDetailsView";
+import Public from "./views/public/Public";
 
 interface AppContext {
   appData: {
@@ -287,16 +286,9 @@ export default function App(): React.ReactElement {
               <DisabledAppView />
             ) : (
               <Routes>
-                <Route path="/ranking" element={<RankingView />} />
-                <Route path="/runner-details" element={<RunnerDetailsView />} />
-                <Route path="/runner-details/:runnerId" element={<RunnerDetailsView />} />
-
                 <Route path="/login" element={<LoginView />} />
-
                 <Route path="/admin/*" element={<Admin />} />
-
-                {/* Redirect any unresolved route to /ranking */}
-                <Route path="*" element={<Navigate to="/ranking" replace />} />
+                <Route path="*" element={<Public />} />
               </Routes>
             )}
           </main>
