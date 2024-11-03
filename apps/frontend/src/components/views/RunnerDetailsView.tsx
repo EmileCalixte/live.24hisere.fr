@@ -1,6 +1,7 @@
 import React from "react";
 import { faCircleInfo, faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useQueryState } from "nuqs";
 import { Col, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -8,11 +9,10 @@ import {
   type RunnerWithProcessedHours,
   type RunnerWithProcessedPassages,
 } from "@live24hisere/core/types";
-import { RUNNER_LAPS_TABLE_SEARCH_PARAMS, RUNNER_SPEED_CHART_SEARCH_PARAMS } from "../../constants/searchParams";
-import { useQueryString } from "../../hooks/queryString/useQueryString";
-import { useTabQueryString } from "../../hooks/queryString/useTabQueryString";
+import { SearchParam } from "../../constants/searchParams";
 import { useIntervalApiRequest } from "../../hooks/useIntervalApiRequest";
 import { useRanking } from "../../hooks/useRanking";
+import { parseAsEnum } from "../../queryStringParsers/parseAsEnum";
 import { getRace } from "../../services/api/raceService";
 import { getRaceRunners, getRunners } from "../../services/api/runnerService";
 import { generateXlsxFromData } from "../../utils/excelUtils";
@@ -40,8 +40,10 @@ export default function RunnerDetailsView(): React.ReactElement {
 
   const navigate = useNavigate();
 
-  const { deleteParams, prefixedQueryString } = useQueryString();
-  const { selectedTab, setTabParam } = useTabQueryString([Tab.Stats, Tab.Laps], Tab.Stats);
+  const [selectedTab, setSelectedTab] = useQueryState(
+    SearchParam.TAB,
+    parseAsEnum([Tab.Stats, Tab.Laps]).withDefault(Tab.Stats),
+  );
 
   const runners = useIntervalApiRequest(getRunners).json?.runners;
 
@@ -100,9 +102,9 @@ export default function RunnerDetailsView(): React.ReactElement {
 
   const onSelectRunner = React.useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
-      navigate(`/runner-details/${e.target.value}${prefixedQueryString}`);
+      navigate(`/runner-details/${e.target.value}${window.location.search}`);
     },
-    [navigate, prefixedQueryString],
+    [navigate],
   );
 
   const exportRunnerToXlsx = React.useCallback(() => {
@@ -123,17 +125,7 @@ export default function RunnerDetailsView(): React.ReactElement {
     if (runners.find((runner) => runner.id.toString() === runnerId) === undefined) {
       navigate("/runner-details");
     }
-  }, [runners, runnerId, navigate, prefixedQueryString]);
-
-  React.useEffect(() => {
-    if (selectedTab !== Tab.Laps) {
-      deleteParams(RUNNER_LAPS_TABLE_SEARCH_PARAMS, { replace: true });
-    }
-
-    if (selectedTab !== Tab.Stats) {
-      deleteParams(RUNNER_SPEED_CHART_SEARCH_PARAMS, { replace: true });
-    }
-  }, [deleteParams, selectedTab]);
+  }, [runners, runnerId, navigate]);
 
   return (
     <Page
@@ -173,7 +165,7 @@ export default function RunnerDetailsView(): React.ReactElement {
                   <li className={selectedTab === Tab.Stats ? "active" : ""}>
                     <button
                       onClick={() => {
-                        setTabParam(Tab.Stats);
+                        void setSelectedTab(Tab.Stats);
                       }}
                     >
                       Statistiques
@@ -182,7 +174,7 @@ export default function RunnerDetailsView(): React.ReactElement {
                   <li className={selectedTab === Tab.Laps ? "active" : ""}>
                     <button
                       onClick={() => {
-                        setTabParam(Tab.Laps);
+                        void setSelectedTab(Tab.Laps);
                       }}
                     >
                       Détails des tours

@@ -3,7 +3,7 @@ import { faSortDown, faSortUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
 import { type PublicRace, type RunnerWithProcessedPassages } from "@live24hisere/core/types";
-import { RUNNER_DETAILS_LAPS_SORT_COLUMNS, SortBy, SortDirection } from "../../../constants/sort";
+import { RUNNER_DETAILS_LAPS_SORT_COLUMNS, SortColumn, SortDirection } from "../../../constants/sort";
 import { useSortQueryString } from "../../../hooks/queryString/useSortQueryString";
 import { useRaceTime } from "../../../hooks/useRaceTime";
 import { useWindowDimensions } from "../../../hooks/useWindowDimensions";
@@ -23,9 +23,9 @@ interface RunnerDetailsLapsProps {
 export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsProps): React.ReactElement {
   const { serverTimeOffset } = React.useContext(appContext).appData;
 
-  const { sortColumn, sortDirection, setSortColumnParam, setSortDirectionParam } = useSortQueryString(
+  const { sortColumn, sortDirection, setSortColumn, setSortDirection } = useSortQueryString(
     RUNNER_DETAILS_LAPS_SORT_COLUMNS,
-    SortBy.RACE_TIME,
+    SortColumn.RACE_TIME,
   );
 
   const raceTime = useRaceTime(race, serverTimeOffset);
@@ -46,7 +46,7 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
     const passagesToDisplay = [...runner.passages];
 
     switch (sortColumn) {
-      case SortBy.RACE_TIME:
+      case SortColumn.RACE_TIME:
         passagesToDisplay.sort((passageA, passageB) => {
           if (passageA.processed.lapEndRaceTime < passageB.processed.lapEndRaceTime) {
             return sortDirection === SortDirection.ASC ? -1 : 1;
@@ -59,7 +59,7 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
           return 0;
         });
         break;
-      case SortBy.LAP_SPEED:
+      case SortColumn.LAP_SPEED:
         passagesToDisplay.sort((passageA, passageB) => {
           if (passageA.processed.lapSpeed < passageB.processed.lapSpeed) {
             return sortDirection === SortDirection.ASC ? -1 : 1;
@@ -118,35 +118,37 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
   }, [raceTime, currentLapTime]);
 
   const updateSort = React.useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>, clickedSortColumn: SortBy) => {
+    (e: React.MouseEvent<HTMLButtonElement>, clickedSortColumn: SortColumn) => {
       e.preventDefault();
 
       if (clickedSortColumn !== sortColumn) {
-        setSortColumnParam(clickedSortColumn);
-        setSortDirectionParam(SortDirection.ASC);
+        void setSortColumn(clickedSortColumn);
+        void setSortDirection(SortDirection.ASC);
 
         return;
       }
 
-      setSortDirectionParam(getOppositeSortDirection(sortDirection));
+      void setSortDirection(getOppositeSortDirection(sortDirection));
     },
-    [setSortColumnParam, setSortDirectionParam, sortColumn, sortDirection],
+    [setSortColumn, setSortDirection, sortColumn, sortDirection],
   );
 
   const onResponsiveSortButtonClick = React.useCallback(() => {
-    if (sortColumn === SortBy.RACE_TIME) {
-      setSortColumnParam(SortBy.LAP_SPEED);
-      setSortDirectionParam(SortDirection.DESC);
+    if (sortColumn === SortColumn.RACE_TIME) {
+      void setSortColumn(SortColumn.LAP_SPEED);
+      void setSortDirection(SortDirection.DESC);
 
       return;
     }
 
-    setSortColumnParam(SortBy.RACE_TIME);
-    setSortDirectionParam(SortDirection.ASC);
-  }, [setSortColumnParam, setSortDirectionParam, sortColumn]);
+    void setSortColumn(SortColumn.RACE_TIME);
+    void setSortDirection(SortDirection.ASC);
+  }, [setSortColumn, setSortDirection, sortColumn]);
 
   const showCurrentLap =
-    isRaceStarted(race, serverTimeOffset) && !isRaceFinished(race, serverTimeOffset) && sortColumn === SortBy.RACE_TIME;
+    isRaceStarted(race, serverTimeOffset) &&
+    !isRaceFinished(race, serverTimeOffset) &&
+    sortColumn === SortColumn.RACE_TIME;
 
   const showCurrentLapAtTopOfTable = showCurrentLap && sortDirection === SortDirection.ASC;
   const showCurrentLapAtBottomOfTable = showCurrentLap && sortDirection === SortDirection.DESC;
@@ -167,11 +169,11 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
                     <button
                       className="a"
                       onClick={(e) => {
-                        updateSort(e, SortBy.RACE_TIME);
+                        updateSort(e, SortColumn.RACE_TIME);
                       }}
                     >
                       Temps de course
-                      {sortColumn === SortBy.RACE_TIME && (
+                      {sortColumn === SortColumn.RACE_TIME && (
                         <>
                           {sortDirection === SortDirection.ASC && (
                             <FontAwesomeIcon icon={faSortDown} className="ms-1" />
@@ -186,11 +188,11 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
                     <button
                       className="a"
                       onClick={(e) => {
-                        updateSort(e, SortBy.LAP_SPEED);
+                        updateSort(e, SortColumn.LAP_SPEED);
                       }}
                     >
                       Vitesse
-                      {sortColumn === SortBy.LAP_SPEED && (
+                      {sortColumn === SortColumn.LAP_SPEED && (
                         <>
                           {sortDirection === SortDirection.ASC && (
                             <FontAwesomeIcon icon={faSortDown} className="ms-1" />
@@ -237,9 +239,9 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
           <div>
             <div className="mb-3">
               <button className="button" onClick={onResponsiveSortButtonClick}>
-                {sortColumn === SortBy.RACE_TIME && <>Trier par vitesse</>}
+                {sortColumn === SortColumn.RACE_TIME && <>Trier par vitesse</>}
 
-                {sortColumn === SortBy.LAP_SPEED && <>Trier par temps de passage</>}
+                {sortColumn === SortColumn.LAP_SPEED && <>Trier par temps de passage</>}
               </button>
             </div>
 

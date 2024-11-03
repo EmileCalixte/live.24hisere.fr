@@ -1,4 +1,5 @@
 import React from "react";
+import { parseAsInteger, useQueryState } from "nuqs";
 import { Col, Row } from "react-bootstrap";
 import { ALL_CATEGORIES } from "@live24hisere/core/constants";
 import {
@@ -6,19 +7,20 @@ import {
   type FullCategoriesDict,
   type GenderWithMixed,
   type PartialCategoriesDict,
+  type RaceWithRunnerCount,
   type RunnerWithProcessedData,
   type RunnerWithProcessedPassages,
 } from "@live24hisere/core/types";
 import { categoryUtils, objectUtils } from "@live24hisere/utils";
 import { RankingTimeMode } from "../../constants/rankingTimeMode";
+import { SearchParam } from "../../constants/searchParams";
 import "../../css/print-ranking-table.css";
-import { useCategoryQueryString } from "../../hooks/queryString/useCategoryQueryString";
-import { useGenderQueryString } from "../../hooks/queryString/useGenderQueryString";
-import { useRaceQueryString } from "../../hooks/queryString/useRaceQueryString";
 import { useRankingTimeQueryString } from "../../hooks/queryString/useRankingTimeQueryString";
 import { useIntervalApiRequest } from "../../hooks/useIntervalApiRequest";
 import { useRanking } from "../../hooks/useRanking";
 import { useWindowDimensions } from "../../hooks/useWindowDimensions";
+import { parseAsCategory } from "../../queryStringParsers/parseAsCategory";
+import { parseAsGender } from "../../queryStringParsers/parseAsGender";
 import { getRaces } from "../../services/api/raceService";
 import { getRaceRunners } from "../../services/api/runnerService";
 import { getProcessedPassagesFromPassages, getRunnerProcessedDataFromPassages } from "../../utils/passageUtils";
@@ -33,21 +35,24 @@ import ResponsiveRankingTable from "../viewParts/ranking/rankingTable/responsive
 const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
 
 export default function RankingView(): React.ReactElement {
-  const { selectedGender, setGenderParam, deleteGenderParam } = useGenderQueryString();
+  const [selectedRaceId, setSelectedRaceId] = useQueryState(SearchParam.RACE, parseAsInteger);
+  const [selectedCategory, setSelectedCategory] = useQueryState(SearchParam.CATEGORY, parseAsCategory);
+  const [selectedGender, setSelectedGender] = useQueryState(SearchParam.GENDER, parseAsGender);
 
   const { width: windowWidth } = useWindowDimensions();
 
   const races = useIntervalApiRequest(getRaces).json?.races;
 
-  const { selectedRace, setRaceParam } = useRaceQueryString(races);
+  const selectedRace = React.useMemo<RaceWithRunnerCount | null>(() => {
+    return races?.find((race) => race.id === selectedRaceId) ?? null;
+  }, [races, selectedRaceId]);
+
   const {
     selectedTimeMode,
+    setSelectedTimeMode,
     selectedRankingTime,
     rankingDate,
-    setTimeModeParam,
-    deleteTimeModeParam,
-    setRankingTimeParam,
-    deleteRankingTimeParam,
+    setRankingTime,
     setRankingTimeMemory,
   } = useRankingTimeQueryString(selectedRace);
 
@@ -82,35 +87,42 @@ export default function RankingView(): React.ReactElement {
   const ranking = useRanking(selectedRace ?? undefined, processedRunners, rankingDate);
 
   const onRaceSelect = (e: React.ChangeEvent<HTMLSelectElement>): void => {
-    setRaceParam(e.target.value);
+    void setSelectedRaceId(parseInt(e.target.value));
   };
 
   const onCategorySelect = (e: React.ChangeEvent<HTMLSelectElement>): void => {
-    if (e.target.value === "scratch") {
-      deleteCategoryParam();
+    const value = e.target.value;
+
+    if (value === "scratch") {
+      void setSelectedCategory(null);
       return;
     }
 
-    setCategoryParam(e.target.value);
+    if (!categoryUtils.isCategoryCode(value)) {
+      void setSelectedCategory(null);
+      throw new Error(`${value} is not a valid category code`);
+    }
+
+    void setSelectedCategory(value);
   };
 
   const onGenderSelect = (gender: GenderWithMixed): void => {
     if (gender === "mixed") {
-      deleteGenderParam();
+      void setSelectedGender(null);
       return;
     }
 
-    setGenderParam(gender);
+    void setSelectedGender(gender);
   };
 
   const onTimeModeSelect = (timeMode: RankingTimeMode): void => {
     if (timeMode === RankingTimeMode.NOW) {
-      deleteTimeModeParam();
-      deleteRankingTimeParam();
+      void setSelectedTimeMode(null);
+      void setRankingTime(null);
       return;
     }
 
-    setTimeModeParam(timeMode);
+    void setSelectedTimeMode(timeMode);
   };
 
   /**
@@ -119,7 +131,7 @@ export default function RankingView(): React.ReactElement {
   const onRankingTimeSave = (time: number): void => {
     const timeToSave = Math.floor(time / 1000);
 
-    setRankingTimeParam(timeToSave);
+    void setRankingTime(timeToSave);
     setRankingTimeMemory(timeToSave);
   };
 
@@ -145,7 +157,13 @@ export default function RankingView(): React.ReactElement {
     return objectUtils.excludeKeys(ALL_CATEGORIES, categoriesToRemove);
   }, [ranking]);
 
-  const { selectedCategory, setCategoryParam, deleteCategoryParam } = useCategoryQueryString(selectedRace, categories);
+  // Clear category param if a category is selected but no runner is in it in the ranking
+  React.useEffect(() => {
+    console.log(categories, selectedCategory);
+    if (categories && selectedCategory && !(selectedCategory in categories)) {
+      void setSelectedCategory(null);
+    }
+  }, [categories, selectedCategory, setSelectedCategory]);
 
   return (
     <Page id="ranking" title="Classements">
@@ -177,7 +195,7 @@ export default function RankingView(): React.ReactElement {
               setTimeMode={onTimeModeSelect}
               onRankingTimeSave={onRankingTimeSave}
               selectedCategory={selectedCategory}
-              selectedGender={selectedGender}
+              selectedGender={selectedGender ?? "mixed"}
               selectedTimeMode={selectedTimeMode}
               currentRankingTime={selectedRankingTime ?? selectedRace.duration * 1000}
               maxRankingTime={selectedRace.duration * 1000}
@@ -194,7 +212,7 @@ export default function RankingView(): React.ReactElement {
                     race={selectedRace}
                     ranking={ranking}
                     tableCategory={selectedCategory}
-                    tableGender={selectedGender}
+                    tableGender={selectedGender ?? "mixed"}
                     tableRaceDuration={selectedTimeMode === RankingTimeMode.AT ? selectedRankingTime : null}
                   />
                 )}
@@ -207,7 +225,7 @@ export default function RankingView(): React.ReactElement {
                       race={selectedRace}
                       ranking={ranking}
                       tableCategory={selectedCategory}
-                      tableGender={selectedGender}
+                      tableGender={selectedGender ?? "mixed"}
                       tableRaceDuration={selectedTimeMode === RankingTimeMode.AT ? selectedRankingTime : null}
                     />
                   </div>
