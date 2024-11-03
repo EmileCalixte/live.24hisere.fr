@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import React from "react";
+import { parseAsBoolean, useQueryState } from "nuqs";
 import { Col, Row } from "react-bootstrap";
 import ReactDOMServer from "react-dom/server";
 import {
@@ -8,7 +9,6 @@ import {
   type RunnerWithProcessedPassages,
 } from "@live24hisere/core/types";
 import { SearchParam } from "../../../../constants/searchParams";
-import { useSpeedChartQueryString } from "../../../../hooks/queryString/useSpeedChartQueryString";
 import { useWindowDimensions } from "../../../../hooks/useWindowDimensions";
 import CanvasjsReact from "../../../../lib/canvasjs/canvasjs.react";
 import { formatMsAsDuration } from "../../../../utils/utils";
@@ -54,15 +54,27 @@ interface SpeedChartProps {
 }
 
 export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartProps): React.ReactElement {
-  const {
-    displayEachLapSpeed,
-    displayEachHourSpeed,
-    displayAverageSpeed,
-    displayAverageSpeedEvolution,
-    toggleSearchParam,
-  } = useSpeedChartQueryString();
-
   const { width: windowWidth } = useWindowDimensions();
+
+  const [showEachLapSpeed, setShowEachLapSpeed] = useQueryState(
+    SearchParam.SHOW_LAP_SPEED,
+    parseAsBoolean.withDefault(true),
+  );
+
+  const [showEachHourSpeed, setShowEachHourSpeed] = useQueryState(
+    SearchParam.SHOW_HOUR_SPEED,
+    parseAsBoolean.withDefault(true),
+  );
+
+  const [showAverageSpeed, setShowAverageSpeed] = useQueryState(
+    SearchParam.SHOW_AVG_SPEED,
+    parseAsBoolean.withDefault(true),
+  );
+
+  const [showAverageSpeedEvolution, setShowAverageSpeedEvolution] = useQueryState(
+    SearchParam.SHOW_AVG_SPEED_EVOLUTION,
+    parseAsBoolean.withDefault(true),
+  );
 
   const getXAxisInterval = React.useCallback((): number => {
     const baseInterval = getBaseXAxisInterval(race.duration);
@@ -226,7 +238,7 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
           markerType: null,
           showInLegend: true,
           name: "Vitesse du tour",
-          visible: displayEachLapSpeed,
+          visible: showEachLapSpeed,
           color: "#ed9b3f",
           dataPoints: [],
         },
@@ -235,7 +247,7 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
           markerType: null,
           showInLegend: true,
           name: "Vitesse moyenne de l'heure",
-          visible: displayEachHourSpeed,
+          visible: showEachHourSpeed,
           color: "#ff4a4f",
           fillOpacity: 0.4,
           dataPoints: [],
@@ -245,7 +257,7 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
           markerType: null,
           showInLegend: true,
           name: "Vitesse moyenne générale",
-          visible: displayAverageSpeed,
+          visible: showAverageSpeed,
           color: "#a2d083",
           fillOpacity: 0,
           dataPoints: [],
@@ -255,7 +267,7 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
           markerType: null,
           showInLegend: true,
           name: "Vitesse moyenne générale au cours du temps",
-          visible: displayAverageSpeedEvolution,
+          visible: showAverageSpeedEvolution,
           color: "#9e7eff",
           fillOpacity: 0,
           legendMarkerType: "square",
@@ -354,10 +366,10 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
     maxSpeed,
     getXAxisInterval,
     getTooltipContent,
-    displayEachLapSpeed,
-    displayEachHourSpeed,
-    displayAverageSpeed,
-    displayAverageSpeedEvolution,
+    showEachLapSpeed,
+    showEachHourSpeed,
+    showAverageSpeed,
+    showAverageSpeedEvolution,
   ]);
 
   return (
@@ -369,36 +381,36 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
 
             <Checkbox
               label="Vitesse à chaque tour"
-              checked={displayEachLapSpeed}
+              checked={showEachLapSpeed}
               onChange={() => {
-                toggleSearchParam(SearchParam.HIDE_LAP_SPEED);
+                void setShowEachLapSpeed(!showEachLapSpeed);
               }}
             />
 
             <Checkbox
               label="Vitesse moyenne à chaque heure"
               className="mt-2"
-              checked={displayEachHourSpeed}
+              checked={showEachHourSpeed}
               onChange={() => {
-                toggleSearchParam(SearchParam.HIDE_HOUR_SPEED);
+                void setShowEachHourSpeed(!showEachHourSpeed);
               }}
             />
 
             <Checkbox
               label="Vitesse moyenne générale"
               className="mt-2"
-              checked={displayAverageSpeed}
+              checked={showAverageSpeed}
               onChange={() => {
-                toggleSearchParam(SearchParam.HIDE_AVG_SPEED);
+                void setShowAverageSpeed(!showAverageSpeed);
               }}
             />
 
             <Checkbox
               label="Évolution de la vitesse moyenne"
               className="mt-2"
-              checked={displayAverageSpeedEvolution}
+              checked={showAverageSpeedEvolution}
               onChange={() => {
-                toggleSearchParam(SearchParam.HIDE_AVG_SPEED_EVOLUTION);
+                void setShowAverageSpeedEvolution(!showAverageSpeedEvolution);
               }}
             />
           </fieldset>

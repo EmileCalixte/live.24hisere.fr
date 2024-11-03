@@ -3,9 +3,9 @@ export const enum SortDirection {
   DESC = "desc",
 }
 
-export const enum SortBy {
+export const enum SortColumn {
   RACE_TIME = "raceTime",
   LAP_SPEED = "lapSpeed",
 }
 
-export const RUNNER_DETAILS_LAPS_SORT_COLUMNS = [SortBy.RACE_TIME, SortBy.LAP_SPEED];
+export const RUNNER_DETAILS_LAPS_SORT_COLUMNS = [SortColumn.RACE_TIME, SortColumn.LAP_SPEED];

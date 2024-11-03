@@ -1,6 +1,7 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap-grid.css";
 import "bootstrap/dist/css/bootstrap-utilities.css";
+import { NuqsAdapter } from "nuqs/adapters/react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import "toastr2/dist/toastr.min.css";
@@ -19,7 +20,9 @@ if (!container) {
 const root = createRoot(container);
 
 root.render(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>,
+  <NuqsAdapter>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </NuqsAdapter>,
 );
