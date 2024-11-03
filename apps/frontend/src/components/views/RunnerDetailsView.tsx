@@ -29,6 +29,7 @@ import RunnerDetailsLaps from "../viewParts/runnerDetails/RunnerDetailsLaps";
 import RunnerDetailsRaceDetails from "../viewParts/runnerDetails/RunnerDetailsRaceDetails";
 import RunnerDetailsStats from "../viewParts/runnerDetails/RunnerDetailsStats";
 import RunnerSelector from "../viewParts/runnerDetails/RunnerSelector";
+import { publicContext } from "./public/Public";
 
 const enum Tab {
   Stats = "stats",
@@ -36,6 +37,8 @@ const enum Tab {
 }
 
 export default function RunnerDetailsView(): React.ReactElement {
+  const { selectedEdition } = React.useContext(publicContext);
+
   const { runnerId } = useParams();
 
   const navigate = useNavigate();
@@ -142,101 +145,111 @@ export default function RunnerDetailsView(): React.ReactElement {
         </Col>
       </Row>
 
-      <Row className="hide-on-print">
-        <Col>
-          <RunnerSelector runners={runners} onSelectRunner={onSelectRunner} selectedRunnerId={runnerId} />
-        </Col>
-      </Row>
-
-      {selectedRunner && race ? (
-        <>
-          <Row className="mt-3">
-            <Col className="mb-3">
-              <button className="a" onClick={exportRunnerToXlsx}>
-                <FontAwesomeIcon icon={faFileExcel} /> Générer un fichier Excel
-              </button>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col>
-              <div className="runner-details-data-container">
-                <ul className="tabs-container">
-                  <li className={selectedTab === Tab.Stats ? "active" : ""}>
-                    <button
-                      onClick={() => {
-                        void setSelectedTab(Tab.Stats);
-                      }}
-                    >
-                      Statistiques
-                    </button>
-                  </li>
-                  <li className={selectedTab === Tab.Laps ? "active" : ""}>
-                    <button
-                      onClick={() => {
-                        void setSelectedTab(Tab.Laps);
-                      }}
-                    >
-                      Détails des tours
-                    </button>
-                  </li>
-                </ul>
-
-                <div className="card">
-                  {selectedRunner.stopped && (
-                    <div>
-                      <p
-                        className="mt-3 mb-0"
-                        style={{
-                          fontWeight: "bold",
-                          color: "#db1616",
-                        }}
-                      >
-                        Coureur arrêté
-                        <RunnerStoppedTooltip className="ms-2">
-                          <FontAwesomeIcon
-                            icon={faCircleInfo}
-                            style={{
-                              fontSize: "0.85em",
-                            }}
-                          />
-                        </RunnerStoppedTooltip>
-                      </p>
-                    </div>
-                  )}
-
-                  {(() => {
-                    switch (selectedTab) {
-                      case Tab.Stats:
-                        return (
-                          <>
-                            <RunnerDetailsRaceDetails race={race} />
-                            {ranking ? (
-                              <RunnerDetailsStats runner={selectedRunner} race={race} ranking={ranking} />
-                            ) : (
-                              <CircularLoader />
-                            )}
-                          </>
-                        );
-                      case Tab.Laps:
-                        return <RunnerDetailsLaps runner={selectedRunner} race={race} />;
-                      default:
-                        return null;
-                    }
-                  })()}
-                </div>
-              </div>
-            </Col>
-          </Row>
-        </>
+      {selectedEdition === null ? (
+        <Row>
+          <Col>
+            <p>Sélectionnez une édition ci-dessus pour accéder aux détails des coureurs</p>
+          </Col>
+        </Row>
       ) : (
         <>
-          {runnerId !== undefined && (
-            <Row className="mt-3">
-              <Col>
-                <CircularLoader asideText="Chargement des données" />
-              </Col>
-            </Row>
+          <Row className="hide-on-print">
+            <Col>
+              <RunnerSelector runners={runners} onSelectRunner={onSelectRunner} selectedRunnerId={runnerId} />
+            </Col>
+          </Row>
+
+          {selectedRunner && race ? (
+            <>
+              <Row className="mt-3">
+                <Col className="mb-3">
+                  <button className="a" onClick={exportRunnerToXlsx}>
+                    <FontAwesomeIcon icon={faFileExcel} /> Générer un fichier Excel
+                  </button>
+                </Col>
+              </Row>
+
+              <Row>
+                <Col>
+                  <div className="runner-details-data-container">
+                    <ul className="tabs-container">
+                      <li className={selectedTab === Tab.Stats ? "active" : ""}>
+                        <button
+                          onClick={() => {
+                            void setSelectedTab(Tab.Stats);
+                          }}
+                        >
+                          Statistiques
+                        </button>
+                      </li>
+                      <li className={selectedTab === Tab.Laps ? "active" : ""}>
+                        <button
+                          onClick={() => {
+                            void setSelectedTab(Tab.Laps);
+                          }}
+                        >
+                          Détails des tours
+                        </button>
+                      </li>
+                    </ul>
+
+                    <div className="card">
+                      {selectedRunner.stopped && (
+                        <div>
+                          <p
+                            className="mt-3 mb-0"
+                            style={{
+                              fontWeight: "bold",
+                              color: "#db1616",
+                            }}
+                          >
+                            Coureur arrêté
+                            <RunnerStoppedTooltip className="ms-2">
+                              <FontAwesomeIcon
+                                icon={faCircleInfo}
+                                style={{
+                                  fontSize: "0.85em",
+                                }}
+                              />
+                            </RunnerStoppedTooltip>
+                          </p>
+                        </div>
+                      )}
+
+                      {(() => {
+                        switch (selectedTab) {
+                          case Tab.Stats:
+                            return (
+                              <>
+                                <RunnerDetailsRaceDetails race={race} />
+                                {ranking ? (
+                                  <RunnerDetailsStats runner={selectedRunner} race={race} ranking={ranking} />
+                                ) : (
+                                  <CircularLoader />
+                                )}
+                              </>
+                            );
+                          case Tab.Laps:
+                            return <RunnerDetailsLaps runner={selectedRunner} race={race} />;
+                          default:
+                            return null;
+                        }
+                      })()}
+                    </div>
+                  </div>
+                </Col>
+              </Row>
+            </>
+          ) : (
+            <>
+              {runnerId !== undefined && (
+                <Row className="mt-3">
+                  <Col>
+                    <CircularLoader asideText="Chargement des données" />
+                  </Col>
+                </Row>
+              )}
+            </>
           )}
         </>
       )}
