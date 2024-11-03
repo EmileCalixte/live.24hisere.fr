@@ -51,6 +51,7 @@ CREATE TABLE `config` (
 INSERT INTO `config` (`key`, `value`) VALUES
 ('disabled_app_message', '<h1>Application désactivée</h1><p>Application désactivée (message de test)</p>'),
 ('import_dag_file_path', 'http://localhost:8081/dag-file.txt'),
+('current_edition_id', '7'),
 ('is_app_enabled', '1');
 
 -- --------------------------------------------------------

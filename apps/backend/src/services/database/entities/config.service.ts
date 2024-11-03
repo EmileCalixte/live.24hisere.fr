@@ -8,6 +8,7 @@ import { EntityService } from "../entity.service";
 const KEY_IMPORT_DAG_FILE_PATH = "import_dag_file_path";
 const KEY_IS_APP_ENABLED = "is_app_enabled";
 const KEY_DISABLED_APP_MESSAGE = "disabled_app_message";
+const KEY_CURRENT_EDITION_ID = "current_edition_id";
 
 @Injectable()
 export class ConfigService extends EntityService {
@@ -48,6 +49,21 @@ export class ConfigService extends EntityService {
 
   public async setDisabledAppMessage(message: string): Promise<void> {
     await this.saveLine(KEY_DISABLED_APP_MESSAGE, message);
+  }
+
+  public async getCurrentEditionId(): Promise<number | null> {
+    const config = await this.getLine(KEY_CURRENT_EDITION_ID);
+
+    return config?.value ? parseInt(config.value) : null;
+  }
+
+  public async setCurrentEditionId(editionId: number | null): Promise<void> {
+    if (editionId === null) {
+      await this.deleteLine(KEY_CURRENT_EDITION_ID);
+      return;
+    }
+
+    await this.saveLine(KEY_CURRENT_EDITION_ID, editionId.toString());
   }
 
   private async getLine(key: string): Promise<Config | null> {
