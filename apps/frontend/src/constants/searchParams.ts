@@ -1,5 +1,6 @@
 export const enum SearchParam {
   CATEGORY = "category",
+  EDITION = "edition",
   GENDER = "gender",
   RACE = "race",
   RANKING_TIME = "rankingTime",

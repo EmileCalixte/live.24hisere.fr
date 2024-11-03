@@ -159,7 +159,6 @@ export default function RankingView(): React.ReactElement {
 
   // Clear category param if a category is selected but no runner is in it in the ranking
   React.useEffect(() => {
-    console.log(categories, selectedCategory);
     if (categories && selectedCategory && !(selectedCategory in categories)) {
       void setSelectedCategory(null);
     }

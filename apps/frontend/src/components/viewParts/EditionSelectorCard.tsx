@@ -8,12 +8,14 @@ import Select from "../ui/forms/Select";
 interface EditionSelectorCardProps {
   editions: PublicEdition[];
   selectedEditionId: number | undefined;
+  onEditionSelect: React.ChangeEventHandler<HTMLSelectElement>;
   className?: string;
 }
 
 export default function EditionSelectorCard({
   editions,
   selectedEditionId,
+  onEditionSelect,
   className,
 }: EditionSelectorCardProps): React.ReactElement {
   const editionOptions = React.useMemo<Array<SelectOption<number>>>(() => {
@@ -31,7 +33,13 @@ export default function EditionSelectorCard({
     <div className={clsx("card", className)}>
       <Row>
         <Col xl={3} lg={4} md={6} sm={9} xs={12}>
-          <Select label="Édition" options={editionOptions} value={selectedEditionId} />
+          <Select
+            label="Édition"
+            options={editionOptions}
+            value={selectedEditionId}
+            onChange={onEditionSelect}
+            placeholderLabel="Sélectionnez une édition"
+          />
         </Col>
       </Row>
     </div>
