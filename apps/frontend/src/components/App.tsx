@@ -192,7 +192,7 @@ export default function App(): React.ReactElement {
     if (!isApiRequestResultOk(result)) {
       forgetAccessToken();
       setUser(null);
-      ToastService.getToastr().error("Vous avez été déconecté");
+      ToastService.getToastr().error("Vous avez été déconnecté");
       return;
     }
 

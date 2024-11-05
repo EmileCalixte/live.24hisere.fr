@@ -184,7 +184,7 @@ export default function RankingView(): React.ReactElement {
       ) : (
         <>
           <Row className="hide-on-print mb-3">
-            <Col xxl={2} xl={3} lg={4} md={6} sm={9} xs={12}>
+            <Col xl={3} lg={4} md={6} sm={9} xs={12}>
               <Select
                 label="Course"
                 options={racesOptions}
