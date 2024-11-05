@@ -2,11 +2,10 @@ import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { postAdminEdition } from "../../../../services/api/editionService";
+import { getEditionCreateBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../../services/ToastService";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { appContext } from "../../../App";
-import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
-import Crumb from "../../../ui/breadcrumbs/Crumb";
 import Page from "../../../ui/Page";
 import EditionDetailsForm from "../../../viewParts/admin/editions/EditionDetailsForm";
 
@@ -52,13 +51,7 @@ export default function CreateEditionAdminView(): React.ReactElement {
   return (
     <Page id="admin-create-edition" title="Créer une édition">
       <Row>
-        <Col>
-          <Breadcrumbs>
-            <Crumb url="/admin" label="Administration" />
-            <Crumb url="/admin/editions" label="Éditions" />
-            <Crumb label="Créer une édition" />
-          </Breadcrumbs>
-        </Col>
+        <Col>{getEditionCreateBreadcrumbs()}</Col>
       </Row>
 
       <Row>

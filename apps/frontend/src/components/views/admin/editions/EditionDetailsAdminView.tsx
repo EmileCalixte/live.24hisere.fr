@@ -3,11 +3,10 @@ import { Col, Row } from "react-bootstrap";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { type AdminEditionWithRaceCount } from "@live24hisere/core/types";
 import { deleteAdminEdition, getAdminEdition, patchAdminEdition } from "../../../../services/api/editionService";
+import { getEditionDetailsBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../../services/ToastService";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { appContext } from "../../../App";
-import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
-import Crumb from "../../../ui/breadcrumbs/Crumb";
 import CircularLoader from "../../../ui/CircularLoader";
 import Page from "../../../ui/Page";
 import EditionDetailsForm from "../../../viewParts/admin/editions/EditionDetailsForm";
@@ -121,19 +120,7 @@ export default function EditionDetailsAdminView(): React.ReactElement {
       title={edition === undefined ? "Chargement" : `Détails de l'édition ${edition.name}`}
     >
       <Row>
-        <Col>
-          <Breadcrumbs>
-            <Crumb url="/admin" label="Administration" />
-            <Crumb url="/admin/editions" label="Éditions" />
-            {(() => {
-              if (edition === undefined) {
-                return <CircularLoader />;
-              }
-
-              return <Crumb label={edition.name} />;
-            })()}
-          </Breadcrumbs>
-        </Col>
+        <Col>{getEditionDetailsBreadcrumbs(edition)}</Col>
       </Row>
 
       <Row>

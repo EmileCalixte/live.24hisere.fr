@@ -6,12 +6,11 @@ import { Link } from "react-router-dom";
 import { type AdminRace, type RaceDict, type Runner } from "@live24hisere/core/types";
 import { getAdminRaces } from "../../../../services/api/raceService";
 import { getAdminRunners } from "../../../../services/api/runnerService";
+import { getRunnersBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../../services/ToastService";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { getRaceDictFromRaces } from "../../../../utils/raceUtils";
 import { appContext } from "../../../App";
-import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
-import Crumb from "../../../ui/breadcrumbs/Crumb";
 import CircularLoader from "../../../ui/CircularLoader";
 import Page from "../../../ui/Page";
 import RunnersTable from "../../../viewParts/admin/runners/RunnersTable";
@@ -91,12 +90,7 @@ export default function RunnersAdminView(): React.ReactElement {
   return (
     <Page id="admin-runners" title="Coureurs">
       <Row>
-        <Col>
-          <Breadcrumbs>
-            <Crumb url="/admin" label="Administration" />
-            <Crumb label="Coureurs" />
-          </Breadcrumbs>
-        </Col>
+        <Col>{getRunnersBreadcrumbs()}</Col>
       </Row>
 
       {displayedRunners === false && (

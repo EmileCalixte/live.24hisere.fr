@@ -18,13 +18,12 @@ import {
   patchAdminRunnerPassage,
   postAdminRunnerPassage,
 } from "../../../../services/api/runnerService";
+import { getRunnerDetailsBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../../services/ToastService";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { getProcessedPassagesFromPassages } from "../../../../utils/passageUtils";
 import { formatDateAsString, formatDateForApi } from "../../../../utils/utils";
 import { appContext } from "../../../App";
-import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
-import Crumb from "../../../ui/breadcrumbs/Crumb";
 import CircularLoader from "../../../ui/CircularLoader";
 import Page from "../../../ui/Page";
 import RunnerDetailsForm from "../../../viewParts/admin/runners/RunnerDetailsForm";
@@ -336,19 +335,7 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
       title={runner === undefined ? "Chargement" : `Détails du coureur ${runner.firstname} ${runner.lastname}`}
     >
       <Row>
-        <Col>
-          <Breadcrumbs>
-            <Crumb url="/admin" label="Administration" />
-            <Crumb url="/admin/runners" label="Coureurs" />
-            {(() => {
-              if (runner === undefined) {
-                return <CircularLoader />;
-              }
-
-              return <Crumb label={`${runner.lastname.toUpperCase()} ${runner.firstname}`} />;
-            })()}
-          </Breadcrumbs>
-        </Col>
+        <Col>{getRunnerDetailsBreadcrumbs(runner)}</Col>
       </Row>
       {runner === undefined && (
         <Row>

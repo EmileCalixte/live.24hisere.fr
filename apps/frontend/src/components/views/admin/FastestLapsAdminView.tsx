@@ -9,14 +9,13 @@ import {
 import { getAdminPassages } from "../../../services/api/passageService";
 import { getAdminRaces } from "../../../services/api/raceService";
 import { getAdminRunners } from "../../../services/api/runnerService";
+import { getFastestLapsBreadcrumbs } from "../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../services/ToastService";
 import { type SelectOption } from "../../../types/Forms";
 import { isApiRequestResultOk } from "../../../utils/apiUtils";
 import { getProcessedPassagesFromPassages } from "../../../utils/passageUtils";
 import { getRaceDictFromRaces } from "../../../utils/raceUtils";
 import { appContext } from "../../App";
-import Breadcrumbs from "../../ui/breadcrumbs/Breadcrumbs";
-import Crumb from "../../ui/breadcrumbs/Crumb";
 import CircularLoader from "../../ui/CircularLoader";
 import { Checkbox } from "../../ui/forms/Checkbox";
 import Select from "../../ui/forms/Select";
@@ -316,12 +315,7 @@ export default function FastestLapsAdminView(): React.ReactElement {
   return (
     <Page id="admin-fastest-laps" title="Tours les plus rapides">
       <Row>
-        <Col>
-          <Breadcrumbs>
-            <Crumb url="/admin" label="Administration" />
-            <Crumb label="Tours les plus rapides" />
-          </Breadcrumbs>
-        </Col>
+        <Col>{getFastestLapsBreadcrumbs()}</Col>
       </Row>
 
       {passagesInPage === false && (

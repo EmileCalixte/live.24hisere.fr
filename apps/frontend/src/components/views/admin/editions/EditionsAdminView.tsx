@@ -5,11 +5,10 @@ import { Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { type AdminEditionWithRaceCount } from "@live24hisere/core/types";
 import { getAdminEditions, putAdminEditionOrder } from "../../../../services/api/editionService";
+import { getEditionsBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../../services/ToastService";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { appContext } from "../../../App";
-import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
-import Crumb from "../../../ui/breadcrumbs/Crumb";
 import SortListButtons from "../../../ui/buttons/SortListButtons";
 import CircularLoader from "../../../ui/CircularLoader";
 import SortList from "../../../ui/lists/SortList";
@@ -75,12 +74,7 @@ export default function EditionsAdminView(): React.ReactElement {
   return (
     <Page id="admin-editions" title="Éditions">
       <Row>
-        <Col>
-          <Breadcrumbs>
-            <Crumb url="/admin" label="Administration" />
-            <Crumb label="Éditions" />
-          </Breadcrumbs>
-        </Col>
+        <Col>{getEditionsBreadcrumbs()}</Col>
       </Row>
 
       {editions === false && <CircularLoader />}
