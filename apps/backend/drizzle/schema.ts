@@ -1,4 +1,4 @@
-import { customType, mysqlTable } from "drizzle-orm/mysql-core";
+import { customType, mysqlTable, unique } from "drizzle-orm/mysql-core";
 import { GENDERS } from "@live24hisere/core/constants";
 import { dateUtils } from "@live24hisere/utils";
 
@@ -59,20 +59,24 @@ export const TABLE_EDITION = mysqlTable(TABLE_NAME_EDITION, (t) => ({
   isPublic: t.boolean().notNull(),
 }));
 
-export const TABLE_RACE = mysqlTable(TABLE_NAME_RACE, (t) => ({
-  id: t.int().primaryKey().autoincrement(),
-  editionId: t
-    .int()
-    .references(() => TABLE_EDITION.id)
-    .notNull(),
-  name: t.varchar({ length: 50 }).notNull().unique(),
-  startTime: date(DEFAULT_DATE_PARAMS).notNull(),
-  duration: t.int({ unsigned: true }).notNull(),
-  initialDistance: t.decimal({ precision: 10, scale: 3 }).notNull(),
-  lapDistance: t.decimal({ precision: 10, scale: 3 }).notNull(),
-  order: t.int().notNull(),
-  isPublic: t.boolean().notNull(),
-}));
+export const TABLE_RACE = mysqlTable(
+  TABLE_NAME_RACE,
+  (t) => ({
+    id: t.int().primaryKey().autoincrement(),
+    editionId: t
+      .int()
+      .references(() => TABLE_EDITION.id)
+      .notNull(),
+    name: t.varchar({ length: 50 }).notNull(),
+    startTime: date(DEFAULT_DATE_PARAMS).notNull(),
+    duration: t.int({ unsigned: true }).notNull(),
+    initialDistance: t.decimal({ precision: 10, scale: 3 }).notNull(),
+    lapDistance: t.decimal({ precision: 10, scale: 3 }).notNull(),
+    order: t.int().notNull(),
+    isPublic: t.boolean().notNull(),
+  }),
+  (t) => ({ unique: unique().on(t.name, t.editionId) }),
+);
 
 export const TABLE_RUNNER = mysqlTable(TABLE_NAME_RUNNER, (t) => ({
   id: t.int().primaryKey(),

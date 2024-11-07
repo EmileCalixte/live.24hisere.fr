@@ -15,6 +15,13 @@
       "when": 1730486745147,
       "tag": "0001_create-edition",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1731014943852,
+      "tag": "0002_race-name-unique-in-edition",
+      "breakpoints": true
     }
   ]
 }

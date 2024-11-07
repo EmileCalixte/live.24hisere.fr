@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : database
--- Généré le : ven. 01 nov. 2024 à 19:28
+-- Généré le : jeu. 07 nov. 2024 à 21:30
 -- Version du serveur : 10.6.14-MariaDB-1:10.6.14+maria~ubu2004
 -- Version de PHP : 8.2.20
 
@@ -49,9 +49,9 @@ CREATE TABLE `config` (
 --
 
 INSERT INTO `config` (`key`, `value`) VALUES
+('current_edition_id', '7'),
 ('disabled_app_message', '<h1>Application désactivée</h1><p>Application désactivée (message de test)</p>'),
 ('import_dag_file_path', 'http://localhost:8081/dag-file.txt'),
-('current_edition_id', '7'),
 ('is_app_enabled', '1');
 
 -- --------------------------------------------------------
@@ -96,7 +96,7 @@ CREATE TABLE `misc` (
 --
 
 INSERT INTO `misc` (`key`, `value`) VALUES
-('last_update_time', '2024-04-07T07:22:06.242Z');
+('last_update_time', '2024-11-07T21:30:03.703Z');
 
 -- --------------------------------------------------------
 
@@ -15109,7 +15109,8 @@ CREATE TABLE `__drizzle_migrations` (
 
 INSERT INTO `__drizzle_migrations` (`id`, `hash`, `created_at`) VALUES
 (1, 'be56cb5324a4e8a26247e1a6ffc674fa893d8512a6cb848e664f97646c8f8d35', 1727603690954),
-(2, '51942c706fda030e67d1777c3a9ea4b6d91bd4c06ec0582912c58b0b04026535', 1730486745147);
+(2, '51942c706fda030e67d1777c3a9ea4b6d91bd4c06ec0582912c58b0b04026535', 1730486745147),
+(3, '454ba9158f5135d5bbc131eb4ca3317b9ba4dc33ba67bec3442dc6a728feb963', 1731014943852);
 
 --
 -- Index pour les tables déchargées
@@ -15154,7 +15155,7 @@ ALTER TABLE `passage`
 --
 ALTER TABLE `race`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `race_name_unique` (`name`),
+  ADD UNIQUE KEY `race_name_editionId_unique` (`name`,`edition_id`),
   ADD KEY `race_edition_id_edition_id_fk` (`edition_id`);
 
 --
@@ -15209,7 +15210,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT pour la table `__drizzle_migrations`
 --
 ALTER TABLE `__drizzle_migrations`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Contraintes pour les tables déchargées
