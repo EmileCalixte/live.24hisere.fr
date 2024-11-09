@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { and, asc, count, eq, getTableColumns, max } from "drizzle-orm";
 import { AdminRaceWithOrder, AdminRaceWithRunnerCount, RaceWithRunnerCount } from "@live24hisere/core/types";
 import { objectUtils } from "@live24hisere/utils";
-import { TABLE_RACE, TABLE_RUNNER } from "../../../../drizzle/schema";
+import { TABLE_EDITION, TABLE_RACE, TABLE_RUNNER } from "../../../../drizzle/schema";
 import { DrizzleTableColumns } from "../../../types/utils/drizzle";
 import { EntityService } from "../entity.service";
 
@@ -74,9 +74,10 @@ export class RaceService extends EntityService {
       })
       .from(TABLE_RACE)
       .leftJoin(TABLE_RUNNER, eq(TABLE_RUNNER.raceId, TABLE_RACE.id))
+      .innerJoin(TABLE_EDITION, eq(TABLE_EDITION.id, TABLE_RACE.editionId))
       .orderBy(asc(TABLE_RACE.order))
       .groupBy(TABLE_RACE.id)
-      .where(and(eq(TABLE_RACE.isPublic, true), eq(TABLE_RACE.editionId, editionId)));
+      .where(and(eq(TABLE_RACE.isPublic, true), eq(TABLE_EDITION.isPublic, true), eq(TABLE_RACE.editionId, editionId)));
   }
 
   async getPublicRaceById(raceId: number): Promise<RaceWithRunnerCount | null> {
@@ -87,8 +88,9 @@ export class RaceService extends EntityService {
       })
       .from(TABLE_RACE)
       .leftJoin(TABLE_RUNNER, eq(TABLE_RUNNER.raceId, TABLE_RACE.id))
+      .innerJoin(TABLE_EDITION, eq(TABLE_EDITION.id, TABLE_RACE.editionId))
       .groupBy(TABLE_RACE.id)
-      .where(and(eq(TABLE_RACE.id, raceId), eq(TABLE_RACE.isPublic, true)));
+      .where(and(eq(TABLE_RACE.id, raceId), eq(TABLE_EDITION.isPublic, true), eq(TABLE_RACE.isPublic, true)));
 
     return this.getUniqueResult(races);
   }
