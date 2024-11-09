@@ -11,11 +11,6 @@ export interface PublicRace {
   id: number;
 
   /**
-   * The ID of the edition the race belongs to
-   */
-  editionId: number;
-
-  /**
    * The name of the race
    */
   name: string;
@@ -49,6 +44,11 @@ export type AdminRace<TRace extends PublicRace = PublicRace> = TRace & {
    * Whether the race is publicly displayed or not
    */
   isPublic: boolean;
+
+  /**
+   * The ID of the edition the race belongs to
+   */
+  editionId: number;
 };
 
 export type AdminRaceWithOrder<TRace extends AdminRace = AdminRace> = TRace & {

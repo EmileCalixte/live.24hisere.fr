@@ -58,7 +58,7 @@ describe("Runner endpoints (e2e)", { concurrent: false }, () => {
         request(app.getHttpServer()).get("/races/5/runners").expect(HttpStatus.NOT_FOUND),
 
         // Get runners of a non-existing race
-        request(app.getHttpServer()).get("/races/10/runners").expect(HttpStatus.NOT_FOUND),
+        request(app.getHttpServer()).get("/races/100/runners").expect(HttpStatus.NOT_FOUND),
       ]);
 
       const json = JSON.parse(response.text);

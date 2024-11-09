@@ -9,6 +9,23 @@ import { EntityService } from "../entity.service";
 @Injectable()
 export class RaceService extends EntityService {
   async getAdminRaces(): Promise<AdminRaceWithRunnerCount[]> {
+    const toto = this.db
+      .select({
+        ...this.getAdminRaceColumns(),
+        runnerCount: count(TABLE_RUNNER.id),
+      })
+      .from(TABLE_RACE)
+      .leftJoin(TABLE_RUNNER, eq(TABLE_RUNNER.raceId, TABLE_RACE.id))
+      .groupBy(TABLE_RACE.id);
+
+    const sql = toto.getSQL();
+
+    console.log(sql);
+
+    return await toto;
+  }
+
+  async getEditionAdminRaces(editionId: number): Promise<AdminRaceWithRunnerCount[]> {
     return await this.db
       .select({
         ...this.getAdminRaceColumns(),
@@ -17,7 +34,8 @@ export class RaceService extends EntityService {
       .from(TABLE_RACE)
       .leftJoin(TABLE_RUNNER, eq(TABLE_RUNNER.raceId, TABLE_RACE.id))
       .orderBy(asc(TABLE_RACE.order))
-      .groupBy(TABLE_RACE.id);
+      .groupBy(TABLE_RACE.id)
+      .where(eq(TABLE_RACE.editionId, editionId));
   }
 
   async getAdminRaceById(raceId: number): Promise<AdminRaceWithRunnerCount | null> {
@@ -34,7 +52,7 @@ export class RaceService extends EntityService {
     return this.getUniqueResult(races);
   }
 
-  async getAdminRaceByName(raceName: string): Promise<AdminRaceWithRunnerCount | null> {
+  async getAdminRaceByNameAndEdition(raceName: string, editionId: number): Promise<AdminRaceWithRunnerCount | null> {
     const races = await this.db
       .select({
         ...this.getAdminRaceColumns(),
@@ -43,12 +61,12 @@ export class RaceService extends EntityService {
       .from(TABLE_RACE)
       .leftJoin(TABLE_RUNNER, eq(TABLE_RUNNER.raceId, TABLE_RACE.id))
       .groupBy(TABLE_RACE.id)
-      .where(eq(TABLE_RACE.name, raceName));
+      .where(and(eq(TABLE_RACE.name, raceName), eq(TABLE_RACE.editionId, editionId)));
 
     return this.getUniqueResult(races);
   }
 
-  async getPublicRaces(): Promise<RaceWithRunnerCount[]> {
+  async getPublicRaces(editionId: number): Promise<RaceWithRunnerCount[]> {
     return await this.db
       .select({
         ...this.getPublicRaceColumns(),
@@ -58,7 +76,7 @@ export class RaceService extends EntityService {
       .leftJoin(TABLE_RUNNER, eq(TABLE_RUNNER.raceId, TABLE_RACE.id))
       .orderBy(asc(TABLE_RACE.order))
       .groupBy(TABLE_RACE.id)
-      .where(eq(TABLE_RACE.isPublic, true));
+      .where(and(eq(TABLE_RACE.isPublic, true), eq(TABLE_RACE.editionId, editionId)));
   }
 
   async getPublicRaceById(raceId: number): Promise<RaceWithRunnerCount | null> {

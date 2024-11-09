@@ -41,7 +41,7 @@ describe("Edition endpoints (e2e)", { concurrent: false }, () => {
       }
 
       // Test editions order and test that private edition is not present
-      expect(json.editions.map((edition: PublicEdition) => edition.id)).toEqual([7, 1, 2, 3, 4, 5, 6]);
+      expect(json.editions.map((edition: PublicEdition) => edition.id)).toEqual([6, 5, 4, 3, 2, 1]);
     });
   });
 
@@ -66,7 +66,7 @@ describe("Edition endpoints (e2e)", { concurrent: false }, () => {
       }
 
       // Test editions order and test that private edition is present
-      expect(json.editions.map((edition: AdminEdition) => edition.id)).toEqual([7, 1, 2, 3, 4, 5, 6, 8]);
+      expect(json.editions.map((edition: AdminEdition) => edition.id)).toEqual([6, 5, 4, 3, 2, 1, 7]);
     });
 
     it("Get an edition (GET /admin/editions/{id})", async () => {
@@ -79,7 +79,7 @@ describe("Edition endpoints (e2e)", { concurrent: false }, () => {
 
         // Get non-public edition
         request(app.getHttpServer())
-          .get("/admin/editions/8")
+          .get("/admin/editions/7")
           .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
           .expect(HttpStatus.OK),
 
@@ -137,7 +137,7 @@ describe("Edition endpoints (e2e)", { concurrent: false }, () => {
         const json = JSON.parse(editionListResponse.text);
 
         expect(json.editions).toBeArray();
-        expect(json.editions.length).toBe(8);
+        expect(json.editions.length).toBe(7);
 
         expect(json.editions.map((edition: AdminEdition) => edition.id).slice(0, 5)).toEqual([5, 2, 6, 1, 3]);
       });
@@ -145,7 +145,7 @@ describe("Edition endpoints (e2e)", { concurrent: false }, () => {
       it("Modify edition order with all edition IDs", async () => {
         const response = await request(app.getHttpServer())
           .put("/admin/editions-order")
-          .send([7, 1, 2, 3, 4, 5, 6, 8])
+          .send([6, 5, 4, 3, 2, 1, 7])
           .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
           .expect(HttpStatus.NO_CONTENT);
 
@@ -159,7 +159,7 @@ describe("Edition endpoints (e2e)", { concurrent: false }, () => {
 
         expect(json.editions).toBeArray();
 
-        expect(json.editions.map((edition: AdminEdition) => edition.id)).toEqual([7, 1, 2, 3, 4, 5, 6, 8]);
+        expect(json.editions.map((edition: AdminEdition) => edition.id)).toEqual([6, 5, 4, 3, 2, 1, 7]);
       });
     });
 
@@ -267,14 +267,13 @@ describe("Edition endpoints (e2e)", { concurrent: false }, () => {
 
         // Test editions order and test that the new edition is present
         expect(json.editions.map((edition: AdminEdition) => edition.id)).toEqual([
-          7,
-          1,
-          2,
-          3,
-          4,
-          5,
           6,
-          8,
+          5,
+          4,
+          3,
+          2,
+          1,
+          7,
           createdEditionId,
         ]);
       });

@@ -1,13 +1,15 @@
 import { HttpStatus, INestApplication } from "@nestjs/common";
 import request from "supertest";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { AdminRace, PublicRace } from "@live24hisere/core/types";
+import { AdminRace, AdminRaceWithRunnerCount, PublicRace } from "@live24hisere/core/types";
 import { objectUtils } from "@live24hisere/utils";
 import { initApp } from "./_init";
 import { ADMIN_USER_ACCESS_TOKEN } from "./constants/accessToken";
 import { ISO8601_DATE_REGEX } from "./constants/dates";
 import {
   ERROR_MESSAGE_CANNOT_DELETE_RACE_WITH_RUNNERS,
+  ERROR_MESSAGE_EDITION_ID_MUST_BE_NUMBER,
+  ERROR_MESSAGE_EDITION_NOT_FOUND,
   ERROR_MESSAGE_RACE_ID_MUST_BE_NUMBER,
   ERROR_MESSAGE_RACE_NAME_ALREADY_EXISTS,
   ERROR_MESSAGE_RACE_NOT_FOUND,
@@ -26,37 +28,72 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
   });
 
   describe("RacesController (e2e)", () => {
-    it("Get race list (GET /races)", async () => {
-      const response = await request(app.getHttpServer()).get("/races").expect(HttpStatus.OK);
-
-      const json = JSON.parse(response.text);
-
-      expect(json.races).toBeArray();
-
-      for (const race of json.races) {
-        expect(race).toContainAllKeys([
-          "id",
-          "editionId",
-          "name",
-          "startTime",
-          "duration",
-          "initialDistance",
-          "lapDistance",
-          "runnerCount",
+    describe("Get race list (GET /races)", async () => {
+      it("Try to get races without edition query string param or with invalid param", async () => {
+        const responses = await Promise.all([
+          request(app.getHttpServer()).get("/races").expect(HttpStatus.BAD_REQUEST),
+          request(app.getHttpServer()).get("/races?edition=invalid").expect(HttpStatus.BAD_REQUEST),
         ]);
 
-        expect(race.id).toBeNumber();
-        expect(race.name).toBeString();
-        expect(race.startTime).toBeDateString();
-        expect(race.startTime).toMatch(ISO8601_DATE_REGEX);
-        expect(race.duration).toBeNumber();
-        expect(race.initialDistance).toBeString();
-        expect(race.lapDistance).toBeString();
-        expect(race.runnerCount).toBeNumber();
-      }
+        for (const response of responses) {
+          const json = JSON.parse(response.text);
 
-      // Test races order and test that private race is not present
-      expect(json.races.map((race: PublicRace) => race.id)).toEqual([1, 4, 3, 2]);
+          expect(json).toEqual(badRequestBody("edition param must be provided in query string and must be numeric"));
+        }
+      });
+
+      it("Get race list of an edition (GET /races?edition=6)", async () => {
+        const response = await request(app.getHttpServer()).get("/races?edition=6").expect(HttpStatus.OK);
+
+        const json = JSON.parse(response.text);
+
+        expect(json.races).toBeArray();
+
+        for (const race of json.races) {
+          expect(race).toContainAllKeys([
+            "id",
+            "editionId",
+            "name",
+            "startTime",
+            "duration",
+            "initialDistance",
+            "lapDistance",
+            "runnerCount",
+          ]);
+
+          expect(race.id).toBeNumber();
+          expect(race.name).toBeString();
+          expect(race.startTime).toBeDateString();
+          expect(race.startTime).toMatch(ISO8601_DATE_REGEX);
+          expect(race.duration).toBeNumber();
+          expect(race.initialDistance).toBeString();
+          expect(race.lapDistance).toBeString();
+          expect(race.runnerCount).toBeNumber();
+        }
+
+        // Test races order and test that private race is not present
+        expect(json.races.map((race: PublicRace) => race.id)).toEqual([1, 4, 3, 2]);
+      });
+
+      it("Get race list of another edition (GET /races?edition=1)", async () => {
+        const response = await request(app.getHttpServer()).get("/races?edition=1").expect(HttpStatus.OK);
+
+        const json = JSON.parse(response.text);
+
+        expect(json.races).toBeArray();
+
+        // Test races order
+        expect(json.races.map((race: PublicRace) => race.id)).toEqual([6, 7]);
+      });
+
+      it("Get race list of a non-existing edition (GET /races?edition=11)", async () => {
+        const response = await request(app.getHttpServer()).get("/races?edition=11").expect(HttpStatus.OK);
+
+        const json = JSON.parse(response.text);
+
+        expect(json.races).toBeArray();
+        expect(json.races).toBeEmpty();
+      });
     });
 
     it("Get a race (GET /races/{id})", async () => {
@@ -68,7 +105,7 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
         request(app.getHttpServer()).get("/races/5").expect(HttpStatus.NOT_FOUND),
 
         // Get non-existing race
-        request(app.getHttpServer()).get("/races/10").expect(HttpStatus.NOT_FOUND),
+        request(app.getHttpServer()).get("/races/100").expect(HttpStatus.NOT_FOUND),
 
         // Invalid ID format
         request(app.getHttpServer()).get("/races/invalid").expect(HttpStatus.BAD_REQUEST),
@@ -121,9 +158,11 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
 
       const json = JSON.parse(response.text);
 
-      expect(json.races).toBeArray();
+      const races: AdminRaceWithRunnerCount[] = json.races;
 
-      for (const race of json.races) {
+      expect(races).toBeArray();
+
+      for (const race of races) {
         expect(race).toContainAllKeys([
           "id",
           "editionId",
@@ -147,8 +186,71 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
         expect(race.runnerCount).toBeNumber();
       }
 
-      // Test races order and test that private race is present
-      expect(json.races.map((race: AdminRace) => race.id)).toEqual([1, 4, 3, 2, 5]);
+      // Test that private race is present
+      expect(races.map((race: AdminRace) => race.id).includes(5)).toBe(true);
+    });
+
+    describe("Get edition race list (GET /admin/editions/{id}/races)", async () => {
+      it("Try to get races of a non-existing edition", async () => {
+        const response = await request(app.getHttpServer())
+          .get("/admin/editions/11/races")
+          .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
+          .expect(HttpStatus.NOT_FOUND);
+
+        const json = JSON.parse(response.text);
+
+        expect(json).toEqual(notFoundBody(ERROR_MESSAGE_EDITION_NOT_FOUND));
+      });
+
+      it("Try to get edition races with an invalid edition ID", async () => {
+        const response = await request(app.getHttpServer())
+          .get("/admin/editions/invalid/races")
+          .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
+          .expect(HttpStatus.BAD_REQUEST);
+
+        const json = JSON.parse(response.text);
+
+        expect(json).toEqual(badRequestBody(ERROR_MESSAGE_EDITION_ID_MUST_BE_NUMBER));
+      });
+
+      it("Get edition races", async () => {
+        const response = await request(app.getHttpServer())
+          .get("/admin/editions/6/races")
+          .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
+          .expect(HttpStatus.OK);
+
+        const json = JSON.parse(response.text);
+
+        const races: AdminRaceWithRunnerCount[] = json.races;
+
+        expect(races).toBeArray();
+
+        for (const race of races) {
+          expect(race).toContainAllKeys([
+            "id",
+            "editionId",
+            "name",
+            "startTime",
+            "duration",
+            "initialDistance",
+            "lapDistance",
+            "isPublic",
+            "runnerCount",
+          ]);
+
+          expect(race.id).toBeNumber();
+          expect(race.name).toBeString();
+          expect(race.startTime).toBeDateString();
+          expect(race.startTime).toMatch(ISO8601_DATE_REGEX);
+          expect(race.duration).toBeNumber();
+          expect(race.initialDistance).toBeString();
+          expect(race.lapDistance).toBeString();
+          expect(race.isPublic).toBeBoolean();
+          expect(race.runnerCount).toBeNumber();
+        }
+
+        expect(races.map((race) => race.id)).toEqual([1, 4, 3, 2, 5]);
+      });
     });
 
     it("Get a race (GET /admin/race/{id})", async () => {
@@ -167,7 +269,7 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
 
         // Get non-existing race
         request(app.getHttpServer())
-          .get("/admin/races/10")
+          .get("/admin/races/100")
           .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
           .expect(HttpStatus.NOT_FOUND),
 
@@ -217,10 +319,10 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
       expect(invalidIdJson).toEqual(badRequestBody(ERROR_MESSAGE_RACE_ID_MUST_BE_NUMBER));
     });
 
-    describe("Edit race order (PUT /admin/races-order)", async () => {
+    describe("Edit race order (PUT /admin/editions/{id}/races-order)", async () => {
       it("Modify race order with all race IDs", async () => {
         const response = await request(app.getHttpServer())
-          .put("/admin/races-order")
+          .put("/admin/editions/6/races-order")
           .send([5, 1, 3, 4, 2])
           .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
           .expect(HttpStatus.NO_CONTENT);
@@ -228,7 +330,7 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
         expect(response.text).toBeEmpty();
 
         const raceListResponse = await request(app.getHttpServer())
-          .get("/admin/races")
+          .get("/admin/editions/6/races")
           .set("Authorization", ADMIN_USER_ACCESS_TOKEN);
 
         const json = JSON.parse(raceListResponse.text);
@@ -240,7 +342,7 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
 
       it("Modify race order with partial race IDs", async () => {
         const response = await request(app.getHttpServer())
-          .put("/admin/races-order")
+          .put("/admin/editions/6/races-order")
           .send([1, 4, 3, 2])
           .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
           .expect(HttpStatus.NO_CONTENT);
@@ -248,7 +350,7 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
         expect(response.text).toBeEmpty();
 
         const raceListResponse = await request(app.getHttpServer())
-          .get("/admin/races")
+          .get("/admin/editions/6/races")
           .set("Authorization", ADMIN_USER_ACCESS_TOKEN);
 
         const json = JSON.parse(raceListResponse.text);
@@ -260,7 +362,7 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
     });
 
     const raceToPost: Omit<AdminRace, "id"> = {
-      editionId: 7,
+      editionId: 6,
       name: "Test e2e race",
       startTime: "2021-02-03T04:05:06.000Z",
       duration: 123456,
@@ -466,7 +568,7 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
         expect(createdRace.runnerCount).toBe(0);
       });
 
-      it("Try to post the same race again", async () => {
+      it("Try to post the same race again in the same edition", async () => {
         const response = await request(app.getHttpServer())
           .post("/admin/races")
           .send(raceToPost)
@@ -478,9 +580,26 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
         expect(json).toEqual(badRequestBody(ERROR_MESSAGE_RACE_NAME_ALREADY_EXISTS));
       });
 
+      it("Post the same race in another edition", async () => {
+        const response = await request(app.getHttpServer())
+          .post("/admin/races")
+          .send({ ...raceToPost, editionId: 5 })
+          .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
+          .expect(HttpStatus.CREATED);
+
+        const json = JSON.parse(response.text);
+
+        const raceId = json.race.id;
+
+        await request(app.getHttpServer())
+          .delete(`/admin/races/${raceId}`)
+          .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
+          .expect(HttpStatus.NO_CONTENT);
+      });
+
       it("Get race list, check order and test that the new race is present", async () => {
         const response = await request(app.getHttpServer())
-          .get("/admin/races")
+          .get("/admin/editions/6/races")
           .set("Authorization", ADMIN_USER_ACCESS_TOKEN);
 
         const json = JSON.parse(response.text);
@@ -620,6 +739,85 @@ describe("Race endpoints (e2e)", { concurrent: false }, () => {
           expect(json.error).toBe("Unprocessable Entity");
           expect(json.statusCode).toBe(HttpStatus.UNPROCESSABLE_ENTITY);
         }
+      });
+
+      describe("Try to change race edition where the new edition contains a race with the same name", async () => {
+        let raceId1: number;
+        let raceId2: number;
+
+        it("Create a race in edition 1", async () => {
+          const response = await request(app.getHttpServer())
+            .post("/admin/races")
+            .send({
+              editionId: 1,
+              name: "Test e2e race",
+              startTime: "2021-01-01T01:01:01.000Z",
+              duration: 111111,
+              initialDistance: "111",
+              lapDistance: "1111",
+              isPublic: true,
+            })
+            .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
+            .expect(HttpStatus.CREATED);
+
+          raceId1 = JSON.parse(response.text).race.id;
+        });
+
+        it("Create a race in edition 2", async () => {
+          const response = await request(app.getHttpServer())
+            .post("/admin/races")
+            .send({
+              editionId: 2,
+              name: "Test e2e race",
+              startTime: "2022-02-02T02:02:02.000Z",
+              duration: 222222,
+              initialDistance: "222",
+              lapDistance: "2222",
+              isPublic: true,
+            })
+            .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
+            .expect(HttpStatus.CREATED);
+
+          raceId2 = JSON.parse(response.text).race.id;
+        });
+
+        it("Try to change race edition from 1 to 2", async () => {
+          const response = await request(app.getHttpServer())
+            .patch(`/admin/races/${raceId1}`)
+            .send({ editionId: 2 })
+            .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
+            .expect(HttpStatus.BAD_REQUEST);
+
+          const json = JSON.parse(response.text);
+
+          expect(json).toEqual(badRequestBody(ERROR_MESSAGE_RACE_NAME_ALREADY_EXISTS));
+        });
+
+        it("Delete race 2", async () => {
+          await request(app.getHttpServer())
+            .delete(`/admin/races/${raceId2}`)
+            .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
+            .expect(HttpStatus.NO_CONTENT);
+        });
+
+        it("Change race edition should work now", async () => {
+          const response = await request(app.getHttpServer())
+            .patch(`/admin/races/${raceId1}`)
+            .send({ editionId: 2 })
+            .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
+            .expect(HttpStatus.OK);
+
+          const json = JSON.parse(response.text);
+
+          expect(json.race.editionId).toBe(2);
+        });
+
+        it("Delete race 1", async () => {
+          await request(app.getHttpServer())
+            .delete(`/admin/races/${raceId1}`)
+            .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
+            .expect(HttpStatus.NO_CONTENT);
+        });
       });
 
       it("Test valid PATCH bodies", async () => {
