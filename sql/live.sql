@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : database
--- Généré le : jeu. 07 nov. 2024 à 21:30
+-- Généré le : sam. 09 nov. 2024 à 09:53
 -- Version du serveur : 10.6.14-MariaDB-1:10.6.14+maria~ubu2004
 -- Version de PHP : 8.2.20
 
@@ -49,7 +49,7 @@ CREATE TABLE `config` (
 --
 
 INSERT INTO `config` (`key`, `value`) VALUES
-('current_edition_id', '7'),
+('current_edition_id', '6'),
 ('disabled_app_message', '<h1>Application désactivée</h1><p>Application désactivée (message de test)</p>'),
 ('import_dag_file_path', 'http://localhost:8081/dag-file.txt'),
 ('is_app_enabled', '1');
@@ -72,13 +72,12 @@ CREATE TABLE `edition` (
 --
 
 INSERT INTO `edition` (`id`, `name`, `order`, `is_public`) VALUES
-(1, '2016 - 1ère édition', 1, 1),
-(2, '2017 - 2ème édition', 2, 1),
-(3, '2018 - 3ème édition', 3, 1),
-(4, '2019 - 4ème édition', 4, 1),
-(5, '2022 - 5ème édition', 5, 1),
-(6, '2023 - 6ème édition', 6, 1),
-(7, '2024 - 7ème édition', 0, 1);
+(1, '2017 - 1ère édition', 5, 1),
+(2, '2018 - 2ème édition', 4, 1),
+(3, '2019 - 3ème édition', 3, 1),
+(4, '2022 - 4ème édition', 2, 1),
+(5, '2023 - 5ème édition', 1, 1),
+(6, '2024 - 6ème édition', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -96,7 +95,7 @@ CREATE TABLE `misc` (
 --
 
 INSERT INTO `misc` (`key`, `value`) VALUES
-('last_update_time', '2024-11-07T21:30:03.703Z');
+('last_update_time', '2024-11-09T09:53:43.452Z');
 
 -- --------------------------------------------------------
 
@@ -14894,11 +14893,22 @@ CREATE TABLE `race` (
 --
 
 INSERT INTO `race` (`id`, `edition_id`, `name`, `start_time`, `duration`, `initial_distance`, `lap_distance`, `order`, `is_public`) VALUES
-(1, 1, '24 Heures', '2024-04-06 07:00:03', 86400, 523.123, 1001.234, 0, 1),
-(2, 1, '12 Heures', '2024-04-06 19:00:03', 43200, 0.000, 1001.234, 3, 1),
-(3, 1, '6 Heures', '2024-04-06 08:00:00', 21600, 0.000, 1001.234, 2, 1),
-(4, 1, '3 Heures', '2024-04-06 11:00:00', 10800, 0.000, 1001.234, 1, 1),
-(5, 1, 'Course privée', '2024-04-06 00:00:00', 86400, 0.000, 1001.234, 4, 0);
+(1, 6, '24 Heures', '2024-04-06 07:00:03', 86400, 523.123, 1001.234, 0, 1),
+(2, 6, '12 Heures', '2024-04-06 19:00:03', 43200, 0.000, 1001.234, 3, 1),
+(3, 6, '6 Heures', '2024-04-06 08:00:00', 21600, 0.000, 1001.234, 2, 1),
+(4, 6, '3 Heures', '2024-04-06 11:00:00', 10800, 0.000, 1001.234, 1, 1),
+(5, 6, 'Course privée', '2024-04-06 00:00:00', 86400, 0.000, 1001.234, 4, 0),
+(6, 1, '24 Heures - solo', '2017-04-08 10:00:00', 86400, 0.000, 0.000, 0, 1),
+(7, 1, '24 Heures - équipes', '2017-04-08 10:00:00', 86400, 0.000, 0.000, 1, 1),
+(8, 2, '24 Heures - solo', '2018-04-07 10:00:00', 86400, 0.000, 0.000, 0, 1),
+(9, 2, '24 Heures - équipes', '2018-04-07 10:00:00', 86400, 0.000, 0.000, 1, 1),
+(10, 3, '24 Heures - solo', '2019-04-06 10:00:00', 86400, 0.000, 0.000, 0, 1),
+(11, 3, '24 Heures - équipes', '2019-04-06 10:00:00', 86400, 0.000, 0.000, 1, 1),
+(12, 4, '24 Heures', '2022-04-02 09:00:00', 86400, 297.000, 1015.540, 0, 1),
+(13, 5, '24 Heures', '2023-04-01 09:00:00', 86400, 560.000, 1058.000, 0, 1),
+(14, 5, '12 Heures', '2023-04-01 21:00:00', 43200, 0.000, 1058.000, 3, 1),
+(15, 5, '6 Heures', '2023-04-01 10:00:00', 21600, 0.000, 1058.000, 2, 1),
+(16, 5, '3 Heures', '2023-04-01 13:00:00', 10800, 0.000, 1058.000, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -15186,7 +15196,7 @@ ALTER TABLE `__drizzle_migrations`
 -- AUTO_INCREMENT pour la table `edition`
 --
 ALTER TABLE `edition`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT pour la table `passage`
@@ -15198,7 +15208,7 @@ ALTER TABLE `passage`
 -- AUTO_INCREMENT pour la table `race`
 --
 ALTER TABLE `race`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT pour la table `user`
