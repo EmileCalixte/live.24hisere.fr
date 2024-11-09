@@ -1,8 +1,9 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { type AdminEditionWithRaceCount } from "@live24hisere/core/types";
+import { type AdminEditionWithRaceCount, type AdminRaceWithRunnerCount } from "@live24hisere/core/types";
 import { deleteAdminEdition, getAdminEdition, patchAdminEdition } from "../../../../services/api/editionService";
+import { getAdminEditionRaces } from "../../../../services/api/raceService";
 import { getEditionDetailsBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../../services/ToastService";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
@@ -10,6 +11,7 @@ import { appContext } from "../../../App";
 import CircularLoader from "../../../ui/CircularLoader";
 import Page from "../../../ui/Page";
 import EditionDetailsForm from "../../../viewParts/admin/editions/EditionDetailsForm";
+import EditionRaces from "../../../viewParts/admin/editions/EditionRaces";
 
 export default function EditionDetailsAdminView(): React.ReactElement {
   const navigate = useNavigate();
@@ -18,7 +20,8 @@ export default function EditionDetailsAdminView(): React.ReactElement {
 
   const { editionId: urlEditionId } = useParams();
 
-  const [edition, setEdition] = React.useState<AdminEditionWithRaceCount | undefined | null>(undefined);
+  const [edition, setEdition] = React.useState<AdminEditionWithRaceCount | null | undefined>(undefined);
+  const [races, setRaces] = React.useState<AdminRaceWithRunnerCount[] | null | undefined>(undefined);
 
   const [editionName, setEditionName] = React.useState("");
   const [isPublic, setIsPublic] = React.useState(false);
@@ -54,9 +57,31 @@ export default function EditionDetailsAdminView(): React.ReactElement {
     setIsPublic(responseJson.edition.isPublic);
   }, [accessToken, urlEditionId]);
 
+  const fetchRaces = React.useCallback(async () => {
+    if (!edition || !accessToken) {
+      return;
+    }
+
+    const result = await getAdminEditionRaces(accessToken, edition.id);
+
+    if (!isApiRequestResultOk(result)) {
+      ToastService.getToastr().error("Impossible de récupérer les courses de l'édition");
+      setRaces(null);
+      return;
+    }
+
+    const responseJson = result.json;
+
+    setRaces(responseJson.races);
+  }, [accessToken, edition]);
+
   React.useEffect(() => {
     void fetchEdition();
   }, [fetchEdition]);
+
+  React.useEffect(() => {
+    void fetchRaces();
+  }, [fetchRaces]);
 
   const onSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
@@ -141,6 +166,8 @@ export default function EditionDetailsAdminView(): React.ReactElement {
                   />
                 </Col>
               </Row>
+
+              <EditionRaces editionId={edition.id} races={races} setRaces={setRaces} />
 
               <Row>
                 <Col>

@@ -1,6 +1,7 @@
 import {
   type ApiRequestResult,
   type DeleteRaceAdminApiRequest,
+  type GetEditionRacesAdminApiRequest,
   type GetRaceAdminApiRequest,
   type GetRaceApiRequest,
   type GetRacesAdminApiRequest,
@@ -21,6 +22,16 @@ export async function getRace(raceId: number | string): Promise<ApiRequestResult
 
 export async function getAdminRaces(accessToken: string): Promise<ApiRequestResult<GetRacesAdminApiRequest>> {
   return await performAuthenticatedApiRequest<GetRacesAdminApiRequest>("/admin/races", accessToken);
+}
+
+export async function getAdminEditionRaces(
+  accessToken: string,
+  editionId: number | string,
+): Promise<ApiRequestResult<GetEditionRacesAdminApiRequest>> {
+  return await performAuthenticatedApiRequest<GetEditionRacesAdminApiRequest>(
+    `/admin/editions/${editionId}/races`,
+    accessToken,
+  );
 }
 
 export async function getAdminRace(
@@ -63,10 +74,11 @@ export async function deleteAdminRace(
 
 export async function putAdminRaceOrder(
   accessToken: string,
+  editionId: number | string,
   raceOrder: PutRaceOrderAdminApiRequest["payload"],
 ): Promise<ApiRequestResult<PutRaceOrderAdminApiRequest>> {
   return await performAuthenticatedApiRequest<PutRaceOrderAdminApiRequest>(
-    "/admin/races-order",
+    `/admin/editions/${editionId}/races-order`,
     accessToken,
     raceOrder,
     {
