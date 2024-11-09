@@ -11,8 +11,8 @@ import {
 } from "@live24hisere/core/types";
 import { performApiRequest, performAuthenticatedApiRequest } from "./apiService";
 
-export async function getRaces(): Promise<ApiRequestResult<GetRacesApiRequest>> {
-  return await performApiRequest<GetRacesApiRequest>("/races");
+export async function getRaces(editionId: number): Promise<ApiRequestResult<GetRacesApiRequest>> {
+  return await performApiRequest<GetRacesApiRequest>(`/races?edition=${editionId}`);
 }
 
 export async function getRace(raceId: number | string): Promise<ApiRequestResult<GetRaceApiRequest>> {

@@ -1,7 +1,7 @@
 import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { type EditionWithRaceCount } from "@live24hisere/core/types";
-import { useIntervalApiRequest } from "../../../hooks/useIntervalApiRequest";
+import { useIntervalSimpleApiRequest } from "../../../hooks/useIntervalApiRequest";
 import { useSelectedEdition } from "../../../hooks/useSelectedEdition";
 import { getEditions } from "../../../services/api/editionService";
 import CircularLoader from "../../ui/CircularLoader";
@@ -18,7 +18,7 @@ export const publicContext = React.createContext<PublicContext>({
 });
 
 export default function Public(): React.ReactElement {
-  const editions = useIntervalApiRequest(getEditions).json?.editions;
+  const editions = useIntervalSimpleApiRequest(getEditions).json?.editions;
 
   const { selectedEdition, setSelectedEditionId } = useSelectedEdition(editions);
 

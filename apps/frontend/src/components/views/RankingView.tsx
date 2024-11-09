@@ -16,7 +16,7 @@ import { RankingTimeMode } from "../../constants/rankingTimeMode";
 import { SearchParam } from "../../constants/searchParams";
 import "../../css/print-ranking-table.css";
 import { useRankingTimeQueryString } from "../../hooks/queryString/useRankingTimeQueryString";
-import { useIntervalApiRequest } from "../../hooks/useIntervalApiRequest";
+import { useIntervalApiRequest, useIntervalSimpleApiRequest } from "../../hooks/useIntervalApiRequest";
 import { useRanking } from "../../hooks/useRanking";
 import { useWindowDimensions } from "../../hooks/useWindowDimensions";
 import { parseAsCategory } from "../../queryStringParsers/parseAsCategory";
@@ -44,7 +44,15 @@ export default function RankingView(): React.ReactElement {
 
   const { width: windowWidth } = useWindowDimensions();
 
-  const races = useIntervalApiRequest(getRaces).json?.races;
+  const racesRequestInput = React.useMemo(() => {
+    if (selectedEdition) {
+      return [getRaces, selectedEdition.id] as const;
+    }
+
+    return undefined;
+  }, [selectedEdition]);
+
+  const races = useIntervalApiRequest(racesRequestInput).json?.races;
 
   const selectedRace = React.useMemo<RaceWithRunnerCount | null>(() => {
     return races?.find((race) => race.id === selectedRaceId) ?? null;
@@ -71,7 +79,7 @@ export default function RankingView(): React.ReactElement {
     return async () => await getRaceRunners(selectedRace.id);
   }, [selectedRace]);
 
-  const runners = useIntervalApiRequest(fetchRunners).json?.runners;
+  const runners = useIntervalSimpleApiRequest(fetchRunners).json?.runners;
 
   const processedRunners = React.useMemo<
     Array<RunnerWithProcessedPassages & RunnerWithProcessedData> | undefined

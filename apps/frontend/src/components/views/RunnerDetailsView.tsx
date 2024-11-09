@@ -10,7 +10,7 @@ import {
   type RunnerWithProcessedPassages,
 } from "@live24hisere/core/types";
 import { SearchParam } from "../../constants/searchParams";
-import { useIntervalApiRequest } from "../../hooks/useIntervalApiRequest";
+import { useIntervalSimpleApiRequest } from "../../hooks/useIntervalApiRequest";
 import { useRanking } from "../../hooks/useRanking";
 import { parseAsEnum } from "../../queryStringParsers/parseAsEnum";
 import { getRace } from "../../services/api/raceService";
@@ -48,7 +48,7 @@ export default function RunnerDetailsView(): React.ReactElement {
     parseAsEnum([Tab.Stats, Tab.Laps]).withDefault(Tab.Stats),
   );
 
-  const runners = useIntervalApiRequest(getRunners).json?.runners;
+  const runners = useIntervalSimpleApiRequest(getRunners).json?.runners;
 
   const raceId: number | undefined = React.useMemo(() => {
     if (runnerId === undefined) {
@@ -66,7 +66,7 @@ export default function RunnerDetailsView(): React.ReactElement {
     return async () => await getRace(raceId);
   }, [raceId]);
 
-  const race = useIntervalApiRequest(fetchRace).json?.race;
+  const race = useIntervalSimpleApiRequest(fetchRace).json?.race;
 
   const fetchRaceRunners = React.useMemo(() => {
     if (raceId === undefined) {
@@ -76,7 +76,7 @@ export default function RunnerDetailsView(): React.ReactElement {
     return async () => await getRaceRunners(raceId);
   }, [raceId]);
 
-  const raceRunners = useIntervalApiRequest(fetchRaceRunners).json?.runners;
+  const raceRunners = useIntervalSimpleApiRequest(fetchRaceRunners).json?.runners;
 
   const processedRaceRunners = React.useMemo<
     Array<RunnerWithProcessedPassages & RunnerWithProcessedHours & RunnerWithProcessedData> | undefined
