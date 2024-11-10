@@ -1,10 +1,10 @@
-import { type PublicEdition, type Runner } from "@live24hisere/core/types";
+import { type PublicEdition, type PublicRace, type Runner } from "@live24hisere/core/types";
 import Breadcrumbs from "../../components/ui/breadcrumbs/Breadcrumbs";
 import Crumb, { type CrumbProps } from "../../components/ui/breadcrumbs/Crumb";
 import CircularLoader from "../../components/ui/CircularLoader";
 import { type ComponentElement } from "../../types/utils/react";
 
-type Toto = CrumbProps | "LOADER";
+type BreadcrumbsItem = CrumbProps | "LOADER";
 
 type BreadcrumbsElement = ComponentElement<typeof Breadcrumbs>;
 
@@ -36,6 +36,21 @@ export function getImportRunnersCsvBreadcrumbs(): BreadcrumbsElement {
   return getBreadcrumbs([...getRunnersCrumbs(true), { label: "Import via fichier CSV" }]);
 }
 
+export function getRacesBreadcrumbs(): BreadcrumbsElement {
+  return getBreadcrumbs(getRacesCrumbs());
+}
+
+export function getRaceCreateBreadcrumbs(): BreadcrumbsElement {
+  return getBreadcrumbs([...getRacesCrumbs(true), { label: "Créer une course" }]);
+}
+
+export function getRaceDetailsBreadcrumbs(
+  edition: PublicEdition | undefined,
+  race: PublicRace | undefined,
+): BreadcrumbsElement {
+  return getBreadcrumbs(getRaceCrumbs(edition, race));
+}
+
 export function getRunnersBreadcrumbs(): BreadcrumbsElement {
   return getBreadcrumbs(getRunnersCrumbs());
 }
@@ -62,8 +77,8 @@ function getEditionsCrumbs(clickable: boolean = false): CrumbProps[] {
   return [getAdminCrumb(), editionsCrumb];
 }
 
-function getEditionCrumbs(edition: PublicEdition | undefined, clickable: boolean = false): Toto[] {
-  let editionCrumb: Toto;
+function getEditionCrumbs(edition: PublicEdition | undefined, clickable: boolean = false): BreadcrumbsItem[] {
+  let editionCrumb: BreadcrumbsItem;
 
   if (!edition) {
     editionCrumb = "LOADER";
@@ -78,6 +93,36 @@ function getEditionCrumbs(edition: PublicEdition | undefined, clickable: boolean
   return [...getEditionsCrumbs(true), editionCrumb];
 }
 
+function getRacesCrumbs(clickable: boolean = false): CrumbProps[] {
+  const racesCrumb: CrumbProps = { label: "Courses" };
+
+  if (clickable) {
+    racesCrumb.url = "/admin/races";
+  }
+
+  return [getAdminCrumb(), racesCrumb];
+}
+
+function getRaceCrumbs(
+  edition: PublicEdition | undefined,
+  race: PublicRace | undefined,
+  clickable: boolean = false,
+): BreadcrumbsItem[] {
+  let raceCrumb: BreadcrumbsItem;
+
+  if (!race) {
+    raceCrumb = "LOADER";
+  } else {
+    raceCrumb = { label: race.name };
+
+    if (clickable) {
+      raceCrumb.url = `/admin/races/${race.id}`;
+    }
+  }
+
+  return [...getEditionCrumbs(edition, true), raceCrumb];
+}
+
 function getRunnersCrumbs(clickable: boolean = false): CrumbProps[] {
   const runnersCrumb: CrumbProps = { label: "Coureurs" };
 
@@ -88,8 +133,8 @@ function getRunnersCrumbs(clickable: boolean = false): CrumbProps[] {
   return [getAdminCrumb(), runnersCrumb];
 }
 
-function getRunnerCrumbs(runner: Runner | undefined): Toto[] {
-  let runnerCrumb: Toto;
+function getRunnerCrumbs(runner: Runner | undefined): BreadcrumbsItem[] {
+  let runnerCrumb: BreadcrumbsItem;
 
   if (!runner) {
     runnerCrumb = "LOADER";
@@ -100,7 +145,7 @@ function getRunnerCrumbs(runner: Runner | undefined): Toto[] {
   return [...getRunnersCrumbs(true), runnerCrumb];
 }
 
-function getBreadcrumbs(data: Toto[]): BreadcrumbsElement {
+function getBreadcrumbs(data: BreadcrumbsItem[]): BreadcrumbsElement {
   return (
     <Breadcrumbs>
       {data.map((crumbData, index) => {

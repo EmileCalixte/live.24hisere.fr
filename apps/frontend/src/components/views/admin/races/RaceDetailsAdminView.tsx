@@ -1,14 +1,15 @@
-import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { type AdminRaceWithRunnerCount } from "@live24hisere/core/types";
+import { type AdminEditionWithRaceCount, type AdminRaceWithRunnerCount } from "@live24hisere/core/types";
+import { getAdminEditions } from "../../../../services/api/editionService";
 import { deleteAdminRace, getAdminRace, patchAdminRace } from "../../../../services/api/raceService";
+import { getRaceDetailsBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../../services/ToastService";
+import { type SelectOption } from "../../../../types/Forms";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { formatDateForApi } from "../../../../utils/utils";
 import { appContext } from "../../../App";
-import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
-import Crumb from "../../../ui/breadcrumbs/Crumb";
 import CircularLoader from "../../../ui/CircularLoader";
 import Page from "../../../ui/Page";
 import RaceDetailsForm from "../../../viewParts/admin/races/RaceDetailsForm";
@@ -16,27 +17,49 @@ import RaceDetailsForm from "../../../viewParts/admin/races/RaceDetailsForm";
 export default function RaceDetailsAdminView(): React.ReactElement {
   const navigate = useNavigate();
 
-  const { accessToken } = useContext(appContext).user;
+  const { accessToken } = React.useContext(appContext).user;
 
   const { raceId: urlRaceId } = useParams();
 
-  const [race, setRace] = useState<AdminRaceWithRunnerCount | undefined | null>(undefined);
+  const [race, setRace] = React.useState<AdminRaceWithRunnerCount | undefined | null>(undefined);
+  const [editions, setEditions] = React.useState<AdminEditionWithRaceCount[] | false>(false);
 
-  const [raceName, setRaceName] = useState("");
-  const [initialDistance, setInitialDistance] = useState<number | string>(0);
-  const [lapDistance, setLapDistance] = useState<number | string>(0);
-  const [startTime, setStartTime] = useState(new Date(0));
-  const [duration, setDuration] = useState(0);
-  const [isPublic, setIsPublic] = useState(false);
+  const [raceEditionId, setRaceEditionId] = React.useState(0);
+  const [raceName, setRaceName] = React.useState("");
+  const [initialDistance, setInitialDistance] = React.useState<number | string>(0);
+  const [lapDistance, setLapDistance] = React.useState<number | string>(0);
+  const [startTime, setStartTime] = React.useState(new Date(0));
+  const [duration, setDuration] = React.useState(0);
+  const [isPublic, setIsPublic] = React.useState(false);
 
-  const [isSaving, setIsSaving] = useState(false);
+  const [isSaving, setIsSaving] = React.useState(false);
 
-  const unsavedChanges = useMemo(() => {
+  const editionOptions = React.useMemo<Array<SelectOption<number>>>(() => {
+    if (!editions) {
+      return [];
+    }
+
+    return editions.map((edition) => ({
+      label: edition.name,
+      value: edition.id,
+    }));
+  }, [editions]);
+
+  const edition = React.useMemo(() => {
+    if (!race || !editions) {
+      return undefined;
+    }
+
+    return editions.find((edition) => edition.id === race.editionId);
+  }, [race, editions]);
+
+  const unsavedChanges = React.useMemo(() => {
     if (!race) {
       return false;
     }
 
     return [
+      raceEditionId === race.editionId,
       raceName === race.name,
       initialDistance.toString() === race.initialDistance.toString(),
       lapDistance.toString() === race.lapDistance.toString(),
@@ -44,9 +67,9 @@ export default function RaceDetailsAdminView(): React.ReactElement {
       duration === race.duration * 1000,
       isPublic === race.isPublic,
     ].includes(false);
-  }, [race, raceName, initialDistance, lapDistance, startTime, duration, isPublic]);
+  }, [race, raceEditionId, raceName, initialDistance, lapDistance, startTime, duration, isPublic]);
 
-  const fetchRace = useCallback(async () => {
+  const fetchRace = React.useCallback(async () => {
     if (!urlRaceId || !accessToken) {
       return;
     }
@@ -63,6 +86,7 @@ export default function RaceDetailsAdminView(): React.ReactElement {
 
     setRace(responseJson.race);
 
+    setRaceEditionId(responseJson.race.editionId);
     setRaceName(responseJson.race.name);
     setInitialDistance(responseJson.race.initialDistance);
     setLapDistance(responseJson.race.lapDistance);
@@ -71,9 +95,30 @@ export default function RaceDetailsAdminView(): React.ReactElement {
     setIsPublic(responseJson.race.isPublic);
   }, [accessToken, urlRaceId]);
 
-  useEffect(() => {
+  const fetchEditions = React.useCallback(async () => {
+    if (!accessToken) {
+      return;
+    }
+
+    const result = await getAdminEditions(accessToken);
+
+    if (!isApiRequestResultOk(result)) {
+      ToastService.getToastr().error("Impossible de récupérer la liste des éditions");
+      return;
+    }
+
+    const responseJson = result.json;
+
+    setEditions(responseJson.editions);
+  }, [accessToken]);
+
+  React.useEffect(() => {
     void fetchRace();
   }, [fetchRace]);
+
+  React.useEffect(() => {
+    void fetchEditions();
+  }, [fetchEditions]);
 
   const onSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
@@ -85,6 +130,7 @@ export default function RaceDetailsAdminView(): React.ReactElement {
     setIsSaving(true);
 
     const body = {
+      editionId: raceEditionId,
       name: raceName,
       isPublic,
       startTime: formatDateForApi(startTime),
@@ -107,7 +153,7 @@ export default function RaceDetailsAdminView(): React.ReactElement {
     setIsSaving(false);
   };
 
-  const deleteRace = useCallback(async () => {
+  const deleteRace = React.useCallback(async () => {
     if (!race || !accessToken) {
       return;
     }
@@ -138,19 +184,7 @@ export default function RaceDetailsAdminView(): React.ReactElement {
   return (
     <Page id="admin-race-details" title={race === undefined ? "Chargement" : `Détails de la course ${race.name}`}>
       <Row>
-        <Col>
-          <Breadcrumbs>
-            <Crumb url="/admin" label="Administration" />
-            <Crumb url="/admin/races" label="Courses" />
-            {(() => {
-              if (race === undefined) {
-                return <CircularLoader />;
-              }
-
-              return <Crumb label={race.name} />;
-            })()}
-          </Breadcrumbs>
-        </Col>
+        <Col>{getRaceDetailsBreadcrumbs(edition, race)}</Col>
       </Row>
 
       <Row>
@@ -163,6 +197,9 @@ export default function RaceDetailsAdminView(): React.ReactElement {
                 <Col>
                   <RaceDetailsForm
                     onSubmit={onSubmit}
+                    editionOptions={editionOptions}
+                    editionId={raceEditionId}
+                    setEditionId={setRaceEditionId}
                     name={raceName}
                     setName={setRaceName}
                     initialDistance={initialDistance}

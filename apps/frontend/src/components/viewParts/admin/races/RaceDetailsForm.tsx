@@ -1,11 +1,16 @@
 import React, { useMemo } from "react";
+import { type SelectOption } from "../../../../types/Forms";
 import { getDateStringFromDate, getTimeStringFromDate } from "../../../../utils/utils";
 import { Checkbox } from "../../../ui/forms/Checkbox";
 import DurationInputs from "../../../ui/forms/DurationInputs";
 import { Input } from "../../../ui/forms/Input";
+import Select from "../../../ui/forms/Select";
 
 interface RaceDetailsFormProps {
   onSubmit: (e: React.FormEvent) => Promise<void>;
+  editionOptions: Array<SelectOption<number>>;
+  editionId: number;
+  setEditionId: (editionId: number) => void;
   name: string;
   setName: (name: string) => void;
   initialDistance: number | string;
@@ -23,6 +28,9 @@ interface RaceDetailsFormProps {
 
 export default function RaceDetailsForm({
   onSubmit,
+  editionOptions,
+  editionId,
+  setEditionId,
   name,
   setName,
   initialDistance,
@@ -54,6 +62,10 @@ export default function RaceDetailsForm({
     return getTimeStringFromDate(startTime);
   }, [startTime]);
 
+  const onEditionSelect = (e: React.ChangeEvent<HTMLSelectElement>): void => {
+    setEditionId(parseInt(e.target.value));
+  };
+
   const onStartTimeDateChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     if (!e.target.value) {
       return;
@@ -76,8 +88,17 @@ export default function RaceDetailsForm({
         void onSubmit(e);
       }}
     >
+      <Select
+        label="Édition"
+        options={editionOptions}
+        value={editionId}
+        onChange={onEditionSelect}
+        placeholderLabel="Sélectionnez une édition"
+      />
+
       <Input
         label="Nom"
+        className="mt-3"
         maxLength={50}
         required
         name="name"

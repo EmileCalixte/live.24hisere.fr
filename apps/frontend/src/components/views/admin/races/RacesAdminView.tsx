@@ -1,34 +1,27 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React from "react";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { type AdminRaceWithRunnerCount } from "@live24hisere/core/types";
-import { getAdminRaces, putAdminRaceOrder } from "../../../../services/api/raceService";
+import { type AdminEditionWithRaceCount, type AdminRaceWithRunnerCount } from "@live24hisere/core/types";
+import { getAdminEditions } from "../../../../services/api/editionService";
+import { getAdminRaces } from "../../../../services/api/raceService";
+import { getRacesBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../../services/ToastService";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
+import { formatDateAsString, formatMsAsDuration } from "../../../../utils/utils";
 import { appContext } from "../../../App";
-import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
-import Crumb from "../../../ui/breadcrumbs/Crumb";
-import SortListButtons from "../../../ui/buttons/SortListButtons";
 import CircularLoader from "../../../ui/CircularLoader";
-import SortList from "../../../ui/lists/SortList";
 import Page from "../../../ui/Page";
-import RaceListItem from "../../../viewParts/admin/races/RaceListItem";
 
 export default function RacesAdminView(): React.ReactElement {
-  const { accessToken } = useContext(appContext).user;
+  const { accessToken } = React.useContext(appContext).user;
 
   // false = not fetched yet
-  const [races, setRaces] = useState<AdminRaceWithRunnerCount[] | false>(false);
+  const [races, setRaces] = React.useState<AdminRaceWithRunnerCount[] | false>(false);
+  const [editions, setEditions] = React.useState<AdminEditionWithRaceCount[] | false>(false);
 
-  // Used when user is reordering the list
-  const [sortingRaces, setSortingRaces] = useState<AdminRaceWithRunnerCount[] | false>(false);
-  const [isSorting, setIsSorting] = useState(false);
-
-  const [isSaving, setIsSaving] = useState(false);
-
-  const fetchRaces = useCallback(async () => {
+  const fetchRaces = React.useCallback(async () => {
     if (!accessToken) {
       return;
     }
@@ -41,55 +34,35 @@ export default function RacesAdminView(): React.ReactElement {
     }
 
     setRaces(result.json.races);
-    setSortingRaces(result.json.races);
   }, [accessToken]);
 
-  const saveSort = useCallback(async () => {
-    if (!accessToken || !sortingRaces) {
+  const fetchEditions = React.useCallback(async () => {
+    if (!accessToken) {
       return;
     }
 
-    setIsSaving(true);
-
-    const raceIds = sortingRaces.map((race) => race.id);
-
-    const result = await putAdminRaceOrder(accessToken, raceIds);
+    const result = await getAdminEditions(accessToken);
 
     if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de sauvegarder l'ordre des courses");
-      setIsSaving(false);
+      ToastService.getToastr().error("Impossible de récupérer la liste des éditions");
       return;
     }
 
-    setRaces([...sortingRaces]);
+    setEditions(result.json.editions);
+  }, [accessToken]);
 
-    ToastService.getToastr().success("L'ordre des courses a été modifié");
-    setIsSorting(false);
-    setIsSaving(false);
-  }, [accessToken, sortingRaces]);
-
-  useEffect(() => {
+  React.useEffect(() => {
     void fetchRaces();
   }, [fetchRaces]);
 
-  useEffect(() => {
-    if (races === false) {
-      return;
-    }
-
-    // When user enables/disables sorting mode, reset sortingRaces array with current races order
-    setSortingRaces([...races]);
-  }, [isSorting, races]);
+  React.useEffect(() => {
+    void fetchEditions();
+  }, [fetchEditions]);
 
   return (
     <Page id="admin-races" title="Courses">
       <Row>
-        <Col>
-          <Breadcrumbs>
-            <Crumb url="/admin" label="Administration" />
-            <Crumb label="Courses" />
-          </Breadcrumbs>
-        </Col>
+        <Col>{getRacesBreadcrumbs()}</Col>
       </Row>
 
       {races === false && <CircularLoader />}
@@ -110,38 +83,63 @@ export default function RacesAdminView(): React.ReactElement {
               {races.length === 0 && <p>Aucune course</p>}
 
               {races.length > 0 && (
-                <>
-                  <SortListButtons
-                    isSorting={isSorting}
-                    setIsSorting={setIsSorting}
-                    saveSort={() => {
-                      void saveSort();
-                    }}
-                    disabled={isSaving}
-                    className="mt-4"
-                  />
+                <table className="table mt-3">
+                  <thead>
+                    <tr>
+                      <th>Nom</th>
+                      <th>Édition</th>
+                      <th>Nb. coureurs</th>
+                      <th>Publique</th>
+                      <th>Date</th>
+                      <th>Durée</th>
+                      <th>Distance</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {races.map((race) => {
+                      const edition = editions ? editions.find((edition) => edition.id === race.editionId) : undefined;
 
-                  <Row>
-                    <Col>
-                      <SortList
-                        items={sortingRaces || []}
-                        keyFunction={(race) => race.id}
-                        setItems={setSortingRaces}
-                        isSorting={isSorting}
-                        className="admin-list"
-                      >
-                        {(race, isDragged, isDraggedOver) => (
-                          <RaceListItem
-                            race={race}
-                            isSorting={isSorting}
-                            isDragged={isDragged}
-                            isDraggedOver={isDraggedOver}
-                          />
-                        )}
-                      </SortList>
-                    </Col>
-                  </Row>
-                </>
+                      const lapDistance = parseFloat(race.lapDistance);
+                      const initialDistance = parseFloat(race.initialDistance);
+
+                      return (
+                        <tr key={race.id}>
+                          <td>
+                            <Link to={`/admin/races/${race.id}`}>{race.name}</Link>
+                          </td>
+                          <td>
+                            {edition ? (
+                              <Link to={`/admin/editions/${edition.id}`}>{edition.name}</Link>
+                            ) : (
+                              <CircularLoader />
+                            )}
+                          </td>
+                          <td>{race.runnerCount}</td>
+                          <td>
+                            {edition ? (
+                              edition.isPublic ? (
+                                race.isPublic ? (
+                                  "Oui"
+                                ) : (
+                                  "Non"
+                                )
+                              ) : (
+                                "Non (édition privée)"
+                              )
+                            ) : (
+                              <CircularLoader />
+                            )}
+                          </td>
+                          <td>{formatDateAsString(new Date(race.startTime))}</td>
+                          <td>{formatMsAsDuration(race.duration * 1000)}</td>
+                          <td>
+                            {lapDistance} m{!!initialDistance && <> (dist. initiale {initialDistance} m)</>}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
               )}
             </Col>
           </Row>
