@@ -1,7 +1,7 @@
 import { HttpStatus, INestApplication } from "@nestjs/common";
 import request from "supertest";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { Runner } from "@live24hisere/core/types";
+import { RaceRunner } from "@live24hisere/core/types";
 import { objectUtils } from "@live24hisere/utils";
 import { initApp } from "./_init";
 import { ADMIN_USER_ACCESS_TOKEN } from "./constants/accessToken";
@@ -221,7 +221,7 @@ describe("Runner endpoints (e2e)", { concurrent: false }, () => {
       expect(JSON.parse(invalidIdResponse.text)).toEqual(badRequestBody(ERROR_MESSAGE_RUNNER_ID_MUST_BE_NUMBER));
     });
 
-    const runnersToPost: Array<Omit<Runner, "birthYear"> & { birthYear: number | string }> = [
+    const runnersToPost: Array<Omit<RaceRunner, "birthYear"> & { birthYear: number | string }> = [
       {
         id: 1234567,
         firstname: "e2e firstname 1",

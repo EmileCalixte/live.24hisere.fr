@@ -1,11 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { type RaceDict, type Runner } from "@live24hisere/core/types";
+import { type RaceDict, type RaceRunner } from "@live24hisere/core/types";
 import { categoryUtils } from "@live24hisere/utils";
 import CircularLoader from "../../../ui/CircularLoader";
 
 interface RunnersTableProps {
-  runners: Runner[];
+  runners: RaceRunner[];
   races: RaceDict | false;
 }
 

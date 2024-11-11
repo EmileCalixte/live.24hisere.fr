@@ -4,7 +4,7 @@ import {
   type AdminPassageWithRunnerId,
   type ProcessedPassage,
   type RaceDict,
-  type Runner,
+  type RaceRunner,
 } from "@live24hisere/core/types";
 import { getAdminPassages } from "../../../services/api/passageService";
 import { getAdminRaces } from "../../../services/api/raceService";
@@ -42,7 +42,7 @@ export default function FastestLapsAdminView(): React.ReactElement {
   const [races, setRaces] = React.useState<RaceDict | false>(false);
 
   // false = not fetched yet
-  const [runners, setRunners] = React.useState<Runner[] | false>(false);
+  const [runners, setRunners] = React.useState<RaceRunner[] | false>(false);
 
   const [displayOnlyOneFastestLapPerRunner, setDisplayOnlyOneFastestLapPerRunner] = React.useState(false);
   const [selectedRaceId, setSelectedRaceId] = React.useState<number | "ALL">("ALL");
@@ -348,7 +348,7 @@ export default function FastestLapsAdminView(): React.ReactElement {
 
           <Row>
             <Col>
-              <FastestLapsTable passages={passagesInPage} races={races as RaceDict} runners={runners as Runner[]} />
+              <FastestLapsTable passages={passagesInPage} races={races as RaceDict} runners={runners as RaceRunner[]} />
             </Col>
           </Row>
 

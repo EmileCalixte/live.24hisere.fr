@@ -2,9 +2,6 @@ import { type Gender } from "./Gender";
 import { type ProcessedPassage, type PublicPassage } from "./Passage";
 import { type PublicRace } from "./Race";
 
-/**
- * An object representing a runner
- */
 export interface Runner {
   /**
    * The runner ID
@@ -30,23 +27,33 @@ export interface Runner {
    * The birth year of the runner
    */
   birthYear: string;
+}
+
+/**
+ * An object representing a runner
+ */
+export interface RaceRunner extends Runner {
+  /**
+   * The ID of the race which the runner takes part
+   */
+  raceId: number;
+
+  /**
+   * The runner's bib number in the race
+   */
+  bibNumber: number;
 
   /**
    * Whether the rider has stopped competing or not
    */
   stopped: boolean;
-
-  /**
-   * The ID of the race which the runner takes part
-   */
-  raceId: number;
 }
 
 /**
  * An object representing a runner with his passages
  */
 export type RunnerWithPassages<
-  TRunner extends Runner = Runner,
+  TRunner extends RaceRunner = RaceRunner,
   TPassage extends PublicPassage = PublicPassage,
 > = TRunner & {
   /**
@@ -56,16 +63,16 @@ export type RunnerWithPassages<
 };
 
 export type RunnerWithProcessedPassages<
-  TRunner extends Runner = Runner,
+  TRunner extends RaceRunner = RaceRunner,
   TPassage extends ProcessedPassage = ProcessedPassage,
 > = RunnerWithPassages<TRunner, TPassage>;
 
-export type RunnerWithRace<TRunner extends Runner = Runner, TRace extends PublicRace = PublicRace> = TRunner & {
+export type RunnerWithRace<TRunner extends RaceRunner = RaceRunner, TRace extends PublicRace = PublicRace> = TRunner & {
   race: TRace;
 };
 
 export type RunnerWithRaceAndPassages<
-  TRunner extends Runner = Runner,
+  TRunner extends RaceRunner = RaceRunner,
   TRace extends PublicRace = PublicRace,
   TPassage extends PublicPassage = PublicPassage,
 > = RunnerWithRace<TRunner, TRace> & RunnerWithPassages<TRunner, TPassage>;
@@ -102,7 +109,7 @@ export interface RunnerProcessedData {
   };
 }
 
-export type RunnerWithProcessedData<TRunner extends Runner = Runner> = TRunner & RunnerProcessedData;
+export type RunnerWithProcessedData<TRunner extends RaceRunner = RaceRunner> = TRunner & RunnerProcessedData;
 
 /**
  * An object containing the information of a runner's race hour
@@ -147,7 +154,7 @@ export interface RunnerProcessedHour {
 /**
  * An object representing a runner with the information of his race hours
  */
-export type RunnerWithProcessedHours<TRunner extends Runner = Runner> = TRunner & {
+export type RunnerWithProcessedHours<TRunner extends RaceRunner = RaceRunner> = TRunner & {
   /**
    * The race hours of the runner
    */

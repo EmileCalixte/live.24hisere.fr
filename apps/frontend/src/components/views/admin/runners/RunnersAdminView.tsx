@@ -3,7 +3,7 @@ import { faFileCsv, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { type AdminRace, type RaceDict, type Runner } from "@live24hisere/core/types";
+import { type AdminRace, type RaceDict, type RaceRunner } from "@live24hisere/core/types";
 import { getAdminRaces } from "../../../../services/api/raceService";
 import { getAdminRunners } from "../../../../services/api/runnerService";
 import { getRunnersBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
@@ -21,7 +21,7 @@ export default function RunnersAdminView(): React.ReactElement {
   const { accessToken } = useContext(appContext).user;
 
   // false = not fetched yet
-  const [runners, setRunners] = useState<Runner[] | false>(false);
+  const [runners, setRunners] = useState<RaceRunner[] | false>(false);
 
   // false = not fetched yet
   const [races, setRaces] = useState<RaceDict<AdminRace> | false>(false);
@@ -67,7 +67,7 @@ export default function RunnersAdminView(): React.ReactElement {
     setRunners(result.json.runners);
   }, [accessToken]);
 
-  const displayedRunners = useMemo<Runner[] | false>(() => {
+  const displayedRunners = useMemo<RaceRunner[] | false>(() => {
     if (!runners) {
       return false;
     }

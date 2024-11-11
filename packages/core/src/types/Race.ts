@@ -1,4 +1,4 @@
-import { type Runner } from "./Runner";
+import { type RaceRunner } from "./Runner";
 import { type DateISOString } from "./utils/dates";
 
 /**
@@ -58,7 +58,7 @@ export type AdminRaceWithOrder<TRace extends AdminRace = AdminRace> = TRace & {
   order: number;
 };
 
-export type RaceWithRunners<TRace extends PublicRace = PublicRace, TRunner extends Runner = Runner> = TRace & {
+export type RaceWithRunners<TRace extends PublicRace = PublicRace, TRunner extends RaceRunner = RaceRunner> = TRace & {
   runners: TRunner[];
 };
 

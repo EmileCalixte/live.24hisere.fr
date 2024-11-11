@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { eq, getTableColumns } from "drizzle-orm";
-import { AdminPassage, Runner, RunnerWithPassages } from "@live24hisere/core/types";
+import { AdminPassage, RaceRunner, RunnerWithPassages } from "@live24hisere/core/types";
 import { objectUtils } from "@live24hisere/utils";
 import { TABLE_PASSAGE, TABLE_RACE, TABLE_RUNNER } from "../../../../drizzle/schema";
 import { DrizzleService } from "../drizzle.service";
@@ -16,17 +16,17 @@ export class RunnerService extends EntityService {
     super(drizzleService);
   }
 
-  async getRunnerById(runnerId: number): Promise<Runner | null> {
+  async getRunnerById(runnerId: number): Promise<RaceRunner | null> {
     const runners = await this.db.select().from(TABLE_RUNNER).where(eq(TABLE_RUNNER.id, runnerId));
 
     return this.getUniqueResult(runners);
   }
 
-  async getAdminRunners(): Promise<Runner[]> {
+  async getAdminRunners(): Promise<RaceRunner[]> {
     return await this.db.query.TABLE_RUNNER.findMany();
   }
 
-  async getAdminRunnerById(runnerId: number): Promise<RunnerWithPassages<Runner, AdminPassage> | null> {
+  async getAdminRunnerById(runnerId: number): Promise<RunnerWithPassages<RaceRunner, AdminPassage> | null> {
     const [runners, passages] = await Promise.all([
       this.db.select().from(TABLE_RUNNER).where(eq(TABLE_RUNNER.id, runnerId)),
       this.passageService.getAdminPassagesByRunnerId(runnerId),
@@ -44,7 +44,7 @@ export class RunnerService extends EntityService {
     };
   }
 
-  async getPublicRunners(): Promise<Runner[]> {
+  async getPublicRunners(): Promise<RaceRunner[]> {
     return await this.db
       .select({ ...getTableColumns(TABLE_RUNNER) })
       .from(TABLE_RUNNER)
@@ -68,7 +68,7 @@ export class RunnerService extends EntityService {
     }));
   }
 
-  async createRunner(runnerData: Runner): Promise<Runner> {
+  async createRunner(runnerData: RaceRunner): Promise<RaceRunner> {
     await this.db.insert(TABLE_RUNNER).values(runnerData).$returningId();
 
     const newRunner = await this.getRunnerById(runnerData.id);
@@ -85,13 +85,13 @@ export class RunnerService extends EntityService {
    * @param data The runners
    * @returns The number of created rows
    */
-  async createRunners(data: Runner[]): Promise<number> {
+  async createRunners(data: RaceRunner[]): Promise<number> {
     const [resultSetHeader] = await this.db.insert(TABLE_RUNNER).values(data);
 
     return resultSetHeader.affectedRows;
   }
 
-  async updateRunner(runnerId: number, newRunnerData: Partial<Runner>): Promise<Runner> {
+  async updateRunner(runnerId: number, newRunnerData: Partial<RaceRunner>): Promise<RaceRunner> {
     // If runner ID is not changed, we can directly update the runner
     if (!newRunnerData.id || newRunnerData.id === runnerId) {
       const [resultSetHeader] = await this.db

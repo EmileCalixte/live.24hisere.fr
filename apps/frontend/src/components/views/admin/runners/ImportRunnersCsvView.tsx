@@ -8,7 +8,7 @@ import {
   type Gender,
   type PostRunnersBulkAdminApiRequest,
   type RaceDict,
-  type Runner,
+  type RaceRunner,
 } from "@live24hisere/core/types";
 import { stringUtils } from "@live24hisere/utils";
 import { GENDER_OPTIONS } from "../../../../constants/forms";
@@ -67,7 +67,7 @@ export default function ImportRunnersCsvView(): React.ReactElement {
   } = React.useContext(appContext);
 
   // false = not fetched yet
-  const [runners, setRunners] = React.useState<Runner[] | false>(false);
+  const [runners, setRunners] = React.useState<RaceRunner[] | false>(false);
 
   // false = not fetched yet
   const [races, setRaces] = React.useState<RaceDict<AdminRace> | false>(false);

@@ -1,12 +1,12 @@
 import { type AdminPassage } from "../Passage";
-import { type Runner, type RunnerWithPassages } from "../Runner";
+import { type RaceRunner, type RunnerWithPassages } from "../Runner";
 import { type ApiRequest } from "./ApiRequest";
 
 export interface GetRunnersApiRequest extends ApiRequest {
   payload: never;
 
   response: {
-    runners: Runner[];
+    runners: RaceRunner[];
   };
 }
 
@@ -22,7 +22,7 @@ export interface GetRunnersAdminApiRequest extends ApiRequest {
   payload: never;
 
   response: {
-    runners: Runner[];
+    runners: RaceRunner[];
   };
 }
 
@@ -30,15 +30,15 @@ export interface GetRunnerAdminApiRequest extends ApiRequest {
   payload: never;
 
   response: {
-    runner: RunnerWithPassages<Runner, AdminPassage>;
+    runner: RunnerWithPassages<RaceRunner, AdminPassage>;
   };
 }
 
 export interface PostRunnerAdminApiRequest extends ApiRequest {
-  payload: Omit<Runner, "birthYear"> & { birthYear: number };
+  payload: Omit<RaceRunner, "birthYear"> & { birthYear: number };
 
   response: {
-    runner: RunnerWithPassages<Runner, AdminPassage>;
+    runner: RunnerWithPassages<RaceRunner, AdminPassage>;
   };
 }
 
@@ -54,7 +54,7 @@ export interface PatchRunnerAdminApiRequest extends ApiRequest {
   payload: Partial<PostRunnerAdminApiRequest["payload"]>;
 
   response: {
-    runner: Runner;
+    runner: RaceRunner;
   };
 }
 

@@ -1,7 +1,7 @@
 import {
   type PassageWithRunnerId,
   type PublicPassage,
-  type Runner,
+  type RaceRunner,
   type RunnerWithPassages,
   type RunnerWithProcessedData,
   type RunnerWithProcessedPassages,
@@ -13,7 +13,7 @@ import { getSortedPassages } from "./passageUtils";
 import { formatMsAsDuration } from "./utils";
 
 export function getRunnersWithPassagesFromRunnersAndPassages<
-  TRunner extends Runner,
+  TRunner extends RaceRunner,
   TPassage extends PassageWithRunnerId,
 >(runners: TRunner[], passages: TPassage[]): Array<RunnerWithPassages<TRunner, TPassage>> {
   /**
@@ -40,7 +40,7 @@ export function getRunnersWithPassagesFromRunnersAndPassages<
   );
 }
 
-export function getRunnerWithPassagesFromRunnerAndPassages<TRunner extends Runner, TPassage extends PublicPassage>(
+export function getRunnerWithPassagesFromRunnerAndPassages<TRunner extends RaceRunner, TPassage extends PublicPassage>(
   runner: TRunner,
   passages: TPassage[],
 ): TRunner & { passages: TPassage[] } {
@@ -159,7 +159,7 @@ export function areRunnersEqual(
  * @param runners
  * @param label an optional callback function to format the label
  */
-export function getRunnersSelectOptions<TRunner extends Runner>(
+export function getRunnersSelectOptions<TRunner extends RaceRunner>(
   runners: TRunner[] | false,
   label?: (runner: TRunner) => string,
 ): SelectOption[] {

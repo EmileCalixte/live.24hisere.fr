@@ -1,4 +1,4 @@
-import { type PublicEdition, type PublicRace, type Runner } from "@live24hisere/core/types";
+import { type PublicEdition, type PublicRace, type RaceRunner } from "@live24hisere/core/types";
 import Breadcrumbs from "../../components/ui/breadcrumbs/Breadcrumbs";
 import Crumb, { type CrumbProps } from "../../components/ui/breadcrumbs/Crumb";
 import CircularLoader from "../../components/ui/CircularLoader";
@@ -59,7 +59,7 @@ export function getRunnerCreateBreadcrumbs(): BreadcrumbsElement {
   return getBreadcrumbs([...getRunnersCrumbs(true), { label: "Créer un coureur" }]);
 }
 
-export function getRunnerDetailsBreadcrumbs(runner: Runner | undefined): BreadcrumbsElement {
+export function getRunnerDetailsBreadcrumbs(runner: RaceRunner | undefined): BreadcrumbsElement {
   return getBreadcrumbs(getRunnerCrumbs(runner));
 }
 
@@ -133,7 +133,7 @@ function getRunnersCrumbs(clickable: boolean = false): CrumbProps[] {
   return [getAdminCrumb(), runnersCrumb];
 }
 
-function getRunnerCrumbs(runner: Runner | undefined): BreadcrumbsItem[] {
+function getRunnerCrumbs(runner: RaceRunner | undefined): BreadcrumbsItem[] {
   let runnerCrumb: BreadcrumbsItem;
 
   if (!runner) {
