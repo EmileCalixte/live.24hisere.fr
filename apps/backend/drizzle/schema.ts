@@ -85,6 +85,7 @@ export const TABLE_RUNNER = mysqlTable(TABLE_NAME_RUNNER, (t) => ({
   lastname: t.varchar({ length: 255 }).notNull(),
   gender: t.varchar({ length: 1, enum: GENDERS }).notNull(),
   birthYear: t.varchar({ length: 4 }).notNull(),
+  isPublic: t.boolean().notNull(),
 }));
 
 export const TABLE_PARTICIPANT = mysqlTable(
