@@ -6,6 +6,7 @@ const TABLE_NAME_ACCESS_TOKEN = "access_token";
 const TABLE_NAME_CONFIG = "config";
 const TABLE_NAME_EDITION = "edition";
 const TABLE_NAME_MISC = "misc";
+const TABLE_NAME_PARTICIPANT = "participant";
 const TABLE_NAME_PASSAGE = "passage";
 const TABLE_NAME_RACE = "race";
 const TABLE_NAME_RUNNER = "runner";
@@ -79,25 +80,41 @@ export const TABLE_RACE = mysqlTable(
 );
 
 export const TABLE_RUNNER = mysqlTable(TABLE_NAME_RUNNER, (t) => ({
-  id: t.int().primaryKey(),
+  id: t.int().primaryKey().autoincrement(),
   firstname: t.varchar({ length: 255 }).notNull(),
   lastname: t.varchar({ length: 255 }).notNull(),
   gender: t.varchar({ length: 1, enum: GENDERS }).notNull(),
   birthYear: t.varchar({ length: 4 }).notNull(),
-  stopped: t.boolean().notNull(),
-  raceId: t
-    .int()
-    .references(() => TABLE_RACE.id)
-    .notNull(),
 }));
+
+export const TABLE_PARTICIPANT = mysqlTable(
+  TABLE_NAME_PARTICIPANT,
+  (t) => ({
+    id: t.int().primaryKey().autoincrement(),
+    raceId: t
+      .int()
+      .references(() => TABLE_RACE.id)
+      .notNull(),
+    runnerId: t
+      .int()
+      .references(() => TABLE_RUNNER.id)
+      .notNull(),
+    bibNumber: t.int().notNull(),
+    stopped: t.boolean().notNull(),
+  }),
+  (t) => ({
+    unique: unique().on(t.raceId, t.runnerId),
+    unique2: unique().on(t.raceId, t.bibNumber),
+  }),
+);
 
 export const TABLE_PASSAGE = mysqlTable(TABLE_NAME_PASSAGE, (t) => ({
   id: t.int().primaryKey().autoincrement(),
   detectionId: t.int().unique(), // Not null if the passage comes from a detection of the timing system
   importTime: date(DEFAULT_DATE_PARAMS), // same
-  runnerId: t
+  participantId: t
     .int()
-    .references(() => TABLE_RUNNER.id)
+    .references(() => TABLE_PARTICIPANT.id)
     .notNull(),
   time: date(DEFAULT_DATE_PARAMS).notNull(),
   isHidden: t.boolean().notNull(),
