@@ -102,8 +102,8 @@ importers:
         specifier: ^0.14.1
         version: 0.14.1
       cron:
-        specifier: ^3.1.7
-        version: 3.1.7
+        specifier: ^3.2.1
+        version: 3.2.1
       drizzle-orm:
         specifier: ^0.36.0
         version: 0.36.0(@types/react@18.3.12)(mysql2@3.11.3)(react@18.3.1)
@@ -2722,6 +2722,9 @@ packages:
   cron@3.1.7:
     resolution: {integrity: sha512-tlBg7ARsAMQLzgwqVxy8AZl/qlTc5nibqYwtNGoCrd+cV+ugI+tvZC1oT/8dFH8W455YrywGykx/KMmAqOr7Jw==}
 
+  cron@3.2.1:
+    resolution: {integrity: sha512-w2n5l49GMmmkBFEsH9FIDhjZ1n1QgTMOCMGuQtOXs5veNiosZmso6bQGuqOJSYAXXrG84WQFVneNk+Yt0Ua9iw==}
+
   cross-spawn@7.0.3:
     resolution: {integrity: sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==}
     engines: {node: '>= 8'}
@@ -4172,6 +4175,10 @@ packages:
 
   luxon@3.4.4:
     resolution: {integrity: sha512-zobTr7akeGHnv7eBOXcRgMeCP6+uyYsczwmeRCauvpvaAltgNyTbLH/+VaEAPUeWBT+1GuNmz4wC/6jtQzbbVA==}
+    engines: {node: '>=12'}
+
+  luxon@3.5.0:
+    resolution: {integrity: sha512-rh+Zjr6DNfUYR3bPwJEnuwDdqMbxZW7LOQfUN4B54+Cl+0o5zaU9RJ6bcidfDtC1cWCZXQ+nvX8bf6bAji37QQ==}
     engines: {node: '>=12'}
 
   lz-string@1.5.0:
@@ -8270,6 +8277,11 @@ snapshots:
       '@types/luxon': 3.4.2
       luxon: 3.4.4
 
+  cron@3.2.1:
+    dependencies:
+      '@types/luxon': 3.4.2
+      luxon: 3.5.0
+
   cross-spawn@7.0.3:
     dependencies:
       path-key: 3.1.1
@@ -10090,6 +10102,8 @@ snapshots:
   lru.min@1.1.1: {}
 
   luxon@3.4.4: {}
+
+  luxon@3.5.0: {}
 
   lz-string@1.5.0: {}
 
