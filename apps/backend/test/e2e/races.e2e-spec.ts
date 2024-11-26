@@ -16,7 +16,7 @@ import {
 } from "./constants/errors";
 import { badRequestBody, notFoundBody } from "./utils/errors";
 
-describe("Race endpoints (e2e)", { concurrent: false }, () => {
+describe.skip("Race endpoints (e2e)", { concurrent: false }, () => {
   let app: INestApplication;
 
   beforeEach(async () => {

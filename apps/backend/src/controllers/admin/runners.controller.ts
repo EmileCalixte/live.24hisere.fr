@@ -50,44 +50,41 @@ export class RunnersController {
     });
 
     return {
-      runner: {
-        ...runner,
-        passages: [],
-      },
+      runner,
     };
   }
 
-  @Post("/admin/runners-bulk")
-  async createRunnersBulk(
-    @Body(new ParseArrayPipe({ items: RunnerDto })) runnerDtos: RunnerDto[],
-  ): Promise<ApiResponse<PostRunnersBulkAdminApiRequest>> {
-    await Promise.all(
-      runnerDtos.map(async (dto) => {
-        await this.ensureRunnerIdDoesNotExist(dto.id);
-      }),
-    );
+  // @Post("/admin/runners-bulk")
+  // async createRunnersBulk(
+  //   @Body(new ParseArrayPipe({ items: RunnerDto })) runnerDtos: RunnerDto[],
+  // ): Promise<ApiResponse<PostRunnersBulkAdminApiRequest>> {
+  //   await Promise.all(
+  //     runnerDtos.map(async (dto) => {
+  //       await this.ensureRunnerIdDoesNotExist(dto.id);
+  //     }),
+  //   );
 
-    const ids = new Set();
+  //   const ids = new Set();
 
-    for (const dto of runnerDtos) {
-      if (ids.has(dto.id)) {
-        throw new BadRequestException("Duplicate IDs");
-      }
+  //   for (const dto of runnerDtos) {
+  //     if (ids.has(dto.id)) {
+  //       throw new BadRequestException("Duplicate IDs");
+  //     }
 
-      ids.add(dto.id);
-    }
+  //     ids.add(dto.id);
+  //   }
 
-    const createdRunnersCount = await this.runnerService.createRunners(
-      runnerDtos.map((dto) => ({
-        ...dto,
-        birthYear: dto.birthYear.toString(),
-      })),
-    );
+  //   const createdRunnersCount = await this.runnerService.createRunners(
+  //     runnerDtos.map((dto) => ({
+  //       ...dto,
+  //       birthYear: dto.birthYear.toString(),
+  //     })),
+  //   );
 
-    return {
-      count: createdRunnersCount,
-    };
-  }
+  //   return {
+  //     count: createdRunnersCount,
+  //   };
+  // }
 
   @Get("/admin/runners/:runnerId")
   async getRunner(@Param("runnerId") runnerId: string): Promise<ApiResponse<GetRunnerAdminApiRequest>> {
@@ -125,10 +122,6 @@ export class RunnersController {
       throw new NotFoundException("Runner not found");
     }
 
-    if (updateRunnerDto.id && id !== updateRunnerDto.id) {
-      await this.ensureRunnerIdDoesNotExist(updateRunnerDto.id);
-    }
-
     const updateRunnerData: Parameters<RunnerService["updateRunner"]>[1] = objectUtils.excludeKeys(updateRunnerDto, [
       "birthYear",
     ]);
@@ -164,13 +157,5 @@ export class RunnersController {
     }
 
     await this.runnerService.deleteRunner(id);
-  }
-
-  private async ensureRunnerIdDoesNotExist(id: number): Promise<void> {
-    const existingRunner = await this.runnerService.getRunnerById(id);
-
-    if (existingRunner) {
-      throw new BadRequestException("A runner with the same ID already exists");
-    }
   }
 }

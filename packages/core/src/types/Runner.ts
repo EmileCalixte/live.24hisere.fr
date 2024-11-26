@@ -1,8 +1,12 @@
 import { type Gender } from "./Gender";
+import { Participant } from "./Participant";
 import { type ProcessedPassage, type PublicPassage } from "./Passage";
 import { type PublicRace } from "./Race";
 
-export interface Runner {
+/**
+ * An object representing a runner
+ */
+export interface PublicRunner {
   /**
    * The runner ID
    */
@@ -29,30 +33,29 @@ export interface Runner {
   birthYear: string;
 }
 
-/**
- * An object representing a runner
- */
-export interface RaceRunner extends Runner {
+export interface AdminRunner extends PublicRunner {
   /**
-   * The ID of the race which the runner takes part
+   * Whether the runner is publicly displayed or not
    */
-  raceId: number;
-
-  /**
-   * The runner's bib number in the race
-   */
-  bibNumber: number;
-
-  /**
-   * Whether the rider has stopped competing or not
-   */
-  stopped: boolean;
+  isPublic: boolean;
 }
+
+export type RunnerWithRaceCount<TRunner extends PublicRunner = PublicRunner> = TRunner & {
+  /**
+   * The number of races in which the runner is a participant
+   */
+  raceCount: number;
+};
+
+/**
+ * An object representing a runner participating in a race
+ */
+export type RaceRunner<TRunner extends PublicRunner = PublicRunner> = TRunner & Omit<Participant, "id" | "runnerId">;
 
 /**
  * An object representing a runner with his passages
  */
-export type RunnerWithPassages<
+export type RaceRunnerWithPassages<
   TRunner extends RaceRunner = RaceRunner,
   TPassage extends PublicPassage = PublicPassage,
 > = TRunner & {
@@ -62,10 +65,10 @@ export type RunnerWithPassages<
   passages: TPassage[];
 };
 
-export type RunnerWithProcessedPassages<
+export type RaceRunnerWithProcessedPassages<
   TRunner extends RaceRunner = RaceRunner,
   TPassage extends ProcessedPassage = ProcessedPassage,
-> = RunnerWithPassages<TRunner, TPassage>;
+> = RaceRunnerWithPassages<TRunner, TPassage>;
 
 export type RunnerWithRace<TRunner extends RaceRunner = RaceRunner, TRace extends PublicRace = PublicRace> = TRunner & {
   race: TRace;
@@ -75,7 +78,7 @@ export type RunnerWithRaceAndPassages<
   TRunner extends RaceRunner = RaceRunner,
   TRace extends PublicRace = PublicRace,
   TPassage extends PublicPassage = PublicPassage,
-> = RunnerWithRace<TRunner, TRace> & RunnerWithPassages<TRunner, TPassage>;
+> = RunnerWithRace<TRunner, TRace> & RaceRunnerWithPassages<TRunner, TPassage>;
 
 export interface RunnerProcessedData {
   /**

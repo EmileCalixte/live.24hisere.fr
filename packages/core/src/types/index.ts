@@ -6,6 +6,7 @@ export * from "./Category";
 export * from "./Config";
 export * from "./Edition";
 export * from "./Gender";
+export * from "./Participant";
 export * from "./Passage";
 export * from "./Race";
 export * from "./Runner";

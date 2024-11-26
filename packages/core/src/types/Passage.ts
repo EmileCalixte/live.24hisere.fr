@@ -15,7 +15,12 @@ export interface PublicPassage {
   time: DateISOString;
 }
 
-export type PassageWithRunnerId<TPassage extends PublicPassage = PublicPassage> = TPassage & {
+export type PassageWithRunnerIdAndRaceId<TPassage extends PublicPassage = PublicPassage> = TPassage & {
+  /**
+   * The ID of the race
+   */
+  raceId: number;
+
   /**
    * The ID of the runner of the passage
    */
@@ -42,7 +47,8 @@ export interface AdminPassage extends PublicPassage {
   isHidden: boolean;
 }
 
-export type AdminPassageWithRunnerId<TPassage extends AdminPassage = AdminPassage> = PassageWithRunnerId<TPassage>;
+export type AdminPassageWithRunnerIdAndRaceId<TPassage extends AdminPassage = AdminPassage> =
+  PassageWithRunnerIdAndRaceId<TPassage>;
 
 /**
  * An object containing computed data about a runner passage

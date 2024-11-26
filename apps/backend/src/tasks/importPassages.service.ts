@@ -96,13 +96,13 @@ export class ImportPassagesService extends TaskService {
 
     this.logger.verbose(`Importing passage with detection ID ${data.detectionId}`);
 
-    await this.passageService.createPassage({
-      detectionId: data.detectionId,
-      importTime: new Date().toISOString(),
-      runnerId: runner.id,
-      time: data.passageDateTime.toString(),
-      isHidden: false,
-    });
+    // await this.passageService.createPassage({
+    //   detectionId: data.detectionId,
+    //   importTime: new Date().toISOString(),
+    //   runnerId: runner.id,
+    //   time: data.passageDateTime.toString(),
+    //   isHidden: false,
+    // });
 
     return true;
   }

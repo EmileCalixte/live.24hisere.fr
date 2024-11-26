@@ -1,56 +1,133 @@
 import { Injectable } from "@nestjs/common";
 import { and, asc, eq, getTableColumns } from "drizzle-orm";
-import { AdminPassage, AdminPassageWithRunnerId, PublicPassage } from "@live24hisere/core/types";
-import { TABLE_PASSAGE } from "../../../../drizzle/schema";
+import { AdminPassage, AdminPassageWithRunnerIdAndRaceId, PublicPassage } from "@live24hisere/core/types";
+import { TABLE_PARTICIPANT, TABLE_PASSAGE, TABLE_RACE, TABLE_RUNNER } from "../../../../drizzle/schema";
 import { DrizzleTableColumns } from "../../../types/utils/drizzle";
 import { EntityService } from "../entity.service";
 
 @Injectable()
 export class PassageService extends EntityService {
-  async getPassageById(passageId: number): Promise<AdminPassageWithRunnerId | null> {
-    const passages = await this.db.select().from(TABLE_PASSAGE).where(eq(TABLE_PASSAGE.id, passageId));
-
-    return this.getUniqueResult(passages);
-  }
-
-  async getPassageByDetectionId(detectionId: number): Promise<AdminPassageWithRunnerId | null> {
-    const passages = await this.db.select().from(TABLE_PASSAGE).where(eq(TABLE_PASSAGE.detectionId, detectionId));
-
-    return this.getUniqueResult(passages);
-  }
-
-  async getAllPassages(): Promise<AdminPassageWithRunnerId[]> {
-    return await this.db.query.TABLE_PASSAGE.findMany({
-      orderBy: [asc(TABLE_PASSAGE.time)],
-    });
-  }
-
-  async getAllPublicPassages(): Promise<AdminPassageWithRunnerId[]> {
-    return await this.db
-      .select()
+  async getPassageById(passageId: number): Promise<AdminPassageWithRunnerIdAndRaceId | null> {
+    const passages = await this.db
+      .select({
+        ...this.getAdminPassageColumns(),
+        raceId: TABLE_PARTICIPANT.raceId,
+        runnerId: TABLE_PARTICIPANT.runnerId,
+      })
       .from(TABLE_PASSAGE)
+      .innerJoin(TABLE_PARTICIPANT, eq(TABLE_PARTICIPANT.id, TABLE_PASSAGE.participantId))
+      .where(eq(TABLE_PASSAGE.id, passageId));
+
+    return this.getUniqueResult(passages);
+  }
+
+  async getPassageByDetectionId(detectionId: number): Promise<AdminPassageWithRunnerIdAndRaceId | null> {
+    const passages = await this.db
+      .select({
+        ...this.getAdminPassageColumns(),
+        raceId: TABLE_PARTICIPANT.raceId,
+        runnerId: TABLE_PARTICIPANT.runnerId,
+      })
+      .from(TABLE_PASSAGE)
+      .innerJoin(TABLE_PARTICIPANT, eq(TABLE_PARTICIPANT.id, TABLE_PASSAGE.participantId))
+      .where(eq(TABLE_PASSAGE.detectionId, detectionId));
+
+    return this.getUniqueResult(passages);
+  }
+
+  async getAllPassages(): Promise<AdminPassageWithRunnerIdAndRaceId[]> {
+    return await this.db
+      .select({
+        ...this.getAdminPassageColumns(),
+        raceId: TABLE_PARTICIPANT.raceId,
+        runnerId: TABLE_PARTICIPANT.runnerId,
+      })
+      .from(TABLE_PASSAGE)
+      .innerJoin(TABLE_PARTICIPANT, eq(TABLE_PARTICIPANT.id, TABLE_PASSAGE.participantId))
+      .orderBy(asc(TABLE_PASSAGE.time));
+  }
+
+  async getAllPublicPassages(): Promise<AdminPassageWithRunnerIdAndRaceId[]> {
+    return await this.db
+      .select({
+        ...this.getAdminPassageColumns(),
+        raceId: TABLE_PARTICIPANT.raceId,
+        runnerId: TABLE_PARTICIPANT.runnerId,
+      })
+      .from(TABLE_PASSAGE)
+      .innerJoin(TABLE_PARTICIPANT, eq(TABLE_PARTICIPANT.id, TABLE_PASSAGE.participantId))
       .where(eq(TABLE_PASSAGE.isHidden, false))
       .orderBy(asc(TABLE_PASSAGE.time));
   }
 
-  async getAdminPassagesByRunnerId(runnerId: number): Promise<AdminPassage[]> {
+  async getAdminPassagesByRaceAndRunnerId(raceId: number, runnerId: number): Promise<AdminPassage[]> {
     return await this.db
       .select(this.getAdminPassageColumns())
       .from(TABLE_PASSAGE)
-      .where(eq(TABLE_PASSAGE.runnerId, runnerId))
+      .leftJoin(TABLE_PARTICIPANT, eq(TABLE_PARTICIPANT.id, TABLE_PASSAGE.participantId))
+      .where(and(eq(TABLE_PARTICIPANT.raceId, raceId), eq(TABLE_PARTICIPANT.runnerId, runnerId)))
       .orderBy(asc(TABLE_PASSAGE.time));
   }
 
-  async getPublicPassagesByRunnerId(runnerId: number): Promise<PublicPassage[]> {
+  /** @deprecated */
+  async getPublicPassagesByRaceAndRunnerId(raceId: number, runnerId: number): Promise<PublicPassage[]> {
     return await this.db
       .select(this.getPublicPassageColumns())
       .from(TABLE_PASSAGE)
-      .where(and(eq(TABLE_PASSAGE.runnerId, runnerId), eq(TABLE_PASSAGE.isHidden, false)))
+      .leftJoin(TABLE_PARTICIPANT, eq(TABLE_PARTICIPANT.id, TABLE_PASSAGE.participantId))
+      .where(
+        and(
+          eq(TABLE_PARTICIPANT.raceId, raceId),
+          eq(TABLE_PARTICIPANT.runnerId, runnerId),
+          eq(TABLE_PASSAGE.isHidden, false),
+        ),
+      )
       .orderBy(asc(TABLE_PASSAGE.time));
   }
 
-  async createPassage(passageData: Omit<AdminPassageWithRunnerId, "id">): Promise<AdminPassageWithRunnerId> {
-    const result = await this.db.insert(TABLE_PASSAGE).values(passageData).$returningId();
+  /**
+   * @returns A map with runner ID as key and list of passages of the runner in the provided race as value
+   */
+  async getPublicPassagesByRaceId(raceId: number): Promise<Map<number, PublicPassage[]>> {
+    const passages = await this.db
+      .select({ ...this.getPublicPassageColumns(), runnerId: TABLE_PARTICIPANT.runnerId })
+      .from(TABLE_PASSAGE)
+      .innerJoin(TABLE_PARTICIPANT, eq(TABLE_PARTICIPANT.id, TABLE_PASSAGE.participantId))
+      .where(and(eq(TABLE_PARTICIPANT.raceId, raceId), eq(TABLE_PASSAGE.isHidden, false)))
+      .orderBy(asc(TABLE_PASSAGE.time));
+
+    return passages.reduce((map, passage) => {
+      const runnerPassages = map.get(passage.runnerId) ?? [];
+
+      runnerPassages.push(passage);
+      map.set(passage.runnerId, runnerPassages);
+
+      return map;
+    }, new Map<number, PublicPassage[]>());
+  }
+
+  async createPassage(
+    raceId: number,
+    runnerId: number,
+    passageData: Omit<AdminPassage, "id">,
+  ): Promise<AdminPassageWithRunnerIdAndRaceId> {
+    const participant = this.getUniqueResult(
+      await this.db
+        .select()
+        .from(TABLE_PARTICIPANT)
+        .where(and(eq(TABLE_RACE.id, raceId), eq(TABLE_RUNNER.id, runnerId))),
+    );
+
+    if (!participant) {
+      throw new Error(
+        `Failed to find a participant with provided race and runner IDs (provided race ID: ${raceId}, provided runner ID: ${runnerId})`,
+      );
+    }
+
+    const result = await this.db
+      .insert(TABLE_PASSAGE)
+      .values({ ...passageData, participantId: participant.id })
+      .$returningId();
 
     const passageId = this.getUniqueResult(result)?.id;
 
@@ -70,7 +147,7 @@ export class PassageService extends EntityService {
   async updatePassage(
     passageId: number,
     newPassageData: Partial<Omit<AdminPassage, "id">>,
-  ): Promise<AdminPassageWithRunnerId> {
+  ): Promise<AdminPassageWithRunnerIdAndRaceId> {
     const [resultSetHeader] = await this.db
       .update(TABLE_PASSAGE)
       .set(newPassageData)
@@ -106,8 +183,8 @@ export class PassageService extends EntityService {
     return { id, time };
   }
 
-  private getAdminPassageColumns(): Omit<DrizzleTableColumns<typeof TABLE_PASSAGE>, "runnerId"> {
-    const { runnerId, ...columns } = getTableColumns(TABLE_PASSAGE);
+  private getAdminPassageColumns(): Omit<DrizzleTableColumns<typeof TABLE_PASSAGE>, "participantId"> {
+    const { participantId, ...columns } = getTableColumns(TABLE_PASSAGE);
 
     return columns;
   }
