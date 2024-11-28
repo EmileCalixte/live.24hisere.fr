@@ -162,7 +162,7 @@ export default function RaceDetailsForm({
       <DurationInputs legend="Durée" className="mt-3" duration={duration} setDuration={setDuration} />
 
       <Checkbox
-        label="Visible par les utilisateurs"
+        label="Visible publiquement"
         checked={isPublic}
         className="mt-3"
         onChange={(e) => {

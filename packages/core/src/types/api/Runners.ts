@@ -1,11 +1,4 @@
-import { type AdminPassage } from "../Passage";
-import {
-  AdminRunner,
-  type PublicRunner,
-  type RaceRunner,
-  type RaceRunnerWithPassages,
-  RunnerWithRaceCount,
-} from "../Runner";
+import { type AdminRunner, type PublicRunner, type RaceRunnerWithPassages, type RunnerWithRaceCount } from "../Runner";
 import { type ApiRequest } from "./ApiRequest";
 
 export interface GetRunnersApiRequest extends ApiRequest {
@@ -36,7 +29,7 @@ export interface GetRunnerAdminApiRequest extends ApiRequest {
   payload: never;
 
   response: {
-    runner: RunnerWithRaceCount;
+    runner: RunnerWithRaceCount<AdminRunner>;
   };
 }
 
