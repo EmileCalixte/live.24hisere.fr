@@ -7,7 +7,6 @@ import {
   HttpCode,
   NotFoundException,
   Param,
-  ParseArrayPipe,
   Patch,
   Post,
   UseGuards,
@@ -18,7 +17,6 @@ import {
   GetRunnersAdminApiRequest,
   PatchRunnerAdminApiRequest,
   PostRunnerAdminApiRequest,
-  PostRunnersBulkAdminApiRequest,
 } from "@live24hisere/core/types";
 import { objectUtils } from "@live24hisere/utils";
 import { RunnerDto } from "../../dtos/runner/runner.dto";
@@ -42,8 +40,6 @@ export class RunnersController {
 
   @Post("/admin/runners")
   async createRunner(@Body() runnerDto: RunnerDto): Promise<ApiResponse<PostRunnerAdminApiRequest>> {
-    await this.ensureRunnerIdDoesNotExist(runnerDto.id);
-
     const runner = await this.runnerService.createRunner({
       ...runnerDto,
       birthYear: runnerDto.birthYear.toString(),
@@ -116,7 +112,7 @@ export class RunnersController {
       throw new BadRequestException("Runner ID must be a number");
     }
 
-    const runner = await this.runnerService.getRunnerById(id);
+    const runner = await this.runnerService.getAdminRunnerById(id);
 
     if (!runner) {
       throw new NotFoundException("Runner not found");
@@ -150,7 +146,7 @@ export class RunnersController {
       throw new BadRequestException("Runner ID must be a number");
     }
 
-    const runner = await this.runnerService.getRunnerById(id);
+    const runner = await this.runnerService.getAdminRunnerById(id);
 
     if (!runner) {
       throw new NotFoundException("Runner not found");

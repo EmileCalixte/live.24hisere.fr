@@ -87,7 +87,7 @@ export class ImportPassagesService extends TaskService {
       return false;
     }
 
-    const runner = await this.runnerService.getRunnerById(data.runnerId);
+    const runner = await this.runnerService.getAdminRunnerById(data.runnerId);
 
     if (!runner) {
       this.logger.verbose(`Runner with ID ${data.runnerId} not found, skipping detection with ID ${data.detectionId}`);

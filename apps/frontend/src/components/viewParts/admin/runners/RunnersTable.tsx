@@ -1,25 +1,21 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { type RaceDict, type RaceRunner } from "@live24hisere/core/types";
-import { categoryUtils } from "@live24hisere/utils";
-import CircularLoader from "../../../ui/CircularLoader";
+import { type AdminRunner, type RunnerWithRaceCount } from "@live24hisere/core/types";
 
 interface RunnersTableProps {
-  runners: RaceRunner[];
-  races: RaceDict | false;
+  runners: Array<RunnerWithRaceCount<AdminRunner>>;
 }
 
-export default function RunnersTable({ runners, races }: RunnersTableProps): React.ReactElement {
+export default function RunnersTable({ runners }: RunnersTableProps): React.ReactElement {
   return (
-    <table className="table">
+    <table className="table no-full-width">
       <thead>
         <tr>
-          <th>Doss.</th>
+          <th>ID</th>
           <th>Nom</th>
           <th>Sexe</th>
           <th>Année naissance</th>
-          <th>Catégorie</th>
-          <th>Course</th>
+          <th>Courses</th>
           <th>Détails</th>
         </tr>
       </thead>
@@ -33,20 +29,7 @@ export default function RunnersTable({ runners, races }: RunnersTableProps): Rea
               </td>
               <td>{runner.gender}</td>
               <td>{runner.birthYear}</td>
-              <td>{categoryUtils.getCategoryCodeFromBirthYear(runner.birthYear)}</td>
-              <td>
-                {(() => {
-                  if (races === false) {
-                    return <CircularLoader />;
-                  }
-
-                  if (runner.raceId in races) {
-                    return races[runner.raceId].name;
-                  }
-
-                  return <i>Course inconnue</i>;
-                })()}
-              </td>
+              <td>{runner.raceCount}</td>
               <td>
                 <Link to={`/admin/runners/${runner.id}`}>Détails</Link>
               </td>

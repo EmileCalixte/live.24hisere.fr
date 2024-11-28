@@ -35,7 +35,7 @@ export class RunnerService extends EntityService {
     return this.getUniqueResult(runners);
   }
 
-  async getRunnerById(runnerId: number): Promise<RunnerWithRaceCount<AdminRunner> | null> {
+  async getAdminRunnerById(runnerId: number): Promise<RunnerWithRaceCount<AdminRunner> | null> {
     const runners = await this.db
       .select({
         ...getTableColumns(TABLE_RUNNER),
@@ -169,7 +169,7 @@ export class RunnerService extends EntityService {
       throw new Error("Failed to insert a runner in database (no ID returned)");
     }
 
-    const newRunner = await this.getRunnerById(runnerId);
+    const newRunner = await this.getAdminRunnerById(runnerId);
 
     if (!newRunner) {
       throw new Error(`Failed to get created runner data in database (created runner ID: ${runnerId}`);
@@ -202,7 +202,7 @@ export class RunnerService extends EntityService {
       throw new Error(`Runner with ID ${runnerId} not found in database`);
     }
 
-    const newRunner = await this.getRunnerById(runnerId);
+    const newRunner = await this.getAdminRunnerById(runnerId);
 
     if (!newRunner) {
       throw new Error(`Failed to get updated runner data from database (updated runner ID: ${runnerId})`);
