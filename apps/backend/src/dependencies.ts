@@ -7,6 +7,7 @@ import { UsernameQuestionSet } from "./commands/questionSets/username.questionSe
 import { UpdateUserPasswordCommand } from "./commands/updateUserPassword.command";
 import { ConfigController } from "./controllers/admin/config.controller";
 import { EditionsController as EditionsControllerAdmin } from "./controllers/admin/editions.controller";
+import { ParticipantsController } from "./controllers/admin/participants.controller";
 import { PassagesController } from "./controllers/admin/passages.controller";
 import { RacesController as RacesControllerAdmin } from "./controllers/admin/races.controller";
 import { RunnerPassagesController } from "./controllers/admin/runnerPassages.controller";
@@ -24,6 +25,7 @@ import { AccessTokenService } from "./services/database/entities/accessToken.ser
 import { ConfigService } from "./services/database/entities/config.service";
 import { EditionService } from "./services/database/entities/edition.service";
 import { MiscService } from "./services/database/entities/misc.service";
+import { ParticipantService } from "./services/database/entities/participant.service";
 import { PassageService } from "./services/database/entities/passage.service";
 import { RaceService } from "./services/database/entities/race.service";
 import { RunnerService } from "./services/database/entities/runner.service";
@@ -58,6 +60,7 @@ export const dependencies: Dependencies = {
     admin: [
       ConfigController,
       EditionsControllerAdmin,
+      ParticipantsController,
       PassagesController,
       RacesControllerAdmin,
       RunnerPassagesController,
@@ -73,6 +76,7 @@ export const dependencies: Dependencies = {
       ConfigService,
       EditionService,
       MiscService,
+      ParticipantService,
       PassageService,
       RaceService,
       RunnerService,

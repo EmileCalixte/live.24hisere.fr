@@ -3,11 +3,15 @@ import { Col, Row } from "react-bootstrap";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { GENDER } from "@live24hisere/core/constants";
 import {
+  type AdminEditionWithRaceCount,
   type AdminRaceWithRunnerCount,
   type AdminRunner,
   type Gender,
+  type Participant,
   type RunnerWithRaceCount,
 } from "@live24hisere/core/types";
+import { getAdminEditions } from "../../../../services/api/editionService";
+import { getAdminRunnerParticipations } from "../../../../services/api/participantService";
 import { getAdminRaces } from "../../../../services/api/raceService";
 import { deleteAdminRunner, getAdminRunner, patchAdminRunner } from "../../../../services/api/runnerService";
 import { getRunnerDetailsBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
@@ -17,6 +21,7 @@ import { appContext } from "../../../App";
 import CircularLoader from "../../../ui/CircularLoader";
 import Page from "../../../ui/Page";
 import RunnerDetailsForm from "../../../viewParts/admin/runners/RunnerDetailsForm";
+import RunnerParticipationsTable from "../../../viewParts/admin/runners/RunnerParticipationsTable";
 
 export default function RunnerDetailsAdminView(): React.ReactElement {
   const navigate = useNavigate();
@@ -25,10 +30,14 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
 
   const { runnerId: urlRunnerId } = useParams();
 
-  const [races, setRaces] = React.useState<AdminRaceWithRunnerCount[] | false>(false);
+  const [editions, setEditions] = React.useState<AdminEditionWithRaceCount[] | undefined | null>(undefined);
+
+  const [races, setRaces] = React.useState<AdminRaceWithRunnerCount[] | undefined | null>(undefined);
   console.log(races);
 
   const [runner, setRunner] = React.useState<RunnerWithRaceCount<AdminRunner> | undefined | null>(undefined);
+
+  const [participations, setParticipations] = React.useState<Participant[] | undefined | null>(undefined);
 
   const [runnerFirstname, setRunnerFirstname] = React.useState("");
   const [runnerLastname, setRunnerLastname] = React.useState("");
@@ -51,6 +60,21 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
       runnerIsPublic === runner.isPublic,
     ].includes(false);
   }, [runner, runnerFirstname, runnerLastname, runnerGender, runnerBirthYear, runnerIsPublic]);
+
+  const fetchEditions = React.useCallback(async () => {
+    if (!accessToken) {
+      return;
+    }
+
+    const result = await getAdminEditions(accessToken);
+
+    if (!isApiRequestResultOk(result)) {
+      ToastService.getToastr().error("Impossible de récupérer la liste des éditions");
+      return;
+    }
+
+    setEditions(result.json.editions);
+  }, [accessToken]);
 
   const fetchRaces = React.useCallback(async () => {
     if (!accessToken) {
@@ -89,6 +113,21 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
     setRunnerGender(runner.gender);
     setRunnerBirthYear(runner.birthYear);
     setRunnerIsPublic(runner.isPublic);
+  }, [accessToken, urlRunnerId]);
+
+  const fetchParticipations = React.useCallback(async () => {
+    if (!urlRunnerId || !accessToken) {
+      return;
+    }
+
+    const result = await getAdminRunnerParticipations(accessToken, urlRunnerId);
+
+    if (!isApiRequestResultOk(result)) {
+      ToastService.getToastr().error("Impossible de récupérer les participations du coureur");
+      return;
+    }
+
+    setParticipations(result.json.participations);
   }, [accessToken, urlRunnerId]);
 
   // const updatePassageVisiblity = React.useCallback(
@@ -200,12 +239,20 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
   // );
 
   React.useEffect(() => {
+    void fetchEditions();
+  }, [fetchEditions]);
+
+  React.useEffect(() => {
     void fetchRaces();
   }, [fetchRaces]);
 
   React.useEffect(() => {
     void fetchRunner();
   }, [fetchRunner]);
+
+  React.useEffect(() => {
+    void fetchParticipations();
+  }, [fetchParticipations]);
 
   const onSubmit = React.useCallback(
     async (e: React.FormEvent) => {
@@ -268,6 +315,7 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
     <Page
       id="admin-runner-details"
       title={runner === undefined ? "Chargement" : `Détails du coureur ${runner.firstname} ${runner.lastname}`}
+      className="d-flex flex-column gap-3"
     >
       <Row>
         <Col>{getRunnerDetailsBreadcrumbs(runner)}</Col>
@@ -284,6 +332,8 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
         <>
           <Row>
             <Col xxl={3} xl={4} lg={6} md={9} sm={12}>
+              <h3>Détails du coureur</h3>
+
               <RunnerDetailsForm
                 onSubmit={(e) => {
                   void onSubmit(e);
@@ -303,6 +353,26 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
             </Col>
           </Row>
 
+          <Row>
+            <Col>
+              <h3>Participations</h3>
+
+              {participations === undefined && <CircularLoader />}
+
+              {participations && participations.length <= 0 && (
+                <p>Ce coureur n'est enregistré comme participant sur aucune course.</p>
+              )}
+
+              {participations && participations.length > 0 && (
+                <RunnerParticipationsTable
+                  participations={participations}
+                  races={races ?? undefined}
+                  editions={editions ?? undefined}
+                />
+              )}
+            </Col>
+          </Row>
+
           {/* <Row>
             <Col className="mt-3">
               <h3>Passages</h3>
@@ -319,7 +389,7 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
           </Row> */}
 
           <Row>
-            <Col className="mt-3">
+            <Col>
               <h3>Supprimer le coureur</h3>
 
               <p>
@@ -328,7 +398,7 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
               </p>
 
               <button
-                className="button red mt-3"
+                className="button red"
                 onClick={() => {
                   void deleteRunner();
                 }}

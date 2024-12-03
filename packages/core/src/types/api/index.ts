@@ -3,6 +3,7 @@ export * from "./AppData";
 export * from "./Auth";
 export * from "./Config";
 export * from "./Editions";
+export * from "./Participants";
 export * from "./Passages";
 export * from "./Races";
 export * from "./Runners";

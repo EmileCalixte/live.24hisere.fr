@@ -16,6 +16,8 @@ export class RaceService extends EntityService {
       })
       .from(TABLE_RACE)
       .leftJoin(TABLE_PARTICIPANT, eq(TABLE_PARTICIPANT.raceId, TABLE_RACE.id))
+      .innerJoin(TABLE_EDITION, eq(TABLE_EDITION.id, TABLE_RACE.editionId))
+      .orderBy(asc(TABLE_EDITION.order), asc(TABLE_RACE.order))
       .groupBy(TABLE_RACE.id);
   }
 
@@ -116,7 +118,7 @@ export class RaceService extends EntityService {
     const newRace = await this.getAdminRaceById(raceId);
 
     if (!newRace) {
-      throw new Error(`Failed to get created race data in database (created race ID: ${raceId}`);
+      throw new Error(`Failed to get created race data in database (created race ID: ${raceId})`);
     }
 
     return newRace;

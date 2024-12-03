@@ -64,7 +64,7 @@ export class PassageService extends EntityService {
     return await this.db
       .select(this.getAdminPassageColumns())
       .from(TABLE_PASSAGE)
-      .leftJoin(TABLE_PARTICIPANT, eq(TABLE_PARTICIPANT.id, TABLE_PASSAGE.participantId))
+      .innerJoin(TABLE_PARTICIPANT, eq(TABLE_PARTICIPANT.id, TABLE_PASSAGE.participantId))
       .where(and(eq(TABLE_PARTICIPANT.raceId, raceId), eq(TABLE_PARTICIPANT.runnerId, runnerId)))
       .orderBy(asc(TABLE_PASSAGE.time));
   }
@@ -74,7 +74,7 @@ export class PassageService extends EntityService {
     return await this.db
       .select(this.getPublicPassageColumns())
       .from(TABLE_PASSAGE)
-      .leftJoin(TABLE_PARTICIPANT, eq(TABLE_PARTICIPANT.id, TABLE_PASSAGE.participantId))
+      .innerJoin(TABLE_PARTICIPANT, eq(TABLE_PARTICIPANT.id, TABLE_PASSAGE.participantId))
       .where(
         and(
           eq(TABLE_PARTICIPANT.raceId, raceId),
