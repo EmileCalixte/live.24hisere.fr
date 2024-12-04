@@ -1,5 +1,5 @@
 import { type Gender } from "./Gender";
-import { Participant } from "./Participant";
+import { type Participant } from "./Participant";
 import { type ProcessedPassage, type PublicPassage } from "./Passage";
 import { type PublicRace } from "./Race";
 

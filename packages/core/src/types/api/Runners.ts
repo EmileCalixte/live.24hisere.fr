@@ -1,4 +1,10 @@
-import { type AdminRunner, type PublicRunner, type RaceRunnerWithPassages, type RunnerWithRaceCount } from "../Runner";
+import {
+  type AdminRunner,
+  type PublicRunner,
+  type RaceRunner,
+  type RaceRunnerWithPassages,
+  type RunnerWithRaceCount,
+} from "../Runner";
 import { type ApiRequest } from "./ApiRequest";
 
 export interface GetRunnersApiRequest extends ApiRequest {
@@ -59,4 +65,10 @@ export interface DeleteRunnerAdminApiRequest extends ApiRequest {
   payload: never;
 
   response: never;
+}
+
+export interface GetRaceRunnersAdminApiRequest extends ApiRequest {
+  payload: never;
+
+  response: { runners: Array<RaceRunner<AdminRunner>> };
 }

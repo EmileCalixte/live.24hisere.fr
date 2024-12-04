@@ -131,6 +131,19 @@ export class RunnerService extends EntityService {
     }));
   }
 
+  public async getAdminRaceRunners(raceId: number): Promise<Array<RaceRunner<AdminRunner>>> {
+    return await this.db
+      .select({
+        ...getTableColumns(TABLE_RUNNER),
+        ...this.getPublicParticipantColumns(),
+      })
+      .from(TABLE_PARTICIPANT)
+      .innerJoin(TABLE_RUNNER, eq(TABLE_PARTICIPANT.runnerId, TABLE_RUNNER.id))
+      .innerJoin(TABLE_RACE, eq(TABLE_PARTICIPANT.raceId, TABLE_RACE.id))
+      .innerJoin(TABLE_EDITION, eq(TABLE_RACE.editionId, TABLE_EDITION.id))
+      .where(eq(TABLE_RACE.id, raceId));
+  }
+
   private async getRaceRunner(raceId: number, runnerId: number, publicOnly: boolean): Promise<RaceRunner | null> {
     const where = [eq(TABLE_RACE.id, raceId), eq(TABLE_RUNNER.id, runnerId)];
 

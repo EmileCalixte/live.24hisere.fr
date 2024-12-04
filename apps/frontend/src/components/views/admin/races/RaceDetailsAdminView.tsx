@@ -1,9 +1,15 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { type AdminEditionWithRaceCount, type AdminRaceWithRunnerCount } from "@live24hisere/core/types";
+import {
+  type AdminEditionWithRaceCount,
+  type AdminRaceWithRunnerCount,
+  type AdminRunner,
+  type RaceRunner,
+} from "@live24hisere/core/types";
 import { getAdminEditions } from "../../../../services/api/editionService";
 import { deleteAdminRace, getAdminRace, patchAdminRace } from "../../../../services/api/raceService";
+import { getAdminRaceRunners } from "../../../../services/api/runnerService";
 import { getRaceDetailsBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../../services/ToastService";
 import { type SelectOption } from "../../../../types/Forms";
@@ -13,6 +19,7 @@ import { appContext } from "../../../App";
 import CircularLoader from "../../../ui/CircularLoader";
 import Page from "../../../ui/Page";
 import RaceDetailsForm from "../../../viewParts/admin/races/RaceDetailsForm";
+import RaceRunnersTable from "../../../viewParts/admin/races/RaceRunnersTable";
 
 export default function RaceDetailsAdminView(): React.ReactElement {
   const navigate = useNavigate();
@@ -22,6 +29,7 @@ export default function RaceDetailsAdminView(): React.ReactElement {
   const { raceId: urlRaceId } = useParams();
 
   const [race, setRace] = React.useState<AdminRaceWithRunnerCount | undefined | null>(undefined);
+  const [raceRunners, setRaceRunners] = React.useState<Array<RaceRunner<AdminRunner>> | undefined | null>(undefined);
   const [editions, setEditions] = React.useState<AdminEditionWithRaceCount[] | false>(false);
 
   const [raceEditionId, setRaceEditionId] = React.useState(0);
@@ -95,6 +103,22 @@ export default function RaceDetailsAdminView(): React.ReactElement {
     setIsPublic(responseJson.race.isPublic);
   }, [accessToken, urlRaceId]);
 
+  const fetchRaceRunners = React.useCallback(async () => {
+    if (!urlRaceId || !accessToken) {
+      return;
+    }
+
+    const result = await getAdminRaceRunners(accessToken, urlRaceId);
+
+    if (!isApiRequestResultOk(result)) {
+      ToastService.getToastr().error("Impossible de récupérer les coureurs");
+      setRace(null);
+      return;
+    }
+
+    setRaceRunners(result.json.runners);
+  }, [accessToken, urlRaceId]);
+
   const fetchEditions = React.useCallback(async () => {
     if (!accessToken) {
       return;
@@ -115,6 +139,10 @@ export default function RaceDetailsAdminView(): React.ReactElement {
   React.useEffect(() => {
     void fetchRace();
   }, [fetchRace]);
+
+  React.useEffect(() => {
+    void fetchRaceRunners();
+  }, [fetchRaceRunners]);
 
   React.useEffect(() => {
     void fetchEditions();
@@ -182,66 +210,86 @@ export default function RaceDetailsAdminView(): React.ReactElement {
   }
 
   return (
-    <Page id="admin-race-details" title={race === undefined ? "Chargement" : `Détails de la course ${race.name}`}>
+    <Page
+      id="admin-race-details"
+      title={race === undefined ? "Chargement" : `Détails de la course ${race.name}`}
+      className="d-flex flex-column gap-3"
+    >
       <Row>
         <Col>{getRaceDetailsBreadcrumbs(edition, race)}</Col>
       </Row>
 
-      <Row>
-        <Col xxl={3} xl={4} lg={6} md={9} sm={12}>
-          {race === undefined && <CircularLoader />}
+      {race === undefined && (
+        <Row>
+          <Col>
+            <CircularLoader />
+          </Col>
+        </Row>
+      )}
 
-          {race !== undefined && (
-            <>
-              <Row>
-                <Col>
-                  <RaceDetailsForm
-                    onSubmit={onSubmit}
-                    editionOptions={editionOptions}
-                    editionId={raceEditionId}
-                    setEditionId={setRaceEditionId}
-                    name={raceName}
-                    setName={setRaceName}
-                    initialDistance={initialDistance}
-                    setInitialDistance={setInitialDistance}
-                    lapDistance={lapDistance}
-                    setLapDistance={setLapDistance}
-                    startTime={startTime}
-                    setStartTime={setStartTime}
-                    duration={duration}
-                    setDuration={setDuration}
-                    isPublic={isPublic}
-                    setIsPublic={setIsPublic}
-                    submitButtonDisabled={isSaving || !unsavedChanges}
-                  />
-                </Col>
-              </Row>
+      {race !== undefined && (
+        <>
+          <Row>
+            <Col xxl={3} xl={4} lg={6} md={9} sm={12}>
+              <h3>Détails de la course</h3>
 
-              <Row>
-                <Col>
-                  <h3>Supprimer la course</h3>
+              <RaceDetailsForm
+                onSubmit={onSubmit}
+                editionOptions={editionOptions}
+                editionId={raceEditionId}
+                setEditionId={setRaceEditionId}
+                name={raceName}
+                setName={setRaceName}
+                initialDistance={initialDistance}
+                setInitialDistance={setInitialDistance}
+                lapDistance={lapDistance}
+                setLapDistance={setLapDistance}
+                startTime={startTime}
+                setStartTime={setStartTime}
+                duration={duration}
+                setDuration={setDuration}
+                isPublic={isPublic}
+                setIsPublic={setIsPublic}
+                submitButtonDisabled={isSaving || !unsavedChanges}
+              />
+            </Col>
+          </Row>
 
-                  {race.runnerCount > 0 ? (
-                    <p>La course ne peut pas être supprimée tant qu'elle contient des coureurs.</p>
-                  ) : (
-                    <p>Cette action est irréversible.</p>
-                  )}
+          <Row>
+            <Col>
+              <h3>Coureurs</h3>
 
-                  <button
-                    className="button red mt-3"
-                    disabled={race.runnerCount > 0}
-                    onClick={() => {
-                      void deleteRace();
-                    }}
-                  >
-                    Supprimer la course
-                  </button>
-                </Col>
-              </Row>
-            </>
-          )}
-        </Col>
-      </Row>
+              {raceRunners === undefined && <CircularLoader />}
+
+              {raceRunners === null && <p>Impossible de récupérer les coureurs</p>}
+
+              {raceRunners && <RaceRunnersTable runners={raceRunners} />}
+            </Col>
+          </Row>
+
+          <Row>
+            <Col>
+              <h3>Supprimer la course</h3>
+
+              {race.runnerCount > 0 ? (
+                <p>La course ne peut pas être supprimée tant qu'elle contient des coureurs.</p>
+              ) : (
+                <p>Cette action est irréversible.</p>
+              )}
+
+              <button
+                className="button red"
+                disabled={race.runnerCount > 0}
+                onClick={() => {
+                  void deleteRace();
+                }}
+              >
+                Supprimer la course
+              </button>
+            </Col>
+          </Row>
+        </>
+      )}
     </Page>
   );
 }

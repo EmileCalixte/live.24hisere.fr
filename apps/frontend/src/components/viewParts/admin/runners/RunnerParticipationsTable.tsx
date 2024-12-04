@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { type AdminEdition, type AdminRace, type Participant } from "@live24hisere/core/types";
 import CircularLoader from "../../../ui/CircularLoader";
 
@@ -30,8 +31,16 @@ export default function RunnerParticipationsTable({
 
           return (
             <tr key={participation.id}>
-              <td>{editions ? edition?.name : <CircularLoader />}</td>
-              <td>{races ? race?.name : <CircularLoader />}</td>
+              <td>
+                {!editions && <CircularLoader />}
+
+                {edition && <Link to={`/admin/editions/${edition.id}`}>{edition.name}</Link>}
+              </td>
+              <td>
+                {!races && <CircularLoader />}
+
+                {race && <Link to={`/admin/races/${race.id}`}>{race.name}</Link>}
+              </td>
               <td>{participation.bibNumber}</td>
               <td>{participation.stopped ? "Oui" : "Non"}</td>
             </tr>

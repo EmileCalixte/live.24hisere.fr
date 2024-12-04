@@ -13,6 +13,7 @@ import {
 } from "@nestjs/common";
 import {
   ApiResponse,
+  GetRaceRunnersAdminApiRequest,
   GetRunnerAdminApiRequest,
   GetRunnersAdminApiRequest,
   PatchRunnerAdminApiRequest,
@@ -22,12 +23,16 @@ import { objectUtils } from "@live24hisere/utils";
 import { RunnerDto } from "../../dtos/runner/runner.dto";
 import { UpdateRunnerDto } from "../../dtos/runner/updateRunner.dto";
 import { AuthGuard } from "../../guards/auth.guard";
+import { RaceService } from "../../services/database/entities/race.service";
 import { RunnerService } from "../../services/database/entities/runner.service";
 
 @Controller()
 @UseGuards(AuthGuard)
 export class RunnersController {
-  constructor(private readonly runnerService: RunnerService) {}
+  constructor(
+    private readonly raceService: RaceService,
+    private readonly runnerService: RunnerService,
+  ) {}
 
   @Get("/admin/runners")
   async getRunners(): Promise<ApiResponse<GetRunnersAdminApiRequest>> {
@@ -153,5 +158,22 @@ export class RunnersController {
     }
 
     await this.runnerService.deleteRunner(id);
+  }
+
+  @Get("/admin/races/:raceId/runners")
+  async getRaceRunners(@Param("raceId") raceId: string): Promise<ApiResponse<GetRaceRunnersAdminApiRequest>> {
+    const id = Number(raceId);
+
+    if (isNaN(id)) {
+      throw new BadRequestException("Race ID must be a number");
+    }
+
+    const race = await this.raceService.getAdminRaceById(id);
+
+    if (!race) {
+      throw new NotFoundException("Race not found");
+    }
+
+    return { runners: await this.runnerService.getAdminRaceRunners(race.id) };
   }
 }

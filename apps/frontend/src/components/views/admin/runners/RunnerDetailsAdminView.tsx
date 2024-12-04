@@ -320,6 +320,7 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
       <Row>
         <Col>{getRunnerDetailsBreadcrumbs(runner)}</Col>
       </Row>
+
       {runner === undefined && (
         <Row>
           <Col>
