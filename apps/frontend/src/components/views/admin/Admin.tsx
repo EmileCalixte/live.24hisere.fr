@@ -4,6 +4,9 @@ import { appContext } from "../../App";
 import CircularLoader from "../../ui/CircularLoader";
 import AdminHomeView from "./AdminHomeView";
 import DisabledAppAdminView from "./DisabledAppAdminView";
+import CreateEditionAdminView from "./editions/CreateEditionAdminView";
+import EditionDetailsAdminView from "./editions/EditionDetailsAdminView";
+import EditionsAdminView from "./editions/EditionsAdminView";
 import FastestLapsAdminView from "./FastestLapsAdminView";
 import PassageImportSettingsAdminView from "./passageImportSettings/PassageImportSettingsAdminView";
 import CreateRaceAdminView from "./races/CreateRaceAdminView";
@@ -28,6 +31,9 @@ export default function Admin(): React.ReactElement {
   return (
     <Routes>
       <Route path="/" element={<AdminHomeView />} />
+      <Route path="editions" element={<EditionsAdminView />} />
+      <Route path="editions/create" element={<CreateEditionAdminView />} />
+      <Route path="editions/:editionId" element={<EditionDetailsAdminView />} />
       <Route path="runners" element={<RunnersAdminView />} />
       <Route path="runners/create" element={<CreateRunnerAdminView />} />
       <Route path="runners/import-csv" element={<ImportRunnersCsvView />} />

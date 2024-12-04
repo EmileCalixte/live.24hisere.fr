@@ -1,11 +1,11 @@
-import { type AdminPassage, type AdminPassageWithRunnerId } from "../Passage";
+import { type AdminPassage, type AdminPassageWithRunnerIdAndRaceId } from "../Passage";
 import { type ApiRequest } from "./ApiRequest";
 
 export interface GetAllPassagesAdminApiRequest extends ApiRequest {
   payload: never;
 
   response: {
-    passages: AdminPassageWithRunnerId[];
+    passages: AdminPassageWithRunnerIdAndRaceId[];
   };
 }
 

@@ -6,11 +6,10 @@ import { type AdminRaceWithRunnerCount, type Gender } from "@live24hisere/core/t
 import { useStateWithNonNullableSetter } from "../../../../hooks/useStateWithNonNullableSetter";
 import { getAdminRaces } from "../../../../services/api/raceService";
 import { postAdminRunner } from "../../../../services/api/runnerService";
+import { getRunnerCreateBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../../services/ToastService";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { appContext } from "../../../App";
-import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
-import Crumb from "../../../ui/breadcrumbs/Crumb";
 import Page from "../../../ui/Page";
 import RunnerDetailsForm from "../../../viewParts/admin/runners/RunnerDetailsForm";
 
@@ -99,13 +98,7 @@ export default function CreateRunnerAdminView(): React.ReactElement {
   return (
     <Page id="admin-create-runner" title="Créer un coureur">
       <Row>
-        <Col>
-          <Breadcrumbs>
-            <Crumb url="/admin" label="Administration" />
-            <Crumb url="/admin/runners" label="Coureurs" />
-            <Crumb label="Créer un coureur" />
-          </Breadcrumbs>
-        </Col>
+        <Col>{getRunnerCreateBreadcrumbs()}</Col>
       </Row>
 
       <Row>

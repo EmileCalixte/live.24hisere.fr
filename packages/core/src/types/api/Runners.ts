@@ -1,12 +1,17 @@
-import { type AdminPassage } from "../Passage";
-import { type Runner, type RunnerWithPassages } from "../Runner";
+import {
+  type AdminRunner,
+  type PublicRunner,
+  type RaceRunner,
+  type RaceRunnerWithPassages,
+  type RunnerWithRaceCount,
+} from "../Runner";
 import { type ApiRequest } from "./ApiRequest";
 
 export interface GetRunnersApiRequest extends ApiRequest {
   payload: never;
 
   response: {
-    runners: Runner[];
+    runners: PublicRunner[];
   };
 }
 
@@ -14,7 +19,7 @@ export interface GetRaceRunnersApiRequest extends ApiRequest {
   payload: never;
 
   response: {
-    runners: RunnerWithPassages[];
+    runners: RaceRunnerWithPassages[];
   };
 }
 
@@ -22,7 +27,7 @@ export interface GetRunnersAdminApiRequest extends ApiRequest {
   payload: never;
 
   response: {
-    runners: Runner[];
+    runners: Array<RunnerWithRaceCount<AdminRunner>>;
   };
 }
 
@@ -30,15 +35,15 @@ export interface GetRunnerAdminApiRequest extends ApiRequest {
   payload: never;
 
   response: {
-    runner: RunnerWithPassages<Runner, AdminPassage>;
+    runner: RunnerWithRaceCount<AdminRunner>;
   };
 }
 
 export interface PostRunnerAdminApiRequest extends ApiRequest {
-  payload: Omit<Runner, "birthYear"> & { birthYear: number };
+  payload: Omit<AdminRunner, "id" | "birthYear"> & { birthYear: number };
 
   response: {
-    runner: RunnerWithPassages<Runner, AdminPassage>;
+    runner: RunnerWithRaceCount<AdminRunner>;
   };
 }
 
@@ -53,13 +58,17 @@ export interface PostRunnersBulkAdminApiRequest extends ApiRequest {
 export interface PatchRunnerAdminApiRequest extends ApiRequest {
   payload: Partial<PostRunnerAdminApiRequest["payload"]>;
 
-  response: {
-    runner: Runner;
-  };
+  response: PostRunnerAdminApiRequest["response"];
 }
 
 export interface DeleteRunnerAdminApiRequest extends ApiRequest {
   payload: never;
 
   response: never;
+}
+
+export interface GetRaceRunnersAdminApiRequest extends ApiRequest {
+  payload: never;
+
+  response: { runners: Array<RaceRunner<AdminRunner>> };
 }

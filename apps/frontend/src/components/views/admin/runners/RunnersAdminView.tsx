@@ -1,57 +1,27 @@
-import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import React, { useCallback } from "react";
 import { faFileCsv, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { type AdminRace, type RaceDict, type Runner } from "@live24hisere/core/types";
-import { getAdminRaces } from "../../../../services/api/raceService";
+import { type AdminRunner, type RunnerWithRaceCount } from "@live24hisere/core/types";
+import { stringUtils } from "@live24hisere/utils";
 import { getAdminRunners } from "../../../../services/api/runnerService";
+import { getRunnersBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../../services/ToastService";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
-import { getRaceDictFromRaces } from "../../../../utils/raceUtils";
 import { appContext } from "../../../App";
-import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
-import Crumb from "../../../ui/breadcrumbs/Crumb";
 import CircularLoader from "../../../ui/CircularLoader";
+import { Input } from "../../../ui/forms/Input";
 import Page from "../../../ui/Page";
 import RunnersTable from "../../../viewParts/admin/runners/RunnersTable";
 
-const RACE_SELECT_OPTION_ALL = "all";
-
 export default function RunnersAdminView(): React.ReactElement {
-  const { accessToken } = useContext(appContext).user;
+  const { accessToken } = React.useContext(appContext).user;
 
   // false = not fetched yet
-  const [runners, setRunners] = useState<Runner[] | false>(false);
+  const [runners, setRunners] = React.useState<Array<RunnerWithRaceCount<AdminRunner>> | false>(false);
 
-  // false = not fetched yet
-  const [races, setRaces] = useState<RaceDict<AdminRace> | false>(false);
-
-  const [selectedRaceId, setSelectedRaceId] = useState<number | null>(null);
-
-  function onSelectRace(e: React.ChangeEvent<HTMLSelectElement>): void {
-    if (e.target.value === RACE_SELECT_OPTION_ALL) {
-      setSelectedRaceId(null);
-      return;
-    }
-
-    setSelectedRaceId(parseInt(e.target.value));
-  }
-
-  const fetchRaces = useCallback(async () => {
-    if (!accessToken) {
-      return;
-    }
-
-    const result = await getAdminRaces(accessToken);
-
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de récupérer la liste des courses");
-      return;
-    }
-
-    setRaces(getRaceDictFromRaces(result.json.races));
-  }, [accessToken]);
+  const [search, setSearch] = React.useState("");
 
   const fetchRunners = useCallback(async () => {
     if (!accessToken) {
@@ -68,35 +38,36 @@ export default function RunnersAdminView(): React.ReactElement {
     setRunners(result.json.runners);
   }, [accessToken]);
 
-  const displayedRunners = useMemo<Runner[] | false>(() => {
+  React.useEffect(() => {
+    void fetchRunners();
+  }, [fetchRunners]);
+
+  const displayedRunners = React.useMemo(() => {
     if (!runners) {
       return false;
     }
 
-    if (selectedRaceId === null) {
+    const trimmedSearch = search.trim();
+
+    if (trimmedSearch.length < 1) {
       return runners;
     }
 
-    return runners.filter((runner) => runner.raceId === selectedRaceId);
-  }, [runners, selectedRaceId]);
+    return runners.filter((runner) => {
+      const firstnameMatches = stringUtils.normalizedIncludes(runner.firstname, trimmedSearch);
+      const lastnameMatches = stringUtils.normalizedIncludes(runner.lastname, trimmedSearch);
 
-  useEffect(() => {
-    void fetchRaces();
-  }, [fetchRaces]);
+      console.log(runner.firstname, runner.lastname, trimmedSearch);
+      console.log(firstnameMatches, lastnameMatches);
 
-  useEffect(() => {
-    void fetchRunners();
-  }, [fetchRunners]);
+      return firstnameMatches || lastnameMatches;
+    });
+  }, [runners, search]);
 
   return (
     <Page id="admin-runners" title="Coureurs">
       <Row>
-        <Col>
-          <Breadcrumbs>
-            <Crumb url="/admin" label="Administration" />
-            <Crumb label="Coureurs" />
-          </Breadcrumbs>
-        </Col>
+        <Col>{getRunnersBreadcrumbs()}</Col>
       </Row>
 
       {displayedRunners === false && (
@@ -125,30 +96,15 @@ export default function RunnersAdminView(): React.ReactElement {
 
           <Row>
             <Col lg={3} md={4} sm={6} xs={12} className="mt-3">
-              <div className="input-group">
-                <label htmlFor="admin-runners-race-select">Course</label>
-                <select id="admin-runners-race-select" className="input-select" onChange={onSelectRace}>
-                  <option value={RACE_SELECT_OPTION_ALL}>Toutes</option>
-
-                  {(() => {
-                    if (races === false) {
-                      return <option disabled>Chargement des courses...</option>;
-                    }
-
-                    return (
-                      <>
-                        {Object.entries(races).map(([raceId, race]) => {
-                          return (
-                            <option key={raceId} value={raceId}>
-                              {race.name}
-                            </option>
-                          );
-                        })}
-                      </>
-                    );
-                  })()}
-                </select>
-              </div>
+              <Input
+                label="Rechercher"
+                placeholder="Nom ou prénom"
+                autoComplete="off"
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                }}
+              />
             </Col>
           </Row>
 
@@ -156,7 +112,7 @@ export default function RunnersAdminView(): React.ReactElement {
             <Col className="mt-3">
               {displayedRunners.length === 0 && <p>Aucun coureur</p>}
 
-              {displayedRunners.length > 0 && <RunnersTable runners={displayedRunners} races={races} />}
+              {displayedRunners.length > 0 && <RunnersTable runners={displayedRunners} />}
             </Col>
           </Row>
         </>

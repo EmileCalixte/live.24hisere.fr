@@ -527,15 +527,15 @@ table.table th .buttons-container {
   box-shadow: 0 1px 3px rgb(180 180 180);
 }
 
-.admin-list li.draggable a:hover {
+.admin-list li.sorting a:hover {
   cursor: grab;
 }
 
-.admin-list li.draggable a.dragged {
+.admin-list li.sorting a.dragged {
   opacity: 50%;
 }
 
-.admin-list li.draggable a.dragged-over {
+.admin-list li.sorting a.dragged-over {
   border: 1px solid #2eb72e;
 }
 

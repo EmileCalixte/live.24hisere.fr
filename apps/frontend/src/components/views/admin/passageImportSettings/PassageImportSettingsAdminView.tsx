@@ -3,11 +3,10 @@ import { Col, Row } from "react-bootstrap";
 import { type PassageImportSettings } from "@live24hisere/core/types";
 import { stringUtils } from "@live24hisere/utils";
 import { getPassageImportSettings, patchPassageImportSettings } from "../../../../services/api/configService";
+import { getImportPassagesSettingsBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../../services/ToastService";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { appContext } from "../../../App";
-import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
-import Crumb from "../../../ui/breadcrumbs/Crumb";
 import { Input } from "../../../ui/forms/Input";
 import Page from "../../../ui/Page";
 
@@ -94,12 +93,7 @@ export default function PassageImportSettingsAdminView(): React.ReactElement {
   return (
     <Page id="admin-passage-import-settings" title="Paramètres d'import des passages">
       <Row>
-        <Col>
-          <Breadcrumbs>
-            <Crumb url="/admin" label="Administration" />
-            <Crumb label="Paramètres d'import des passages" />
-          </Breadcrumbs>
-        </Col>
+        <Col>{getImportPassagesSettingsBreadcrumbs()}</Col>
       </Row>
 
       <Row>

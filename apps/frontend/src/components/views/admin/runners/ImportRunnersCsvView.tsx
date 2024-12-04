@@ -8,13 +8,14 @@ import {
   type Gender,
   type PostRunnersBulkAdminApiRequest,
   type RaceDict,
-  type Runner,
+  type RaceRunner,
 } from "@live24hisere/core/types";
 import { stringUtils } from "@live24hisere/utils";
 import { GENDER_OPTIONS } from "../../../../constants/forms";
 import { ImportCsvColumn } from "../../../../constants/importCsv";
 import { getAdminRaces } from "../../../../services/api/raceService";
 import { getAdminRunners, postAdminRunnersBulk } from "../../../../services/api/runnerService";
+import { getImportRunnersCsvBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../../services/ToastService";
 import { type SelectOption } from "../../../../types/Forms";
 import { type RunnerFromCsv, type RunnersCsvMapping } from "../../../../types/ImportCsv";
@@ -22,8 +23,6 @@ import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { getRunnerFromCsv, parseCsv } from "../../../../utils/csvUtils";
 import { getRaceDictFromRaces } from "../../../../utils/raceUtils";
 import { appContext } from "../../../App";
-import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
-import Crumb from "../../../ui/breadcrumbs/Crumb";
 import { Input } from "../../../ui/forms/Input";
 import Select from "../../../ui/forms/Select";
 import Page from "../../../ui/Page";
@@ -68,7 +67,7 @@ export default function ImportRunnersCsvView(): React.ReactElement {
   } = React.useContext(appContext);
 
   // false = not fetched yet
-  const [runners, setRunners] = React.useState<Runner[] | false>(false);
+  const [runners, setRunners] = React.useState<RaceRunner[] | false>(false);
 
   // false = not fetched yet
   const [races, setRaces] = React.useState<RaceDict<AdminRace> | false>(false);
@@ -366,13 +365,7 @@ export default function ImportRunnersCsvView(): React.ReactElement {
   return (
     <Page id="admin-import-runners-csv" title="Import de coureurs">
       <Row>
-        <Col>
-          <Breadcrumbs>
-            <Crumb url="/admin" label="Administration" />
-            <Crumb url="/admin/runners" label="Coureurs" />
-            <Crumb label="Import via fichier CSV" />
-          </Breadcrumbs>
-        </Col>
+        <Col>{getImportRunnersCsvBreadcrumbs()}</Col>
       </Row>
 
       <Row className="row-cols-auto">
