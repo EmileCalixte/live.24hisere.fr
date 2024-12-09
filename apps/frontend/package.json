@@ -32,7 +32,7 @@
     "react-bootstrap": "^2.10.5",
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
-    "react-router-dom": "^6.27.0",
+    "react-router-dom": "^7.0.2",
     "toastr2": "^3.0.0-alpha.18",
     "vite": "^5.4.9",
     "vite-plugin-svgr": "^4.2.0",
