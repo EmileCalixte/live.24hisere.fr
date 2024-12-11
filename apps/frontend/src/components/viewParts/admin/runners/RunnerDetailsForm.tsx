@@ -1,6 +1,5 @@
 import React from "react";
 import { type Gender } from "@live24hisere/core/types";
-import { categoryUtils } from "@live24hisere/utils";
 import { GENDER_OPTIONS } from "../../../../constants/forms";
 import { Checkbox } from "../../../ui/forms/Checkbox";
 import { Input } from "../../../ui/forms/Input";
@@ -79,10 +78,6 @@ export default function RunnerDetailsForm({
             setBirthYear(e.target.value);
           }}
         />
-
-        <div>
-          <span>Catégorie : {categoryUtils.getCategoryNameFromBirthYear(parseInt(birthYear))}</span>
-        </div>
       </div>
 
       <RadioGroup

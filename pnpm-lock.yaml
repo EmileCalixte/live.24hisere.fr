@@ -183,6 +183,9 @@ importers:
 
   apps/frontend:
     dependencies:
+      '@emilecalixte/ffa-categories':
+        specifier: ^0.2.0
+        version: 0.2.0
       '@emotion/react':
         specifier: ^11.13.3
         version: 11.13.3(@types/react@18.3.12)(react@18.3.1)
@@ -590,6 +593,9 @@ packages:
 
   '@drizzle-team/brocli@0.10.2':
     resolution: {integrity: sha512-z33Il7l5dKjUgGULTqBsQBQwckHh5AbIuxhdsIxDDiZAzBOrZO6q9ogcWC65kU382AfynTfgNumVcNIjuIua6w==}
+
+  '@emilecalixte/ffa-categories@0.2.0':
+    resolution: {integrity: sha512-ifSBM9lRF4vhClgO5KT1rCG/2aLfEOmC5WHxN972vVjP/RJ/dTffIs1bKvofhoIkxvsQhxqwxrnUN4Qbvm4tsg==}
 
   '@emotion/babel-plugin@11.12.0':
     resolution: {integrity: sha512-y2WQb+oP8Jqvvclh8Q55gLUyb7UFvgv7eJfsj7td5TToBrIUtPay2kMrZi4xjq9qw2vD0ZR5fSho0yqoFgX7Rw==}
@@ -6140,6 +6146,8 @@ snapshots:
       '@jridgewell/trace-mapping': 0.3.9
 
   '@drizzle-team/brocli@0.10.2': {}
+
+  '@emilecalixte/ffa-categories@0.2.0': {}
 
   '@emotion/babel-plugin@11.12.0':
     dependencies:

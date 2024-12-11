@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
-import { type CategoryShortCode, type GenderWithMixed, type PublicRace } from "@live24hisere/core/types";
-import { categoryUtils } from "@live24hisere/utils";
+import { type CategoryCode, getCategory } from "@emilecalixte/ffa-categories";
+import { type GenderWithMixed, type PublicRace } from "@live24hisere/core/types";
 import { type Ranking, type RankingRunner } from "../../../../../types/Ranking";
 import RankingTableInfoHeader from "../RankingTableInfoHeader";
 import ResponsiveRankingTableRow from "./ResponsiveRankingTableRow";
@@ -8,7 +8,7 @@ import ResponsiveRankingTableRow from "./ResponsiveRankingTableRow";
 interface ResponsiveRankingTableProps {
   race: PublicRace;
   ranking: Ranking;
-  tableCategory: CategoryShortCode | null;
+  tableCategoryCode: CategoryCode | null;
   tableGender: GenderWithMixed;
   tableRaceDuration: number | null;
 }
@@ -16,16 +16,16 @@ interface ResponsiveRankingTableProps {
 export default function ResponsiveRankingTable({
   race,
   ranking,
-  tableCategory,
+  tableCategoryCode,
   tableGender,
   tableRaceDuration,
 }: ResponsiveRankingTableProps): React.ReactElement {
   const getRankingTableRow = useCallback(
     (rankingRunner: RankingRunner) => {
-      const runnerCategory = categoryUtils.getCategoryCodeFromBirthYear(rankingRunner.birthYear);
+      const runnerCategoryCode = getCategory(Number(rankingRunner.birthYear), { date: new Date(race.startTime) }).code;
 
-      if (tableCategory !== null) {
-        if (tableCategory !== runnerCategory) {
+      if (tableCategoryCode !== null) {
+        if (tableCategoryCode !== runnerCategoryCode) {
           return null;
         }
       }
@@ -39,13 +39,14 @@ export default function ResponsiveRankingTable({
       return (
         <ResponsiveRankingTableRow
           key={rankingRunner.id}
+          race={race}
           runner={rankingRunner}
-          tableCategory={tableCategory}
+          tableCategoryCode={tableCategoryCode}
           tableGender={tableGender}
         />
       );
     },
-    [tableCategory, tableGender],
+    [race, tableCategoryCode, tableGender],
   );
 
   return (
@@ -54,7 +55,7 @@ export default function ResponsiveRankingTable({
         <tr>
           <RankingTableInfoHeader
             race={race}
-            tableCategory={tableCategory}
+            tableCategoryCode={tableCategoryCode}
             tableGender={tableGender}
             tableRaceDuration={tableRaceDuration}
           />

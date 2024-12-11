@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
+import { type CategoryCode, getCategory } from "@emilecalixte/ffa-categories";
 import { Link } from "react-router-dom";
-import { type CategoryShortCode, type GenderWithMixed } from "@live24hisere/core/types";
-import { categoryUtils } from "@live24hisere/utils";
+import { type GenderWithMixed, type PublicRace } from "@live24hisere/core/types";
 import { type RankingRunner } from "../../../../../types/Ranking";
 import { getRankingType } from "../../../../../utils/rankingUtils";
 import { formatGap } from "../../../../../utils/runnerUtils";
@@ -9,20 +9,22 @@ import { formatFloatNumber, formatMsAsDuration } from "../../../../../utils/util
 import RunnerStoppedBadge from "../../../../ui/badges/RunnerStoppedBadge";
 
 interface ResponsiveRankingTableRowProps {
+  race: PublicRace;
   runner: RankingRunner;
-  tableCategory: CategoryShortCode | null;
+  tableCategoryCode: CategoryCode | null;
   tableGender: GenderWithMixed;
 }
 
 export default function ResponsiveRankingTableRow({
+  race,
   runner,
-  tableCategory,
+  tableCategoryCode,
   tableGender,
 }: ResponsiveRankingTableRowProps): React.ReactElement {
-  const runnerCategory = categoryUtils.getCategoryCodeFromBirthYear(runner.birthYear);
+  const runnerCategoryCode = getCategory(Number(runner.birthYear), { date: new Date(race.startTime) });
 
   const rowRanking = useMemo(() => {
-    if (tableCategory === null) {
+    if (tableCategoryCode === null) {
       if (tableGender === "mixed") {
         return runner.ranks.displayed.scratchMixed;
       }
@@ -35,18 +37,18 @@ export default function ResponsiveRankingTableRow({
     }
 
     return runner.ranks.displayed.categoryGender;
-  }, [runner, tableCategory, tableGender]);
+  }, [runner, tableCategoryCode, tableGender]);
 
   const rowSecondaryRankings = useMemo(() => {
-    if (tableCategory === null) {
+    if (tableCategoryCode === null) {
       if (tableGender === "mixed") {
         return (
           <>
             {runner.ranks.displayed.scratchGender} {runner.gender.toUpperCase()}
             &nbsp;|&nbsp;
-            {runner.ranks.displayed.categoryMixed} {runnerCategory}
+            {runner.ranks.displayed.categoryMixed} {runnerCategoryCode}
             &nbsp;|&nbsp;
-            {runner.ranks.displayed.categoryGender} {runnerCategory}-{runner.gender.toUpperCase()}
+            {runner.ranks.displayed.categoryGender} {runnerCategoryCode}-{runner.gender.toUpperCase()}
           </>
         );
       }
@@ -55,9 +57,9 @@ export default function ResponsiveRankingTableRow({
         <>
           {runner.ranks.displayed.scratchMixed}
           &nbsp;|&nbsp;
-          {runner.ranks.displayed.categoryMixed} {runnerCategory}
+          {runner.ranks.displayed.categoryMixed} {runnerCategoryCode}
           &nbsp;|&nbsp;
-          {runner.ranks.displayed.categoryGender} {runnerCategory}-{runner.gender.toUpperCase()}
+          {runner.ranks.displayed.categoryGender} {runnerCategoryCode}-{runner.gender.toUpperCase()}
         </>
       );
     }
@@ -69,7 +71,7 @@ export default function ResponsiveRankingTableRow({
           &nbsp;|&nbsp;
           {runner.ranks.displayed.scratchGender} {runner.gender.toUpperCase()}
           &nbsp;|&nbsp;
-          {runner.ranks.displayed.categoryGender} {runnerCategory}-{runner.gender.toUpperCase()}
+          {runner.ranks.displayed.categoryGender} {runnerCategoryCode}-{runner.gender.toUpperCase()}
         </>
       );
     }
@@ -80,12 +82,12 @@ export default function ResponsiveRankingTableRow({
         &nbsp;|&nbsp;
         {runner.ranks.displayed.scratchGender} {runner.gender.toUpperCase()}
         &nbsp;|&nbsp;
-        {runner.ranks.displayed.categoryMixed} {runnerCategory}
+        {runner.ranks.displayed.categoryMixed} {runnerCategoryCode}
       </>
     );
-  }, [runner, tableCategory, tableGender, runnerCategory]);
+  }, [runner, tableCategoryCode, tableGender, runnerCategoryCode]);
 
-  const formattedGap = formatGap(runner.gaps.firstRunner[getRankingType(tableCategory, tableGender)].gap);
+  const formattedGap = formatGap(runner.gaps.firstRunner[getRankingType(tableCategoryCode, tableGender)].gap);
 
   const displayedGap = formattedGap === null || formattedGap === "=" ? null : formattedGap;
 

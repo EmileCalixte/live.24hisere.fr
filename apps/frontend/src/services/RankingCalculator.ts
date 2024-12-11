@@ -1,5 +1,5 @@
+import { getCategory } from "@emilecalixte/ffa-categories";
 import { type GenderWithMixed, type PublicRace } from "@live24hisere/core/types";
-import { categoryUtils } from "@live24hisere/utils";
 import {
   type MinimalRankingRunnerInput,
   type Ranking,
@@ -54,11 +54,11 @@ export class RankingCalculator<TRunner extends MinimalRankingRunnerInput> {
   };
 
   constructor(
-    race: PublicRace,
+    private readonly race: PublicRace,
     private readonly runners: TRunner[],
     rankingDate?: Date,
   ) {
-    this.runners = this.runners.filter((runner) => runner.raceId === race.id);
+    this.runners = this.runners.filter((runner) => runner.raceId === this.race.id);
 
     if (rankingDate) {
       this.runners = this.runners.map((runner) => {
@@ -66,7 +66,7 @@ export class RankingCalculator<TRunner extends MinimalRankingRunnerInput> {
 
         return {
           ...runner,
-          ...getRunnerProcessedDataFromPassages(race, passages),
+          ...getRunnerProcessedDataFromPassages(this.race, passages),
           passages,
         };
       });
@@ -86,7 +86,7 @@ export class RankingCalculator<TRunner extends MinimalRankingRunnerInput> {
     const ranking: Ranking<TRunner> = [];
 
     for (const runner of this.runners) {
-      const runnerCategoryCode = categoryUtils.getCategoryCodeFromBirthYear(runner.birthYear);
+      const runnerCategoryCode = getCategory(Number(runner.birthYear), { date: new Date(this.race.startTime) }).code;
 
       const rankings: RankingRunnerRanks = {
         actual: {
@@ -231,7 +231,7 @@ export class RankingCalculator<TRunner extends MinimalRankingRunnerInput> {
   }
 
   private updateFirstRunners(runner: Ranking<TRunner>[number]): void {
-    const runnerCategoryCode = categoryUtils.getCategoryCodeFromBirthYear(runner.birthYear);
+    const runnerCategoryCode = getCategory(Number(runner.birthYear), { date: new Date(this.race.startTime) }).code;
 
     if (!(runnerCategoryCode in this.firstRunnersByCategory)) {
       this.addCategoryCodeToFirstRunners(runnerCategoryCode);

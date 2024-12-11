@@ -1,17 +1,21 @@
 import React from "react";
+import {
+  ALL_CATEGORY_CODES,
+  type CategoryCode,
+  type CategoryList,
+  getCategory,
+  getCategoryList,
+  isCategoryCode,
+} from "@emilecalixte/ffa-categories";
 import { parseAsInteger, useQueryState } from "nuqs";
 import { Col, Row } from "react-bootstrap";
-import { ALL_CATEGORIES } from "@live24hisere/core/constants";
 import {
-  type CategoryShortCode,
-  type FullCategoriesDict,
   type GenderWithMixed,
-  type PartialCategoriesDict,
+  type RaceRunnerWithProcessedPassages,
   type RaceWithRunnerCount,
   type RunnerWithProcessedData,
-  type RunnerWithProcessedPassages,
 } from "@live24hisere/core/types";
-import { categoryUtils, objectUtils } from "@live24hisere/utils";
+import { objectUtils } from "@live24hisere/utils";
 import { RankingTimeMode } from "../../constants/rankingTimeMode";
 import { SearchParam } from "../../constants/searchParams";
 import "../../css/print-ranking-table.css";
@@ -37,7 +41,7 @@ const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
 
 export default function RankingView(): React.ReactElement {
   const [selectedRaceId, setSelectedRaceId] = useQueryState(SearchParam.RACE, parseAsInteger);
-  const [selectedCategory, setSelectedCategory] = useQueryState(SearchParam.CATEGORY, parseAsCategory);
+  const [selectedCategoryCode, setSelectedCategory] = useQueryState(SearchParam.CATEGORY, parseAsCategory);
   const [selectedGender, setSelectedGender] = useQueryState(SearchParam.GENDER, parseAsGender);
 
   const { selectedEdition } = React.useContext(publicContext);
@@ -57,6 +61,14 @@ export default function RankingView(): React.ReactElement {
   const selectedRace = React.useMemo<RaceWithRunnerCount | null>(() => {
     return races?.find((race) => race.id === selectedRaceId) ?? null;
   }, [races, selectedRaceId]);
+
+  const allCategories = React.useMemo(() => {
+    if (!selectedRace) {
+      return {};
+    }
+
+    return getCategoryList(new Date(selectedRace.startTime));
+  }, [selectedRace]);
 
   const {
     selectedTimeMode,
@@ -82,7 +94,7 @@ export default function RankingView(): React.ReactElement {
   const runners = useIntervalSimpleApiRequest(fetchRunners).json?.runners;
 
   const processedRunners = React.useMemo<
-    Array<RunnerWithProcessedPassages & RunnerWithProcessedData> | undefined
+    Array<RaceRunnerWithProcessedPassages & RunnerWithProcessedData> | undefined
   >(() => {
     if (!runners || !selectedRace) {
       return;
@@ -109,7 +121,7 @@ export default function RankingView(): React.ReactElement {
       return;
     }
 
-    if (!categoryUtils.isCategoryCode(value)) {
+    if (!isCategoryCode(value)) {
       void setSelectedCategory(null);
       throw new Error(`${value} is not a valid category code`);
     }
@@ -146,34 +158,34 @@ export default function RankingView(): React.ReactElement {
     setRankingTimeMemory(timeToSave);
   };
 
-  const categories = React.useMemo<PartialCategoriesDict | null>(() => {
-    if (!ranking) {
+  const categories = React.useMemo<CategoryList | null>(() => {
+    if (!ranking || !selectedRace) {
       return null;
     }
 
-    const categoriesInRanking = new Set<CategoryShortCode>();
+    const categoriesInRanking = new Set<CategoryCode>();
 
     for (const runner of ranking) {
-      categoriesInRanking.add(categoryUtils.getCategoryCodeFromBirthYear(runner.birthYear));
+      categoriesInRanking.add(getCategory(Number(runner.birthYear), { date: new Date(selectedRace.startTime) }).code);
     }
 
-    const categoriesToRemove: Array<keyof FullCategoriesDict> = [];
+    const categoriesToRemove: CategoryCode[] = [];
 
-    for (const categoryCode of objectUtils.keys(ALL_CATEGORIES)) {
+    for (const categoryCode of ALL_CATEGORY_CODES) {
       if (!categoriesInRanking.has(categoryCode)) {
         categoriesToRemove.push(categoryCode);
       }
     }
 
-    return objectUtils.excludeKeys(ALL_CATEGORIES, categoriesToRemove);
-  }, [ranking]);
+    return objectUtils.excludeKeys(allCategories, categoriesToRemove);
+  }, [allCategories, ranking, selectedRace]);
 
   // Clear category param if a category is selected but no runner is in it in the ranking
   React.useEffect(() => {
-    if (categories && selectedCategory && !(selectedCategory in categories)) {
+    if (categories && selectedCategoryCode && !(selectedCategoryCode in categories)) {
       void setSelectedCategory(null);
     }
-  }, [categories, selectedCategory, setSelectedCategory]);
+  }, [categories, selectedCategoryCode, setSelectedCategory]);
 
   return (
     <Page id="ranking" title="Classements">
@@ -212,7 +224,7 @@ export default function RankingView(): React.ReactElement {
                   onGenderSelect={onGenderSelect}
                   setTimeMode={onTimeModeSelect}
                   onRankingTimeSave={onRankingTimeSave}
-                  selectedCategory={selectedCategory}
+                  selectedCategoryCode={selectedCategoryCode}
                   selectedGender={selectedGender ?? "mixed"}
                   selectedTimeMode={selectedTimeMode}
                   currentRankingTime={selectedRankingTime ?? selectedRace.duration * 1000}
@@ -229,7 +241,7 @@ export default function RankingView(): React.ReactElement {
                       <RankingTable
                         race={selectedRace}
                         ranking={ranking}
-                        tableCategory={selectedCategory}
+                        tableCategoryCode={selectedCategoryCode}
                         tableGender={selectedGender ?? "mixed"}
                         tableRaceDuration={selectedTimeMode === RankingTimeMode.AT ? selectedRankingTime : null}
                       />
@@ -242,7 +254,7 @@ export default function RankingView(): React.ReactElement {
                         <ResponsiveRankingTable
                           race={selectedRace}
                           ranking={ranking}
-                          tableCategory={selectedCategory}
+                          tableCategoryCode={selectedCategoryCode}
                           tableGender={selectedGender ?? "mixed"}
                           tableRaceDuration={selectedTimeMode === RankingTimeMode.AT ? selectedRankingTime : null}
                         />
