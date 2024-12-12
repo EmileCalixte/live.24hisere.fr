@@ -263,7 +263,7 @@ export default function RaceDetailsAdminView(): React.ReactElement {
 
               {raceRunners === null && <p>Impossible de récupérer les coureurs</p>}
 
-              {raceRunners && <RaceRunnersTable runners={raceRunners} />}
+              {raceRunners && <RaceRunnersTable race={race} runners={raceRunners} />}
             </Col>
           </Row>
 

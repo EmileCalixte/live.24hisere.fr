@@ -1,12 +1,14 @@
 import React from "react";
-import { type AdminRunner, type RaceRunner } from "@live24hisere/core/types";
-import CircularLoader from "../../../ui/CircularLoader";
+import { getCategory } from "@emilecalixte/ffa-categories";
+import { Link } from "react-router-dom";
+import { type AdminRace, type AdminRunner, type RaceRunner } from "@live24hisere/core/types";
 
 interface RaceRunnersTableProps {
+  race: AdminRace;
   runners: Array<RaceRunner<AdminRunner>>;
 }
 
-export default function RaceRunnersTable({ runners }: RaceRunnersTableProps): React.ReactElement {
+export default function RaceRunnersTable({ race, runners }: RaceRunnersTableProps): React.ReactElement {
   return (
     <table className="table no-full-width">
       <thead>
@@ -20,14 +22,18 @@ export default function RaceRunnersTable({ runners }: RaceRunnersTableProps): Re
       </thead>
       <tbody>
         {runners.map((runner) => {
+          const category = getCategory(Number(runner.birthYear), { date: new Date(race.startTime) });
+
           return (
             <tr key={runner.id}>
               <td>{runner.bibNumber}</td>
               <td>
-                {runner.firstname} {runner.lastname}
+                <Link to={`/admin/runners/${runner.id}`}>
+                  {runner.firstname} {runner.lastname}
+                </Link>
               </td>
               <td>
-                <CircularLoader />
+                {category.code} - {category.name}
               </td>
               <td>{runner.stopped ? "Oui" : "Non"}</td>
               <td>{runner.isPublic ? "Oui" : "Non"}</td>
