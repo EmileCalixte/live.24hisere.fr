@@ -20,12 +20,11 @@ export default function CreateRunnerAdminView(): React.ReactElement {
 
   const [races, setRaces] = useState<AdminRaceWithRunnerCount[] | false>(false);
 
-  const [id, setId] = useState(1);
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [gender, setGender] = useState<Gender>(GENDER.M);
   const [birthYear, setBirthYear] = useState((new Date().getFullYear() - 30).toString());
-  const [stopped, setStopped] = useState(false);
+  const [isPublic, setIsPublic] = React.useState(false);
   const [raceId, setRaceId] = useStateWithNonNullableSetter<number | null>(null);
 
   const [isSaving, setIsSaving] = useState(false);
@@ -68,12 +67,11 @@ export default function CreateRunnerAdminView(): React.ReactElement {
       setIsSaving(true);
 
       const body = {
-        id,
         firstname,
         lastname,
         gender,
         birthYear: parseInt(birthYear),
-        stopped,
+        isPublic,
         raceId,
       };
 
@@ -85,10 +83,12 @@ export default function CreateRunnerAdminView(): React.ReactElement {
         return;
       }
 
+      const id = result.json.runner.id;
+
       ToastService.getToastr().success("Coureur créé");
       navigate(`/admin/runners/${id}`);
     },
-    [accessToken, raceId, id, firstname, lastname, gender, birthYear, stopped, navigate],
+    [accessToken, raceId, firstname, lastname, gender, birthYear, isPublic, navigate],
   );
 
   useEffect(() => {
@@ -109,8 +109,6 @@ export default function CreateRunnerAdminView(): React.ReactElement {
             onSubmit={(e) => {
               void onSubmit(e);
             }}
-            id={id}
-            setId={setId}
             firstname={firstname}
             setFirstname={setFirstname}
             lastname={lastname}
@@ -119,11 +117,8 @@ export default function CreateRunnerAdminView(): React.ReactElement {
             setGender={setGender}
             birthYear={birthYear}
             setBirthYear={setBirthYear}
-            stopped={stopped}
-            setStopped={setStopped}
-            races={races}
-            raceId={raceId ?? 0}
-            setRaceId={setRaceId}
+            isPublic={isPublic}
+            setIsPublic={setIsPublic}
             submitButtonDisabled={isSaving || (races && races.length < 1)}
           />
         </Col>

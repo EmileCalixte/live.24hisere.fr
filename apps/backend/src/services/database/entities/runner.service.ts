@@ -55,7 +55,7 @@ export class RunnerService extends EntityService {
         raceCount: count(TABLE_PARTICIPANT.id),
       })
       .from(TABLE_RUNNER)
-      .innerJoin(TABLE_PARTICIPANT, eq(TABLE_PARTICIPANT.runnerId, TABLE_RUNNER.id))
+      .leftJoin(TABLE_PARTICIPANT, eq(TABLE_PARTICIPANT.runnerId, TABLE_RUNNER.id))
       .groupBy(TABLE_RUNNER.id);
   }
 

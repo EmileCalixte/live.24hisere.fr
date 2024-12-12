@@ -283,6 +283,8 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
       ToastService.getToastr().success("Détails du coureur enregistrés");
 
       setIsSaving(false);
+
+      setRunner(result.json.runner);
     },
     [runner, accessToken, runnerFirstname, runnerLastname, runnerBirthYear, runnerGender, runnerIsPublic],
   );
