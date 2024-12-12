@@ -18,6 +18,7 @@ export default function RaceRunnersTable({ race, runners }: RaceRunnersTableProp
           <th>Catégorie</th>
           <th>Arrêté</th>
           <th>Visible public</th>
+          <th>Détails du coureur</th>
         </tr>
       </thead>
       <tbody>
@@ -37,6 +38,9 @@ export default function RaceRunnersTable({ race, runners }: RaceRunnersTableProp
               </td>
               <td>{runner.stopped ? "Oui" : "Non"}</td>
               <td>{runner.isPublic ? "Oui" : "Non"}</td>
+              <td>
+                <Link to={`/admin/races/${race.id}/runners/${runner.id}`}>Détails</Link>
+              </td>
             </tr>
           );
         })}

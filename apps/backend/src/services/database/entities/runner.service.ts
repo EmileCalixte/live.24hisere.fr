@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { and, count, eq, getTableColumns, sql } from "drizzle-orm";
 import {
+  AdminRaceRunnerWithPassages,
   AdminRunner,
   PublicRunner,
   RaceRunner,
@@ -140,8 +141,33 @@ export class RunnerService extends EntityService {
       .from(TABLE_PARTICIPANT)
       .innerJoin(TABLE_RUNNER, eq(TABLE_PARTICIPANT.runnerId, TABLE_RUNNER.id))
       .innerJoin(TABLE_RACE, eq(TABLE_PARTICIPANT.raceId, TABLE_RACE.id))
-      .innerJoin(TABLE_EDITION, eq(TABLE_RACE.editionId, TABLE_EDITION.id))
       .where(eq(TABLE_RACE.id, raceId));
+  }
+
+  async getAdminRaceRunner(raceId: number, runnerId: number): Promise<AdminRaceRunnerWithPassages | null> {
+    const [runners, passages] = await Promise.all([
+      this.db
+        .select({
+          ...getTableColumns(TABLE_RUNNER),
+          ...this.getPublicParticipantColumns(),
+        })
+        .from(TABLE_PARTICIPANT)
+        .innerJoin(TABLE_RUNNER, eq(TABLE_PARTICIPANT.runnerId, TABLE_RUNNER.id))
+        .innerJoin(TABLE_RACE, eq(TABLE_PARTICIPANT.raceId, TABLE_RACE.id))
+        .where(and(eq(TABLE_RACE.id, raceId), eq(TABLE_RUNNER.id, runnerId))),
+      this.passageService.getAdminPassagesByRaceAndRunnerId(raceId, runnerId),
+    ]);
+
+    const runner = this.getUniqueResult(runners);
+
+    if (!runner) {
+      return null;
+    }
+
+    return {
+      ...runner,
+      passages,
+    };
   }
 
   private async getRaceRunner(raceId: number, runnerId: number, publicOnly: boolean): Promise<RaceRunner | null> {

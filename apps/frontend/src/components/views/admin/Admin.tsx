@@ -9,6 +9,7 @@ import EditionDetailsAdminView from "./editions/EditionDetailsAdminView";
 import EditionsAdminView from "./editions/EditionsAdminView";
 import FastestLapsAdminView from "./FastestLapsAdminView";
 import PassageImportSettingsAdminView from "./passageImportSettings/PassageImportSettingsAdminView";
+import RaceRunnerAdminView from "./raceRunners/RaceRunnerAdminView";
 import CreateRaceAdminView from "./races/CreateRaceAdminView";
 import RaceDetailsAdminView from "./races/RaceDetailsAdminView";
 import RacesAdminView from "./races/RacesAdminView";
@@ -41,6 +42,7 @@ export default function Admin(): React.ReactElement {
       <Route path="races" element={<RacesAdminView />} />
       <Route path="races/create" element={<CreateRaceAdminView />} />
       <Route path="races/:raceId" element={<RaceDetailsAdminView />} />
+      <Route path="races/:raceId/runners/:runnerId" element={<RaceRunnerAdminView />} />
       <Route path="fastest-laps" element={<FastestLapsAdminView />} />
       <Route path="passage-import-settings" element={<PassageImportSettingsAdminView />} />
       <Route path="disabled-app" element={<DisabledAppAdminView />} />

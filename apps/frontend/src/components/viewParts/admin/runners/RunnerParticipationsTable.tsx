@@ -22,6 +22,7 @@ export default function RunnerParticipationsTable({
           <th>Course</th>
           <th>Dossard</th>
           <th>Arrêté</th>
+          <th>Détails participation</th>
         </tr>
       </thead>
       <tbody>
@@ -43,6 +44,11 @@ export default function RunnerParticipationsTable({
               </td>
               <td>{participation.bibNumber}</td>
               <td>{participation.stopped ? "Oui" : "Non"}</td>
+              <td>
+                {!races && <CircularLoader />}
+
+                {race && <Link to={`/admin/races/${race.id}/runners/${participation.runnerId}`}>Détails</Link>}
+              </td>
             </tr>
           );
         })}

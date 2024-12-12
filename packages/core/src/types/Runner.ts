@@ -1,6 +1,6 @@
 import { type Gender } from "./Gender";
 import { type Participant } from "./Participant";
-import { type ProcessedPassage, type PublicPassage } from "./Passage";
+import { type AdminPassage, type ProcessedPassage, type PublicPassage } from "./Passage";
 import { type PublicRace } from "./Race";
 
 /**
@@ -64,6 +64,8 @@ export type RaceRunnerWithPassages<
    */
   passages: TPassage[];
 };
+
+export type AdminRaceRunnerWithPassages = RaceRunnerWithPassages<RaceRunner<AdminRunner>, AdminPassage>;
 
 export type RaceRunnerWithProcessedPassages<
   TRunner extends RaceRunner = RaceRunner,
