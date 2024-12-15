@@ -1,14 +1,17 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
+  type AdminEdition,
   type AdminProcessedPassage,
   type AdminRaceRunnerWithPassages,
   type AdminRaceWithRunnerCount,
 } from "@live24hisere/core/types";
+import { getAdminEdition } from "../../../../services/api/editionService";
 import { getAdminRaceRunner } from "../../../../services/api/participantService";
 import { deleteAdminPassage, patchAdminPassage, postAdminPassage } from "../../../../services/api/passageService";
 import { getAdminRace } from "../../../../services/api/raceService";
+import { getParticipantBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../../services/ToastService";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { getProcessedPassagesFromPassages } from "../../../../utils/passageUtils";
@@ -16,17 +19,32 @@ import { formatDateAsString, formatDateForApi } from "../../../../utils/utils";
 import { appContext } from "../../../App";
 import CircularLoader from "../../../ui/CircularLoader";
 import Page from "../../../ui/Page";
-import RaceRunnerDetailsPassages from "../../../viewParts/admin/runners/RaceRunnerDetailsPassages";
+import ParticipantDetailsForm from "../../../viewParts/admin/participants/ParticipantDetailsForm";
+import ParticipantDetailsPassages from "../../../viewParts/admin/participants/ParticipantDetailsPassages";
 
-export default function RacesAdminView(): React.ReactElement {
+export default function ParticipantAdminView(): React.ReactElement {
   const navigate = useNavigate();
 
   const { accessToken } = React.useContext(appContext).user;
 
   const { raceId: urlRaceId, runnerId: urlRunnerId } = useParams();
 
+  const [edition, setEdition] = React.useState<AdminEdition | undefined | null>(undefined);
   const [race, setRace] = React.useState<AdminRaceWithRunnerCount | undefined | null>(undefined);
   const [runner, setRunner] = React.useState<AdminRaceRunnerWithPassages | undefined | null>(undefined);
+
+  const [participantBibNumber, setParticipantBibNumber] = React.useState(0);
+  const [participantIsStopped, setParticipantIsStopped] = React.useState(false);
+
+  const [isSaving] = React.useState(false);
+
+  const unsavedChanges = React.useMemo(() => {
+    if (!runner) {
+      return false;
+    }
+
+    return [participantBibNumber === runner.bibNumber, participantIsStopped === runner.stopped].includes(false);
+  }, [runner, participantBibNumber, participantIsStopped]);
 
   const processedPassages = React.useMemo(() => {
     if (!race || !runner) {
@@ -35,6 +53,22 @@ export default function RacesAdminView(): React.ReactElement {
 
     return getProcessedPassagesFromPassages(race, runner.passages);
   }, [race, runner]);
+
+  const fetchEdition = React.useCallback(async () => {
+    if (!race || !accessToken) {
+      return;
+    }
+
+    const result = await getAdminEdition(accessToken, race.editionId);
+
+    if (!isApiRequestResultOk(result)) {
+      ToastService.getToastr().error("Impossible de récupérer les détails de l'édition");
+      setEdition(null);
+      return;
+    }
+
+    setEdition(result.json.edition);
+  }, [accessToken, race]);
 
   const fetchRace = React.useCallback(async () => {
     if (!urlRaceId || !accessToken) {
@@ -65,7 +99,12 @@ export default function RacesAdminView(): React.ReactElement {
       return;
     }
 
-    setRunner(result.json.runner);
+    const runner = result.json.runner;
+
+    setRunner(runner);
+
+    setParticipantBibNumber(runner.bibNumber);
+    setParticipantIsStopped(runner.stopped);
   }, [accessToken, urlRaceId, urlRunnerId]);
 
   const updatePassageVisiblity = React.useCallback(
@@ -179,12 +218,20 @@ export default function RacesAdminView(): React.ReactElement {
   );
 
   React.useEffect(() => {
+    void fetchEdition();
+  }, [fetchEdition]);
+
+  React.useEffect(() => {
     void fetchRace();
   }, [fetchRace]);
 
   React.useEffect(() => {
     void fetchRunner();
   }, [fetchRunner]);
+
+  const onSubmit = React.useCallback(async (e: React.FormEvent) => {
+    console.log("TODO");
+  }, []);
 
   if (race === null) {
     navigate("/admin");
@@ -195,24 +242,63 @@ export default function RacesAdminView(): React.ReactElement {
   }
 
   return (
-    <Page id="admin-race-runner-details" title="TODO" className="d-flex flex-column gap-3">
-      TODO
+    <Page
+      id="admin-race-runner-details"
+      title={runner ? `Détails de la participation de ${runner.firstname} ${runner.lastname}` : "Chargement"}
+      className="d-flex flex-column gap-3"
+    >
+      <Row>
+        <Col>{getParticipantBreadcrumbs(edition ?? undefined, race ?? undefined, runner ?? undefined)}</Col>
+      </Row>
+
       {(!race || !runner) && <CircularLoader />}
       {race && runner && (
-        <Row>
-          <Col>
-            <h3>Passages</h3>
+        <>
+          <Row>
+            <Col>
+              <h2>
+                Détails de la participation de
+                <> </>
+                <Link to={`/admin/runners/${runner.id}`}>
+                  {runner.firstname} {runner.lastname}
+                </Link>
+                <> </>à la course
+                <> </>
+                <Link to={`/admin/races/${race.id}`}>{race.name}</Link>
+              </h2>
+            </Col>
+          </Row>
 
-            <RaceRunnerDetailsPassages
-              passages={processedPassages}
-              runnerRace={race}
-              updatePassageVisiblity={updatePassageVisiblity}
-              updatePassage={updatePassage}
-              saveNewPassage={saveNewPassage}
-              deletePassage={deletePassage}
-            />
-          </Col>
-        </Row>
+          <Row>
+            <Col xxl={3} xl={4} lg={6} md={9} sm={12}>
+              <ParticipantDetailsForm
+                onSubmit={(e) => {
+                  void onSubmit(e);
+                }}
+                bibNumber={participantBibNumber}
+                setBibNumber={setParticipantBibNumber}
+                isStopped={participantIsStopped}
+                setIsStopped={setParticipantIsStopped}
+                submitButtonDisabled={isSaving || !unsavedChanges}
+              />
+            </Col>
+          </Row>
+
+          <Row>
+            <Col>
+              <h3>Passages</h3>
+
+              <ParticipantDetailsPassages
+                passages={processedPassages}
+                runnerRace={race}
+                updatePassageVisiblity={updatePassageVisiblity}
+                updatePassage={updatePassage}
+                saveNewPassage={saveNewPassage}
+                deletePassage={deletePassage}
+              />
+            </Col>
+          </Row>
+        </>
       )}
     </Page>
   );

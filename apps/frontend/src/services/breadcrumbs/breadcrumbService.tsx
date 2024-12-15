@@ -63,6 +63,14 @@ export function getRunnerDetailsBreadcrumbs(runner: AdminRunner | undefined): Br
   return getBreadcrumbs(getRunnerCrumbs(runner));
 }
 
+export function getParticipantBreadcrumbs(
+  edition: PublicEdition | undefined,
+  race: PublicRace | undefined,
+  runner: AdminRunner | undefined,
+): BreadcrumbsElement {
+  return getBreadcrumbs([...getRaceCrumbs(edition, race, true), getRunnerCrumb(runner)]);
+}
+
 function getAdminCrumb(): CrumbProps {
   return { label: "Administration", url: "/admin" };
 }
@@ -134,15 +142,15 @@ function getRunnersCrumbs(clickable: boolean = false): CrumbProps[] {
 }
 
 function getRunnerCrumbs(runner: AdminRunner | undefined): BreadcrumbsItem[] {
-  let runnerCrumb: BreadcrumbsItem;
+  return [...getRunnersCrumbs(true), getRunnerCrumb(runner)];
+}
 
+function getRunnerCrumb(runner: AdminRunner | undefined): BreadcrumbsItem {
   if (!runner) {
-    runnerCrumb = "LOADER";
-  } else {
-    runnerCrumb = { label: `${runner.lastname.toUpperCase()} ${runner.firstname}` };
+    return "LOADER";
   }
 
-  return [...getRunnersCrumbs(true), runnerCrumb];
+  return { label: `${runner.lastname.toUpperCase()} ${runner.firstname}` };
 }
 
 function getBreadcrumbs(data: BreadcrumbsItem[]): BreadcrumbsElement {
