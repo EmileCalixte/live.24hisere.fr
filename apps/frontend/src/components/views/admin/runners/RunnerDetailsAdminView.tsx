@@ -130,114 +130,6 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
     setParticipations(result.json.participations);
   }, [accessToken, urlRunnerId]);
 
-  // const updatePassageVisiblity = React.useCallback(
-  //   async (passage: AdminProcessedPassage, hidden: boolean) => {
-  //     if (!runner || !accessToken) {
-  //       return;
-  //     }
-
-  //     let confirmMessage: string;
-
-  //     if (hidden) {
-  //       confirmMessage = `Êtes vous sûr de vouloir masquer le passage n°${passage.id} (${formatDateAsString(passage.processed.lapEndTime)}) ?`;
-  //     } else {
-  //       confirmMessage = `Êtes vous sûr de vouloir rendre public le passage n°${passage.id} (${formatDateAsString(passage.processed.lapEndTime)}) ?`;
-  //     }
-
-  //     if (!window.confirm(confirmMessage)) {
-  //       return;
-  //     }
-
-  //     const result = await patchAdminRunnerPassage(accessToken, runner.id, passage.id, { isHidden: hidden });
-
-  //     if (!isApiRequestResultOk(result)) {
-  //       ToastService.getToastr().error("Une erreur est survenue");
-  //       return;
-  //     }
-
-  //     ToastService.getToastr().success(hidden ? "Le passage a été masqué" : "Le passage n'est plus masqué");
-
-  //     void fetchRunner();
-  //   },
-  //   [accessToken, runner, fetchRunner],
-  // );
-
-  // const updatePassage = useCallback(
-  //   async (passage: AdminProcessedPassage, time: Date) => {
-  //     if (!runner || !accessToken) {
-  //       return;
-  //     }
-
-  //     const result = await patchAdminRunnerPassage(accessToken, runner.id, passage.id, {
-  //       time: formatDateForApi(time),
-  //     });
-
-  //     if (!isApiRequestResultOk(result)) {
-  //       ToastService.getToastr().error("Une erreur est survenue");
-  //       return;
-  //     }
-
-  //     ToastService.getToastr().success("Le temps de passage a bien été modifié");
-
-  //     void fetchRunner();
-  //   },
-  //   [accessToken, runner, fetchRunner],
-  // );
-
-  // const saveNewPassage = useCallback(
-  //   async (time: Date) => {
-  //     if (!runner || !accessToken) {
-  //       return;
-  //     }
-
-  //     const result = await postAdminRunnerPassage(accessToken, runner.id, {
-  //       isHidden: false,
-  //       time: formatDateForApi(time),
-  //     });
-
-  //     if (!isApiRequestResultOk(result)) {
-  //       ToastService.getToastr().error("Une erreur est survenue");
-  //       return;
-  //     }
-
-  //     ToastService.getToastr().success("Le passage a bien été créé");
-
-  //     void fetchRunner();
-  //   },
-  //   [accessToken, runner, fetchRunner],
-  // );
-
-  // const deletePassage = useCallback(
-  //   async (passage: AdminProcessedPassage) => {
-  //     if (!runner || !accessToken) {
-  //       return;
-  //     }
-
-  //     let confirmMessage = `Êtes vous sûr de vouloir supprimer le passage n°${passage.id} (${formatDateAsString(passage.processed.lapEndTime)}) ?`;
-
-  //     if (passage.detectionId !== null) {
-  //       confirmMessage +=
-  //         "\n\nAttention, le passage ayant été importé depuis le système de chronométrage, il sera réimporté si il y est toujours présent. Préférez masquer le passage plutôt que de le supprimer si vous souhaitez qu'il n'apparaisse plus au public.";
-  //     }
-
-  //     if (!window.confirm(confirmMessage)) {
-  //       return;
-  //     }
-
-  //     const result = await deleteAdminRunnerPassage(accessToken, runner.id, passage.id);
-
-  //     if (!isApiRequestResultOk(result)) {
-  //       ToastService.getToastr().error("Une erreur est survenue");
-  //       return;
-  //     }
-
-  //     ToastService.getToastr().success("Le passage a été supprimé");
-
-  //     void fetchRunner();
-  //   },
-  //   [accessToken, runner, fetchRunner],
-  // );
-
   React.useEffect(() => {
     void fetchEditions();
   }, [fetchEditions]);
@@ -375,21 +267,6 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
               )}
             </Col>
           </Row>
-
-          {/* <Row>
-            <Col className="mt-3">
-              <h3>Passages</h3>
-
-              <RunnerDetailsPassages
-                passages={runner.passages}
-                runnerRace={runnerRace}
-                updatePassageVisiblity={updatePassageVisiblity}
-                updatePassage={updatePassage}
-                saveNewPassage={saveNewPassage}
-                deletePassage={deletePassage}
-              />
-            </Col>
-          </Row> */}
 
           <Row>
             <Col>

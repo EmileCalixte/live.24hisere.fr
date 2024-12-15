@@ -10,7 +10,6 @@ import { EditionsController as EditionsControllerAdmin } from "./controllers/adm
 import { ParticipantsController } from "./controllers/admin/participants.controller";
 import { PassagesController } from "./controllers/admin/passages.controller";
 import { RacesController as RacesControllerAdmin } from "./controllers/admin/races.controller";
-import { RunnerPassagesController } from "./controllers/admin/runnerPassages.controller";
 import { RunnersController as RunnersControllerAdmin } from "./controllers/admin/runners.controller";
 import { UsersController } from "./controllers/admin/users.controller";
 import { AppDataController } from "./controllers/appData.controller";
@@ -36,6 +35,7 @@ import { RandomService } from "./services/random.service";
 import { ImportPassagesService } from "./tasks/importPassages.service";
 import { EditionIdExistsRule } from "./validation/rules/edition/editionIdExists.rule";
 import { RaceIdExistsRule } from "./validation/rules/race/raceIdExists.rule";
+import { RunnerIdExistsRule } from "./validation/rules/runner/runnerIdExists.rule";
 
 type DependencyArray = Type[];
 
@@ -63,7 +63,6 @@ export const dependencies: Dependencies = {
       ParticipantsController,
       PassagesController,
       RacesControllerAdmin,
-      RunnerPassagesController,
       RunnersControllerAdmin,
       UsersController,
     ],
@@ -84,7 +83,7 @@ export const dependencies: Dependencies = {
     ],
   },
   tasks: [ImportPassagesService],
-  validationRules: [EditionIdExistsRule, RaceIdExistsRule],
+  validationRules: [EditionIdExistsRule, RaceIdExistsRule, RunnerIdExistsRule],
   commands: [CreateUserCommand, UpdateUserPasswordCommand, MigrateCommand],
   questionSets: [CreatePasswordQuestionSet, CurrentPasswordQuestionSet, UsernameQuestionSet],
 };

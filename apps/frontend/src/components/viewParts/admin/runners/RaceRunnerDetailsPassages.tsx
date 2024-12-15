@@ -17,7 +17,7 @@ interface RunnerDetailsPassagesProps {
   deletePassage: (passage: AdminProcessedPassage) => Promise<void>;
 }
 
-export default function RunnerDetailsPassages({
+export default function RaceRunnerDetailsPassages({
   passages,
   runnerRace,
   updatePassageVisiblity,

@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { and, asc, eq, getTableColumns } from "drizzle-orm";
 import { AdminPassage, AdminPassageWithRunnerIdAndRaceId, PublicPassage } from "@live24hisere/core/types";
-import { TABLE_PARTICIPANT, TABLE_PASSAGE, TABLE_RACE, TABLE_RUNNER } from "../../../../drizzle/schema";
+import { TABLE_PARTICIPANT, TABLE_PASSAGE } from "../../../../drizzle/schema";
 import { DrizzleTableColumns } from "../../../types/utils/drizzle";
 import { EntityService } from "../entity.service";
 
@@ -107,26 +107,12 @@ export class PassageService extends EntityService {
   }
 
   async createPassage(
-    raceId: number,
-    runnerId: number,
+    participantId: number,
     passageData: Omit<AdminPassage, "id">,
   ): Promise<AdminPassageWithRunnerIdAndRaceId> {
-    const participant = this.getUniqueResult(
-      await this.db
-        .select()
-        .from(TABLE_PARTICIPANT)
-        .where(and(eq(TABLE_RACE.id, raceId), eq(TABLE_RUNNER.id, runnerId))),
-    );
-
-    if (!participant) {
-      throw new Error(
-        `Failed to find a participant with provided race and runner IDs (provided race ID: ${raceId}, provided runner ID: ${runnerId})`,
-      );
-    }
-
     const result = await this.db
       .insert(TABLE_PASSAGE)
-      .values({ ...passageData, participantId: participant.id })
+      .values({ ...passageData, participantId })
       .$returningId();
 
     const passageId = this.getUniqueResult(result)?.id;
