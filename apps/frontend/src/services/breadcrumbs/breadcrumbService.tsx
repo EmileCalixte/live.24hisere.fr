@@ -4,6 +4,7 @@ import Crumb, { type CrumbProps } from "../../components/ui/breadcrumbs/Crumb";
 import CircularLoader from "../../components/ui/CircularLoader";
 import { type ComponentElement } from "../../types/utils/react";
 
+
 type BreadcrumbsItem = CrumbProps | "LOADER";
 
 type BreadcrumbsElement = ComponentElement<typeof Breadcrumbs>;
@@ -61,6 +62,10 @@ export function getRunnerCreateBreadcrumbs(): BreadcrumbsElement {
 
 export function getRunnerDetailsBreadcrumbs(runner: AdminRunner | undefined): BreadcrumbsElement {
   return getBreadcrumbs(getRunnerCrumbs(runner));
+}
+
+export function getCreateParticipantBreadcrumbs(edition: PublicEdition | undefined, race: PublicRace | undefined): BreadcrumbsElement {
+  return getBreadcrumbs([...getRaceCrumbs(edition, race, true), { label: "Ajouter un coureur" }]);
 }
 
 export function getParticipantBreadcrumbs(

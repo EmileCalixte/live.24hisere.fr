@@ -1,6 +1,8 @@
 import React from "react";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import {
   type AdminEditionWithRaceCount,
   type AdminRaceWithRunnerCount,
@@ -263,7 +265,22 @@ export default function RaceDetailsAdminView(): React.ReactElement {
 
               {raceRunners === null && <p>Impossible de récupérer les coureurs</p>}
 
-              {raceRunners && <RaceRunnersTable race={race} runners={raceRunners} />}
+              {raceRunners && (
+                <>
+                  <p>
+                    <Link to={`/admin/races/${race.id}/add-runner`} className="button">
+                      <FontAwesomeIcon icon={faPlus} className="me-2" />
+                      Ajouter un coureur
+                    </Link>
+                  </p>
+
+                  {raceRunners.length > 0 ? (
+                    <RaceRunnersTable race={race} runners={raceRunners} />
+                  ) : (
+                    <p>Aucun coureur ne participe à cette course</p>
+                  )}
+                </>
+              )}
             </Col>
           </Row>
 

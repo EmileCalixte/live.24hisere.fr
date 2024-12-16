@@ -22,7 +22,7 @@ import Page from "../../../ui/Page";
 import ParticipantDetailsForm from "../../../viewParts/admin/participants/ParticipantDetailsForm";
 import ParticipantDetailsPassages from "../../../viewParts/admin/participants/ParticipantDetailsPassages";
 
-export default function ParticipantAdminView(): React.ReactElement {
+export default function ParticipantDetailsAdminView(): React.ReactElement {
   const navigate = useNavigate();
 
   const { accessToken } = React.useContext(appContext).user;
