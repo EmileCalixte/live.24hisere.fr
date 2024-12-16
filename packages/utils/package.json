@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@live24hisere/core": "workspace:^",
-    "type-fest": "^4.26.1"
+    "type-fest": "^4.30.1"
   },
   "devDependencies": {
     "tsup": "8.2.4",
