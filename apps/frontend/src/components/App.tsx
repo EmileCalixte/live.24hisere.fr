@@ -14,8 +14,7 @@ import Header from "./ui/header/Header";
 import Admin from "./views/admin/Admin";
 import DisabledAppView from "./views/DisabledAppView";
 import LoginView from "./views/LoginView";
-import RankingView from "./views/RankingView";
-import RunnerDetailsView from "./views/RunnerDetailsView";
+import Public from "./views/public/Public";
 
 interface AppContext {
   appData: {
@@ -39,6 +38,11 @@ interface AppContext {
      */
     isAppEnabled: boolean;
     setIsAppEnabled: (isAppEnabled: boolean) => void;
+
+    /**
+     * The ID of the edition to be auto-selected if no edition is selected
+     */
+    currentEditionId: number | null;
 
     /**
      * If the app is disabled, the message to be displayed
@@ -83,6 +87,7 @@ export const appContext = createContext<AppContext>({
     serverTimeOffset: 0,
     isAppEnabled: false,
     setIsAppEnabled: () => {},
+    currentEditionId: null,
     disabledAppMessage: null,
   },
   headerFetchLoader: {
@@ -110,6 +115,7 @@ export default function App(): React.ReactElement {
   const [serverTimeOffset, setServerTimeOffset] = useState(0);
   const [isAppEnabled, setIsAppEnabled] = useState(false);
   const [disabledAppMessage, setDisabledAppMessage] = useState<string | null>(null);
+  const [currentEditionId, setCurrentEditionId] = useState<number | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(localStorage.getItem("accessToken"));
   const [user, setUser] = useState<PublicUser | null | undefined>(undefined); // If null, user is not logged in. If undefined, user info was not fetched yet
   const [redirect, setRedirect] = useState<string | null>(null); // Used to redirect the user to a specified location, for example when user logs out
@@ -160,6 +166,8 @@ export default function App(): React.ReactElement {
     setIsAppEnabled(result.json.isAppEnabled);
     setDisabledAppMessage(result.json.disabledAppMessage);
 
+    setCurrentEditionId(result.json.currentEditionId);
+
     setLastUpdateTime(new Date(result.json.lastUpdateTime ?? 0));
 
     const serverTime = new Date(result.json.currentTime);
@@ -184,7 +192,7 @@ export default function App(): React.ReactElement {
     if (!isApiRequestResultOk(result)) {
       forgetAccessToken();
       setUser(null);
-      ToastService.getToastr().error("Vous avez été déconecté");
+      ToastService.getToastr().error("Vous avez été déconnecté");
       return;
     }
 
@@ -254,6 +262,7 @@ export default function App(): React.ReactElement {
       serverTimeOffset,
       isAppEnabled,
       setIsAppEnabled,
+      currentEditionId,
       disabledAppMessage,
     },
     headerFetchLoader: {
@@ -287,16 +296,9 @@ export default function App(): React.ReactElement {
               <DisabledAppView />
             ) : (
               <Routes>
-                <Route path="/ranking" element={<RankingView />} />
-                <Route path="/runner-details" element={<RunnerDetailsView />} />
-                <Route path="/runner-details/:runnerId" element={<RunnerDetailsView />} />
-
                 <Route path="/login" element={<LoginView />} />
-
                 <Route path="/admin/*" element={<Admin />} />
-
-                {/* Redirect any unresolved route to /ranking */}
-                <Route path="*" element={<Navigate to="/ranking" replace />} />
+                <Route path="*" element={<Public />} />
               </Routes>
             )}
           </main>

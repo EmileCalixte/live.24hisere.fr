@@ -3,11 +3,10 @@ import DOMPurify from "dompurify";
 import { Col, Row } from "react-bootstrap";
 import { type DisabledAppData } from "@live24hisere/core/types";
 import { getDisabledAppData, patchDisabledAppData } from "../../../services/api/configService";
+import { getDisabledAppBreadcrumbs } from "../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../services/ToastService";
 import { isApiRequestResultOk } from "../../../utils/apiUtils";
 import { appContext } from "../../App";
-import Breadcrumbs from "../../ui/breadcrumbs/Breadcrumbs";
-import Crumb from "../../ui/breadcrumbs/Crumb";
 import { Checkbox } from "../../ui/forms/Checkbox";
 import { TextArea } from "../../ui/forms/TextArea";
 import Page from "../../ui/Page";
@@ -99,12 +98,7 @@ export default function DisabledAppAdminView(): React.ReactElement {
   return (
     <Page id="admin-disabled-app" title="Accès à l'application">
       <Row>
-        <Col>
-          <Breadcrumbs>
-            <Crumb url="/admin" label="Administration" />
-            <Crumb label="Accès à l'application" />
-          </Breadcrumbs>
-        </Col>
+        <Col>{getDisabledAppBreadcrumbs()}</Col>
       </Row>
 
       <Row>

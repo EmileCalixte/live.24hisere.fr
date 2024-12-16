@@ -1,18 +1,12 @@
-import React, { useMemo } from "react";
-import { Link } from "react-router-dom";
-import { type AdminRaceWithRunnerCount, type Gender } from "@live24hisere/core/types";
-import { categoryUtils } from "@live24hisere/utils";
+import React from "react";
+import { type Gender } from "@live24hisere/core/types";
 import { GENDER_OPTIONS } from "../../../../constants/forms";
-import { getRacesSelectOptions } from "../../../../utils/raceUtils";
 import { Checkbox } from "../../../ui/forms/Checkbox";
 import { Input } from "../../../ui/forms/Input";
 import RadioGroup from "../../../ui/forms/RadioGroup";
-import Select from "../../../ui/forms/Select";
 
 interface RunnerDetailsFormProps {
   onSubmit: (e: React.FormEvent) => void;
-  id: number;
-  setId: (id: number) => void;
   firstname: string;
   setFirstname: (firstname: string) => void;
   lastname: string;
@@ -21,18 +15,13 @@ interface RunnerDetailsFormProps {
   setGender: (gender: Gender) => void;
   birthYear: string;
   setBirthYear: (birthYear: string) => void;
-  stopped: boolean;
-  setStopped: (stopped: boolean) => void;
-  races: AdminRaceWithRunnerCount[] | false;
-  raceId: number;
-  setRaceId: (raceId: number) => void;
+  isPublic: boolean;
+  setIsPublic: (stopped: boolean) => void;
   submitButtonDisabled: boolean;
 }
 
 export default function RunnerDetailsForm({
   onSubmit,
-  id,
-  setId,
   firstname,
   setFirstname,
   lastname,
@@ -41,37 +30,20 @@ export default function RunnerDetailsForm({
   setGender,
   birthYear,
   setBirthYear,
-  stopped,
-  setStopped,
-  races,
-  raceId,
-  setRaceId,
+  isPublic,
+  setIsPublic,
   submitButtonDisabled,
 }: RunnerDetailsFormProps): React.ReactElement {
-  const racesOptions = useMemo(() => {
-    return getRacesSelectOptions(
-      races,
-      (race) => `${race.name} (${race.runnerCount} ${race.runnerCount >= 2 ? "coureurs" : "coureur"})`,
-    );
-  }, [races]);
+  // const racesOptions = useMemo(() => {
+  //   return getRacesSelectOptions(
+  //     races,
+  //     (race) => `${race.name} (${race.runnerCount} ${race.runnerCount >= 2 ? "coureurs" : "coureur"})`,
+  //   );
+  // }, [races]);
 
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={onSubmit} className="d-flex flex-column gap-3">
       <Input
-        label="Dossard"
-        type="number"
-        name="id"
-        value={id}
-        onChange={(e) => {
-          setId(parseInt(e.target.value));
-        }}
-        required
-        min={1}
-        max={999999}
-      />
-
-      <Input
-        className="mt-3"
         label="Prénom"
         name="firstname"
         maxLength={255}
@@ -83,7 +55,6 @@ export default function RunnerDetailsForm({
       />
 
       <Input
-        className="mt-3"
         label="Nom de famille"
         name="lastname"
         maxLength={255}
@@ -94,26 +65,22 @@ export default function RunnerDetailsForm({
         }}
       />
 
-      <Input
-        className="mt-3"
-        label="Année de naissance"
-        type="number"
-        name="birthYear"
-        min={1900}
-        max={new Date().getFullYear()}
-        required
-        value={birthYear}
-        onChange={(e) => {
-          setBirthYear(e.target.value);
-        }}
-      />
-
-      <div className="mt-1">
-        <span>Catégorie : {categoryUtils.getCategoryNameFromBirthYear(parseInt(birthYear))}</span>
+      <div className="d-flex flex-column gap-1">
+        <Input
+          label="Année de naissance"
+          type="number"
+          name="birthYear"
+          min={1900}
+          max={new Date().getFullYear()}
+          required
+          value={birthYear}
+          onChange={(e) => {
+            setBirthYear(e.target.value);
+          }}
+        />
       </div>
 
       <RadioGroup
-        className="mt-3"
         legend="Sexe"
         options={GENDER_OPTIONS}
         value={gender}
@@ -123,15 +90,14 @@ export default function RunnerDetailsForm({
       />
 
       <Checkbox
-        className="mt-3"
-        label="Arrêté"
-        checked={stopped}
+        label="Visible publiquement"
+        checked={isPublic}
         onChange={(e) => {
-          setStopped(e.target.checked);
+          setIsPublic(e.target.checked);
         }}
       />
 
-      {races && races.length < 1 ? (
+      {/* {races && races.length < 1 ? (
         <p>
           Vous devez <Link to="/admin/races/create">créer une course</Link> pour pouvoir enregistrer un coureur.
         </p>
@@ -147,11 +113,13 @@ export default function RunnerDetailsForm({
           }}
           value={raceId}
         />
-      )}
+      )} */}
 
-      <button className="button mt-3" type="submit" disabled={submitButtonDisabled}>
-        Enregistrer
-      </button>
+      <div>
+        <button className="button" type="submit" disabled={submitButtonDisabled}>
+          Enregistrer
+        </button>
+      </div>
     </form>
   );
 }

@@ -6,11 +6,10 @@ import { type AdminRaceWithRunnerCount, type Gender } from "@live24hisere/core/t
 import { useStateWithNonNullableSetter } from "../../../../hooks/useStateWithNonNullableSetter";
 import { getAdminRaces } from "../../../../services/api/raceService";
 import { postAdminRunner } from "../../../../services/api/runnerService";
+import { getRunnerCreateBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../../services/ToastService";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { appContext } from "../../../App";
-import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
-import Crumb from "../../../ui/breadcrumbs/Crumb";
 import Page from "../../../ui/Page";
 import RunnerDetailsForm from "../../../viewParts/admin/runners/RunnerDetailsForm";
 
@@ -21,12 +20,11 @@ export default function CreateRunnerAdminView(): React.ReactElement {
 
   const [races, setRaces] = useState<AdminRaceWithRunnerCount[] | false>(false);
 
-  const [id, setId] = useState(1);
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [gender, setGender] = useState<Gender>(GENDER.M);
   const [birthYear, setBirthYear] = useState((new Date().getFullYear() - 30).toString());
-  const [stopped, setStopped] = useState(false);
+  const [isPublic, setIsPublic] = React.useState(false);
   const [raceId, setRaceId] = useStateWithNonNullableSetter<number | null>(null);
 
   const [isSaving, setIsSaving] = useState(false);
@@ -69,12 +67,11 @@ export default function CreateRunnerAdminView(): React.ReactElement {
       setIsSaving(true);
 
       const body = {
-        id,
         firstname,
         lastname,
         gender,
         birthYear: parseInt(birthYear),
-        stopped,
+        isPublic,
         raceId,
       };
 
@@ -86,10 +83,12 @@ export default function CreateRunnerAdminView(): React.ReactElement {
         return;
       }
 
+      const id = result.json.runner.id;
+
       ToastService.getToastr().success("Coureur créé");
       navigate(`/admin/runners/${id}`);
     },
-    [accessToken, raceId, id, firstname, lastname, gender, birthYear, stopped, navigate],
+    [accessToken, raceId, firstname, lastname, gender, birthYear, isPublic, navigate],
   );
 
   useEffect(() => {
@@ -99,13 +98,7 @@ export default function CreateRunnerAdminView(): React.ReactElement {
   return (
     <Page id="admin-create-runner" title="Créer un coureur">
       <Row>
-        <Col>
-          <Breadcrumbs>
-            <Crumb url="/admin" label="Administration" />
-            <Crumb url="/admin/runners" label="Coureurs" />
-            <Crumb label="Créer un coureur" />
-          </Breadcrumbs>
-        </Col>
+        <Col>{getRunnerCreateBreadcrumbs()}</Col>
       </Row>
 
       <Row>
@@ -116,8 +109,6 @@ export default function CreateRunnerAdminView(): React.ReactElement {
             onSubmit={(e) => {
               void onSubmit(e);
             }}
-            id={id}
-            setId={setId}
             firstname={firstname}
             setFirstname={setFirstname}
             lastname={lastname}
@@ -126,11 +117,8 @@ export default function CreateRunnerAdminView(): React.ReactElement {
             setGender={setGender}
             birthYear={birthYear}
             setBirthYear={setBirthYear}
-            stopped={stopped}
-            setStopped={setStopped}
-            races={races}
-            raceId={raceId ?? 0}
-            setRaceId={setRaceId}
+            isPublic={isPublic}
+            setIsPublic={setIsPublic}
             submitButtonDisabled={isSaving || (races && races.length < 1)}
           />
         </Col>

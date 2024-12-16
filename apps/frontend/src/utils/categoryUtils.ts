@@ -1,11 +1,11 @@
-import { type CategoryFullName, type CategoryShortCode, type PartialCategoriesDict } from "@live24hisere/core/types";
+import { type CategoryCode, type CategoryList, type CategoryName } from "@emilecalixte/ffa-categories";
 import { objectUtils } from "@live24hisere/utils";
 import { type SelectOption } from "../types/Forms";
 
 export function getCategoriesDictSelectOptions(
-  categoriesDict: PartialCategoriesDict | null,
-  label?: (code: CategoryShortCode, name: CategoryFullName) => string,
-): Array<SelectOption<CategoryShortCode>> {
+  categoriesDict: CategoryList | null,
+  label?: (code: CategoryCode, name: CategoryName) => string,
+): Array<SelectOption<CategoryCode>> {
   if (!categoriesDict) {
     return [];
   }

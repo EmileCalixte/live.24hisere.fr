@@ -2,7 +2,7 @@ import React from "react";
 import { faSortDown, faSortUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
-import { type PublicRace, type RunnerWithProcessedPassages } from "@live24hisere/core/types";
+import { type PublicRace, type RaceRunnerWithProcessedPassages } from "@live24hisere/core/types";
 import { RUNNER_DETAILS_LAPS_SORT_COLUMNS, SortColumn, SortDirection } from "../../../constants/sort";
 import { useSortQueryString } from "../../../hooks/queryString/useSortQueryString";
 import { useRaceTime } from "../../../hooks/useRaceTime";
@@ -16,7 +16,7 @@ import { appContext } from "../../App";
 const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
 
 interface RunnerDetailsLapsProps {
-  runner: RankingRunner<MinimalRankingRunnerInput & RunnerWithProcessedPassages>;
+  runner: RankingRunner<MinimalRankingRunnerInput & RaceRunnerWithProcessedPassages>;
   race: PublicRace;
 }
 

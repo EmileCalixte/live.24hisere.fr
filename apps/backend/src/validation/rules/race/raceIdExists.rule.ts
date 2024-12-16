@@ -12,7 +12,7 @@ export class RaceIdExistsRule implements ValidatorConstraintInterface {
       return false;
     }
 
-    const race = await this.raceService.getRaceById(value);
+    const race = await this.raceService.getAdminRaceById(value);
 
     return !!race;
   }

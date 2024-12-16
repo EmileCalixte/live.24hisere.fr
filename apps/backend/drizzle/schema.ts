@@ -1,10 +1,12 @@
-import { customType, mysqlTable } from "drizzle-orm/mysql-core";
+import { customType, mysqlTable, unique } from "drizzle-orm/mysql-core";
 import { GENDERS } from "@live24hisere/core/constants";
 import { dateUtils } from "@live24hisere/utils";
 
 const TABLE_NAME_ACCESS_TOKEN = "access_token";
 const TABLE_NAME_CONFIG = "config";
+const TABLE_NAME_EDITION = "edition";
 const TABLE_NAME_MISC = "misc";
+const TABLE_NAME_PARTICIPANT = "participant";
 const TABLE_NAME_PASSAGE = "passage";
 const TABLE_NAME_RACE = "race";
 const TABLE_NAME_RUNNER = "runner";
@@ -51,37 +53,69 @@ export const TABLE_MISC = mysqlTable(TABLE_NAME_MISC, (t) => ({
   value: t.varchar({ length: 5000 }).notNull(),
 }));
 
-export const TABLE_RACE = mysqlTable(TABLE_NAME_RACE, (t) => ({
+export const TABLE_EDITION = mysqlTable(TABLE_NAME_EDITION, (t) => ({
   id: t.int().primaryKey().autoincrement(),
   name: t.varchar({ length: 50 }).notNull().unique(),
-  startTime: date(DEFAULT_DATE_PARAMS).notNull(),
-  duration: t.int({ unsigned: true }).notNull(),
-  initialDistance: t.decimal({ precision: 10, scale: 3 }).notNull(),
-  lapDistance: t.decimal({ precision: 10, scale: 3 }).notNull(),
   order: t.int().notNull(),
   isPublic: t.boolean().notNull(),
 }));
 
+export const TABLE_RACE = mysqlTable(
+  TABLE_NAME_RACE,
+  (t) => ({
+    id: t.int().primaryKey().autoincrement(),
+    editionId: t
+      .int()
+      .references(() => TABLE_EDITION.id)
+      .notNull(),
+    name: t.varchar({ length: 50 }).notNull(),
+    startTime: date(DEFAULT_DATE_PARAMS).notNull(),
+    duration: t.int({ unsigned: true }).notNull(),
+    initialDistance: t.decimal({ precision: 10, scale: 3 }).notNull(),
+    lapDistance: t.decimal({ precision: 10, scale: 3 }).notNull(),
+    order: t.int().notNull(),
+    isPublic: t.boolean().notNull(),
+  }),
+  (t) => ({ unique: unique().on(t.name, t.editionId) }),
+);
+
 export const TABLE_RUNNER = mysqlTable(TABLE_NAME_RUNNER, (t) => ({
-  id: t.int().primaryKey(),
+  id: t.int().primaryKey().autoincrement(),
   firstname: t.varchar({ length: 255 }).notNull(),
   lastname: t.varchar({ length: 255 }).notNull(),
   gender: t.varchar({ length: 1, enum: GENDERS }).notNull(),
   birthYear: t.varchar({ length: 4 }).notNull(),
-  stopped: t.boolean().notNull(),
-  raceId: t
-    .int()
-    .references(() => TABLE_RACE.id)
-    .notNull(),
+  isPublic: t.boolean().notNull(),
 }));
+
+export const TABLE_PARTICIPANT = mysqlTable(
+  TABLE_NAME_PARTICIPANT,
+  (t) => ({
+    id: t.int().primaryKey().autoincrement(),
+    raceId: t
+      .int()
+      .references(() => TABLE_RACE.id)
+      .notNull(),
+    runnerId: t
+      .int()
+      .references(() => TABLE_RUNNER.id)
+      .notNull(),
+    bibNumber: t.int().notNull(),
+    stopped: t.boolean().notNull(),
+  }),
+  (t) => ({
+    unique: unique().on(t.raceId, t.runnerId),
+    unique2: unique().on(t.raceId, t.bibNumber),
+  }),
+);
 
 export const TABLE_PASSAGE = mysqlTable(TABLE_NAME_PASSAGE, (t) => ({
   id: t.int().primaryKey().autoincrement(),
   detectionId: t.int().unique(), // Not null if the passage comes from a detection of the timing system
   importTime: date(DEFAULT_DATE_PARAMS), // same
-  runnerId: t
+  participantId: t
     .int()
-    .references(() => TABLE_RUNNER.id)
+    .references(() => TABLE_PARTICIPANT.id)
     .notNull(),
   time: date(DEFAULT_DATE_PARAMS).notNull(),
   isHidden: t.boolean().notNull(),
