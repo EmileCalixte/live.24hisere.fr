@@ -21,7 +21,7 @@ export default function ResponsiveRankingTableRow({
   tableCategoryCode,
   tableGender,
 }: ResponsiveRankingTableRowProps): React.ReactElement {
-  const runnerCategoryCode = getCategory(Number(runner.birthYear), { date: new Date(race.startTime) });
+  const runnerCategoryCode = getCategory(Number(runner.birthYear), { date: new Date(race.startTime) }).code;
 
   const rowRanking = useMemo(() => {
     if (tableCategoryCode === null) {
