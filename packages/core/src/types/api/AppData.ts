@@ -21,6 +21,11 @@ export interface GetAppDataApiRequest extends ApiRequest {
     disabledAppMessage: string | null;
 
     /**
+     * The ID of the edition to be auto-selected
+     */
+    currentEditionId: number | null;
+
+    /**
      * Date and time the runners' data was exported from the timing system
      */
     lastUpdateTime: DateISOString | null;

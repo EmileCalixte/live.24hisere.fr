@@ -5,4 +5,5 @@ export type InputType = Extract<HTMLInputTypeAttribute, "text" | "email" | "pass
 export interface SelectOption<TValue extends string | number = string | number> {
   label: string;
   value: TValue;
+  disabled?: boolean;
 }

@@ -1,15 +1,13 @@
 import {
   type ApiRequestResult,
-  type DeleteAdminRunnerPassageApiRequest,
   type DeleteRunnerAdminApiRequest,
+  type GetRaceRunnersAdminApiRequest,
   type GetRaceRunnersApiRequest,
   type GetRunnerAdminApiRequest,
   type GetRunnersAdminApiRequest,
   type GetRunnersApiRequest,
   type PatchRunnerAdminApiRequest,
-  type PatchRunnerPassageAdminApiRequest,
   type PostRunnerAdminApiRequest,
-  type PostRunnerPassageAdminApiRequest,
   type PostRunnersBulkAdminApiRequest,
 } from "@live24hisere/core/types";
 import { performApiRequest, performAuthenticatedApiRequest } from "./apiService";
@@ -85,42 +83,52 @@ export async function deleteAdminRunner(
   );
 }
 
-export async function postAdminRunnerPassage(
-  accessToken: string,
-  runnerId: number | string,
-  passage: PostRunnerPassageAdminApiRequest["payload"],
-): Promise<ApiRequestResult<PostRunnerPassageAdminApiRequest>> {
-  return await performAuthenticatedApiRequest<PostRunnerPassageAdminApiRequest>(
-    `/admin/runners/${runnerId}/passages`,
-    accessToken,
-    passage,
-    { method: "POST" },
-  );
-}
+// export async function postAdminRunnerPassage(
+//   accessToken: string,
+//   runnerId: number | string,
+//   passage: PostRunnerPassageAdminApiRequest["payload"],
+// ): Promise<ApiRequestResult<PostRunnerPassageAdminApiRequest>> {
+//   return await performAuthenticatedApiRequest<PostRunnerPassageAdminApiRequest>(
+//     `/admin/runners/${runnerId}/passages`,
+//     accessToken,
+//     passage,
+//     { method: "POST" },
+//   );
+// }
 
-export async function patchAdminRunnerPassage(
-  accessToken: string,
-  runnerId: number | string,
-  passageId: number | string,
-  passage: PatchRunnerPassageAdminApiRequest["payload"],
-): Promise<ApiRequestResult<PatchRunnerPassageAdminApiRequest>> {
-  return await performAuthenticatedApiRequest<PatchRunnerPassageAdminApiRequest>(
-    `/admin/runners/${runnerId}/passages/${passageId}`,
-    accessToken,
-    passage,
-    { method: "PATCH" },
-  );
-}
+// export async function patchAdminRunnerPassage(
+//   accessToken: string,
+//   runnerId: number | string,
+//   passageId: number | string,
+//   passage: PatchRunnerPassageAdminApiRequest["payload"],
+// ): Promise<ApiRequestResult<PatchRunnerPassageAdminApiRequest>> {
+//   return await performAuthenticatedApiRequest<PatchRunnerPassageAdminApiRequest>(
+//     `/admin/runners/${runnerId}/passages/${passageId}`,
+//     accessToken,
+//     passage,
+//     { method: "PATCH" },
+//   );
+// }
 
-export async function deleteAdminRunnerPassage(
+// export async function deleteAdminRunnerPassage(
+//   accessToken: string,
+//   runnerId: number | string,
+//   passageId: number | string,
+// ): Promise<ApiRequestResult<DeleteAdminRunnerPassageApiRequest>> {
+//   return await performAuthenticatedApiRequest<DeleteAdminRunnerPassageApiRequest>(
+//     `/admin/runners/${runnerId}/passages/${passageId}`,
+//     accessToken,
+//     undefined,
+//     { method: "DELETE" },
+//   );
+// }
+
+export async function getAdminRaceRunners(
   accessToken: string,
-  runnerId: number | string,
-  passageId: number | string,
-): Promise<ApiRequestResult<DeleteAdminRunnerPassageApiRequest>> {
-  return await performAuthenticatedApiRequest<DeleteAdminRunnerPassageApiRequest>(
-    `/admin/runners/${runnerId}/passages/${passageId}`,
+  raceId: number | string,
+): Promise<ApiRequestResult<GetRaceRunnersAdminApiRequest>> {
+  return await performAuthenticatedApiRequest<GetRaceRunnersAdminApiRequest>(
+    `/admin/races/${raceId}/runners`,
     accessToken,
-    undefined,
-    { method: "DELETE" },
   );
 }

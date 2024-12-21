@@ -1,6 +1,7 @@
 import React from "react";
+import { type CategoryCode } from "@emilecalixte/ffa-categories";
 import { Link } from "react-router-dom";
-import { type CategoryShortCode, type GenderWithMixed, type PublicRace } from "@live24hisere/core/types";
+import { type GenderWithMixed, type PublicRace } from "@live24hisere/core/types";
 import { NO_VALUE_PLACEHOLDER } from "../../../../constants/misc";
 import { type RankingRunner } from "../../../../types/Ranking";
 import { getRankingType } from "../../../../utils/rankingUtils";
@@ -12,21 +13,26 @@ import RankingTableRowNCells from "./RankingTableRowNCells";
 interface RankingTableRowProps {
   race: PublicRace;
   runner: RankingRunner;
-  tableCategory: CategoryShortCode | null;
+  tableCategoryCode: CategoryCode | null;
   tableGender: GenderWithMixed;
 }
 
 export default function RankingTableRow({
   race,
   runner,
-  tableCategory,
+  tableCategoryCode,
   tableGender,
 }: RankingTableRowProps): React.ReactElement {
   const raceInitialDistance = Number(race.initialDistance);
 
   return (
     <tr>
-      <RankingTableRowNCells runner={runner} tableCategory={tableCategory} tableGender={tableGender} />
+      <RankingTableRowNCells
+        race={race}
+        runner={runner}
+        tableCategoryCode={tableCategoryCode}
+        tableGender={tableGender}
+      />
       <td>{runner.id}</td>
       <td>
         {runner.lastname.toUpperCase()} {runner.firstname}
@@ -53,7 +59,7 @@ export default function RankingTableRow({
         })()}
       </td>
       <td>
-        {formatGap(runner.gaps.firstRunner[getRankingType(tableCategory, tableGender)].gap) ?? NO_VALUE_PLACEHOLDER}
+        {formatGap(runner.gaps.firstRunner[getRankingType(tableCategoryCode, tableGender)].gap) ?? NO_VALUE_PLACEHOLDER}
       </td>
 
       <td className="hide-on-print">

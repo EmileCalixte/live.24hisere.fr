@@ -1,11 +1,13 @@
 import React from "react";
+import { getCategory } from "@emilecalixte/ffa-categories";
 import { GENDER } from "@live24hisere/core/constants";
-import { categoryUtils } from "@live24hisere/utils";
+import { type PublicRace } from "@live24hisere/core/types";
 import { NO_VALUE_PLACEHOLDER } from "../../../constants/misc";
 import { type Ranking, type RankingRunner, type RankingRunnerGap } from "../../../types/Ranking";
 import { formatGap } from "../../../utils/runnerUtils";
 
 interface RunnerDetailsStatsGapsTableProps {
+  race: PublicRace;
   runner: RankingRunner;
   ranking: Ranking;
 }
@@ -15,10 +17,11 @@ function formatGapForTable(gap: RankingRunnerGap | null): string {
 }
 
 export default function RunnerDetailsStatsRankingTable({
+  race,
   runner,
   ranking,
 }: RunnerDetailsStatsGapsTableProps): React.ReactElement {
-  const categoryCode = categoryUtils.getCategoryCodeFromBirthYear(runner.birthYear);
+  const categoryCode = getCategory(Number(runner.birthYear), { date: new Date(race.startTime) }).code;
   const genderString = runner.gender === GENDER.F ? "Féminin" : "Masculin";
 
   const scratchMixedRunnerCount = ranking.length;
@@ -29,17 +32,18 @@ export default function RunnerDetailsStatsRankingTable({
 
   const categoryMixedRunnerCount = React.useMemo(() => {
     return ranking.filter(
-      (rankingRunner) => categoryUtils.getCategoryCodeFromBirthYear(rankingRunner.birthYear) === categoryCode,
+      (rankingRunner) =>
+        getCategory(Number(rankingRunner.birthYear), { date: new Date(race.startTime) }).code === categoryCode,
     ).length;
-  }, [ranking, categoryCode]);
+  }, [ranking, race.startTime, categoryCode]);
 
   const categoryGenderRunnerCount = React.useMemo(() => {
     return ranking.filter(
       (rankingRunner) =>
         rankingRunner.gender === runner.gender &&
-        categoryUtils.getCategoryCodeFromBirthYear(rankingRunner.birthYear) === categoryCode,
+        getCategory(Number(rankingRunner.birthYear), { date: new Date(race.startTime) }).code === categoryCode,
     ).length;
-  }, [categoryCode, ranking, runner.gender]);
+  }, [categoryCode, race.startTime, ranking, runner.gender]);
 
   return (
     <table className="table no-full-width">

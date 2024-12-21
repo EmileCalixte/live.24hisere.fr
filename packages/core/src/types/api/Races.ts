@@ -25,6 +25,14 @@ export interface GetRacesAdminApiRequest extends ApiRequest {
   };
 }
 
+export interface GetEditionRacesAdminApiRequest extends ApiRequest {
+  payload: never;
+
+  response: {
+    races: AdminRaceWithRunnerCount[];
+  };
+}
+
 export interface GetRaceAdminApiRequest extends ApiRequest {
   payload: never;
 

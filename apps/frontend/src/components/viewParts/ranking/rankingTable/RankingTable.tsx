@@ -1,6 +1,6 @@
 import React, { type ReactNode } from "react";
-import { type CategoryShortCode, type GenderWithMixed, type PublicRace } from "@live24hisere/core/types";
-import { categoryUtils } from "@live24hisere/utils";
+import { type CategoryCode, getCategory } from "@emilecalixte/ffa-categories";
+import { type GenderWithMixed, type PublicRace } from "@live24hisere/core/types";
 import { type Ranking, type RankingRunner } from "../../../../types/Ranking";
 import RankingTableInfoHeader from "./RankingTableInfoHeader";
 import RankingTableRow from "./RankingTableRow";
@@ -8,7 +8,7 @@ import RankingTableRow from "./RankingTableRow";
 interface RankingTableProps {
   race: PublicRace;
   ranking: Ranking;
-  tableCategory: CategoryShortCode | null;
+  tableCategoryCode: CategoryCode | null;
   tableGender: GenderWithMixed;
   tableRaceDuration: number | null;
 }
@@ -16,15 +16,15 @@ interface RankingTableProps {
 export default function RankingTable({
   race,
   ranking,
-  tableCategory,
+  tableCategoryCode,
   tableGender,
   tableRaceDuration,
 }: RankingTableProps): React.ReactElement {
   const getRankingTableRow = (rankingRunner: RankingRunner): ReactNode => {
-    const runnerCategory = categoryUtils.getCategoryCodeFromBirthYear(rankingRunner.birthYear);
+    const runnerCategory = getCategory(Number(rankingRunner.birthYear), { date: new Date(race.startTime) }).code;
 
-    if (tableCategory !== null) {
-      if (tableCategory !== runnerCategory) {
+    if (tableCategoryCode !== null) {
+      if (tableCategoryCode !== runnerCategory) {
         return null;
       }
     }
@@ -40,7 +40,7 @@ export default function RankingTable({
         key={rankingRunner.id}
         race={race}
         runner={rankingRunner}
-        tableCategory={tableCategory}
+        tableCategoryCode={tableCategoryCode}
         tableGender={tableGender}
       />
     );
@@ -52,7 +52,7 @@ export default function RankingTable({
         <tr>
           <RankingTableInfoHeader
             race={race}
-            tableCategory={tableCategory}
+            tableCategoryCode={tableCategoryCode}
             tableGender={tableGender}
             tableRaceDuration={tableRaceDuration}
           />

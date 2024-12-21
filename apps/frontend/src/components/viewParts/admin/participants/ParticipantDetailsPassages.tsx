@@ -5,10 +5,10 @@ import clsx from "clsx";
 import { Col, Row } from "react-bootstrap";
 import { type AdminProcessedPassage, type AdminRaceWithRunnerCount } from "@live24hisere/core/types";
 import { formatDateAsString, formatMsAsDuration } from "../../../../utils/utils";
-import RunnerDetailsCreatePassage from "./RunnerDetailsCreatePassage";
-import RunnerDetailsEditPassage from "./RunnerDetailsEditPassage";
+import RunnerDetailsCreatePassage from "../runners/RunnerDetailsCreatePassage";
+import RunnerDetailsEditPassage from "../runners/RunnerDetailsEditPassage";
 
-interface RunnerDetailsPassagesProps {
+interface ParticipantDetailsPassagesProps {
   passages: AdminProcessedPassage[];
   runnerRace: AdminRaceWithRunnerCount | null;
   updatePassageVisiblity: (passage: AdminProcessedPassage, hidden: boolean) => Promise<void>;
@@ -17,14 +17,14 @@ interface RunnerDetailsPassagesProps {
   deletePassage: (passage: AdminProcessedPassage) => Promise<void>;
 }
 
-export default function RunnerDetailsPassages({
+export default function ParticipantDetailsPassages({
   passages,
   runnerRace,
   updatePassageVisiblity,
   updatePassage,
   saveNewPassage,
   deletePassage,
-}: RunnerDetailsPassagesProps): React.ReactElement {
+}: ParticipantDetailsPassagesProps): React.ReactElement {
   const [isAdding, setIsAdding] = useState(false);
 
   // The passage for which user is currently editing the time

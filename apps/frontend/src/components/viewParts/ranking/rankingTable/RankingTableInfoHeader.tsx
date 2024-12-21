@@ -1,18 +1,19 @@
 import React from "react";
+import { type CategoryCode } from "@emilecalixte/ffa-categories";
 import { GENDER } from "@live24hisere/core/constants";
-import { type CategoryShortCode, type GenderWithMixed, type PublicRace } from "@live24hisere/core/types";
+import { type GenderWithMixed, type PublicRace } from "@live24hisere/core/types";
 import { formatMsAsDuration } from "../../../../utils/utils";
 
 interface RankingTableInfoHeaderProps {
   race: PublicRace;
-  tableCategory: CategoryShortCode | null;
+  tableCategoryCode: CategoryCode | null;
   tableGender: GenderWithMixed;
   tableRaceDuration: number | null;
 }
 
 export default function RankingTableInfoHeader({
   race,
-  tableCategory,
+  tableCategoryCode,
   tableGender,
   tableRaceDuration,
 }: RankingTableInfoHeaderProps): React.ReactElement {
@@ -20,10 +21,10 @@ export default function RankingTableInfoHeader({
     <td colSpan={42} className="ranking-table-info-header">
       {race.name} : Classement{" "}
       {(() => {
-        if (tableCategory === null) {
+        if (tableCategoryCode === null) {
           return "scratch";
         } else {
-          return tableCategory.toUpperCase();
+          return tableCategoryCode.toUpperCase();
         }
       })()}{" "}
       {(() => {

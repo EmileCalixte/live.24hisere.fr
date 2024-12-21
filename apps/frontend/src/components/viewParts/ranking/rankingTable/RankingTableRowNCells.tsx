@@ -1,22 +1,24 @@
 import React from "react";
-import { type CategoryShortCode, type GenderWithMixed } from "@live24hisere/core/types";
-import { categoryUtils } from "@live24hisere/utils";
+import { type CategoryCode, getCategory } from "@emilecalixte/ffa-categories";
+import { type GenderWithMixed, type PublicRace } from "@live24hisere/core/types";
 import { type RankingRunner } from "../../../../types/Ranking";
 
 interface RankingTableRowNCellsProps {
+  race: PublicRace;
   runner: RankingRunner;
-  tableCategory: CategoryShortCode | null;
+  tableCategoryCode: CategoryCode | null;
   tableGender: GenderWithMixed;
 }
 
 export default function RankingTableRowNCells({
+  race,
   runner,
-  tableCategory,
+  tableCategoryCode,
   tableGender,
 }: RankingTableRowNCellsProps): React.ReactElement {
-  const runnerCategory = categoryUtils.getCategoryCodeFromBirthYear(runner.birthYear);
+  const runnerCategoryCode = getCategory(Number(runner.birthYear), { date: new Date(race.startTime) }).code;
 
-  if (tableCategory === null) {
+  if (tableCategoryCode === null) {
     if (tableGender === "mixed") {
       return (
         <>
@@ -27,10 +29,10 @@ export default function RankingTableRowNCells({
             {runner.ranks.displayed.scratchGender} {runner.gender.toUpperCase()}
           </td>
           <td>
-            {runner.ranks.displayed.categoryMixed} {runnerCategory}
+            {runner.ranks.displayed.categoryMixed} {runnerCategoryCode}
           </td>
           <td>
-            {runner.ranks.displayed.categoryGender} {runnerCategory}-{runner.gender.toUpperCase()}
+            {runner.ranks.displayed.categoryGender} {runnerCategoryCode}-{runner.gender.toUpperCase()}
           </td>
         </>
       );
@@ -44,10 +46,10 @@ export default function RankingTableRowNCells({
           </td>
           <td>{runner.ranks.displayed.scratchMixed}</td>
           <td>
-            {runner.ranks.displayed.categoryMixed} {runnerCategory}
+            {runner.ranks.displayed.categoryMixed} {runnerCategoryCode}
           </td>
           <td>
-            {runner.ranks.displayed.categoryGender} {runnerCategory}-{runner.gender.toUpperCase()}
+            {runner.ranks.displayed.categoryGender} {runnerCategoryCode}-{runner.gender.toUpperCase()}
           </td>
         </>
       );
@@ -58,7 +60,7 @@ export default function RankingTableRowNCells({
         <>
           <td>
             <strong>
-              {runner.ranks.displayed.categoryMixed} {runnerCategory}
+              {runner.ranks.displayed.categoryMixed} {runnerCategoryCode}
             </strong>
           </td>
           <td>{runner.ranks.displayed.scratchMixed}</td>
@@ -66,7 +68,7 @@ export default function RankingTableRowNCells({
             {runner.ranks.displayed.scratchGender} {runner.gender.toUpperCase()}
           </td>
           <td>
-            {runner.ranks.displayed.categoryGender} {runnerCategory}-{runner.gender.toUpperCase()}
+            {runner.ranks.displayed.categoryGender} {runnerCategoryCode}-{runner.gender.toUpperCase()}
           </td>
         </>
       );
@@ -75,7 +77,7 @@ export default function RankingTableRowNCells({
         <>
           <td>
             <strong>
-              {runner.ranks.displayed.categoryGender} {runnerCategory}-{runner.gender.toUpperCase()}
+              {runner.ranks.displayed.categoryGender} {runnerCategoryCode}-{runner.gender.toUpperCase()}
             </strong>
           </td>
           <td>{runner.ranks.displayed.scratchMixed}</td>
@@ -83,7 +85,7 @@ export default function RankingTableRowNCells({
             {runner.ranks.displayed.scratchGender} {runner.gender.toUpperCase()}
           </td>
           <td>
-            {runner.ranks.displayed.categoryMixed} {runnerCategory}
+            {runner.ranks.displayed.categoryMixed} {runnerCategoryCode}
           </td>
         </>
       );

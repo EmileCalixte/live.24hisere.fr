@@ -2,17 +2,18 @@ import React from "react";
 import clsx from "clsx";
 import { type SelectOption } from "../../../types/Forms";
 
-export interface SelectProps<T extends SelectOption["value"]> extends React.SelectHTMLAttributes<HTMLSelectElement> {
+export interface SelectProps<TValue extends SelectOption["value"]>
+  extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label: string;
-  options: Array<SelectOption<T>>;
+  options: Array<SelectOption<TValue>>;
   isLoading?: boolean;
   loadingOptionLabel?: string;
   placeholderLabel?: string;
-  value?: SelectOption["value"] | undefined;
+  value?: TValue | undefined;
   selectRef?: React.LegacyRef<HTMLSelectElement>;
 }
 
-export default function Select<T extends SelectOption["value"]>({
+export default function Select<TValue extends SelectOption["value"]>({
   label,
   options,
   disabled = false,
@@ -23,7 +24,7 @@ export default function Select<T extends SelectOption["value"]>({
   className,
   selectRef,
   ...props
-}: SelectProps<T>): React.ReactElement {
+}: SelectProps<TValue>): React.ReactElement {
   return (
     <div className={clsx("input-group", className)}>
       <label>
@@ -43,7 +44,7 @@ export default function Select<T extends SelectOption["value"]>({
           ) : (
             <>
               {options.map((option, index) => (
-                <option key={index} value={option.value}>
+                <option key={index} value={option.value} disabled={option.disabled}>
                   {option.label}
                 </option>
               ))}

@@ -1,4 +1,5 @@
 import React from "react";
+import { faCalendar } from "@fortawesome/free-regular-svg-icons";
 import { faDownload, faFlagCheckered, faHand, faPersonRunning, faStopwatch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MenuItem from "./MenuItem";
@@ -9,14 +10,19 @@ const menuItems: Array<{
   icon: React.ReactElement;
 }> = [
   {
-    url: "/admin/runners",
-    label: "Gestion des coureurs",
-    icon: <FontAwesomeIcon icon={faPersonRunning} />,
+    url: "/admin/editions",
+    label: "Gestion des éditions",
+    icon: <FontAwesomeIcon icon={faCalendar} />,
   },
   {
     url: "/admin/races",
     label: "Gestion des courses",
     icon: <FontAwesomeIcon icon={faFlagCheckered} />,
+  },
+  {
+    url: "/admin/runners",
+    label: "Gestion des coureurs",
+    icon: <FontAwesomeIcon icon={faPersonRunning} />,
   },
   {
     url: "/admin/fastest-laps",
