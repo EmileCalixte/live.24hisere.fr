@@ -48,7 +48,7 @@ export class RaceService extends EntityService {
     return this.getUniqueResult(races);
   }
 
-  async getAdminRaceByNameAndEdition(raceName: string, editionId: number): Promise<AdminRaceWithRunnerCount | null> {
+  async getAdminRaceByNameAndEditionId(raceName: string, editionId: number): Promise<AdminRaceWithRunnerCount | null> {
     const races = await this.db
       .select({
         ...this.getAdminRaceColumns(),

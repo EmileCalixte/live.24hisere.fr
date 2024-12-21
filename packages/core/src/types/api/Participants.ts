@@ -17,3 +17,17 @@ export interface GetRaceParticipantAdminApiRequest extends ApiRequest {
     runner: AdminRaceRunnerWithPassages;
   };
 }
+
+export interface PostParticipantAdminApiRequest extends ApiRequest {
+  payload: Omit<Participant, "id" | "raceId">;
+
+  response: {
+    participant: Participant;
+  };
+}
+
+export interface PatchParticipantAdminApiRequest extends ApiRequest {
+  payload: Partial<Omit<PostParticipantAdminApiRequest["payload"], "runnerId">>;
+
+  response: PostParticipantAdminApiRequest["response"];
+}

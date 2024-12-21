@@ -7,11 +7,6 @@ import { IsGender } from "../../validation/validators/IsGender";
 type PostRunnerPayload = PostRunnerAdminApiRequest["payload"];
 
 export class RunnerDto implements PostRunnerPayload {
-  // @IsInt()
-  // @IsNotEmpty()
-  // @Min(1)
-  // id: number;
-
   @IsString()
   @IsNotEmpty()
   @MaxLength(RUNNER_FIRSTNAME_MAX_LENGTH)

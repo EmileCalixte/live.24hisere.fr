@@ -1,11 +1,26 @@
-import { BadRequestException, Controller, Get, NotFoundException, Param, UseGuards } from "@nestjs/common";
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from "@nestjs/common";
 import {
   AdminRaceWithRunnerCount,
   AdminRunner,
   ApiResponse,
   GetRaceParticipantAdminApiRequest,
+  Participant,
+  PatchParticipantAdminApiRequest,
+  PostParticipantAdminApiRequest,
   RunnerWithRaceCount,
 } from "@live24hisere/core/types";
+import { ParticipantDto } from "../../dtos/participant/participant.dto";
+import { UpdateParticipantDto } from "../../dtos/participant/updateParticipant.dto";
 import { AuthGuard } from "../../guards/auth.guard";
 import { ParticipantService } from "../../services/database/entities/participant.service";
 import { RaceService } from "../../services/database/entities/race.service";
@@ -51,7 +66,45 @@ export class ParticipantsController {
     };
   }
 
-  private async getRunner(runnerId: string): Promise<RunnerWithRaceCount<AdminRunner>> {
+  @Post("/admin/races/:raceId/runners")
+  async addRunnerToRace(
+    @Param("raceId") raceId: string,
+    @Body() participantDto: ParticipantDto,
+  ): Promise<ApiResponse<PostParticipantAdminApiRequest>> {
+    const race = await this.getRace(raceId);
+    const runner = await this.getRunner(participantDto.runnerId);
+
+    await this.ensureBibNumberIsAvailable(participantDto.bibNumber, race.id);
+
+    const participant = await this.participantService.createParticipant({
+      ...participantDto,
+      raceId: race.id,
+      runnerId: runner.id,
+    });
+
+    return { participant };
+  }
+
+  @Patch("/admin/races/:raceId/runners/:runnerId")
+  async updateRaceRunner(
+    @Param("raceId") raceId: string,
+    @Param("runnerId") runnerId: string,
+    @Body() updateParticipantDto: UpdateParticipantDto,
+  ): Promise<ApiResponse<PatchParticipantAdminApiRequest>> {
+    const race = await this.getRace(raceId);
+    const runner = await this.getRunner(runnerId);
+    const participant = await this.getParticipant(race.id, runner.id);
+
+    if (updateParticipantDto.bibNumber !== undefined && updateParticipantDto.bibNumber !== participant.bibNumber) {
+      await this.ensureBibNumberIsAvailable(updateParticipantDto.bibNumber, race.id);
+    }
+
+    const updatedParticipant = await this.participantService.updateParticipant(participant.id, updateParticipantDto);
+
+    return { participant: updatedParticipant };
+  }
+
+  private async getRunner(runnerId: number | string): Promise<RunnerWithRaceCount<AdminRunner>> {
     const id = Number(runnerId);
 
     if (isNaN(id)) {
@@ -81,5 +134,28 @@ export class ParticipantsController {
     }
 
     return race;
+  }
+
+  private async getParticipant(raceId: number, runnerId: number): Promise<Participant> {
+    const participant = await this.participantService.getAdminParticipantByRaceIdAndRunnerId(raceId, runnerId);
+
+    if (!participant) {
+      throw new NotFoundException(`Runner with ID ${runnerId} does not take part in race with ID ${raceId}`);
+    }
+
+    return participant;
+  }
+
+  private async ensureBibNumberIsAvailable(bibNumber: number, raceId: number): Promise<void> {
+    const existingParticipant = await this.participantService.getAdminParticipantByRaceIdAndBibNumber(
+      bibNumber,
+      raceId,
+    );
+
+    if (existingParticipant) {
+      throw new BadRequestException(
+        `Bib number ${bibNumber} is already assigned to a runner in race with ID ${raceId}`,
+      );
+    }
   }
 }

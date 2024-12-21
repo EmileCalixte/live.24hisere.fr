@@ -6,11 +6,14 @@ import {
   type AdminProcessedPassage,
   type AdminRaceRunnerWithPassages,
   type AdminRaceWithRunnerCount,
+  type AdminRunner,
+  type RaceRunner,
 } from "@live24hisere/core/types";
 import { getAdminEdition } from "../../../../services/api/editionService";
-import { getAdminRaceRunner } from "../../../../services/api/participantService";
+import { getAdminRaceRunner, patchAdminRaceRuner } from "../../../../services/api/participantService";
 import { deleteAdminPassage, patchAdminPassage, postAdminPassage } from "../../../../services/api/passageService";
 import { getAdminRace } from "../../../../services/api/raceService";
+import { getAdminRaceRunners } from "../../../../services/api/runnerService";
 import { getParticipantBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../../services/ToastService";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
@@ -31,12 +34,14 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
 
   const [edition, setEdition] = React.useState<AdminEdition | undefined | null>(undefined);
   const [race, setRace] = React.useState<AdminRaceWithRunnerCount | undefined | null>(undefined);
+  const [raceRunners, setRaceRunners] = React.useState<Array<RaceRunner<AdminRunner>> | undefined | null>(undefined);
+
   const [runner, setRunner] = React.useState<AdminRaceRunnerWithPassages | undefined | null>(undefined);
 
   const [participantBibNumber, setParticipantBibNumber] = React.useState(0);
   const [participantIsStopped, setParticipantIsStopped] = React.useState(false);
 
-  const [isSaving] = React.useState(false);
+  const [isSaving, setIsSaving] = React.useState(false);
 
   const unsavedChanges = React.useMemo(() => {
     if (!runner) {
@@ -84,6 +89,22 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
     }
 
     setRace(result.json.race);
+  }, [accessToken, urlRaceId]);
+
+  const fetchRaceRunners = React.useCallback(async () => {
+    if (!urlRaceId || !accessToken) {
+      return;
+    }
+
+    const result = await getAdminRaceRunners(accessToken, urlRaceId);
+
+    if (!isApiRequestResultOk(result)) {
+      ToastService.getToastr().error("Impossible de récupérer les coureurs participant déjà à la course");
+      setRace(null);
+      return;
+    }
+
+    setRaceRunners(result.json.runners);
   }, [accessToken, urlRaceId]);
 
   const fetchRunner = React.useCallback(async () => {
@@ -217,6 +238,19 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
     [accessToken, fetchRunner],
   );
 
+  const raceUnavailableBibNumbers = React.useMemo(() => {
+    const bibNumbers = new Set<number>();
+
+    raceRunners?.forEach((runner) => bibNumbers.add(runner.bibNumber));
+
+    return bibNumbers;
+  }, [raceRunners]);
+
+  const isBibNumberAvailable =
+    participantBibNumber === undefined ||
+    participantBibNumber === runner?.bibNumber ||
+    !raceUnavailableBibNumbers.has(participantBibNumber);
+
   React.useEffect(() => {
     void fetchEdition();
   }, [fetchEdition]);
@@ -226,12 +260,41 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
   }, [fetchRace]);
 
   React.useEffect(() => {
+    void fetchRaceRunners();
+  }, [fetchRaceRunners]);
+
+  React.useEffect(() => {
     void fetchRunner();
   }, [fetchRunner]);
 
-  const onSubmit = React.useCallback(async (e: React.FormEvent) => {
-    console.log("TODO");
-  }, []);
+  const onSubmit = React.useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
+
+      if (!accessToken || !race || !runner) {
+        return;
+      }
+
+      setIsSaving(true);
+
+      const body = {
+        bibNumber: participantBibNumber,
+        stopped: participantIsStopped,
+      };
+
+      const result = await patchAdminRaceRuner(accessToken, race.id, runner.id, body);
+
+      if (!isApiRequestResultOk(result)) {
+        ToastService.getToastr().error("Une erreur est survenue");
+        setIsSaving(false);
+        return;
+      }
+
+      ToastService.getToastr().success("Informations enregistrées");
+      setIsSaving(false);
+    },
+    [accessToken, participantBibNumber, participantIsStopped, race, runner],
+  );
 
   if (race === null) {
     navigate("/admin");
@@ -277,9 +340,10 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
                 }}
                 bibNumber={participantBibNumber}
                 setBibNumber={setParticipantBibNumber}
+                isBibNumberAvailable={isBibNumberAvailable}
                 isStopped={participantIsStopped}
                 setIsStopped={setParticipantIsStopped}
-                submitButtonDisabled={isSaving || !unsavedChanges}
+                submitButtonDisabled={isSaving || !unsavedChanges || !isBibNumberAvailable}
               />
             </Col>
           </Row>

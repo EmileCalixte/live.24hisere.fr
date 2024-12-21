@@ -205,7 +205,7 @@ export class RacesController {
   }
 
   private async ensureRaceNameDoesNotExist(name: string, editionId: number): Promise<void> {
-    const existingRace = await this.raceService.getAdminRaceByNameAndEdition(name, editionId);
+    const existingRace = await this.raceService.getAdminRaceByNameAndEditionId(name, editionId);
 
     if (existingRace) {
       throw new BadRequestException("A race with the same name already exists in this edition");
