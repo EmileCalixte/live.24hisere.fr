@@ -1,40 +1,17 @@
 import React from "react";
-import { faCircleInfo, faFileExcel } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useQueryState } from "nuqs";
 import { Col, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  type RaceRunnerWithProcessedData,
-  type RunnerWithProcessedHours,
-  type RunnerWithProcessedPassages,
-} from "@live24hisere/core/types";
-import { SearchParam } from "../../constants/searchParams";
 import { useIntervalSimpleApiRequest } from "../../hooks/useIntervalApiRequest";
-import { useRanking } from "../../hooks/useRanking";
-import { parseAsEnum } from "../../queryStringParsers/parseAsEnum";
-import { getRace } from "../../services/api/raceService";
-import { getRaceRunners, getRunners } from "../../services/api/runnerService";
-import { generateXlsxFromData } from "../../utils/excelUtils";
-import {
-  getProcessedHoursFromPassages,
-  getProcessedPassagesFromPassages,
-  getRunnerProcessedDataFromPassages,
-} from "../../utils/passageUtils";
-import { getDataForExcelExport } from "../../utils/runnerUtils";
+import { getRunners } from "../../services/api/runnerService";
 import CircularLoader from "../ui/CircularLoader";
 import Page from "../ui/Page";
-import RunnerStoppedTooltip from "../ui/tooltips/RunnerStoppedTooltip";
-import RunnerDetailsLaps from "../viewParts/runnerDetails/RunnerDetailsLaps";
-import RunnerDetailsRaceDetails from "../viewParts/runnerDetails/RunnerDetailsRaceDetails";
-import RunnerDetailsStats from "../viewParts/runnerDetails/RunnerDetailsStats";
 import RunnerSelector from "../viewParts/runnerDetails/RunnerSelector";
 import { publicContext } from "./public/Public";
 
-const enum Tab {
-  Stats = "stats",
-  Laps = "laps",
-}
+// const enum Tab {
+//   Stats = "stats",
+//   Laps = "laps",
+// }
 
 export default function RunnerDetailsView(): React.ReactElement {
   const { selectedEdition } = React.useContext(publicContext);
@@ -43,65 +20,65 @@ export default function RunnerDetailsView(): React.ReactElement {
 
   const navigate = useNavigate();
 
-  const [selectedTab, setSelectedTab] = useQueryState(
-    SearchParam.TAB,
-    parseAsEnum([Tab.Stats, Tab.Laps]).withDefault(Tab.Stats),
-  );
+  // const [selectedTab, setSelectedTab] = useQueryState(
+  //   SearchParam.TAB,
+  //   parseAsEnum([Tab.Stats, Tab.Laps]).withDefault(Tab.Stats),
+  // );
 
   const runners = useIntervalSimpleApiRequest(getRunners).json?.runners;
 
-  const raceId: number | undefined = React.useMemo(() => {
-    if (runnerId === undefined) {
-      return undefined;
-    }
+  // const raceId: number | undefined = React.useMemo(() => {
+  //   if (runnerId === undefined) {
+  //     return undefined;
+  //   }
 
-    return runners?.find((runner) => runner.id.toString() === runnerId)?.raceId;
-  }, [runnerId, runners]);
+  //   return runners?.find((runner) => runner.id.toString() === runnerId)?.raceId;
+  // }, [runnerId, runners]);
 
-  const fetchRace = React.useMemo(() => {
-    if (raceId === undefined) {
-      return;
-    }
+  // const fetchRace = React.useMemo(() => {
+  //   if (raceId === undefined) {
+  //     return;
+  //   }
 
-    return async () => await getRace(raceId);
-  }, [raceId]);
+  //   return async () => await getRace(raceId);
+  // }, [raceId]);
 
-  const race = useIntervalSimpleApiRequest(fetchRace).json?.race;
+  // const race = useIntervalSimpleApiRequest(fetchRace).json?.race;
 
-  const fetchRaceRunners = React.useMemo(() => {
-    if (raceId === undefined) {
-      return;
-    }
+  // const fetchRaceRunners = React.useMemo(() => {
+  //   if (raceId === undefined) {
+  //     return;
+  //   }
 
-    return async () => await getRaceRunners(raceId);
-  }, [raceId]);
+  //   return async () => await getRaceRunners(raceId);
+  // }, [raceId]);
 
-  const raceRunners = useIntervalSimpleApiRequest(fetchRaceRunners).json?.runners;
+  // const raceRunners = useIntervalSimpleApiRequest(fetchRaceRunners).json?.runners;
 
-  const processedRaceRunners = React.useMemo<
-    Array<RunnerWithProcessedPassages & RunnerWithProcessedHours & RaceRunnerWithProcessedData> | undefined
-  >(() => {
-    if (!raceRunners || !race) {
-      return;
-    }
+  // const processedRaceRunners = React.useMemo<
+  //   Array<RunnerWithProcessedPassages & RunnerWithProcessedHours & RaceRunnerWithProcessedData> | undefined
+  // >(() => {
+  //   if (!raceRunners || !race) {
+  //     return;
+  //   }
 
-    return raceRunners.map((runner) => {
-      const processedPassages = getProcessedPassagesFromPassages(race, runner.passages);
+  //   return raceRunners.map((runner) => {
+  //     const processedPassages = getProcessedPassagesFromPassages(race, runner.passages);
 
-      return {
-        ...runner,
-        ...getRunnerProcessedDataFromPassages(race, runner.passages),
-        passages: processedPassages,
-        hours: getProcessedHoursFromPassages(race, processedPassages),
-      };
-    });
-  }, [raceRunners, race]);
+  //     return {
+  //       ...runner,
+  //       ...getRunnerProcessedDataFromPassages(race, runner.passages),
+  //       passages: processedPassages,
+  //       hours: getProcessedHoursFromPassages(race, processedPassages),
+  //     };
+  //   });
+  // }, [raceRunners, race]);
 
-  const ranking = useRanking(race, processedRaceRunners);
+  // const ranking = useRanking(race, processedRaceRunners);
 
-  const selectedRunner = React.useMemo(() => {
-    return ranking?.find((rankingRunner) => rankingRunner.id.toString() === runnerId);
-  }, [ranking, runnerId]);
+  // const selectedRunner = React.useMemo(() => {
+  //   return ranking?.find((rankingRunner) => rankingRunner.id.toString() === runnerId);
+  // }, [ranking, runnerId]);
 
   const onSelectRunner = React.useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -110,15 +87,15 @@ export default function RunnerDetailsView(): React.ReactElement {
     [navigate],
   );
 
-  const exportRunnerToXlsx = React.useCallback(() => {
-    if (!selectedRunner) {
-      return;
-    }
+  // const exportRunnerToXlsx = React.useCallback(() => {
+  //   if (!selectedRunner) {
+  //     return;
+  //   }
 
-    const filename = `${selectedRunner.firstname} ${selectedRunner.lastname}`.trim();
+  //   const filename = `${selectedRunner.firstname} ${selectedRunner.lastname}`.trim();
 
-    generateXlsxFromData(getDataForExcelExport(selectedRunner), filename);
-  }, [selectedRunner]);
+  //   generateXlsxFromData(getDataForExcelExport(selectedRunner), filename);
+  // }, [selectedRunner]);
 
   React.useEffect(() => {
     if (!runners || runnerId === undefined) {
@@ -134,9 +111,10 @@ export default function RunnerDetailsView(): React.ReactElement {
     <Page
       id="runner-details"
       title={
-        selectedRunner === undefined
-          ? "Détails coureur"
-          : `Détails coureur ${selectedRunner.firstname} ${selectedRunner.lastname}`
+        "TODO"
+        // selectedRunner === undefined
+        //   ? "Détails coureur"
+        //   : `Détails coureur ${selectedRunner.firstname} ${selectedRunner.lastname}`
       }
     >
       <Row className="hide-on-print">
@@ -159,7 +137,7 @@ export default function RunnerDetailsView(): React.ReactElement {
             </Col>
           </Row>
 
-          {selectedRunner && race ? (
+          {/* {selectedRunner && race ? (
             <>
               <Row className="mt-3">
                 <Col className="mb-3">
@@ -240,17 +218,17 @@ export default function RunnerDetailsView(): React.ReactElement {
                 </Col>
               </Row>
             </>
-          ) : (
-            <>
-              {runnerId !== undefined && (
-                <Row className="mt-3">
-                  <Col>
-                    <CircularLoader asideText="Chargement des données" />
-                  </Col>
-                </Row>
-              )}
-            </>
-          )}
+          ) : ( */}
+          <>
+            {runnerId !== undefined && (
+              <Row className="mt-3">
+                <Col>
+                  <CircularLoader asideText="Chargement des données" />
+                </Col>
+              </Row>
+            )}
+          </>
+          {/* )} */}
         </>
       )}
     </Page>
