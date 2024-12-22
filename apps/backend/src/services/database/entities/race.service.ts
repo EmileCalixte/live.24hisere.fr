@@ -70,18 +70,10 @@ export class RaceService extends EntityService {
       })
       .from(TABLE_RACE)
       .leftJoin(TABLE_PARTICIPANT, eq(TABLE_PARTICIPANT.raceId, TABLE_RACE.id))
-      .innerJoin(TABLE_RUNNER, eq(TABLE_RUNNER.id, TABLE_PARTICIPANT.runnerId))
       .innerJoin(TABLE_EDITION, eq(TABLE_EDITION.id, TABLE_RACE.editionId))
       .orderBy(asc(TABLE_RACE.order))
       .groupBy(TABLE_RACE.id)
-      .where(
-        and(
-          eq(TABLE_RACE.isPublic, true),
-          eq(TABLE_EDITION.isPublic, true),
-          eq(TABLE_RACE.editionId, editionId),
-          eq(TABLE_RUNNER.isPublic, true),
-        ),
-      );
+      .where(and(eq(TABLE_RACE.isPublic, true), eq(TABLE_EDITION.isPublic, true), eq(TABLE_RACE.editionId, editionId)));
   }
 
   async getPublicRaceById(raceId: number): Promise<RaceWithRunnerCount | null> {
