@@ -13,8 +13,7 @@
     }
   },
   "dependencies": {
-    "@live24hisere/core": "workspace:^",
-    "type-fest": "^4.26.1"
+    "@live24hisere/core": "workspace:^"
   },
   "devDependencies": {
     "tsup": "8.3.5",
