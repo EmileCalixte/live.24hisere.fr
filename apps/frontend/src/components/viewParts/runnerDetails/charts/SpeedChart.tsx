@@ -5,8 +5,8 @@ import { Col, Row } from "react-bootstrap";
 import ReactDOMServer from "react-dom/server";
 import {
   type PublicRace,
+  type RaceRunnerWithProcessedPassages,
   type RunnerWithProcessedHours,
-  type RunnerWithProcessedPassages,
 } from "@live24hisere/core/types";
 import { SearchParam } from "../../../../constants/searchParams";
 import { useWindowDimensions } from "../../../../hooks/useWindowDimensions";
@@ -48,7 +48,7 @@ function getXAxisLabelValue(e: any): string {
 }
 
 interface SpeedChartProps {
-  runner: RunnerWithProcessedPassages & RunnerWithProcessedHours;
+  runner: RaceRunnerWithProcessedPassages & RunnerWithProcessedHours;
   race: PublicRace;
   averageSpeed: number;
 }

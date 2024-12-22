@@ -86,7 +86,7 @@ export default function RunnerDetailsStats({ runner, race, ranking }: RunnerDeta
         <Col>
           <h2>Données générales</h2>
 
-          <RunnerDetailsStatsRankingTable runner={runner} ranking={ranking} />
+          <RunnerDetailsStatsRankingTable race={race} runner={runner} ranking={ranking} />
 
           <p>Statistiques de course</p>
 

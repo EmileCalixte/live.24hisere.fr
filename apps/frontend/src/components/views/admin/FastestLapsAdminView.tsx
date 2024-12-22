@@ -1,22 +1,25 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 import {
-  type AdminPassageWithRunnerId,
+  type AdminEditionWithRaceCount,
+  type AdminPassageWithRunnerIdAndRaceId,
+  type AdminRaceWithRunnerCount,
+  type AdminRunner,
   type ProcessedPassage,
   type RaceDict,
-  type Runner,
+  type RaceRunner,
 } from "@live24hisere/core/types";
-import { getAdminPassages } from "../../../services/api/passageService";
+import { getAdminEditions } from "../../../services/api/editionService";
+import { getAdminRacePassages } from "../../../services/api/passageService";
 import { getAdminRaces } from "../../../services/api/raceService";
-import { getAdminRunners } from "../../../services/api/runnerService";
+import { getAdminRaceRunners } from "../../../services/api/runnerService";
+import { getFastestLapsBreadcrumbs } from "../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../services/ToastService";
 import { type SelectOption } from "../../../types/Forms";
 import { isApiRequestResultOk } from "../../../utils/apiUtils";
 import { getProcessedPassagesFromPassages } from "../../../utils/passageUtils";
 import { getRaceDictFromRaces } from "../../../utils/raceUtils";
 import { appContext } from "../../App";
-import Breadcrumbs from "../../ui/breadcrumbs/Breadcrumbs";
-import Crumb from "../../ui/breadcrumbs/Crumb";
 import CircularLoader from "../../ui/CircularLoader";
 import { Checkbox } from "../../ui/forms/Checkbox";
 import Select from "../../ui/forms/Select";
@@ -24,9 +27,9 @@ import Page from "../../ui/Page";
 import Pagination from "../../ui/pagination/Pagination";
 import FastestLapsTable from "../../viewParts/admin/fastestLaps/FastestLapsTable";
 
-type RunnerSortedPassages = Record<number, AdminPassageWithRunnerId[]>;
+type RunnerSortedPassages = Record<number, AdminPassageWithRunnerIdAndRaceId[]>;
 
-type RunnerSortedProcessedPassages = Record<number, Array<ProcessedPassage<AdminPassageWithRunnerId>>>;
+type RunnerSortedProcessedPassages = Record<number, Array<ProcessedPassage<AdminPassageWithRunnerIdAndRaceId>>>;
 
 const ITEMS_PER_PAGE = 100;
 
@@ -37,18 +40,36 @@ export default function FastestLapsAdminView(): React.ReactElement {
   const { accessToken } = React.useContext(appContext).user;
 
   // false = not fetched yet
-  const [passages, setPassages] = React.useState<AdminPassageWithRunnerId[] | false>(false);
+  const [passages, setPassages] = React.useState<AdminPassageWithRunnerIdAndRaceId[] | false>(false);
 
   // false = not fetched yet
-  const [races, setRaces] = React.useState<RaceDict | false>(false);
+  const [editions, setEditions] = React.useState<AdminEditionWithRaceCount[] | false>(false);
+  const [races, setRaces] = React.useState<RaceDict<AdminRaceWithRunnerCount> | false>(false);
 
   // false = not fetched yet
-  const [runners, setRunners] = React.useState<Runner[] | false>(false);
+  const [runners, setRunners] = React.useState<Array<RaceRunner<AdminRunner>> | false>(false);
 
   const [displayOnlyOneFastestLapPerRunner, setDisplayOnlyOneFastestLapPerRunner] = React.useState(false);
-  const [selectedRaceId, setSelectedRaceId] = React.useState<number | "ALL">("ALL");
+  const [selectedRaceId, setSelectedRaceId] = React.useState<number | undefined>(undefined);
 
   const [page, setPage] = React.useState(1);
+
+  const fetchEditions = React.useCallback(async () => {
+    if (!accessToken) {
+      return;
+    }
+
+    const result = await getAdminEditions(accessToken);
+
+    if (!isApiRequestResultOk(result)) {
+      ToastService.getToastr().error("Impossible de récupérer la liste des éditions");
+      return;
+    }
+
+    const responseJson = result.json;
+
+    setEditions(responseJson.editions);
+  }, [accessToken]);
 
   const fetchRaces = React.useCallback(async () => {
     if (!accessToken) {
@@ -66,11 +87,11 @@ export default function FastestLapsAdminView(): React.ReactElement {
   }, [accessToken]);
 
   const fetchRunners = React.useCallback(async () => {
-    if (!accessToken) {
+    if (!accessToken || selectedRaceId === undefined) {
       return;
     }
 
-    const result = await getAdminRunners(accessToken);
+    const result = await getAdminRaceRunners(accessToken, selectedRaceId);
 
     if (!isApiRequestResultOk(result)) {
       ToastService.getToastr().error("Impossible de récupérer la liste des coureurs");
@@ -78,23 +99,37 @@ export default function FastestLapsAdminView(): React.ReactElement {
     }
 
     setRunners(result.json.runners);
-  }, [accessToken]);
+  }, [accessToken, selectedRaceId]);
 
   const fetchPassages = React.useCallback(async () => {
-    if (!accessToken) {
+    if (!accessToken || selectedRaceId === undefined) {
       return;
     }
 
-    const result = await getAdminPassages(accessToken);
+    setPassages(false);
+
+    const result = await getAdminRacePassages(accessToken, selectedRaceId);
 
     if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de récupérer la liste des passages");
+      ToastService.getToastr().error("Impossible de récupérer la liste des passages de la course sélectionnée");
       return;
     }
 
     // The passages are already ordered by time
     setPassages(result.json.passages);
-  }, [accessToken]);
+  }, [accessToken, selectedRaceId]);
+
+  React.useEffect(() => {
+    void fetchEditions();
+
+    const interval = setInterval(() => {
+      void fetchEditions();
+    }, RUNNERS_AND_RACES_FETCH_INTERVAL);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [fetchEditions]);
 
   React.useEffect(() => {
     void fetchRaces();
@@ -194,12 +229,14 @@ export default function FastestLapsAdminView(): React.ReactElement {
     return sortedProcessedPassages;
   }, [runnerSortedPassages, races, runners]);
 
-  const speedSortedProcessedPassages = React.useMemo<Array<ProcessedPassage<AdminPassageWithRunnerId>> | false>(() => {
+  const speedSortedProcessedPassages = React.useMemo<
+    Array<ProcessedPassage<AdminPassageWithRunnerIdAndRaceId>> | false
+  >(() => {
     if (!runnerSortedProcessedPassages) {
       return false;
     }
 
-    const sortedProcessedPassages: Array<ProcessedPassage<AdminPassageWithRunnerId>> = [];
+    const sortedProcessedPassages: Array<ProcessedPassage<AdminPassageWithRunnerIdAndRaceId>> = [];
 
     for (const runnerId in runnerSortedProcessedPassages) {
       const runnerProcessedPassages = runnerSortedProcessedPassages[runnerId];
@@ -225,14 +262,14 @@ export default function FastestLapsAdminView(): React.ReactElement {
       });
   }, [runnerSortedProcessedPassages]);
 
-  const passagesToDisplay = React.useMemo<Array<ProcessedPassage<AdminPassageWithRunnerId>> | false>(() => {
+  const passagesToDisplay = React.useMemo<Array<ProcessedPassage<AdminPassageWithRunnerIdAndRaceId>> | false>(() => {
     if (!speedSortedProcessedPassages) {
       return false;
     }
 
     let passages = [...speedSortedProcessedPassages];
 
-    if (selectedRaceId !== "ALL" && runners) {
+    if (runners) {
       passages = passages.filter((passage) => {
         const runner = runners.find((runner) => runner.id === passage.runnerId);
 
@@ -265,12 +302,12 @@ export default function FastestLapsAdminView(): React.ReactElement {
     return Math.ceil(passagesToDisplay.length / ITEMS_PER_PAGE);
   }, [passagesToDisplay]);
 
-  const passagesInPage = React.useMemo<Array<ProcessedPassage<AdminPassageWithRunnerId>> | false>(() => {
+  const passagesInPage = React.useMemo<Array<ProcessedPassage<AdminPassageWithRunnerIdAndRaceId>> | false>(() => {
     if (!passagesToDisplay) {
       return false;
     }
 
-    const passages: Array<ProcessedPassage<AdminPassageWithRunnerId>> = [];
+    const passages: Array<ProcessedPassage<AdminPassageWithRunnerIdAndRaceId>> = [];
 
     for (
       let i = ITEMS_PER_PAGE * (page - 1);
@@ -283,30 +320,32 @@ export default function FastestLapsAdminView(): React.ReactElement {
     return passages;
   }, [passagesToDisplay, page]);
 
-  const raceOptions = React.useMemo<Array<SelectOption<number | "ALL">>>(() => {
-    const allOption: SelectOption<"ALL"> = {
-      label: "Toutes les courses",
-      value: "ALL",
-    };
-
-    if (!races) {
-      return [allOption];
+  const raceOptions = React.useMemo<Array<SelectOption<number>>>(() => {
+    if (!races || !editions) {
+      return [];
     }
 
-    return [
-      allOption,
-      ...Object.values(races).map((race) => ({
-        label: race.name,
+    const editionMap = new Map<number, (typeof editions)[number]>();
+
+    editions.forEach((edition) => {
+      editionMap.set(edition.id, edition);
+    });
+
+    return Object.values(races).map((race) => {
+      const edition = editionMap.get(race.editionId);
+
+      return {
+        label: `${edition ? `${edition.name} - ` : ""}${race.name}`,
         value: race.id,
-      })),
-    ];
-  }, [races]);
+      };
+    });
+  }, [races, editions]);
 
   const onSelectRace: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
     const raceId = Number(e.target.value);
 
     if (isNaN(raceId)) {
-      setSelectedRaceId("ALL");
+      setSelectedRaceId(undefined);
       return;
     }
 
@@ -316,56 +355,61 @@ export default function FastestLapsAdminView(): React.ReactElement {
   return (
     <Page id="admin-fastest-laps" title="Tours les plus rapides">
       <Row>
-        <Col>
-          <Breadcrumbs>
-            <Crumb url="/admin" label="Administration" />
-            <Crumb label="Tours les plus rapides" />
-          </Breadcrumbs>
-        </Col>
+        <Col>{getFastestLapsBreadcrumbs()}</Col>
       </Row>
 
-      {passagesInPage === false && (
-        <Row>
-          <Col>
-            <CircularLoader />
-          </Col>
-        </Row>
-      )}
-
-      {passagesInPage !== false && (
+      {races ? (
         <>
           <Row className="mb-3">
-            <Col>
-              <Checkbox
-                label="N'afficher que le tour le plus rapide de chaque coureur"
-                checked={displayOnlyOneFastestLapPerRunner}
-                onChange={(e) => {
-                  setDisplayOnlyOneFastestLapPerRunner(e.target.checked);
-                }}
+            <Col xxl={2} xl={3} lg={4} md={6} sm={12}>
+              <Select
+                label="Course"
+                placeholderLabel="Sélectionnez une course"
+                options={raceOptions}
+                value={selectedRaceId}
+                onChange={onSelectRace}
               />
             </Col>
           </Row>
 
-          <Row className="mb-3">
-            <Col xxl={2} xl={3} lg={4} md={6} sm={12}>
-              <Select label="Course" options={raceOptions} value={selectedRaceId} onChange={onSelectRace} />
-            </Col>
-          </Row>
+          {selectedRaceId !== undefined && passagesInPage === false && <CircularLoader />}
 
-          <Row>
-            <Col>
-              <FastestLapsTable passages={passagesInPage} races={races as RaceDict} runners={runners as Runner[]} />
-            </Col>
-          </Row>
+          {passagesInPage && (
+            <>
+              <Row className="mb-3">
+                <Col>
+                  <Checkbox
+                    label="N'afficher que le tour le plus rapide de chaque coureur"
+                    checked={displayOnlyOneFastestLapPerRunner}
+                    onChange={(e) => {
+                      setDisplayOnlyOneFastestLapPerRunner(e.target.checked);
+                    }}
+                  />
+                </Col>
+              </Row>
 
-          {pageCount > 1 && (
-            <Row>
-              <Col className="mt-3 pagination-container">
-                <Pagination minPage={1} maxPage={pageCount} currentPage={page} setPage={setPage} />
-              </Col>
-            </Row>
+              <Row>
+                <Col>
+                  <FastestLapsTable
+                    passages={passagesInPage}
+                    races={races as RaceDict}
+                    runners={runners as RaceRunner[]}
+                  />
+                </Col>
+              </Row>
+
+              {pageCount > 1 && (
+                <Row>
+                  <Col className="mt-3 pagination-container">
+                    <Pagination minPage={1} maxPage={pageCount} currentPage={page} setPage={setPage} />
+                  </Col>
+                </Row>
+              )}
+            </>
           )}
         </>
+      ) : (
+        <CircularLoader />
       )}
     </Page>
   );

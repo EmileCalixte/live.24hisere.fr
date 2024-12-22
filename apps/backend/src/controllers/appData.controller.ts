@@ -12,9 +12,10 @@ export class AppDataController {
 
   @Get("/app-data")
   async getAppData(): Promise<ApiResponse<GetAppDataApiRequest>> {
-    const [isAppEnabled, disabledAppMessage, lastUpdateTime] = await Promise.all([
+    const [isAppEnabled, disabledAppMessage, currentEditionId, lastUpdateTime] = await Promise.all([
       this.configService.getIsAppEnabled(),
       this.configService.getDisabledAppMessage(),
+      this.configService.getCurrentEditionId(),
       this.miscService.getLastUpdateTime(true),
     ]);
 
@@ -22,6 +23,7 @@ export class AppDataController {
       currentTime: new Date().toISOString(),
       isAppEnabled: isAppEnabled ?? false,
       disabledAppMessage: isAppEnabled ? null : disabledAppMessage,
+      currentEditionId,
       lastUpdateTime,
     };
   }

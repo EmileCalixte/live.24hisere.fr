@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
+import { type CategoryCode, type CategoryList } from "@emilecalixte/ffa-categories";
 import { Col } from "react-bootstrap";
-import { type CategoryShortCode, type GenderWithMixed, type PartialCategoriesDict } from "@live24hisere/core/types";
+import { type GenderWithMixed } from "@live24hisere/core/types";
 import { CATEGORY_SCRATCH } from "../../../constants/category";
 import {
   CATEGORY_SCRATCH_SELECT_OPTION,
@@ -15,12 +16,12 @@ import Select from "../../ui/forms/Select";
 import RankingSettingsTime from "./RankingSettingsTime";
 
 interface RankingSettingsProps {
-  categories: PartialCategoriesDict | null;
+  categories: CategoryList | null;
   onCategorySelect: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onGenderSelect: (gender: GenderWithMixed) => void;
   setTimeMode: (timeMode: RankingTimeMode) => void;
   onRankingTimeSave: (time: number) => void;
-  selectedCategory: CategoryShortCode | null;
+  selectedCategoryCode: CategoryCode | null;
   selectedGender: GenderWithMixed;
   selectedTimeMode: RankingTimeMode;
   currentRankingTime: number;
@@ -33,13 +34,13 @@ export default function RankingSettings({
   onGenderSelect,
   setTimeMode,
   onRankingTimeSave,
-  selectedCategory,
+  selectedCategoryCode,
   selectedGender,
   selectedTimeMode,
   currentRankingTime,
   maxRankingTime,
 }: RankingSettingsProps): React.ReactElement {
-  const categoriesOptions = useMemo<Array<SelectOption<CategoryShortCode | "scratch">>>(() => {
+  const categoriesOptions = useMemo<Array<SelectOption<CategoryCode | "scratch">>>(() => {
     return [CATEGORY_SCRATCH_SELECT_OPTION, ...getCategoriesDictSelectOptions(categories)];
   }, [categories]);
 
@@ -49,7 +50,7 @@ export default function RankingSettings({
         <Select
           label="Catégorie"
           options={categoriesOptions}
-          value={selectedCategory ?? CATEGORY_SCRATCH}
+          value={selectedCategoryCode ?? CATEGORY_SCRATCH}
           onChange={onCategorySelect}
         />
       </Col>

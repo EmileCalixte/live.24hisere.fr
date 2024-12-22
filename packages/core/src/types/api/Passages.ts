@@ -1,31 +1,31 @@
-import { type AdminPassage, type AdminPassageWithRunnerId } from "../Passage";
+import { type AdminPassage, type AdminPassageWithRunnerIdAndRaceId } from "../Passage";
 import { type ApiRequest } from "./ApiRequest";
 
-export interface GetAllPassagesAdminApiRequest extends ApiRequest {
+export interface GetAllPassagesOfRaceAdminApiRequest extends ApiRequest {
   payload: never;
 
   response: {
-    passages: AdminPassageWithRunnerId[];
+    passages: AdminPassageWithRunnerIdAndRaceId[];
   };
 }
 
-export interface PostRunnerPassageAdminApiRequest extends ApiRequest {
-  payload: Omit<AdminPassage, "id" | "detectionId" | "importTime">;
+export interface PostPassageAdminApiRequest extends ApiRequest {
+  payload: Omit<AdminPassageWithRunnerIdAndRaceId, "id" | "detectionId" | "importTime">;
 
   response: {
     passage: AdminPassage;
   };
 }
 
-export interface PatchRunnerPassageAdminApiRequest extends ApiRequest {
-  payload: Partial<PostRunnerPassageAdminApiRequest["payload"]>;
+export interface PatchPassageAdminApiRequest extends ApiRequest {
+  payload: Partial<Omit<PostPassageAdminApiRequest["payload"], "raceId" | "runnerId">>;
 
   response: {
     passage: AdminPassage;
   };
 }
 
-export interface DeleteAdminRunnerPassageApiRequest extends ApiRequest {
+export interface DeletePassageAdminApiRequest extends ApiRequest {
   payload: never;
 
   response: never;

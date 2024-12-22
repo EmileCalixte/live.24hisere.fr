@@ -1,9 +1,9 @@
+import { isCategoryCode } from "@emilecalixte/ffa-categories";
 import { createParser } from "nuqs";
-import { categoryUtils } from "@live24hisere/utils";
 
 export const parseAsCategory = createParser({
   parse(value) {
-    if (categoryUtils.isCategoryCode(value)) {
+    if (isCategoryCode(value)) {
       return value;
     }
 

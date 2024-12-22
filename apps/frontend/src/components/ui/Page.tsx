@@ -6,15 +6,16 @@ interface PageProps {
   children: React.ReactNode[] | React.ReactNode;
   id: string;
   title: string;
+  className?: string;
 }
 
-export default function Page({ children, id, title }: PageProps): React.ReactElement {
+export default function Page({ children, id, title, className }: PageProps): React.ReactElement {
   if (Array.isArray(children)) {
     children = [children];
   }
 
   return (
-    <div id={`page-${id}`}>
+    <div id={`page-${id}`} className={className}>
       <Helmet>
         <title>{[title, APP_BASE_TITLE].join(" - ")}</title>
       </Helmet>

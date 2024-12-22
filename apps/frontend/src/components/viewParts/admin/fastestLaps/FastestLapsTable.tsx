@@ -1,17 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import {
-  type AdminPassageWithRunnerId,
+  type AdminPassageWithRunnerIdAndRaceId,
   type ProcessedPassage,
   type RaceDict,
-  type Runner,
+  type RaceRunner,
 } from "@live24hisere/core/types";
 import { formatFloatNumber, formatMsAsDuration } from "../../../../utils/utils";
 
 interface FastestLapsTableProps {
-  passages: Array<ProcessedPassage<AdminPassageWithRunnerId>>;
+  passages: Array<ProcessedPassage<AdminPassageWithRunnerIdAndRaceId>>;
   races: RaceDict;
-  runners: Runner[];
+  runners: RaceRunner[];
 }
 
 export default function FastestLapsTable({ passages, races, runners }: FastestLapsTableProps): React.ReactElement {

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-interface CrumbProps {
+export interface CrumbProps {
   label: string;
   url?: string;
 }

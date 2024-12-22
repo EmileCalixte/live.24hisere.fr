@@ -28,11 +28,18 @@ describe("AppDataController (e2e)", () => {
 
     const json = JSON.parse(response.text);
 
-    expect(json).toContainAllKeys(["currentTime", "isAppEnabled", "disabledAppMessage", "lastUpdateTime"]);
+    expect(json).toContainAllKeys([
+      "currentTime",
+      "isAppEnabled",
+      "disabledAppMessage",
+      "currentEditionId",
+      "lastUpdateTime",
+    ]);
 
     expect(json.currentTime).toBeDateString();
     expect(json.isAppEnabled).toBeBoolean();
     expect(json.disabledAppMessage).toBeOneOf([expect.any(String), null]);
+    expect(json.currentEditionId).toBeOneOf([expect.any(Number), null]);
     expect(json.lastUpdateTime).toBeDateString();
   });
 });

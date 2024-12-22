@@ -4,7 +4,11 @@ import { appContext } from "../../App";
 import CircularLoader from "../../ui/CircularLoader";
 import AdminHomeView from "./AdminHomeView";
 import DisabledAppAdminView from "./DisabledAppAdminView";
+import CreateEditionAdminView from "./editions/CreateEditionAdminView";
+import EditionDetailsAdminView from "./editions/EditionDetailsAdminView";
+import EditionsAdminView from "./editions/EditionsAdminView";
 import FastestLapsAdminView from "./FastestLapsAdminView";
+import ParticipantDetailsAdminView from "./participants/ParticipantDetailsAdminView";
 import PassageImportSettingsAdminView from "./passageImportSettings/PassageImportSettingsAdminView";
 import CreateRaceAdminView from "./races/CreateRaceAdminView";
 import RaceDetailsAdminView from "./races/RaceDetailsAdminView";
@@ -13,6 +17,7 @@ import CreateRunnerAdminView from "./runners/CreateRunnerAdminView";
 import ImportRunnersCsvView from "./runners/ImportRunnersCsvView";
 import RunnerDetailsAdminView from "./runners/RunnerDetailsAdminView";
 import RunnersAdminView from "./runners/RunnersAdminView";
+import CreateParticipantAdminView from "./participants/CreateParticipantAdminView";
 
 export default function Admin(): React.ReactElement {
   const { user } = useContext(appContext).user;
@@ -28,6 +33,9 @@ export default function Admin(): React.ReactElement {
   return (
     <Routes>
       <Route path="/" element={<AdminHomeView />} />
+      <Route path="editions" element={<EditionsAdminView />} />
+      <Route path="editions/create" element={<CreateEditionAdminView />} />
+      <Route path="editions/:editionId" element={<EditionDetailsAdminView />} />
       <Route path="runners" element={<RunnersAdminView />} />
       <Route path="runners/create" element={<CreateRunnerAdminView />} />
       <Route path="runners/import-csv" element={<ImportRunnersCsvView />} />
@@ -35,6 +43,8 @@ export default function Admin(): React.ReactElement {
       <Route path="races" element={<RacesAdminView />} />
       <Route path="races/create" element={<CreateRaceAdminView />} />
       <Route path="races/:raceId" element={<RaceDetailsAdminView />} />
+      <Route path="races/:raceId/add-runner" element={<CreateParticipantAdminView />} />
+      <Route path="races/:raceId/runners/:runnerId" element={<ParticipantDetailsAdminView />} />
       <Route path="fastest-laps" element={<FastestLapsAdminView />} />
       <Route path="passage-import-settings" element={<PassageImportSettingsAdminView />} />
       <Route path="disabled-app" element={<DisabledAppAdminView />} />

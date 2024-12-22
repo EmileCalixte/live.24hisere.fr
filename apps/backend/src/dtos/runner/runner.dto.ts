@@ -1,18 +1,12 @@
 import { Type } from "class-transformer";
-import { IsBoolean, IsDefined, IsInt, IsNotEmpty, IsString, Max, MaxLength, Min, Validate } from "class-validator";
+import { IsBoolean, IsInt, IsNotEmpty, IsString, Max, MaxLength, Min } from "class-validator";
 import { RUNNER_FIRSTNAME_MAX_LENGTH, RUNNER_LASTNAME_MAX_LENGTH } from "@live24hisere/core/constants";
 import { Gender, PostRunnerAdminApiRequest } from "@live24hisere/core/types";
-import { RaceIdExistsRule } from "../../validation/rules/race/raceIdExists.rule";
 import { IsGender } from "../../validation/validators/IsGender";
 
 type PostRunnerPayload = PostRunnerAdminApiRequest["payload"];
 
 export class RunnerDto implements PostRunnerPayload {
-  @IsInt()
-  @IsNotEmpty()
-  @Min(1)
-  id: number;
-
   @IsString()
   @IsNotEmpty()
   @MaxLength(RUNNER_FIRSTNAME_MAX_LENGTH)
@@ -35,11 +29,15 @@ export class RunnerDto implements PostRunnerPayload {
   birthYear: number;
 
   @IsBoolean()
-  @IsDefined()
-  stopped: boolean;
-
-  @IsInt()
   @IsNotEmpty()
-  @Validate(RaceIdExistsRule)
-  raceId: number;
+  isPublic: boolean;
+
+  // @IsBoolean()
+  // @IsDefined()
+  // stopped: boolean;
+
+  // @IsInt()
+  // @IsNotEmpty()
+  // @Validate(RaceIdExistsRule)
+  // raceId: number;
 }

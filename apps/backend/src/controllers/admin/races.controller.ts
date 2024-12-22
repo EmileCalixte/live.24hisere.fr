@@ -15,7 +15,9 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import {
+  AdminEdition,
   ApiResponse,
+  GetEditionRacesAdminApiRequest,
   GetRaceAdminApiRequest,
   GetRacesAdminApiRequest,
   PatchRaceAdminApiRequest,
@@ -24,12 +26,16 @@ import {
 import { RaceDto } from "../../dtos/race/race.dto";
 import { UpdateRaceDto } from "../../dtos/race/updateRace.dto";
 import { AuthGuard } from "../../guards/auth.guard";
+import { EditionService } from "../../services/database/entities/edition.service";
 import { RaceService } from "../../services/database/entities/race.service";
 
 @Controller()
 @UseGuards(AuthGuard)
 export class RacesController {
-  constructor(private readonly raceService: RaceService) {}
+  constructor(
+    private readonly editionService: EditionService,
+    private readonly raceService: RaceService,
+  ) {}
 
   @Get("/admin/races")
   async getRaces(): Promise<ApiResponse<GetRacesAdminApiRequest>> {
@@ -42,7 +48,7 @@ export class RacesController {
 
   @Post("/admin/races")
   async createRace(@Body() raceDto: RaceDto): Promise<ApiResponse<PostRaceAdminApiRequest>> {
-    await this.ensureRaceNameDoesNotExist(raceDto.name);
+    await this.ensureRaceNameDoesNotExist(raceDto.name, raceDto.editionId);
 
     const race = await this.raceService.createRace({
       ...raceDto,
@@ -88,8 +94,11 @@ export class RacesController {
       throw new NotFoundException("Race not found");
     }
 
-    if (updateRaceDto.name && race.name !== updateRaceDto.name) {
-      await this.ensureRaceNameDoesNotExist(updateRaceDto.name);
+    const isNameUpdated = updateRaceDto.name !== undefined && race.name !== updateRaceDto.name;
+    const isEditionUpdated = updateRaceDto.editionId !== undefined && race.editionId !== updateRaceDto.editionId;
+
+    if (isNameUpdated || isEditionUpdated) {
+      await this.ensureRaceNameDoesNotExist(updateRaceDto.name ?? race.name, updateRaceDto.editionId ?? race.editionId);
     }
 
     const updatedRace = await this.raceService.updateRace(id, updateRaceDto);
@@ -121,9 +130,22 @@ export class RacesController {
     await this.raceService.deleteRace(id);
   }
 
-  @Put("/admin/races-order")
+  @Get("/admin/editions/:editionId/races")
+  async getEditionRaces(
+    @Param("editionId") editionId: string,
+  ): Promise<Promise<ApiResponse<GetEditionRacesAdminApiRequest>>> {
+    const edition = await this.getEdition(editionId);
+
+    const races = await this.raceService.getEditionAdminRaces(edition.id);
+
+    return { races };
+  }
+
+  @Put("/admin/editions/:editionId/races-order")
   @HttpCode(204)
-  async updateRacesOrder(@Req() req: RawBodyRequest<Request>): Promise<void> {
+  async updateRacesOrder(@Param("editionId") editionId: string, @Req() req: RawBodyRequest<Request>): Promise<void> {
+    const edition = await this.getEdition(editionId);
+
     const body = req.body;
 
     if (!Array.isArray(body)) {
@@ -132,8 +154,8 @@ export class RacesController {
 
     let order = 0;
 
-    const allRaces = await this.raceService.getAdminRaces();
-    const touchedRaceIds = new Set<(typeof allRaces)[number]["id"]>();
+    const editionRaces = await this.raceService.getEditionAdminRaces(edition.id);
+    const touchedRaceIds = new Set<(typeof editionRaces)[number]["id"]>();
     const updates: Array<Promise<unknown>> = [];
 
     // Update races whose id has been passed in body
@@ -142,7 +164,7 @@ export class RacesController {
         continue;
       }
 
-      const race = allRaces.find((r) => r.id === raceId);
+      const race = editionRaces.find((r) => r.id === raceId);
 
       if (!race) {
         continue;
@@ -155,7 +177,7 @@ export class RacesController {
     }
 
     // Update other races order to last provided race order + 1
-    for (const race of allRaces) {
+    for (const race of editionRaces) {
       if (touchedRaceIds.has(race.id)) {
         continue;
       }
@@ -166,11 +188,27 @@ export class RacesController {
     await Promise.all(updates);
   }
 
-  private async ensureRaceNameDoesNotExist(name: string): Promise<void> {
-    const existingRace = await this.raceService.getRaceByName(name);
+  private async getEdition(editionId: string): Promise<AdminEdition> {
+    const id = parseInt(editionId);
+
+    if (isNaN(id)) {
+      throw new BadRequestException("Edition ID must be a number");
+    }
+
+    const edition = await this.editionService.getAdminEditionById(id);
+
+    if (!edition) {
+      throw new NotFoundException("Edition not found");
+    }
+
+    return edition;
+  }
+
+  private async ensureRaceNameDoesNotExist(name: string, editionId: number): Promise<void> {
+    const existingRace = await this.raceService.getAdminRaceByNameAndEditionId(name, editionId);
 
     if (existingRace) {
-      throw new BadRequestException("A race with the same name already exists");
+      throw new BadRequestException("A race with the same name already exists in this edition");
     }
   }
 }

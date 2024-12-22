@@ -3,18 +3,13 @@ import { faCheck, faFileArrowUp, faWandMagicSparkles, faXmark } from "@fortaweso
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { Col, Row } from "react-bootstrap";
-import {
-  type AdminRace,
-  type Gender,
-  type PostRunnersBulkAdminApiRequest,
-  type RaceDict,
-  type Runner,
-} from "@live24hisere/core/types";
+import { type AdminRace, type Gender, type RaceDict, type RaceRunner } from "@live24hisere/core/types";
 import { stringUtils } from "@live24hisere/utils";
 import { GENDER_OPTIONS } from "../../../../constants/forms";
 import { ImportCsvColumn } from "../../../../constants/importCsv";
 import { getAdminRaces } from "../../../../services/api/raceService";
-import { getAdminRunners, postAdminRunnersBulk } from "../../../../services/api/runnerService";
+import { getAdminRunners } from "../../../../services/api/runnerService";
+import { getImportRunnersCsvBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../../services/ToastService";
 import { type SelectOption } from "../../../../types/Forms";
 import { type RunnerFromCsv, type RunnersCsvMapping } from "../../../../types/ImportCsv";
@@ -22,8 +17,6 @@ import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { getRunnerFromCsv, parseCsv } from "../../../../utils/csvUtils";
 import { getRaceDictFromRaces } from "../../../../utils/raceUtils";
 import { appContext } from "../../../App";
-import Breadcrumbs from "../../../ui/breadcrumbs/Breadcrumbs";
-import Crumb from "../../../ui/breadcrumbs/Crumb";
 import { Input } from "../../../ui/forms/Input";
 import Select from "../../../ui/forms/Select";
 import Page from "../../../ui/Page";
@@ -68,7 +61,7 @@ export default function ImportRunnersCsvView(): React.ReactElement {
   } = React.useContext(appContext);
 
   // false = not fetched yet
-  const [runners, setRunners] = React.useState<Runner[] | false>(false);
+  const [runners] = React.useState<RaceRunner[] | false>(false);
 
   // false = not fetched yet
   const [races, setRaces] = React.useState<RaceDict<AdminRace> | false>(false);
@@ -85,7 +78,7 @@ export default function ImportRunnersCsvView(): React.ReactElement {
   // The runners displayed in import form for import preparation
   const [runnersToImport, setRunnersToImport] = React.useState<RunnerToImport[]>([]);
 
-  const [isSaving, setIsSaving] = React.useState(false);
+  const [isSaving] = React.useState(false);
 
   const fileInputref = React.useRef<HTMLInputElement>(null);
 
@@ -135,10 +128,10 @@ export default function ImportRunnersCsvView(): React.ReactElement {
 
     if (!isApiRequestResultOk(result)) {
       ToastService.getToastr().error("Impossible de récupérer la liste des coureurs");
-      return;
+      // return;
     }
 
-    setRunners(result.json.runners);
+    // setRunners(result.json.runners);
   }, [accessToken]);
 
   const raceOptions = React.useMemo<Array<SelectOption<number>>>(() => {
@@ -338,24 +331,24 @@ export default function ImportRunnersCsvView(): React.ReactElement {
       return;
     }
 
-    const body: PostRunnersBulkAdminApiRequest["payload"] = (runners as Array<RunnerToImport<RunnerFromCsv>>).map(
-      ({ runner }) => ({
-        ...runner,
-        birthYear: parseInt(runner.birthYear),
-        stopped: false,
-        raceId: selectedRaceId,
-      }),
-    );
+    // const body: PostRunnersBulkAdminApiRequest["payload"] = (runners as Array<RunnerToImport<RunnerFromCsv>>).map(
+    //   ({ runner }) => ({
+    //     ...runner,
+    //     birthYear: parseInt(runner.birthYear),
+    //     stopped: false,
+    //     raceId: selectedRaceId,
+    //   }),
+    // );
 
-    const result = await postAdminRunnersBulk(accessToken, body);
+    // const result = await postAdminRunnersBulk(accessToken, body);
 
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Une erreur est survenue");
-      setIsSaving(false);
-      return;
-    }
+    // if (!isApiRequestResultOk(result)) {
+    //   ToastService.getToastr().error("Une erreur est survenue");
+    //   setIsSaving(false);
+    //   return;
+    // }
 
-    ToastService.getToastr().success(`${result.json.count} coureurs importés`);
+    // ToastService.getToastr().success(`${result.json.count} coureurs importés`);
     clearFileInput();
     void fetchRunners();
   }, [accessToken, clearFileInput, fetchRunners, runnersToImport, selectedRaceId]);
@@ -366,13 +359,7 @@ export default function ImportRunnersCsvView(): React.ReactElement {
   return (
     <Page id="admin-import-runners-csv" title="Import de coureurs">
       <Row>
-        <Col>
-          <Breadcrumbs>
-            <Crumb url="/admin" label="Administration" />
-            <Crumb url="/admin/runners" label="Coureurs" />
-            <Crumb label="Import via fichier CSV" />
-          </Breadcrumbs>
-        </Col>
+        <Col>{getImportRunnersCsvBreadcrumbs()}</Col>
       </Row>
 
       <Row className="row-cols-auto">

@@ -3,7 +3,11 @@ import { NestFactory } from "@nestjs/core";
 import { useContainer } from "class-validator";
 import { AppModule } from "./app.module";
 import { NODE_ENV_DEVELOPMENT } from "./constants/env.constants";
+import { setupSwagger } from "./swagger";
 
+/**
+ * Web app entrypoint
+ */
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
 
@@ -23,6 +27,8 @@ async function bootstrap(): Promise<void> {
   });
 
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
+
+  setupSwagger(app);
 
   await app.listen(8000);
 }

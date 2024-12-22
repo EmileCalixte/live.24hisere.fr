@@ -1,4 +1,4 @@
-import { type RunnerWithProcessedData, type RunnerWithProcessedPassages } from "@live24hisere/core/types";
+import { type RaceRunnerWithProcessedData, type RaceRunnerWithProcessedPassages } from "@live24hisere/core/types";
 
 export type RankingType = "scratchMixed" | "scratchGender" | "categoryMixed" | "categoryGender";
 
@@ -110,6 +110,6 @@ export type RankingRunner<T extends MinimalRankingRunnerInput = MinimalRankingRu
   gaps: RankingRunnerGaps<T>;
 };
 
-export type MinimalRankingRunnerInput = RunnerWithProcessedPassages & RunnerWithProcessedData;
+export type MinimalRankingRunnerInput = RaceRunnerWithProcessedPassages & RaceRunnerWithProcessedData;
 
 export type Ranking<T extends MinimalRankingRunnerInput = MinimalRankingRunnerInput> = Array<RankingRunner<T>>;
