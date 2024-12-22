@@ -9,22 +9,21 @@ import {
   Param,
   Patch,
   Post,
-  Query,
   UseGuards,
 } from "@nestjs/common";
 import {
   ApiResponse,
-  GetAllPassagesAdminApiRequest,
+  GetAllPassagesOfRaceAdminApiRequest,
   PatchPassageAdminApiRequest,
   PostPassageAdminApiRequest,
 } from "@live24hisere/core/types";
-import { objectUtils, typeUtils } from "@live24hisere/utils";
+import { objectUtils } from "@live24hisere/utils";
 import { PassageDto } from "../../dtos/passage/passage.dto";
 import { UpdatePassageDto } from "../../dtos/passage/updatePassage.dto";
 import { AuthGuard } from "../../guards/auth.guard";
 import { ParticipantService } from "../../services/database/entities/participant.service";
 import { PassageService } from "../../services/database/entities/passage.service";
-import { QueryParam } from "../../types/utils/query";
+import { RaceService } from "../../services/database/entities/race.service";
 
 @Controller()
 @UseGuards(AuthGuard)
@@ -32,18 +31,8 @@ export class PassagesController {
   constructor(
     private readonly participantService: ParticipantService,
     private readonly passageService: PassageService,
+    private readonly raceService: RaceService,
   ) {}
-
-  @Get("/admin/passages")
-  async getPassages(
-    @Query("excludeHidden") excludeHidden: QueryParam,
-  ): Promise<ApiResponse<GetAllPassagesAdminApiRequest>> {
-    const passages = typeUtils.isDefined(excludeHidden)
-      ? await this.passageService.getAllPublicPassages()
-      : await this.passageService.getAllPassages();
-
-    return { passages };
-  }
 
   @Post("/admin/passages")
   async getRunnerPassages(@Body() passageDto: PassageDto): Promise<ApiResponse<PostPassageAdminApiRequest>> {
@@ -109,5 +98,24 @@ export class PassagesController {
     }
 
     await this.passageService.deletePassage(Id);
+  }
+
+  @Get("/admin/races/:raceId/passages")
+  async getRacePassages(@Param("raceId") raceId: string): Promise<ApiResponse<GetAllPassagesOfRaceAdminApiRequest>> {
+    const id = Number(raceId);
+
+    if (isNaN(id)) {
+      throw new BadRequestException("Race ID must be a number");
+    }
+
+    const race = await this.raceService.getAdminRaceById(id);
+
+    if (!race) {
+      throw new NotFoundException("Race not found");
+    }
+
+    const passages = await this.passageService.getAllPassagesOfRace(race.id);
+
+    return { passages };
   }
 }

@@ -35,7 +35,7 @@ export class PassageService extends EntityService {
     return this.getUniqueResult(passages);
   }
 
-  async getAllPassages(): Promise<AdminPassageWithRunnerIdAndRaceId[]> {
+  async getAllPassagesOfRace(raceId: number): Promise<AdminPassageWithRunnerIdAndRaceId[]> {
     return await this.db
       .select({
         ...this.getAdminPassageColumns(),
@@ -44,19 +44,7 @@ export class PassageService extends EntityService {
       })
       .from(TABLE_PASSAGE)
       .innerJoin(TABLE_PARTICIPANT, eq(TABLE_PARTICIPANT.id, TABLE_PASSAGE.participantId))
-      .orderBy(asc(TABLE_PASSAGE.time));
-  }
-
-  async getAllPublicPassages(): Promise<AdminPassageWithRunnerIdAndRaceId[]> {
-    return await this.db
-      .select({
-        ...this.getAdminPassageColumns(),
-        raceId: TABLE_PARTICIPANT.raceId,
-        runnerId: TABLE_PARTICIPANT.runnerId,
-      })
-      .from(TABLE_PASSAGE)
-      .innerJoin(TABLE_PARTICIPANT, eq(TABLE_PARTICIPANT.id, TABLE_PASSAGE.participantId))
-      .where(eq(TABLE_PASSAGE.isHidden, false))
+      .where(eq(TABLE_PARTICIPANT.raceId, raceId))
       .orderBy(asc(TABLE_PASSAGE.time));
   }
 
@@ -66,22 +54,6 @@ export class PassageService extends EntityService {
       .from(TABLE_PASSAGE)
       .innerJoin(TABLE_PARTICIPANT, eq(TABLE_PARTICIPANT.id, TABLE_PASSAGE.participantId))
       .where(and(eq(TABLE_PARTICIPANT.raceId, raceId), eq(TABLE_PARTICIPANT.runnerId, runnerId)))
-      .orderBy(asc(TABLE_PASSAGE.time));
-  }
-
-  /** @deprecated */
-  async getPublicPassagesByRaceAndRunnerId(raceId: number, runnerId: number): Promise<PublicPassage[]> {
-    return await this.db
-      .select(this.getPublicPassageColumns())
-      .from(TABLE_PASSAGE)
-      .innerJoin(TABLE_PARTICIPANT, eq(TABLE_PARTICIPANT.id, TABLE_PASSAGE.participantId))
-      .where(
-        and(
-          eq(TABLE_PARTICIPANT.raceId, raceId),
-          eq(TABLE_PARTICIPANT.runnerId, runnerId),
-          eq(TABLE_PASSAGE.isHidden, false),
-        ),
-      )
       .orderBy(asc(TABLE_PASSAGE.time));
   }
 

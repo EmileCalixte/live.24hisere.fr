@@ -1,10 +1,11 @@
 import {
-  type PassageWithRunnerId,
+  type PassageWithRunnerIdAndRaceId,
   type PublicPassage,
+  type PublicRunner,
   type RaceRunner,
-  type RunnerWithPassages,
-  type RunnerWithProcessedData,
-  type RunnerWithProcessedPassages,
+  type RaceRunnerWithPassages,
+  type RaceRunnerWithProcessedData,
+  type RaceRunnerWithProcessedPassages,
 } from "@live24hisere/core/types";
 import { compareUtils, dateUtils } from "@live24hisere/utils";
 import { type SelectOption } from "../types/Forms";
@@ -14,8 +15,8 @@ import { formatMsAsDuration } from "./utils";
 
 export function getRunnersWithPassagesFromRunnersAndPassages<
   TRunner extends RaceRunner,
-  TPassage extends PassageWithRunnerId,
->(runners: TRunner[], passages: TPassage[]): Array<RunnerWithPassages<TRunner, TPassage>> {
+  TPassage extends PassageWithRunnerIdAndRaceId,
+>(runners: TRunner[], passages: TPassage[]): Array<RaceRunnerWithPassages<TRunner, TPassage>> {
   /**
    * A map with runner ID as key and array of passages as value
    */
@@ -56,8 +57,8 @@ export function getRunnerWithPassagesFromRunnerAndPassages<TRunner extends RaceR
  * @param runner2 Must be the lowest-ranking runner
  */
 export function getGapBetweenRunners(
-  runner1: RunnerWithProcessedPassages & RunnerWithProcessedData,
-  runner2: RunnerWithProcessedPassages & RunnerWithProcessedData,
+  runner1: RaceRunnerWithProcessedPassages & RaceRunnerWithProcessedData,
+  runner2: RaceRunnerWithProcessedPassages & RaceRunnerWithProcessedData,
 ): RankingRunnerGap | null {
   if (Object.is(runner1, runner2)) {
     return null;
@@ -129,8 +130,8 @@ export function formatGap(gap: RankingRunnerGap | null, exhaustive: boolean = fa
  * Returns -1 if `runner1` is faster, 1 if `runner2` is faster and 0 if the runners are equal
  */
 export function spaceshipRunners(
-  runner1: RunnerWithPassages & RunnerWithProcessedData,
-  runner2: RunnerWithPassages & RunnerWithProcessedData,
+  runner1: RaceRunnerWithPassages & RaceRunnerWithProcessedData,
+  runner2: RaceRunnerWithPassages & RaceRunnerWithProcessedData,
 ): ReturnType<typeof compareUtils.spaceship> {
   const runner1PassageCount = runner1.passages.length;
   const runner2PassageCount = runner2.passages.length;
@@ -148,8 +149,8 @@ export function spaceshipRunners(
  * Returns true if two runners are equal (same number of laps and last passage at the same time)
  */
 export function areRunnersEqual(
-  runner1: RunnerWithPassages & RunnerWithProcessedData,
-  runner2: RunnerWithPassages & RunnerWithProcessedData,
+  runner1: RaceRunnerWithPassages & RaceRunnerWithProcessedData,
+  runner2: RaceRunnerWithPassages & RaceRunnerWithProcessedData,
 ): boolean {
   return spaceshipRunners(runner1, runner2) === 0;
 }
@@ -159,7 +160,7 @@ export function areRunnersEqual(
  * @param runners
  * @param label an optional callback function to format the label
  */
-export function getRunnersSelectOptions<TRunner extends RaceRunner>(
+export function getRunnersSelectOptions<TRunner extends PublicRunner>(
   runners: TRunner[] | false,
   label?: (runner: TRunner) => string,
 ): SelectOption[] {
@@ -176,7 +177,7 @@ export function getRunnersSelectOptions<TRunner extends RaceRunner>(
 /**
  * Returns runner data ready for excel export
  */
-export function getDataForExcelExport(runner: RunnerWithProcessedPassages): object[] {
+export function getDataForExcelExport(runner: RaceRunnerWithProcessedPassages): object[] {
   const excelData: object[] = [];
 
   runner.passages.forEach((passage) => {

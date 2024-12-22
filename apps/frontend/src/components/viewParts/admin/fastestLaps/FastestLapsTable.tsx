@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import {
-  type AdminPassageWithRunnerId,
+  type AdminPassageWithRunnerIdAndRaceId,
   type ProcessedPassage,
   type RaceDict,
   type RaceRunner,
@@ -9,7 +9,7 @@ import {
 import { formatFloatNumber, formatMsAsDuration } from "../../../../utils/utils";
 
 interface FastestLapsTableProps {
-  passages: Array<ProcessedPassage<AdminPassageWithRunnerId>>;
+  passages: Array<ProcessedPassage<AdminPassageWithRunnerIdAndRaceId>>;
   races: RaceDict;
   runners: RaceRunner[];
 }

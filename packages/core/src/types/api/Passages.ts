@@ -1,7 +1,7 @@
 import { type AdminPassage, type AdminPassageWithRunnerIdAndRaceId } from "../Passage";
 import { type ApiRequest } from "./ApiRequest";
 
-export interface GetAllPassagesAdminApiRequest extends ApiRequest {
+export interface GetAllPassagesOfRaceAdminApiRequest extends ApiRequest {
   payload: never;
 
   response: {

@@ -1,14 +1,20 @@
 import {
   type ApiRequestResult,
   type DeletePassageAdminApiRequest,
-  type GetAllPassagesAdminApiRequest,
+  type GetAllPassagesOfRaceAdminApiRequest,
   type PatchPassageAdminApiRequest,
   type PostPassageAdminApiRequest,
 } from "@live24hisere/core/types";
 import { performAuthenticatedApiRequest } from "./apiService";
 
-export async function getAdminPassages(accessToken: string): Promise<ApiRequestResult<GetAllPassagesAdminApiRequest>> {
-  return await performAuthenticatedApiRequest<GetAllPassagesAdminApiRequest>("/admin/passages", accessToken);
+export async function getAdminRacePassages(
+  accessToken: string,
+  raceId: number | string,
+): Promise<ApiRequestResult<GetAllPassagesOfRaceAdminApiRequest>> {
+  return await performAuthenticatedApiRequest<GetAllPassagesOfRaceAdminApiRequest>(
+    `/admin/races/${raceId}/passages`,
+    accessToken,
+  );
 }
 
 export async function postAdminPassage(

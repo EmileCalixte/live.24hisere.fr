@@ -1,11 +1,11 @@
 import React from "react";
-import { type RaceRunner } from "@live24hisere/core/types";
+import { type PublicRunner } from "@live24hisere/core/types";
 import { compareUtils } from "@live24hisere/utils";
 import { getRunnersSelectOptions } from "../../../utils/runnerUtils";
 import Select from "../../ui/forms/Select";
 
 interface RunnerSelectorProps {
-  runners: RaceRunner[] | undefined;
+  runners: PublicRunner[] | undefined;
   onSelectRunner: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   selectedRunnerId: string | undefined;
 }
@@ -33,7 +33,7 @@ export default function RunnerSelector({
     return runner !== undefined;
   }, [runners, selectedRunnerId]);
 
-  const idSortedRunners = React.useMemo<RaceRunner[] | false>(() => {
+  const idSortedRunners = React.useMemo<PublicRunner[] | false>(() => {
     if (!runners) {
       return false;
     }
@@ -41,7 +41,7 @@ export default function RunnerSelector({
     return [...runners].sort((a, b) => compareUtils.spaceship(a.id, b.id));
   }, [runners]);
 
-  const nameSortedRunners = React.useMemo<RaceRunner[] | false>(() => {
+  const nameSortedRunners = React.useMemo<PublicRunner[] | false>(() => {
     if (!runners) {
       return false;
     }

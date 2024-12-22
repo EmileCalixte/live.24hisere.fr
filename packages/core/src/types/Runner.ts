@@ -114,7 +114,7 @@ export interface RunnerProcessedData {
   };
 }
 
-export type RunnerWithProcessedData<TRunner extends RaceRunner = RaceRunner> = TRunner & RunnerProcessedData;
+export type RaceRunnerWithProcessedData<TRunner extends RaceRunner = RaceRunner> = TRunner & RunnerProcessedData;
 
 /**
  * An object containing the information of a runner's race hour

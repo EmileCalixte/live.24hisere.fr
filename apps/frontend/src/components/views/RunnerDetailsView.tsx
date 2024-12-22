@@ -5,7 +5,7 @@ import { useQueryState } from "nuqs";
 import { Col, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import {
-  type RunnerWithProcessedData,
+  type RaceRunnerWithProcessedData,
   type RunnerWithProcessedHours,
   type RunnerWithProcessedPassages,
 } from "@live24hisere/core/types";
@@ -79,7 +79,7 @@ export default function RunnerDetailsView(): React.ReactElement {
   const raceRunners = useIntervalSimpleApiRequest(fetchRaceRunners).json?.runners;
 
   const processedRaceRunners = React.useMemo<
-    Array<RunnerWithProcessedPassages & RunnerWithProcessedHours & RunnerWithProcessedData> | undefined
+    Array<RunnerWithProcessedPassages & RunnerWithProcessedHours & RaceRunnerWithProcessedData> | undefined
   >(() => {
     if (!raceRunners || !race) {
       return;

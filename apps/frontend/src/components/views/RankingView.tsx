@@ -11,9 +11,9 @@ import { parseAsInteger, useQueryState } from "nuqs";
 import { Col, Row } from "react-bootstrap";
 import {
   type GenderWithMixed,
+  type RaceRunnerWithProcessedData,
   type RaceRunnerWithProcessedPassages,
   type RaceWithRunnerCount,
-  type RunnerWithProcessedData,
 } from "@live24hisere/core/types";
 import { objectUtils } from "@live24hisere/utils";
 import { RankingTimeMode } from "../../constants/rankingTimeMode";
@@ -94,7 +94,7 @@ export default function RankingView(): React.ReactElement {
   const runners = useIntervalSimpleApiRequest(fetchRunners).json?.runners;
 
   const processedRunners = React.useMemo<
-    Array<RaceRunnerWithProcessedPassages & RunnerWithProcessedData> | undefined
+    Array<RaceRunnerWithProcessedPassages & RaceRunnerWithProcessedData> | undefined
   >(() => {
     if (!runners || !selectedRace) {
       return;
