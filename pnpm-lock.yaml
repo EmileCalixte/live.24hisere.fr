@@ -109,10 +109,10 @@ importers:
         version: 3.2.1
       drizzle-orm:
         specifier: ^0.38.2
-        version: 0.38.2(@types/react@18.3.12)(mysql2@3.11.5)(react@18.3.1)
+        version: 0.38.2(@types/react@18.3.12)(mysql2@3.12.0)(react@18.3.1)
       mysql2:
-        specifier: ^3.11.5
-        version: 3.11.5
+        specifier: ^3.12.0
+        version: 3.12.0
       nest-commander:
         specifier: ^3.15.0
         version: 3.15.0(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.4.15(@nestjs/common@10.4.15(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/platform-express@10.4.15)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@types/inquirer@8.2.10)(typescript@5.7.2)
@@ -4486,8 +4486,8 @@ packages:
     resolution: {integrity: sha512-avsJQhyd+680gKXyG/sQc0nXaC6rBkPOfyHYcFb9+hdkqQkR9bdnkJ0AMZhke0oesPqIO+mFFJ+IdBc7mst4IA==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
 
-  mysql2@3.11.5:
-    resolution: {integrity: sha512-0XFu8rUmFN9vC0ME36iBvCUObftiMHItrYFhlCRvFWbLgpNqtC4Br/NmZX1HNCszxT0GGy5QtP+k3Q3eCJPaYA==}
+  mysql2@3.12.0:
+    resolution: {integrity: sha512-C8fWhVysZoH63tJbX8d10IAoYCyXy4fdRFz2Ihrt9jtPILYynFEKUUzpp1U7qxzDc3tMbotvaBH+sl6bFnGZiw==}
     engines: {node: '>= 8.0'}
 
   mz@2.7.0:
@@ -8671,10 +8671,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.38.2(@types/react@18.3.12)(mysql2@3.11.5)(react@18.3.1):
+  drizzle-orm@0.38.2(@types/react@18.3.12)(mysql2@3.12.0)(react@18.3.1):
     optionalDependencies:
       '@types/react': 18.3.12
-      mysql2: 3.11.5
+      mysql2: 3.12.0
       react: 18.3.1
 
   eastasianwidth@0.2.0: {}
@@ -10470,7 +10470,7 @@ snapshots:
 
   mute-stream@1.0.0: {}
 
-  mysql2@3.11.5:
+  mysql2@3.12.0:
     dependencies:
       aws-ssl-profiles: 1.1.2
       denque: 2.1.0
