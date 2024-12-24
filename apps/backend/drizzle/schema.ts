@@ -76,7 +76,7 @@ export const TABLE_RACE = mysqlTable(
     order: t.int().notNull(),
     isPublic: t.boolean().notNull(),
   }),
-  (t) => ({ unique: unique().on(t.name, t.editionId) }),
+  (t) => [unique().on(t.name, t.editionId)],
 );
 
 export const TABLE_RUNNER = mysqlTable(TABLE_NAME_RUNNER, (t) => ({
@@ -103,10 +103,7 @@ export const TABLE_PARTICIPANT = mysqlTable(
     bibNumber: t.int().notNull(),
     stopped: t.boolean().notNull(),
   }),
-  (t) => ({
-    unique: unique().on(t.raceId, t.runnerId),
-    unique2: unique().on(t.raceId, t.bibNumber),
-  }),
+  (t) => [unique().on(t.raceId, t.runnerId), unique().on(t.raceId, t.bibNumber)],
 );
 
 export const TABLE_PASSAGE = mysqlTable(TABLE_NAME_PASSAGE, (t) => ({
