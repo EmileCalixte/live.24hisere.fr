@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { appContext } from "../../App";
 import CircularLoader from "../../ui/CircularLoader";
@@ -8,6 +8,7 @@ import CreateEditionAdminView from "./editions/CreateEditionAdminView";
 import EditionDetailsAdminView from "./editions/EditionDetailsAdminView";
 import EditionsAdminView from "./editions/EditionsAdminView";
 import FastestLapsAdminView from "./FastestLapsAdminView";
+import CreateParticipantAdminView from "./participants/CreateParticipantAdminView";
 import ParticipantDetailsAdminView from "./participants/ParticipantDetailsAdminView";
 import PassageImportSettingsAdminView from "./passageImportSettings/PassageImportSettingsAdminView";
 import CreateRaceAdminView from "./races/CreateRaceAdminView";
@@ -17,10 +18,9 @@ import CreateRunnerAdminView from "./runners/CreateRunnerAdminView";
 import ImportRunnersCsvView from "./runners/ImportRunnersCsvView";
 import RunnerDetailsAdminView from "./runners/RunnerDetailsAdminView";
 import RunnersAdminView from "./runners/RunnersAdminView";
-import CreateParticipantAdminView from "./participants/CreateParticipantAdminView";
 
 export default function Admin(): React.ReactElement {
-  const { user } = useContext(appContext).user;
+  const { user } = React.useContext(appContext).user;
 
   if (user === null) {
     return <Navigate to="/" />;

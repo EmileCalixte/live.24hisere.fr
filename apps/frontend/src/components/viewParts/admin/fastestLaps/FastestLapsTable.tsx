@@ -35,7 +35,7 @@ export default function FastestLapsTable({ passages, races, runners }: FastestLa
             return null;
           }
 
-          const race = runner ? races[runner?.raceId] : undefined; // undefined should never happen
+          const race = races[runner.raceId];
 
           return (
             <tr key={passage.id}>
@@ -45,7 +45,7 @@ export default function FastestLapsTable({ passages, races, runners }: FastestLa
                   {`${runner.id} – ${runner.firstname} ${runner.lastname}`}
                 </Link>
               </td>
-              <td>{race?.name ?? <i>Course inconnue</i>}</td>
+              <td>{race.name}</td>
               <td>{formatMsAsDuration(passage.processed.lapDuration, false)}</td>
               <td>{`${formatFloatNumber(passage.processed.lapSpeed, 2)} km/h`}</td>
               <td>

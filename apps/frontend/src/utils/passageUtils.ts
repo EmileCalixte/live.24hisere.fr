@@ -66,7 +66,7 @@ export function getProcessedPassagesFromPassages<TPassage extends PublicPassage>
     const passage = passages[i];
     const previousPassage = isFirstPassage ? null : passages[i - 1];
 
-    let lapNumber: number | null;
+    let lapNumber: number | null = null;
 
     if (raceInitialDistance <= 0) {
       lapNumber = i + 1;

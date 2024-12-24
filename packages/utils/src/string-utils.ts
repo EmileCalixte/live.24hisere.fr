@@ -4,7 +4,10 @@ export function capitalizeWords(text: string, separators: string[] = [" "]): str
 
   return text
     .toLowerCase()
-    .replace(regex, (match, firstLetter) => `${match.slice(0, -firstLetter.length)}${firstLetter.toUpperCase()}`);
+    .replace(
+      regex,
+      (match, firstLetter: string) => `${match.slice(0, -firstLetter.length)}${firstLetter.toUpperCase()}`,
+    );
 }
 
 export function harmonizeName(name: string): string {
@@ -31,7 +34,7 @@ export function isValidUrl(string: string): boolean {
  * @param caseSensitive If true, search will be case-sensitive
  * @returns True if normalized string includes normalized substring, false otherwise
  */
-export function normalizedIncludes(subject: string, search: string, caseSensitive: boolean = false): boolean {
+export function normalizedIncludes(subject: string, search: string, caseSensitive = false): boolean {
   let string = subject;
   let subString = search;
 

@@ -12,7 +12,7 @@ export default function AdminHeaderUserDropdown({ hideDropdown }: AdminHeaderUse
 
   const onClickOutside = useCallback(
     (e: MouseEvent) => {
-      if (!dropdownNode?.current) {
+      if (!dropdownNode.current) {
         return;
       }
 

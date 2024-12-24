@@ -46,19 +46,11 @@ export default function RaceDetailsForm({
   submitButtonDisabled,
 }: RaceDetailsFormProps): React.ReactElement {
   const startTimeDate = useMemo(() => {
-    if (!startTime) {
-      return;
-    }
-
     // Date input value requires YYYY-MM-DD format
     return getDateStringFromDate(startTime, "-").split("-").reverse().join("-");
   }, [startTime]);
 
   const startTimeTime = useMemo(() => {
-    if (!startTime) {
-      return "";
-    }
-
     return getTimeStringFromDate(startTime);
   }, [startTime]);
 

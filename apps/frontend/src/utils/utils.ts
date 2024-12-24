@@ -88,7 +88,7 @@ export function prefixNumber(number: number, minDigits = 2): string | typeof NaN
 
   let stringNumber = number.toString();
 
-  const numberIsNegative = stringNumber.charAt(0) === "-";
+  const numberIsNegative = stringNumber.startsWith("-");
 
   if (numberIsNegative) {
     stringNumber = stringNumber.substring(1);
@@ -97,7 +97,7 @@ export function prefixNumber(number: number, minDigits = 2): string | typeof NaN
   const splittedStringNumber = stringNumber.split(".");
 
   let stringNumberIntPart = splittedStringNumber[0];
-  const stringNumberDecimalPart = splittedStringNumber[1] ?? null;
+  const stringNumberDecimalPart = splittedStringNumber.length > 1 ? splittedStringNumber[1] : null;
 
   while (stringNumberIntPart.length < minDigits) {
     stringNumberIntPart = "0" + stringNumberIntPart;

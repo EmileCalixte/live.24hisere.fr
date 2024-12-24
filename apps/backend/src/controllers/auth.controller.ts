@@ -32,7 +32,7 @@ export class AuthController {
 
   @UseGuards(AuthGuard)
   @Get("/auth/current-user-info")
-  async getCurrentUserInfo(@LoggedInUser() { user }: AuthData): Promise<ApiResponse<GetCurrentUserInfoApiRequest>> {
+  getCurrentUserInfo(@LoggedInUser() { user }: AuthData): ApiResponse<GetCurrentUserInfoApiRequest> {
     return {
       user: {
         username: user.username,

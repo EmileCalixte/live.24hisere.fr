@@ -213,14 +213,6 @@ export default function FastestLapsAdminView(): React.ReactElement {
 
       const race = races[runner.raceId];
 
-      if (!race) {
-        console.warn(
-          `Race ${runner.raceId} not found in races object, ignoring passages of runner ${runner.id}`,
-          races,
-        );
-        continue;
-      }
-
       const runnerPassages = runnerSortedPassages[runnerId];
 
       sortedProcessedPassages[runnerId] = getProcessedPassagesFromPassages(race, runnerPassages);

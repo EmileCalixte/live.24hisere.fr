@@ -120,7 +120,7 @@ describe("Edition endpoints (e2e)", { concurrent: false }, () => {
       expect(invalidIdJson).toEqual(badRequestBody(ERROR_MESSAGE_EDITION_ID_MUST_BE_NUMBER));
     });
 
-    describe("Edit edition order (PUT /admin/editions-order)", async () => {
+    describe("Edit edition order (PUT /admin/editions-order)", () => {
       it("Modify edition order with partial edition IDs", async () => {
         const response = await request(app.getHttpServer())
           .put("/admin/editions-order")
@@ -170,7 +170,7 @@ describe("Edition endpoints (e2e)", { concurrent: false }, () => {
 
     let createdEditionId: number;
 
-    describe("Create an edition (POST /admin/editions)", async () => {
+    describe("Create an edition (POST /admin/editions)", () => {
       it("Test invalid POST bodies", async () => {
         const responses = await Promise.all([
           // Post an edition without body
@@ -279,7 +279,7 @@ describe("Edition endpoints (e2e)", { concurrent: false }, () => {
       });
     });
 
-    describe("Edit an edition (PATCH /admin/editions/{id}", async () => {
+    describe("Edit an edition (PATCH /admin/editions/{id}", () => {
       it("Test invalid PATCH bodies", async () => {
         const responses = await Promise.all([
           // Patch an edition with an invalid name type
@@ -356,7 +356,7 @@ describe("Edition endpoints (e2e)", { concurrent: false }, () => {
       });
     });
 
-    describe("Delete an edition (DELETE /admin/editions/{id}", async () => {
+    describe("Delete an edition (DELETE /admin/editions/{id}", () => {
       it("Ensure that the edition cannot be deleted if it contains races", async () => {
         const response = await request(app.getHttpServer())
           .delete("/admin/editions/1")

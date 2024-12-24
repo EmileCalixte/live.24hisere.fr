@@ -1,0 +1,79 @@
+import love from "eslint-config-love";
+import eslintConfigPrettier from "eslint-config-prettier";
+import reactPlugin from "eslint-plugin-react";
+import reactHooksPlugin from "eslint-plugin-react-hooks";
+
+const ext = "{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx}";
+
+export default [
+  {
+    ignores: ["**/dist", "**/lib", "eslint.config.js"],
+  },
+  {
+    files: [`**/*.${ext}`],
+    ...love,
+  },
+  {
+    files: [`apps/backend/**/*.${ext}`],
+    rules: {
+      // Type import of NestJS module dependencies break dependency injection
+      "@typescript-eslint/consistent-type-imports": ["error", { prefer: "no-type-imports" }],
+    },
+  },
+  {
+    files: [`apps/backend/test/**/*.${ext}`],
+    rules: {
+      "@typescript-eslint/init-declarations": "off",
+      "@typescript-eslint/no-unsafe-assignment": "off",
+      "@typescript-eslint/no-unsafe-argument": "off",
+      "@typescript-eslint/no-unsafe-call": "off",
+      "@typescript-eslint/no-unsafe-member-access": "off",
+    },
+  },
+  {
+    files: [`apps/frontend/**/*.${ext}`],
+    plugins: {
+      ...reactPlugin.configs.flat.recommended.plugins,
+    },
+    rules: {
+      ...reactPlugin.configs.flat.recommended.rules,
+      ...reactPlugin.configs.flat["jsx-runtime"].rules,
+    },
+    languageOptions: reactPlugin.configs.flat["jsx-runtime"].languageOptions,
+  },
+  {
+    files: [`apps/frontend/**/*.${ext}`],
+    plugins: {
+      "react-hooks": reactHooksPlugin,
+    },
+    rules: {
+      ...reactHooksPlugin.configs.recommended.rules,
+    },
+  },
+  eslintConfigPrettier,
+  {
+    rules: {
+      complexity: "off",
+      "eslint-comments/require-description": "off",
+      "guard-for-in": "off", // TODO enable ?
+      "max-lines": "off",
+      "promise/avoid-new": "off",
+      "react/no-unescaped-entities": "off",
+      "@typescript-eslint/ban-ts-comment": "off",
+      "@typescript-eslint/class-methods-use-this": "off",
+      "@typescript-eslint/max-params": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-magic-numbers": "off",
+      "@typescript-eslint/no-unsafe-enum-comparison": "off",
+      "@typescript-eslint/no-unsafe-return": "off",
+      "@typescript-eslint/no-unsafe-type-assertion": "off",
+      "@typescript-eslint/strict-boolean-expressions": "off",
+      "@typescript-eslint/prefer-destructuring": "off",
+
+      // TODO enable and fix
+      "arrow-body-style": "off",
+      "@typescript-eslint/no-import-type-side-effects": "off",
+      "@typescript-eslint/consistent-type-imports": "off",
+    },
+  },
+];

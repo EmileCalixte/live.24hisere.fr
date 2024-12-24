@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import React, { createContext, useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { BrowserRouter, Navigate, Route, Routes, useMatch } from "react-router-dom";
@@ -144,7 +145,7 @@ export default function App(): React.ReactElement {
   const fetchAppData = useCallback(async () => {
     verbose("Fetching app data");
 
-    let result;
+    let result = null;
 
     try {
       result = await getAppData();

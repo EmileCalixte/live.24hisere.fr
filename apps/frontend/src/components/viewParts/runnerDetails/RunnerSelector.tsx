@@ -26,9 +26,7 @@ export default function RunnerSelector({
 
     const searchedRunnerId = parseInt(selectedRunnerId);
 
-    const runner = runners.find((runner) => {
-      return runner.id === searchedRunnerId;
-    });
+    const runner = runners.find((runner) => runner.id === searchedRunnerId);
 
     return runner !== undefined;
   }, [runners, selectedRunnerId]);

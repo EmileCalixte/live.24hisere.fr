@@ -122,8 +122,8 @@ export default function CreateParticipantAdminView(): React.ReactElement {
 
   const isBibNumberAvailable = bibNumber === undefined || !raceUnavailableBibNumbers.has(bibNumber);
 
-  const runnerOptions = React.useMemo<Array<SelectOption<AdminRunner["id"]>>>(() => {
-    return (
+  const runnerOptions = React.useMemo<Array<SelectOption<AdminRunner["id"]>>>(
+    () =>
       allRunners?.map((runner) => {
         const isAlreadyParticipating = alreadyParticipatingRunnerIds.has(runner.id);
 
@@ -132,9 +132,9 @@ export default function CreateParticipantAdminView(): React.ReactElement {
           value: runner.id,
           disabled: isAlreadyParticipating,
         };
-      }) ?? []
-    );
-  }, [allRunners, alreadyParticipatingRunnerIds]);
+      }) ?? [],
+    [allRunners, alreadyParticipatingRunnerIds],
+  );
 
   const clearForm = React.useCallback(() => {
     setRunnerId(undefined);

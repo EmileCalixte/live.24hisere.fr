@@ -1,12 +1,12 @@
-export * from "./api/index";
-export * from "./utils/index";
+export type * from "./api/index";
+export type * from "./utils/index";
 
-export * from "./AccessToken";
-export * from "./Config";
-export * from "./Edition";
-export * from "./Gender";
-export * from "./Participant";
-export * from "./Passage";
-export * from "./Race";
-export * from "./Runner";
-export * from "./User";
+export type * from "./AccessToken";
+export type * from "./Config";
+export type * from "./Edition";
+export type * from "./Gender";
+export type * from "./Participant";
+export type * from "./Passage";
+export type * from "./Race";
+export type * from "./Runner";
+export type * from "./User";

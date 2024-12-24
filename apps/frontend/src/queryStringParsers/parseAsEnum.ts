@@ -12,7 +12,7 @@ export function parseAsEnum<T extends readonly string[]>(availableValues: T): Pa
     },
 
     serialize(value) {
-      return value ?? "";
+      return value;
     },
   });
 }

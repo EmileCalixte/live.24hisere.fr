@@ -47,7 +47,7 @@ function hasRunnerFromCsvAllRequiredData(runner: Partial<RunnerFromCsv>): runner
   }
 
   return Object.values(runner).every((value) => {
-    if (value === undefined || value === "") {
+    if (value === "") {
       return false;
     }
 
@@ -297,10 +297,6 @@ export default function ImportRunnersCsvView(): React.ReactElement {
 
     const runnerToUpdate = runners[index];
 
-    if (!runnerToUpdate) {
-      return;
-    }
-
     runnerToUpdate.runner[key] = value;
 
     setRunnersToImport(runners);
@@ -310,10 +306,6 @@ export default function ImportRunnersCsvView(): React.ReactElement {
     const runners = structuredClone(runnersToImport);
 
     const runnerToUpdate = runners[index];
-
-    if (!runnerToUpdate) {
-      return;
-    }
 
     runnerToUpdate.toImport = !runnerToUpdate.toImport;
 
@@ -330,6 +322,8 @@ export default function ImportRunnersCsvView(): React.ReactElement {
     if (!runners.every(({ runner }) => hasRunnerFromCsvAllRequiredData(runner))) {
       return;
     }
+
+    await Promise.resolve(); // TODO remove this
 
     // const body: PostRunnersBulkAdminApiRequest["payload"] = (runners as Array<RunnerToImport<RunnerFromCsv>>).map(
     //   ({ runner }) => ({

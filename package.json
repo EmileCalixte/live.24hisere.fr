@@ -14,7 +14,7 @@
     "test": "turbo run test --parallel",
     "build": "turbo run build",
     "format": "prettier \"{apps,packages}/**/*.{js,ts,jsx,tsx,css,json}\" --write",
-    "lint-path": "eslint --ext ts,tsx --max-warnings=0",
+    "lint-path": "eslint --max-warnings=0 --no-warn-ignored",
     "lint": "pnpm lint-path .",
     "lint-fix": "pnpm lint --fix",
     "prepare": "husky"
@@ -22,21 +22,16 @@
   "lint-staged": {
     "*.{js,ts,jsx,tsx}": [
       "prettier --write",
-      "eslint --fix --max-warnings=0"
+      "eslint --fix --max-warnings=0 --no-warn-ignored"
     ],
     "*.css": "prettier --write"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^5.2.0",
-    "@typescript-eslint/eslint-plugin": "^7.18.0",
-    "@typescript-eslint/parser": "^7.18.0",
-    "eslint": "^8.57.1",
-    "eslint-config-love": "47.0.0",
+    "@types/eslint-config-prettier": "^6.11.3",
+    "eslint": "^9.17.0",
+    "eslint-config-love": "113.0.0",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-config-standard": "^17.1.0",
-    "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-n": "^16.6.2",
-    "eslint-plugin-promise": "^6.6.0",
     "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-hooks": "^5.1.0",
     "husky": "^9.1.7",

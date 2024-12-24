@@ -44,7 +44,7 @@ export default function AdminListItem({
 
       <div className="admin-list-link-label">{label}</div>
 
-      {secondaryIcons && secondaryIcons.length > 0 && (
+      {secondaryIcons.length > 0 && (
         <div className="admin-list-link-secondary-icons">
           {secondaryIcons.map((iconGroup, iconGroupIndex) => (
             <div className="admin-list-link-secondary-icon-group" key={iconGroupIndex}>

@@ -134,13 +134,9 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
         return;
       }
 
-      let confirmMessage: string;
-
-      if (hidden) {
-        confirmMessage = `Êtes vous sûr de vouloir masquer le passage n°${passage.id} (${formatDateAsString(passage.processed.lapEndTime)}) ?`;
-      } else {
-        confirmMessage = `Êtes vous sûr de vouloir rendre public le passage n°${passage.id} (${formatDateAsString(passage.processed.lapEndTime)}) ?`;
-      }
+      const confirmMessage = hidden
+        ? `Êtes vous sûr de vouloir masquer le passage n°${passage.id} (${formatDateAsString(passage.processed.lapEndTime)}) ?`
+        : `Êtes vous sûr de vouloir rendre public le passage n°${passage.id} (${formatDateAsString(passage.processed.lapEndTime)}) ?`;
 
       if (!window.confirm(confirmMessage)) {
         return;
@@ -247,9 +243,7 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
   }, [raceRunners]);
 
   const isBibNumberAvailable =
-    participantBibNumber === undefined ||
-    participantBibNumber === runner?.bibNumber ||
-    !raceUnavailableBibNumbers.has(participantBibNumber);
+    participantBibNumber === runner?.bibNumber || !raceUnavailableBibNumbers.has(participantBibNumber);
 
   React.useEffect(() => {
     void fetchEdition();

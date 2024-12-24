@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { type AppConfig } from "../types/AppConfig";
 
 const config: AppConfig = {

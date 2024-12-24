@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { type PublicRace } from "@live24hisere/core/types";
 import { formatMsAsDuration } from "../../../utils/utils";
@@ -13,9 +13,7 @@ export default function RunnerDetailsRaceDetails({ race }: RunnerDetailsRaceDeta
   const raceLapDistance = Number(race.lapDistance);
 
   // The race total duration formatted to be human-readable
-  const formattedRaceDuration = useMemo(() => {
-    return formatMsAsDuration(race.duration * 1000);
-  }, [race]);
+  const formattedRaceDuration = React.useMemo(() => formatMsAsDuration(race.duration * 1000), [race]);
 
   return (
     <Row>

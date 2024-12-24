@@ -15,7 +15,7 @@ describe("Admin ConfigController (e2e)", () => {
     await app.close();
   });
 
-  describe("Test Disabled App (GET-PATCH /admin/disabled-app)", async () => {
+  describe("Test Disabled App (GET-PATCH /admin/disabled-app)", () => {
     const disabledAppMessage = `Test disabled app message ${Date.now()}`;
 
     it("Get current disabled app settings", async () => {
@@ -95,7 +95,7 @@ describe("Admin ConfigController (e2e)", () => {
     });
   });
 
-  describe("Test passage import settings (GET-PATCH /admin/passage-import)", async () => {
+  describe("Test passage import settings (GET-PATCH /admin/passage-import)", () => {
     const dagFileUrl = `http://dag-file.test/${Date.now()}`;
 
     it("Get current passage import settings", async () => {

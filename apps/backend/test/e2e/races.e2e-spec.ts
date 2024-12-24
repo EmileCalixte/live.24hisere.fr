@@ -28,7 +28,7 @@ describe.skip("Race endpoints (e2e)", { concurrent: false }, () => {
   });
 
   describe("RacesController (e2e)", () => {
-    describe("Get race list (GET /races)", async () => {
+    describe("Get race list (GET /races)", () => {
       it("Try to get races without edition query string param or with invalid param", async () => {
         const responses = await Promise.all([
           request(app.getHttpServer()).get("/races").expect(HttpStatus.BAD_REQUEST),
@@ -190,7 +190,7 @@ describe.skip("Race endpoints (e2e)", { concurrent: false }, () => {
       expect(races.map((race: AdminRace) => race.id).includes(5)).toBe(true);
     });
 
-    describe("Get edition race list (GET /admin/editions/{id}/races)", async () => {
+    describe("Get edition race list (GET /admin/editions/{id}/races)", () => {
       it("Try to get races of a non-existing edition", async () => {
         const response = await request(app.getHttpServer())
           .get("/admin/editions/11/races")
@@ -319,7 +319,7 @@ describe.skip("Race endpoints (e2e)", { concurrent: false }, () => {
       expect(invalidIdJson).toEqual(badRequestBody(ERROR_MESSAGE_RACE_ID_MUST_BE_NUMBER));
     });
 
-    describe("Edit race order (PUT /admin/editions/{id}/races-order)", async () => {
+    describe("Edit race order (PUT /admin/editions/{id}/races-order)", () => {
       it("Modify race order with all race IDs", async () => {
         const response = await request(app.getHttpServer())
           .put("/admin/editions/6/races-order")
@@ -373,7 +373,7 @@ describe.skip("Race endpoints (e2e)", { concurrent: false }, () => {
 
     let createdRaceId: number;
 
-    describe("Create a race (POST /admin/races)", async () => {
+    describe("Create a race (POST /admin/races)", () => {
       it("Test invalid POST bodies", async () => {
         const responses = await Promise.all([
           // Post a race without body
@@ -634,7 +634,7 @@ describe.skip("Race endpoints (e2e)", { concurrent: false }, () => {
       });
     });
 
-    describe("Edit a race (PATCH /admin/races/{id})", async () => {
+    describe("Edit a race (PATCH /admin/races/{id})", () => {
       it("Test invalid PATCH bodies", async () => {
         const responses = await Promise.all([
           // Patch a race with an invalid edition ID type
@@ -741,7 +741,7 @@ describe.skip("Race endpoints (e2e)", { concurrent: false }, () => {
         }
       });
 
-      describe("Try to change race edition where the new edition contains a race with the same name", async () => {
+      describe("Try to change race edition where the new edition contains a race with the same name", () => {
         let raceId1: number;
         let raceId2: number;
 
@@ -896,7 +896,7 @@ describe.skip("Race endpoints (e2e)", { concurrent: false }, () => {
       });
     });
 
-    describe("Delete a race (DELETE /admin/races/{id}", async () => {
+    describe("Delete a race (DELETE /admin/races/{id}", () => {
       it("Ensure that the race cannot be deleted if it contains runners", async () => {
         const response = await request(app.getHttpServer())
           .delete(`/admin/races/${createdRaceId}`)

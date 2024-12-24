@@ -10,16 +10,18 @@ import {
 import { getRunnerProcessedDataFromPassages } from "../utils/passageUtils";
 import { areRunnersEqual, getGapBetweenRunners, spaceshipRunners } from "../utils/runnerUtils";
 
-type CategoryGenderRanks = {
-  [key in GenderWithMixed]: {
+type CategoryGenderRanks = Record<
+  GenderWithMixed,
+  {
     rank: number;
     lastRunnerId: number | null;
-  };
-};
+  }
+>;
 
-type CategoryGenderFirstRunners<TRunner extends MinimalRankingRunnerInput> = {
-  [key in GenderWithMixed]: RankingRunner<TRunner> | null;
-};
+type CategoryGenderFirstRunners<TRunner extends MinimalRankingRunnerInput> = Record<
+  GenderWithMixed,
+  RankingRunner<TRunner> | null
+>;
 
 interface CurrentRanksByCategory {
   scratch: CategoryGenderRanks;
@@ -237,21 +239,10 @@ export class RankingCalculator<TRunner extends MinimalRankingRunnerInput> {
       this.addCategoryCodeToFirstRunners(runnerCategoryCode);
     }
 
-    if (!this.firstRunnersByCategory.scratch.mixed) {
-      this.firstRunnersByCategory.scratch.mixed = runner;
-    }
-
-    if (!this.firstRunnersByCategory.scratch[runner.gender]) {
-      this.firstRunnersByCategory.scratch[runner.gender] = runner;
-    }
-
-    if (!this.firstRunnersByCategory[runnerCategoryCode].mixed) {
-      this.firstRunnersByCategory[runnerCategoryCode].mixed = runner;
-    }
-
-    if (!this.firstRunnersByCategory[runnerCategoryCode][runner.gender]) {
-      this.firstRunnersByCategory[runnerCategoryCode][runner.gender] = runner;
-    }
+    this.firstRunnersByCategory.scratch.mixed ??= runner;
+    this.firstRunnersByCategory.scratch[runner.gender] ??= runner;
+    this.firstRunnersByCategory[runnerCategoryCode].mixed ??= runner;
+    this.firstRunnersByCategory[runnerCategoryCode][runner.gender] ??= runner;
   }
 
   private addCategoryCodeToFirstRunners(categoryCode: string): void {

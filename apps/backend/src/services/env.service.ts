@@ -36,9 +36,12 @@ export class EnvService implements OnModuleInit {
     this.logger.log("Registering environment variables...");
     try {
       this.initEnv();
-    } catch (error) {
+    } catch (error: unknown) {
       this.logger.error(error);
-      throw error;
+
+      if (error instanceof Error) {
+        throw error;
+      }
     }
     this.logger.log("Environment variables registered");
   }
@@ -55,7 +58,7 @@ export class EnvService implements OnModuleInit {
           return acc;
         },
         // An ugly `as` but with this reduce I don't know how to do this better
-        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/prefer-reduce-type-parameter
         {} as RequiredEnvironmentVariables,
       ),
       ...Object.entries(OPTIONAL_ENVIRONMENT_VARIABLES).reduce<OptionalEnvironmentVariables>(
@@ -65,7 +68,7 @@ export class EnvService implements OnModuleInit {
           return acc;
         },
         // An ugly `as` but with this reduce I don't know how to do this better
-        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/prefer-reduce-type-parameter
         {} as OptionalEnvironmentVariables,
       ),
     };

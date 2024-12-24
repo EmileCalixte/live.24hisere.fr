@@ -28,14 +28,12 @@ export default function RankingTableInfoHeader({
         }
       })()}{" "}
       {(() => {
-        if (tableGender === "mixed") {
-          return "mixte";
-        } else if (tableGender === GENDER.M) {
+        if (tableGender === GENDER.M) {
           return "hommes";
         } else if (tableGender === GENDER.F) {
           return "femmes";
         } else {
-          return tableGender;
+          return "mixte";
         }
       })()}{" "}
       {(() => {

@@ -19,10 +19,6 @@ export default function EditionSelectorCard({
   className,
 }: EditionSelectorCardProps): React.ReactElement {
   const editionOptions = React.useMemo<Array<SelectOption<number>>>(() => {
-    if (!editions) {
-      return [];
-    }
-
     return editions.map((edition) => ({
       label: edition.name,
       value: edition.id,

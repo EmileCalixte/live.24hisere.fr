@@ -9,9 +9,9 @@ class ToastService {
     this.toastr = new Toastr();
   }
 
-  public static getToastr = (): Toastr => {
+  public static getToastr(): Toastr {
     return ToastService.getInstance().toastr;
-  };
+  }
 
   private static getInstance(): ToastService {
     if (ToastService.instance === null) {

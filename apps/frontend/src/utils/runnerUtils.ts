@@ -101,7 +101,7 @@ export function getGapBetweenRunners(
   };
 }
 
-export function formatGap(gap: RankingRunnerGap | null, exhaustive: boolean = false): string | null {
+export function formatGap(gap: RankingRunnerGap | null, exhaustive = false): string | null {
   if (!gap) {
     return null;
   }

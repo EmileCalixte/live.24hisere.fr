@@ -8,7 +8,7 @@ export function isFloatString(value: unknown): value is string {
     return false;
   }
 
-  if (!value.match(/^\d+(\.\d+)?$/)) {
+  if (!/^\d+(\.\d+)?$/.exec(value)) {
     return false;
   }
 

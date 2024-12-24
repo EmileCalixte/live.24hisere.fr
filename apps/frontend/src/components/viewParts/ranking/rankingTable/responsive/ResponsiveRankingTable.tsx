@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { type CategoryCode, getCategory } from "@emilecalixte/ffa-categories";
 import { type GenderWithMixed, type PublicRace } from "@live24hisere/core/types";
 import { type Ranking, type RankingRunner } from "../../../../../types/Ranking";
@@ -20,7 +20,7 @@ export default function ResponsiveRankingTable({
   tableGender,
   tableRaceDuration,
 }: ResponsiveRankingTableProps): React.ReactElement {
-  const getRankingTableRow = useCallback(
+  const getRankingTableRow = React.useCallback(
     (rankingRunner: RankingRunner) => {
       const runnerCategoryCode = getCategory(Number(rankingRunner.birthYear), { date: new Date(race.startTime) }).code;
 

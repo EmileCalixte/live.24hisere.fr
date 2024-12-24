@@ -82,7 +82,7 @@ function getAdminCrumb(): CrumbProps {
   return { label: "Administration", url: "/admin" };
 }
 
-function getEditionsCrumbs(clickable: boolean = false): CrumbProps[] {
+function getEditionsCrumbs(clickable = false): CrumbProps[] {
   const editionsCrumb: CrumbProps = { label: "Éditions" };
 
   if (clickable) {
@@ -92,12 +92,10 @@ function getEditionsCrumbs(clickable: boolean = false): CrumbProps[] {
   return [getAdminCrumb(), editionsCrumb];
 }
 
-function getEditionCrumbs(edition: PublicEdition | undefined, clickable: boolean = false): BreadcrumbsItem[] {
-  let editionCrumb: BreadcrumbsItem;
+function getEditionCrumbs(edition: PublicEdition | undefined, clickable = false): BreadcrumbsItem[] {
+  let editionCrumb: BreadcrumbsItem = "LOADER";
 
-  if (!edition) {
-    editionCrumb = "LOADER";
-  } else {
+  if (edition) {
     editionCrumb = { label: edition.name };
 
     if (clickable) {
@@ -108,7 +106,7 @@ function getEditionCrumbs(edition: PublicEdition | undefined, clickable: boolean
   return [...getEditionsCrumbs(true), editionCrumb];
 }
 
-function getRacesCrumbs(clickable: boolean = false): CrumbProps[] {
+function getRacesCrumbs(clickable = false): CrumbProps[] {
   const racesCrumb: CrumbProps = { label: "Courses" };
 
   if (clickable) {
@@ -121,13 +119,11 @@ function getRacesCrumbs(clickable: boolean = false): CrumbProps[] {
 function getRaceCrumbs(
   edition: PublicEdition | undefined,
   race: PublicRace | undefined,
-  clickable: boolean = false,
+  clickable = false,
 ): BreadcrumbsItem[] {
-  let raceCrumb: BreadcrumbsItem;
+  let raceCrumb: BreadcrumbsItem = "LOADER";
 
-  if (!race) {
-    raceCrumb = "LOADER";
-  } else {
+  if (race) {
     raceCrumb = { label: race.name };
 
     if (clickable) {
@@ -138,7 +134,7 @@ function getRaceCrumbs(
   return [...getEditionCrumbs(edition, true), raceCrumb];
 }
 
-function getRunnersCrumbs(clickable: boolean = false): CrumbProps[] {
+function getRunnersCrumbs(clickable = false): CrumbProps[] {
   const runnersCrumb: CrumbProps = { label: "Coureurs" };
 
   if (clickable) {

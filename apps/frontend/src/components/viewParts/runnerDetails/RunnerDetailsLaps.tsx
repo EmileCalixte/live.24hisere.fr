@@ -72,15 +72,13 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
           return 0;
         });
         break;
-      default:
-        throw new Error("Unknown sort column");
     }
 
     return passagesToDisplay;
   }, [runner, sortColumn, sortDirection]);
 
   const currentLapTableRow = React.useMemo(() => {
-    if (currentLapTime === null || runner.stopped) {
+    if (runner.stopped) {
       return null;
     }
 
@@ -95,7 +93,7 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
   }, [currentLapTime, runner.stopped, raceTime]);
 
   const currentLapResponsiveTableRow = React.useMemo(() => {
-    if (currentLapTime === null) {
+    if (runner.stopped) {
       return null;
     }
 
@@ -115,7 +113,7 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
         </td>
       </tr>
     );
-  }, [raceTime, currentLapTime]);
+  }, [currentLapTime, runner.stopped, raceTime]);
 
   const updateSort = React.useCallback(
     (e: React.MouseEvent<HTMLButtonElement>, clickedSortColumn: SortColumn) => {

@@ -115,7 +115,7 @@ export function useRankingTimeQueryString(race: PublicRace | null): UseRankingTi
   }, [race, selectedRankingTime, selectedTimeMode, setRankingTime]);
 
   return {
-    selectedTimeMode: selectedTimeMode ?? RankingTimeMode.NOW,
+    selectedTimeMode,
     setSelectedTimeMode,
     selectedRankingTime,
     rankingDate,

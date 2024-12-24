@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import { type CategoryCode } from "@emilecalixte/ffa-categories";
 import { Link } from "react-router-dom";
 import { type GenderWithMixed, type PublicRace } from "@live24hisere/core/types";
