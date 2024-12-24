@@ -10,7 +10,7 @@ import {
 } from "../../../constants/forms";
 import { RankingTimeMode } from "../../../constants/rankingTimeMode";
 import { type SelectOption } from "../../../types/Forms";
-import { getCategoriesDictSelectOptions } from "../../../utils/categoryUtils";
+import { getCategoriesSelectOptions } from "../../../utils/categoryUtils";
 import RadioGroup from "../../ui/forms/RadioGroup";
 import Select from "../../ui/forms/Select";
 import RankingSettingsTime from "./RankingSettingsTime";
@@ -41,7 +41,7 @@ export default function RankingSettings({
   maxRankingTime,
 }: RankingSettingsProps): React.ReactElement {
   const categoriesOptions = useMemo<Array<SelectOption<CategoryCode | "scratch">>>(() => {
-    return [CATEGORY_SCRATCH_SELECT_OPTION, ...getCategoriesDictSelectOptions(categories)];
+    return [CATEGORY_SCRATCH_SELECT_OPTION, ...getCategoriesSelectOptions(categories)];
   }, [categories]);
 
   return (

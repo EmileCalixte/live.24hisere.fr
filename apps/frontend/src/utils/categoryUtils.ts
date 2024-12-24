@@ -2,18 +2,16 @@ import { type CategoryCode, type CategoryList, type CategoryName } from "@emilec
 import { objectUtils } from "@live24hisere/utils";
 import { type SelectOption } from "../types/Forms";
 
-export function getCategoriesDictSelectOptions(
-  categoriesDict: CategoryList | null,
+export function getCategoriesSelectOptions(
+  categories: CategoryList | null,
   label?: (code: CategoryCode, name: CategoryName) => string,
 ): Array<SelectOption<CategoryCode>> {
-  if (!categoriesDict) {
+  if (!categories) {
     return [];
   }
 
-  return objectUtils.entries(categoriesDict).map(([key, name]) => {
-    return {
-      label: label ? label(key, name) : name,
-      value: key,
-    };
-  });
+  return objectUtils.entries(categories).map(([key, name]) => ({
+    label: label ? label(key, name) : name,
+    value: key,
+  }));
 }
