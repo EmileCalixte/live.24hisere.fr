@@ -1,9 +1,9 @@
 import React from "react";
 import { getCategory } from "@emilecalixte/ffa-categories";
 import { GENDER } from "@live24hisere/core/constants";
-import { type PublicRace } from "@live24hisere/core/types";
+import type { PublicRace } from "@live24hisere/core/types";
 import { NO_VALUE_PLACEHOLDER } from "../../../constants/misc";
-import { type Ranking, type RankingRunner, type RankingRunnerGap } from "../../../types/Ranking";
+import type { Ranking, RankingRunner, RankingRunnerGap } from "../../../types/Ranking";
 import { formatGap } from "../../../utils/runnerUtils";
 
 interface RunnerDetailsStatsGapsTableProps {

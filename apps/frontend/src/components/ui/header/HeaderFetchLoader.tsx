@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import CircularLoader from "../CircularLoader";
 
 export default function HeaderFetchLoader(): React.ReactElement {

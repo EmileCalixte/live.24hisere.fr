@@ -1,8 +1,8 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
-import { type ProcessedPassage, type PublicRace, type RunnerWithProcessedHours } from "@live24hisere/core/types";
+import type { ProcessedPassage, PublicRace, RunnerWithProcessedHours } from "@live24hisere/core/types";
 import { NO_VALUE_PLACEHOLDER } from "../../../constants/misc";
-import { type Ranking, type RankingRunner } from "../../../types/Ranking";
+import type { Ranking, RankingRunner } from "../../../types/Ranking";
 import { getPaceFromSpeed } from "../../../utils/mathUtils";
 import { getFastestLapPassage, getSlowestLapPassage } from "../../../utils/passageUtils";
 import { formatMsAsDuration } from "../../../utils/utils";

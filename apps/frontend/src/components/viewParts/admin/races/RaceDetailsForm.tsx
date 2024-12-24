@@ -1,5 +1,6 @@
-import React, { useMemo } from "react";
-import { type SelectOption } from "../../../../types/Forms";
+import type React from "react";
+import { useMemo } from "react";
+import type { SelectOption } from "../../../../types/Forms";
 import { getDateStringFromDate, getTimeStringFromDate } from "../../../../utils/utils";
 import { Checkbox } from "../../../ui/forms/Checkbox";
 import DurationInputs from "../../../ui/forms/DurationInputs";
@@ -45,14 +46,14 @@ export default function RaceDetailsForm({
   setIsPublic,
   submitButtonDisabled,
 }: RaceDetailsFormProps): React.ReactElement {
-  const startTimeDate = useMemo(() => {
-    // Date input value requires YYYY-MM-DD format
-    return getDateStringFromDate(startTime, "-").split("-").reverse().join("-");
-  }, [startTime]);
+  const startTimeDate = useMemo(
+    () =>
+      // Date input value requires YYYY-MM-DD format
+      getDateStringFromDate(startTime, "-").split("-").reverse().join("-"),
+    [startTime],
+  );
 
-  const startTimeTime = useMemo(() => {
-    return getTimeStringFromDate(startTime);
-  }, [startTime]);
+  const startTimeTime = useMemo(() => getTimeStringFromDate(startTime), [startTime]);
 
   const onEditionSelect = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     setEditionId(parseInt(e.target.value));

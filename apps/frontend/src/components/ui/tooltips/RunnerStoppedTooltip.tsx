@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import { Tooltip } from "../Tooltip";
 
 type RunnerStoppedTooltipProps = Omit<React.ComponentProps<typeof Tooltip>, "title">;

@@ -69,11 +69,6 @@ export default [
       "@typescript-eslint/no-unsafe-type-assertion": "off",
       "@typescript-eslint/strict-boolean-expressions": "off",
       "@typescript-eslint/prefer-destructuring": "off",
-
-      // TODO enable and fix
-      "arrow-body-style": "off",
-      "@typescript-eslint/no-import-type-side-effects": "off",
-      "@typescript-eslint/consistent-type-imports": "off",
     },
   },
 ];

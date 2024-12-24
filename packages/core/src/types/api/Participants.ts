@@ -1,6 +1,6 @@
-import { type Participant } from "../Participant";
-import { type AdminRaceRunnerWithPassages } from "../Runner";
-import { type ApiRequest } from "./ApiRequest";
+import type { Participant } from "../Participant";
+import type { AdminRaceRunnerWithPassages } from "../Runner";
+import type { ApiRequest } from "./ApiRequest";
 
 export interface GetRunnerParticipationsAdminApiRequest extends ApiRequest {
   payload: never;

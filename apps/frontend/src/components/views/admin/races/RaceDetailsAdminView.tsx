@@ -3,18 +3,18 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
-import {
-  type AdminEditionWithRaceCount,
-  type AdminRaceWithRunnerCount,
-  type AdminRunner,
-  type RaceRunner,
+import type {
+  AdminEditionWithRaceCount,
+  AdminRaceWithRunnerCount,
+  AdminRunner,
+  RaceRunner,
 } from "@live24hisere/core/types";
 import { getAdminEditions } from "../../../../services/api/editionService";
 import { deleteAdminRace, getAdminRace, patchAdminRace } from "../../../../services/api/raceService";
 import { getAdminRaceRunners } from "../../../../services/api/runnerService";
 import { getRaceDetailsBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../../services/ToastService";
-import { type SelectOption } from "../../../../types/Forms";
+import type { SelectOption } from "../../../../types/Forms";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { formatDateForApi } from "../../../../utils/utils";
 import { appContext } from "../../../App";

@@ -1,5 +1,5 @@
-import React from "react";
-import { type SelectOption } from "../../../../types/Forms";
+import type React from "react";
+import type { SelectOption } from "../../../../types/Forms";
 import { Checkbox } from "../../../ui/forms/Checkbox";
 import { Input } from "../../../ui/forms/Input";
 import Select from "../../../ui/forms/Select";

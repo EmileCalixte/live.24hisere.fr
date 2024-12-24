@@ -1,19 +1,14 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  type AdminEdition,
-  type AdminRaceWithRunnerCount,
-  type AdminRunner,
-  type RaceRunner,
-} from "@live24hisere/core/types";
+import type { AdminEdition, AdminRaceWithRunnerCount, AdminRunner, RaceRunner } from "@live24hisere/core/types";
 import { getAdminEdition } from "../../../../services/api/editionService";
 import { postAdminRaceRunner } from "../../../../services/api/participantService";
 import { getAdminRace } from "../../../../services/api/raceService";
 import { getAdminRaceRunners, getAdminRunners } from "../../../../services/api/runnerService";
 import { getCreateParticipantBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../../services/ToastService";
-import { type SelectOption } from "../../../../types/Forms";
+import type { SelectOption } from "../../../../types/Forms";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { appContext } from "../../../App";
 import CircularLoader from "../../../ui/CircularLoader";

@@ -1,5 +1,5 @@
 import React from "react";
-import { type ApiRequest, type ApiRequestResult } from "@live24hisere/core/types";
+import type { ApiRequest, ApiRequestResult } from "@live24hisere/core/types";
 
 export const DEFAULT_FETCH_INTERVAL = 20000;
 

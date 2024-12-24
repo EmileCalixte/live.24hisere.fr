@@ -1,6 +1,6 @@
 import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { type EditionWithRaceCount } from "@live24hisere/core/types";
+import type { EditionWithRaceCount } from "@live24hisere/core/types";
 import { useIntervalSimpleApiRequest } from "../../../hooks/useIntervalApiRequest";
 import { useSelectedEdition } from "../../../hooks/useSelectedEdition";
 import { getEditions } from "../../../services/api/editionService";

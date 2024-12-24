@@ -1,7 +1,7 @@
-import { type Gender } from "./Gender";
-import { type Participant } from "./Participant";
-import { type AdminPassage, type ProcessedPassage, type PublicPassage } from "./Passage";
-import { type PublicRace } from "./Race";
+import type { Gender } from "./Gender";
+import type { Participant } from "./Participant";
+import type { AdminPassage, ProcessedPassage, PublicPassage } from "./Passage";
+import type { PublicRace } from "./Race";
 
 /**
  * An object representing a runner

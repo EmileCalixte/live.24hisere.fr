@@ -3,11 +3,7 @@ import React from "react";
 import { parseAsBoolean, useQueryState } from "nuqs";
 import { Col, Row } from "react-bootstrap";
 import ReactDOMServer from "react-dom/server";
-import {
-  type PublicRace,
-  type RaceRunnerWithProcessedPassages,
-  type RunnerWithProcessedHours,
-} from "@live24hisere/core/types";
+import type { PublicRace, RaceRunnerWithProcessedPassages, RunnerWithProcessedHours } from "@live24hisere/core/types";
 import { SearchParam } from "../../../../constants/searchParams";
 import { useWindowDimensions } from "../../../../hooks/useWindowDimensions";
 import CanvasjsReact from "../../../../lib/canvasjs/canvasjs.react";

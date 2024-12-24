@@ -1,8 +1,8 @@
 import React from "react";
 import clsx from "clsx";
 import { Col, Row } from "react-bootstrap";
-import { type PublicEdition } from "@live24hisere/core/types";
-import { type SelectOption } from "../../types/Forms";
+import type { PublicEdition } from "@live24hisere/core/types";
+import type { SelectOption } from "../../types/Forms";
 import Select from "../ui/forms/Select";
 
 interface EditionSelectorCardProps {
@@ -18,12 +18,14 @@ export default function EditionSelectorCard({
   onEditionSelect,
   className,
 }: EditionSelectorCardProps): React.ReactElement {
-  const editionOptions = React.useMemo<Array<SelectOption<number>>>(() => {
-    return editions.map((edition) => ({
-      label: edition.name,
-      value: edition.id,
-    }));
-  }, [editions]);
+  const editionOptions = React.useMemo<Array<SelectOption<number>>>(
+    () =>
+      editions.map((edition) => ({
+        label: edition.name,
+        value: edition.id,
+      })),
+    [editions],
+  );
 
   return (
     <div className={clsx("card", className)}>

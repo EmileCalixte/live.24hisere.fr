@@ -1,13 +1,13 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import {
-  type AdminEdition,
-  type AdminProcessedPassage,
-  type AdminRaceRunnerWithPassages,
-  type AdminRaceWithRunnerCount,
-  type AdminRunner,
-  type RaceRunner,
+import type {
+  AdminEdition,
+  AdminProcessedPassage,
+  AdminRaceRunnerWithPassages,
+  AdminRaceWithRunnerCount,
+  AdminRunner,
+  RaceRunner,
 } from "@live24hisere/core/types";
 import { getAdminEdition } from "../../../../services/api/editionService";
 import { getAdminRaceRunner, patchAdminRaceRuner } from "../../../../services/api/participantService";

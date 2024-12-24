@@ -1,9 +1,9 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
-import { type AdminRaceWithRunnerCount } from "@live24hisere/core/types";
+import type { AdminRaceWithRunnerCount } from "@live24hisere/core/types";
 import { putAdminRaceOrder } from "../../../../services/api/raceService";
 import ToastService from "../../../../services/ToastService";
-import { type ReactStateSetter } from "../../../../types/utils/react";
+import type { ReactStateSetter } from "../../../../types/utils/react";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { appContext } from "../../../App";
 import SortListButtons from "../../../ui/buttons/SortListButtons";

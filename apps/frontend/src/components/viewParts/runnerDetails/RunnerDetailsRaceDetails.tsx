@@ -1,6 +1,6 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
-import { type PublicRace } from "@live24hisere/core/types";
+import type { PublicRace } from "@live24hisere/core/types";
 import { formatMsAsDuration } from "../../../utils/utils";
 import RaceTimer from "../RaceTimer";
 

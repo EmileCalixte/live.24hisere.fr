@@ -1,7 +1,7 @@
-import React from "react";
+import type React from "react";
 import { faEye, faEyeSlash, faPersonRunning } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { type AdminRaceWithRunnerCount } from "@live24hisere/core/types";
+import type { AdminRaceWithRunnerCount } from "@live24hisere/core/types";
 import AdminListItem from "../../../ui/lists/AdminListItem";
 import RaceTimer from "../../RaceTimer";
 

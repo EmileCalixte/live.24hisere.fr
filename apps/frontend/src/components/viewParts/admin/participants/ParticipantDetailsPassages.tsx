@@ -1,9 +1,10 @@
-import React, { useEffect, useMemo, useState } from "react";
+import type React from "react";
+import { useEffect, useMemo, useState } from "react";
 import { faEye, faEyeSlash, faPen, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { Col, Row } from "react-bootstrap";
-import { type AdminProcessedPassage, type AdminRaceWithRunnerCount } from "@live24hisere/core/types";
+import type { AdminProcessedPassage, AdminRaceWithRunnerCount } from "@live24hisere/core/types";
 import { formatDateAsString, formatMsAsDuration } from "../../../../utils/utils";
 import RunnerDetailsCreatePassage from "../runners/RunnerDetailsCreatePassage";
 import RunnerDetailsEditPassage from "../runners/RunnerDetailsEditPassage";
@@ -32,9 +33,7 @@ export default function ParticipantDetailsPassages({
 
   const passageCount = useMemo(() => passages.length, [passages]);
 
-  const hiddenPassageCount = useMemo(() => {
-    return passages.filter((passage) => passage.isHidden).length;
-  }, [passages]);
+  const hiddenPassageCount = useMemo(() => passages.filter((passage) => passage.isHidden).length, [passages]);
 
   useEffect(() => {
     const scrollX = window.scrollX;
@@ -116,85 +115,83 @@ export default function ParticipantDetailsPassages({
                   </tr>
                 </thead>
                 <tbody>
-                  {passages.map((passage) => {
-                    return (
-                      <tr key={passage.id} className={clsx(passage.isHidden && "passage-hidden")}>
-                        <td
-                          style={{
-                            fontSize: "0.85em",
-                          }}
-                        >
-                          {passage.id}
-                        </td>
-                        <td
-                          style={{
-                            fontSize: "0.85em",
-                          }}
-                        >
-                          {(() => {
-                            if (passage.detectionId !== null) {
-                              let text = `Auto (${passage.detectionId})`;
+                  {passages.map((passage) => (
+                    <tr key={passage.id} className={clsx(passage.isHidden && "passage-hidden")}>
+                      <td
+                        style={{
+                          fontSize: "0.85em",
+                        }}
+                      >
+                        {passage.id}
+                      </td>
+                      <td
+                        style={{
+                          fontSize: "0.85em",
+                        }}
+                      >
+                        {(() => {
+                          if (passage.detectionId !== null) {
+                            let text = `Auto (${passage.detectionId})`;
 
-                              if (passage.importTime !== null) {
-                                text = `${text} (${formatDateAsString(new Date(passage.importTime))})`;
-                              }
-
-                              return text;
+                            if (passage.importTime !== null) {
+                              text = `${text} (${formatDateAsString(new Date(passage.importTime))})`;
                             }
 
-                            return "Manuel";
-                          })()}
-                        </td>
-                        <td>{formatDateAsString(passage.processed.lapEndTime)}</td>
-                        <td>{formatMsAsDuration(passage.processed.lapEndRaceTime)}</td>
-                        <td className="no-padding-vertical">
-                          <div className="buttons-container">
-                            {passage.isHidden && (
-                              <button
-                                className="button small"
-                                onClick={() => {
-                                  void updatePassageVisiblity(passage, false);
-                                }}
-                              >
-                                <FontAwesomeIcon icon={faEye} /> Ne plus masquer
-                              </button>
-                            )}
+                            return text;
+                          }
 
-                            {!passage.isHidden && (
-                              <button
-                                className="button orange small"
-                                onClick={() => {
-                                  void updatePassageVisiblity(passage, true);
-                                }}
-                              >
-                                <FontAwesomeIcon icon={faEyeSlash} /> Masquer
-                              </button>
-                            )}
-                          </div>
-                        </td>
-                        <td>
-                          <button
-                            className="button small"
-                            onClick={() => {
-                              setEditingPassage(passage);
-                            }}
-                          >
-                            <FontAwesomeIcon icon={faPen} /> Modifier
-                          </button>
-                        </td>
-                        <td>
-                          <button
-                            className="button red small"
-                            onClick={() => {
-                              void deletePassage(passage);
-                            }}
-                          >
-                            <FontAwesomeIcon icon={faTrash} /> Supprimer
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  })}
+                          return "Manuel";
+                        })()}
+                      </td>
+                      <td>{formatDateAsString(passage.processed.lapEndTime)}</td>
+                      <td>{formatMsAsDuration(passage.processed.lapEndRaceTime)}</td>
+                      <td className="no-padding-vertical">
+                        <div className="buttons-container">
+                          {passage.isHidden && (
+                            <button
+                              className="button small"
+                              onClick={() => {
+                                void updatePassageVisiblity(passage, false);
+                              }}
+                            >
+                              <FontAwesomeIcon icon={faEye} /> Ne plus masquer
+                            </button>
+                          )}
+
+                          {!passage.isHidden && (
+                            <button
+                              className="button orange small"
+                              onClick={() => {
+                                void updatePassageVisiblity(passage, true);
+                              }}
+                            >
+                              <FontAwesomeIcon icon={faEyeSlash} /> Masquer
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                      <td>
+                        <button
+                          className="button small"
+                          onClick={() => {
+                            setEditingPassage(passage);
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faPen} /> Modifier
+                        </button>
+                      </td>
+                      <td>
+                        <button
+                          className="button red small"
+                          onClick={() => {
+                            void deletePassage(passage);
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faTrash} /> Supprimer
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </>

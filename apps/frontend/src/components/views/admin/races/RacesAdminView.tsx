@@ -3,7 +3,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { type AdminEditionWithRaceCount, type AdminRaceWithRunnerCount } from "@live24hisere/core/types";
+import type { AdminEditionWithRaceCount, AdminRaceWithRunnerCount } from "@live24hisere/core/types";
 import { getAdminEditions } from "../../../../services/api/editionService";
 import { getAdminRaces } from "../../../../services/api/raceService";
 import { getRacesBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";

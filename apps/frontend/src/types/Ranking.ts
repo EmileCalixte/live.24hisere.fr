@@ -1,4 +1,4 @@
-import { type RaceRunnerWithProcessedData, type RaceRunnerWithProcessedPassages } from "@live24hisere/core/types";
+import type { RaceRunnerWithProcessedData, RaceRunnerWithProcessedPassages } from "@live24hisere/core/types";
 
 export type RankingType = "scratchMixed" | "scratchGender" | "categoryMixed" | "categoryGender";
 

@@ -1,5 +1,5 @@
-import { type DisabledAppData, type PassageImportSettings } from "../Config";
-import { type ApiRequest } from "./ApiRequest";
+import type { DisabledAppData, PassageImportSettings } from "../Config";
+import type { ApiRequest } from "./ApiRequest";
 
 export interface GetDisabledAppDataAdminApiRequest extends ApiRequest {
   payload: never;

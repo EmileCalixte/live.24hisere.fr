@@ -1,8 +1,8 @@
 import React from "react";
 import { type CategoryCode, getCategory } from "@emilecalixte/ffa-categories";
 import { Link } from "react-router-dom";
-import { type GenderWithMixed, type PublicRace } from "@live24hisere/core/types";
-import { type RankingRunner } from "../../../../../types/Ranking";
+import type { GenderWithMixed, PublicRace } from "@live24hisere/core/types";
+import type { RankingRunner } from "../../../../../types/Ranking";
 import { getRankingType } from "../../../../../utils/rankingUtils";
 import { formatGap } from "../../../../../utils/runnerUtils";
 import { formatFloatNumber, formatMsAsDuration } from "../../../../../utils/utils";

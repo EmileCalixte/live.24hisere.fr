@@ -9,11 +9,11 @@ import {
 } from "@emilecalixte/ffa-categories";
 import { parseAsInteger, useQueryState } from "nuqs";
 import { Col, Row } from "react-bootstrap";
-import {
-  type GenderWithMixed,
-  type RaceRunnerWithProcessedData,
-  type RaceRunnerWithProcessedPassages,
-  type RaceWithRunnerCount,
+import type {
+  GenderWithMixed,
+  RaceRunnerWithProcessedData,
+  RaceRunnerWithProcessedPassages,
+  RaceWithRunnerCount,
 } from "@live24hisere/core/types";
 import { objectUtils } from "@live24hisere/utils";
 import { RankingTimeMode } from "../../constants/rankingTimeMode";

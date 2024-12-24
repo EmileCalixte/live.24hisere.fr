@@ -1,9 +1,9 @@
-import React from "react";
+import type React from "react";
 import { Col, Row } from "react-bootstrap";
-import { type ImportCsvColumn } from "../../../../../constants/importCsv";
-import { type SelectOption } from "../../../../../types/Forms";
-import { type RunnersCsvMapping } from "../../../../../types/ImportCsv";
-import { type ReactStateSetter } from "../../../../../types/utils/react";
+import type { ImportCsvColumn } from "../../../../../constants/importCsv";
+import type { SelectOption } from "../../../../../types/Forms";
+import type { RunnersCsvMapping } from "../../../../../types/ImportCsv";
+import type { ReactStateSetter } from "../../../../../types/utils/react";
 import { getObjectKeys } from "../../../../../utils/utils";
 import Select from "../../../../ui/forms/Select";
 

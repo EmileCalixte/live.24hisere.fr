@@ -1,4 +1,5 @@
-import React, { useCallback, useMemo } from "react";
+import type React from "react";
+import { useCallback, useMemo } from "react";
 import { getDurationAsMs } from "../../../utils/mathUtils";
 import { prefixNumber } from "../../../utils/utils";
 
@@ -39,17 +40,11 @@ export default function DurationInputs({
     throw new Error("minDuration cannot be negative");
   }
 
-  const hours = useMemo(() => {
-    return Math.floor(duration / 1000 / 60 / 60);
-  }, [duration]);
+  const hours = useMemo(() => Math.floor(duration / 1000 / 60 / 60), [duration]);
 
-  const minutes = useMemo(() => {
-    return Math.floor(duration / 1000 / 60) % 60;
-  }, [duration]);
+  const minutes = useMemo(() => Math.floor(duration / 1000 / 60) % 60, [duration]);
 
-  const seconds = useMemo(() => {
-    return Math.floor(duration / 1000) % 60;
-  }, [duration]);
+  const seconds = useMemo(() => Math.floor(duration / 1000) % 60, [duration]);
 
   const onHoursChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {

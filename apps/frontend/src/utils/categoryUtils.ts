@@ -1,6 +1,6 @@
-import { type CategoryCode, type CategoryList, type CategoryName } from "@emilecalixte/ffa-categories";
+import type { CategoryCode, CategoryList, CategoryName } from "@emilecalixte/ffa-categories";
 import { objectUtils } from "@live24hisere/utils";
-import { type SelectOption } from "../types/Forms";
+import type { SelectOption } from "../types/Forms";
 
 export function getCategoriesSelectOptions(
   categories: CategoryList | null,

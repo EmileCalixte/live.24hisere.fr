@@ -1,5 +1,5 @@
 import React from "react";
-import { type PublicRunner } from "@live24hisere/core/types";
+import type { PublicRunner } from "@live24hisere/core/types";
 import { compareUtils } from "@live24hisere/utils";
 import { getRunnersSelectOptions } from "../../../utils/runnerUtils";
 import Select from "../../ui/forms/Select";

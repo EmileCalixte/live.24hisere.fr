@@ -1,5 +1,5 @@
-import React from "react";
-import { type Gender } from "@live24hisere/core/types";
+import type React from "react";
+import type { Gender } from "@live24hisere/core/types";
 import { GENDER_OPTIONS } from "../../../../constants/forms";
 import { Checkbox } from "../../../ui/forms/Checkbox";
 import { Input } from "../../../ui/forms/Input";

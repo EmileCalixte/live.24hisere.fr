@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { type PublicRace } from "@live24hisere/core/types";
+import type { PublicRace } from "@live24hisere/core/types";
 import { getCurrentRaceTime } from "../utils/raceUtils";
 
 const UPDATE_RACE_TIME_INTERVAL = 1000;

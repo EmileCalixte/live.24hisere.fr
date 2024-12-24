@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { type ReactUseStateResultWithNonNullableSetter } from "../types/utils/react";
+import type { ReactUseStateResultWithNonNullableSetter } from "../types/utils/react";
 
 /**
  * Returns a stateful value, and a function to update it but this function cannot take null or undefined as parameter.

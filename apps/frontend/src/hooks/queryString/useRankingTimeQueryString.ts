@@ -1,10 +1,10 @@
 import React from "react";
 import { parseAsInteger, useQueryState } from "nuqs";
-import { type PublicRace } from "@live24hisere/core/types";
+import type { PublicRace } from "@live24hisere/core/types";
 import { RankingTimeMode } from "../../constants/rankingTimeMode";
 import { SearchParam } from "../../constants/searchParams";
 import { parseAsEnum } from "../../queryStringParsers/parseAsEnum";
-import { type ReactStateSetter } from "../../types/utils/react";
+import type { ReactStateSetter } from "../../types/utils/react";
 import { getDateFromRaceTime } from "../../utils/raceUtils";
 
 interface UseRankingTimeQueryString {

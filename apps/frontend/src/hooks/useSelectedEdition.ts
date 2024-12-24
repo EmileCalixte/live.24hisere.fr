@@ -1,9 +1,9 @@
 import React from "react";
 import { parseAsInteger, useQueryState } from "nuqs";
-import { type PublicEdition } from "@live24hisere/core/types";
+import type { PublicEdition } from "@live24hisere/core/types";
 import { appContext } from "../components/App";
 import { SearchParam } from "../constants/searchParams";
-import { type ReactStateSetter } from "../types/utils/react";
+import type { ReactStateSetter } from "../types/utils/react";
 
 interface UseSelectedEdition<TEdition extends PublicEdition> {
   selectedEdition: TEdition | null;

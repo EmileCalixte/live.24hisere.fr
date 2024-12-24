@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import type React from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 export const MIN_DOTS = 0;
 export const MAX_DOTS = 3;
@@ -28,9 +29,7 @@ export default function OptionWithLoadingDots({ children }: OptionWithLoadingDot
     };
   }, [updateDotCount]);
 
-  const dots = useMemo<string>(() => {
-    return new Array(dotCount).fill(".").join("");
-  }, [dotCount]);
+  const dots = useMemo<string>(() => new Array(dotCount).fill(".").join(""), [dotCount]);
 
   return (
     <option disabled>

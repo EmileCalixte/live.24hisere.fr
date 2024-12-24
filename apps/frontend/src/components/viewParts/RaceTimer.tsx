@@ -1,5 +1,6 @@
-import React, { useContext, useMemo } from "react";
-import { type PublicRace } from "@live24hisere/core/types";
+import type React from "react";
+import { useContext, useMemo } from "react";
+import type { PublicRace } from "@live24hisere/core/types";
 import { useRaceTime } from "../../hooks/useRaceTime";
 import { isRaceFinished, isRaceStarted } from "../../utils/raceUtils";
 import { formatMsAsDuration } from "../../utils/utils";

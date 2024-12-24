@@ -1,7 +1,7 @@
-import React from "react";
+import type React from "react";
 import { faEye, faEyeSlash, faFlagCheckered } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { type AdminEditionWithRaceCount } from "@live24hisere/core/types";
+import type { AdminEditionWithRaceCount } from "@live24hisere/core/types";
 import AdminListItem from "../../../ui/lists/AdminListItem";
 
 interface EditionListItemProps

@@ -1,10 +1,10 @@
-import React from "react";
+import type React from "react";
 import { Link } from "react-router-dom";
-import {
-  type AdminPassageWithRunnerIdAndRaceId,
-  type ProcessedPassage,
-  type RaceDict,
-  type RaceRunner,
+import type {
+  AdminPassageWithRunnerIdAndRaceId,
+  ProcessedPassage,
+  RaceDict,
+  RaceRunner,
 } from "@live24hisere/core/types";
 import { formatFloatNumber, formatMsAsDuration } from "../../../../utils/utils";
 

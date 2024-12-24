@@ -1,7 +1,8 @@
-import React, { useMemo } from "react";
-import { type CategoryCode, type CategoryList } from "@emilecalixte/ffa-categories";
+import type React from "react";
+import { useMemo } from "react";
+import type { CategoryCode, CategoryList } from "@emilecalixte/ffa-categories";
 import { Col } from "react-bootstrap";
-import { type GenderWithMixed } from "@live24hisere/core/types";
+import type { GenderWithMixed } from "@live24hisere/core/types";
 import { CATEGORY_SCRATCH } from "../../../constants/category";
 import {
   CATEGORY_SCRATCH_SELECT_OPTION,
@@ -9,7 +10,7 @@ import {
   RANKING_TIME_MODE_OPTIONS,
 } from "../../../constants/forms";
 import { RankingTimeMode } from "../../../constants/rankingTimeMode";
-import { type SelectOption } from "../../../types/Forms";
+import type { SelectOption } from "../../../types/Forms";
 import { getCategoriesSelectOptions } from "../../../utils/categoryUtils";
 import RadioGroup from "../../ui/forms/RadioGroup";
 import Select from "../../ui/forms/Select";
@@ -40,9 +41,10 @@ export default function RankingSettings({
   currentRankingTime,
   maxRankingTime,
 }: RankingSettingsProps): React.ReactElement {
-  const categoriesOptions = useMemo<Array<SelectOption<CategoryCode | "scratch">>>(() => {
-    return [CATEGORY_SCRATCH_SELECT_OPTION, ...getCategoriesSelectOptions(categories)];
-  }, [categories]);
+  const categoriesOptions = useMemo<Array<SelectOption<CategoryCode | "scratch">>>(
+    () => [CATEGORY_SCRATCH_SELECT_OPTION, ...getCategoriesSelectOptions(categories)],
+    [categories],
+  );
 
   return (
     <>

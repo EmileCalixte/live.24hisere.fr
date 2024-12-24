@@ -1,11 +1,11 @@
 import { getCategory } from "@emilecalixte/ffa-categories";
-import { type GenderWithMixed, type PublicRace } from "@live24hisere/core/types";
-import {
-  type MinimalRankingRunnerInput,
-  type Ranking,
-  type RankingRunner,
-  type RankingRunnerGaps,
-  type RankingRunnerRanks,
+import type { GenderWithMixed, PublicRace } from "@live24hisere/core/types";
+import type {
+  MinimalRankingRunnerInput,
+  Ranking,
+  RankingRunner,
+  RankingRunnerGaps,
+  RankingRunnerRanks,
 } from "../types/Ranking";
 import { getRunnerProcessedDataFromPassages } from "../utils/passageUtils";
 import { areRunnersEqual, getGapBetweenRunners, spaceshipRunners } from "../utils/runnerUtils";

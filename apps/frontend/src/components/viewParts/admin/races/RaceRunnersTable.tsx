@@ -1,7 +1,7 @@
-import React from "react";
+import type React from "react";
 import { getCategory } from "@emilecalixte/ffa-categories";
 import { Link } from "react-router-dom";
-import { type AdminRace, type AdminRunner, type RaceRunner } from "@live24hisere/core/types";
+import type { AdminRace, AdminRunner, RaceRunner } from "@live24hisere/core/types";
 
 interface RaceRunnersTableProps {
   race: AdminRace;

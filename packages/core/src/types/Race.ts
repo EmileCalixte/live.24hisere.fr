@@ -1,5 +1,5 @@
-import { type RaceRunner } from "./Runner";
-import { type DateISOString } from "./utils/dates";
+import type { RaceRunner } from "./Runner";
+import type { DateISOString } from "./utils/dates";
 
 /**
  * An object representing a race

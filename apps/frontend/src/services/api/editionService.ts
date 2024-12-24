@@ -1,12 +1,12 @@
-import {
-  type ApiRequestResult,
-  type DeleteEditionAdminApiRequest,
-  type GetEditionAdminApiRequest,
-  type GetEditionsAdminApiRequest,
-  type GetEditionsApiRequest,
-  type PatchEditionAdminApiRequest,
-  type PostEditionAdminApiRequest,
-  type PutEditionOrderAdminApiRequest,
+import type {
+  ApiRequestResult,
+  DeleteEditionAdminApiRequest,
+  GetEditionAdminApiRequest,
+  GetEditionsAdminApiRequest,
+  GetEditionsApiRequest,
+  PatchEditionAdminApiRequest,
+  PostEditionAdminApiRequest,
+  PutEditionOrderAdminApiRequest,
 } from "@live24hisere/core/types";
 import { performApiRequest, performAuthenticatedApiRequest } from "./apiService";
 

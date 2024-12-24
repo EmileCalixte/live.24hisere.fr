@@ -1,8 +1,8 @@
-import { type AdminRunner, type PublicEdition, type PublicRace } from "@live24hisere/core/types";
+import type { AdminRunner, PublicEdition, PublicRace } from "@live24hisere/core/types";
 import Breadcrumbs from "../../components/ui/breadcrumbs/Breadcrumbs";
 import Crumb, { type CrumbProps } from "../../components/ui/breadcrumbs/Crumb";
 import CircularLoader from "../../components/ui/CircularLoader";
-import { type ComponentElement } from "../../types/utils/react";
+import type { ComponentElement } from "../../types/utils/react";
 
 type BreadcrumbsItem = CrumbProps | "LOADER";
 

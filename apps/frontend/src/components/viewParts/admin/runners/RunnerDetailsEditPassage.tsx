@@ -1,5 +1,6 @@
-import React, { useCallback, useMemo, useState } from "react";
-import { type AdminProcessedPassage, type AdminRaceWithRunnerCount } from "@live24hisere/core/types";
+import type React from "react";
+import { useCallback, useMemo, useState } from "react";
+import type { AdminProcessedPassage, AdminRaceWithRunnerCount } from "@live24hisere/core/types";
 import ToastService from "../../../../services/ToastService";
 import RunnerDetailsPassageForm from "./RunnerDetailsPassageForm";
 
@@ -34,9 +35,10 @@ export default function RunnerDetailsEditPassage({
     return new Date(raceStartTime.getTime() + passageRaceTime);
   }, [runnerRace, passageRaceTime]);
 
-  const unsavedChanges = useMemo(() => {
-    return [passage.processed.lapEndRaceTime === passageRaceTime].includes(false);
-  }, [passage, passageRaceTime]);
+  const unsavedChanges = useMemo(
+    () => [passage.processed.lapEndRaceTime === passageRaceTime].includes(false),
+    [passage, passageRaceTime],
+  );
 
   const onSubmit = useCallback(
     async (e: React.FormEvent) => {

@@ -1,4 +1,5 @@
-import React, { useCallback, useContext, useEffect, useRef } from "react";
+import type React from "react";
+import { useCallback, useContext, useEffect, useRef } from "react";
 import { appContext } from "../../App";
 
 interface AdminHeaderUserDropdownProps {

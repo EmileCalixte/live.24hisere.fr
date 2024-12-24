@@ -1,4 +1,4 @@
-import { type ApiRequest, type ApiRequestResult } from "@live24hisere/core/types";
+import type { ApiRequest, ApiRequestResult } from "@live24hisere/core/types";
 import config from "../../config/config";
 import { DEFAULT_HEADERS, DEFAULT_HEADERS_WITH_BODY, REQUEST_TIMEOUT } from "../../constants/api";
 import {

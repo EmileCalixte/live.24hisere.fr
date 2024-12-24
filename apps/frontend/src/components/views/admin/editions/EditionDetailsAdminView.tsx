@@ -1,7 +1,7 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { type AdminEditionWithRaceCount, type AdminRaceWithRunnerCount } from "@live24hisere/core/types";
+import type { AdminEditionWithRaceCount, AdminRaceWithRunnerCount } from "@live24hisere/core/types";
 import { deleteAdminEdition, getAdminEdition, patchAdminEdition } from "../../../../services/api/editionService";
 import { getAdminEditionRaces } from "../../../../services/api/raceService";
 import { getEditionDetailsBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";

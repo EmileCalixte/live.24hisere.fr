@@ -1,7 +1,7 @@
 import React from "react";
 import DOMPurify from "dompurify";
 import { Col, Row } from "react-bootstrap";
-import { type DisabledAppData } from "@live24hisere/core/types";
+import type { DisabledAppData } from "@live24hisere/core/types";
 import { getDisabledAppData, patchDisabledAppData } from "../../../services/api/configService";
 import { getDisabledAppBreadcrumbs } from "../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../services/ToastService";
