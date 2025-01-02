@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { type ProcessedPassage } from "@live24hisere/core/types";
+import type { ProcessedPassage } from "@live24hisere/core/types";
 import { getFastestLapPassage, getSlowestLapPassage } from "../../src/utils/passageUtils";
 
 describe("Get fastest and slowest lap passages", () => {

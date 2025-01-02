@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { Navigate } from "react-router-dom";
 import { login } from "../../services/api/authService";
@@ -9,12 +9,12 @@ import { Input } from "../ui/forms/Input";
 import Page from "../ui/Page";
 
 export default function LoginView(): React.ReactElement {
-  const { accessToken, saveAccessToken, setUser } = useContext(appContext).user;
+  const { accessToken, saveAccessToken, setUser } = React.useContext(appContext).user;
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [submitButtonDisabled, setSubmitButtonDisabled] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(accessToken !== null);
+  const [username, setUsername] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [submitButtonDisabled, setSubmitButtonDisabled] = React.useState(false);
+  const [loggedIn, setLoggedIn] = React.useState(accessToken !== null);
 
   const onSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();

@@ -1,10 +1,10 @@
 import { ONE_HOUR_IN_MILLISECONDS } from "@live24hisere/core/constants";
-import {
-  type ProcessedPassage,
-  type PublicPassage,
-  type PublicRace,
-  type RunnerProcessedData,
-  type RunnerProcessedHour,
+import type {
+  ProcessedPassage,
+  PublicPassage,
+  PublicRace,
+  RunnerProcessedData,
+  RunnerProcessedHour,
 } from "@live24hisere/core/types";
 import { compareUtils, dateUtils } from "@live24hisere/utils";
 import { getPaceFromSpeed, getSpeed } from "./mathUtils";
@@ -66,7 +66,7 @@ export function getProcessedPassagesFromPassages<TPassage extends PublicPassage>
     const passage = passages[i];
     const previousPassage = isFirstPassage ? null : passages[i - 1];
 
-    let lapNumber: number | null;
+    let lapNumber: number | null = null;
 
     if (raceInitialDistance <= 0) {
       lapNumber = i + 1;

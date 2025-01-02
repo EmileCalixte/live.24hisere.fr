@@ -1,7 +1,7 @@
-import React from "react";
-import { type CategoryCode } from "@emilecalixte/ffa-categories";
+import type React from "react";
+import type { CategoryCode } from "@emilecalixte/ffa-categories";
 import { GENDER } from "@live24hisere/core/constants";
-import { type GenderWithMixed, type PublicRace } from "@live24hisere/core/types";
+import type { GenderWithMixed, PublicRace } from "@live24hisere/core/types";
 import { formatMsAsDuration } from "../../../../utils/utils";
 
 interface RankingTableInfoHeaderProps {
@@ -28,14 +28,12 @@ export default function RankingTableInfoHeader({
         }
       })()}{" "}
       {(() => {
-        if (tableGender === "mixed") {
-          return "mixte";
-        } else if (tableGender === GENDER.M) {
+        if (tableGender === GENDER.M) {
           return "hommes";
         } else if (tableGender === GENDER.F) {
           return "femmes";
         } else {
-          return tableGender;
+          return "mixte";
         }
       })()}{" "}
       {(() => {

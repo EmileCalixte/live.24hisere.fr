@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import { Tooltip as MuiTooltip } from "@mui/material";
 
 type MuiTooltipProps = React.ComponentProps<typeof MuiTooltip>;

@@ -117,7 +117,7 @@ describe.skip("Runner endpoints (e2e)", { concurrent: false }, () => {
     });
   });
 
-  describe("Admin RunnersController (e2e)", async () => {
+  describe("Admin RunnersController (e2e)", () => {
     it("Get runner list (GET /admin/runners)", async () => {
       const response = await request(app.getHttpServer())
         .get("/runners")
@@ -246,7 +246,7 @@ describe.skip("Runner endpoints (e2e)", { concurrent: false }, () => {
     const runnerPatchId2 = 1234570;
     const runnerPatchId3 = 1234571;
 
-    describe("Create a runner (POST /admin/runners)", async () => {
+    describe("Create a runner (POST /admin/runners)", () => {
       it("Test invalid POST bodies", async () => {
         const runnerToPost = runnersToPost[0];
 
@@ -461,7 +461,7 @@ describe.skip("Runner endpoints (e2e)", { concurrent: false }, () => {
       });
     });
 
-    describe("Edit a runner (PATCH /admin/runners)", async () => {
+    describe("Edit a runner (PATCH /admin/runners)", () => {
       const runnerId = runnersToPost[0].id;
 
       it("Test invalid PATCH bodies", async () => {
@@ -665,7 +665,7 @@ describe.skip("Runner endpoints (e2e)", { concurrent: false }, () => {
         expect(runner.id).toBe(runnersToPost[0].id);
       });
 
-      describe("Edit runner ID without passages", async () => {
+      describe("Edit runner ID without passages", () => {
         it("Edit only ID", async () => {
           const response = await request(app.getHttpServer())
             .patch(`/admin/runners/${runnersToPost[0].id}`)
@@ -703,7 +703,7 @@ describe.skip("Runner endpoints (e2e)", { concurrent: false }, () => {
         });
       });
 
-      describe("Edit runner ID with passages", async () => {
+      describe("Edit runner ID with passages", () => {
         it("Add a passage to a runner", async () => {
           await request(app.getHttpServer())
             .post(`/admin/runners/${runnerPatchId2}/passages`)
@@ -753,7 +753,7 @@ describe.skip("Runner endpoints (e2e)", { concurrent: false }, () => {
       });
     });
 
-    describe("Delete a runner (DELETE /admin/runners/{id})", async () => {
+    describe("Delete a runner (DELETE /admin/runners/{id})", () => {
       it("Try to delete non-existing runner", async () => {
         const response = await request(app.getHttpServer())
           .delete("/admin/runners/23456789")
@@ -795,7 +795,7 @@ describe.skip("Runner endpoints (e2e)", { concurrent: false }, () => {
       });
     });
 
-    describe("Bulk import runners (POST /admin/runners-bulk)", async () => {
+    describe("Bulk import runners (POST /admin/runners-bulk)", () => {
       it("Import runners", async () => {
         const response = await request(app.getHttpServer())
           .post("/admin/runners-bulk")

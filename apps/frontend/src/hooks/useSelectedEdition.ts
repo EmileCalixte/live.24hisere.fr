@@ -1,9 +1,9 @@
 import React from "react";
 import { parseAsInteger, useQueryState } from "nuqs";
-import { type PublicEdition } from "@live24hisere/core/types";
+import type { PublicEdition } from "@live24hisere/core/types";
 import { appContext } from "../components/App";
 import { SearchParam } from "../constants/searchParams";
-import { type ReactStateSetter } from "../types/utils/react";
+import type { ReactStateSetter } from "../types/utils/react";
 
 interface UseSelectedEdition<TEdition extends PublicEdition> {
   selectedEdition: TEdition | null;
@@ -49,9 +49,10 @@ export function useSelectedEdition<TEdition extends PublicEdition>(
     }
   }, [selectedEditionId, selectedEditionIdParam, setSelectedEditionIdParam]);
 
-  const selectedEdition = React.useMemo(() => {
-    return editions?.find((edition) => edition.id === selectedEditionId) ?? null;
-  }, [editions, selectedEditionId]);
+  const selectedEdition = React.useMemo(
+    () => editions?.find((edition) => edition.id === selectedEditionId) ?? null,
+    [editions, selectedEditionId],
+  );
 
   // Hack to rewrite edition param after a navigation
   if (previousHref.current !== window.location.href) {

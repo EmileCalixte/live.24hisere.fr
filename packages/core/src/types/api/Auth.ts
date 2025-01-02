@@ -1,4 +1,4 @@
-import { type ApiRequest } from "./ApiRequest";
+import type { ApiRequest } from "./ApiRequest";
 
 export interface GetCurrentUserInfoApiRequest extends ApiRequest {
   payload: never;

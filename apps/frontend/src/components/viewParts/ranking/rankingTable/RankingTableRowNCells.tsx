@@ -1,7 +1,7 @@
-import React from "react";
+import type React from "react";
 import { type CategoryCode, getCategory } from "@emilecalixte/ffa-categories";
-import { type GenderWithMixed, type PublicRace } from "@live24hisere/core/types";
-import { type RankingRunner } from "../../../../types/Ranking";
+import type { GenderWithMixed, PublicRace } from "@live24hisere/core/types";
+import type { RankingRunner } from "../../../../types/Ranking";
 
 interface RankingTableRowNCellsProps {
   race: PublicRace;

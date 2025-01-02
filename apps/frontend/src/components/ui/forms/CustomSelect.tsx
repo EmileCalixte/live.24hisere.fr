@@ -3,7 +3,7 @@ import clsx from "clsx";
 import latinize from "latinize";
 import { Key } from "../../../constants/keyboardEvent";
 import { useDocumentActiveElement } from "../../../hooks/useDocumentActiveElement";
-import { type SelectOption } from "../../../types/Forms";
+import type { SelectOption } from "../../../types/Forms";
 import { Input } from "./Input";
 import Select, { type SelectProps } from "./Select";
 
@@ -43,13 +43,13 @@ export default function CustomSelect<T extends SelectOption["value"]>({
     });
   }, [options, search]);
 
-  const isOpened = React.useMemo<boolean>(() => {
-    return (
+  const isOpened = React.useMemo<boolean>(
+    () =>
       ((documentActiveElement === selectRef.current && shouldOpenOnSelectFocus) ||
         openedContainerRef.current?.contains(documentActiveElement)) ??
-      false
-    );
-  }, [documentActiveElement, shouldOpenOnSelectFocus]);
+      false,
+    [documentActiveElement, shouldOpenOnSelectFocus],
+  );
 
   const onSelectMouseDown: React.MouseEventHandler<HTMLSelectElement> = (e) => {
     e.preventDefault(); // Prevent the select default menu from opening on click

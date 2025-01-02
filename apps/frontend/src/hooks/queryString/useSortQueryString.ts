@@ -25,8 +25,8 @@ export function useSortQueryString<T extends readonly SortColumn[]>(
   );
 
   return {
-    sortColumn: sortColumn ?? defaultColumn,
-    sortDirection: sortDirection ?? SortDirection.ASC,
+    sortColumn,
+    sortDirection,
     setSortColumn,
     setSortDirection,
   };

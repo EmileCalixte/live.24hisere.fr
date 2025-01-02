@@ -1,9 +1,9 @@
 import React from "react";
 import { getCategory } from "@emilecalixte/ffa-categories";
 import { GENDER } from "@live24hisere/core/constants";
-import { type PublicRace } from "@live24hisere/core/types";
+import type { PublicRace } from "@live24hisere/core/types";
 import { NO_VALUE_PLACEHOLDER } from "../../../constants/misc";
-import { type Ranking, type RankingRunner, type RankingRunnerGap } from "../../../types/Ranking";
+import type { Ranking, RankingRunner, RankingRunnerGap } from "../../../types/Ranking";
 import { formatGap } from "../../../utils/runnerUtils";
 
 interface RunnerDetailsStatsGapsTableProps {
@@ -26,24 +26,29 @@ export default function RunnerDetailsStatsRankingTable({
 
   const scratchMixedRunnerCount = ranking.length;
 
-  const scratchGenderRunnerCount = React.useMemo(() => {
-    return ranking.filter((rankingRunner) => rankingRunner.gender === runner.gender).length;
-  }, [ranking, runner.gender]);
+  const scratchGenderRunnerCount = React.useMemo(
+    () => ranking.filter((rankingRunner) => rankingRunner.gender === runner.gender).length,
+    [ranking, runner.gender],
+  );
 
-  const categoryMixedRunnerCount = React.useMemo(() => {
-    return ranking.filter(
-      (rankingRunner) =>
-        getCategory(Number(rankingRunner.birthYear), { date: new Date(race.startTime) }).code === categoryCode,
-    ).length;
-  }, [ranking, race.startTime, categoryCode]);
+  const categoryMixedRunnerCount = React.useMemo(
+    () =>
+      ranking.filter(
+        (rankingRunner) =>
+          getCategory(Number(rankingRunner.birthYear), { date: new Date(race.startTime) }).code === categoryCode,
+      ).length,
+    [ranking, race.startTime, categoryCode],
+  );
 
-  const categoryGenderRunnerCount = React.useMemo(() => {
-    return ranking.filter(
-      (rankingRunner) =>
-        rankingRunner.gender === runner.gender &&
-        getCategory(Number(rankingRunner.birthYear), { date: new Date(race.startTime) }).code === categoryCode,
-    ).length;
-  }, [categoryCode, race.startTime, ranking, runner.gender]);
+  const categoryGenderRunnerCount = React.useMemo(
+    () =>
+      ranking.filter(
+        (rankingRunner) =>
+          rankingRunner.gender === runner.gender &&
+          getCategory(Number(rankingRunner.birthYear), { date: new Date(race.startTime) }).code === categoryCode,
+      ).length,
+    [categoryCode, race.startTime, ranking, runner.gender],
+  );
 
   return (
     <table className="table no-full-width">

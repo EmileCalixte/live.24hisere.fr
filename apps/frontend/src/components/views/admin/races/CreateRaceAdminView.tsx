@@ -1,12 +1,12 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { type AdminEditionWithRaceCount, type AdminRace } from "@live24hisere/core/types";
+import type { AdminEditionWithRaceCount, AdminRace } from "@live24hisere/core/types";
 import { getAdminEditions } from "../../../../services/api/editionService";
 import { getAdminRaces, postAdminRace } from "../../../../services/api/raceService";
 import { getRaceCreateBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../../services/ToastService";
-import { type SelectOption } from "../../../../types/Forms";
+import type { SelectOption } from "../../../../types/Forms";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { getRacesSelectOptions } from "../../../../utils/raceUtils";
 import { formatDateForApi } from "../../../../utils/utils";

@@ -1,6 +1,6 @@
-import React from "react";
+import type React from "react";
 import clsx from "clsx";
-import { type InputType } from "../../../types/Forms";
+import type { InputType } from "../../../types/Forms";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;

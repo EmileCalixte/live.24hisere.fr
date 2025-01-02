@@ -9,7 +9,7 @@ import {
 } from "@live24hisere/core/constants";
 import { genderUtils } from "@live24hisere/utils";
 import { ImportCsvColumn } from "../constants/importCsv";
-import { type RunnerFromCsv, type RunnersCsvMapping } from "../types/ImportCsv";
+import type { RunnerFromCsv, RunnersCsvMapping } from "../types/ImportCsv";
 
 export async function parseCsv(file: File, config?: Papa.ParseLocalConfig): Promise<Papa.ParseResult<string[]>> {
   return await new Promise<Papa.ParseResult<string[]>>((resolve, reject) => {
@@ -55,7 +55,7 @@ export function getRunnerFromCsv(csvRow: string[], mapping: RunnersCsvMapping): 
   } else if (birthYear?.match(DD_SLASH_MM_SLASH_YYYY_NON_STRICT_REGEX)) {
     birthYear = birthYear.split("/")[2];
   } else if (birthYear?.match(YYYY_MM_DD_NON_STRICT_REGEX)) {
-    birthYear = birthYear?.split("-")[0];
+    birthYear = birthYear.split("-")[0];
   }
 
   if (birthYear?.match(YYYY_REGEX)) {

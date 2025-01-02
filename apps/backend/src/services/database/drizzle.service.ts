@@ -10,16 +10,14 @@ export class DrizzleService implements OnModuleInit, OnModuleDestroy {
 
   constructor(private readonly envService: EnvService) {}
 
-  private connection: mysql.Pool;
+  private connection: mysql.Pool | undefined = undefined;
   private db: MySql2Database<typeof schema>;
 
   onModuleInit(): void {
     this.logger.log("Initializing database connection...");
 
-    this.initConnection();
-
     this.db = drizzle({
-      client: this.connection,
+      client: this.getConnection(),
       schema,
       mode: "default",
       casing: "snake_case",
@@ -29,10 +27,12 @@ export class DrizzleService implements OnModuleInit, OnModuleDestroy {
   }
 
   async onModuleDestroy(): Promise<void> {
-    await this.connection.end();
+    await this.connection?.end();
   }
 
   public getConnection(): mysql.Pool {
+    this.connection ??= this.createConnection();
+
     return this.connection;
   }
 
@@ -40,12 +40,8 @@ export class DrizzleService implements OnModuleInit, OnModuleDestroy {
     return this.db;
   }
 
-  private initConnection(): void {
-    if (this.connection) {
-      return;
-    }
-
-    this.connection = mysql.createPool({
+  private createConnection(): mysql.Pool {
+    return mysql.createPool({
       host: this.envService.get("DB_HOST"),
       database: this.envService.get("DB_NAME"),
       user: this.envService.get("DB_USERNAME"),

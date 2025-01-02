@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import DOMPurify from "dompurify";
 import { Col, Row } from "react-bootstrap";
 import { appContext } from "../App";
@@ -7,7 +7,7 @@ import Page from "../ui/Page";
 export default function DisabledAppView(): React.ReactElement {
   const {
     appData: { disabledAppMessage },
-  } = useContext(appContext);
+  } = React.useContext(appContext);
 
   const message = disabledAppMessage ?? "<p>Suivi live désactivé</p>";
 

@@ -10,7 +10,7 @@ export abstract class TaskService {
 
   protected constructor(
     protected readonly schedulerRegistry: SchedulerRegistry,
-    protected readonly preventOverlapping: boolean = true,
+    protected readonly preventOverlapping = true,
   ) {
     this.logger = new Logger(`Tasks - ${this.getTaskName()}`);
 
@@ -60,7 +60,7 @@ export abstract class TaskService {
     this.previousExecutionStartTime = new Date();
 
     this.task()
-      .catch((error) => {
+      .catch((error: unknown) => {
         this.logger.error(error);
       })
       .finally(() => {

@@ -1,9 +1,9 @@
-import {
-  type ApiRequestResult,
-  type GetRaceParticipantAdminApiRequest,
-  type GetRunnerParticipationsAdminApiRequest,
-  type PatchParticipantAdminApiRequest,
-  type PostParticipantAdminApiRequest,
+import type {
+  ApiRequestResult,
+  GetRaceParticipantAdminApiRequest,
+  GetRunnerParticipationsAdminApiRequest,
+  PatchParticipantAdminApiRequest,
+  PostParticipantAdminApiRequest,
 } from "@live24hisere/core/types";
 import { performAuthenticatedApiRequest } from "./apiService";
 

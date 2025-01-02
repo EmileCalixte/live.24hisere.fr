@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import { EDITION_NAME_MAX_LENGTH } from "@live24hisere/core/constants";
 import { Checkbox } from "../../../ui/forms/Checkbox";
 import { Input } from "../../../ui/forms/Input";

@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import { Col, Row } from "react-bootstrap";
 import Page from "../../ui/Page";
 import MenuList from "../../viewParts/admin/home/MenuList";

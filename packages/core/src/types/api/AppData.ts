@@ -1,5 +1,5 @@
-import { type DateISOString } from "../utils";
-import { type ApiRequest } from "./ApiRequest";
+import type { DateISOString } from "../utils";
+import type { ApiRequest } from "./ApiRequest";
 
 export interface GetAppDataApiRequest extends ApiRequest {
   payload: never;

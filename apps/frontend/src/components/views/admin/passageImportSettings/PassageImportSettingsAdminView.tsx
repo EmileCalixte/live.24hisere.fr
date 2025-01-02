@@ -1,6 +1,6 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
-import { type PassageImportSettings } from "@live24hisere/core/types";
+import type { PassageImportSettings } from "@live24hisere/core/types";
 import { stringUtils } from "@live24hisere/utils";
 import { getPassageImportSettings, patchPassageImportSettings } from "../../../../services/api/configService";
 import { getImportPassagesSettingsBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";

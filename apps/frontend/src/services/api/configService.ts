@@ -1,9 +1,9 @@
-import {
-  type ApiRequestResult,
-  type GetDisabledAppDataAdminApiRequest,
-  type GetPassageImportSettingsAdminApiRequest,
-  type PatchDisabledAppDataAdminApiRequest,
-  type PatchPassageImportSettingsAdminApiRequest,
+import type {
+  ApiRequestResult,
+  GetDisabledAppDataAdminApiRequest,
+  GetPassageImportSettingsAdminApiRequest,
+  PatchDisabledAppDataAdminApiRequest,
+  PatchPassageImportSettingsAdminApiRequest,
 } from "@live24hisere/core/types";
 import { performAuthenticatedApiRequest } from "./apiService";
 

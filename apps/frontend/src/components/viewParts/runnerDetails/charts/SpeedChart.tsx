@@ -1,13 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access  */
 import React from "react";
 import { parseAsBoolean, useQueryState } from "nuqs";
 import { Col, Row } from "react-bootstrap";
 import ReactDOMServer from "react-dom/server";
-import {
-  type PublicRace,
-  type RaceRunnerWithProcessedPassages,
-  type RunnerWithProcessedHours,
-} from "@live24hisere/core/types";
+import type { PublicRace, RaceRunnerWithProcessedPassages, RunnerWithProcessedHours } from "@live24hisere/core/types";
 import { SearchParam } from "../../../../constants/searchParams";
 import { useWindowDimensions } from "../../../../hooks/useWindowDimensions";
 import CanvasjsReact from "../../../../lib/canvasjs/canvasjs.react";
@@ -183,25 +179,19 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
   );
 
   const minSpeed = React.useMemo(() => {
-    let minSpeed: number | undefined;
-
-    runner.passages.forEach((passage) => {
-      if (minSpeed === undefined || passage.processed.lapSpeed < minSpeed) {
-        minSpeed = passage.processed.lapSpeed;
-      }
-    });
+    const minSpeed = runner.passages.reduce<number | undefined>(
+      (min, passage) => (min === undefined || passage.processed.lapSpeed < min ? passage.processed.lapSpeed : min),
+      undefined,
+    );
 
     return minSpeed ?? DEFAULT_MIN_SPEED;
   }, [runner]);
 
   const maxSpeed = React.useMemo(() => {
-    let maxSpeed: number | undefined;
-
-    runner.passages.forEach((passage) => {
-      if (maxSpeed === undefined || passage.processed.lapSpeed > maxSpeed) {
-        maxSpeed = passage.processed.lapSpeed;
-      }
-    });
+    const maxSpeed = runner.passages.reduce<number | undefined>(
+      (max, passage) => (max === undefined || passage.processed.lapSpeed > max ? passage.processed.lapSpeed : max),
+      undefined,
+    );
 
     return maxSpeed ?? DEFAULT_MAX_SPEED;
   }, [runner]);
@@ -327,9 +317,7 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
 
     const lapHourSpeedDataPoints = [];
 
-    for (let i = 0; i < runner.hours.length; ++i) {
-      const hour = runner.hours[i];
-
+    for (const hour of runner.hours) {
       lapHourSpeedDataPoints.push({
         x: hour.startRaceTime,
         y: hour.averageSpeed,

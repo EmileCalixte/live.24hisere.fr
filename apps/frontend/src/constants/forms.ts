@@ -1,6 +1,6 @@
 import { GENDER } from "@live24hisere/core/constants";
-import { type Gender, type GenderWithMixed } from "@live24hisere/core/types";
-import { type SelectOption } from "../types/Forms";
+import type { Gender, GenderWithMixed } from "@live24hisere/core/types";
+import type { SelectOption } from "../types/Forms";
 import { CATEGORY_SCRATCH } from "./category";
 import { RankingTimeMode } from "./rankingTimeMode";
 

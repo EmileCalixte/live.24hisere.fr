@@ -1,4 +1,4 @@
-import { type HTMLInputTypeAttribute } from "react";
+import type { HTMLInputTypeAttribute } from "react";
 
 export type InputType = Extract<HTMLInputTypeAttribute, "text" | "email" | "password" | "number" | "file">;
 

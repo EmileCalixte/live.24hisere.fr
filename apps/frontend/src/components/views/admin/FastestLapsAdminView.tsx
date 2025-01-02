@@ -1,13 +1,13 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
-import {
-  type AdminEditionWithRaceCount,
-  type AdminPassageWithRunnerIdAndRaceId,
-  type AdminRaceWithRunnerCount,
-  type AdminRunner,
-  type ProcessedPassage,
-  type RaceDict,
-  type RaceRunner,
+import type {
+  AdminEditionWithRaceCount,
+  AdminPassageWithRunnerIdAndRaceId,
+  AdminRaceWithRunnerCount,
+  AdminRunner,
+  ProcessedPassage,
+  RaceDict,
+  RaceRunner,
 } from "@live24hisere/core/types";
 import { getAdminEditions } from "../../../services/api/editionService";
 import { getAdminRacePassages } from "../../../services/api/passageService";
@@ -15,7 +15,7 @@ import { getAdminRaces } from "../../../services/api/raceService";
 import { getAdminRaceRunners } from "../../../services/api/runnerService";
 import { getFastestLapsBreadcrumbs } from "../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../services/ToastService";
-import { type SelectOption } from "../../../types/Forms";
+import type { SelectOption } from "../../../types/Forms";
 import { isApiRequestResultOk } from "../../../utils/apiUtils";
 import { getProcessedPassagesFromPassages } from "../../../utils/passageUtils";
 import { getRaceDictFromRaces } from "../../../utils/raceUtils";
@@ -212,14 +212,6 @@ export default function FastestLapsAdminView(): React.ReactElement {
       }
 
       const race = races[runner.raceId];
-
-      if (!race) {
-        console.warn(
-          `Race ${runner.raceId} not found in races object, ignoring passages of runner ${runner.id}`,
-          races,
-        );
-        continue;
-      }
 
       const runnerPassages = runnerSortedPassages[runnerId];
 

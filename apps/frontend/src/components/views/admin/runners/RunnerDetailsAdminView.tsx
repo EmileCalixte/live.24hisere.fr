@@ -2,13 +2,13 @@ import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { GENDER } from "@live24hisere/core/constants";
-import {
-  type AdminEditionWithRaceCount,
-  type AdminRaceWithRunnerCount,
-  type AdminRunner,
-  type Gender,
-  type Participant,
-  type RunnerWithRaceCount,
+import type {
+  AdminEditionWithRaceCount,
+  AdminRaceWithRunnerCount,
+  AdminRunner,
+  Gender,
+  Participant,
+  RunnerWithRaceCount,
 } from "@live24hisere/core/types";
 import { getAdminEditions } from "../../../../services/api/editionService";
 import { getAdminRunnerParticipations } from "../../../../services/api/participantService";

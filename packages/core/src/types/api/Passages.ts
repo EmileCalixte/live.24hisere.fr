@@ -1,5 +1,5 @@
-import { type AdminPassage, type AdminPassageWithRunnerIdAndRaceId } from "../Passage";
-import { type ApiRequest } from "./ApiRequest";
+import type { AdminPassage, AdminPassageWithRunnerIdAndRaceId } from "../Passage";
+import type { ApiRequest } from "./ApiRequest";
 
 export interface GetAllPassagesOfRaceAdminApiRequest extends ApiRequest {
   payload: never;

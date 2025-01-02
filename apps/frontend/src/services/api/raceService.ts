@@ -1,14 +1,14 @@
-import {
-  type ApiRequestResult,
-  type DeleteRaceAdminApiRequest,
-  type GetEditionRacesAdminApiRequest,
-  type GetRaceAdminApiRequest,
-  type GetRaceApiRequest,
-  type GetRacesAdminApiRequest,
-  type GetRacesApiRequest,
-  type PatchRaceAdminApiRequest,
-  type PostRaceAdminApiRequest,
-  type PutRaceOrderAdminApiRequest,
+import type {
+  ApiRequestResult,
+  DeleteRaceAdminApiRequest,
+  GetEditionRacesAdminApiRequest,
+  GetRaceAdminApiRequest,
+  GetRaceApiRequest,
+  GetRacesAdminApiRequest,
+  GetRacesApiRequest,
+  PatchRaceAdminApiRequest,
+  PostRaceAdminApiRequest,
+  PutRaceOrderAdminApiRequest,
 } from "@live24hisere/core/types";
 import { performApiRequest, performAuthenticatedApiRequest } from "./apiService";
 

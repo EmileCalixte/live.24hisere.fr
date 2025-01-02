@@ -1,6 +1,6 @@
-import React from "react";
+import type React from "react";
 import { Link } from "react-router-dom";
-import { type AdminEdition, type AdminRace, type Participant } from "@live24hisere/core/types";
+import type { AdminEdition, AdminRace, Participant } from "@live24hisere/core/types";
 import CircularLoader from "../../../ui/CircularLoader";
 
 interface RunnerParticipationsTableProps {

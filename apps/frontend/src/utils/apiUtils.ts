@@ -1,4 +1,4 @@
-import { type ApiRequest, type ApiRequestResult, type ApiRequestResultOk } from "@live24hisere/core/types";
+import type { ApiRequest, ApiRequestResult, ApiRequestResultOk } from "@live24hisere/core/types";
 
 export const EVENT_API_REQUEST_STARTED = "apiRequestStarted";
 export const EVENT_API_REQUEST_ENDED = "apiRequestEnded";

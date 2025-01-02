@@ -2,12 +2,12 @@ import React from "react";
 import { faSortDown, faSortUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
-import { type PublicRace, type RaceRunnerWithProcessedPassages } from "@live24hisere/core/types";
+import type { PublicRace, RaceRunnerWithProcessedPassages } from "@live24hisere/core/types";
 import { RUNNER_DETAILS_LAPS_SORT_COLUMNS, SortColumn, SortDirection } from "../../../constants/sort";
 import { useSortQueryString } from "../../../hooks/queryString/useSortQueryString";
 import { useRaceTime } from "../../../hooks/useRaceTime";
 import { useWindowDimensions } from "../../../hooks/useWindowDimensions";
-import { type MinimalRankingRunnerInput, type RankingRunner } from "../../../types/Ranking";
+import type { MinimalRankingRunnerInput, RankingRunner } from "../../../types/Ranking";
 import { isRaceFinished, isRaceStarted } from "../../../utils/raceUtils";
 import { getOppositeSortDirection } from "../../../utils/sortUtils";
 import { formatMsAsDuration } from "../../../utils/utils";
@@ -72,15 +72,13 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
           return 0;
         });
         break;
-      default:
-        throw new Error("Unknown sort column");
     }
 
     return passagesToDisplay;
   }, [runner, sortColumn, sortDirection]);
 
   const currentLapTableRow = React.useMemo(() => {
-    if (currentLapTime === null || runner.stopped) {
+    if (runner.stopped) {
       return null;
     }
 
@@ -95,7 +93,7 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
   }, [currentLapTime, runner.stopped, raceTime]);
 
   const currentLapResponsiveTableRow = React.useMemo(() => {
-    if (currentLapTime === null) {
+    if (runner.stopped) {
       return null;
     }
 
@@ -115,7 +113,7 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
         </td>
       </tr>
     );
-  }, [raceTime, currentLapTime]);
+  }, [currentLapTime, runner.stopped, raceTime]);
 
   const updateSort = React.useCallback(
     (e: React.MouseEvent<HTMLButtonElement>, clickedSortColumn: SortColumn) => {

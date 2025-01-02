@@ -1,13 +1,13 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import {
-  type AdminEdition,
-  type AdminProcessedPassage,
-  type AdminRaceRunnerWithPassages,
-  type AdminRaceWithRunnerCount,
-  type AdminRunner,
-  type RaceRunner,
+import type {
+  AdminEdition,
+  AdminProcessedPassage,
+  AdminRaceRunnerWithPassages,
+  AdminRaceWithRunnerCount,
+  AdminRunner,
+  RaceRunner,
 } from "@live24hisere/core/types";
 import { getAdminEdition } from "../../../../services/api/editionService";
 import { getAdminRaceRunner, patchAdminRaceRuner } from "../../../../services/api/participantService";
@@ -134,13 +134,9 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
         return;
       }
 
-      let confirmMessage: string;
-
-      if (hidden) {
-        confirmMessage = `Êtes vous sûr de vouloir masquer le passage n°${passage.id} (${formatDateAsString(passage.processed.lapEndTime)}) ?`;
-      } else {
-        confirmMessage = `Êtes vous sûr de vouloir rendre public le passage n°${passage.id} (${formatDateAsString(passage.processed.lapEndTime)}) ?`;
-      }
+      const confirmMessage = hidden
+        ? `Êtes vous sûr de vouloir masquer le passage n°${passage.id} (${formatDateAsString(passage.processed.lapEndTime)}) ?`
+        : `Êtes vous sûr de vouloir rendre public le passage n°${passage.id} (${formatDateAsString(passage.processed.lapEndTime)}) ?`;
 
       if (!window.confirm(confirmMessage)) {
         return;
@@ -247,9 +243,7 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
   }, [raceRunners]);
 
   const isBibNumberAvailable =
-    participantBibNumber === undefined ||
-    participantBibNumber === runner?.bibNumber ||
-    !raceUnavailableBibNumbers.has(participantBibNumber);
+    participantBibNumber === runner?.bibNumber || !raceUnavailableBibNumbers.has(participantBibNumber);
 
   React.useEffect(() => {
     void fetchEdition();

@@ -10,8 +10,7 @@ const KEY_LAST_UPDATE_TIME = "last_update_time";
 
 @Injectable()
 export class MiscService extends EntityService {
-  public async getLastUpdateTime(): Promise<Date | null>;
-  public async getLastUpdateTime(asISOString: false): Promise<Date | null>;
+  public async getLastUpdateTime(asISOString?: false): Promise<Date | null>;
   public async getLastUpdateTime(asISOString: true): Promise<DateISOString | null>;
   public async getLastUpdateTime(asISOString = false): Promise<Date | DateISOString | null> {
     const misc = await this.getLine(KEY_LAST_UPDATE_TIME);

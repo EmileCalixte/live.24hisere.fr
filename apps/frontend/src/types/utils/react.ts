@@ -1,5 +1,5 @@
 import type React from "react";
-import { type JSXElementConstructor } from "react";
+import type { JSXElementConstructor } from "react";
 
 export type ReactStateSetter<S> = React.Dispatch<React.SetStateAction<S>>;
 

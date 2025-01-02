@@ -1,4 +1,4 @@
-import { type Entries } from "@live24hisere/core/types";
+import type { Entries } from "@live24hisere/core/types";
 
 /**
  * Returns a copy of an object without the specified keys

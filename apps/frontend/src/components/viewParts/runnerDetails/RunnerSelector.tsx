@@ -1,5 +1,5 @@
 import React from "react";
-import { type PublicRunner } from "@live24hisere/core/types";
+import type { PublicRunner } from "@live24hisere/core/types";
 import { compareUtils } from "@live24hisere/utils";
 import { getRunnersSelectOptions } from "../../../utils/runnerUtils";
 import Select from "../../ui/forms/Select";
@@ -26,9 +26,7 @@ export default function RunnerSelector({
 
     const searchedRunnerId = parseInt(selectedRunnerId);
 
-    const runner = runners.find((runner) => {
-      return runner.id === searchedRunnerId;
-    });
+    const runner = runners.find((runner) => runner.id === searchedRunnerId);
 
     return runner !== undefined;
   }, [runners, selectedRunnerId]);

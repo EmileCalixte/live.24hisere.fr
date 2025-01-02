@@ -1,8 +1,8 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { Col, Row } from "react-bootstrap";
-import { type ProcessedPassage, type PublicRace, type RunnerWithProcessedHours } from "@live24hisere/core/types";
+import type { ProcessedPassage, PublicRace, RunnerWithProcessedHours } from "@live24hisere/core/types";
 import { NO_VALUE_PLACEHOLDER } from "../../../constants/misc";
-import { type Ranking, type RankingRunner } from "../../../types/Ranking";
+import type { Ranking, RankingRunner } from "../../../types/Ranking";
 import { getPaceFromSpeed } from "../../../utils/mathUtils";
 import { getFastestLapPassage, getSlowestLapPassage } from "../../../utils/passageUtils";
 import { formatMsAsDuration } from "../../../utils/utils";
@@ -19,7 +19,7 @@ export default function RunnerDetailsStats({ runner, race, ranking }: RunnerDeta
   const raceInitialDistance = Number(race.initialDistance);
   const raceLapDistance = Number(race.lapDistance);
 
-  const completeLapCount = useMemo<number>(() => {
+  const completeLapCount = React.useMemo<number>(() => {
     if (raceInitialDistance > 0) {
       return Math.max(0, runner.passages.length - 1);
     }
@@ -28,7 +28,7 @@ export default function RunnerDetailsStats({ runner, race, ranking }: RunnerDeta
   }, [raceInitialDistance, runner.passages.length]);
 
   /** Total distance in meters */
-  const totalDistance = useMemo<number>(() => {
+  const totalDistance = React.useMemo<number>(() => {
     if (runner.passages.length >= 1) {
       if (raceInitialDistance > 0) {
         return raceInitialDistance + raceLapDistance * (runner.passages.length - 1);
@@ -40,7 +40,7 @@ export default function RunnerDetailsStats({ runner, race, ranking }: RunnerDeta
     return 0;
   }, [raceInitialDistance, raceLapDistance, runner.passages.length]);
 
-  const lastPassageDate = useMemo<Date | null>(() => {
+  const lastPassageDate = React.useMemo<Date | null>(() => {
     if (runner.passages.length <= 0) {
       return null;
     }
@@ -48,12 +48,18 @@ export default function RunnerDetailsStats({ runner, race, ranking }: RunnerDeta
     return new Date(runner.passages[runner.passages.length - 1].time);
   }, [runner]);
 
-  const fastestLapPassage = useMemo<ProcessedPassage | null>(() => getFastestLapPassage(runner.passages), [runner]);
+  const fastestLapPassage = React.useMemo<ProcessedPassage | null>(
+    () => getFastestLapPassage(runner.passages),
+    [runner],
+  );
 
-  const slowestLapPassage = useMemo<ProcessedPassage | null>(() => getSlowestLapPassage(runner.passages), [runner]);
+  const slowestLapPassage = React.useMemo<ProcessedPassage | null>(
+    () => getSlowestLapPassage(runner.passages),
+    [runner],
+  );
 
   /** Last runner passage race time in ms */
-  const lastPassageRaceTime = useMemo<number | null>(() => {
+  const lastPassageRaceTime = React.useMemo<number | null>(() => {
     if (lastPassageDate === null) {
       return null;
     }
@@ -62,7 +68,7 @@ export default function RunnerDetailsStats({ runner, race, ranking }: RunnerDeta
   }, [race, lastPassageDate]);
 
   /** Total runner average speed in km/h */
-  const averageSpeed = useMemo<number | null>(() => {
+  const averageSpeed = React.useMemo<number | null>(() => {
     if (lastPassageRaceTime === null) {
       return null;
     }
@@ -72,7 +78,7 @@ export default function RunnerDetailsStats({ runner, race, ranking }: RunnerDeta
   }, [totalDistance, lastPassageRaceTime]);
 
   /** Total runner average pace in ms/km */
-  const averagePace = useMemo<number | null>(() => {
+  const averagePace = React.useMemo<number | null>(() => {
     if (averageSpeed === null) {
       return null;
     }

@@ -29,6 +29,7 @@ export type UnionTypeRecord<T extends string> = {
  * type Example7 = ObjectValueType<Example, "optionalStringOrUndefined">; // string | undefined (with exactOptionalPropertyTypes: true), string (with exactOptionalPropertyTypes: false)
  * ```
  */
+// eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style -- Cannot use a Record here because it breaks typings (adds `undefined` to type `Entries`)
 export type ObjectValueType<TObject extends object, TKey extends keyof TObject> = Required<{
   [P in TKey]: TObject[TKey];
 }>[TKey];

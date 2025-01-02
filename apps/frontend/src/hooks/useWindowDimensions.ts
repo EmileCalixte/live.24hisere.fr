@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { type Dimensions2d } from "@live24hisere/core/types";
+import type { Dimensions2d } from "@live24hisere/core/types";
 
 function getWindowDimensions(): Dimensions2d {
   return {

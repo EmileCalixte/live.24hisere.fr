@@ -1,5 +1,5 @@
-import { type PublicRace, type RaceDict } from "@live24hisere/core/types";
-import { type SelectOption } from "../types/Forms";
+import type { PublicRace, RaceDict } from "@live24hisere/core/types";
+import type { SelectOption } from "../types/Forms";
 
 /**
  * @param race

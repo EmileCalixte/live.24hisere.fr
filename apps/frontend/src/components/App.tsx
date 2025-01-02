@@ -1,7 +1,9 @@
-import React, { createContext, useCallback, useEffect, useState } from "react";
+/* eslint-disable @typescript-eslint/no-empty-function */
+import type React from "react";
+import { createContext, useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { BrowserRouter, Navigate, Route, Routes, useMatch } from "react-router-dom";
-import { type PublicUser } from "@live24hisere/core/types";
+import type { PublicUser } from "@live24hisere/core/types";
 import { APP_BASE_TITLE } from "../constants/app";
 import { getAppData } from "../services/api/appDataService";
 import { getCurrentUserInfo, logout as performLogoutRequest } from "../services/api/authService";
@@ -144,7 +146,7 @@ export default function App(): React.ReactElement {
   const fetchAppData = useCallback(async () => {
     verbose("Fetching app data");
 
-    let result;
+    let result = null;
 
     try {
       result = await getAppData();

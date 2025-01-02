@@ -1,8 +1,8 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { type CategoryCode, getCategory } from "@emilecalixte/ffa-categories";
 import { Link } from "react-router-dom";
-import { type GenderWithMixed, type PublicRace } from "@live24hisere/core/types";
-import { type RankingRunner } from "../../../../../types/Ranking";
+import type { GenderWithMixed, PublicRace } from "@live24hisere/core/types";
+import type { RankingRunner } from "../../../../../types/Ranking";
 import { getRankingType } from "../../../../../utils/rankingUtils";
 import { formatGap } from "../../../../../utils/runnerUtils";
 import { formatFloatNumber, formatMsAsDuration } from "../../../../../utils/utils";
@@ -23,7 +23,7 @@ export default function ResponsiveRankingTableRow({
 }: ResponsiveRankingTableRowProps): React.ReactElement {
   const runnerCategoryCode = getCategory(Number(runner.birthYear), { date: new Date(race.startTime) }).code;
 
-  const rowRanking = useMemo(() => {
+  const rowRanking = React.useMemo(() => {
     if (tableCategoryCode === null) {
       if (tableGender === "mixed") {
         return runner.ranks.displayed.scratchMixed;
@@ -39,7 +39,7 @@ export default function ResponsiveRankingTableRow({
     return runner.ranks.displayed.categoryGender;
   }, [runner, tableCategoryCode, tableGender]);
 
-  const rowSecondaryRankings = useMemo(() => {
+  const rowSecondaryRankings = React.useMemo(() => {
     if (tableCategoryCode === null) {
       if (tableGender === "mixed") {
         return (

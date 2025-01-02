@@ -1,15 +1,15 @@
-import {
-  type PassageWithRunnerIdAndRaceId,
-  type PublicPassage,
-  type PublicRunner,
-  type RaceRunner,
-  type RaceRunnerWithPassages,
-  type RaceRunnerWithProcessedData,
-  type RaceRunnerWithProcessedPassages,
+import type {
+  PassageWithRunnerIdAndRaceId,
+  PublicPassage,
+  PublicRunner,
+  RaceRunner,
+  RaceRunnerWithPassages,
+  RaceRunnerWithProcessedData,
+  RaceRunnerWithProcessedPassages,
 } from "@live24hisere/core/types";
 import { compareUtils, dateUtils } from "@live24hisere/utils";
-import { type SelectOption } from "../types/Forms";
-import { type RankingRunnerGap } from "../types/Ranking";
+import type { SelectOption } from "../types/Forms";
+import type { RankingRunnerGap } from "../types/Ranking";
 import { getSortedPassages } from "./passageUtils";
 import { formatMsAsDuration } from "./utils";
 
@@ -101,7 +101,7 @@ export function getGapBetweenRunners(
   };
 }
 
-export function formatGap(gap: RankingRunnerGap | null, exhaustive: boolean = false): string | null {
+export function formatGap(gap: RankingRunnerGap | null, exhaustive = false): string | null {
   if (!gap) {
     return null;
   }

@@ -1,5 +1,5 @@
-import { type AdminUser } from "../User";
-import { type ApiRequest } from "./ApiRequest";
+import type { AdminUser } from "../User";
+import type { ApiRequest } from "./ApiRequest";
 
 export interface GetUsersAdminApiRequest extends ApiRequest {
   payload: never;

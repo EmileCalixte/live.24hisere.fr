@@ -1,5 +1,5 @@
-import { type AdminEdition, type AdminEditionWithRaceCount, type EditionWithRaceCount } from "../Edition";
-import { type ApiRequest } from "./ApiRequest";
+import type { AdminEdition, AdminEditionWithRaceCount, EditionWithRaceCount } from "../Edition";
+import type { ApiRequest } from "./ApiRequest";
 
 export interface GetEditionsApiRequest extends ApiRequest {
   payload: never;

@@ -9,11 +9,11 @@ import {
 } from "@emilecalixte/ffa-categories";
 import { parseAsInteger, useQueryState } from "nuqs";
 import { Col, Row } from "react-bootstrap";
-import {
-  type GenderWithMixed,
-  type RaceRunnerWithProcessedData,
-  type RaceRunnerWithProcessedPassages,
-  type RaceWithRunnerCount,
+import type {
+  GenderWithMixed,
+  RaceRunnerWithProcessedData,
+  RaceRunnerWithProcessedPassages,
+  RaceWithRunnerCount,
 } from "@live24hisere/core/types";
 import { objectUtils } from "@live24hisere/utils";
 import { RankingTimeMode } from "../../constants/rankingTimeMode";
@@ -58,9 +58,10 @@ export default function RankingView(): React.ReactElement {
 
   const races = useIntervalApiRequest(racesRequestInput).json?.races;
 
-  const selectedRace = React.useMemo<RaceWithRunnerCount | null>(() => {
-    return races?.find((race) => race.id === selectedRaceId) ?? null;
-  }, [races, selectedRaceId]);
+  const selectedRace = React.useMemo<RaceWithRunnerCount | null>(
+    () => races?.find((race) => race.id === selectedRaceId) ?? null,
+    [races, selectedRaceId],
+  );
 
   const allCategories = React.useMemo(() => {
     if (!selectedRace) {
@@ -79,9 +80,7 @@ export default function RankingView(): React.ReactElement {
     setRankingTimeMemory,
   } = useRankingTimeQueryString(selectedRace);
 
-  const racesOptions = React.useMemo(() => {
-    return getRacesSelectOptions(races);
-  }, [races]);
+  const racesOptions = React.useMemo(() => getRacesSelectOptions(races), [races]);
 
   const fetchRunners = React.useMemo(() => {
     if (!selectedRace) {

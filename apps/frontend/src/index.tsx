@@ -1,4 +1,3 @@
-import React from "react";
 import "bootstrap/dist/css/bootstrap-grid.css";
 import "bootstrap/dist/css/bootstrap-utilities.css";
 import { NuqsAdapter } from "nuqs/adapters/react";

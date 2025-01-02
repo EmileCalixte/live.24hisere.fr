@@ -6,7 +6,7 @@ export function useDocumentActiveElement(): Element | null {
   const [activeElement, setActiveElement] = useState(document.activeElement);
 
   useEffect(() => {
-    let focusOutTimeout: NodeJS.Timeout;
+    let focusOutTimeout: NodeJS.Timeout | undefined = undefined;
 
     function onFocusIn(): void {
       clearTimeout(focusOutTimeout);

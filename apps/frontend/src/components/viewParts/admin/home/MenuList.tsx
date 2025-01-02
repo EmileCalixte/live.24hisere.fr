@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import { faCalendar } from "@fortawesome/free-regular-svg-icons";
 import { faDownload, faFlagCheckered, faHand, faPersonRunning, faStopwatch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

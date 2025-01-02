@@ -1,9 +1,9 @@
-import {
-  type ApiRequestResult,
-  type DeletePassageAdminApiRequest,
-  type GetAllPassagesOfRaceAdminApiRequest,
-  type PatchPassageAdminApiRequest,
-  type PostPassageAdminApiRequest,
+import type {
+  ApiRequestResult,
+  DeletePassageAdminApiRequest,
+  GetAllPassagesOfRaceAdminApiRequest,
+  PatchPassageAdminApiRequest,
+  PostPassageAdminApiRequest,
 } from "@live24hisere/core/types";
 import { performAuthenticatedApiRequest } from "./apiService";
 

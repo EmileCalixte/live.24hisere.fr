@@ -1,4 +1,5 @@
-import React, { useCallback, useContext, useEffect, useRef } from "react";
+import type React from "react";
+import { useCallback, useContext, useEffect, useRef } from "react";
 import { appContext } from "../../App";
 
 interface AdminHeaderUserDropdownProps {
@@ -12,7 +13,7 @@ export default function AdminHeaderUserDropdown({ hideDropdown }: AdminHeaderUse
 
   const onClickOutside = useCallback(
     (e: MouseEvent) => {
-      if (!dropdownNode?.current) {
+      if (!dropdownNode.current) {
         return;
       }
 

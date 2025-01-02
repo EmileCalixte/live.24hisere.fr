@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import { type PublicRace } from "@live24hisere/core/types";
+import type { PublicRace } from "@live24hisere/core/types";
 import { RankingCalculator } from "../services/RankingCalculator";
-import { type MinimalRankingRunnerInput, type Ranking } from "../types/Ranking";
+import type { MinimalRankingRunnerInput, Ranking } from "../types/Ranking";
 
 export function useRanking<TRunner extends MinimalRankingRunnerInput>(
   race: PublicRace | undefined,
