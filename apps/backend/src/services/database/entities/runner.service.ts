@@ -267,7 +267,7 @@ export class RunnerService extends EntityService {
         `,
       );
 
-      await tx.delete(TABLE_PARTICIPANT).where(eq(TABLE_PARTICIPANT.runnerId, TABLE_RUNNER.id));
+      await tx.delete(TABLE_PARTICIPANT).where(eq(TABLE_PARTICIPANT.runnerId, runnerId));
 
       const [resultSetHeader] = await tx.delete(TABLE_RUNNER).where(eq(TABLE_RUNNER.id, runnerId));
 
