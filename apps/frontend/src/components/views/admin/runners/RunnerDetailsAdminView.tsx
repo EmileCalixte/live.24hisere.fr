@@ -198,7 +198,7 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
     }
 
     ToastService.getToastr().success("Coureur supprimé");
-    navigate("/admin/runners");
+    void navigate("/admin/runners");
   }, [accessToken, navigate, runner]);
 
   if (runner === null) {

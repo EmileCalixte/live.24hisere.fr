@@ -291,11 +291,11 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
   );
 
   if (race === null) {
-    navigate("/admin");
+    void navigate("/admin");
   }
 
   if (race && runner === null) {
-    navigate(`/admin/races/${race.id}`);
+    void navigate(`/admin/races/${race.id}`);
   }
 
   return (

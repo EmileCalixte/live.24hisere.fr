@@ -82,7 +82,7 @@ export default function RunnerDetailsView(): React.ReactElement {
 
   const onSelectRunner = React.useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
-      navigate(`/runner-details/${e.target.value}${window.location.search}`);
+      void navigate(`/runner-details/${e.target.value}${window.location.search}`);
     },
     [navigate],
   );
@@ -103,7 +103,7 @@ export default function RunnerDetailsView(): React.ReactElement {
     }
 
     if (runners.find((runner) => runner.id.toString() === runnerId) === undefined) {
-      navigate("/runner-details");
+      void navigate("/runner-details");
     }
   }, [runners, runnerId, navigate]);
 
