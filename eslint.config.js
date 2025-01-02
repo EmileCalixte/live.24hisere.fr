@@ -23,6 +23,7 @@ export default [
   {
     files: [`apps/backend/test/**/*.${ext}`],
     rules: {
+      "max-nested-callbacks": "off",
       "@typescript-eslint/init-declarations": "off",
       "@typescript-eslint/no-unsafe-assignment": "off",
       "@typescript-eslint/no-unsafe-argument": "off",
