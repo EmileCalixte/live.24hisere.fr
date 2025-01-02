@@ -9,7 +9,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   className?: string;
   labelClassName?: string;
   hasError?: boolean;
-  inputRef?: React.LegacyRef<HTMLInputElement>;
+  inputRef?: React.Ref<HTMLInputElement>;
 }
 
 export function Input({

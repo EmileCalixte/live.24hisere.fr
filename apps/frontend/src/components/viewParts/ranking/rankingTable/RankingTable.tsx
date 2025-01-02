@@ -1,5 +1,4 @@
 import type React from "react";
-import type { ReactNode } from "react";
 import { type CategoryCode, getCategory } from "@emilecalixte/ffa-categories";
 import type { GenderWithMixed, PublicRace } from "@live24hisere/core/types";
 import type { Ranking, RankingRunner } from "../../../../types/Ranking";
@@ -21,7 +20,7 @@ export default function RankingTable({
   tableGender,
   tableRaceDuration,
 }: RankingTableProps): React.ReactElement {
-  const getRankingTableRow = (rankingRunner: RankingRunner): ReactNode => {
+  const getRankingTableRow = (rankingRunner: RankingRunner): React.ReactElement | null => {
     const runnerCategory = getCategory(Number(rankingRunner.birthYear), { date: new Date(race.startTime) }).code;
 
     if (tableCategoryCode !== null) {

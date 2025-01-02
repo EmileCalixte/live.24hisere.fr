@@ -10,7 +10,7 @@ export interface SelectProps<TValue extends SelectOption["value"]>
   loadingOptionLabel?: string;
   placeholderLabel?: string;
   value?: TValue | undefined;
-  selectRef?: React.LegacyRef<HTMLSelectElement>;
+  selectRef?: React.Ref<HTMLSelectElement>;
 }
 
 export default function Select<TValue extends SelectOption["value"]>({
