@@ -86,7 +86,7 @@ export default function CreateRunnerAdminView(): React.ReactElement {
       const id = result.json.runner.id;
 
       ToastService.getToastr().success("Coureur créé");
-      navigate(`/admin/runners/${id}`);
+      void navigate(`/admin/runners/${id}`);
     },
     [accessToken, raceId, firstname, lastname, gender, birthYear, isPublic, navigate],
   );

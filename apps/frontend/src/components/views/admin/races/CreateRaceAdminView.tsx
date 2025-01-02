@@ -141,7 +141,7 @@ export default function CreateRaceAdminView(): React.ReactElement {
       }
 
       ToastService.getToastr().success("Course créée");
-      navigate(`/admin/races/${result.json.race.id}`);
+      void navigate(`/admin/races/${result.json.race.id}`);
     },
     [accessToken, raceEditionId, raceName, isPublic, startTime, duration, initialDistance, lapDistance, navigate],
   );

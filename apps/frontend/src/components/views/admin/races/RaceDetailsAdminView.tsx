@@ -204,7 +204,7 @@ export default function RaceDetailsAdminView(): React.ReactElement {
     }
 
     ToastService.getToastr().success("Course supprimée");
-    navigate("/admin/races");
+    void navigate("/admin/races");
   }, [accessToken, navigate, race]);
 
   if (race === null) {

@@ -164,7 +164,7 @@ export default function CreateParticipantAdminView(): React.ReactElement {
       ToastService.getToastr().success("Coureur ajouté à la course");
 
       if (redirectToCreatedParticipant) {
-        navigate(`/admin/races/${race.id}/runners/${runnerId}`);
+        void navigate(`/admin/races/${race.id}/runners/${runnerId}`);
       } else {
         clearForm();
         void fetchRaceRunners();
@@ -202,7 +202,7 @@ export default function CreateParticipantAdminView(): React.ReactElement {
   }, [fetchRunners]);
 
   if (race === null) {
-    navigate("/admin");
+    void navigate("/admin");
   }
 
   return (

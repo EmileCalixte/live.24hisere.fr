@@ -43,7 +43,7 @@ export default function CreateEditionAdminView(): React.ReactElement {
       }
 
       ToastService.getToastr().success("Édition créée");
-      navigate(`/admin/editions/${result.json.edition.id}`);
+      void navigate(`/admin/editions/${result.json.edition.id}`);
     },
     [accessToken, editionName, isPublic, navigate],
   );

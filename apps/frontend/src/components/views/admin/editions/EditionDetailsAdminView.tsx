@@ -132,7 +132,7 @@ export default function EditionDetailsAdminView(): React.ReactElement {
     }
 
     ToastService.getToastr().success("Edition supprimée");
-    navigate("/admin/editions");
+    void navigate("/admin/editions");
   }, [accessToken, edition, navigate]);
 
   if (edition === null) {
