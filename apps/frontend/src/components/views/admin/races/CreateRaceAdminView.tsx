@@ -2,13 +2,13 @@ import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import type { AdminEditionWithRaceCount, AdminRace } from "@live24hisere/core/types";
+import { useRaceSelectOptions } from "../../../../hooks/useRaceSelectOptions";
 import { getAdminEditions } from "../../../../services/api/editionService";
 import { getAdminRaces, postAdminRace } from "../../../../services/api/raceService";
 import { getRaceCreateBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../../services/ToastService";
 import type { SelectOption } from "../../../../types/Forms";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
-import { getRacesSelectOptions } from "../../../../utils/raceUtils";
 import { formatDateForApi } from "../../../../utils/utils";
 import { appContext } from "../../../App";
 import Select from "../../../ui/forms/Select";
@@ -44,19 +44,15 @@ export default function CreateRaceAdminView(): React.ReactElement {
     }));
   }, [editions]);
 
-  const existingRacesOptions = React.useMemo(
-    () =>
-      getRacesSelectOptions(existingRaces, (race) => {
-        const edition = editions ? editions.find((edition) => edition.id === race.editionId) : undefined;
+  const existingRacesOptions = useRaceSelectOptions(existingRaces, (race) => {
+    const edition = editions ? editions.find((edition) => edition.id === race.editionId) : undefined;
 
-        if (edition) {
-          return `${race.name} - ${edition.name}`;
-        }
+    if (edition) {
+      return `${race.name} - ${edition.name}`;
+    }
 
-        return race.name;
-      }),
-    [editions, existingRaces],
-  );
+    return race.name;
+  });
 
   const onSelectRaceToCopy = React.useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {

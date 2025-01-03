@@ -21,6 +21,7 @@ import { SearchParam } from "../../constants/searchParams";
 import "../../css/print-ranking-table.css";
 import { useRankingTimeQueryString } from "../../hooks/queryString/useRankingTimeQueryString";
 import { useIntervalApiRequest, useIntervalSimpleApiRequest } from "../../hooks/useIntervalApiRequest";
+import { useRaceSelectOptions } from "../../hooks/useRaceSelectOptions";
 import { useRanking } from "../../hooks/useRanking";
 import { useWindowDimensions } from "../../hooks/useWindowDimensions";
 import { parseAsCategory } from "../../queryStringParsers/parseAsCategory";
@@ -28,7 +29,6 @@ import { parseAsGender } from "../../queryStringParsers/parseAsGender";
 import { getRaces } from "../../services/api/raceService";
 import { getRaceRunners } from "../../services/api/runnerService";
 import { getProcessedPassagesFromPassages, getRunnerProcessedDataFromPassages } from "../../utils/passageUtils";
-import { getRacesSelectOptions } from "../../utils/raceUtils";
 import CircularLoader from "../ui/CircularLoader";
 import Select from "../ui/forms/Select";
 import Page from "../ui/Page";
@@ -80,7 +80,7 @@ export default function RankingView(): React.ReactElement {
     setRankingTimeMemory,
   } = useRankingTimeQueryString(selectedRace);
 
-  const racesOptions = React.useMemo(() => getRacesSelectOptions(races), [races]);
+  const racesOptions = useRaceSelectOptions(races);
 
   const fetchRunners = React.useMemo(() => {
     if (!selectedRace) {

@@ -34,12 +34,10 @@ export default function RunnerDetailsForm({
   setIsPublic,
   submitButtonDisabled,
 }: RunnerDetailsFormProps): React.ReactElement {
-  // const racesOptions = useMemo(() => {
-  //   return getRacesSelectOptions(
-  //     races,
-  //     (race) => `${race.name} (${race.runnerCount} ${race.runnerCount >= 2 ? "coureurs" : "coureur"})`,
-  //   );
-  // }, [races]);
+  // const racesOptions = useRaceSelectOptions(
+  //   races,
+  //   (race) => `${race.name} (${race.runnerCount} ${race.runnerCount >= 2 ? "coureurs" : "coureur"})`,
+  // );
 
   return (
     <form onSubmit={onSubmit} className="d-flex flex-column gap-3">
