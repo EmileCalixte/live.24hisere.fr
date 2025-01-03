@@ -1,4 +1,4 @@
-import type { ApiRequest, ApiRequestResult, ApiRequestResultOk } from "@live24hisere/core/types";
+import type { ApiRequest, ApiRequestResultLegacy, ApiRequestResultOk } from "@live24hisere/core/types";
 
 export const EVENT_API_REQUEST_STARTED = "apiRequestStarted";
 export const EVENT_API_REQUEST_ENDED = "apiRequestEnded";
@@ -28,7 +28,7 @@ export async function getResponseJson<T = unknown>(response: Response): Promise<
  * Returns true if the api request result was OK.
  */
 export function isApiRequestResultOk<T extends ApiRequest>(
-  result: ApiRequestResult<T>,
+  result: ApiRequestResultLegacy<T>,
 ): result is ApiRequestResultOk<T> {
   return result.isOk;
 }

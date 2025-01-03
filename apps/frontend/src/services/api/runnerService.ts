@@ -1,5 +1,5 @@
 import type {
-  ApiRequestResult,
+  ApiRequestResultLegacy,
   DeleteRunnerAdminApiRequest,
   GetRaceRunnersAdminApiRequest,
   GetRaceRunnersApiRequest,
@@ -10,32 +10,37 @@ import type {
   PostRunnerAdminApiRequest,
   PostRunnersBulkAdminApiRequest,
 } from "@live24hisere/core/types";
-import { performApiRequest, performAuthenticatedApiRequest } from "./apiService";
+import { performApiRequestLegacy, performAuthenticatedApiRequestLegacy } from "./apiService";
 
-export async function getRunners(): Promise<ApiRequestResult<GetRunnersApiRequest>> {
-  return await performApiRequest<GetRunnersApiRequest>("/runners");
+export async function getRunners(): Promise<ApiRequestResultLegacy<GetRunnersApiRequest>> {
+  return await performApiRequestLegacy<GetRunnersApiRequest>("/runners");
 }
 
-export async function getRaceRunners(raceId: number | string): Promise<ApiRequestResult<GetRaceRunnersApiRequest>> {
-  return await performApiRequest<GetRaceRunnersApiRequest>(`/races/${raceId}/runners`);
+export async function getRaceRunners(
+  raceId: number | string,
+): Promise<ApiRequestResultLegacy<GetRaceRunnersApiRequest>> {
+  return await performApiRequestLegacy<GetRaceRunnersApiRequest>(`/races/${raceId}/runners`);
 }
 
-export async function getAdminRunners(accessToken: string): Promise<ApiRequestResult<GetRunnersAdminApiRequest>> {
-  return await performAuthenticatedApiRequest<GetRunnersAdminApiRequest>("/admin/runners", accessToken);
+export async function getAdminRunners(accessToken: string): Promise<ApiRequestResultLegacy<GetRunnersAdminApiRequest>> {
+  return await performAuthenticatedApiRequestLegacy<GetRunnersAdminApiRequest>("/admin/runners", accessToken);
 }
 
 export async function getAdminRunner(
   accessToken: string,
   runnerId: number | string,
-): Promise<ApiRequestResult<GetRunnerAdminApiRequest>> {
-  return await performAuthenticatedApiRequest<GetRunnerAdminApiRequest>(`/admin/runners/${runnerId}`, accessToken);
+): Promise<ApiRequestResultLegacy<GetRunnerAdminApiRequest>> {
+  return await performAuthenticatedApiRequestLegacy<GetRunnerAdminApiRequest>(
+    `/admin/runners/${runnerId}`,
+    accessToken,
+  );
 }
 
 export async function postAdminRunner(
   accessToken: string,
   runner: PostRunnerAdminApiRequest["payload"],
-): Promise<ApiRequestResult<PostRunnerAdminApiRequest>> {
-  return await performAuthenticatedApiRequest<PostRunnerAdminApiRequest>("/admin/runners", accessToken, runner, {
+): Promise<ApiRequestResultLegacy<PostRunnerAdminApiRequest>> {
+  return await performAuthenticatedApiRequestLegacy<PostRunnerAdminApiRequest>("/admin/runners", accessToken, runner, {
     method: "POST",
   });
 }
@@ -43,8 +48,8 @@ export async function postAdminRunner(
 export async function postAdminRunnersBulk(
   accessToken: string,
   runners: PostRunnersBulkAdminApiRequest["payload"],
-): Promise<ApiRequestResult<PostRunnersBulkAdminApiRequest>> {
-  return await performAuthenticatedApiRequest<PostRunnersBulkAdminApiRequest>(
+): Promise<ApiRequestResultLegacy<PostRunnersBulkAdminApiRequest>> {
+  return await performAuthenticatedApiRequestLegacy<PostRunnersBulkAdminApiRequest>(
     "/admin/runners-bulk",
     accessToken,
     runners,
@@ -58,8 +63,8 @@ export async function patchAdminRunner(
   accessToken: string,
   runnerId: number | string,
   runner: PatchRunnerAdminApiRequest["payload"],
-): Promise<ApiRequestResult<PatchRunnerAdminApiRequest>> {
-  return await performAuthenticatedApiRequest<PatchRunnerAdminApiRequest>(
+): Promise<ApiRequestResultLegacy<PatchRunnerAdminApiRequest>> {
+  return await performAuthenticatedApiRequestLegacy<PatchRunnerAdminApiRequest>(
     `/admin/runners/${runnerId}`,
     accessToken,
     runner,
@@ -72,8 +77,8 @@ export async function patchAdminRunner(
 export async function deleteAdminRunner(
   accessToken: string,
   runnerId: number | string,
-): Promise<ApiRequestResult<DeleteRunnerAdminApiRequest>> {
-  return await performAuthenticatedApiRequest<DeleteRunnerAdminApiRequest>(
+): Promise<ApiRequestResultLegacy<DeleteRunnerAdminApiRequest>> {
+  return await performAuthenticatedApiRequestLegacy<DeleteRunnerAdminApiRequest>(
     `/admin/runners/${runnerId}`,
     accessToken,
     undefined,
@@ -126,8 +131,8 @@ export async function deleteAdminRunner(
 export async function getAdminRaceRunners(
   accessToken: string,
   raceId: number | string,
-): Promise<ApiRequestResult<GetRaceRunnersAdminApiRequest>> {
-  return await performAuthenticatedApiRequest<GetRaceRunnersAdminApiRequest>(
+): Promise<ApiRequestResultLegacy<GetRaceRunnersAdminApiRequest>> {
+  return await performAuthenticatedApiRequestLegacy<GetRaceRunnersAdminApiRequest>(
     `/admin/races/${raceId}/runners`,
     accessToken,
   );

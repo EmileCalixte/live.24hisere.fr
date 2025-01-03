@@ -1,5 +1,6 @@
 import type {
-  ApiRequestResult,
+  ApiRequestResultLegacy,
+  ApiResponse,
   DeleteEditionAdminApiRequest,
   GetEditionAdminApiRequest,
   GetEditionsAdminApiRequest,
@@ -8,38 +9,48 @@ import type {
   PostEditionAdminApiRequest,
   PutEditionOrderAdminApiRequest,
 } from "@live24hisere/core/types";
-import { performApiRequest, performAuthenticatedApiRequest } from "./apiService";
+import { performApiRequest, performAuthenticatedApiRequestLegacy } from "./apiService";
 
-export async function getEditions(): Promise<ApiRequestResult<GetEditionsApiRequest>> {
+export async function getEditions(): Promise<ApiResponse<GetEditionsApiRequest>> {
   return await performApiRequest<GetEditionsApiRequest>("/editions");
 }
 
-export async function getAdminEditions(accessToken: string): Promise<ApiRequestResult<GetEditionsAdminApiRequest>> {
-  return await performAuthenticatedApiRequest<GetEditionsAdminApiRequest>("/admin/editions", accessToken);
+export async function getAdminEditions(
+  accessToken: string,
+): Promise<ApiRequestResultLegacy<GetEditionsAdminApiRequest>> {
+  return await performAuthenticatedApiRequestLegacy<GetEditionsAdminApiRequest>("/admin/editions", accessToken);
 }
 
 export async function getAdminEdition(
   accessToken: string,
   editionId: number | string,
-): Promise<ApiRequestResult<GetEditionAdminApiRequest>> {
-  return await performAuthenticatedApiRequest<GetEditionAdminApiRequest>(`/admin/editions/${editionId}`, accessToken);
+): Promise<ApiRequestResultLegacy<GetEditionAdminApiRequest>> {
+  return await performAuthenticatedApiRequestLegacy<GetEditionAdminApiRequest>(
+    `/admin/editions/${editionId}`,
+    accessToken,
+  );
 }
 
 export async function postAdminEdition(
   accessToken: string,
   edition: PostEditionAdminApiRequest["payload"],
-): Promise<ApiRequestResult<PostEditionAdminApiRequest>> {
-  return await performAuthenticatedApiRequest<PostEditionAdminApiRequest>("/admin/editions", accessToken, edition, {
-    method: "POST",
-  });
+): Promise<ApiRequestResultLegacy<PostEditionAdminApiRequest>> {
+  return await performAuthenticatedApiRequestLegacy<PostEditionAdminApiRequest>(
+    "/admin/editions",
+    accessToken,
+    edition,
+    {
+      method: "POST",
+    },
+  );
 }
 
 export async function patchAdminEdition(
   accessToken: string,
   editionId: number | string,
   edition: PatchEditionAdminApiRequest["payload"],
-): Promise<ApiRequestResult<PatchEditionAdminApiRequest>> {
-  return await performAuthenticatedApiRequest<PatchEditionAdminApiRequest>(
+): Promise<ApiRequestResultLegacy<PatchEditionAdminApiRequest>> {
+  return await performAuthenticatedApiRequestLegacy<PatchEditionAdminApiRequest>(
     `/admin/editions/${editionId}`,
     accessToken,
     edition,
@@ -52,8 +63,8 @@ export async function patchAdminEdition(
 export async function deleteAdminEdition(
   accessToken: string,
   editionId: number | string,
-): Promise<ApiRequestResult<DeleteEditionAdminApiRequest>> {
-  return await performAuthenticatedApiRequest<DeleteEditionAdminApiRequest>(
+): Promise<ApiRequestResultLegacy<DeleteEditionAdminApiRequest>> {
+  return await performAuthenticatedApiRequestLegacy<DeleteEditionAdminApiRequest>(
     `/admin/editions/${editionId}`,
     accessToken,
     undefined,
@@ -64,8 +75,8 @@ export async function deleteAdminEdition(
 export async function putAdminEditionOrder(
   accessToken: string,
   editionOrder: PutEditionOrderAdminApiRequest["payload"],
-): Promise<ApiRequestResult<PutEditionOrderAdminApiRequest>> {
-  return await performAuthenticatedApiRequest<PutEditionOrderAdminApiRequest>(
+): Promise<ApiRequestResultLegacy<PutEditionOrderAdminApiRequest>> {
+  return await performAuthenticatedApiRequestLegacy<PutEditionOrderAdminApiRequest>(
     "/admin/editions-order",
     accessToken,
     editionOrder,

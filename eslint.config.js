@@ -70,6 +70,9 @@ export default [
       "@typescript-eslint/no-unsafe-type-assertion": "off",
       "@typescript-eslint/strict-boolean-expressions": "off",
       "@typescript-eslint/prefer-destructuring": "off",
+
+      // TODO re-enable
+      "@typescript-eslint/no-deprecated": "off",
     },
   },
 ];

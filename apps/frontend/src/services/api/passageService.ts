@@ -1,17 +1,17 @@
 import type {
-  ApiRequestResult,
+  ApiRequestResultLegacy,
   DeletePassageAdminApiRequest,
   GetAllPassagesOfRaceAdminApiRequest,
   PatchPassageAdminApiRequest,
   PostPassageAdminApiRequest,
 } from "@live24hisere/core/types";
-import { performAuthenticatedApiRequest } from "./apiService";
+import { performAuthenticatedApiRequestLegacy } from "./apiService";
 
 export async function getAdminRacePassages(
   accessToken: string,
   raceId: number | string,
-): Promise<ApiRequestResult<GetAllPassagesOfRaceAdminApiRequest>> {
-  return await performAuthenticatedApiRequest<GetAllPassagesOfRaceAdminApiRequest>(
+): Promise<ApiRequestResultLegacy<GetAllPassagesOfRaceAdminApiRequest>> {
+  return await performAuthenticatedApiRequestLegacy<GetAllPassagesOfRaceAdminApiRequest>(
     `/admin/races/${raceId}/passages`,
     accessToken,
   );
@@ -20,18 +20,23 @@ export async function getAdminRacePassages(
 export async function postAdminPassage(
   accessToken: string,
   passage: PostPassageAdminApiRequest["payload"],
-): Promise<ApiRequestResult<PostPassageAdminApiRequest>> {
-  return await performAuthenticatedApiRequest<PostPassageAdminApiRequest>("/admin/passages", accessToken, passage, {
-    method: "POST",
-  });
+): Promise<ApiRequestResultLegacy<PostPassageAdminApiRequest>> {
+  return await performAuthenticatedApiRequestLegacy<PostPassageAdminApiRequest>(
+    "/admin/passages",
+    accessToken,
+    passage,
+    {
+      method: "POST",
+    },
+  );
 }
 
 export async function patchAdminPassage(
   accessToken: string,
   passageId: number | string,
   passage: PatchPassageAdminApiRequest["payload"],
-): Promise<ApiRequestResult<PatchPassageAdminApiRequest>> {
-  return await performAuthenticatedApiRequest<PatchPassageAdminApiRequest>(
+): Promise<ApiRequestResultLegacy<PatchPassageAdminApiRequest>> {
+  return await performAuthenticatedApiRequestLegacy<PatchPassageAdminApiRequest>(
     `/admin/passages/${passageId}`,
     accessToken,
     passage,
@@ -42,8 +47,8 @@ export async function patchAdminPassage(
 export async function deleteAdminPassage(
   accessToken: string,
   passageId: number | string,
-): Promise<ApiRequestResult<DeletePassageAdminApiRequest>> {
-  return await performAuthenticatedApiRequest<DeletePassageAdminApiRequest>(
+): Promise<ApiRequestResultLegacy<DeletePassageAdminApiRequest>> {
+  return await performAuthenticatedApiRequestLegacy<DeletePassageAdminApiRequest>(
     `/admin/passages/${passageId}`,
     accessToken,
     undefined,

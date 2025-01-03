@@ -1,17 +1,17 @@
 import type {
-  ApiRequestResult,
+  ApiRequestResultLegacy,
   GetRaceParticipantAdminApiRequest,
   GetRunnerParticipationsAdminApiRequest,
   PatchParticipantAdminApiRequest,
   PostParticipantAdminApiRequest,
 } from "@live24hisere/core/types";
-import { performAuthenticatedApiRequest } from "./apiService";
+import { performAuthenticatedApiRequestLegacy } from "./apiService";
 
 export async function getAdminRunnerParticipations(
   accessToken: string,
   runnerId: number | string,
-): Promise<ApiRequestResult<GetRunnerParticipationsAdminApiRequest>> {
-  return await performAuthenticatedApiRequest<GetRunnerParticipationsAdminApiRequest>(
+): Promise<ApiRequestResultLegacy<GetRunnerParticipationsAdminApiRequest>> {
+  return await performAuthenticatedApiRequestLegacy<GetRunnerParticipationsAdminApiRequest>(
     `/admin/runners/${runnerId}/participations`,
     accessToken,
   );
@@ -21,8 +21,8 @@ export async function getAdminRaceRunner(
   accessToken: string,
   raceId: number | string,
   runnerId: number | string,
-): Promise<ApiRequestResult<GetRaceParticipantAdminApiRequest>> {
-  return await performAuthenticatedApiRequest<GetRaceParticipantAdminApiRequest>(
+): Promise<ApiRequestResultLegacy<GetRaceParticipantAdminApiRequest>> {
+  return await performAuthenticatedApiRequestLegacy<GetRaceParticipantAdminApiRequest>(
     `/admin/races/${raceId}/runners/${runnerId}`,
     accessToken,
   );
@@ -32,8 +32,8 @@ export async function postAdminRaceRunner(
   accessToken: string,
   raceId: number | string,
   participant: PostParticipantAdminApiRequest["payload"],
-): Promise<ApiRequestResult<PostParticipantAdminApiRequest>> {
-  return await performAuthenticatedApiRequest<PostParticipantAdminApiRequest>(
+): Promise<ApiRequestResultLegacy<PostParticipantAdminApiRequest>> {
+  return await performAuthenticatedApiRequestLegacy<PostParticipantAdminApiRequest>(
     `/admin/races/${raceId}/runners`,
     accessToken,
     participant,
@@ -46,8 +46,8 @@ export async function patchAdminRaceRuner(
   raceId: number | string,
   runnerId: number | string,
   participant: PatchParticipantAdminApiRequest["payload"],
-): Promise<ApiRequestResult<PatchParticipantAdminApiRequest>> {
-  return await performAuthenticatedApiRequest<PatchParticipantAdminApiRequest>(
+): Promise<ApiRequestResultLegacy<PatchParticipantAdminApiRequest>> {
+  return await performAuthenticatedApiRequestLegacy<PatchParticipantAdminApiRequest>(
     `/admin/races/${raceId}/runners/${runnerId}`,
     accessToken,
     participant,
