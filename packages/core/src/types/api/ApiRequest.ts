@@ -12,7 +12,10 @@ export interface ApiRequest {
 
 export type ApiResponse<T extends ApiRequest> = T["response"];
 
-export interface ApiRequestResult<T extends ApiRequest> {
+/**
+ * @deprecated
+ */
+export interface ApiRequestResultLegacy<T extends ApiRequest> {
   /**
    * True if response is OK, false otherwise
    *
@@ -31,7 +34,7 @@ export interface ApiRequestResult<T extends ApiRequest> {
   json: T["response"] | undefined;
 }
 
-export interface ApiRequestResultOk<T extends ApiRequest> extends ApiRequestResult<T> {
+export interface ApiRequestResultOk<T extends ApiRequest> extends ApiRequestResultLegacy<T> {
   isOk: true;
   json: ApiResponse<T>;
 }

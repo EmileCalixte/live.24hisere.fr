@@ -1,7 +1,7 @@
 import React from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Navigate, Route, Routes } from "react-router-dom";
 import type { EditionWithRaceCount } from "@live24hisere/core/types";
-import { useIntervalSimpleApiRequest } from "../../../hooks/useIntervalApiRequest";
 import { useSelectedEdition } from "../../../hooks/useSelectedEdition";
 import { getEditions } from "../../../services/api/editionService";
 import CircularLoader from "../../ui/CircularLoader";
@@ -18,7 +18,18 @@ export const publicContext = React.createContext<PublicContext>({
 });
 
 export default function Public(): React.ReactElement {
-  const editions = useIntervalSimpleApiRequest(getEditions).json?.editions;
+  // const editions = useIntervalSimpleApiRequest(getEditions).json?.editions;
+
+  const result = useQuery({
+    queryKey: ["editions"],
+    queryFn: getEditions,
+    refetchInterval: 20000,
+    retry: false,
+  });
+
+  console.log("RESULT", JSON.parse(JSON.stringify(result)), result.error);
+
+  const editions = result.data?.editions;
 
   const { selectedEdition, setSelectedEditionId } = useSelectedEdition(editions);
 

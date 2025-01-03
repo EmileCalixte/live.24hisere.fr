@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "bootstrap/dist/css/bootstrap-grid.css";
 import "bootstrap/dist/css/bootstrap-utilities.css";
 import { NuqsAdapter } from "nuqs/adapters/react";
@@ -18,10 +19,14 @@ if (!container) {
 
 const root = createRoot(container);
 
+const queryClient = new QueryClient();
+
 root.render(
   <NuqsAdapter>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </QueryClientProvider>
   </NuqsAdapter>,
 );

@@ -1,15 +1,15 @@
 import React from "react";
-import type { ApiRequest, ApiRequestResult } from "@live24hisere/core/types";
+import type { ApiRequest, ApiRequestResultLegacy } from "@live24hisere/core/types";
 
 export const DEFAULT_FETCH_INTERVAL = 20000;
 
 interface UseIntervalApiRequest<T extends ApiRequest> {
-  result: ApiRequestResult<T> | undefined;
-  json: ApiRequestResult<T>["json"];
+  result: ApiRequestResultLegacy<T> | undefined;
+  json: ApiRequestResultLegacy<T>["json"];
 }
 
 export function useIntervalSimpleApiRequest<TFunc extends ApiRequest>(
-  fetchFunction: ((...args: []) => Promise<ApiRequestResult<TFunc>>) | undefined,
+  fetchFunction: ((...args: []) => Promise<ApiRequestResultLegacy<TFunc>>) | undefined,
   fetchInterval = DEFAULT_FETCH_INTERVAL,
 ): UseIntervalApiRequest<TFunc> {
   const input = React.useMemo(() => {
@@ -24,10 +24,10 @@ export function useIntervalSimpleApiRequest<TFunc extends ApiRequest>(
 }
 
 export function useIntervalApiRequest<TFunc extends ApiRequest, TArgs extends readonly any[]>(
-  input: readonly [(...args: TArgs) => Promise<ApiRequestResult<TFunc>>, ...TArgs] | undefined,
+  input: readonly [(...args: TArgs) => Promise<ApiRequestResultLegacy<TFunc>>, ...TArgs] | undefined,
   fetchInterval = DEFAULT_FETCH_INTERVAL,
 ): UseIntervalApiRequest<TFunc> {
-  const [result, setResult] = React.useState<ApiRequestResult<TFunc> | undefined>(undefined);
+  const [result, setResult] = React.useState<ApiRequestResultLegacy<TFunc> | undefined>(undefined);
 
   const performApiRequest = React.useCallback(async (): Promise<void> => {
     if (!input) {
