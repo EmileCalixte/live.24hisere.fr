@@ -86,7 +86,11 @@ export async function performApiRequest<T extends ApiRequest>(
   const result = await performApiRequestLegacy(url, body, init);
 
   if (!result.isOk) {
-    throw new ApiError(result.response.status, result.json);
+    throw new ApiError(
+      result.response.status,
+      result.json,
+      `Request ${init.method ?? "GET"} ${url} resulted in an HTTP ${result.response.status} status code`,
+    );
   }
 
   return result.json;

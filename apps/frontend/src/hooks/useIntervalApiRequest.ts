@@ -8,6 +8,9 @@ interface UseIntervalApiRequest<T extends ApiRequest> {
   json: ApiRequestResultLegacy<T>["json"];
 }
 
+/**
+ * @deprecated
+ */
 export function useIntervalSimpleApiRequest<TFunc extends ApiRequest>(
   fetchFunction: ((...args: []) => Promise<ApiRequestResultLegacy<TFunc>>) | undefined,
   fetchInterval = DEFAULT_FETCH_INTERVAL,
@@ -23,6 +26,9 @@ export function useIntervalSimpleApiRequest<TFunc extends ApiRequest>(
   return useIntervalApiRequest(input, fetchInterval);
 }
 
+/**
+ * @deprecated
+ */
 export function useIntervalApiRequest<TFunc extends ApiRequest, TArgs extends readonly any[]>(
   input: readonly [(...args: TArgs) => Promise<ApiRequestResultLegacy<TFunc>>, ...TArgs] | undefined,
   fetchInterval = DEFAULT_FETCH_INTERVAL,

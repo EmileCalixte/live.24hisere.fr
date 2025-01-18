@@ -1,4 +1,4 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "bootstrap/dist/css/bootstrap-grid.css";
 import "bootstrap/dist/css/bootstrap-utilities.css";
 import { NuqsAdapter } from "nuqs/adapters/react";
@@ -10,6 +10,7 @@ import "./css/forms.css";
 import "./css/index.css";
 import "./css/toastr-override.css";
 import "./css/utils.css";
+import ToastService from "./services/ToastService";
 
 const container = document.getElementById("root");
 
@@ -19,7 +20,20 @@ if (!container) {
 
 const root = createRoot(container);
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  queryCache: new QueryCache({
+    onError: (error, query) => {
+      const errorMessage =
+        typeof query.meta?.errorMessage === "string"
+          ? query.meta.errorMessage
+          : "Une erreur de communication avec le serveur est survenue";
+
+      ToastService.getToastr().error(errorMessage);
+
+      console.error(error);
+    },
+  }),
+});
 
 root.render(
   <NuqsAdapter>
