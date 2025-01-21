@@ -9,16 +9,15 @@ import type {
   PostEditionAdminApiRequest,
   PutEditionOrderAdminApiRequest,
 } from "@live24hisere/core/types";
-import { performApiRequest, performAuthenticatedApiRequestLegacy } from "./apiService";
+import { ENDPOINT_ADMIN_EDITIONS, ENDPOINT_PUBLIC_EDITIONS } from "../../constants/api";
+import { performApiRequest, performAuthenticatedApiRequest, performAuthenticatedApiRequestLegacy } from "./apiService";
 
 export async function getEditions(): Promise<ApiResponse<GetEditionsApiRequest>> {
-  return await performApiRequest<GetEditionsApiRequest>("/editions");
+  return await performApiRequest<GetEditionsApiRequest>(ENDPOINT_PUBLIC_EDITIONS);
 }
 
-export async function getAdminEditions(
-  accessToken: string,
-): Promise<ApiRequestResultLegacy<GetEditionsAdminApiRequest>> {
-  return await performAuthenticatedApiRequestLegacy<GetEditionsAdminApiRequest>("/admin/editions", accessToken);
+export async function getAdminEditions(accessToken: string): Promise<ApiResponse<GetEditionsAdminApiRequest>> {
+  return await performAuthenticatedApiRequest<GetEditionsAdminApiRequest>(ENDPOINT_ADMIN_EDITIONS, accessToken);
 }
 
 export async function getAdminEdition(

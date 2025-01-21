@@ -4,7 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import type { AdminEditionWithRaceCount } from "@live24hisere/core/types";
-import { getAdminEditions, putAdminEditionOrder } from "../../../../services/api/editionService";
+import { useAdminEditions } from "../../../../hooks/api/admin/useAdminEditions";
+import { putAdminEditionOrder } from "../../../../services/api/editionService";
 import { getEditionsBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../../services/ToastService";
 import { isApiRequestResultOk } from "../../../../utils/apiUtils";
@@ -18,8 +19,9 @@ import EditionListItem from "../../../viewParts/admin/editions/EditionListItem";
 export default function EditionsAdminView(): React.ReactElement {
   const { accessToken } = React.useContext(appContext).user;
 
-  // false = not fetched yet
-  const [editions, setEditions] = React.useState<AdminEditionWithRaceCount[] | false>(false);
+  const getEditionsResult = useAdminEditions();
+
+  const editions = getEditionsResult.data?.editions;
 
   // Used when user is reordering the list
   const [sortingEditions, setSortingEditions] = React.useState<AdminEditionWithRaceCount[] | false>(false);
@@ -27,21 +29,9 @@ export default function EditionsAdminView(): React.ReactElement {
 
   const [isSaving, setIsSaving] = React.useState(false);
 
-  const fetchEditions = React.useCallback(async () => {
-    if (!accessToken) {
-      return;
-    }
-
-    const result = await getAdminEditions(accessToken);
-
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de récupérer la liste des éditions");
-      return;
-    }
-
-    setEditions(result.json.editions);
-    setSortingEditions(result.json.editions);
-  }, [accessToken]);
+  React.useEffect(() => {
+    setSortingEditions(editions ?? []);
+  }, [editions]);
 
   const saveSort = React.useCallback(async () => {
     if (!accessToken || !sortingEditions) {
@@ -60,16 +50,13 @@ export default function EditionsAdminView(): React.ReactElement {
       return;
     }
 
-    setEditions([...sortingEditions]);
+    // TODO
+    // setEditions([...sortingEditions]);
 
     ToastService.getToastr().success("L'ordre des éditions a été modifié");
     setIsSorting(false);
     setIsSaving(false);
   }, [accessToken, sortingEditions]);
-
-  React.useEffect(() => {
-    void fetchEditions();
-  }, [fetchEditions]);
 
   return (
     <Page id="admin-editions" title="Éditions">
@@ -77,9 +64,9 @@ export default function EditionsAdminView(): React.ReactElement {
         <Col>{getEditionsBreadcrumbs()}</Col>
       </Row>
 
-      {editions === false && <CircularLoader />}
+      {getEditionsResult.isLoading && <CircularLoader />}
 
-      {editions !== false && (
+      {editions && (
         <>
           <Row>
             <Col>
