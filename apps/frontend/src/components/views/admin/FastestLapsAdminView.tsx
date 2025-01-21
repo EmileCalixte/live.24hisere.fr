@@ -1,7 +1,6 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 import type {
-  AdminEditionWithRaceCount,
   AdminPassageWithRunnerIdAndRaceId,
   AdminRaceWithRunnerCount,
   AdminRunner,
@@ -9,7 +8,7 @@ import type {
   RaceDict,
   RaceRunner,
 } from "@live24hisere/core/types";
-import { getAdminEditions } from "../../../services/api/editionService";
+import { useAdminEditions } from "../../../hooks/api/admin/useAdminEditions";
 import { getAdminRacePassages } from "../../../services/api/passageService";
 import { getAdminRaces } from "../../../services/api/raceService";
 import { getAdminRaceRunners } from "../../../services/api/runnerService";
@@ -43,7 +42,8 @@ export default function FastestLapsAdminView(): React.ReactElement {
   const [passages, setPassages] = React.useState<AdminPassageWithRunnerIdAndRaceId[] | false>(false);
 
   // false = not fetched yet
-  const [editions, setEditions] = React.useState<AdminEditionWithRaceCount[] | false>(false);
+  const getEditionsResult = useAdminEditions(true);
+  const editions = getEditionsResult.data?.editions;
   const [races, setRaces] = React.useState<RaceDict<AdminRaceWithRunnerCount> | false>(false);
 
   // false = not fetched yet
@@ -53,23 +53,6 @@ export default function FastestLapsAdminView(): React.ReactElement {
   const [selectedRaceId, setSelectedRaceId] = React.useState<number | undefined>(undefined);
 
   const [page, setPage] = React.useState(1);
-
-  const fetchEditions = React.useCallback(async () => {
-    if (!accessToken) {
-      return;
-    }
-
-    const result = await getAdminEditions(accessToken);
-
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de récupérer la liste des éditions");
-      return;
-    }
-
-    const responseJson = result.json;
-
-    setEditions(responseJson.editions);
-  }, [accessToken]);
 
   const fetchRaces = React.useCallback(async () => {
     if (!accessToken) {
@@ -118,18 +101,6 @@ export default function FastestLapsAdminView(): React.ReactElement {
     // The passages are already ordered by time
     setPassages(result.json.passages);
   }, [accessToken, selectedRaceId]);
-
-  React.useEffect(() => {
-    void fetchEditions();
-
-    const interval = setInterval(() => {
-      void fetchEditions();
-    }, RUNNERS_AND_RACES_FETCH_INTERVAL);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, [fetchEditions]);
 
   React.useEffect(() => {
     void fetchRaces();

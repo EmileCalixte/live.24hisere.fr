@@ -3,14 +3,13 @@ import { Col, Row } from "react-bootstrap";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { GENDER } from "@live24hisere/core/constants";
 import type {
-  AdminEditionWithRaceCount,
   AdminRaceWithRunnerCount,
   AdminRunner,
   Gender,
   Participant,
   RunnerWithRaceCount,
 } from "@live24hisere/core/types";
-import { getAdminEditions } from "../../../../services/api/editionService";
+import { useAdminEditions } from "../../../../hooks/api/admin/useAdminEditions";
 import { getAdminRunnerParticipations } from "../../../../services/api/participantService";
 import { getAdminRaces } from "../../../../services/api/raceService";
 import { deleteAdminRunner, getAdminRunner, patchAdminRunner } from "../../../../services/api/runnerService";
@@ -30,7 +29,8 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
 
   const { runnerId: urlRunnerId } = useParams();
 
-  const [editions, setEditions] = React.useState<AdminEditionWithRaceCount[] | undefined | null>(undefined);
+  const getEditionsResult = useAdminEditions();
+  const editions = getEditionsResult.data?.editions;
 
   const [races, setRaces] = React.useState<AdminRaceWithRunnerCount[] | undefined | null>(undefined);
   console.log(races);
@@ -60,21 +60,6 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
       runnerIsPublic === runner.isPublic,
     ].includes(false);
   }, [runner, runnerFirstname, runnerLastname, runnerGender, runnerBirthYear, runnerIsPublic]);
-
-  const fetchEditions = React.useCallback(async () => {
-    if (!accessToken) {
-      return;
-    }
-
-    const result = await getAdminEditions(accessToken);
-
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de récupérer la liste des éditions");
-      return;
-    }
-
-    setEditions(result.json.editions);
-  }, [accessToken]);
 
   const fetchRaces = React.useCallback(async () => {
     if (!accessToken) {
@@ -129,10 +114,6 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
 
     setParticipations(result.json.participations);
   }, [accessToken, urlRunnerId]);
-
-  React.useEffect(() => {
-    void fetchEditions();
-  }, [fetchEditions]);
 
   React.useEffect(() => {
     void fetchRaces();
@@ -262,7 +243,7 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
                 <RunnerParticipationsTable
                   participations={participations}
                   races={races ?? undefined}
-                  editions={editions ?? undefined}
+                  editions={editions}
                 />
               )}
             </Col>

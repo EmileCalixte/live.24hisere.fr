@@ -1,9 +1,9 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import type { AdminEditionWithRaceCount, AdminRace } from "@live24hisere/core/types";
+import type { AdminRace } from "@live24hisere/core/types";
+import { useAdminEditions } from "../../../../hooks/api/admin/useAdminEditions";
 import { useRaceSelectOptions } from "../../../../hooks/useRaceSelectOptions";
-import { getAdminEditions } from "../../../../services/api/editionService";
 import { getAdminRaces, postAdminRace } from "../../../../services/api/raceService";
 import { getRaceCreateBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../../services/ToastService";
@@ -20,8 +20,10 @@ export default function CreateRaceAdminView(): React.ReactElement {
 
   const { accessToken } = React.useContext(appContext).user;
 
+  const getEditionsResult = useAdminEditions();
+  const editions = getEditionsResult.data?.editions;
+
   const [existingRaces, setExistingRaces] = React.useState<AdminRace[] | false>(false);
-  const [editions, setEditions] = React.useState<AdminEditionWithRaceCount[] | false>(false);
 
   const [raceEditionId, setRaceEditionId] = React.useState(0);
   const [raceName, setRaceName] = React.useState("");
@@ -45,7 +47,7 @@ export default function CreateRaceAdminView(): React.ReactElement {
   }, [editions]);
 
   const existingRacesOptions = useRaceSelectOptions(existingRaces, (race) => {
-    const edition = editions ? editions.find((edition) => edition.id === race.editionId) : undefined;
+    const edition = editions?.find((edition) => edition.id === race.editionId);
 
     if (edition) {
       return `${race.name} - ${edition.name}`;
@@ -91,23 +93,6 @@ export default function CreateRaceAdminView(): React.ReactElement {
     setExistingRaces(result.json.races);
   }, [accessToken]);
 
-  const fetchEditions = React.useCallback(async () => {
-    if (!accessToken) {
-      return;
-    }
-
-    const result = await getAdminEditions(accessToken);
-
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de récupérer la liste des éditions");
-      return;
-    }
-
-    const responseJson = result.json;
-
-    setEditions(responseJson.editions);
-  }, [accessToken]);
-
   const onSubmit = React.useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
@@ -145,10 +130,6 @@ export default function CreateRaceAdminView(): React.ReactElement {
   React.useEffect(() => {
     void fetchExistingRaces();
   }, [fetchExistingRaces]);
-
-  React.useEffect(() => {
-    void fetchEditions();
-  }, [fetchEditions]);
 
   return (
     <Page id="admin-create-race" title="Créer une course">

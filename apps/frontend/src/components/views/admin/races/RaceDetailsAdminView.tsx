@@ -3,13 +3,8 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
-import type {
-  AdminEditionWithRaceCount,
-  AdminRaceWithRunnerCount,
-  AdminRunner,
-  RaceRunner,
-} from "@live24hisere/core/types";
-import { getAdminEditions } from "../../../../services/api/editionService";
+import type { AdminRaceWithRunnerCount, AdminRunner, RaceRunner } from "@live24hisere/core/types";
+import { useAdminEditions } from "../../../../hooks/api/admin/useAdminEditions";
 import { deleteAdminRace, getAdminRace, patchAdminRace } from "../../../../services/api/raceService";
 import { getAdminRaceRunners } from "../../../../services/api/runnerService";
 import { getRaceDetailsBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
@@ -32,7 +27,9 @@ export default function RaceDetailsAdminView(): React.ReactElement {
 
   const [race, setRace] = React.useState<AdminRaceWithRunnerCount | undefined | null>(undefined);
   const [raceRunners, setRaceRunners] = React.useState<Array<RaceRunner<AdminRunner>> | undefined | null>(undefined);
-  const [editions, setEditions] = React.useState<AdminEditionWithRaceCount[] | false>(false);
+
+  const getEditionsResult = useAdminEditions();
+  const editions = getEditionsResult.data?.editions;
 
   const [raceEditionId, setRaceEditionId] = React.useState(0);
   const [raceName, setRaceName] = React.useState("");
@@ -56,11 +53,11 @@ export default function RaceDetailsAdminView(): React.ReactElement {
   }, [editions]);
 
   const edition = React.useMemo(() => {
-    if (!race || !editions) {
+    if (!race) {
       return undefined;
     }
 
-    return editions.find((edition) => edition.id === race.editionId);
+    return editions?.find((edition) => edition.id === race.editionId);
   }, [race, editions]);
 
   const unsavedChanges = React.useMemo(() => {
@@ -121,23 +118,6 @@ export default function RaceDetailsAdminView(): React.ReactElement {
     setRaceRunners(result.json.runners);
   }, [accessToken, urlRaceId]);
 
-  const fetchEditions = React.useCallback(async () => {
-    if (!accessToken) {
-      return;
-    }
-
-    const result = await getAdminEditions(accessToken);
-
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de récupérer la liste des éditions");
-      return;
-    }
-
-    const responseJson = result.json;
-
-    setEditions(responseJson.editions);
-  }, [accessToken]);
-
   React.useEffect(() => {
     void fetchRace();
   }, [fetchRace]);
@@ -145,10 +125,6 @@ export default function RaceDetailsAdminView(): React.ReactElement {
   React.useEffect(() => {
     void fetchRaceRunners();
   }, [fetchRaceRunners]);
-
-  React.useEffect(() => {
-    void fetchEditions();
-  }, [fetchEditions]);
 
   const onSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();

@@ -3,8 +3,8 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import type { AdminEditionWithRaceCount, AdminRaceWithRunnerCount } from "@live24hisere/core/types";
-import { getAdminEditions } from "../../../../services/api/editionService";
+import type { AdminRaceWithRunnerCount } from "@live24hisere/core/types";
+import { useAdminEditions } from "../../../../hooks/api/admin/useAdminEditions";
 import { getAdminRaces } from "../../../../services/api/raceService";
 import { getRacesBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../../services/ToastService";
@@ -19,7 +19,9 @@ export default function RacesAdminView(): React.ReactElement {
 
   // false = not fetched yet
   const [races, setRaces] = React.useState<AdminRaceWithRunnerCount[] | false>(false);
-  const [editions, setEditions] = React.useState<AdminEditionWithRaceCount[] | false>(false);
+
+  const getEditionsResult = useAdminEditions();
+  const editions = getEditionsResult.data?.editions;
 
   const fetchRaces = React.useCallback(async () => {
     if (!accessToken) {
@@ -36,28 +38,9 @@ export default function RacesAdminView(): React.ReactElement {
     setRaces(result.json.races);
   }, [accessToken]);
 
-  const fetchEditions = React.useCallback(async () => {
-    if (!accessToken) {
-      return;
-    }
-
-    const result = await getAdminEditions(accessToken);
-
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de récupérer la liste des éditions");
-      return;
-    }
-
-    setEditions(result.json.editions);
-  }, [accessToken]);
-
   React.useEffect(() => {
     void fetchRaces();
   }, [fetchRaces]);
-
-  React.useEffect(() => {
-    void fetchEditions();
-  }, [fetchEditions]);
 
   return (
     <Page id="admin-races" title="Courses">
@@ -97,7 +80,7 @@ export default function RacesAdminView(): React.ReactElement {
                   </thead>
                   <tbody>
                     {races.map((race) => {
-                      const edition = editions ? editions.find((edition) => edition.id === race.editionId) : undefined;
+                      const edition = editions?.find((edition) => edition.id === race.editionId);
 
                       const lapDistance = parseFloat(race.lapDistance);
                       const initialDistance = parseFloat(race.initialDistance);
