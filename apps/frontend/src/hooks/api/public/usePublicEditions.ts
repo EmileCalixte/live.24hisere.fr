@@ -10,7 +10,7 @@ export function usePublicEditions(): UseQueryResult<ApiResponse<GetEditionsApiRe
     refetchInterval: DEFAULT_FETCH_INTERVAL,
     retry: false,
     meta: {
-      errorMessage: "Une erreur est survenue lors de la récupération de la liste des éditions.",
+      errorToast: "Une erreur est survenue lors de la récupération de la liste des éditions.",
     },
   });
 }

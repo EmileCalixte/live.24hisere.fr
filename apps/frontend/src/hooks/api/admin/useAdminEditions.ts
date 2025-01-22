@@ -13,7 +13,7 @@ export function useAdminEditions(fetchPeriodically = false): UseQueryResult<ApiR
     retry: false,
     refetchInterval: fetchPeriodically && DEFAULT_FETCH_INTERVAL,
     meta: {
-      errorMessage: "Une erreur est survenue lors de la récupération de la liste des éditions.",
+      errorToast: "Une erreur est survenue lors de la récupération de la liste des éditions.",
     },
   });
 }

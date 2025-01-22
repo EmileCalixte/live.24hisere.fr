@@ -1,4 +1,7 @@
+import type { Query } from "@tanstack/react-query";
 import type { ApiRequest, ApiRequestResultLegacy, ApiRequestResultOk } from "@live24hisere/core/types";
+import { ApiError } from "../errors/ApiError";
+import type { ApiTimeoutError } from "../errors/ApiTimeoutError";
 
 export const EVENT_API_REQUEST_STARTED = "apiRequestStarted";
 export const EVENT_API_REQUEST_ENDED = "apiRequestEnded";
@@ -31,4 +34,19 @@ export function isApiRequestResultOk<T extends ApiRequest>(
   result: ApiRequestResultLegacy<T>,
 ): result is ApiRequestResultOk<T> {
   return result.isOk;
+}
+
+export function getErrorMessageToDisplay(
+  error: Error | ApiError | ApiTimeoutError,
+  query: Query<unknown, unknown, unknown>,
+): string | null {
+  const is404 = error instanceof ApiError && error.statusCode === 404;
+
+  const meta = query.meta;
+
+  if (is404) {
+    return meta?.notFoundToast ?? meta?.errorToast ?? null;
+  }
+
+  return meta?.errorToast ?? null;
 }

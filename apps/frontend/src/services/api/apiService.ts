@@ -122,5 +122,13 @@ export async function performAuthenticatedApiRequest<T extends ApiRequest>(
 ): Promise<ApiResponse<T>> {
   const result = await performAuthenticatedApiRequestLegacy(url, accessToken, body, init);
 
+  if (!result.isOk) {
+    throw new ApiError(
+      result.response.status,
+      result.json,
+      `Request ${init.method ?? "GET"} ${url} resulted in an HTTP ${result.response.status} status code`,
+    );
+  }
+
   return result.json;
 }

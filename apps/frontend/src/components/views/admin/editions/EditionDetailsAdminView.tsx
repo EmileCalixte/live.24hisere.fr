@@ -1,8 +1,10 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import type { AdminEditionWithRaceCount, AdminRaceWithRunnerCount } from "@live24hisere/core/types";
-import { deleteAdminEdition, getAdminEdition, patchAdminEdition } from "../../../../services/api/editionService";
+import type { AdminRaceWithRunnerCount } from "@live24hisere/core/types";
+import { ApiError } from "../../../../errors/ApiError";
+import { useAdminEdition } from "../../../../hooks/api/admin/useAdminEdition";
+import { deleteAdminEdition, patchAdminEdition } from "../../../../services/api/editionService";
 import { getAdminEditionRaces } from "../../../../services/api/raceService";
 import { getEditionDetailsBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../../services/ToastService";
@@ -20,7 +22,11 @@ export default function EditionDetailsAdminView(): React.ReactElement {
 
   const { editionId: urlEditionId } = useParams();
 
-  const [edition, setEdition] = React.useState<AdminEditionWithRaceCount | null | undefined>(undefined);
+  // FIXME urlEditionId type
+  const getEditionResult = useAdminEdition(urlEditionId);
+  const edition = getEditionResult.data?.edition;
+  const isEditionNotFound = getEditionResult.error instanceof ApiError && getEditionResult.error.statusCode === 404;
+
   const [races, setRaces] = React.useState<AdminRaceWithRunnerCount[] | null | undefined>(undefined);
 
   const [editionName, setEditionName] = React.useState("");
@@ -36,26 +42,14 @@ export default function EditionDetailsAdminView(): React.ReactElement {
     return [editionName === edition.name, isPublic === edition.isPublic].includes(false);
   }, [edition, editionName, isPublic]);
 
-  const fetchEdition = React.useCallback(async () => {
-    if (!urlEditionId || !accessToken) {
+  React.useEffect(() => {
+    if (!edition) {
       return;
     }
 
-    const result = await getAdminEdition(accessToken, urlEditionId);
-
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de récupérer les détails de l'édition");
-      setEdition(null);
-      return;
-    }
-
-    const responseJson = result.json;
-
-    setEdition(responseJson.edition);
-
-    setEditionName(responseJson.edition.name);
-    setIsPublic(responseJson.edition.isPublic);
-  }, [accessToken, urlEditionId]);
+    setEditionName(edition.name);
+    setIsPublic(edition.isPublic);
+  }, [edition]);
 
   const fetchRaces = React.useCallback(async () => {
     if (!edition || !accessToken) {
@@ -74,10 +68,6 @@ export default function EditionDetailsAdminView(): React.ReactElement {
 
     setRaces(responseJson.races);
   }, [accessToken, edition]);
-
-  React.useEffect(() => {
-    void fetchEdition();
-  }, [fetchEdition]);
 
   React.useEffect(() => {
     void fetchRaces();
@@ -107,7 +97,7 @@ export default function EditionDetailsAdminView(): React.ReactElement {
 
     ToastService.getToastr().success("Paramètres de l'édition enregistrés");
 
-    await fetchEdition();
+    await getEditionResult.refetch();
     setIsSaving(false);
   };
 
@@ -135,7 +125,9 @@ export default function EditionDetailsAdminView(): React.ReactElement {
     void navigate("/admin/editions");
   }, [accessToken, edition, navigate]);
 
-  if (edition === null) {
+  console.log("ERROR", getEditionResult.error);
+
+  if (isEditionNotFound) {
     return <Navigate to="/admin/editions" />;
   }
 

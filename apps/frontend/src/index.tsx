@@ -11,6 +11,7 @@ import "./css/index.css";
 import "./css/toastr-override.css";
 import "./css/utils.css";
 import ToastService from "./services/ToastService";
+import { getErrorMessageToDisplay } from "./utils/apiUtils";
 
 const container = document.getElementById("root");
 
@@ -23,12 +24,11 @@ const root = createRoot(container);
 const queryClient = new QueryClient({
   queryCache: new QueryCache({
     onError: (error, query) => {
-      const errorMessage =
-        typeof query.meta?.errorMessage === "string"
-          ? query.meta.errorMessage
-          : "Une erreur de communication avec le serveur est survenue";
+      const errorMessage = getErrorMessageToDisplay(error, query);
 
-      ToastService.getToastr().error(errorMessage);
+      if (errorMessage) {
+        ToastService.getToastr().error(errorMessage);
+      }
 
       console.error(error);
     },

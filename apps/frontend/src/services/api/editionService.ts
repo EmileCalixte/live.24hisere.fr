@@ -10,6 +10,7 @@ import type {
   PutEditionOrderAdminApiRequest,
 } from "@live24hisere/core/types";
 import { ENDPOINT_ADMIN_EDITIONS, ENDPOINT_PUBLIC_EDITIONS } from "../../constants/api";
+import type { UrlId } from "../../types/utils/api";
 import { performApiRequest, performAuthenticatedApiRequest, performAuthenticatedApiRequestLegacy } from "./apiService";
 
 export async function getEditions(): Promise<ApiResponse<GetEditionsApiRequest>> {
@@ -22,10 +23,10 @@ export async function getAdminEditions(accessToken: string): Promise<ApiResponse
 
 export async function getAdminEdition(
   accessToken: string,
-  editionId: number | string,
-): Promise<ApiRequestResultLegacy<GetEditionAdminApiRequest>> {
-  return await performAuthenticatedApiRequestLegacy<GetEditionAdminApiRequest>(
-    `/admin/editions/${editionId}`,
+  editionId: UrlId,
+): Promise<ApiResponse<GetEditionAdminApiRequest>> {
+  return await performAuthenticatedApiRequest<GetEditionAdminApiRequest>(
+    `${ENDPOINT_ADMIN_EDITIONS}/${editionId}`,
     accessToken,
   );
 }
