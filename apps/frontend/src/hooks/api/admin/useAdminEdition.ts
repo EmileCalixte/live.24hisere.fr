@@ -4,13 +4,20 @@ import { getAdminEdition } from "../../../services/api/editionService";
 import type { UrlId } from "../../../types/utils/api";
 import { useRequiredAccessToken } from "../useRequiredAccessToken";
 
-export function useAdminEdition(editionId: UrlId): UseQueryResult<ApiResponse<GetEditionAdminApiRequest>> {
+export function useAdminEdition(editionId: UrlId | undefined): UseQueryResult<ApiResponse<GetEditionAdminApiRequest>> {
   const accessToken = useRequiredAccessToken();
 
   return useQuery({
     queryKey: ["getAdminEdition", editionId],
-    queryFn: async () => await getAdminEdition(accessToken, editionId),
+    queryFn: async () => {
+      if (editionId === undefined) {
+        return {};
+      }
+
+      return await getAdminEdition(accessToken, editionId);
+    },
     retry: false,
+    enabled: editionId !== undefined,
     meta: {
       notFoundToast: "Cette édition n'existe pas.",
       errorToast: "Une erreur est survenue lors de la récupération des détails de l'édition.",

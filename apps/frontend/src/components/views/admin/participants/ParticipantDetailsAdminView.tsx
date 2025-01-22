@@ -1,15 +1,15 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import type {
-  AdminEdition,
   AdminProcessedPassage,
   AdminRaceRunnerWithPassages,
   AdminRaceWithRunnerCount,
   AdminRunner,
   RaceRunner,
 } from "@live24hisere/core/types";
-import { getAdminEdition } from "../../../../services/api/editionService";
+import { useAdminEdition } from "../../../../hooks/api/admin/useAdminEdition";
+import { useRequiredParams } from "../../../../hooks/useRequiredParams";
 import { getAdminRaceRunner, patchAdminRaceRuner } from "../../../../services/api/participantService";
 import { deleteAdminPassage, patchAdminPassage, postAdminPassage } from "../../../../services/api/passageService";
 import { getAdminRace } from "../../../../services/api/raceService";
@@ -30,11 +30,13 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
 
   const { accessToken } = React.useContext(appContext).user;
 
-  const { raceId: urlRaceId, runnerId: urlRunnerId } = useParams();
+  const { raceId: urlRaceId, runnerId: urlRunnerId } = useRequiredParams(["raceId", "runnerId"]);
 
-  const [edition, setEdition] = React.useState<AdminEdition | undefined | null>(undefined);
   const [race, setRace] = React.useState<AdminRaceWithRunnerCount | undefined | null>(undefined);
   const [raceRunners, setRaceRunners] = React.useState<Array<RaceRunner<AdminRunner>> | undefined | null>(undefined);
+
+  const getEditionResult = useAdminEdition(race?.id);
+  const edition = getEditionResult.data?.edition;
 
   const [runner, setRunner] = React.useState<AdminRaceRunnerWithPassages | undefined | null>(undefined);
 
@@ -58,22 +60,6 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
 
     return getProcessedPassagesFromPassages(race, runner.passages);
   }, [race, runner]);
-
-  const fetchEdition = React.useCallback(async () => {
-    if (!race || !accessToken) {
-      return;
-    }
-
-    const result = await getAdminEdition(accessToken, race.editionId);
-
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de récupérer les détails de l'édition");
-      setEdition(null);
-      return;
-    }
-
-    setEdition(result.json.edition);
-  }, [accessToken, race]);
 
   const fetchRace = React.useCallback(async () => {
     if (!urlRaceId || !accessToken) {
@@ -244,10 +230,6 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
 
   const isBibNumberAvailable =
     participantBibNumber === runner?.bibNumber || !raceUnavailableBibNumbers.has(participantBibNumber);
-
-  React.useEffect(() => {
-    void fetchEdition();
-  }, [fetchEdition]);
 
   React.useEffect(() => {
     void fetchRace();
