@@ -1,9 +1,10 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import type { AdminRaceWithRunnerCount } from "@live24hisere/core/types";
 import { ApiError } from "../../../../errors/ApiError";
 import { useAdminEdition } from "../../../../hooks/api/admin/useAdminEdition";
+import { useRequiredParams } from "../../../../hooks/useRequiredParams";
 import { deleteAdminEdition, patchAdminEdition } from "../../../../services/api/editionService";
 import { getAdminEditionRaces } from "../../../../services/api/raceService";
 import { getEditionDetailsBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
@@ -20,9 +21,8 @@ export default function EditionDetailsAdminView(): React.ReactElement {
 
   const { accessToken } = React.useContext(appContext).user;
 
-  const { editionId: urlEditionId } = useParams();
+  const { editionId: urlEditionId } = useRequiredParams(["editionId"]);
 
-  // FIXME urlEditionId type
   const getEditionResult = useAdminEdition(urlEditionId);
   const edition = getEditionResult.data?.edition;
   const isEditionNotFound = getEditionResult.error instanceof ApiError && getEditionResult.error.statusCode === 404;
