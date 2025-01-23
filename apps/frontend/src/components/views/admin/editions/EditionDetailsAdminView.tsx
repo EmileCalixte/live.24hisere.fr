@@ -1,12 +1,12 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import type { AdminRaceWithRunnerCount } from "@live24hisere/core/types";
 import { ApiError } from "../../../../errors/ApiError";
+import { useDeleteAdminEdition } from "../../../../hooks/api/requests/admin/editions/useDeleteAdminEdition";
 import { useGetAdminEdition } from "../../../../hooks/api/requests/admin/editions/useGetAdminEdition";
 import { usePatchAdminEdition } from "../../../../hooks/api/requests/admin/editions/usePatchAdminEdition";
 import { useRequiredParams } from "../../../../hooks/useRequiredParams";
-import { deleteAdminEdition } from "../../../../services/api/editionService";
 import { getAdminEditionRaces } from "../../../../services/api/raceService";
 import { getEditionDetailsBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../../services/ToastService";
@@ -18,8 +18,6 @@ import EditionDetailsForm from "../../../viewParts/admin/editions/EditionDetails
 import EditionRaces from "../../../viewParts/admin/editions/EditionRaces";
 
 export default function EditionDetailsAdminView(): React.ReactElement {
-  const navigate = useNavigate();
-
   const { accessToken } = React.useContext(appContext).user;
 
   const { editionId: urlEditionId } = useRequiredParams(["editionId"]);
@@ -29,6 +27,7 @@ export default function EditionDetailsAdminView(): React.ReactElement {
   const isEditionNotFound = getEditionQuery.error instanceof ApiError && getEditionQuery.error.statusCode === 404;
 
   const patchEditionMutation = usePatchAdminEdition(edition?.id, getEditionQuery.refetch);
+  const deleteEditionMutation = useDeleteAdminEdition(edition?.id);
 
   const [races, setRaces] = React.useState<AdminRaceWithRunnerCount[] | null | undefined>(undefined);
 
@@ -87,12 +86,8 @@ export default function EditionDetailsAdminView(): React.ReactElement {
     void getEditionQuery.refetch();
   };
 
-  const deleteEdition = React.useCallback(async () => {
-    if (!edition || !accessToken) {
-      return;
-    }
-
-    if (edition.raceCount > 0) {
+  const deleteEdition = (): void => {
+    if (!edition || edition.raceCount > 0) {
       return;
     }
 
@@ -100,18 +95,10 @@ export default function EditionDetailsAdminView(): React.ReactElement {
       return;
     }
 
-    const result = await deleteAdminEdition(accessToken, edition.id);
+    deleteEditionMutation.mutate();
+  };
 
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Une erreur est survenue");
-      return;
-    }
-
-    ToastService.getToastr().success("Edition supprimée");
-    void navigate("/admin/editions");
-  }, [accessToken, edition, navigate]);
-
-  if (isEditionNotFound) {
+  if (isEditionNotFound || deleteEditionMutation.isSuccess) {
     return <Navigate to="/admin/editions" />;
   }
 
@@ -157,13 +144,7 @@ export default function EditionDetailsAdminView(): React.ReactElement {
                     <p>Cette action est irréversible.</p>
                   )}
 
-                  <button
-                    className="button red mt-3"
-                    disabled={edition.raceCount > 0}
-                    onClick={() => {
-                      void deleteEdition();
-                    }}
-                  >
+                  <button className="button red mt-3" disabled={edition.raceCount > 0} onClick={deleteEdition}>
                     Supprimer l'édition
                   </button>
                 </Col>

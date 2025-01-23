@@ -58,8 +58,8 @@ export async function patchAdminEdition(
 export async function deleteAdminEdition(
   accessToken: string,
   editionId: number | string,
-): Promise<ApiRequestResultLegacy<DeleteEditionAdminApiRequest>> {
-  return await performAuthenticatedApiRequestLegacy<DeleteEditionAdminApiRequest>(
+): Promise<ApiResponse<DeleteEditionAdminApiRequest>> {
+  return await performAuthenticatedApiRequest<DeleteEditionAdminApiRequest>(
     `/admin/editions/${editionId}`,
     accessToken,
     undefined,
