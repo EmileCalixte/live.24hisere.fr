@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import type { AdminEditionWithRaceCount } from "@live24hisere/core/types";
-import { useAdminEditions } from "../../../../hooks/api/admin/useAdminEditions";
+import { useGetAdminEditions } from "../../../../hooks/api/requests/admin/editions/useGetAdminEditions";
 import { putAdminEditionOrder } from "../../../../services/api/editionService";
 import { getEditionsBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../../services/ToastService";
@@ -19,9 +19,9 @@ import EditionListItem from "../../../viewParts/admin/editions/EditionListItem";
 export default function EditionsAdminView(): React.ReactElement {
   const { accessToken } = React.useContext(appContext).user;
 
-  const getEditionsResult = useAdminEditions();
+  const getEditionsQuery = useGetAdminEditions();
 
-  const editions = getEditionsResult.data?.editions;
+  const editions = getEditionsQuery.data?.editions;
 
   // Used when user is reordering the list
   const [sortingEditions, setSortingEditions] = React.useState<AdminEditionWithRaceCount[] | false>(false);
@@ -64,7 +64,7 @@ export default function EditionsAdminView(): React.ReactElement {
         <Col>{getEditionsBreadcrumbs()}</Col>
       </Row>
 
-      {getEditionsResult.isLoading && <CircularLoader />}
+      {getEditionsQuery.isLoading && <CircularLoader />}
 
       {editions && (
         <>

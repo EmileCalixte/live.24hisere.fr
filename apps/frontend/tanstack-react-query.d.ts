@@ -9,15 +9,22 @@ interface Meta extends Record<string, unknown> {
   notFoundToast?: string;
 
   /**
-   * A massage to display in a toast when the request fails
+   * A message to display in a toast when the request fails
    */
   errorToast?: string;
+}
+
+interface MutationMeta extends Meta {
+  /**
+   * A message to display in a toast when the request succeeds
+   */
+  successToast?: string;
 }
 
 declare module "@tanstack/react-query" {
   interface Register {
     defaultError: Error | ApiError | ApiTimeoutError;
     queryMeta: Meta;
-    mutationMeta: Meta;
+    mutationMeta: MutationMeta;
   }
 }

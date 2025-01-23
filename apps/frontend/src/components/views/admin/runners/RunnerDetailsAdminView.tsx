@@ -9,7 +9,7 @@ import type {
   Participant,
   RunnerWithRaceCount,
 } from "@live24hisere/core/types";
-import { useAdminEditions } from "../../../../hooks/api/admin/useAdminEditions";
+import { useGetAdminEditions } from "../../../../hooks/api/requests/admin/editions/useGetAdminEditions";
 import { getAdminRunnerParticipations } from "../../../../services/api/participantService";
 import { getAdminRaces } from "../../../../services/api/raceService";
 import { deleteAdminRunner, getAdminRunner, patchAdminRunner } from "../../../../services/api/runnerService";
@@ -29,8 +29,8 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
 
   const { runnerId: urlRunnerId } = useParams();
 
-  const getEditionsResult = useAdminEditions();
-  const editions = getEditionsResult.data?.editions;
+  const getEditionsQuery = useGetAdminEditions();
+  const editions = getEditionsQuery.data?.editions;
 
   const [races, setRaces] = React.useState<AdminRaceWithRunnerCount[] | undefined | null>(undefined);
   console.log(races);

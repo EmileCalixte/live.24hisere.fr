@@ -8,7 +8,7 @@ import type {
   AdminRunner,
   RaceRunner,
 } from "@live24hisere/core/types";
-import { useAdminEdition } from "../../../../hooks/api/admin/useAdminEdition";
+import { useGetAdminEdition } from "../../../../hooks/api/requests/admin/editions/useGetAdminEdition";
 import { useRequiredParams } from "../../../../hooks/useRequiredParams";
 import { getAdminRaceRunner, patchAdminRaceRuner } from "../../../../services/api/participantService";
 import { deleteAdminPassage, patchAdminPassage, postAdminPassage } from "../../../../services/api/passageService";
@@ -35,8 +35,11 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
   const [race, setRace] = React.useState<AdminRaceWithRunnerCount | undefined | null>(undefined);
   const [raceRunners, setRaceRunners] = React.useState<Array<RaceRunner<AdminRunner>> | undefined | null>(undefined);
 
-  const getEditionResult = useAdminEdition(race?.id);
-  const edition = getEditionResult.data?.edition;
+  const getEditionQuery = useGetAdminEdition(race?.editionId);
+  const edition = getEditionQuery.data?.edition;
+
+  console.log("RACE", race);
+  console.log("EDITION", edition);
 
   const [runner, setRunner] = React.useState<AdminRaceRunnerWithPassages | undefined | null>(undefined);
 

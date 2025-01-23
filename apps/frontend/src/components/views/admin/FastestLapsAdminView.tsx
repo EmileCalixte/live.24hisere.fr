@@ -8,7 +8,7 @@ import type {
   RaceDict,
   RaceRunner,
 } from "@live24hisere/core/types";
-import { useAdminEditions } from "../../../hooks/api/admin/useAdminEditions";
+import { useGetAdminEditions } from "../../../hooks/api/requests/admin/editions/useGetAdminEditions";
 import { getAdminRacePassages } from "../../../services/api/passageService";
 import { getAdminRaces } from "../../../services/api/raceService";
 import { getAdminRaceRunners } from "../../../services/api/runnerService";
@@ -42,8 +42,8 @@ export default function FastestLapsAdminView(): React.ReactElement {
   const [passages, setPassages] = React.useState<AdminPassageWithRunnerIdAndRaceId[] | false>(false);
 
   // false = not fetched yet
-  const getEditionsResult = useAdminEditions(true);
-  const editions = getEditionsResult.data?.editions;
+  const getEditionsQuery = useGetAdminEditions(true);
+  const editions = getEditionsQuery.data?.editions;
   const [races, setRaces] = React.useState<RaceDict<AdminRaceWithRunnerCount> | false>(false);
 
   // false = not fetched yet

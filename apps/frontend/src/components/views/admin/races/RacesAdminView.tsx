@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import type { AdminRaceWithRunnerCount } from "@live24hisere/core/types";
-import { useAdminEditions } from "../../../../hooks/api/admin/useAdminEditions";
+import { useGetAdminEditions } from "../../../../hooks/api/requests/admin/editions/useGetAdminEditions";
 import { getAdminRaces } from "../../../../services/api/raceService";
 import { getRacesBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../../services/ToastService";
@@ -20,8 +20,8 @@ export default function RacesAdminView(): React.ReactElement {
   // false = not fetched yet
   const [races, setRaces] = React.useState<AdminRaceWithRunnerCount[] | false>(false);
 
-  const getEditionsResult = useAdminEditions();
-  const editions = getEditionsResult.data?.editions;
+  const getEditionsQuery = useGetAdminEditions();
+  const editions = getEditionsQuery.data?.editions;
 
   const fetchRaces = React.useCallback(async () => {
     if (!accessToken) {

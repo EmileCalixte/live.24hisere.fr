@@ -10,6 +10,7 @@ export interface ApiRequest {
   response: object | undefined;
 }
 
+export type ApiPayload<T extends ApiRequest> = T["payload"];
 export type ApiResponse<T extends ApiRequest> = T["response"];
 
 /**

@@ -2,7 +2,7 @@ import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import type { AdminRace } from "@live24hisere/core/types";
-import { useAdminEditions } from "../../../../hooks/api/admin/useAdminEditions";
+import { useGetAdminEditions } from "../../../../hooks/api/requests/admin/editions/useGetAdminEditions";
 import { useRaceSelectOptions } from "../../../../hooks/useRaceSelectOptions";
 import { getAdminRaces, postAdminRace } from "../../../../services/api/raceService";
 import { getRaceCreateBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
@@ -20,8 +20,8 @@ export default function CreateRaceAdminView(): React.ReactElement {
 
   const { accessToken } = React.useContext(appContext).user;
 
-  const getEditionsResult = useAdminEditions();
-  const editions = getEditionsResult.data?.editions;
+  const getEditionsQuery = useGetAdminEditions();
+  const editions = getEditionsQuery.data?.editions;
 
   const [existingRaces, setExistingRaces] = React.useState<AdminRace[] | false>(false);
 

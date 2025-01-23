@@ -1,7 +1,7 @@
 import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import type { EditionWithRaceCount } from "@live24hisere/core/types";
-import { usePublicEditions } from "../../../hooks/api/public/usePublicEditions";
+import { useGetPublicEditions } from "../../../hooks/api/requests/public/editions/useGetPublicEditions";
 import { useSelectedEdition } from "../../../hooks/useSelectedEdition";
 import CircularLoader from "../../ui/CircularLoader";
 import EditionSelectorCard from "../../viewParts/EditionSelectorCard";
@@ -17,9 +17,9 @@ export const publicContext = React.createContext<PublicContext>({
 });
 
 export default function Public(): React.ReactElement {
-  const getEditionsResult = usePublicEditions();
+  const getEditionsQuery = useGetPublicEditions();
 
-  const editions = getEditionsResult.data?.editions;
+  const editions = getEditionsQuery.data?.editions;
 
   const { selectedEdition, setSelectedEditionId } = useSelectedEdition(editions);
 

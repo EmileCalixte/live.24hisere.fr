@@ -1,4 +1,4 @@
-import type { Query } from "@tanstack/react-query";
+import type { Mutation, Query } from "@tanstack/react-query";
 import type { ApiRequest, ApiRequestResultLegacy, ApiRequestResultOk } from "@live24hisere/core/types";
 import { ApiError } from "../errors/ApiError";
 import type { ApiTimeoutError } from "../errors/ApiTimeoutError";
@@ -38,7 +38,7 @@ export function isApiRequestResultOk<T extends ApiRequest>(
 
 export function getErrorMessageToDisplay(
   error: Error | ApiError | ApiTimeoutError,
-  query: Query<unknown, unknown, unknown>,
+  query: Query<unknown, unknown, unknown> | Mutation<unknown, unknown>,
 ): string | null {
   const is404 = error instanceof ApiError && error.statusCode === 404;
 

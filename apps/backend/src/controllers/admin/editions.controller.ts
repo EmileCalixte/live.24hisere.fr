@@ -42,6 +42,10 @@ export class EditionsController {
 
   @Post("/admin/editions")
   async createRace(@Body() editionDto: EditionDto): Promise<ApiResponse<PostEditionAdminApiRequest>> {
+    await new Promise((resolve) => {
+      setTimeout(resolve, 1000);
+    });
+
     await this.ensureEditionNameDoesNotExist(editionDto.name);
 
     const edition = await this.editionService.createEdition({

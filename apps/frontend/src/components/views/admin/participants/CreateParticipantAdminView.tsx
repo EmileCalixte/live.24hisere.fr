@@ -2,7 +2,7 @@ import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import type { AdminRaceWithRunnerCount, AdminRunner, RaceRunner } from "@live24hisere/core/types";
-import { useAdminEdition } from "../../../../hooks/api/admin/useAdminEdition";
+import { useGetAdminEdition } from "../../../../hooks/api/requests/admin/editions/useGetAdminEdition";
 import { useRequiredParams } from "../../../../hooks/useRequiredParams";
 import { postAdminRaceRunner } from "../../../../services/api/participantService";
 import { getAdminRace } from "../../../../services/api/raceService";
@@ -28,8 +28,8 @@ export default function CreateParticipantAdminView(): React.ReactElement {
   const [raceRunners, setRaceRunners] = React.useState<Array<RaceRunner<AdminRunner>> | undefined | null>(undefined);
   const [allRunners, setAllRunners] = React.useState<AdminRunner[] | undefined | null>(undefined);
 
-  const getEditionResult = useAdminEdition(race?.editionId);
-  const edition = getEditionResult.data?.edition;
+  const getEditionQuery = useGetAdminEdition(race?.editionId);
+  const edition = getEditionQuery.data?.edition;
 
   const [runnerId, setRunnerId] = React.useState<number | undefined>(undefined);
   const [bibNumber, setBibNumber] = React.useState<number | undefined>(undefined);

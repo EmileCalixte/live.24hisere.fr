@@ -3,9 +3,10 @@ import { Col, Row } from "react-bootstrap";
 import { Navigate, useNavigate } from "react-router-dom";
 import type { AdminRaceWithRunnerCount } from "@live24hisere/core/types";
 import { ApiError } from "../../../../errors/ApiError";
-import { useAdminEdition } from "../../../../hooks/api/admin/useAdminEdition";
+import { useGetAdminEdition } from "../../../../hooks/api/requests/admin/editions/useGetAdminEdition";
+import { usePatchAdminEdition } from "../../../../hooks/api/requests/admin/editions/usePatchAdminEdition";
 import { useRequiredParams } from "../../../../hooks/useRequiredParams";
-import { deleteAdminEdition, patchAdminEdition } from "../../../../services/api/editionService";
+import { deleteAdminEdition } from "../../../../services/api/editionService";
 import { getAdminEditionRaces } from "../../../../services/api/raceService";
 import { getEditionDetailsBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../../services/ToastService";
@@ -23,16 +24,16 @@ export default function EditionDetailsAdminView(): React.ReactElement {
 
   const { editionId: urlEditionId } = useRequiredParams(["editionId"]);
 
-  const getEditionResult = useAdminEdition(urlEditionId);
-  const edition = getEditionResult.data?.edition;
-  const isEditionNotFound = getEditionResult.error instanceof ApiError && getEditionResult.error.statusCode === 404;
+  const getEditionQuery = useGetAdminEdition(urlEditionId);
+  const edition = getEditionQuery.data?.edition;
+  const isEditionNotFound = getEditionQuery.error instanceof ApiError && getEditionQuery.error.statusCode === 404;
+
+  const patchEditionMutation = usePatchAdminEdition(edition?.id, getEditionQuery.refetch);
 
   const [races, setRaces] = React.useState<AdminRaceWithRunnerCount[] | null | undefined>(undefined);
 
   const [editionName, setEditionName] = React.useState("");
   const [isPublic, setIsPublic] = React.useState(false);
-
-  const [isSaving, setIsSaving] = React.useState(false);
 
   const unsavedChanges = React.useMemo(() => {
     if (!edition) {
@@ -73,32 +74,17 @@ export default function EditionDetailsAdminView(): React.ReactElement {
     void fetchRaces();
   }, [fetchRaces]);
 
-  const onSubmit = async (e: React.FormEvent): Promise<void> => {
+  const onSubmit: React.FormEventHandler = (e) => {
     e.preventDefault();
-
-    if (!edition || !accessToken) {
-      return;
-    }
-
-    setIsSaving(true);
 
     const body = {
       name: editionName,
       isPublic,
     };
 
-    const result = await patchAdminEdition(accessToken, edition.id, body);
+    patchEditionMutation.mutate(body);
 
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Une erreur est survenue");
-      setIsSaving(false);
-      return;
-    }
-
-    ToastService.getToastr().success("Paramètres de l'édition enregistrés");
-
-    await getEditionResult.refetch();
-    setIsSaving(false);
+    void getEditionQuery.refetch();
   };
 
   const deleteEdition = React.useCallback(async () => {
@@ -124,8 +110,6 @@ export default function EditionDetailsAdminView(): React.ReactElement {
     ToastService.getToastr().success("Edition supprimée");
     void navigate("/admin/editions");
   }, [accessToken, edition, navigate]);
-
-  console.log("ERROR", getEditionResult.error);
 
   if (isEditionNotFound) {
     return <Navigate to="/admin/editions" />;
@@ -154,7 +138,9 @@ export default function EditionDetailsAdminView(): React.ReactElement {
                     setName={setEditionName}
                     isPublic={isPublic}
                     setIsPublic={setIsPublic}
-                    submitButtonDisabled={isSaving || !unsavedChanges}
+                    submitButtonDisabled={
+                      patchEditionMutation.isPending || getEditionQuery.isPending || !unsavedChanges
+                    }
                   />
                 </Col>
               </Row>

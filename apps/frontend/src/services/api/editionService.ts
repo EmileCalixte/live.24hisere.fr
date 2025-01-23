@@ -34,23 +34,18 @@ export async function getAdminEdition(
 export async function postAdminEdition(
   accessToken: string,
   edition: PostEditionAdminApiRequest["payload"],
-): Promise<ApiRequestResultLegacy<PostEditionAdminApiRequest>> {
-  return await performAuthenticatedApiRequestLegacy<PostEditionAdminApiRequest>(
-    "/admin/editions",
-    accessToken,
-    edition,
-    {
-      method: "POST",
-    },
-  );
+): Promise<ApiResponse<PostEditionAdminApiRequest>> {
+  return await performAuthenticatedApiRequest<PostEditionAdminApiRequest>("/admin/editions", accessToken, edition, {
+    method: "POST",
+  });
 }
 
 export async function patchAdminEdition(
   accessToken: string,
-  editionId: number | string,
+  editionId: UrlId,
   edition: PatchEditionAdminApiRequest["payload"],
-): Promise<ApiRequestResultLegacy<PatchEditionAdminApiRequest>> {
-  return await performAuthenticatedApiRequestLegacy<PatchEditionAdminApiRequest>(
+): Promise<ApiResponse<PatchEditionAdminApiRequest>> {
+  return await performAuthenticatedApiRequest<PatchEditionAdminApiRequest>(
     `/admin/editions/${editionId}`,
     accessToken,
     edition,

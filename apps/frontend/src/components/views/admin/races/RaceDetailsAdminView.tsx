@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import type { AdminRaceWithRunnerCount, AdminRunner, RaceRunner } from "@live24hisere/core/types";
-import { useAdminEditions } from "../../../../hooks/api/admin/useAdminEditions";
+import { useGetAdminEditions } from "../../../../hooks/api/requests/admin/editions/useGetAdminEditions";
 import { deleteAdminRace, getAdminRace, patchAdminRace } from "../../../../services/api/raceService";
 import { getAdminRaceRunners } from "../../../../services/api/runnerService";
 import { getRaceDetailsBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
@@ -28,8 +28,8 @@ export default function RaceDetailsAdminView(): React.ReactElement {
   const [race, setRace] = React.useState<AdminRaceWithRunnerCount | undefined | null>(undefined);
   const [raceRunners, setRaceRunners] = React.useState<Array<RaceRunner<AdminRunner>> | undefined | null>(undefined);
 
-  const getEditionsResult = useAdminEditions();
-  const editions = getEditionsResult.data?.editions;
+  const getEditionsQuery = useGetAdminEditions();
+  const editions = getEditionsQuery.data?.editions;
 
   const [raceEditionId, setRaceEditionId] = React.useState(0);
   const [raceName, setRaceName] = React.useState("");

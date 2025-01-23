@@ -4,7 +4,7 @@ import { Checkbox } from "../../../ui/forms/Checkbox";
 import { Input } from "../../../ui/forms/Input";
 
 interface EditionDetailsFormProps {
-  onSubmit: (e: React.FormEvent) => Promise<void>;
+  onSubmit: (e: React.FormEvent) => void;
   name: string;
   setName: (name: string) => void;
   isPublic: boolean;
@@ -21,11 +21,7 @@ export default function EditionDetailsForm({
   submitButtonDisabled,
 }: EditionDetailsFormProps): React.ReactElement {
   return (
-    <form
-      onSubmit={(e) => {
-        void onSubmit(e);
-      }}
-    >
+    <form onSubmit={onSubmit}>
       <Input
         label="Nom"
         maxLength={EDITION_NAME_MAX_LENGTH}

@@ -1,4 +1,4 @@
-import { QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "bootstrap/dist/css/bootstrap-grid.css";
 import "bootstrap/dist/css/bootstrap-utilities.css";
 import { NuqsAdapter } from "nuqs/adapters/react";
@@ -31,6 +31,24 @@ const queryClient = new QueryClient({
       }
 
       console.error(error);
+    },
+  }),
+  mutationCache: new MutationCache({
+    onError: (error, _, __, mutation) => {
+      const errorMessage = getErrorMessageToDisplay(error, mutation);
+
+      if (errorMessage) {
+        ToastService.getToastr().error(errorMessage);
+      }
+
+      console.error(error);
+    },
+    onSuccess: (_, __, ___, mutation) => {
+      const successMessage = mutation.meta?.successToast;
+
+      if (successMessage) {
+        ToastService.getToastr().success(successMessage);
+      }
     },
   }),
 });
