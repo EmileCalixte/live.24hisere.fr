@@ -1,5 +1,4 @@
 import type {
-  ApiRequestResultLegacy,
   ApiResponse,
   DeleteEditionAdminApiRequest,
   GetEditionAdminApiRequest,
@@ -11,7 +10,7 @@ import type {
 } from "@live24hisere/core/types";
 import { ENDPOINT_ADMIN_EDITIONS, ENDPOINT_PUBLIC_EDITIONS } from "../../constants/api";
 import type { UrlId } from "../../types/utils/api";
-import { performApiRequest, performAuthenticatedApiRequest, performAuthenticatedApiRequestLegacy } from "./apiService";
+import { performApiRequest, performAuthenticatedApiRequest } from "./apiService";
 
 export async function getEditions(): Promise<ApiResponse<GetEditionsApiRequest>> {
   return await performApiRequest<GetEditionsApiRequest>(ENDPOINT_PUBLIC_EDITIONS);
@@ -70,8 +69,8 @@ export async function deleteAdminEdition(
 export async function putAdminEditionOrder(
   accessToken: string,
   editionOrder: PutEditionOrderAdminApiRequest["payload"],
-): Promise<ApiRequestResultLegacy<PutEditionOrderAdminApiRequest>> {
-  return await performAuthenticatedApiRequestLegacy<PutEditionOrderAdminApiRequest>(
+): Promise<ApiResponse<PutEditionOrderAdminApiRequest>> {
+  return await performAuthenticatedApiRequest<PutEditionOrderAdminApiRequest>(
     "/admin/editions-order",
     accessToken,
     editionOrder,

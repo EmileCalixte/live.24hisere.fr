@@ -5,11 +5,8 @@ import { Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import type { AdminEditionWithRaceCount } from "@live24hisere/core/types";
 import { useGetAdminEditions } from "../../../../hooks/api/requests/admin/editions/useGetAdminEditions";
-import { putAdminEditionOrder } from "../../../../services/api/editionService";
+import { usePutAdminEditionOrder } from "../../../../hooks/api/requests/admin/editions/usePutAdminEditionOrder";
 import { getEditionsBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
-import ToastService from "../../../../services/ToastService";
-import { isApiRequestResultOk } from "../../../../utils/apiUtils";
-import { appContext } from "../../../App";
 import SortListButtons from "../../../ui/buttons/SortListButtons";
 import CircularLoader from "../../../ui/CircularLoader";
 import SortList from "../../../ui/lists/SortList";
@@ -17,24 +14,23 @@ import Page from "../../../ui/Page";
 import EditionListItem from "../../../viewParts/admin/editions/EditionListItem";
 
 export default function EditionsAdminView(): React.ReactElement {
-  const { accessToken } = React.useContext(appContext).user;
-
   const getEditionsQuery = useGetAdminEditions();
 
   const editions = getEditionsQuery.data?.editions;
 
+  const putEditionOrderMutation = usePutAdminEditionOrder();
+
   // Used when user is reordering the list
   const [sortingEditions, setSortingEditions] = React.useState<AdminEditionWithRaceCount[] | false>(false);
   const [isSorting, setIsSorting] = React.useState(false);
-
   const [isSaving, setIsSaving] = React.useState(false);
 
   React.useEffect(() => {
     setSortingEditions(editions ?? []);
   }, [editions]);
 
-  const saveSort = React.useCallback(async () => {
-    if (!accessToken || !sortingEditions) {
+  const saveSort = (): void => {
+    if (!sortingEditions) {
       return;
     }
 
@@ -42,21 +38,15 @@ export default function EditionsAdminView(): React.ReactElement {
 
     const editionIds = sortingEditions.map((edition) => edition.id);
 
-    const result = await putAdminEditionOrder(accessToken, editionIds);
-
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de sauvegarder l'ordre des éditions");
-      setIsSaving(false);
-      return;
-    }
-
-    // TODO
-    // setEditions([...sortingEditions]);
-
-    ToastService.getToastr().success("L'ordre des éditions a été modifié");
-    setIsSorting(false);
-    setIsSaving(false);
-  }, [accessToken, sortingEditions]);
+    putEditionOrderMutation.mutate(editionIds, {
+      onSettled: () => {
+        void getEditionsQuery.refetch().finally(() => {
+          setIsSaving(false);
+          setIsSorting(false);
+        });
+      },
+    });
+  };
 
   return (
     <Page id="admin-editions" title="Éditions">
@@ -86,9 +76,7 @@ export default function EditionsAdminView(): React.ReactElement {
                   <SortListButtons
                     isSorting={isSorting}
                     setIsSorting={setIsSorting}
-                    saveSort={() => {
-                      void saveSort();
-                    }}
+                    saveSort={saveSort}
                     disabled={isSaving}
                     className="mt-4"
                   />
