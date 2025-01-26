@@ -1,6 +1,6 @@
-import type { ApiRequestResultLegacy, GetAppDataApiRequest } from "@live24hisere/core/types";
-import { performApiRequestLegacy } from "./apiService";
+import type { ApiResponse, GetAppDataApiRequest } from "@live24hisere/core/types";
+import { performApiRequest } from "./apiService";
 
-export async function getAppData(): Promise<ApiRequestResultLegacy<GetAppDataApiRequest>> {
-  return await performApiRequestLegacy<GetAppDataApiRequest>("/app-data");
+export async function getAppData(): Promise<ApiResponse<GetAppDataApiRequest>> {
+  return await performApiRequest<GetAppDataApiRequest>("/app-data");
 }

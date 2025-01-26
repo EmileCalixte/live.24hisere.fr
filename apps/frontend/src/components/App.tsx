@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import type React from "react";
-import { createContext, useCallback, useEffect, useState } from "react";
+import React, { createContext, useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { BrowserRouter, Navigate, Route, Routes, useMatch } from "react-router-dom";
 import type { PublicUser } from "@live24hisere/core/types";
 import { APP_BASE_TITLE } from "../constants/app";
-import { getAppData } from "../services/api/appDataService";
+import { useGetAppData } from "../hooks/api/requests/public/appData/useGetAppData";
 import { getCurrentUserInfo, logout as performLogoutRequest } from "../services/api/authService";
 import ToastService from "../services/ToastService";
 import { EVENT_API_REQUEST_ENDED, EVENT_API_REQUEST_STARTED, isApiRequestResultOk } from "../utils/apiUtils";
@@ -106,10 +105,10 @@ export const appContext = createContext<AppContext>({
   },
 });
 
-// Fetch app data every 20 seconds
-const FETCH_APP_DATA_INTERVAL_TIME = 20 * 1000;
-
 export default function App(): React.ReactElement {
+  const getAppDataQuery = useGetAppData();
+  const appData = getAppDataQuery.data;
+
   const [isLoading, setIsLoading] = useState(true);
   const [fetchLevel, setFetchLevel] = useState(0);
   const [fetchAppDataError, setFetchAppDataError] = useState<unknown>(null);
@@ -143,36 +142,21 @@ export default function App(): React.ReactElement {
     setAccessToken(null);
   }, []);
 
-  const fetchAppData = useCallback(async () => {
-    verbose("Fetching app data");
-
-    let result = null;
-
-    try {
-      result = await getAppData();
-      setFetchAppDataError(null);
-    } catch (e) {
-      setFetchAppDataError(e);
-      setIsLoading(false);
-      console.error(e);
+  React.useEffect(() => {
+    if (!appData) {
       return;
     }
 
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de récupérer les informations de l'application");
-      return;
-    }
+    verbose("App data", appData);
 
-    verbose("App data", result.json);
+    setIsAppEnabled(appData.isAppEnabled);
+    setDisabledAppMessage(appData.disabledAppMessage);
 
-    setIsAppEnabled(result.json.isAppEnabled);
-    setDisabledAppMessage(result.json.disabledAppMessage);
+    setCurrentEditionId(appData.currentEditionId);
 
-    setCurrentEditionId(result.json.currentEditionId);
+    setLastUpdateTime(new Date(appData.lastUpdateTime ?? 0));
 
-    setLastUpdateTime(new Date(result.json.lastUpdateTime ?? 0));
-
-    const serverTime = new Date(result.json.currentTime);
+    const serverTime = new Date(appData.currentTime);
     const clientTime = new Date();
 
     const timeOffsetMs = serverTime.getTime() - clientTime.getTime();
@@ -180,7 +164,11 @@ export default function App(): React.ReactElement {
     setServerTimeOffset(Math.round(timeOffsetMs / 1000));
 
     setIsLoading(false);
-  }, []);
+  }, [appData]);
+
+  React.useEffect(() => {
+    setFetchAppDataError(getAppDataQuery.error);
+  }, [getAppDataQuery.error]);
 
   const fetchUserInfo = useCallback(async () => {
     if (!accessToken) {
@@ -225,18 +213,6 @@ export default function App(): React.ReactElement {
       window.removeEventListener(EVENT_API_REQUEST_ENDED, decrementFetchLevel);
     };
   }, [incrementFetchLevel, decrementFetchLevel]);
-
-  useEffect(() => {
-    void fetchAppData();
-
-    const interval = setInterval(() => {
-      void fetchAppData();
-    }, FETCH_APP_DATA_INTERVAL_TIME);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, [fetchAppData]);
 
   useEffect(() => {
     if (accessToken === null) {
