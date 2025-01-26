@@ -29,7 +29,7 @@ export default function EditionsAdminView(): React.ReactElement {
     setSortingEditions(editions ?? []);
   }, [editions]);
 
-  const saveSort = (): void => {
+  function saveSort(): void {
     if (!sortingEditions) {
       return;
     }
@@ -46,7 +46,7 @@ export default function EditionsAdminView(): React.ReactElement {
         });
       },
     });
-  };
+  }
 
   return (
     <Page id="admin-editions" title="Éditions">

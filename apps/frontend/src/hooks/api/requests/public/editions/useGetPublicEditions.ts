@@ -1,9 +1,8 @@
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
-import type { ApiResponse, GetEditionsApiRequest } from "@live24hisere/core/types";
+import { useQuery } from "@tanstack/react-query";
 import { getEditions } from "../../../../../services/api/editionService";
 import { DEFAULT_FETCH_INTERVAL } from "../../../../useIntervalApiRequest";
 
-export function useGetPublicEditions(): UseQueryResult<ApiResponse<GetEditionsApiRequest>> {
+export function useGetPublicEditions() {
   return useQuery({
     queryKey: ["getPublicEditions"],
     queryFn: getEditions,

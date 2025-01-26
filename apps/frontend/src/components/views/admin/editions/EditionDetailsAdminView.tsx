@@ -1,35 +1,30 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { Navigate } from "react-router-dom";
-import type { AdminRaceWithRunnerCount } from "@live24hisere/core/types";
-import { ApiError } from "../../../../errors/ApiError";
 import { useDeleteAdminEdition } from "../../../../hooks/api/requests/admin/editions/useDeleteAdminEdition";
 import { useGetAdminEdition } from "../../../../hooks/api/requests/admin/editions/useGetAdminEdition";
 import { usePatchAdminEdition } from "../../../../hooks/api/requests/admin/editions/usePatchAdminEdition";
+import { useGetAdminEditionRaces } from "../../../../hooks/api/requests/admin/races/useGetAdminEditionRaces";
 import { useRequiredParams } from "../../../../hooks/useRequiredParams";
-import { getAdminEditionRaces } from "../../../../services/api/raceService";
 import { getEditionDetailsBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
-import ToastService from "../../../../services/ToastService";
-import { isApiRequestResultOk } from "../../../../utils/apiUtils";
-import { appContext } from "../../../App";
+import { is404Error } from "../../../../utils/apiUtils";
 import CircularLoader from "../../../ui/CircularLoader";
 import Page from "../../../ui/Page";
 import EditionDetailsForm from "../../../viewParts/admin/editions/EditionDetailsForm";
 import EditionRaces from "../../../viewParts/admin/editions/EditionRaces";
 
 export default function EditionDetailsAdminView(): React.ReactElement {
-  const { accessToken } = React.useContext(appContext).user;
-
   const { editionId: urlEditionId } = useRequiredParams(["editionId"]);
 
   const getEditionQuery = useGetAdminEdition(urlEditionId);
   const edition = getEditionQuery.data?.edition;
-  const isEditionNotFound = getEditionQuery.error instanceof ApiError && getEditionQuery.error.statusCode === 404;
+  const isEditionNotFound = is404Error(getEditionQuery.error);
 
   const patchEditionMutation = usePatchAdminEdition(edition?.id, getEditionQuery.refetch);
   const deleteEditionMutation = useDeleteAdminEdition(edition?.id);
 
-  const [races, setRaces] = React.useState<AdminRaceWithRunnerCount[] | null | undefined>(undefined);
+  const getRacesQuery = useGetAdminEditionRaces(edition?.id);
+  const races = getRacesQuery.data?.races;
 
   const [editionName, setEditionName] = React.useState("");
   const [isPublic, setIsPublic] = React.useState(false);
@@ -51,28 +46,6 @@ export default function EditionDetailsAdminView(): React.ReactElement {
     setIsPublic(edition.isPublic);
   }, [edition]);
 
-  const fetchRaces = React.useCallback(async () => {
-    if (!edition || !accessToken) {
-      return;
-    }
-
-    const result = await getAdminEditionRaces(accessToken, edition.id);
-
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de récupérer les courses de l'édition");
-      setRaces(null);
-      return;
-    }
-
-    const responseJson = result.json;
-
-    setRaces(responseJson.races);
-  }, [accessToken, edition]);
-
-  React.useEffect(() => {
-    void fetchRaces();
-  }, [fetchRaces]);
-
   const onSubmit: React.FormEventHandler = (e) => {
     e.preventDefault();
 
@@ -82,8 +55,6 @@ export default function EditionDetailsAdminView(): React.ReactElement {
     };
 
     patchEditionMutation.mutate(body);
-
-    void getEditionQuery.refetch();
   };
 
   const deleteEdition = (): void => {
@@ -132,7 +103,7 @@ export default function EditionDetailsAdminView(): React.ReactElement {
                 </Col>
               </Row>
 
-              <EditionRaces editionId={edition.id} races={races} setRaces={setRaces} />
+              <EditionRaces editionId={edition.id} races={races} getRacesQuery={getRacesQuery} />
 
               <Row>
                 <Col>

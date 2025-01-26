@@ -1,11 +1,8 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 import type { AdminRaceWithRunnerCount } from "@live24hisere/core/types";
-import { putAdminRaceOrder } from "../../../../services/api/raceService";
-import ToastService from "../../../../services/ToastService";
-import type { ReactStateSetter } from "../../../../types/utils/react";
-import { isApiRequestResultOk } from "../../../../utils/apiUtils";
-import { appContext } from "../../../App";
+import type { useGetAdminEditionRaces } from "../../../../hooks/api/requests/admin/races/useGetAdminEditionRaces";
+import { usePutAdminRaceOrder } from "../../../../hooks/api/requests/admin/races/usePutAdminRaceOrder";
 import SortListButtons from "../../../ui/buttons/SortListButtons";
 import CircularLoader from "../../../ui/CircularLoader";
 import SortList from "../../../ui/lists/SortList";
@@ -14,11 +11,11 @@ import RaceListItem from "../races/RaceListItem";
 interface EditionRacesProps {
   editionId: number;
   races: AdminRaceWithRunnerCount[] | null | undefined;
-  setRaces: ReactStateSetter<AdminRaceWithRunnerCount[] | null | undefined>;
+  getRacesQuery: ReturnType<typeof useGetAdminEditionRaces>;
 }
 
-export default function EditionRaces({ editionId, races, setRaces }: EditionRacesProps): React.ReactElement {
-  const { accessToken } = React.useContext(appContext).user;
+export default function EditionRaces({ editionId, races, getRacesQuery }: EditionRacesProps): React.ReactElement {
+  const putRaceOrderMutation = usePutAdminRaceOrder(editionId);
 
   // Used when user is reordering the list
   const [sortingRaces, setSortingRaces] = React.useState<AdminRaceWithRunnerCount[] | false>(false);
@@ -26,8 +23,8 @@ export default function EditionRaces({ editionId, races, setRaces }: EditionRace
 
   const [isSaving, setIsSaving] = React.useState(false);
 
-  const saveSort = React.useCallback(async () => {
-    if (!accessToken || !sortingRaces) {
+  function saveSort(): void {
+    if (!sortingRaces) {
       return;
     }
 
@@ -35,20 +32,15 @@ export default function EditionRaces({ editionId, races, setRaces }: EditionRace
 
     const raceIds = sortingRaces.map((race) => race.id);
 
-    const result = await putAdminRaceOrder(accessToken, editionId, raceIds);
-
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de sauvegarder l'ordre des courses");
-      setIsSaving(false);
-      return;
-    }
-
-    setRaces([...sortingRaces]);
-
-    ToastService.getToastr().success("L'ordre des courses a été modifié");
-    setIsSorting(false);
-    setIsSaving(false);
-  }, [accessToken, editionId, setRaces, sortingRaces]);
+    putRaceOrderMutation.mutate(raceIds, {
+      onSettled: () => {
+        void getRacesQuery.refetch().finally(() => {
+          setIsSaving(false);
+          setIsSorting(false);
+        });
+      },
+    });
+  }
 
   React.useEffect(() => {
     if (!races) {
@@ -82,9 +74,7 @@ export default function EditionRaces({ editionId, races, setRaces }: EditionRace
               <SortListButtons
                 isSorting={isSorting}
                 setIsSorting={setIsSorting}
-                saveSort={() => {
-                  void saveSort();
-                }}
+                saveSort={saveSort}
                 disabled={isSaving}
               />
 

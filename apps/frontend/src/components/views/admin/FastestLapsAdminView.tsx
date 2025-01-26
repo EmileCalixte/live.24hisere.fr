@@ -2,15 +2,13 @@ import React from "react";
 import { Col, Row } from "react-bootstrap";
 import type {
   AdminPassageWithRunnerIdAndRaceId,
-  AdminRaceWithRunnerCount,
   AdminRunner,
   ProcessedPassage,
-  RaceDict,
   RaceRunner,
 } from "@live24hisere/core/types";
 import { useGetAdminEditions } from "../../../hooks/api/requests/admin/editions/useGetAdminEditions";
+import { useGetAdminRaces } from "../../../hooks/api/requests/admin/races/useGetAdminRaces";
 import { getAdminRacePassages } from "../../../services/api/passageService";
-import { getAdminRaces } from "../../../services/api/raceService";
 import { getAdminRaceRunners } from "../../../services/api/runnerService";
 import { getFastestLapsBreadcrumbs } from "../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../services/ToastService";
@@ -41,10 +39,12 @@ export default function FastestLapsAdminView(): React.ReactElement {
   // false = not fetched yet
   const [passages, setPassages] = React.useState<AdminPassageWithRunnerIdAndRaceId[] | false>(false);
 
-  // false = not fetched yet
   const getEditionsQuery = useGetAdminEditions(true);
   const editions = getEditionsQuery.data?.editions;
-  const [races, setRaces] = React.useState<RaceDict<AdminRaceWithRunnerCount> | false>(false);
+
+  const getRacesQuery = useGetAdminRaces(true);
+  const races = getRacesQuery.data?.races;
+  const raceDict = React.useMemo(() => getRaceDictFromRaces(races ?? []), [races]);
 
   // false = not fetched yet
   const [runners, setRunners] = React.useState<Array<RaceRunner<AdminRunner>> | false>(false);
@@ -53,21 +53,6 @@ export default function FastestLapsAdminView(): React.ReactElement {
   const [selectedRaceId, setSelectedRaceId] = React.useState<number | undefined>(undefined);
 
   const [page, setPage] = React.useState(1);
-
-  const fetchRaces = React.useCallback(async () => {
-    if (!accessToken) {
-      return;
-    }
-
-    const result = await getAdminRaces(accessToken);
-
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de récupérer la liste des courses");
-      return;
-    }
-
-    setRaces(getRaceDictFromRaces(result.json.races));
-  }, [accessToken]);
 
   const fetchRunners = React.useCallback(async () => {
     if (!accessToken || selectedRaceId === undefined) {
@@ -101,18 +86,6 @@ export default function FastestLapsAdminView(): React.ReactElement {
     // The passages are already ordered by time
     setPassages(result.json.passages);
   }, [accessToken, selectedRaceId]);
-
-  React.useEffect(() => {
-    void fetchRaces();
-
-    const interval = setInterval(() => {
-      void fetchRaces();
-    }, RUNNERS_AND_RACES_FETCH_INTERVAL);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, [fetchRaces]);
 
   React.useEffect(() => {
     void fetchRunners();
@@ -353,11 +326,7 @@ export default function FastestLapsAdminView(): React.ReactElement {
 
               <Row>
                 <Col>
-                  <FastestLapsTable
-                    passages={passagesInPage}
-                    races={races as RaceDict}
-                    runners={runners as RaceRunner[]}
-                  />
+                  <FastestLapsTable passages={passagesInPage} races={raceDict} runners={runners as RaceRunner[]} />
                 </Col>
               </Row>
 

@@ -50,3 +50,11 @@ export function getErrorMessageToDisplay(
 
   return meta?.errorToast ?? null;
 }
+
+export function isApiError(error: unknown): error is ApiError {
+  return error instanceof ApiError;
+}
+
+export function is404Error(error: unknown): error is ApiError {
+  return isApiError(error) && error.statusCode === 404;
+}

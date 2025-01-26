@@ -1,10 +1,8 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { GENDER } from "@live24hisere/core/constants";
-import type { AdminRaceWithRunnerCount, Gender } from "@live24hisere/core/types";
-import { useStateWithNonNullableSetter } from "../../../../hooks/useStateWithNonNullableSetter";
-import { getAdminRaces } from "../../../../services/api/raceService";
+import type { Gender } from "@live24hisere/core/types";
 import { postAdminRunner } from "../../../../services/api/runnerService";
 import { getRunnerCreateBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../../services/ToastService";
@@ -18,49 +16,19 @@ export default function CreateRunnerAdminView(): React.ReactElement {
 
   const { accessToken } = useContext(appContext).user;
 
-  const [races, setRaces] = useState<AdminRaceWithRunnerCount[] | false>(false);
-
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [gender, setGender] = useState<Gender>(GENDER.M);
   const [birthYear, setBirthYear] = useState((new Date().getFullYear() - 30).toString());
   const [isPublic, setIsPublic] = React.useState(false);
-  const [raceId, setRaceId] = useStateWithNonNullableSetter<number | null>(null);
 
   const [isSaving, setIsSaving] = useState(false);
-
-  const fetchRaces = useCallback(async () => {
-    if (!accessToken) {
-      return;
-    }
-
-    const result = await getAdminRaces(accessToken);
-
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de récupérer la liste des courses");
-      return;
-    }
-
-    const responseRaces = result.json.races;
-
-    if (responseRaces.length < 1) {
-      ToastService.getToastr().warning(
-        "Aucune course n'a été créée. Au moins une course doit exister pour enregistrer un coureur.",
-      );
-    }
-
-    setRaces(responseRaces);
-
-    if (raceId === null && responseRaces.length > 0) {
-      setRaceId(responseRaces[0].id);
-    }
-  }, [accessToken, raceId, setRaceId]);
 
   const onSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
 
-      if (!accessToken || raceId === null) {
+      if (!accessToken) {
         return;
       }
 
@@ -72,7 +40,6 @@ export default function CreateRunnerAdminView(): React.ReactElement {
         gender,
         birthYear: parseInt(birthYear),
         isPublic,
-        raceId,
       };
 
       const result = await postAdminRunner(accessToken, body);
@@ -88,12 +55,8 @@ export default function CreateRunnerAdminView(): React.ReactElement {
       ToastService.getToastr().success("Coureur créé");
       void navigate(`/admin/runners/${id}`);
     },
-    [accessToken, raceId, firstname, lastname, gender, birthYear, isPublic, navigate],
+    [accessToken, firstname, lastname, gender, birthYear, isPublic, navigate],
   );
-
-  useEffect(() => {
-    void fetchRaces();
-  }, [fetchRaces]);
 
   return (
     <Page id="admin-create-runner" title="Créer un coureur">
@@ -119,7 +82,7 @@ export default function CreateRunnerAdminView(): React.ReactElement {
             setBirthYear={setBirthYear}
             isPublic={isPublic}
             setIsPublic={setIsPublic}
-            submitButtonDisabled={isSaving || (races && races.length < 1)}
+            submitButtonDisabled={isSaving}
           />
         </Col>
       </Row>

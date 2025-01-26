@@ -2,16 +2,10 @@ import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { GENDER } from "@live24hisere/core/constants";
-import type {
-  AdminRaceWithRunnerCount,
-  AdminRunner,
-  Gender,
-  Participant,
-  RunnerWithRaceCount,
-} from "@live24hisere/core/types";
+import type { AdminRunner, Gender, Participant, RunnerWithRaceCount } from "@live24hisere/core/types";
 import { useGetAdminEditions } from "../../../../hooks/api/requests/admin/editions/useGetAdminEditions";
+import { useGetAdminRaces } from "../../../../hooks/api/requests/admin/races/useGetAdminRaces";
 import { getAdminRunnerParticipations } from "../../../../services/api/participantService";
-import { getAdminRaces } from "../../../../services/api/raceService";
 import { deleteAdminRunner, getAdminRunner, patchAdminRunner } from "../../../../services/api/runnerService";
 import { getRunnerDetailsBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../../services/ToastService";
@@ -32,8 +26,8 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
   const getEditionsQuery = useGetAdminEditions();
   const editions = getEditionsQuery.data?.editions;
 
-  const [races, setRaces] = React.useState<AdminRaceWithRunnerCount[] | undefined | null>(undefined);
-  console.log(races);
+  const getRacesQuery = useGetAdminRaces();
+  const races = getRacesQuery.data?.races;
 
   const [runner, setRunner] = React.useState<RunnerWithRaceCount<AdminRunner> | undefined | null>(undefined);
 
@@ -60,21 +54,6 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
       runnerIsPublic === runner.isPublic,
     ].includes(false);
   }, [runner, runnerFirstname, runnerLastname, runnerGender, runnerBirthYear, runnerIsPublic]);
-
-  const fetchRaces = React.useCallback(async () => {
-    if (!accessToken) {
-      return;
-    }
-
-    const result = await getAdminRaces(accessToken);
-
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de récupérer la liste des courses");
-      return;
-    }
-
-    setRaces(result.json.races);
-  }, [accessToken]);
 
   const fetchRunner = React.useCallback(async () => {
     if (!urlRunnerId || !accessToken) {
@@ -114,10 +93,6 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
 
     setParticipations(result.json.participations);
   }, [accessToken, urlRunnerId]);
-
-  React.useEffect(() => {
-    void fetchRaces();
-  }, [fetchRaces]);
 
   React.useEffect(() => {
     void fetchRunner();

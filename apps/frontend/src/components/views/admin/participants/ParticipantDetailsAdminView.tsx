@@ -4,19 +4,18 @@ import { Link, useNavigate } from "react-router-dom";
 import type {
   AdminProcessedPassage,
   AdminRaceRunnerWithPassages,
-  AdminRaceWithRunnerCount,
   AdminRunner,
   RaceRunner,
 } from "@live24hisere/core/types";
 import { useGetAdminEdition } from "../../../../hooks/api/requests/admin/editions/useGetAdminEdition";
+import { useGetAdminRace } from "../../../../hooks/api/requests/admin/races/useGetAdminRace";
 import { useRequiredParams } from "../../../../hooks/useRequiredParams";
 import { getAdminRaceRunner, patchAdminRaceRuner } from "../../../../services/api/participantService";
 import { deleteAdminPassage, patchAdminPassage, postAdminPassage } from "../../../../services/api/passageService";
-import { getAdminRace } from "../../../../services/api/raceService";
 import { getAdminRaceRunners } from "../../../../services/api/runnerService";
 import { getParticipantBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../../services/ToastService";
-import { isApiRequestResultOk } from "../../../../utils/apiUtils";
+import { is404Error, isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { getProcessedPassagesFromPassages } from "../../../../utils/passageUtils";
 import { formatDateAsString, formatDateForApi } from "../../../../utils/utils";
 import { appContext } from "../../../App";
@@ -32,7 +31,10 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
 
   const { raceId: urlRaceId, runnerId: urlRunnerId } = useRequiredParams(["raceId", "runnerId"]);
 
-  const [race, setRace] = React.useState<AdminRaceWithRunnerCount | undefined | null>(undefined);
+  const getRaceQuery = useGetAdminRace(urlRaceId);
+  const race = getRaceQuery.data?.race;
+  const isRaceNotFound = is404Error(getRaceQuery.error);
+
   const [raceRunners, setRaceRunners] = React.useState<Array<RaceRunner<AdminRunner>> | undefined | null>(undefined);
 
   const getEditionQuery = useGetAdminEdition(race?.editionId);
@@ -64,22 +66,6 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
     return getProcessedPassagesFromPassages(race, runner.passages);
   }, [race, runner]);
 
-  const fetchRace = React.useCallback(async () => {
-    if (!urlRaceId || !accessToken) {
-      return;
-    }
-
-    const result = await getAdminRace(accessToken, urlRaceId);
-
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de récupérer les détails de la course");
-      setRace(null);
-      return;
-    }
-
-    setRace(result.json.race);
-  }, [accessToken, urlRaceId]);
-
   const fetchRaceRunners = React.useCallback(async () => {
     if (!urlRaceId || !accessToken) {
       return;
@@ -89,7 +75,6 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
 
     if (!isApiRequestResultOk(result)) {
       ToastService.getToastr().error("Impossible de récupérer les coureurs participant déjà à la course");
-      setRace(null);
       return;
     }
 
@@ -233,11 +218,6 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
 
   const isBibNumberAvailable =
     participantBibNumber === runner?.bibNumber || !raceUnavailableBibNumbers.has(participantBibNumber);
-
-  React.useEffect(() => {
-    void fetchRace();
-  }, [fetchRace]);
-
   React.useEffect(() => {
     void fetchRaceRunners();
   }, [fetchRaceRunners]);
@@ -275,7 +255,7 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
     [accessToken, participantBibNumber, participantIsStopped, race, runner],
   );
 
-  if (race === null) {
+  if (isRaceNotFound) {
     void navigate("/admin");
   }
 

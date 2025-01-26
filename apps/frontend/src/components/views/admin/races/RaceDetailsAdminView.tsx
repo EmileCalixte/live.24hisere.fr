@@ -2,15 +2,17 @@ import React from "react";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
-import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
-import type { AdminRaceWithRunnerCount, AdminRunner, RaceRunner } from "@live24hisere/core/types";
+import { Link, Navigate, useParams } from "react-router-dom";
+import type { AdminRunner, RaceRunner } from "@live24hisere/core/types";
 import { useGetAdminEditions } from "../../../../hooks/api/requests/admin/editions/useGetAdminEditions";
-import { deleteAdminRace, getAdminRace, patchAdminRace } from "../../../../services/api/raceService";
+import { useDeleteAdminRace } from "../../../../hooks/api/requests/admin/races/useDeleteAdminRace";
+import { useGetAdminRace } from "../../../../hooks/api/requests/admin/races/useGetAdminRace";
+import { usePatchAdminRace } from "../../../../hooks/api/requests/admin/races/usePatchAdminRace";
 import { getAdminRaceRunners } from "../../../../services/api/runnerService";
 import { getRaceDetailsBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../../services/ToastService";
 import type { SelectOption } from "../../../../types/Forms";
-import { isApiRequestResultOk } from "../../../../utils/apiUtils";
+import { is404Error, isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { formatDateForApi } from "../../../../utils/utils";
 import { appContext } from "../../../App";
 import CircularLoader from "../../../ui/CircularLoader";
@@ -19,13 +21,17 @@ import RaceDetailsForm from "../../../viewParts/admin/races/RaceDetailsForm";
 import RaceRunnersTable from "../../../viewParts/admin/races/RaceRunnersTable";
 
 export default function RaceDetailsAdminView(): React.ReactElement {
-  const navigate = useNavigate();
-
   const { accessToken } = React.useContext(appContext).user;
 
   const { raceId: urlRaceId } = useParams();
 
-  const [race, setRace] = React.useState<AdminRaceWithRunnerCount | undefined | null>(undefined);
+  const getRaceQuery = useGetAdminRace(urlRaceId);
+  const race = getRaceQuery.data?.race;
+  const isRaceNotFound = is404Error(getRaceQuery.error);
+
+  const patchRaceMutation = usePatchAdminRace(race?.id, getRaceQuery.refetch);
+  const deleteRaceMutation = useDeleteAdminRace(race?.id);
+
   const [raceRunners, setRaceRunners] = React.useState<Array<RaceRunner<AdminRunner>> | undefined | null>(undefined);
 
   const getEditionsQuery = useGetAdminEditions();
@@ -38,8 +44,6 @@ export default function RaceDetailsAdminView(): React.ReactElement {
   const [startTime, setStartTime] = React.useState(new Date(0));
   const [duration, setDuration] = React.useState(0);
   const [isPublic, setIsPublic] = React.useState(false);
-
-  const [isSaving, setIsSaving] = React.useState(false);
 
   const editionOptions = React.useMemo<Array<SelectOption<number>>>(() => {
     if (!editions) {
@@ -76,31 +80,19 @@ export default function RaceDetailsAdminView(): React.ReactElement {
     ].includes(false);
   }, [race, raceEditionId, raceName, initialDistance, lapDistance, startTime, duration, isPublic]);
 
-  const fetchRace = React.useCallback(async () => {
-    if (!urlRaceId || !accessToken) {
+  React.useEffect(() => {
+    if (!race) {
       return;
     }
 
-    const result = await getAdminRace(accessToken, urlRaceId);
-
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de récupérer les détails de la course");
-      setRace(null);
-      return;
-    }
-
-    const responseJson = result.json;
-
-    setRace(responseJson.race);
-
-    setRaceEditionId(responseJson.race.editionId);
-    setRaceName(responseJson.race.name);
-    setInitialDistance(responseJson.race.initialDistance);
-    setLapDistance(responseJson.race.lapDistance);
-    setStartTime(new Date(responseJson.race.startTime));
-    setDuration(responseJson.race.duration * 1000);
-    setIsPublic(responseJson.race.isPublic);
-  }, [accessToken, urlRaceId]);
+    setRaceEditionId(race.editionId);
+    setRaceName(race.name);
+    setInitialDistance(race.initialDistance);
+    setLapDistance(race.lapDistance);
+    setStartTime(new Date(race.startTime));
+    setDuration(race.duration * 1000);
+    setIsPublic(race.isPublic);
+  }, [race]);
 
   const fetchRaceRunners = React.useCallback(async () => {
     if (!urlRaceId || !accessToken) {
@@ -111,7 +103,6 @@ export default function RaceDetailsAdminView(): React.ReactElement {
 
     if (!isApiRequestResultOk(result)) {
       ToastService.getToastr().error("Impossible de récupérer les coureurs");
-      setRace(null);
       return;
     }
 
@@ -119,21 +110,11 @@ export default function RaceDetailsAdminView(): React.ReactElement {
   }, [accessToken, urlRaceId]);
 
   React.useEffect(() => {
-    void fetchRace();
-  }, [fetchRace]);
-
-  React.useEffect(() => {
     void fetchRaceRunners();
   }, [fetchRaceRunners]);
 
-  const onSubmit = async (e: React.FormEvent): Promise<void> => {
+  const onSubmit: React.FormEventHandler = (e) => {
     e.preventDefault();
-
-    if (!race || !accessToken) {
-      return;
-    }
-
-    setIsSaving(true);
 
     const body = {
       editionId: raceEditionId,
@@ -145,26 +126,11 @@ export default function RaceDetailsAdminView(): React.ReactElement {
       lapDistance: lapDistance.toString(),
     };
 
-    const result = await patchAdminRace(accessToken, race.id, body);
-
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Une erreur est survenue");
-      setIsSaving(false);
-      return;
-    }
-
-    ToastService.getToastr().success("Paramètres de la course enregistrés");
-
-    await fetchRace();
-    setIsSaving(false);
+    patchRaceMutation.mutate(body);
   };
 
-  const deleteRace = React.useCallback(async () => {
-    if (!race || !accessToken) {
-      return;
-    }
-
-    if (race.runnerCount > 0) {
+  function deleteRace(): void {
+    if (!race || race.runnerCount > 0) {
       return;
     }
 
@@ -172,18 +138,10 @@ export default function RaceDetailsAdminView(): React.ReactElement {
       return;
     }
 
-    const result = await deleteAdminRace(accessToken, race.id);
+    deleteRaceMutation.mutate();
+  }
 
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Une erreur est survenue");
-      return;
-    }
-
-    ToastService.getToastr().success("Course supprimée");
-    void navigate("/admin/races");
-  }, [accessToken, navigate, race]);
-
-  if (race === null) {
+  if (isRaceNotFound || deleteRaceMutation.isSuccess) {
     return <Navigate to="/admin/races" />;
   }
 
@@ -228,7 +186,7 @@ export default function RaceDetailsAdminView(): React.ReactElement {
                 setDuration={setDuration}
                 isPublic={isPublic}
                 setIsPublic={setIsPublic}
-                submitButtonDisabled={isSaving || !unsavedChanges}
+                submitButtonDisabled={patchRaceMutation.isPending || getRaceQuery.isPending || !unsavedChanges}
               />
             </Col>
           </Row>
@@ -270,13 +228,7 @@ export default function RaceDetailsAdminView(): React.ReactElement {
                 <p>Cette action est irréversible.</p>
               )}
 
-              <button
-                className="button red"
-                disabled={race.runnerCount > 0}
-                onClick={() => {
-                  void deleteRace();
-                }}
-              >
+              <button className="button red" disabled={race.runnerCount > 0} onClick={deleteRace}>
                 Supprimer la course
               </button>
             </Col>

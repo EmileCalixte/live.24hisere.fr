@@ -8,26 +8,22 @@ import type {
   PostEditionAdminApiRequest,
   PutEditionOrderAdminApiRequest,
 } from "@live24hisere/core/types";
-import { ENDPOINT_ADMIN_EDITIONS, ENDPOINT_PUBLIC_EDITIONS } from "../../constants/api";
 import type { UrlId } from "../../types/utils/api";
 import { performApiRequest, performAuthenticatedApiRequest } from "./apiService";
 
 export async function getEditions(): Promise<ApiResponse<GetEditionsApiRequest>> {
-  return await performApiRequest<GetEditionsApiRequest>(ENDPOINT_PUBLIC_EDITIONS);
+  return await performApiRequest<GetEditionsApiRequest>("/editions");
 }
 
 export async function getAdminEditions(accessToken: string): Promise<ApiResponse<GetEditionsAdminApiRequest>> {
-  return await performAuthenticatedApiRequest<GetEditionsAdminApiRequest>(ENDPOINT_ADMIN_EDITIONS, accessToken);
+  return await performAuthenticatedApiRequest<GetEditionsAdminApiRequest>("/admin/editions", accessToken);
 }
 
 export async function getAdminEdition(
   accessToken: string,
   editionId: UrlId,
 ): Promise<ApiResponse<GetEditionAdminApiRequest>> {
-  return await performAuthenticatedApiRequest<GetEditionAdminApiRequest>(
-    `${ENDPOINT_ADMIN_EDITIONS}/${editionId}`,
-    accessToken,
-  );
+  return await performAuthenticatedApiRequest<GetEditionAdminApiRequest>(`/admin/editions/${editionId}`, accessToken);
 }
 
 export async function postAdminEdition(
@@ -56,7 +52,7 @@ export async function patchAdminEdition(
 
 export async function deleteAdminEdition(
   accessToken: string,
-  editionId: number | string,
+  editionId: UrlId,
 ): Promise<ApiResponse<DeleteEditionAdminApiRequest>> {
   return await performAuthenticatedApiRequest<DeleteEditionAdminApiRequest>(
     `/admin/editions/${editionId}`,

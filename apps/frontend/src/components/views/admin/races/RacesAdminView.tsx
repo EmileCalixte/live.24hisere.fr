@@ -1,46 +1,21 @@
-import React from "react";
+import type React from "react";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import type { AdminRaceWithRunnerCount } from "@live24hisere/core/types";
 import { useGetAdminEditions } from "../../../../hooks/api/requests/admin/editions/useGetAdminEditions";
-import { getAdminRaces } from "../../../../services/api/raceService";
+import { useGetAdminRaces } from "../../../../hooks/api/requests/admin/races/useGetAdminRaces";
 import { getRacesBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
-import ToastService from "../../../../services/ToastService";
-import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { formatDateAsString, formatMsAsDuration } from "../../../../utils/utils";
-import { appContext } from "../../../App";
 import CircularLoader from "../../../ui/CircularLoader";
 import Page from "../../../ui/Page";
 
 export default function RacesAdminView(): React.ReactElement {
-  const { accessToken } = React.useContext(appContext).user;
-
-  // false = not fetched yet
-  const [races, setRaces] = React.useState<AdminRaceWithRunnerCount[] | false>(false);
+  const getRacesQuery = useGetAdminRaces();
+  const races = getRacesQuery.data?.races;
 
   const getEditionsQuery = useGetAdminEditions();
   const editions = getEditionsQuery.data?.editions;
-
-  const fetchRaces = React.useCallback(async () => {
-    if (!accessToken) {
-      return;
-    }
-
-    const result = await getAdminRaces(accessToken);
-
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de récupérer la liste des courses");
-      return;
-    }
-
-    setRaces(result.json.races);
-  }, [accessToken]);
-
-  React.useEffect(() => {
-    void fetchRaces();
-  }, [fetchRaces]);
 
   return (
     <Page id="admin-races" title="Courses">
@@ -48,9 +23,9 @@ export default function RacesAdminView(): React.ReactElement {
         <Col>{getRacesBreadcrumbs()}</Col>
       </Row>
 
-      {races === false && <CircularLoader />}
+      {getRacesQuery.isLoading && <CircularLoader />}
 
-      {races !== false && (
+      {races && (
         <>
           <Row>
             <Col>

@@ -19,14 +19,14 @@ import { objectUtils } from "@live24hisere/utils";
 import { RankingTimeMode } from "../../constants/rankingTimeMode";
 import { SearchParam } from "../../constants/searchParams";
 import "../../css/print-ranking-table.css";
+import { useGetPublicRaces } from "../../hooks/api/requests/public/races/useGetPublicRaces";
 import { useRankingTimeQueryString } from "../../hooks/queryString/useRankingTimeQueryString";
-import { useIntervalApiRequest, useIntervalSimpleApiRequest } from "../../hooks/useIntervalApiRequest";
+import { useIntervalSimpleApiRequest } from "../../hooks/useIntervalApiRequest";
 import { useRaceSelectOptions } from "../../hooks/useRaceSelectOptions";
 import { useRanking } from "../../hooks/useRanking";
 import { useWindowDimensions } from "../../hooks/useWindowDimensions";
 import { parseAsCategory } from "../../queryStringParsers/parseAsCategory";
 import { parseAsGender } from "../../queryStringParsers/parseAsGender";
-import { getRaces } from "../../services/api/raceService";
 import { getRaceRunners } from "../../services/api/runnerService";
 import { getProcessedPassagesFromPassages, getRunnerProcessedDataFromPassages } from "../../utils/passageUtils";
 import CircularLoader from "../ui/CircularLoader";
@@ -48,15 +48,8 @@ export default function RankingView(): React.ReactElement {
 
   const { width: windowWidth } = useWindowDimensions();
 
-  const racesRequestInput = React.useMemo(() => {
-    if (selectedEdition) {
-      return [getRaces, selectedEdition.id] as const;
-    }
-
-    return undefined;
-  }, [selectedEdition]);
-
-  const races = useIntervalApiRequest(racesRequestInput).json?.races;
+  const getRacesQuery = useGetPublicRaces(selectedEdition?.id);
+  const races = getRacesQuery.data?.races;
 
   const selectedRace = React.useMemo<RaceWithRunnerCount | null>(
     () => races?.find((race) => race.id === selectedRaceId) ?? null,
