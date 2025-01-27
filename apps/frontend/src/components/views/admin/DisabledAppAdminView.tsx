@@ -1,11 +1,9 @@
 import React from "react";
 import DOMPurify from "dompurify";
 import { Col, Row } from "react-bootstrap";
-import type { DisabledAppData } from "@live24hisere/core/types";
-import { getDisabledAppData, patchDisabledAppData } from "../../../services/api/configService";
+import { useGetDisabledAppData } from "../../../hooks/api/requests/admin/config/useGetDisabledAppData";
+import { usePatchDisabledAppData } from "../../../hooks/api/requests/admin/config/usePatchDisabledAppData";
 import { getDisabledAppBreadcrumbs } from "../../../services/breadcrumbs/breadcrumbService";
-import ToastService from "../../../services/ToastService";
-import { isApiRequestResultOk } from "../../../utils/apiUtils";
 import { appContext } from "../../App";
 import { Checkbox } from "../../ui/forms/Checkbox";
 import { TextArea } from "../../ui/forms/TextArea";
@@ -13,16 +11,16 @@ import Page from "../../ui/Page";
 
 export default function DisabledAppAdminView(): React.ReactElement {
   const {
-    user: { accessToken },
     appData: { setIsAppEnabled: setAppDataIsAppEnabled },
   } = React.useContext(appContext);
 
-  const [disabledAppData, setDisabledAppData] = React.useState<DisabledAppData | false>(false);
+  const getDisabledAppDataQuery = useGetDisabledAppData();
+  const disabledAppData = getDisabledAppDataQuery.data;
+
+  const patchDisabledAppDataMutation = usePatchDisabledAppData(getDisabledAppDataQuery.refetch);
 
   const [isAppEnabled, setIsAppEnabled] = React.useState(false);
   const [disabledAppMessage, setDisabledAppMessage] = React.useState("");
-
-  const [isSaving, setIsSaving] = React.useState(false);
 
   const unsavedChanges = React.useMemo(() => {
     if (!disabledAppData) {
@@ -35,56 +33,16 @@ export default function DisabledAppAdminView(): React.ReactElement {
     ].includes(false);
   }, [disabledAppData, disabledAppMessage, isAppEnabled]);
 
-  const fetchDisabledAppData = React.useCallback(async () => {
-    if (!accessToken) {
-      return;
-    }
+  const onSubmit: React.FormEventHandler = (e) => {
+    e.preventDefault();
 
-    const result = await getDisabledAppData(accessToken);
+    const body = {
+      isAppEnabled,
+      disabledAppMessage,
+    };
 
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de récupérer les données d'accès à l'application");
-      return;
-    }
-
-    setDisabledAppData(result.json);
-  }, [accessToken]);
-
-  React.useEffect(() => {
-    void fetchDisabledAppData();
-  }, [fetchDisabledAppData]);
-
-  const onSubmit = React.useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
-
-      if (!accessToken) {
-        return;
-      }
-
-      setIsSaving(true);
-
-      const body = {
-        isAppEnabled,
-        disabledAppMessage,
-      };
-
-      const result = await patchDisabledAppData(accessToken, body);
-
-      if (!isApiRequestResultOk(result)) {
-        ToastService.getToastr().error("Une erreur est survenue");
-        setIsSaving(false);
-        return;
-      }
-
-      ToastService.getToastr().success("Paramètres enregistrés");
-
-      setDisabledAppData(result.json);
-      setAppDataIsAppEnabled(result.json.isAppEnabled);
-      setIsSaving(false);
-    },
-    [accessToken, disabledAppMessage, isAppEnabled, setAppDataIsAppEnabled],
-  );
+    patchDisabledAppDataMutation.mutate(body);
+  };
 
   React.useEffect(() => {
     if (!disabledAppData) {
@@ -92,8 +50,9 @@ export default function DisabledAppAdminView(): React.ReactElement {
     }
 
     setIsAppEnabled(disabledAppData.isAppEnabled);
+    setAppDataIsAppEnabled(disabledAppData.isAppEnabled);
     setDisabledAppMessage(disabledAppData.disabledAppMessage ?? "");
-  }, [disabledAppData]);
+  }, [disabledAppData, setAppDataIsAppEnabled]);
 
   return (
     <Page id="admin-disabled-app" title="Accès à l'application">
@@ -103,11 +62,7 @@ export default function DisabledAppAdminView(): React.ReactElement {
 
       <Row>
         <Col>
-          <form
-            onSubmit={(e) => {
-              void onSubmit(e);
-            }}
-          >
+          <form onSubmit={onSubmit}>
             <Checkbox
               label="Application active"
               checked={isAppEnabled}
@@ -125,7 +80,11 @@ export default function DisabledAppAdminView(): React.ReactElement {
               className="mt-3"
             />
 
-            <button className="button mt-3" type="submit" disabled={isSaving || !unsavedChanges}>
+            <button
+              className="button mt-3"
+              type="submit"
+              disabled={getDisabledAppDataQuery.isPending || patchDisabledAppDataMutation.isPending || !unsavedChanges}
+            >
               Enregistrer
             </button>
           </form>
