@@ -8,10 +8,12 @@ import type {
   RaceRunner,
 } from "@live24hisere/core/types";
 import { useGetAdminEdition } from "../../../../hooks/api/requests/admin/editions/useGetAdminEdition";
+import { useDeleteAdminPassage } from "../../../../hooks/api/requests/admin/passages/useDeleteAdminPassage";
+import { usePatchAdminPassage } from "../../../../hooks/api/requests/admin/passages/usePatchAdminPassage";
+import { usePostAdminPassage } from "../../../../hooks/api/requests/admin/passages/usePostAdminPassage";
 import { useGetAdminRace } from "../../../../hooks/api/requests/admin/races/useGetAdminRace";
 import { useRequiredParams } from "../../../../hooks/useRequiredParams";
 import { getAdminRaceRunner, patchAdminRaceRuner } from "../../../../services/api/participantService";
-import { deleteAdminPassage, patchAdminPassage, postAdminPassage } from "../../../../services/api/passageService";
 import { getAdminRaceRunners } from "../../../../services/api/runnerService";
 import { getParticipantBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../../services/ToastService";
@@ -40,10 +42,11 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
   const getEditionQuery = useGetAdminEdition(race?.editionId);
   const edition = getEditionQuery.data?.edition;
 
-  console.log("RACE", race);
-  console.log("EDITION", edition);
-
   const [runner, setRunner] = React.useState<AdminRaceRunnerWithPassages | undefined | null>(undefined);
+
+  const postPassageMutation = usePostAdminPassage();
+  const patchPassageMutation = usePatchAdminPassage();
+  const deletePassageMutation = useDeleteAdminPassage();
 
   const [participantBibNumber, setParticipantBibNumber] = React.useState(0);
   const [participantIsStopped, setParticipantIsStopped] = React.useState(false);
@@ -102,111 +105,82 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
     setParticipantIsStopped(runner.stopped);
   }, [accessToken, urlRaceId, urlRunnerId]);
 
-  const updatePassageVisiblity = React.useCallback(
-    async (passage: AdminProcessedPassage, hidden: boolean) => {
-      if (!runner || !accessToken) {
-        return;
-      }
+  function updatePassageVisiblity(passage: AdminProcessedPassage, hidden: boolean): void {
+    if (!runner || !accessToken) {
+      return;
+    }
 
-      const confirmMessage = hidden
-        ? `Êtes vous sûr de vouloir masquer le passage n°${passage.id} (${formatDateAsString(passage.processed.lapEndTime)}) ?`
-        : `Êtes vous sûr de vouloir rendre public le passage n°${passage.id} (${formatDateAsString(passage.processed.lapEndTime)}) ?`;
+    const confirmMessage = hidden
+      ? `Êtes vous sûr de vouloir masquer le passage n°${passage.id} (${formatDateAsString(passage.processed.lapEndTime)}) ?`
+      : `Êtes vous sûr de vouloir rendre public le passage n°${passage.id} (${formatDateAsString(passage.processed.lapEndTime)}) ?`;
 
-      if (!window.confirm(confirmMessage)) {
-        return;
-      }
+    if (!window.confirm(confirmMessage)) {
+      return;
+    }
 
-      const result = await patchAdminPassage(accessToken, passage.id, { isHidden: hidden });
+    patchPassageMutation.mutate(
+      { passageId: passage.id, passage: { isHidden: hidden } },
+      {
+        onSuccess: () => {
+          void fetchRunner();
+        },
+      },
+    );
+  }
 
-      if (!isApiRequestResultOk(result)) {
-        ToastService.getToastr().error("Une erreur est survenue");
-        return;
-      }
+  function updatePassage(passage: AdminProcessedPassage, time: Date): void {
+    if (!runner || !accessToken) {
+      return;
+    }
 
-      ToastService.getToastr().success(hidden ? "Le passage a été masqué" : "Le passage n'est plus masqué");
+    patchPassageMutation.mutate(
+      { passageId: passage.id, passage: { time: formatDateForApi(time) } },
+      {
+        onSuccess: () => {
+          void fetchRunner();
+        },
+      },
+    );
+  }
 
-      void fetchRunner();
-    },
-    [accessToken, runner, fetchRunner],
-  );
+  function saveNewPassage(time: Date): void {
+    if (!race || !runner) {
+      return;
+    }
 
-  const updatePassage = React.useCallback(
-    async (passage: AdminProcessedPassage, time: Date) => {
-      if (!runner || !accessToken) {
-        return;
-      }
-
-      const result = await patchAdminPassage(accessToken, passage.id, {
-        time: formatDateForApi(time),
-      });
-
-      if (!isApiRequestResultOk(result)) {
-        ToastService.getToastr().error("Une erreur est survenue");
-        return;
-      }
-
-      ToastService.getToastr().success("Le temps de passage a bien été modifié");
-
-      void fetchRunner();
-    },
-    [accessToken, runner, fetchRunner],
-  );
-
-  const saveNewPassage = React.useCallback(
-    async (time: Date) => {
-      if (!race || !runner || !accessToken) {
-        return;
-      }
-
-      const result = await postAdminPassage(accessToken, {
+    postPassageMutation.mutate(
+      {
         raceId: race.id,
         runnerId: runner.id,
         isHidden: false,
         time: formatDateForApi(time),
-      });
+      },
+      {
+        onSuccess: () => {
+          void fetchRunner();
+        },
+      },
+    );
+  }
 
-      if (!isApiRequestResultOk(result)) {
-        ToastService.getToastr().error("Une erreur est survenue");
-        return;
-      }
+  function deletePassage(passage: AdminProcessedPassage): void {
+    let confirmMessage = `Êtes vous sûr de vouloir supprimer le passage n°${passage.id} (${formatDateAsString(passage.processed.lapEndTime)}) ?`;
 
-      ToastService.getToastr().success("Le passage a bien été créé");
+    if (passage.detectionId !== null) {
+      confirmMessage +=
+        "\n\nAttention, le passage ayant été importé depuis le système de chronométrage, il sera réimporté si il y est toujours présent. Préférez masquer le passage plutôt que de le supprimer si vous souhaitez qu'il n'apparaisse plus au public.";
+    }
 
-      void fetchRunner();
-    },
-    [accessToken, race, runner, fetchRunner],
-  );
+    if (!window.confirm(confirmMessage)) {
+      return;
+    }
 
-  const deletePassage = React.useCallback(
-    async (passage: AdminProcessedPassage) => {
-      if (!accessToken) {
-        return;
-      }
-
-      let confirmMessage = `Êtes vous sûr de vouloir supprimer le passage n°${passage.id} (${formatDateAsString(passage.processed.lapEndTime)}) ?`;
-
-      if (passage.detectionId !== null) {
-        confirmMessage +=
-          "\n\nAttention, le passage ayant été importé depuis le système de chronométrage, il sera réimporté si il y est toujours présent. Préférez masquer le passage plutôt que de le supprimer si vous souhaitez qu'il n'apparaisse plus au public.";
-      }
-
-      if (!window.confirm(confirmMessage)) {
-        return;
-      }
-
-      const result = await deleteAdminPassage(accessToken, passage.id);
-
-      if (!isApiRequestResultOk(result)) {
-        ToastService.getToastr().error("Une erreur est survenue");
-        return;
-      }
-
-      ToastService.getToastr().success("Le passage a été supprimé");
-
-      void fetchRunner();
-    },
-    [accessToken, fetchRunner],
-  );
+    deletePassageMutation.mutate(passage.id, {
+      onSuccess: () => {
+        void fetchRunner();
+      },
+    });
+  }
 
   const raceUnavailableBibNumbers = React.useMemo(() => {
     const bibNumbers = new Set<number>();

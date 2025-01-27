@@ -18,7 +18,7 @@ export function useGetAdminEditionRaces(editionId: UrlId | undefined) {
     retry: false,
     enabled: editionId !== undefined,
     meta: {
-      errorToast: "Une erreur est survenue lors de la récupération des courses de l'édition",
+      errorToast: "Une erreur est survenue lors de la récupération des courses de l'édition.",
     },
   });
 }

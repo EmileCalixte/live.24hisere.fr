@@ -7,8 +7,8 @@ import type {
   RaceRunner,
 } from "@live24hisere/core/types";
 import { useGetAdminEditions } from "../../../hooks/api/requests/admin/editions/useGetAdminEditions";
+import { useGetAdminRacePassages } from "../../../hooks/api/requests/admin/passages/useGetAdminRacePassages";
 import { useGetAdminRaces } from "../../../hooks/api/requests/admin/races/useGetAdminRaces";
-import { getAdminRacePassages } from "../../../services/api/passageService";
 import { getAdminRaceRunners } from "../../../services/api/runnerService";
 import { getFastestLapsBreadcrumbs } from "../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../services/ToastService";
@@ -31,13 +31,9 @@ type RunnerSortedProcessedPassages = Record<number, Array<ProcessedPassage<Admin
 const ITEMS_PER_PAGE = 100;
 
 const RUNNERS_AND_RACES_FETCH_INTERVAL = 60 * 1000;
-const PASSAGES_FETCH_INTERVAL = 20 * 1000;
 
 export default function FastestLapsAdminView(): React.ReactElement {
   const { accessToken } = React.useContext(appContext).user;
-
-  // false = not fetched yet
-  const [passages, setPassages] = React.useState<AdminPassageWithRunnerIdAndRaceId[] | false>(false);
 
   const getEditionsQuery = useGetAdminEditions(true);
   const editions = getEditionsQuery.data?.editions;
@@ -51,6 +47,9 @@ export default function FastestLapsAdminView(): React.ReactElement {
 
   const [displayOnlyOneFastestLapPerRunner, setDisplayOnlyOneFastestLapPerRunner] = React.useState(false);
   const [selectedRaceId, setSelectedRaceId] = React.useState<number | undefined>(undefined);
+
+  const getPassagesQuery = useGetAdminRacePassages(selectedRaceId, true);
+  const passages = getPassagesQuery.data?.passages;
 
   const [page, setPage] = React.useState(1);
 
@@ -69,24 +68,6 @@ export default function FastestLapsAdminView(): React.ReactElement {
     setRunners(result.json.runners);
   }, [accessToken, selectedRaceId]);
 
-  const fetchPassages = React.useCallback(async () => {
-    if (!accessToken || selectedRaceId === undefined) {
-      return;
-    }
-
-    setPassages(false);
-
-    const result = await getAdminRacePassages(accessToken, selectedRaceId);
-
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de récupérer la liste des passages de la course sélectionnée");
-      return;
-    }
-
-    // The passages are already ordered by time
-    setPassages(result.json.passages);
-  }, [accessToken, selectedRaceId]);
-
   React.useEffect(() => {
     void fetchRunners();
 
@@ -100,24 +81,12 @@ export default function FastestLapsAdminView(): React.ReactElement {
   }, [fetchRunners]);
 
   React.useEffect(() => {
-    void fetchPassages();
-
-    const interval = setInterval(() => {
-      void fetchPassages();
-    }, PASSAGES_FETCH_INTERVAL);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, [fetchPassages]);
-
-  React.useEffect(() => {
     setPage(1);
   }, [displayOnlyOneFastestLapPerRunner]);
 
-  const runnerSortedPassages = React.useMemo<RunnerSortedPassages | false>(() => {
+  const runnerSortedPassages = React.useMemo<RunnerSortedPassages | undefined>(() => {
     if (!passages) {
-      return false;
+      return;
     }
 
     const sortedPassages: RunnerSortedPassages = {};
