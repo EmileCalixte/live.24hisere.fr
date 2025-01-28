@@ -180,7 +180,7 @@ export default function RaceDetailsAdminView(): React.ReactElement {
 
           <Row>
             <Col>
-              <h3>Coureurs</h3>
+              <h3>Participants</h3>
 
               {raceRunners === undefined && <CircularLoader />}
 

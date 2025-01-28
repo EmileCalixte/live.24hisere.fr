@@ -2,17 +2,16 @@ import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { Navigate, useNavigate } from "react-router-dom";
 import { GENDER } from "@live24hisere/core/constants";
-import type { Gender, Participant } from "@live24hisere/core/types";
+import type { Gender } from "@live24hisere/core/types";
 import { useGetAdminEditions } from "../../../../hooks/api/requests/admin/editions/useGetAdminEditions";
+import { useGetAdminRunnerParticipations } from "../../../../hooks/api/requests/admin/participants/useGetAdminRunnerParticipations";
 import { useGetAdminRaces } from "../../../../hooks/api/requests/admin/races/useGetAdminRaces";
 import { useDeleteAdminRunner } from "../../../../hooks/api/requests/admin/runners/useDeleteAdminRunner";
 import { useGetAdminRunner } from "../../../../hooks/api/requests/admin/runners/useGetAdminRunner";
 import { usePatchAdminRunner } from "../../../../hooks/api/requests/admin/runners/usePatchAdminRunner";
 import { useRequiredParams } from "../../../../hooks/useRequiredParams";
-import { getAdminRunnerParticipations } from "../../../../services/api/participantService";
 import { getRunnerDetailsBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
-import ToastService from "../../../../services/ToastService";
-import { is404Error, isApiRequestResultOk } from "../../../../utils/apiUtils";
+import { is404Error } from "../../../../utils/apiUtils";
 import { appContext } from "../../../App";
 import CircularLoader from "../../../ui/CircularLoader";
 import Page from "../../../ui/Page";
@@ -30,6 +29,9 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
   const runner = getRunnerQuery.data?.runner;
   const isRunnerNotFound = is404Error(getRunnerQuery.error);
 
+  const getParticipationsQuery = useGetAdminRunnerParticipations(runner?.id);
+  const participations = getParticipationsQuery.data?.participations;
+
   const patchRunnerMutation = usePatchAdminRunner(runner?.id);
   const deleteRunnerMutation = useDeleteAdminRunner(runner?.id);
 
@@ -39,15 +41,11 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
   const getRacesQuery = useGetAdminRaces();
   const races = getRacesQuery.data?.races;
 
-  const [participations, setParticipations] = React.useState<Participant[] | undefined | null>(undefined);
-
   const [runnerFirstname, setRunnerFirstname] = React.useState("");
   const [runnerLastname, setRunnerLastname] = React.useState("");
   const [runnerGender, setRunnerGender] = React.useState<Gender>(GENDER.M);
   const [runnerBirthYear, setRunnerBirthYear] = React.useState("0");
   const [runnerIsPublic, setRunnerIsPublic] = React.useState(false);
-
-  const [isSaving, setIsSaving] = React.useState(false);
 
   const unsavedChanges = React.useMemo(() => {
     if (!runner) {
@@ -75,33 +73,12 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
     setRunnerIsPublic(runner.isPublic);
   }, [runner]);
 
-  const fetchParticipations = React.useCallback(async () => {
-    if (!urlRunnerId || !accessToken) {
-      return;
-    }
-
-    const result = await getAdminRunnerParticipations(accessToken, urlRunnerId);
-
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de récupérer les participations du coureur");
-      return;
-    }
-
-    setParticipations(result.json.participations);
-  }, [accessToken, urlRunnerId]);
-
-  React.useEffect(() => {
-    void fetchParticipations();
-  }, [fetchParticipations]);
-
   const onSubmit: React.FormEventHandler = (e) => {
     e.preventDefault();
 
     if (!runner || !accessToken) {
       return;
     }
-
-    setIsSaving(true);
 
     const body = {
       firstname: runnerFirstname,
@@ -170,7 +147,7 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
                 setBirthYear={setRunnerBirthYear}
                 isPublic={runnerIsPublic}
                 setIsPublic={setRunnerIsPublic}
-                submitButtonDisabled={isSaving || !unsavedChanges}
+                submitButtonDisabled={patchRunnerMutation.isPending || !unsavedChanges}
               />
             </Col>
           </Row>
