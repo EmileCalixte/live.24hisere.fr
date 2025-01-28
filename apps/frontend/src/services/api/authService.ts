@@ -1,10 +1,11 @@
 import type {
   ApiRequestResultLegacy,
+  ApiResponse,
   GetCurrentUserInfoApiRequest,
   LoginApiRequest,
   LogoutApiRequest,
 } from "@live24hisere/core/types";
-import { performApiRequestLegacy, performAuthenticatedApiRequestLegacy } from "./apiService";
+import { performApiRequest, performAuthenticatedApiRequest, performAuthenticatedApiRequestLegacy } from "./apiService";
 
 export async function getCurrentUserInfo(
   accessToken: string,
@@ -12,10 +13,12 @@ export async function getCurrentUserInfo(
   return await performAuthenticatedApiRequestLegacy("/auth/current-user-info", accessToken);
 }
 
-export async function login(username: string, password: string): Promise<ApiRequestResultLegacy<LoginApiRequest>> {
-  return await performApiRequestLegacy<LoginApiRequest>("/auth/login", { username, password }, { method: "POST" });
+export async function login(username: string, password: string): Promise<ApiResponse<LoginApiRequest>> {
+  return await performApiRequest<LoginApiRequest>("/auth/login", { username, password }, { method: "POST" });
 }
 
-export async function logout(accessToken: string): Promise<ApiRequestResultLegacy<LogoutApiRequest>> {
-  return await performAuthenticatedApiRequestLegacy("/auth/logout", accessToken, undefined, { method: "POST" });
+export async function logout(accessToken: string): Promise<ApiResponse<LogoutApiRequest>> {
+  return await performAuthenticatedApiRequest<LogoutApiRequest>("/auth/logout", accessToken, undefined, {
+    method: "POST",
+  });
 }

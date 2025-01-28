@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import React, { createContext, useCallback, useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
-import { BrowserRouter, Navigate, Route, Routes, useMatch } from "react-router-dom";
+import { Route, Routes, useMatch, useNavigate } from "react-router-dom";
 import type { PublicUser } from "@live24hisere/core/types";
 import { APP_BASE_TITLE } from "../constants/app";
+import { useLogout } from "../hooks/api/requests/auth/useLogout";
 import { useGetAppData } from "../hooks/api/requests/public/appData/useGetAppData";
-import { getCurrentUserInfo, logout as performLogoutRequest } from "../services/api/authService";
+import { getCurrentUserInfo } from "../services/api/authService";
 import ToastService from "../services/ToastService";
 import { EVENT_API_REQUEST_ENDED, EVENT_API_REQUEST_STARTED, isApiRequestResultOk } from "../utils/apiUtils";
 import { verbose } from "../utils/utils";
@@ -106,8 +107,12 @@ export const appContext = createContext<AppContext>({
 });
 
 export default function App(): React.ReactElement {
+  const navigate = useNavigate();
+
   const getAppDataQuery = useGetAppData();
   const appData = getAppDataQuery.data;
+
+  const logoutMutation = useLogout();
 
   const [isLoading, setIsLoading] = useState(true);
   const [fetchLevel, setFetchLevel] = useState(0);
@@ -119,7 +124,6 @@ export default function App(): React.ReactElement {
   const [currentEditionId, setCurrentEditionId] = useState<number | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(localStorage.getItem("accessToken"));
   const [user, setUser] = useState<PublicUser | null | undefined>(undefined); // If null, user is not logged in. If undefined, user info was not fetched yet
-  const [redirect, setRedirect] = useState<string | null>(null); // Used to redirect the user to a specified location, for example when user logs out
 
   const isLoginRoute = !!useMatch("/login");
   const isAdminRoute = !!useMatch("/admin/*");
@@ -191,18 +195,19 @@ export default function App(): React.ReactElement {
     setUser(result.json.user);
   }, [accessToken, forgetAccessToken]);
 
-  const logout = useCallback(() => {
-    if (accessToken) {
-      void performLogoutRequest(accessToken);
+  function logout(): void {
+    if (!accessToken) {
+      return;
     }
 
-    forgetAccessToken();
-
-    setUser(null);
-    setRedirect("/");
-
-    ToastService.getToastr().success("Vous avez été déconnecté");
-  }, [accessToken, forgetAccessToken]);
+    logoutMutation.mutate(accessToken, {
+      onSuccess: () => {
+        forgetAccessToken();
+        setUser(null);
+        void navigate("/");
+      },
+    });
+  }
 
   useEffect(() => {
     window.addEventListener(EVENT_API_REQUEST_STARTED, incrementFetchLevel);
@@ -222,16 +227,6 @@ export default function App(): React.ReactElement {
 
     void fetchUserInfo();
   }, [accessToken, fetchUserInfo]);
-
-  if (redirect !== null) {
-    setRedirect(null);
-
-    return (
-      <BrowserRouter>
-        <Navigate to={redirect} />
-      </BrowserRouter>
-    );
-  }
 
   const appContextValues: AppContext = {
     appData: {

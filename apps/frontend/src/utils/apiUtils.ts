@@ -42,9 +42,14 @@ export function getErrorMessageToDisplay(
   error: Error | ApiError | ApiTimeoutError,
   query: Query<unknown, unknown, unknown> | Mutation<unknown, unknown>,
 ): string | null {
-  const is404 = error instanceof ApiError && error.statusCode === 404;
+  const is401 = is401Error(error);
+  const is404 = is404Error(error);
 
   const meta = query.meta;
+
+  if (is401) {
+    return meta?.unauthorizedToast ?? meta?.errorToast ?? null;
+  }
 
   if (is404) {
     return meta?.notFoundToast ?? meta?.errorToast ?? null;
@@ -55,6 +60,10 @@ export function getErrorMessageToDisplay(
 
 export function isApiError(error: unknown): error is ApiError {
   return error instanceof ApiError;
+}
+
+export function is401Error(error: unknown): error is ApiError {
+  return isApiError(error) && error.statusCode === 401;
 }
 
 export function is404Error(error: unknown): error is ApiError {

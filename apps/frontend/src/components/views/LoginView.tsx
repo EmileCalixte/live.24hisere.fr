@@ -1,9 +1,7 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { Navigate } from "react-router-dom";
-import { login } from "../../services/api/authService";
-import ToastService from "../../services/ToastService";
-import { isApiRequestResultOk } from "../../utils/apiUtils";
+import { useLogin } from "../../hooks/api/requests/auth/useLogin";
 import { appContext } from "../App";
 import { Input } from "../ui/forms/Input";
 import Page from "../ui/Page";
@@ -11,32 +9,25 @@ import Page from "../ui/Page";
 export default function LoginView(): React.ReactElement {
   const { accessToken, saveAccessToken, setUser } = React.useContext(appContext).user;
 
+  const loginMutation = useLogin();
+
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const [submitButtonDisabled, setSubmitButtonDisabled] = React.useState(false);
   const [loggedIn, setLoggedIn] = React.useState(accessToken !== null);
 
-  const onSubmit = async (e: React.FormEvent): Promise<void> => {
+  const onSubmit: React.FormEventHandler = (e) => {
     e.preventDefault();
-    setSubmitButtonDisabled(true);
 
-    const result = await login(username, password);
-
-    if (!isApiRequestResultOk(result)) {
-      if (result.response.status === 403) {
-        ToastService.getToastr().error("Identifiants incorrects");
-      } else {
-        ToastService.getToastr().error("Une erreur est survenue");
-      }
-      setSubmitButtonDisabled(false);
-      return;
-    }
-
-    const accessToken = result.json.accessToken;
-
-    saveAccessToken(accessToken);
-    setUser(undefined); // Will be defined when the application has fetched user info
-    setLoggedIn(true);
+    loginMutation.mutate(
+      { username, password },
+      {
+        onSuccess: ({ accessToken }) => {
+          saveAccessToken(accessToken);
+          setUser(undefined); // Will be defined when the application has fetched user info
+          setLoggedIn(true);
+        },
+      },
+    );
   };
 
   if (loggedIn) {
@@ -48,11 +39,7 @@ export default function LoginView(): React.ReactElement {
       <Row>
         <Col xl={3} lg={4} md={6} sm={12}>
           <h1>Connexion</h1>
-          <form
-            onSubmit={(e) => {
-              void onSubmit(e);
-            }}
-          >
+          <form onSubmit={onSubmit}>
             <Input
               label="Nom d'utilisateur"
               name="username"
@@ -76,7 +63,7 @@ export default function LoginView(): React.ReactElement {
               }}
             />
 
-            <button className="button mt-3" type="submit" disabled={submitButtonDisabled}>
+            <button className="button mt-3" type="submit" disabled={loginMutation.isPending || !username || !password}>
               Connexion
             </button>
           </form>
