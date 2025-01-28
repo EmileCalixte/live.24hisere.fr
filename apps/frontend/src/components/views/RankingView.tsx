@@ -20,14 +20,13 @@ import { RankingTimeMode } from "../../constants/rankingTimeMode";
 import { SearchParam } from "../../constants/searchParams";
 import "../../css/print-ranking-table.css";
 import { useGetPublicRaces } from "../../hooks/api/requests/public/races/useGetPublicRaces";
+import { useGetPublicRaceRunners } from "../../hooks/api/requests/public/runners/useGetPublicRaceRunners";
 import { useRankingTimeQueryString } from "../../hooks/queryString/useRankingTimeQueryString";
-import { useIntervalSimpleApiRequest } from "../../hooks/useIntervalApiRequest";
 import { useRaceSelectOptions } from "../../hooks/useRaceSelectOptions";
 import { useRanking } from "../../hooks/useRanking";
 import { useWindowDimensions } from "../../hooks/useWindowDimensions";
 import { parseAsCategory } from "../../queryStringParsers/parseAsCategory";
 import { parseAsGender } from "../../queryStringParsers/parseAsGender";
-import { getRaceRunners } from "../../services/api/runnerService";
 import { getProcessedPassagesFromPassages, getRunnerProcessedDataFromPassages } from "../../utils/passageUtils";
 import CircularLoader from "../ui/CircularLoader";
 import Select from "../ui/forms/Select";
@@ -43,6 +42,9 @@ export default function RankingView(): React.ReactElement {
   const [selectedRaceId, setSelectedRaceId] = useQueryState(SearchParam.RACE, parseAsInteger);
   const [selectedCategoryCode, setSelectedCategory] = useQueryState(SearchParam.CATEGORY, parseAsCategory);
   const [selectedGender, setSelectedGender] = useQueryState(SearchParam.GENDER, parseAsGender);
+
+  const getRaceRunnersQuery = useGetPublicRaceRunners(selectedRaceId ?? undefined);
+  const runners = getRaceRunnersQuery.data?.runners;
 
   const { selectedEdition } = React.useContext(publicContext);
 
@@ -74,16 +76,6 @@ export default function RankingView(): React.ReactElement {
   } = useRankingTimeQueryString(selectedRace);
 
   const racesOptions = useRaceSelectOptions(races);
-
-  const fetchRunners = React.useMemo(() => {
-    if (!selectedRace) {
-      return;
-    }
-
-    return async () => await getRaceRunners(selectedRace.id);
-  }, [selectedRace]);
-
-  const runners = useIntervalSimpleApiRequest(fetchRunners).json?.runners;
 
   const processedRunners = React.useMemo<
     Array<RaceRunnerWithProcessedPassages & RaceRunnerWithProcessedData> | undefined

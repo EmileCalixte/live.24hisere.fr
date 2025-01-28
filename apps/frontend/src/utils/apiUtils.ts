@@ -29,6 +29,8 @@ export async function getResponseJson<T = unknown>(response: Response): Promise<
 
 /**
  * Returns true if the api request result was OK.
+ *
+ * @deprecated
  */
 export function isApiRequestResultOk<T extends ApiRequest>(
   result: ApiRequestResultLegacy<T>,

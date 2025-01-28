@@ -3,7 +3,7 @@ import type { ApiPayload, PatchPassageImportSettingsAdminApiRequest } from "@liv
 import { patchPassageImportSettings } from "../../../../../services/api/configService";
 import { useRequiredAccessToken } from "../../../useRequiredAccessToken";
 
-export function usePatchPassageImportSettings(refetch: (() => unknown) | undefined) {
+export function usePatchPassageImportSettings() {
   const accessToken = useRequiredAccessToken();
 
   return useMutation({
@@ -12,9 +12,6 @@ export function usePatchPassageImportSettings(refetch: (() => unknown) | undefin
     meta: {
       errorToast: "Une erreur est survenue lors de l'enregistrement des paramètres.",
       successToast: "Paramètres enregistrés.",
-    },
-    onSuccess: () => {
-      refetch?.();
     },
   });
 }

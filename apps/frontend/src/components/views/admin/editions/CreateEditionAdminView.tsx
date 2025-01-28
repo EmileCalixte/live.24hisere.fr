@@ -22,14 +22,12 @@ export default function CreateEditionAdminView(): React.ReactElement {
       isPublic,
     };
 
-    postEditionMutation.mutate(body);
+    postEditionMutation.mutate(body, {
+      onSuccess: ({ edition }) => {
+        void navigate(`/admin/editions/${edition.id}`);
+      },
+    });
   };
-
-  React.useEffect(() => {
-    if (postEditionMutation.isSuccess) {
-      void navigate(`/admin/editions/${postEditionMutation.data.edition.id}`);
-    }
-  }, [navigate, postEditionMutation.data?.edition.id, postEditionMutation.isSuccess]);
 
   return (
     <Page id="admin-create-edition" title="Créer une édition">

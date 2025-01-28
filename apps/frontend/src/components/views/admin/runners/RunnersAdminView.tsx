@@ -1,46 +1,21 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { faFileCsv, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import type { AdminRunner, RunnerWithRaceCount } from "@live24hisere/core/types";
 import { stringUtils } from "@live24hisere/utils";
-import { getAdminRunners } from "../../../../services/api/runnerService";
+import { useGetAdminRunners } from "../../../../hooks/api/requests/admin/runners/useGetAdminRunners";
 import { getRunnersBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
-import ToastService from "../../../../services/ToastService";
-import { isApiRequestResultOk } from "../../../../utils/apiUtils";
-import { appContext } from "../../../App";
 import CircularLoader from "../../../ui/CircularLoader";
 import { Input } from "../../../ui/forms/Input";
 import Page from "../../../ui/Page";
 import RunnersTable from "../../../viewParts/admin/runners/RunnersTable";
 
 export default function RunnersAdminView(): React.ReactElement {
-  const { accessToken } = React.useContext(appContext).user;
-
-  // false = not fetched yet
-  const [runners, setRunners] = React.useState<Array<RunnerWithRaceCount<AdminRunner>> | false>(false);
+  const getRunnersQuery = useGetAdminRunners();
+  const runners = getRunnersQuery.data?.runners;
 
   const [search, setSearch] = React.useState("");
-
-  const fetchRunners = useCallback(async () => {
-    if (!accessToken) {
-      return;
-    }
-
-    const result = await getAdminRunners(accessToken);
-
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de récupérer la liste des coureurs");
-      return;
-    }
-
-    setRunners(result.json.runners);
-  }, [accessToken]);
-
-  React.useEffect(() => {
-    void fetchRunners();
-  }, [fetchRunners]);
 
   const displayedRunners = React.useMemo(() => {
     if (!runners) {

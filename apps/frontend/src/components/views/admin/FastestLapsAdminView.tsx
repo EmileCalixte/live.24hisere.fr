@@ -1,22 +1,14 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
-import type {
-  AdminPassageWithRunnerIdAndRaceId,
-  AdminRunner,
-  ProcessedPassage,
-  RaceRunner,
-} from "@live24hisere/core/types";
+import type { AdminPassageWithRunnerIdAndRaceId, ProcessedPassage, RaceRunner } from "@live24hisere/core/types";
 import { useGetAdminEditions } from "../../../hooks/api/requests/admin/editions/useGetAdminEditions";
 import { useGetAdminRacePassages } from "../../../hooks/api/requests/admin/passages/useGetAdminRacePassages";
 import { useGetAdminRaces } from "../../../hooks/api/requests/admin/races/useGetAdminRaces";
-import { getAdminRaceRunners } from "../../../services/api/runnerService";
+import { useGetAdminRaceRunners } from "../../../hooks/api/requests/admin/runners/useGetAdminRaceRunners";
 import { getFastestLapsBreadcrumbs } from "../../../services/breadcrumbs/breadcrumbService";
-import ToastService from "../../../services/ToastService";
 import type { SelectOption } from "../../../types/Forms";
-import { isApiRequestResultOk } from "../../../utils/apiUtils";
 import { getProcessedPassagesFromPassages } from "../../../utils/passageUtils";
 import { getRaceDictFromRaces } from "../../../utils/raceUtils";
-import { appContext } from "../../App";
 import CircularLoader from "../../ui/CircularLoader";
 import { Checkbox } from "../../ui/forms/Checkbox";
 import Select from "../../ui/forms/Select";
@@ -30,11 +22,7 @@ type RunnerSortedProcessedPassages = Record<number, Array<ProcessedPassage<Admin
 
 const ITEMS_PER_PAGE = 100;
 
-const RUNNERS_AND_RACES_FETCH_INTERVAL = 60 * 1000;
-
 export default function FastestLapsAdminView(): React.ReactElement {
-  const { accessToken } = React.useContext(appContext).user;
-
   const getEditionsQuery = useGetAdminEditions(true);
   const editions = getEditionsQuery.data?.editions;
 
@@ -42,43 +30,16 @@ export default function FastestLapsAdminView(): React.ReactElement {
   const races = getRacesQuery.data?.races;
   const raceDict = React.useMemo(() => getRaceDictFromRaces(races ?? []), [races]);
 
-  // false = not fetched yet
-  const [runners, setRunners] = React.useState<Array<RaceRunner<AdminRunner>> | false>(false);
-
   const [displayOnlyOneFastestLapPerRunner, setDisplayOnlyOneFastestLapPerRunner] = React.useState(false);
   const [selectedRaceId, setSelectedRaceId] = React.useState<number | undefined>(undefined);
+
+  const getRunnersQuery = useGetAdminRaceRunners(selectedRaceId, true);
+  const runners = getRunnersQuery.data?.runners;
 
   const getPassagesQuery = useGetAdminRacePassages(selectedRaceId, true);
   const passages = getPassagesQuery.data?.passages;
 
   const [page, setPage] = React.useState(1);
-
-  const fetchRunners = React.useCallback(async () => {
-    if (!accessToken || selectedRaceId === undefined) {
-      return;
-    }
-
-    const result = await getAdminRaceRunners(accessToken, selectedRaceId);
-
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de récupérer la liste des coureurs");
-      return;
-    }
-
-    setRunners(result.json.runners);
-  }, [accessToken, selectedRaceId]);
-
-  React.useEffect(() => {
-    void fetchRunners();
-
-    const interval = setInterval(() => {
-      void fetchRunners();
-    }, RUNNERS_AND_RACES_FETCH_INTERVAL);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, [fetchRunners]);
 
   React.useEffect(() => {
     setPage(1);

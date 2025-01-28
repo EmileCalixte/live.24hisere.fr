@@ -4,7 +4,7 @@ import { patchAdminEdition } from "../../../../../services/api/editionService";
 import type { UrlId } from "../../../../../types/utils/api";
 import { useRequiredAccessToken } from "../../../useRequiredAccessToken";
 
-export function usePatchAdminEdition(editionId: UrlId | undefined, refetch: (() => unknown) | undefined) {
+export function usePatchAdminEdition(editionId: UrlId | undefined) {
   const accessToken = useRequiredAccessToken();
 
   return useMutation({
@@ -18,9 +18,6 @@ export function usePatchAdminEdition(editionId: UrlId | undefined, refetch: (() 
     meta: {
       errorToast: "Une erreur est survenue lors de l'enregistrement de l'édition.",
       successToast: "Édition enregistrée.",
-    },
-    onSuccess: () => {
-      refetch?.();
     },
   });
 }

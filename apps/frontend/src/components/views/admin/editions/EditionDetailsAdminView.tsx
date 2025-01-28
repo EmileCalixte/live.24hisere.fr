@@ -1,6 +1,6 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useDeleteAdminEdition } from "../../../../hooks/api/requests/admin/editions/useDeleteAdminEdition";
 import { useGetAdminEdition } from "../../../../hooks/api/requests/admin/editions/useGetAdminEdition";
 import { usePatchAdminEdition } from "../../../../hooks/api/requests/admin/editions/usePatchAdminEdition";
@@ -14,13 +14,15 @@ import EditionDetailsForm from "../../../viewParts/admin/editions/EditionDetails
 import EditionRaces from "../../../viewParts/admin/editions/EditionRaces";
 
 export default function EditionDetailsAdminView(): React.ReactElement {
+  const navigate = useNavigate();
+
   const { editionId: urlEditionId } = useRequiredParams(["editionId"]);
 
   const getEditionQuery = useGetAdminEdition(urlEditionId);
   const edition = getEditionQuery.data?.edition;
   const isEditionNotFound = is404Error(getEditionQuery.error);
 
-  const patchEditionMutation = usePatchAdminEdition(edition?.id, getEditionQuery.refetch);
+  const patchEditionMutation = usePatchAdminEdition(edition?.id);
   const deleteEditionMutation = useDeleteAdminEdition(edition?.id);
 
   const getRacesQuery = useGetAdminEditionRaces(edition?.id);
@@ -54,10 +56,14 @@ export default function EditionDetailsAdminView(): React.ReactElement {
       isPublic,
     };
 
-    patchEditionMutation.mutate(body);
+    patchEditionMutation.mutate(body, {
+      onSuccess: () => {
+        void getEditionQuery.refetch();
+      },
+    });
   };
 
-  const deleteEdition = (): void => {
+  function deleteEdition(): void {
     if (!edition || edition.raceCount > 0) {
       return;
     }
@@ -66,10 +72,14 @@ export default function EditionDetailsAdminView(): React.ReactElement {
       return;
     }
 
-    deleteEditionMutation.mutate();
-  };
+    deleteEditionMutation.mutate(undefined, {
+      onSuccess: () => {
+        void navigate("/admin/editions");
+      },
+    });
+  }
 
-  if (isEditionNotFound || deleteEditionMutation.isSuccess) {
+  if (isEditionNotFound) {
     return <Navigate to="/admin/editions" />;
   }
 

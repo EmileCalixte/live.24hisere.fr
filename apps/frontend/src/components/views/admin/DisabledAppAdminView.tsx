@@ -17,7 +17,7 @@ export default function DisabledAppAdminView(): React.ReactElement {
   const getDisabledAppDataQuery = useGetDisabledAppData();
   const disabledAppData = getDisabledAppDataQuery.data;
 
-  const patchDisabledAppDataMutation = usePatchDisabledAppData(getDisabledAppDataQuery.refetch);
+  const patchDisabledAppDataMutation = usePatchDisabledAppData();
 
   const [isAppEnabled, setIsAppEnabled] = React.useState(false);
   const [disabledAppMessage, setDisabledAppMessage] = React.useState("");
@@ -41,7 +41,11 @@ export default function DisabledAppAdminView(): React.ReactElement {
       disabledAppMessage,
     };
 
-    patchDisabledAppDataMutation.mutate(body);
+    patchDisabledAppDataMutation.mutate(body, {
+      onSuccess: () => {
+        void getDisabledAppDataQuery.refetch();
+      },
+    });
   };
 
   React.useEffect(() => {

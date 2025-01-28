@@ -3,7 +3,7 @@ import type { ApiPayload, PatchDisabledAppDataAdminApiRequest } from "@live24his
 import { patchDisabledAppData } from "../../../../../services/api/configService";
 import { useRequiredAccessToken } from "../../../useRequiredAccessToken";
 
-export function usePatchDisabledAppData(refetch: (() => unknown) | undefined) {
+export function usePatchDisabledAppData() {
   const accessToken = useRequiredAccessToken();
 
   return useMutation({
@@ -12,9 +12,6 @@ export function usePatchDisabledAppData(refetch: (() => unknown) | undefined) {
     meta: {
       errorToast: "Une erreur est survenue lors de l'enregistrement des paramètres.",
       successToast: "Paramètres enregistrés.",
-    },
-    onSuccess: () => {
-      refetch?.();
     },
   });
 }

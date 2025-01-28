@@ -4,7 +4,7 @@ import { patchAdminRace } from "../../../../../services/api/raceService";
 import type { UrlId } from "../../../../../types/utils/api";
 import { useRequiredAccessToken } from "../../../useRequiredAccessToken";
 
-export function usePatchAdminRace(raceId: UrlId | undefined, refetch: (() => unknown) | undefined) {
+export function usePatchAdminRace(raceId: UrlId | undefined) {
   const accessToken = useRequiredAccessToken();
 
   return useMutation({
@@ -18,9 +18,6 @@ export function usePatchAdminRace(raceId: UrlId | undefined, refetch: (() => unk
     meta: {
       errorToast: "Une erreur est survenue lors de l'enregistrement de la course.",
       successToast: "Course enregistrée.",
-    },
-    onSuccess: () => {
-      refetch?.();
     },
   });
 }

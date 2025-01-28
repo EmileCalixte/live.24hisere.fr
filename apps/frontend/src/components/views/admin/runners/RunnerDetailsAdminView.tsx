@@ -1,15 +1,18 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { GENDER } from "@live24hisere/core/constants";
-import type { AdminRunner, Gender, Participant, RunnerWithRaceCount } from "@live24hisere/core/types";
+import type { Gender, Participant } from "@live24hisere/core/types";
 import { useGetAdminEditions } from "../../../../hooks/api/requests/admin/editions/useGetAdminEditions";
 import { useGetAdminRaces } from "../../../../hooks/api/requests/admin/races/useGetAdminRaces";
+import { useDeleteAdminRunner } from "../../../../hooks/api/requests/admin/runners/useDeleteAdminRunner";
+import { useGetAdminRunner } from "../../../../hooks/api/requests/admin/runners/useGetAdminRunner";
+import { usePatchAdminRunner } from "../../../../hooks/api/requests/admin/runners/usePatchAdminRunner";
+import { useRequiredParams } from "../../../../hooks/useRequiredParams";
 import { getAdminRunnerParticipations } from "../../../../services/api/participantService";
-import { deleteAdminRunner, getAdminRunner, patchAdminRunner } from "../../../../services/api/runnerService";
 import { getRunnerDetailsBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../../services/ToastService";
-import { isApiRequestResultOk } from "../../../../utils/apiUtils";
+import { is404Error, isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { appContext } from "../../../App";
 import CircularLoader from "../../../ui/CircularLoader";
 import Page from "../../../ui/Page";
@@ -21,15 +24,20 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
 
   const { accessToken } = React.useContext(appContext).user;
 
-  const { runnerId: urlRunnerId } = useParams();
+  const { runnerId: urlRunnerId } = useRequiredParams(["runnerId"]);
+
+  const getRunnerQuery = useGetAdminRunner(urlRunnerId);
+  const runner = getRunnerQuery.data?.runner;
+  const isRunnerNotFound = is404Error(getRunnerQuery.error);
+
+  const patchRunnerMutation = usePatchAdminRunner(runner?.id);
+  const deleteRunnerMutation = useDeleteAdminRunner(runner?.id);
 
   const getEditionsQuery = useGetAdminEditions();
   const editions = getEditionsQuery.data?.editions;
 
   const getRacesQuery = useGetAdminRaces();
   const races = getRacesQuery.data?.races;
-
-  const [runner, setRunner] = React.useState<RunnerWithRaceCount<AdminRunner> | undefined | null>(undefined);
 
   const [participations, setParticipations] = React.useState<Participant[] | undefined | null>(undefined);
 
@@ -55,29 +63,17 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
     ].includes(false);
   }, [runner, runnerFirstname, runnerLastname, runnerGender, runnerBirthYear, runnerIsPublic]);
 
-  const fetchRunner = React.useCallback(async () => {
-    if (!urlRunnerId || !accessToken) {
+  React.useEffect(() => {
+    if (!runner) {
       return;
     }
-
-    const result = await getAdminRunner(accessToken, urlRunnerId);
-
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de récupérer les détails du coureur");
-      setRunner(null);
-      return;
-    }
-
-    const runner = result.json.runner;
-
-    setRunner(runner);
 
     setRunnerFirstname(runner.firstname);
     setRunnerLastname(runner.lastname);
     setRunnerGender(runner.gender);
     setRunnerBirthYear(runner.birthYear);
     setRunnerIsPublic(runner.isPublic);
-  }, [accessToken, urlRunnerId]);
+  }, [runner]);
 
   const fetchParticipations = React.useCallback(async () => {
     if (!urlRunnerId || !accessToken) {
@@ -95,69 +91,46 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
   }, [accessToken, urlRunnerId]);
 
   React.useEffect(() => {
-    void fetchRunner();
-  }, [fetchRunner]);
-
-  React.useEffect(() => {
     void fetchParticipations();
   }, [fetchParticipations]);
 
-  const onSubmit = React.useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
+  const onSubmit: React.FormEventHandler = (e) => {
+    e.preventDefault();
 
-      if (!runner || !accessToken) {
-        return;
-      }
-
-      setIsSaving(true);
-
-      const body = {
-        firstname: runnerFirstname,
-        lastname: runnerLastname,
-        birthYear: parseInt(runnerBirthYear),
-        gender: runnerGender,
-        isPublic: runnerIsPublic,
-      };
-
-      const result = await patchAdminRunner(accessToken, runner.id, body);
-
-      if (!isApiRequestResultOk(result)) {
-        ToastService.getToastr().error("Une erreur est survenue");
-        setIsSaving(false);
-        return;
-      }
-
-      ToastService.getToastr().success("Détails du coureur enregistrés");
-
-      setIsSaving(false);
-
-      setRunner(result.json.runner);
-    },
-    [runner, accessToken, runnerFirstname, runnerLastname, runnerBirthYear, runnerGender, runnerIsPublic],
-  );
-
-  const deleteRunner = React.useCallback(async () => {
     if (!runner || !accessToken) {
       return;
     }
 
+    setIsSaving(true);
+
+    const body = {
+      firstname: runnerFirstname,
+      lastname: runnerLastname,
+      birthYear: parseInt(runnerBirthYear),
+      gender: runnerGender,
+      isPublic: runnerIsPublic,
+    };
+
+    patchRunnerMutation.mutate(body, {
+      onSuccess: () => {
+        void getRunnerQuery.refetch();
+      },
+    });
+  };
+
+  function deleteRunner(): void {
     if (!window.confirm("Êtes-vous sûr de vouloir supprimer ce coureur ?")) {
       return;
     }
 
-    const result = await deleteAdminRunner(accessToken, runner.id);
+    deleteRunnerMutation.mutate(undefined, {
+      onSuccess: () => {
+        void navigate("/admin/runners");
+      },
+    });
+  }
 
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Une erreur est survenue");
-      return;
-    }
-
-    ToastService.getToastr().success("Coureur supprimé");
-    void navigate("/admin/runners");
-  }, [accessToken, navigate, runner]);
-
-  if (runner === null) {
+  if (isRunnerNotFound) {
     return <Navigate to="/admin/runners" />;
   }
 
@@ -186,9 +159,7 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
               <h3>Détails du coureur</h3>
 
               <RunnerDetailsForm
-                onSubmit={(e) => {
-                  void onSubmit(e);
-                }}
+                onSubmit={onSubmit}
                 firstname={runnerFirstname}
                 setFirstname={setRunnerFirstname}
                 lastname={runnerLastname}
@@ -233,12 +204,7 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
                 action est irréversible.
               </p>
 
-              <button
-                className="button red"
-                onClick={() => {
-                  void deleteRunner();
-                }}
-              >
+              <button className="button red" onClick={deleteRunner}>
                 Supprimer le coureur
               </button>
             </Col>

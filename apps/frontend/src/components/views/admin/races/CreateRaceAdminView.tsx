@@ -87,14 +87,12 @@ export default function CreateRaceAdminView(): React.ReactElement {
       lapDistance: lapDistance.toString(),
     };
 
-    postRaceMutation.mutate(body);
+    postRaceMutation.mutate(body, {
+      onSuccess: ({ race }) => {
+        void navigate(`/admin/races/${race.id}`);
+      },
+    });
   };
-
-  React.useEffect(() => {
-    if (postRaceMutation.isSuccess) {
-      void navigate(`/admin/races/${postRaceMutation.data.race.id}`);
-    }
-  }, [navigate, postRaceMutation.data?.race.id, postRaceMutation.isSuccess]);
 
   return (
     <Page id="admin-create-race" title="Créer une course">

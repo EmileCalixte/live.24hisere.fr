@@ -8,12 +8,9 @@ import { stringUtils } from "@live24hisere/utils";
 import { GENDER_OPTIONS } from "../../../../constants/forms";
 import { ImportCsvColumn } from "../../../../constants/importCsv";
 import { useGetAdminRaces } from "../../../../hooks/api/requests/admin/races/useGetAdminRaces";
-import { getAdminRunners } from "../../../../services/api/runnerService";
 import { getImportRunnersCsvBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
-import ToastService from "../../../../services/ToastService";
 import type { SelectOption } from "../../../../types/Forms";
 import type { RunnerFromCsv, RunnersCsvMapping } from "../../../../types/ImportCsv";
-import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { getRunnerFromCsv, parseCsv } from "../../../../utils/csvUtils";
 import { appContext } from "../../../App";
 import { Input } from "../../../ui/forms/Input";
@@ -104,21 +101,6 @@ export default function ImportRunnersCsvView(): React.ReactElement {
     return body;
   }, [csvData]);
 
-  const fetchRunners = React.useCallback(async () => {
-    if (!accessToken) {
-      return;
-    }
-
-    const result = await getAdminRunners(accessToken);
-
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de récupérer la liste des coureurs");
-      // return;
-    }
-
-    // setRunners(result.json.runners);
-  }, [accessToken]);
-
   const raceOptions = React.useMemo<Array<SelectOption<number>>>(() => {
     if (!races) {
       return [];
@@ -185,10 +167,6 @@ export default function ImportRunnersCsvView(): React.ReactElement {
 
     return true;
   }, [existingRunnerIds, runnerToImportIdCounts, runnersToImport, selectedRaceId]);
-
-  React.useEffect(() => {
-    void fetchRunners();
-  }, [fetchRunners]);
 
   // When CSV file content changes, reset mapping
   React.useEffect(() => {
@@ -325,8 +303,8 @@ export default function ImportRunnersCsvView(): React.ReactElement {
 
     // ToastService.getToastr().success(`${result.json.count} coureurs importés`);
     clearFileInput();
-    void fetchRunners();
-  }, [accessToken, clearFileInput, fetchRunners, runnersToImport, selectedRaceId]);
+    // void fetchRunners();
+  }, [accessToken, clearFileInput, runnersToImport, selectedRaceId]);
 
   const runnersToImportCount = runnersToImport.filter(({ toImport }) => toImport).length;
   const runnersFromCsvCount = runnersFromCsv.length;

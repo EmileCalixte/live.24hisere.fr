@@ -35,6 +35,9 @@ export interface ApiRequestResultLegacy<T extends ApiRequest> {
   json: T["response"] | undefined;
 }
 
+/**
+ * @deprecated
+ */
 export interface ApiRequestResultOk<T extends ApiRequest> extends ApiRequestResultLegacy<T> {
   isOk: true;
   json: ApiResponse<T>;

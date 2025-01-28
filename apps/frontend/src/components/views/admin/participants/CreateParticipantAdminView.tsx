@@ -1,12 +1,13 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import type { AdminRunner, RaceRunner } from "@live24hisere/core/types";
+import type { AdminRunner } from "@live24hisere/core/types";
 import { useGetAdminEdition } from "../../../../hooks/api/requests/admin/editions/useGetAdminEdition";
 import { useGetAdminRace } from "../../../../hooks/api/requests/admin/races/useGetAdminRace";
+import { useGetAdminRaceRunners } from "../../../../hooks/api/requests/admin/runners/useGetAdminRaceRunners";
+import { useGetAdminRunners } from "../../../../hooks/api/requests/admin/runners/useGetAdminRunners";
 import { useRequiredParams } from "../../../../hooks/useRequiredParams";
 import { postAdminRaceRunner } from "../../../../services/api/participantService";
-import { getAdminRaceRunners, getAdminRunners } from "../../../../services/api/runnerService";
 import { getCreateParticipantBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../../services/ToastService";
 import type { SelectOption } from "../../../../types/Forms";
@@ -28,8 +29,11 @@ export default function CreateParticipantAdminView(): React.ReactElement {
   const race = getRaceQuery.data?.race;
   const isRaceNotFound = is404Error(getRaceQuery.error);
 
-  const [raceRunners, setRaceRunners] = React.useState<Array<RaceRunner<AdminRunner>> | undefined | null>(undefined);
-  const [allRunners, setAllRunners] = React.useState<AdminRunner[] | undefined | null>(undefined);
+  const getRaceRunnersQuery = useGetAdminRaceRunners(race?.id);
+  const raceRunners = getRaceRunnersQuery.data?.runners;
+
+  const getRunnersQuery = useGetAdminRunners();
+  const allRunners = getRunnersQuery.data?.runners;
 
   const getEditionQuery = useGetAdminEdition(race?.editionId);
   const edition = getEditionQuery.data?.edition;
@@ -40,37 +44,6 @@ export default function CreateParticipantAdminView(): React.ReactElement {
 
   const [redirectToCreatedParticipant, setRedirectToCreatedParticipant] = React.useState(true);
   const [isSaving, setIsSaving] = React.useState(false);
-
-  const fetchRaceRunners = React.useCallback(async () => {
-    if (!urlRaceId || !accessToken) {
-      return;
-    }
-
-    const result = await getAdminRaceRunners(accessToken, urlRaceId);
-
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de récupérer les coureurs participant déjà à la course");
-      return;
-    }
-
-    setRaceRunners(result.json.runners);
-  }, [accessToken, urlRaceId]);
-
-  const fetchRunners = React.useCallback(async () => {
-    if (!accessToken) {
-      return;
-    }
-
-    const result = await getAdminRunners(accessToken);
-
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de récupérer la liste des coureurs");
-      setAllRunners(null);
-      return;
-    }
-
-    setAllRunners(result.json.runners);
-  }, [accessToken]);
 
   const alreadyParticipatingRunnerIds = React.useMemo(() => {
     const ids = new Set<number>();
@@ -140,31 +113,23 @@ export default function CreateParticipantAdminView(): React.ReactElement {
         void navigate(`/admin/races/${race.id}/runners/${runnerId}`);
       } else {
         clearForm();
-        void fetchRaceRunners();
+        void getRaceRunnersQuery.refetch();
       }
 
       setIsSaving(false);
     },
     [
       accessToken,
-      bibNumber,
-      clearForm,
-      fetchRaceRunners,
-      isStopped,
-      navigate,
       race,
-      redirectToCreatedParticipant,
       runnerId,
+      bibNumber,
+      isStopped,
+      redirectToCreatedParticipant,
+      navigate,
+      clearForm,
+      getRaceRunnersQuery,
     ],
   );
-
-  React.useEffect(() => {
-    void fetchRaceRunners();
-  }, [fetchRaceRunners]);
-
-  React.useEffect(() => {
-    void fetchRunners();
-  }, [fetchRunners]);
 
   if (isRaceNotFound) {
     void navigate("/admin");

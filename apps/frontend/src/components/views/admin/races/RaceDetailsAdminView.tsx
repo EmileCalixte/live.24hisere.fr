@@ -2,26 +2,23 @@ import React from "react";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
-import { Link, Navigate, useParams } from "react-router-dom";
-import type { AdminRunner, RaceRunner } from "@live24hisere/core/types";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { useGetAdminEditions } from "../../../../hooks/api/requests/admin/editions/useGetAdminEditions";
 import { useDeleteAdminRace } from "../../../../hooks/api/requests/admin/races/useDeleteAdminRace";
 import { useGetAdminRace } from "../../../../hooks/api/requests/admin/races/useGetAdminRace";
 import { usePatchAdminRace } from "../../../../hooks/api/requests/admin/races/usePatchAdminRace";
-import { getAdminRaceRunners } from "../../../../services/api/runnerService";
+import { useGetAdminRaceRunners } from "../../../../hooks/api/requests/admin/runners/useGetAdminRaceRunners";
 import { getRaceDetailsBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
-import ToastService from "../../../../services/ToastService";
 import type { SelectOption } from "../../../../types/Forms";
-import { is404Error, isApiRequestResultOk } from "../../../../utils/apiUtils";
+import { is404Error } from "../../../../utils/apiUtils";
 import { formatDateForApi } from "../../../../utils/utils";
-import { appContext } from "../../../App";
 import CircularLoader from "../../../ui/CircularLoader";
 import Page from "../../../ui/Page";
 import RaceDetailsForm from "../../../viewParts/admin/races/RaceDetailsForm";
 import RaceRunnersTable from "../../../viewParts/admin/races/RaceRunnersTable";
 
 export default function RaceDetailsAdminView(): React.ReactElement {
-  const { accessToken } = React.useContext(appContext).user;
+  const navigate = useNavigate();
 
   const { raceId: urlRaceId } = useParams();
 
@@ -29,10 +26,11 @@ export default function RaceDetailsAdminView(): React.ReactElement {
   const race = getRaceQuery.data?.race;
   const isRaceNotFound = is404Error(getRaceQuery.error);
 
-  const patchRaceMutation = usePatchAdminRace(race?.id, getRaceQuery.refetch);
+  const patchRaceMutation = usePatchAdminRace(race?.id);
   const deleteRaceMutation = useDeleteAdminRace(race?.id);
 
-  const [raceRunners, setRaceRunners] = React.useState<Array<RaceRunner<AdminRunner>> | undefined | null>(undefined);
+  const getRaceRunnersQuery = useGetAdminRaceRunners(race?.id);
+  const raceRunners = getRaceRunnersQuery.data?.runners;
 
   const getEditionsQuery = useGetAdminEditions();
   const editions = getEditionsQuery.data?.editions;
@@ -94,25 +92,6 @@ export default function RaceDetailsAdminView(): React.ReactElement {
     setIsPublic(race.isPublic);
   }, [race]);
 
-  const fetchRaceRunners = React.useCallback(async () => {
-    if (!urlRaceId || !accessToken) {
-      return;
-    }
-
-    const result = await getAdminRaceRunners(accessToken, urlRaceId);
-
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de récupérer les coureurs");
-      return;
-    }
-
-    setRaceRunners(result.json.runners);
-  }, [accessToken, urlRaceId]);
-
-  React.useEffect(() => {
-    void fetchRaceRunners();
-  }, [fetchRaceRunners]);
-
   const onSubmit: React.FormEventHandler = (e) => {
     e.preventDefault();
 
@@ -126,7 +105,11 @@ export default function RaceDetailsAdminView(): React.ReactElement {
       lapDistance: lapDistance.toString(),
     };
 
-    patchRaceMutation.mutate(body);
+    patchRaceMutation.mutate(body, {
+      onSuccess: () => {
+        void getRaceQuery.refetch();
+      },
+    });
   };
 
   function deleteRace(): void {
@@ -138,10 +121,14 @@ export default function RaceDetailsAdminView(): React.ReactElement {
       return;
     }
 
-    deleteRaceMutation.mutate();
+    deleteRaceMutation.mutate(undefined, {
+      onSuccess: () => {
+        void navigate("/admin/races");
+      },
+    });
   }
 
-  if (isRaceNotFound || deleteRaceMutation.isSuccess) {
+  if (isRaceNotFound) {
     return <Navigate to="/admin/races" />;
   }
 
@@ -197,7 +184,7 @@ export default function RaceDetailsAdminView(): React.ReactElement {
 
               {raceRunners === undefined && <CircularLoader />}
 
-              {raceRunners === null && <p>Impossible de récupérer les coureurs</p>}
+              {getRaceRunnersQuery.error && <p>Impossible de récupérer les coureurs</p>}
 
               {raceRunners && (
                 <>

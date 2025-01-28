@@ -11,7 +11,7 @@ export default function PassageImportSettingsAdminView(): React.ReactElement {
   const getPassageImportSettingsQuery = useGetPassageImportSettings();
   const passageImportSettings = getPassageImportSettingsQuery.data;
 
-  const patchPassageImportSettingsMutation = usePatchPassageImportSettings(getPassageImportSettingsQuery.refetch);
+  const patchPassageImportSettingsMutation = usePatchPassageImportSettings();
 
   const [dagFileUrl, setDagFileUrl] = React.useState("");
 
@@ -30,7 +30,11 @@ export default function PassageImportSettingsAdminView(): React.ReactElement {
       dagFileUrl: dagFileUrl || null,
     };
 
-    patchPassageImportSettingsMutation.mutate(body);
+    patchPassageImportSettingsMutation.mutate(body, {
+      onSuccess: () => {
+        void getPassageImportSettingsQuery.refetch();
+      },
+    });
   };
 
   React.useEffect(() => {
