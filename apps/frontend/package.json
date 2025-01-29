@@ -29,7 +29,7 @@
     "dompurify": "^3.2.3",
     "latinize": "^2.0.0",
     "nuqs": "^2.2.3",
-    "papaparse": "^5.4.1",
+    "papaparse": "^5.5.1",
     "react": "^19.0.0",
     "react-bootstrap": "^2.10.7",
     "react-dom": "^19.0.0",
