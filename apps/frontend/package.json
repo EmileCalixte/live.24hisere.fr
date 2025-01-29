@@ -48,7 +48,7 @@
     "@testing-library/react": "^16.2.0",
     "@testing-library/user-event": "^14.6.1",
     "jsdom": "^26.0.0",
-    "vitest": "^2.1.8"
+    "vitest": "^3.0.4"
   },
   "scripts": {
     "dev": "vite",
