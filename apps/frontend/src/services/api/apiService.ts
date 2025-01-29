@@ -1,4 +1,4 @@
-import type { ApiRequest, ApiRequestResultLegacy, ApiResponse } from "@live24hisere/core/types";
+import type { ApiPayload, ApiRequest, ApiResponse } from "@live24hisere/core/types";
 import config from "../../config/config";
 import { DEFAULT_HEADERS, DEFAULT_HEADERS_WITH_BODY, REQUEST_TIMEOUT } from "../../constants/api";
 import { ApiError } from "../../errors/ApiError";
@@ -27,14 +27,11 @@ function addDefaultHeaders(init: Omit<RequestInit, "headers"> & { headers: Heade
   addHeadersIfNotSet(init.headers, DEFAULT_HEADERS);
 }
 
-/**
- * @deprecated
- */
-export async function performApiRequestLegacy<T extends ApiRequest>(
+export async function performApiRequest<T extends ApiRequest>(
   url: string,
-  body?: T["payload"],
+  body?: ApiPayload<T>,
   init: Omit<RequestInit, "body"> = {},
-): Promise<ApiRequestResultLegacy<T>> {
+): Promise<ApiResponse<T>> {
   if (!url.startsWith(config.apiUrl)) {
     url = getBackendFullUrl(url);
   }
@@ -68,67 +65,31 @@ export async function performApiRequestLegacy<T extends ApiRequest>(
 
     const responseJson = await getResponseJson<T["response"]>(response);
 
-    return {
-      isOk: response.ok,
-      response,
-      json: responseJson,
-    };
+    if (!response.ok) {
+      throw new ApiError(
+        response.status,
+        responseJson,
+        `Request ${init.method ?? "GET"} ${url} resulted in an HTTP ${response.status} status code`,
+      );
+    }
+
+    return responseJson;
   } finally {
     window.dispatchEvent(new CustomEvent(EVENT_API_REQUEST_ENDED));
   }
 }
 
-export async function performApiRequest<T extends ApiRequest>(
-  url: string,
-  body?: T["payload"],
-  init: Omit<RequestInit, "body"> = {},
-): Promise<ApiResponse<T>> {
-  const result = await performApiRequestLegacy(url, body, init);
-
-  if (!result.isOk) {
-    throw new ApiError(
-      result.response.status,
-      result.json,
-      `Request ${init.method ?? "GET"} ${url} resulted in an HTTP ${result.response.status} status code`,
-    );
-  }
-
-  return result.json;
-}
-
-/**
- * @deprecated
- */
-export async function performAuthenticatedApiRequestLegacy<T extends ApiRequest>(
+export async function performAuthenticatedApiRequest<T extends ApiRequest>(
   url: string,
   accessToken: string,
-  body?: T["payload"],
+  body?: ApiPayload<T>,
   init: Omit<RequestInit, "body"> = {},
-): Promise<ApiRequestResultLegacy<T>> {
+): Promise<ApiResponse<T>> {
   if (!(init.headers instanceof Headers)) {
     init.headers = new Headers(init.headers);
   }
 
   init.headers.append("Authorization", accessToken);
 
-  return await performApiRequestLegacy(url, body, init);
-}
-
-export async function performAuthenticatedApiRequest<T extends ApiRequest>(
-  url: string,
-  accessToken: string,
-  body?: T["payload"],
-  init: Omit<RequestInit, "body"> = {},
-): Promise<ApiResponse<T>> {
-  const result = await performAuthenticatedApiRequestLegacy(url, accessToken, body, init);
-
-  if (!result.isOk) {
-    throw new ApiError(
-      result.response.status,
-      result.json,
-      `Request ${init.method ?? "GET"} ${url} resulted in an HTTP ${result.response.status} status code`,
-    );
-  }
-
-  return result.json;
+  return await performApiRequest(url, body, init);
 }

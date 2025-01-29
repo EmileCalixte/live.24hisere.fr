@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
+import { FETCH_INTERVAL } from "../../../../../constants/api";
 import { getAdminRacePassages } from "../../../../../services/api/passageService";
 import type { UrlId } from "../../../../../types/utils/api";
-import { DEFAULT_FETCH_INTERVAL } from "../../../../useIntervalApiRequest";
 import { useRequiredAccessToken } from "../../../useRequiredAccessToken";
 
 export function useGetAdminRacePassages(raceId: UrlId | undefined, fetchPeriodically = false) {
@@ -17,7 +17,7 @@ export function useGetAdminRacePassages(raceId: UrlId | undefined, fetchPeriodic
       return await getAdminRacePassages(accessToken, raceId);
     },
     retry: false,
-    refetchInterval: fetchPeriodically && DEFAULT_FETCH_INTERVAL,
+    refetchInterval: fetchPeriodically && FETCH_INTERVAL,
     enabled: raceId !== undefined,
     meta: {
       errorToast: "Une erreur est survenue lors de la récupération des passages de la course.",

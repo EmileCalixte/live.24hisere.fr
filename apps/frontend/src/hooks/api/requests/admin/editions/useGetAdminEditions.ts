@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
+import { FETCH_INTERVAL } from "../../../../../constants/api";
 import { getAdminEditions } from "../../../../../services/api/editionService";
-import { DEFAULT_FETCH_INTERVAL } from "../../../../useIntervalApiRequest";
 import { useRequiredAccessToken } from "../../../useRequiredAccessToken";
 
 export function useGetAdminEditions(fetchPeriodically = false) {
@@ -10,7 +10,7 @@ export function useGetAdminEditions(fetchPeriodically = false) {
     queryKey: ["getAdminEditions"],
     queryFn: async () => await getAdminEditions(accessToken),
     retry: false,
-    refetchInterval: fetchPeriodically && DEFAULT_FETCH_INTERVAL,
+    refetchInterval: fetchPeriodically && FETCH_INTERVAL,
     meta: {
       errorToast: "Une erreur est survenue lors de la récupération de la liste des éditions.",
     },

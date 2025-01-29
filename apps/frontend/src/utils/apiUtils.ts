@@ -1,5 +1,4 @@
 import type { Mutation, Query } from "@tanstack/react-query";
-import type { ApiRequest, ApiRequestResultLegacy, ApiRequestResultOk } from "@live24hisere/core/types";
 import { ApiError } from "../errors/ApiError";
 import type { ApiTimeoutError } from "../errors/ApiTimeoutError";
 
@@ -25,17 +24,6 @@ export async function getResponseJson<T = unknown>(response: Response): Promise<
   }
 
   return await response.json();
-}
-
-/**
- * Returns true if the api request result was OK.
- *
- * @deprecated
- */
-export function isApiRequestResultOk<T extends ApiRequest>(
-  result: ApiRequestResultLegacy<T>,
-): result is ApiRequestResultOk<T> {
-  return result.isOk;
 }
 
 export function getErrorMessageToDisplay(

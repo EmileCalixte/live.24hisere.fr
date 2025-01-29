@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
+import { FETCH_INTERVAL } from "../../../../../constants/api";
 import { getRaceRunners } from "../../../../../services/api/runnerService";
 import type { UrlId } from "../../../../../types/utils/api";
-import { DEFAULT_FETCH_INTERVAL } from "../../../../useIntervalApiRequest";
 
 export function useGetPublicRaceRunners(raceId: UrlId | undefined) {
   return useQuery({
@@ -13,7 +13,7 @@ export function useGetPublicRaceRunners(raceId: UrlId | undefined) {
 
       return await getRaceRunners(raceId);
     },
-    refetchInterval: DEFAULT_FETCH_INTERVAL,
+    refetchInterval: FETCH_INTERVAL,
     retry: false,
     enabled: raceId !== undefined,
     meta: {

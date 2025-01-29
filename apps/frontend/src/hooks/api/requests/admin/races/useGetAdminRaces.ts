@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
+import { FETCH_INTERVAL } from "../../../../../constants/api";
 import { getAdminRaces } from "../../../../../services/api/raceService";
-import { DEFAULT_FETCH_INTERVAL } from "../../../../useIntervalApiRequest";
 import { useRequiredAccessToken } from "../../../useRequiredAccessToken";
 
 export function useGetAdminRaces(fetchPeriodically = false) {
@@ -10,7 +10,7 @@ export function useGetAdminRaces(fetchPeriodically = false) {
     queryKey: ["getAdminRaces"],
     queryFn: async () => await getAdminRaces(accessToken),
     retry: false,
-    refetchInterval: fetchPeriodically && DEFAULT_FETCH_INTERVAL,
+    refetchInterval: fetchPeriodically && FETCH_INTERVAL,
     meta: {
       errorToast: "Une erreur est survenue lors de la récupération de la liste des courses.",
     },
