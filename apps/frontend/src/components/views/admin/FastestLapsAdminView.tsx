@@ -81,6 +81,7 @@ export default function FastestLapsAdminView(): React.ReactElement {
       const runner = runners.find((ru) => ru.id === Number(runnerId));
 
       if (!runner) {
+        // eslint-disable-next-line no-console
         console.warn(`Runner ${runnerId} not found in runners array, ignoring its passages`, runners);
         continue;
       }

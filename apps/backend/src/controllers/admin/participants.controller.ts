@@ -19,6 +19,7 @@ import {
   PostParticipantAdminApiRequest,
   RunnerWithRaceCount,
 } from "@live24hisere/core/types";
+import { objectUtils } from "@live24hisere/utils";
 import { ParticipantDto } from "../../dtos/participant/participant.dto";
 import { UpdateParticipantDto } from "../../dtos/participant/updateParticipant.dto";
 import { AuthGuard } from "../../guards/auth.guard";
@@ -77,7 +78,7 @@ export class ParticipantsController {
     await this.ensureBibNumberIsAvailable(participantDto.bibNumber, race.id);
 
     const participant = await this.participantService.createParticipant({
-      ...participantDto,
+      ...objectUtils.instanceToObject(participantDto),
       raceId: race.id,
       runnerId: runner.id,
     });

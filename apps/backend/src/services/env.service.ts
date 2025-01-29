@@ -58,7 +58,7 @@ export class EnvService implements OnModuleInit {
           return acc;
         },
         // An ugly `as` but with this reduce I don't know how to do this better
-        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/prefer-reduce-type-parameter
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         {} as RequiredEnvironmentVariables,
       ),
       ...Object.entries(OPTIONAL_ENVIRONMENT_VARIABLES).reduce<OptionalEnvironmentVariables>(
@@ -67,8 +67,7 @@ export class EnvService implements OnModuleInit {
           acc[variableName] = this.initOptionalValue(variableName, defaultValue);
           return acc;
         },
-        // An ugly `as` but with this reduce I don't know how to do this better
-        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/prefer-reduce-type-parameter
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         {} as OptionalEnvironmentVariables,
       ),
     };

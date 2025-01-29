@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/consistent-type-assertions, @typescript-eslint/non-nullable-type-assertion-style, @typescript-eslint/prefer-reduce-type-parameter */
+/* eslint-disable @typescript-eslint/consistent-type-assertions, @typescript-eslint/non-nullable-type-assertion-style */
 import { useParams } from "react-router-dom";
 
 export function useRequiredParams<TKey extends string>(keys: readonly TKey[]): Record<TKey, string> {

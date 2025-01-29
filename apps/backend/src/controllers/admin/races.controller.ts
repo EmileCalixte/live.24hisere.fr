@@ -23,6 +23,7 @@ import {
   PatchRaceAdminApiRequest,
   PostRaceAdminApiRequest,
 } from "@live24hisere/core/types";
+import { objectUtils } from "@live24hisere/utils";
 import { RaceDto } from "../../dtos/race/race.dto";
 import { UpdateRaceDto } from "../../dtos/race/updateRace.dto";
 import { AuthGuard } from "../../guards/auth.guard";
@@ -51,7 +52,7 @@ export class RacesController {
     await this.ensureRaceNameDoesNotExist(raceDto.name, raceDto.editionId);
 
     const race = await this.raceService.createRace({
-      ...raceDto,
+      ...objectUtils.instanceToObject(raceDto),
       order: (await this.raceService.getMaxOrder()) + 1,
     });
 
