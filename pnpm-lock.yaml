@@ -90,8 +90,8 @@ importers:
         specifier: ^0.14.1
         version: 0.14.1
       cron:
-        specifier: ^3.2.1
-        version: 3.2.1
+        specifier: ^3.5.0
+        version: 3.5.0
       drizzle-orm:
         specifier: ^0.39.1
         version: 0.39.1(@types/react@19.0.8)(mysql2@3.12.0)(react@19.0.0)
@@ -2991,6 +2991,9 @@ packages:
 
   cron@3.2.1:
     resolution: {integrity: sha512-w2n5l49GMmmkBFEsH9FIDhjZ1n1QgTMOCMGuQtOXs5veNiosZmso6bQGuqOJSYAXXrG84WQFVneNk+Yt0Ua9iw==}
+
+  cron@3.5.0:
+    resolution: {integrity: sha512-0eYZqCnapmxYcV06uktql93wNWdlTmmBFP2iYz+JPVcQqlyFYcn1lFuIk4R54pkOmE7mcldTAPZv6X5XA4Q46A==}
 
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
@@ -8995,6 +8998,11 @@ snapshots:
   create-require@1.1.1: {}
 
   cron@3.2.1:
+    dependencies:
+      '@types/luxon': 3.4.2
+      luxon: 3.5.0
+
+  cron@3.5.0:
     dependencies:
       '@types/luxon': 3.4.2
       luxon: 3.5.0
