@@ -27,7 +27,7 @@
     "@live24hisere/utils": "workspace:^",
     "@nestjs/axios": "^3.1.3",
     "@nestjs/common": "^10.4.15",
-    "@nestjs/config": "^3.3.0",
+    "@nestjs/config": "^4.0.0",
     "@nestjs/core": "^10.4.15",
     "@nestjs/mapped-types": "^2.1.0",
     "@nestjs/platform-express": "^10.4.15",
