@@ -1,14 +1,13 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import React, { createContext, useCallback, useEffect, useState } from "react";
+import React from "react";
 import { Helmet } from "react-helmet";
 import { Route, Routes, useMatch, useNavigate } from "react-router-dom";
 import type { PublicUser } from "@live24hisere/core/types";
 import { APP_BASE_TITLE } from "../constants/app";
+import { useGetCurrentUser } from "../hooks/api/requests/auth/useGetCurrentUser";
 import { useLogout } from "../hooks/api/requests/auth/useLogout";
 import { useGetAppData } from "../hooks/api/requests/public/appData/useGetAppData";
-import { getCurrentUserInfo } from "../services/api/authService";
-import ToastService from "../services/ToastService";
-import { EVENT_API_REQUEST_ENDED, EVENT_API_REQUEST_STARTED, isApiRequestResultOk } from "../utils/apiUtils";
+import { EVENT_API_REQUEST_ENDED, EVENT_API_REQUEST_STARTED } from "../utils/apiUtils";
 import { verbose } from "../utils/utils";
 import CircularLoader from "./ui/CircularLoader";
 import Footer from "./ui/footer/Footer";
@@ -82,7 +81,7 @@ interface AppContext {
   };
 }
 
-export const appContext = createContext<AppContext>({
+export const appContext = React.createContext<AppContext>({
   appData: {
     fetchError: null,
     lastUpdateTime: new Date(),
@@ -109,42 +108,45 @@ export const appContext = createContext<AppContext>({
 export default function App(): React.ReactElement {
   const navigate = useNavigate();
 
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [fetchLevel, setFetchLevel] = React.useState(0);
+  const [fetchAppDataError, setFetchAppDataError] = React.useState<unknown>(null);
+  const [lastUpdateTime, setLastUpdateTime] = React.useState(new Date());
+  const [serverTimeOffset, setServerTimeOffset] = React.useState(0);
+  const [isAppEnabled, setIsAppEnabled] = React.useState(false);
+  const [disabledAppMessage, setDisabledAppMessage] = React.useState<string | null>(null);
+  const [currentEditionId, setCurrentEditionId] = React.useState<number | null>(null);
+  const [accessToken, setAccessToken] = React.useState<string | null>(localStorage.getItem("accessToken"));
+  const [user, setUser] = React.useState<PublicUser | null | undefined>(undefined); // If null, user is not logged in. If undefined, user info was not fetched yet
+
   const getAppDataQuery = useGetAppData();
   const appData = getAppDataQuery.data;
 
-  const logoutMutation = useLogout();
+  const getCurrentUserQuery = useGetCurrentUser(accessToken, forgetAccessToken);
+  const lastFetchedCurrentUser = getCurrentUserQuery.data?.user;
 
-  const [isLoading, setIsLoading] = useState(true);
-  const [fetchLevel, setFetchLevel] = useState(0);
-  const [fetchAppDataError, setFetchAppDataError] = useState<unknown>(null);
-  const [lastUpdateTime, setLastUpdateTime] = useState(new Date());
-  const [serverTimeOffset, setServerTimeOffset] = useState(0);
-  const [isAppEnabled, setIsAppEnabled] = useState(false);
-  const [disabledAppMessage, setDisabledAppMessage] = useState<string | null>(null);
-  const [currentEditionId, setCurrentEditionId] = useState<number | null>(null);
-  const [accessToken, setAccessToken] = useState<string | null>(localStorage.getItem("accessToken"));
-  const [user, setUser] = useState<PublicUser | null | undefined>(undefined); // If null, user is not logged in. If undefined, user info was not fetched yet
+  const logoutMutation = useLogout();
 
   const isLoginRoute = !!useMatch("/login");
   const isAdminRoute = !!useMatch("/admin/*");
 
-  const incrementFetchLevel = useCallback(() => {
+  const incrementFetchLevel = React.useCallback(() => {
     setFetchLevel((level) => level + 1);
   }, []);
 
-  const decrementFetchLevel = useCallback(() => {
+  const decrementFetchLevel = React.useCallback(() => {
     setFetchLevel((level) => Math.max(0, level - 1));
   }, []);
 
-  const saveAccessToken = useCallback((token: string) => {
+  function saveAccessToken(token: string): void {
     localStorage.setItem("accessToken", token);
     setAccessToken(token);
-  }, []);
+  }
 
-  const forgetAccessToken = useCallback(() => {
+  function forgetAccessToken(): void {
     localStorage.removeItem("accessToken");
     setAccessToken(null);
-  }, []);
+  }
 
   React.useEffect(() => {
     if (!appData) {
@@ -174,27 +176,6 @@ export default function App(): React.ReactElement {
     setFetchAppDataError(getAppDataQuery.error);
   }, [getAppDataQuery.error]);
 
-  const fetchUserInfo = useCallback(async () => {
-    if (!accessToken) {
-      return;
-    }
-
-    verbose("Fetching user info");
-
-    const result = await getCurrentUserInfo(accessToken);
-
-    if (!isApiRequestResultOk(result)) {
-      forgetAccessToken();
-      setUser(null);
-      ToastService.getToastr().error("Vous avez été déconnecté");
-      return;
-    }
-
-    verbose("User info", result.json);
-
-    setUser(result.json.user);
-  }, [accessToken, forgetAccessToken]);
-
   function logout(): void {
     if (!accessToken) {
       return;
@@ -209,7 +190,7 @@ export default function App(): React.ReactElement {
     });
   }
 
-  useEffect(() => {
+  React.useEffect(() => {
     window.addEventListener(EVENT_API_REQUEST_STARTED, incrementFetchLevel);
     window.addEventListener(EVENT_API_REQUEST_ENDED, decrementFetchLevel);
 
@@ -219,14 +200,17 @@ export default function App(): React.ReactElement {
     };
   }, [incrementFetchLevel, decrementFetchLevel]);
 
-  useEffect(() => {
+  React.useEffect(() => {
+    if (lastFetchedCurrentUser) {
+      setUser(lastFetchedCurrentUser);
+    }
+  }, [lastFetchedCurrentUser]);
+
+  React.useEffect(() => {
     if (accessToken === null) {
       setUser(null);
-      return;
     }
-
-    void fetchUserInfo();
-  }, [accessToken, fetchUserInfo]);
+  }, [accessToken]);
 
   const appContextValues: AppContext = {
     appData: {

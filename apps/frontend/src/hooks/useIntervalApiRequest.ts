@@ -1,6 +1,7 @@
 import React from "react";
 import type { ApiRequest, ApiRequestResultLegacy } from "@live24hisere/core/types";
 
+/** @deprecated */
 export const DEFAULT_FETCH_INTERVAL = 20000;
 
 interface UseIntervalApiRequest<T extends ApiRequest> {

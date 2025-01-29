@@ -1,16 +1,13 @@
 import type {
-  ApiRequestResultLegacy,
   ApiResponse,
   GetCurrentUserInfoApiRequest,
   LoginApiRequest,
   LogoutApiRequest,
 } from "@live24hisere/core/types";
-import { performApiRequest, performAuthenticatedApiRequest, performAuthenticatedApiRequestLegacy } from "./apiService";
+import { performApiRequest, performAuthenticatedApiRequest } from "./apiService";
 
-export async function getCurrentUserInfo(
-  accessToken: string,
-): Promise<ApiRequestResultLegacy<GetCurrentUserInfoApiRequest>> {
-  return await performAuthenticatedApiRequestLegacy("/auth/current-user-info", accessToken);
+export async function getCurrentUserInfo(accessToken: string): Promise<ApiResponse<GetCurrentUserInfoApiRequest>> {
+  return await performAuthenticatedApiRequest<GetCurrentUserInfoApiRequest>("/auth/current-user-info", accessToken);
 }
 
 export async function login(username: string, password: string): Promise<ApiResponse<LoginApiRequest>> {
