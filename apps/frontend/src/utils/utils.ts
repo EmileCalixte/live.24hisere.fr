@@ -6,6 +6,7 @@ export function verbose(...items: unknown[]): void {
     return;
   }
 
+  // eslint-disable-next-line no-console
   console.log("%c[v]", "color: orange", ...items);
 }
 

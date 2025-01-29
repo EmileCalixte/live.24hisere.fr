@@ -21,6 +21,12 @@ export default [
     },
   },
   {
+    files: [`apps/backend/src/commands/*.${ext}`],
+    rules: {
+      "no-console": "off",
+    },
+  },
+  {
     files: [`apps/backend/test/**/*.${ext}`],
     rules: {
       "max-nested-callbacks": "off",
@@ -64,6 +70,7 @@ export default [
       "eslint-comments/require-description": "off",
       "guard-for-in": "off", // TODO enable ?
       "max-lines": "off",
+      "no-alert": "off",
       "promise/avoid-new": "off",
       "react/no-unescaped-entities": "off",
       "@typescript-eslint/ban-ts-comment": "off",

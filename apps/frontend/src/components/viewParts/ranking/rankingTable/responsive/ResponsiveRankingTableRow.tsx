@@ -89,7 +89,7 @@ export default function ResponsiveRankingTableRow({
 
   const formattedGap = formatGap(runner.gaps.firstRunner[getRankingType(tableCategoryCode, tableGender)].gap);
 
-  const displayedGap = formattedGap === null || formattedGap === "=" ? null : formattedGap;
+  const displayedGap = formattedGap && formattedGap !== "=" ? formattedGap : null;
 
   return (
     <tr>

@@ -21,6 +21,7 @@ import {
   PatchEditionAdminApiRequest,
   PostEditionAdminApiRequest,
 } from "@live24hisere/core/types";
+import { objectUtils } from "@live24hisere/utils";
 import { EditionDto } from "../../dtos/edition/edition.dto";
 import { UpdateEditionDto } from "../../dtos/edition/updateEdition.dto";
 import { AuthGuard } from "../../guards/auth.guard";
@@ -45,7 +46,7 @@ export class EditionsController {
     await this.ensureEditionNameDoesNotExist(editionDto.name);
 
     const edition = await this.editionService.createEdition({
-      ...editionDto,
+      ...objectUtils.instanceToObject(editionDto),
       order: (await this.editionService.getMaxOrder()) + 1,
     });
 

@@ -64,3 +64,14 @@ export function keys<T extends object>(object: T): Array<keyof T> {
 export function isEmptyObject(object: object): object is Record<string, never> {
   return Object.keys(object).length < 1;
 }
+
+/**
+ * This function bypasses the eslint 'no-misused-spread' rule for class instances.
+ *
+ * The drawbacks of using the spread operator on an instance are still there:
+ * Prototype methods are stripped, the original instance type is lost, and non-enumerable properties are ignored.
+ * **Use this function only if this is not a problem.**
+ */
+export function instanceToObject<T extends object>(instance: T): { [K in keyof T]: T[K] } {
+  return { ...instance };
+}

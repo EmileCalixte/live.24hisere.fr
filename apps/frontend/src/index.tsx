@@ -30,6 +30,7 @@ const queryClient = new QueryClient({
         ToastService.getToastr().error(errorMessage);
       }
 
+      // eslint-disable-next-line no-console
       console.error(error);
     },
   }),
@@ -41,6 +42,7 @@ const queryClient = new QueryClient({
         ToastService.getToastr().error(errorMessage);
       }
 
+      // eslint-disable-next-line no-console
       console.error(error);
     },
     onSuccess: (_, __, ___, mutation) => {

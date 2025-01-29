@@ -46,7 +46,7 @@ export class RunnersController {
   @Post("/admin/runners")
   async createRunner(@Body() runnerDto: RunnerDto): Promise<ApiResponse<PostRunnerAdminApiRequest>> {
     const runner = await this.runnerService.createRunner({
-      ...runnerDto,
+      ...objectUtils.instanceToObject(runnerDto),
       birthYear: runnerDto.birthYear.toString(),
     });
 
