@@ -204,9 +204,6 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.62.12
         version: 5.62.12(react@19.0.0)
-      '@types/dompurify':
-        specifier: ^3.2.0
-        version: 3.2.0
       '@types/latinize':
         specifier: ^0.2.18
         version: 0.2.18
@@ -2247,10 +2244,6 @@ packages:
 
   '@types/cookiejar@2.1.5':
     resolution: {integrity: sha512-he+DHOWReW0nghN24E1WUqM0efK4kI9oTqDm6XmK8ZPe2djZ90BSNdGnIyCLzCPw7/pogPlGbzI2wHGGmi4O/Q==}
-
-  '@types/dompurify@3.2.0':
-    resolution: {integrity: sha512-Fgg31wv9QbLDA0SpTOXO3MaxySc4DKGLi8sna4/Utjo4r3ZRPdCt4UQee8BWr+Q5z21yifghREPJGYaEOEIACg==}
-    deprecated: This is a stub types definition. dompurify provides its own type definitions, so you do not need this installed.
 
   '@types/eslint-config-prettier@6.11.3':
     resolution: {integrity: sha512-3wXCiM8croUnhg9LdtZUJQwNcQYGWxxdOWDjPe1ykCqJFPVpzAKfs/2dgSoCtAvdPeaponcWPI7mPcGGp9dkKQ==}
@@ -8210,10 +8203,6 @@ snapshots:
   '@types/cookie@0.6.0': {}
 
   '@types/cookiejar@2.1.5': {}
-
-  '@types/dompurify@3.2.0':
-    dependencies:
-      dompurify: 3.2.3
 
   '@types/eslint-config-prettier@6.11.3': {}
 
