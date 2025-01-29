@@ -51,6 +51,12 @@ export default [
       ...reactHooksPlugin.configs.recommended.rules,
     },
   },
+  {
+    files: [`apps/frontend/src/hooks/api/requests/**/*.${ext}`],
+    rules: {
+      "@typescript-eslint/explicit-function-return-type": "off",
+    },
+  },
   eslintConfigPrettier,
   {
     rules: {
@@ -63,6 +69,7 @@ export default [
       "@typescript-eslint/ban-ts-comment": "off",
       "@typescript-eslint/class-methods-use-this": "off",
       "@typescript-eslint/max-params": "off",
+      "@typescript-eslint/naming-convention": "off",
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-magic-numbers": "off",
       "@typescript-eslint/no-unsafe-enum-comparison": "off",

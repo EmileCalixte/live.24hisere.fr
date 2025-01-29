@@ -1,4 +1,6 @@
-import type { ApiRequest, ApiRequestResult, ApiRequestResultOk } from "@live24hisere/core/types";
+import type { Mutation, Query } from "@tanstack/react-query";
+import { ApiError } from "../errors/ApiError";
+import type { ApiTimeoutError } from "../errors/ApiTimeoutError";
 
 export const EVENT_API_REQUEST_STARTED = "apiRequestStarted";
 export const EVENT_API_REQUEST_ENDED = "apiRequestEnded";
@@ -24,11 +26,34 @@ export async function getResponseJson<T = unknown>(response: Response): Promise<
   return await response.json();
 }
 
-/**
- * Returns true if the api request result was OK.
- */
-export function isApiRequestResultOk<T extends ApiRequest>(
-  result: ApiRequestResult<T>,
-): result is ApiRequestResultOk<T> {
-  return result.isOk;
+export function getErrorMessageToDisplay(
+  error: Error | ApiError | ApiTimeoutError,
+  query: Query<unknown, unknown, unknown> | Mutation<unknown, unknown>,
+): string | null {
+  const is401 = is401Error(error);
+  const is404 = is404Error(error);
+
+  const meta = query.meta;
+
+  if (is401) {
+    return meta?.unauthorizedToast ?? meta?.errorToast ?? null;
+  }
+
+  if (is404) {
+    return meta?.notFoundToast ?? meta?.errorToast ?? null;
+  }
+
+  return meta?.errorToast ?? null;
+}
+
+export function isApiError(error: unknown): error is ApiError {
+  return error instanceof ApiError;
+}
+
+export function is401Error(error: unknown): error is ApiError {
+  return isApiError(error) && error.statusCode === 401;
+}
+
+export function is404Error(error: unknown): error is ApiError {
+  return isApiError(error) && error.statusCode === 404;
 }

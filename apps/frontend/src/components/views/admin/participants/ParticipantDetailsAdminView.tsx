@@ -1,22 +1,18 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import type {
-  AdminEdition,
-  AdminProcessedPassage,
-  AdminRaceRunnerWithPassages,
-  AdminRaceWithRunnerCount,
-  AdminRunner,
-  RaceRunner,
-} from "@live24hisere/core/types";
-import { getAdminEdition } from "../../../../services/api/editionService";
-import { getAdminRaceRunner, patchAdminRaceRuner } from "../../../../services/api/participantService";
-import { deleteAdminPassage, patchAdminPassage, postAdminPassage } from "../../../../services/api/passageService";
-import { getAdminRace } from "../../../../services/api/raceService";
-import { getAdminRaceRunners } from "../../../../services/api/runnerService";
+import { Link, useNavigate } from "react-router-dom";
+import type { AdminProcessedPassage } from "@live24hisere/core/types";
+import { useGetAdminEdition } from "../../../../hooks/api/requests/admin/editions/useGetAdminEdition";
+import { useGetAdminRaceRunner } from "../../../../hooks/api/requests/admin/participants/useGetAdminRaceRunner";
+import { usePatchAdminRaceRunner } from "../../../../hooks/api/requests/admin/participants/usePatchAdminRaceRunner";
+import { useDeleteAdminPassage } from "../../../../hooks/api/requests/admin/passages/useDeleteAdminPassage";
+import { usePatchAdminPassage } from "../../../../hooks/api/requests/admin/passages/usePatchAdminPassage";
+import { usePostAdminPassage } from "../../../../hooks/api/requests/admin/passages/usePostAdminPassage";
+import { useGetAdminRace } from "../../../../hooks/api/requests/admin/races/useGetAdminRace";
+import { useGetAdminRaceRunners } from "../../../../hooks/api/requests/admin/runners/useGetAdminRaceRunners";
+import { useRequiredParams } from "../../../../hooks/useRequiredParams";
 import { getParticipantBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
-import ToastService from "../../../../services/ToastService";
-import { isApiRequestResultOk } from "../../../../utils/apiUtils";
+import { is404Error } from "../../../../utils/apiUtils";
 import { getProcessedPassagesFromPassages } from "../../../../utils/passageUtils";
 import { formatDateAsString, formatDateForApi } from "../../../../utils/utils";
 import { appContext } from "../../../App";
@@ -30,18 +26,30 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
 
   const { accessToken } = React.useContext(appContext).user;
 
-  const { raceId: urlRaceId, runnerId: urlRunnerId } = useParams();
+  const { raceId: urlRaceId, runnerId: urlRunnerId } = useRequiredParams(["raceId", "runnerId"]);
 
-  const [edition, setEdition] = React.useState<AdminEdition | undefined | null>(undefined);
-  const [race, setRace] = React.useState<AdminRaceWithRunnerCount | undefined | null>(undefined);
-  const [raceRunners, setRaceRunners] = React.useState<Array<RaceRunner<AdminRunner>> | undefined | null>(undefined);
+  const getRaceQuery = useGetAdminRace(urlRaceId);
+  const race = getRaceQuery.data?.race;
+  const isRaceNotFound = is404Error(getRaceQuery.error);
 
-  const [runner, setRunner] = React.useState<AdminRaceRunnerWithPassages | undefined | null>(undefined);
+  const getRunnerQuery = useGetAdminRaceRunner(urlRaceId, urlRunnerId);
+  const runner = getRunnerQuery.data?.runner;
+  const isRunnerNotFound = is404Error(getRunnerQuery.error);
+
+  const getRaceRunnersQuery = useGetAdminRaceRunners(race?.id);
+  const raceRunners = getRaceRunnersQuery.data?.runners;
+
+  const getEditionQuery = useGetAdminEdition(race?.editionId);
+  const edition = getEditionQuery.data?.edition;
+
+  const patchRunnerMutation = usePatchAdminRaceRunner(race?.id, runner?.id);
+
+  const postPassageMutation = usePostAdminPassage();
+  const patchPassageMutation = usePatchAdminPassage();
+  const deletePassageMutation = useDeleteAdminPassage();
 
   const [participantBibNumber, setParticipantBibNumber] = React.useState(0);
   const [participantIsStopped, setParticipantIsStopped] = React.useState(false);
-
-  const [isSaving, setIsSaving] = React.useState(false);
 
   const unsavedChanges = React.useMemo(() => {
     if (!runner) {
@@ -59,180 +67,82 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
     return getProcessedPassagesFromPassages(race, runner.passages);
   }, [race, runner]);
 
-  const fetchEdition = React.useCallback(async () => {
-    if (!race || !accessToken) {
+  function updatePassageVisiblity(passage: AdminProcessedPassage, hidden: boolean): void {
+    if (!runner || !accessToken) {
       return;
     }
 
-    const result = await getAdminEdition(accessToken, race.editionId);
+    const confirmMessage = hidden
+      ? `Êtes vous sûr de vouloir masquer le passage n°${passage.id} (${formatDateAsString(passage.processed.lapEndTime)}) ?`
+      : `Êtes vous sûr de vouloir rendre public le passage n°${passage.id} (${formatDateAsString(passage.processed.lapEndTime)}) ?`;
 
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de récupérer les détails de l'édition");
-      setEdition(null);
+    if (!window.confirm(confirmMessage)) {
       return;
     }
 
-    setEdition(result.json.edition);
-  }, [accessToken, race]);
+    patchPassageMutation.mutate(
+      { passageId: passage.id, passage: { isHidden: hidden } },
+      {
+        onSuccess: () => {
+          void getRunnerQuery.refetch();
+        },
+      },
+    );
+  }
 
-  const fetchRace = React.useCallback(async () => {
-    if (!urlRaceId || !accessToken) {
+  function updatePassage(passage: AdminProcessedPassage, time: Date): void {
+    if (!runner || !accessToken) {
       return;
     }
 
-    const result = await getAdminRace(accessToken, urlRaceId);
+    patchPassageMutation.mutate(
+      { passageId: passage.id, passage: { time: formatDateForApi(time) } },
+      {
+        onSuccess: () => {
+          void getRunnerQuery.refetch();
+        },
+      },
+    );
+  }
 
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de récupérer les détails de la course");
-      setRace(null);
+  function saveNewPassage(time: Date): void {
+    if (!race || !runner) {
       return;
     }
 
-    setRace(result.json.race);
-  }, [accessToken, urlRaceId]);
-
-  const fetchRaceRunners = React.useCallback(async () => {
-    if (!urlRaceId || !accessToken) {
-      return;
-    }
-
-    const result = await getAdminRaceRunners(accessToken, urlRaceId);
-
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de récupérer les coureurs participant déjà à la course");
-      setRace(null);
-      return;
-    }
-
-    setRaceRunners(result.json.runners);
-  }, [accessToken, urlRaceId]);
-
-  const fetchRunner = React.useCallback(async () => {
-    if (!urlRaceId || !urlRunnerId || !accessToken) {
-      return;
-    }
-
-    const result = await getAdminRaceRunner(accessToken, urlRaceId, urlRunnerId);
-
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de récupérer les détails du coureur");
-      setRunner(null);
-      return;
-    }
-
-    const runner = result.json.runner;
-
-    setRunner(runner);
-
-    setParticipantBibNumber(runner.bibNumber);
-    setParticipantIsStopped(runner.stopped);
-  }, [accessToken, urlRaceId, urlRunnerId]);
-
-  const updatePassageVisiblity = React.useCallback(
-    async (passage: AdminProcessedPassage, hidden: boolean) => {
-      if (!runner || !accessToken) {
-        return;
-      }
-
-      const confirmMessage = hidden
-        ? `Êtes vous sûr de vouloir masquer le passage n°${passage.id} (${formatDateAsString(passage.processed.lapEndTime)}) ?`
-        : `Êtes vous sûr de vouloir rendre public le passage n°${passage.id} (${formatDateAsString(passage.processed.lapEndTime)}) ?`;
-
-      if (!window.confirm(confirmMessage)) {
-        return;
-      }
-
-      const result = await patchAdminPassage(accessToken, passage.id, { isHidden: hidden });
-
-      if (!isApiRequestResultOk(result)) {
-        ToastService.getToastr().error("Une erreur est survenue");
-        return;
-      }
-
-      ToastService.getToastr().success(hidden ? "Le passage a été masqué" : "Le passage n'est plus masqué");
-
-      void fetchRunner();
-    },
-    [accessToken, runner, fetchRunner],
-  );
-
-  const updatePassage = React.useCallback(
-    async (passage: AdminProcessedPassage, time: Date) => {
-      if (!runner || !accessToken) {
-        return;
-      }
-
-      const result = await patchAdminPassage(accessToken, passage.id, {
-        time: formatDateForApi(time),
-      });
-
-      if (!isApiRequestResultOk(result)) {
-        ToastService.getToastr().error("Une erreur est survenue");
-        return;
-      }
-
-      ToastService.getToastr().success("Le temps de passage a bien été modifié");
-
-      void fetchRunner();
-    },
-    [accessToken, runner, fetchRunner],
-  );
-
-  const saveNewPassage = React.useCallback(
-    async (time: Date) => {
-      if (!race || !runner || !accessToken) {
-        return;
-      }
-
-      const result = await postAdminPassage(accessToken, {
+    postPassageMutation.mutate(
+      {
         raceId: race.id,
         runnerId: runner.id,
         isHidden: false,
         time: formatDateForApi(time),
-      });
+      },
+      {
+        onSuccess: () => {
+          void getRunnerQuery.refetch();
+        },
+      },
+    );
+  }
 
-      if (!isApiRequestResultOk(result)) {
-        ToastService.getToastr().error("Une erreur est survenue");
-        return;
-      }
+  function deletePassage(passage: AdminProcessedPassage): void {
+    let confirmMessage = `Êtes vous sûr de vouloir supprimer le passage n°${passage.id} (${formatDateAsString(passage.processed.lapEndTime)}) ?`;
 
-      ToastService.getToastr().success("Le passage a bien été créé");
+    if (passage.detectionId !== null) {
+      confirmMessage +=
+        "\n\nAttention, le passage ayant été importé depuis le système de chronométrage, il sera réimporté si il y est toujours présent. Préférez masquer le passage plutôt que de le supprimer si vous souhaitez qu'il n'apparaisse plus au public.";
+    }
 
-      void fetchRunner();
-    },
-    [accessToken, race, runner, fetchRunner],
-  );
+    if (!window.confirm(confirmMessage)) {
+      return;
+    }
 
-  const deletePassage = React.useCallback(
-    async (passage: AdminProcessedPassage) => {
-      if (!accessToken) {
-        return;
-      }
-
-      let confirmMessage = `Êtes vous sûr de vouloir supprimer le passage n°${passage.id} (${formatDateAsString(passage.processed.lapEndTime)}) ?`;
-
-      if (passage.detectionId !== null) {
-        confirmMessage +=
-          "\n\nAttention, le passage ayant été importé depuis le système de chronométrage, il sera réimporté si il y est toujours présent. Préférez masquer le passage plutôt que de le supprimer si vous souhaitez qu'il n'apparaisse plus au public.";
-      }
-
-      if (!window.confirm(confirmMessage)) {
-        return;
-      }
-
-      const result = await deleteAdminPassage(accessToken, passage.id);
-
-      if (!isApiRequestResultOk(result)) {
-        ToastService.getToastr().error("Une erreur est survenue");
-        return;
-      }
-
-      ToastService.getToastr().success("Le passage a été supprimé");
-
-      void fetchRunner();
-    },
-    [accessToken, fetchRunner],
-  );
+    deletePassageMutation.mutate(passage.id, {
+      onSuccess: () => {
+        void getRunnerQuery.refetch();
+      },
+    });
+  }
 
   const raceUnavailableBibNumbers = React.useMemo(() => {
     const bibNumbers = new Set<number>();
@@ -245,56 +155,30 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
   const isBibNumberAvailable =
     participantBibNumber === runner?.bibNumber || !raceUnavailableBibNumbers.has(participantBibNumber);
 
-  React.useEffect(() => {
-    void fetchEdition();
-  }, [fetchEdition]);
+  const onSubmit: React.FormEventHandler = (e) => {
+    e.preventDefault();
 
-  React.useEffect(() => {
-    void fetchRace();
-  }, [fetchRace]);
+    if (!accessToken || !race || !runner) {
+      return;
+    }
 
-  React.useEffect(() => {
-    void fetchRaceRunners();
-  }, [fetchRaceRunners]);
+    const body = {
+      bibNumber: participantBibNumber,
+      stopped: participantIsStopped,
+    };
 
-  React.useEffect(() => {
-    void fetchRunner();
-  }, [fetchRunner]);
+    patchRunnerMutation.mutate(body, {
+      onSuccess: () => {
+        void getRunnerQuery.refetch();
+      },
+    });
+  };
 
-  const onSubmit = React.useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
-
-      if (!accessToken || !race || !runner) {
-        return;
-      }
-
-      setIsSaving(true);
-
-      const body = {
-        bibNumber: participantBibNumber,
-        stopped: participantIsStopped,
-      };
-
-      const result = await patchAdminRaceRuner(accessToken, race.id, runner.id, body);
-
-      if (!isApiRequestResultOk(result)) {
-        ToastService.getToastr().error("Une erreur est survenue");
-        setIsSaving(false);
-        return;
-      }
-
-      ToastService.getToastr().success("Informations enregistrées");
-      setIsSaving(false);
-    },
-    [accessToken, participantBibNumber, participantIsStopped, race, runner],
-  );
-
-  if (race === null) {
+  if (isRaceNotFound) {
     void navigate("/admin");
   }
 
-  if (race && runner === null) {
+  if (race && isRunnerNotFound) {
     void navigate(`/admin/races/${race.id}`);
   }
 
@@ -329,15 +213,13 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
           <Row>
             <Col xxl={3} xl={4} lg={6} md={9} sm={12}>
               <ParticipantDetailsForm
-                onSubmit={(e) => {
-                  void onSubmit(e);
-                }}
+                onSubmit={onSubmit}
                 bibNumber={participantBibNumber}
                 setBibNumber={setParticipantBibNumber}
                 isBibNumberAvailable={isBibNumberAvailable}
                 isStopped={participantIsStopped}
                 setIsStopped={setParticipantIsStopped}
-                submitButtonDisabled={isSaving || !unsavedChanges || !isBibNumberAvailable}
+                submitButtonDisabled={patchRunnerMutation.isPending || !unsavedChanges || !isBibNumberAvailable}
               />
             </Col>
           </Row>

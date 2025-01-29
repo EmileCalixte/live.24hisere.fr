@@ -6,7 +6,7 @@ import RunnerDetailsPassageForm from "./RunnerDetailsPassageForm";
 
 interface RunnerDetailsCreatePassageProps {
   runnerRace: AdminRaceWithRunnerCount | null;
-  savePassage: (time: Date) => Promise<void>;
+  savePassage: (time: Date) => unknown;
   onClose: () => void;
 }
 

@@ -3,19 +3,15 @@ import { faCheck, faFileArrowUp, faWandMagicSparkles, faXmark } from "@fortaweso
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { Col, Row } from "react-bootstrap";
-import type { AdminRace, Gender, RaceDict, RaceRunner } from "@live24hisere/core/types";
+import type { Gender, RaceRunner } from "@live24hisere/core/types";
 import { stringUtils } from "@live24hisere/utils";
 import { GENDER_OPTIONS } from "../../../../constants/forms";
 import { ImportCsvColumn } from "../../../../constants/importCsv";
-import { getAdminRaces } from "../../../../services/api/raceService";
-import { getAdminRunners } from "../../../../services/api/runnerService";
+import { useGetAdminRaces } from "../../../../hooks/api/requests/admin/races/useGetAdminRaces";
 import { getImportRunnersCsvBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
-import ToastService from "../../../../services/ToastService";
 import type { SelectOption } from "../../../../types/Forms";
 import type { RunnerFromCsv, RunnersCsvMapping } from "../../../../types/ImportCsv";
-import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { getRunnerFromCsv, parseCsv } from "../../../../utils/csvUtils";
-import { getRaceDictFromRaces } from "../../../../utils/raceUtils";
 import { appContext } from "../../../App";
 import { Input } from "../../../ui/forms/Input";
 import Select from "../../../ui/forms/Select";
@@ -64,7 +60,8 @@ export default function ImportRunnersCsvView(): React.ReactElement {
   const [runners] = React.useState<RaceRunner[] | false>(false);
 
   // false = not fetched yet
-  const [races, setRaces] = React.useState<RaceDict<AdminRace> | false>(false);
+  const getRacesQuery = useGetAdminRaces();
+  const races = getRacesQuery.data?.races;
 
   const [selectedRaceId, setSelectedRaceId] = React.useState<number | null>(null);
 
@@ -104,42 +101,12 @@ export default function ImportRunnersCsvView(): React.ReactElement {
     return body;
   }, [csvData]);
 
-  const fetchRaces = React.useCallback(async () => {
-    if (!accessToken) {
-      return;
-    }
-
-    const result = await getAdminRaces(accessToken);
-
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de récupérer la liste des courses");
-      return;
-    }
-
-    setRaces(getRaceDictFromRaces(result.json.races));
-  }, [accessToken]);
-
-  const fetchRunners = React.useCallback(async () => {
-    if (!accessToken) {
-      return;
-    }
-
-    const result = await getAdminRunners(accessToken);
-
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de récupérer la liste des coureurs");
-      // return;
-    }
-
-    // setRunners(result.json.runners);
-  }, [accessToken]);
-
   const raceOptions = React.useMemo<Array<SelectOption<number>>>(() => {
     if (!races) {
       return [];
     }
 
-    return Object.values(races).map((race) => ({
+    return races.map((race) => ({
       label: race.name,
       value: race.id,
     }));
@@ -200,14 +167,6 @@ export default function ImportRunnersCsvView(): React.ReactElement {
 
     return true;
   }, [existingRunnerIds, runnerToImportIdCounts, runnersToImport, selectedRaceId]);
-
-  React.useEffect(() => {
-    void fetchRaces();
-  }, [fetchRaces]);
-
-  React.useEffect(() => {
-    void fetchRunners();
-  }, [fetchRunners]);
 
   // When CSV file content changes, reset mapping
   React.useEffect(() => {
@@ -344,8 +303,8 @@ export default function ImportRunnersCsvView(): React.ReactElement {
 
     // ToastService.getToastr().success(`${result.json.count} coureurs importés`);
     clearFileInput();
-    void fetchRunners();
-  }, [accessToken, clearFileInput, fetchRunners, runnersToImport, selectedRaceId]);
+    // void fetchRunners();
+  }, [accessToken, clearFileInput, runnersToImport, selectedRaceId]);
 
   const runnersToImportCount = runnersToImport.filter(({ toImport }) => toImport).length;
   const runnersFromCsvCount = runnersFromCsv.length;
@@ -413,7 +372,7 @@ export default function ImportRunnersCsvView(): React.ReactElement {
                   <Col xl={3} lg={4} md={6} sm={12}>
                     <Select
                       label="Course"
-                      isLoading={races === false}
+                      isLoading={getRacesQuery.isLoading}
                       options={raceOptions}
                       value={selectedRaceId ?? undefined}
                       onChange={onSelectRace}

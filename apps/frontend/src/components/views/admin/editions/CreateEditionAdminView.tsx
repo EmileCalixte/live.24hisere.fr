@@ -1,52 +1,33 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { postAdminEdition } from "../../../../services/api/editionService";
+import { usePostAdminEdition } from "../../../../hooks/api/requests/admin/editions/usePostAdminEdition";
 import { getEditionCreateBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
-import ToastService from "../../../../services/ToastService";
-import { isApiRequestResultOk } from "../../../../utils/apiUtils";
-import { appContext } from "../../../App";
 import Page from "../../../ui/Page";
 import EditionDetailsForm from "../../../viewParts/admin/editions/EditionDetailsForm";
 
 export default function CreateEditionAdminView(): React.ReactElement {
   const navigate = useNavigate();
 
-  const { accessToken } = React.useContext(appContext).user;
+  const postEditionMutation = usePostAdminEdition();
 
   const [editionName, setEditionName] = React.useState("");
   const [isPublic, setIsPublic] = React.useState(false);
 
-  const [isSaving, setIsSaving] = React.useState(false);
+  const onSubmit: React.FormEventHandler = (e) => {
+    e.preventDefault();
 
-  const onSubmit = React.useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
+    const body = {
+      name: editionName,
+      isPublic,
+    };
 
-      if (!accessToken) {
-        return;
-      }
-
-      setIsSaving(true);
-
-      const body = {
-        name: editionName,
-        isPublic,
-      };
-
-      const result = await postAdminEdition(accessToken, body);
-
-      if (!isApiRequestResultOk(result)) {
-        ToastService.getToastr().error("Une erreur est survenue");
-        setIsSaving(false);
-        return;
-      }
-
-      ToastService.getToastr().success("Édition créée");
-      void navigate(`/admin/editions/${result.json.edition.id}`);
-    },
-    [accessToken, editionName, isPublic, navigate],
-  );
+    postEditionMutation.mutate(body, {
+      onSuccess: ({ edition }) => {
+        void navigate(`/admin/editions/${edition.id}`);
+      },
+    });
+  };
 
   return (
     <Page id="admin-create-edition" title="Créer une édition">
@@ -64,7 +45,7 @@ export default function CreateEditionAdminView(): React.ReactElement {
             setName={setEditionName}
             isPublic={isPublic}
             setIsPublic={setIsPublic}
-            submitButtonDisabled={isSaving}
+            submitButtonDisabled={postEditionMutation.isPending}
           />
         </Col>
       </Row>

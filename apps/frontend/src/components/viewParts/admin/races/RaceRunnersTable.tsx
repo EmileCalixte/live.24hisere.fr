@@ -18,7 +18,7 @@ export default function RaceRunnersTable({ race, runners }: RaceRunnersTableProp
           <th>Catégorie</th>
           <th>Arrêté</th>
           <th>Visible public</th>
-          <th>Détails du coureur</th>
+          <th>Détails du participant</th>
         </tr>
       </thead>
       <tbody>

@@ -1,6 +1,8 @@
-import type { ApiRequest, ApiRequestResult } from "@live24hisere/core/types";
+import type { ApiPayload, ApiRequest, ApiResponse } from "@live24hisere/core/types";
 import config from "../../config/config";
 import { DEFAULT_HEADERS, DEFAULT_HEADERS_WITH_BODY, REQUEST_TIMEOUT } from "../../constants/api";
+import { ApiError } from "../../errors/ApiError";
+import { ApiTimeoutError } from "../../errors/ApiTimeoutError";
 import {
   addHeadersIfNotSet,
   EVENT_API_REQUEST_ENDED,
@@ -27,9 +29,9 @@ function addDefaultHeaders(init: Omit<RequestInit, "headers"> & { headers: Heade
 
 export async function performApiRequest<T extends ApiRequest>(
   url: string,
-  body?: T["payload"],
+  body?: ApiPayload<T>,
   init: Omit<RequestInit, "body"> = {},
-): Promise<ApiRequestResult<T>> {
+): Promise<ApiResponse<T>> {
   if (!url.startsWith(config.apiUrl)) {
     url = getBackendFullUrl(url);
   }
@@ -54,7 +56,7 @@ export async function performApiRequest<T extends ApiRequest>(
       }),
       new Promise((resolve, reject) => {
         setTimeout(() => {
-          reject(Error(`Request ${method} ${url} timed out after ${REQUEST_TIMEOUT} ms`));
+          reject(new ApiTimeoutError(`Request ${method} ${url} timed out after ${REQUEST_TIMEOUT} ms`));
         }, REQUEST_TIMEOUT);
       }),
     ])) as Response;
@@ -63,11 +65,15 @@ export async function performApiRequest<T extends ApiRequest>(
 
     const responseJson = await getResponseJson<T["response"]>(response);
 
-    return {
-      isOk: response.ok,
-      response,
-      json: responseJson,
-    };
+    if (!response.ok) {
+      throw new ApiError(
+        response.status,
+        responseJson,
+        `Request ${init.method ?? "GET"} ${url} resulted in an HTTP ${response.status} status code`,
+      );
+    }
+
+    return responseJson;
   } finally {
     window.dispatchEvent(new CustomEvent(EVENT_API_REQUEST_ENDED));
   }
@@ -76,9 +82,9 @@ export async function performApiRequest<T extends ApiRequest>(
 export async function performAuthenticatedApiRequest<T extends ApiRequest>(
   url: string,
   accessToken: string,
-  body?: T["payload"],
+  body?: ApiPayload<T>,
   init: Omit<RequestInit, "body"> = {},
-): Promise<ApiRequestResult<T>> {
+): Promise<ApiResponse<T>> {
   if (!(init.headers instanceof Headers)) {
     init.headers = new Headers(init.headers);
   }

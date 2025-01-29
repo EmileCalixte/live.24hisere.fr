@@ -201,6 +201,9 @@ importers:
       '@mui/material':
         specifier: ^6.3.0
         version: 6.3.0(@emotion/react@11.14.0(@types/react@19.0.2)(react@19.0.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@19.0.2)(react@19.0.0))(@types/react@19.0.2)(react@19.0.0))(@types/react@19.0.2)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@tanstack/react-query':
+        specifier: ^5.62.12
+        version: 5.62.12(react@19.0.0)
       '@types/dompurify':
         specifier: ^3.2.0
         version: 3.2.0
@@ -1995,6 +1998,14 @@ packages:
 
   '@swc/types@0.1.17':
     resolution: {integrity: sha512-V5gRru+aD8YVyCOMAjMpWR1Ui577DD5KSJsHP8RAxopAH22jFz6GZd/qxqjO6MJHQhcsjvjOFXyDhyLQUnMveQ==}
+
+  '@tanstack/query-core@5.62.12':
+    resolution: {integrity: sha512-6igFeBgymHkCxVgaEk+yiLwkMf9haui/EQLmI3o9CatOyDThEoFKe8toLWvWliZC/Jf+h7NwHi/zjfyLArr1ow==}
+
+  '@tanstack/react-query@5.62.12':
+    resolution: {integrity: sha512-yt8p7l5MlHA3QCt6xF1Cu9dw1Anf93yTK+DMDJQ64h/mshAymVAtcwj8TpsyyBrZNWAAZvza/m76bnTSR79ZtQ==}
+    peerDependencies:
+      react: ^18 || ^19
 
   '@testing-library/dom@10.4.0':
     resolution: {integrity: sha512-pemlzrSESWbdAloYml3bAJMEfNh1Z7EduzqPKprCH5S341frlpYnUEW0H72dLxa6IsYr+mPno20GiSm+h9dEdQ==}
@@ -7657,6 +7668,13 @@ snapshots:
   '@swc/types@0.1.17':
     dependencies:
       '@swc/counter': 0.1.3
+
+  '@tanstack/query-core@5.62.12': {}
+
+  '@tanstack/react-query@5.62.12(react@19.0.0)':
+    dependencies:
+      '@tanstack/query-core': 5.62.12
+      react: 19.0.0
 
   '@testing-library/dom@10.4.0':
     dependencies:

@@ -12,10 +12,10 @@ import RunnerDetailsEditPassage from "../runners/RunnerDetailsEditPassage";
 interface ParticipantDetailsPassagesProps {
   passages: AdminProcessedPassage[];
   runnerRace: AdminRaceWithRunnerCount | null;
-  updatePassageVisiblity: (passage: AdminProcessedPassage, hidden: boolean) => Promise<void>;
-  updatePassage: (passage: AdminProcessedPassage, time: Date) => Promise<void>;
-  saveNewPassage: (time: Date) => Promise<void>;
-  deletePassage: (passage: AdminProcessedPassage) => Promise<void>;
+  updatePassageVisiblity: (passage: AdminProcessedPassage, hidden: boolean) => unknown;
+  updatePassage: (passage: AdminProcessedPassage, time: Date) => unknown;
+  saveNewPassage: (time: Date) => unknown;
+  deletePassage: (passage: AdminProcessedPassage) => unknown;
 }
 
 export default function ParticipantDetailsPassages({

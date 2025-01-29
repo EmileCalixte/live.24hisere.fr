@@ -1,5 +1,5 @@
 import type {
-  ApiRequestResult,
+  ApiResponse,
   GetDisabledAppDataAdminApiRequest,
   GetPassageImportSettingsAdminApiRequest,
   PatchDisabledAppDataAdminApiRequest,
@@ -7,16 +7,14 @@ import type {
 } from "@live24hisere/core/types";
 import { performAuthenticatedApiRequest } from "./apiService";
 
-export async function getDisabledAppData(
-  accessToken: string,
-): Promise<ApiRequestResult<GetDisabledAppDataAdminApiRequest>> {
+export async function getDisabledAppData(accessToken: string): Promise<ApiResponse<GetDisabledAppDataAdminApiRequest>> {
   return await performAuthenticatedApiRequest<GetDisabledAppDataAdminApiRequest>("/admin/disabled-app", accessToken);
 }
 
 export async function patchDisabledAppData(
   accessToken: string,
   data: PatchDisabledAppDataAdminApiRequest["payload"],
-): Promise<ApiRequestResult<PatchDisabledAppDataAdminApiRequest>> {
+): Promise<ApiResponse<PatchDisabledAppDataAdminApiRequest>> {
   return await performAuthenticatedApiRequest<PatchDisabledAppDataAdminApiRequest>(
     "/admin/disabled-app",
     accessToken,
@@ -27,7 +25,7 @@ export async function patchDisabledAppData(
 
 export async function getPassageImportSettings(
   accessToken: string,
-): Promise<ApiRequestResult<GetPassageImportSettingsAdminApiRequest>> {
+): Promise<ApiResponse<GetPassageImportSettingsAdminApiRequest>> {
   return await performAuthenticatedApiRequest<GetPassageImportSettingsAdminApiRequest>(
     "/admin/passage-import",
     accessToken,
@@ -37,6 +35,11 @@ export async function getPassageImportSettings(
 export async function patchPassageImportSettings(
   accessToken: string,
   data: PatchPassageImportSettingsAdminApiRequest["payload"],
-): Promise<ApiRequestResult<PatchPassageImportSettingsAdminApiRequest>> {
-  return await performAuthenticatedApiRequest("/admin/passage-import", accessToken, data, { method: "PATCH" });
+): Promise<ApiResponse<PatchPassageImportSettingsAdminApiRequest>> {
+  return await performAuthenticatedApiRequest<PatchPassageImportSettingsAdminApiRequest>(
+    "/admin/passage-import",
+    accessToken,
+    data,
+    { method: "PATCH" },
+  );
 }

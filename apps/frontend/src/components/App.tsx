@@ -1,14 +1,13 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import type React from "react";
-import { createContext, useCallback, useEffect, useState } from "react";
+import React from "react";
 import { Helmet } from "react-helmet";
-import { BrowserRouter, Navigate, Route, Routes, useMatch } from "react-router-dom";
+import { Route, Routes, useMatch, useNavigate } from "react-router-dom";
 import type { PublicUser } from "@live24hisere/core/types";
 import { APP_BASE_TITLE } from "../constants/app";
-import { getAppData } from "../services/api/appDataService";
-import { getCurrentUserInfo, logout as performLogoutRequest } from "../services/api/authService";
-import ToastService from "../services/ToastService";
-import { EVENT_API_REQUEST_ENDED, EVENT_API_REQUEST_STARTED, isApiRequestResultOk } from "../utils/apiUtils";
+import { useGetCurrentUser } from "../hooks/api/requests/auth/useGetCurrentUser";
+import { useLogout } from "../hooks/api/requests/auth/useLogout";
+import { useGetAppData } from "../hooks/api/requests/public/appData/useGetAppData";
+import { EVENT_API_REQUEST_ENDED, EVENT_API_REQUEST_STARTED } from "../utils/apiUtils";
 import { verbose } from "../utils/utils";
 import CircularLoader from "./ui/CircularLoader";
 import Footer from "./ui/footer/Footer";
@@ -82,7 +81,7 @@ interface AppContext {
   };
 }
 
-export const appContext = createContext<AppContext>({
+export const appContext = React.createContext<AppContext>({
   appData: {
     fetchError: null,
     lastUpdateTime: new Date(),
@@ -106,73 +105,64 @@ export const appContext = createContext<AppContext>({
   },
 });
 
-// Fetch app data every 20 seconds
-const FETCH_APP_DATA_INTERVAL_TIME = 20 * 1000;
-
 export default function App(): React.ReactElement {
-  const [isLoading, setIsLoading] = useState(true);
-  const [fetchLevel, setFetchLevel] = useState(0);
-  const [fetchAppDataError, setFetchAppDataError] = useState<unknown>(null);
-  const [lastUpdateTime, setLastUpdateTime] = useState(new Date());
-  const [serverTimeOffset, setServerTimeOffset] = useState(0);
-  const [isAppEnabled, setIsAppEnabled] = useState(false);
-  const [disabledAppMessage, setDisabledAppMessage] = useState<string | null>(null);
-  const [currentEditionId, setCurrentEditionId] = useState<number | null>(null);
-  const [accessToken, setAccessToken] = useState<string | null>(localStorage.getItem("accessToken"));
-  const [user, setUser] = useState<PublicUser | null | undefined>(undefined); // If null, user is not logged in. If undefined, user info was not fetched yet
-  const [redirect, setRedirect] = useState<string | null>(null); // Used to redirect the user to a specified location, for example when user logs out
+  const navigate = useNavigate();
+
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [fetchLevel, setFetchLevel] = React.useState(0);
+  const [fetchAppDataError, setFetchAppDataError] = React.useState<unknown>(null);
+  const [lastUpdateTime, setLastUpdateTime] = React.useState(new Date());
+  const [serverTimeOffset, setServerTimeOffset] = React.useState(0);
+  const [isAppEnabled, setIsAppEnabled] = React.useState(false);
+  const [disabledAppMessage, setDisabledAppMessage] = React.useState<string | null>(null);
+  const [currentEditionId, setCurrentEditionId] = React.useState<number | null>(null);
+  const [accessToken, setAccessToken] = React.useState<string | null>(localStorage.getItem("accessToken"));
+  const [user, setUser] = React.useState<PublicUser | null | undefined>(undefined); // If null, user is not logged in. If undefined, user info was not fetched yet
+
+  const getAppDataQuery = useGetAppData();
+  const appData = getAppDataQuery.data;
+
+  const getCurrentUserQuery = useGetCurrentUser(accessToken, forgetAccessToken);
+  const lastFetchedCurrentUser = getCurrentUserQuery.data?.user;
+
+  const logoutMutation = useLogout();
 
   const isLoginRoute = !!useMatch("/login");
   const isAdminRoute = !!useMatch("/admin/*");
 
-  const incrementFetchLevel = useCallback(() => {
+  const incrementFetchLevel = React.useCallback(() => {
     setFetchLevel((level) => level + 1);
   }, []);
 
-  const decrementFetchLevel = useCallback(() => {
+  const decrementFetchLevel = React.useCallback(() => {
     setFetchLevel((level) => Math.max(0, level - 1));
   }, []);
 
-  const saveAccessToken = useCallback((token: string) => {
+  function saveAccessToken(token: string): void {
     localStorage.setItem("accessToken", token);
     setAccessToken(token);
-  }, []);
+  }
 
-  const forgetAccessToken = useCallback(() => {
+  function forgetAccessToken(): void {
     localStorage.removeItem("accessToken");
     setAccessToken(null);
-  }, []);
+  }
 
-  const fetchAppData = useCallback(async () => {
-    verbose("Fetching app data");
-
-    let result = null;
-
-    try {
-      result = await getAppData();
-      setFetchAppDataError(null);
-    } catch (e) {
-      setFetchAppDataError(e);
-      setIsLoading(false);
-      console.error(e);
+  React.useEffect(() => {
+    if (!appData) {
       return;
     }
 
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de récupérer les informations de l'application");
-      return;
-    }
+    verbose("App data", appData);
 
-    verbose("App data", result.json);
+    setIsAppEnabled(appData.isAppEnabled);
+    setDisabledAppMessage(appData.disabledAppMessage);
 
-    setIsAppEnabled(result.json.isAppEnabled);
-    setDisabledAppMessage(result.json.disabledAppMessage);
+    setCurrentEditionId(appData.currentEditionId);
 
-    setCurrentEditionId(result.json.currentEditionId);
+    setLastUpdateTime(new Date(appData.lastUpdateTime ?? 0));
 
-    setLastUpdateTime(new Date(result.json.lastUpdateTime ?? 0));
-
-    const serverTime = new Date(result.json.currentTime);
+    const serverTime = new Date(appData.currentTime);
     const clientTime = new Date();
 
     const timeOffsetMs = serverTime.getTime() - clientTime.getTime();
@@ -180,43 +170,27 @@ export default function App(): React.ReactElement {
     setServerTimeOffset(Math.round(timeOffsetMs / 1000));
 
     setIsLoading(false);
-  }, []);
+  }, [appData]);
 
-  const fetchUserInfo = useCallback(async () => {
+  React.useEffect(() => {
+    setFetchAppDataError(getAppDataQuery.error);
+  }, [getAppDataQuery.error]);
+
+  function logout(): void {
     if (!accessToken) {
       return;
     }
 
-    verbose("Fetching user info");
+    logoutMutation.mutate(accessToken, {
+      onSuccess: () => {
+        forgetAccessToken();
+        setUser(null);
+        void navigate("/");
+      },
+    });
+  }
 
-    const result = await getCurrentUserInfo(accessToken);
-
-    if (!isApiRequestResultOk(result)) {
-      forgetAccessToken();
-      setUser(null);
-      ToastService.getToastr().error("Vous avez été déconnecté");
-      return;
-    }
-
-    verbose("User info", result.json);
-
-    setUser(result.json.user);
-  }, [accessToken, forgetAccessToken]);
-
-  const logout = useCallback(() => {
-    if (accessToken) {
-      void performLogoutRequest(accessToken);
-    }
-
-    forgetAccessToken();
-
-    setUser(null);
-    setRedirect("/");
-
-    ToastService.getToastr().success("Vous avez été déconnecté");
-  }, [accessToken, forgetAccessToken]);
-
-  useEffect(() => {
+  React.useEffect(() => {
     window.addEventListener(EVENT_API_REQUEST_STARTED, incrementFetchLevel);
     window.addEventListener(EVENT_API_REQUEST_ENDED, decrementFetchLevel);
 
@@ -226,36 +200,17 @@ export default function App(): React.ReactElement {
     };
   }, [incrementFetchLevel, decrementFetchLevel]);
 
-  useEffect(() => {
-    void fetchAppData();
+  React.useEffect(() => {
+    if (lastFetchedCurrentUser) {
+      setUser(lastFetchedCurrentUser);
+    }
+  }, [lastFetchedCurrentUser]);
 
-    const interval = setInterval(() => {
-      void fetchAppData();
-    }, FETCH_APP_DATA_INTERVAL_TIME);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, [fetchAppData]);
-
-  useEffect(() => {
+  React.useEffect(() => {
     if (accessToken === null) {
       setUser(null);
-      return;
     }
-
-    void fetchUserInfo();
-  }, [accessToken, fetchUserInfo]);
-
-  if (redirect !== null) {
-    setRedirect(null);
-
-    return (
-      <BrowserRouter>
-        <Navigate to={redirect} />
-      </BrowserRouter>
-    );
-  }
+  }, [accessToken]);
 
   const appContextValues: AppContext = {
     appData: {

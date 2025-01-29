@@ -7,7 +7,7 @@ import RunnerDetailsPassageForm from "./RunnerDetailsPassageForm";
 interface RunnerDetailsEditPassageProps {
   passage: AdminProcessedPassage;
   runnerRace: AdminRaceWithRunnerCount | null;
-  updatePassage: (passage: AdminProcessedPassage, time: Date) => Promise<void>;
+  updatePassage: (passage: AdminProcessedPassage, time: Date) => unknown;
   onClose: () => void;
 }
 

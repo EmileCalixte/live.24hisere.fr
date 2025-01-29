@@ -8,7 +8,7 @@ import { Input } from "../../../ui/forms/Input";
 import Select from "../../../ui/forms/Select";
 
 interface RaceDetailsFormProps {
-  onSubmit: (e: React.FormEvent) => Promise<void>;
+  onSubmit: (e: React.FormEvent) => void;
   editionOptions: Array<SelectOption<number>>;
   editionId: number;
   setEditionId: (editionId: number) => void;
@@ -78,7 +78,7 @@ export default function RaceDetailsForm({
   return (
     <form
       onSubmit={(e) => {
-        void onSubmit(e);
+        onSubmit(e);
       }}
     >
       <Select

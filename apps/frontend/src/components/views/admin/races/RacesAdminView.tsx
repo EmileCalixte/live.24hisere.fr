@@ -1,63 +1,21 @@
-import React from "react";
+import type React from "react";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import type { AdminEditionWithRaceCount, AdminRaceWithRunnerCount } from "@live24hisere/core/types";
-import { getAdminEditions } from "../../../../services/api/editionService";
-import { getAdminRaces } from "../../../../services/api/raceService";
+import { useGetAdminEditions } from "../../../../hooks/api/requests/admin/editions/useGetAdminEditions";
+import { useGetAdminRaces } from "../../../../hooks/api/requests/admin/races/useGetAdminRaces";
 import { getRacesBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
-import ToastService from "../../../../services/ToastService";
-import { isApiRequestResultOk } from "../../../../utils/apiUtils";
 import { formatDateAsString, formatMsAsDuration } from "../../../../utils/utils";
-import { appContext } from "../../../App";
 import CircularLoader from "../../../ui/CircularLoader";
 import Page from "../../../ui/Page";
 
 export default function RacesAdminView(): React.ReactElement {
-  const { accessToken } = React.useContext(appContext).user;
+  const getRacesQuery = useGetAdminRaces();
+  const races = getRacesQuery.data?.races;
 
-  // false = not fetched yet
-  const [races, setRaces] = React.useState<AdminRaceWithRunnerCount[] | false>(false);
-  const [editions, setEditions] = React.useState<AdminEditionWithRaceCount[] | false>(false);
-
-  const fetchRaces = React.useCallback(async () => {
-    if (!accessToken) {
-      return;
-    }
-
-    const result = await getAdminRaces(accessToken);
-
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de récupérer la liste des courses");
-      return;
-    }
-
-    setRaces(result.json.races);
-  }, [accessToken]);
-
-  const fetchEditions = React.useCallback(async () => {
-    if (!accessToken) {
-      return;
-    }
-
-    const result = await getAdminEditions(accessToken);
-
-    if (!isApiRequestResultOk(result)) {
-      ToastService.getToastr().error("Impossible de récupérer la liste des éditions");
-      return;
-    }
-
-    setEditions(result.json.editions);
-  }, [accessToken]);
-
-  React.useEffect(() => {
-    void fetchRaces();
-  }, [fetchRaces]);
-
-  React.useEffect(() => {
-    void fetchEditions();
-  }, [fetchEditions]);
+  const getEditionsQuery = useGetAdminEditions();
+  const editions = getEditionsQuery.data?.editions;
 
   return (
     <Page id="admin-races" title="Courses">
@@ -65,9 +23,9 @@ export default function RacesAdminView(): React.ReactElement {
         <Col>{getRacesBreadcrumbs()}</Col>
       </Row>
 
-      {races === false && <CircularLoader />}
+      {getRacesQuery.isLoading && <CircularLoader />}
 
-      {races !== false && (
+      {races && (
         <>
           <Row>
             <Col>
@@ -97,7 +55,7 @@ export default function RacesAdminView(): React.ReactElement {
                   </thead>
                   <tbody>
                     {races.map((race) => {
-                      const edition = editions ? editions.find((edition) => edition.id === race.editionId) : undefined;
+                      const edition = editions?.find((edition) => edition.id === race.editionId);
 
                       const lapDistance = parseFloat(race.lapDistance);
                       const initialDistance = parseFloat(race.initialDistance);

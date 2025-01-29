@@ -1,8 +1,7 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
-import { useIntervalSimpleApiRequest } from "../../hooks/useIntervalApiRequest";
-import { getRunners } from "../../services/api/runnerService";
+import { useGetPublicRunners } from "../../hooks/api/requests/public/runners/useGetPublicRunners";
 import CircularLoader from "../ui/CircularLoader";
 import Page from "../ui/Page";
 import RunnerSelector from "../viewParts/runnerDetails/RunnerSelector";
@@ -25,7 +24,8 @@ export default function RunnerDetailsView(): React.ReactElement {
   //   parseAsEnum([Tab.Stats, Tab.Laps]).withDefault(Tab.Stats),
   // );
 
-  const runners = useIntervalSimpleApiRequest(getRunners).json?.runners;
+  const getRunnersQuery = useGetPublicRunners();
+  const runners = getRunnersQuery.data?.runners;
 
   // const raceId: number | undefined = React.useMemo(() => {
   //   if (runnerId === undefined) {
