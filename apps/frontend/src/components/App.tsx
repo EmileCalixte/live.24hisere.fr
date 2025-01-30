@@ -12,10 +12,11 @@ import { verbose } from "../utils/utils";
 import CircularLoader from "./ui/CircularLoader";
 import Footer from "./ui/footer/Footer";
 import Header from "./ui/header/Header";
-import Admin from "./views/admin/Admin";
 import DisabledAppView from "./views/DisabledAppView";
 import LoginView from "./views/LoginView";
 import Public from "./views/public/Public";
+
+const Admin = React.lazy(async () => await import("./views/admin/Admin"));
 
 interface AppContext {
   appData: {
@@ -254,7 +255,14 @@ export default function App(): React.ReactElement {
             ) : (
               <Routes>
                 <Route path="/login" element={<LoginView />} />
-                <Route path="/admin/*" element={<Admin />} />
+                <Route
+                  path="/admin/*"
+                  element={
+                    <React.Suspense fallback={<CircularLoader />}>
+                      <Admin />
+                    </React.Suspense>
+                  }
+                />
                 <Route path="*" element={<Public />} />
               </Routes>
             )}
