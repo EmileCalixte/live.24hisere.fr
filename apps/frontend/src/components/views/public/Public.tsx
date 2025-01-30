@@ -5,8 +5,9 @@ import { useGetPublicEditions } from "../../../hooks/api/requests/public/edition
 import { useSelectedEdition } from "../../../hooks/useSelectedEdition";
 import CircularLoader from "../../ui/CircularLoader";
 import EditionSelectorCard from "../../viewParts/EditionSelectorCard";
-import RankingView from "../RankingView";
-import RunnerDetailsView from "../RunnerDetailsView";
+
+const RankingView = React.lazy(async () => await import("../RankingView"));
+const RunnerDetailsView = React.lazy(async () => await import("../RunnerDetailsView"));
 
 interface PublicContext {
   selectedEdition: EditionWithRaceCount | null;
@@ -46,8 +47,22 @@ export default function Public(): React.ReactElement {
 
       <publicContext.Provider value={{ selectedEdition }}>
         <Routes>
-          <Route path="/ranking" element={<RankingView />} />
-          <Route path="/runner-details" element={<RunnerDetailsView />} />
+          <Route
+            path="/ranking"
+            element={
+              <React.Suspense fallback={<CircularLoader />}>
+                <RankingView />
+              </React.Suspense>
+            }
+          />
+          <Route
+            path="/runner-details"
+            element={
+              <React.Suspense fallback={<CircularLoader />}>
+                <RunnerDetailsView />
+              </React.Suspense>
+            }
+          />
           <Route path="/runner-details/:runnerId" element={<RunnerDetailsView />} />
 
           {/* Redirect any unresolved route to /ranking */}
