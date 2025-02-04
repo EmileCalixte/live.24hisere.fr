@@ -234,6 +234,9 @@ importers:
       dompurify:
         specifier: ^3.2.4
         version: 3.2.4
+      i18n-iso-countries:
+        specifier: ^7.13.0
+        version: 7.13.0
       latinize:
         specifier: ^2.0.0
         version: 2.0.0
@@ -300,6 +303,10 @@ importers:
         version: 3.0.4(@types/node@22.10.2)(jsdom@26.0.0)(terser@5.31.1)(yaml@2.7.0)
 
   packages/core:
+    dependencies:
+      i18n-iso-countries:
+        specifier: ^7.13.0
+        version: 7.13.0
     devDependencies:
       tsup:
         specifier: ^8.3.6
@@ -2856,6 +2863,9 @@ packages:
   dezalgo@1.0.4:
     resolution: {integrity: sha512-rXSP0bf+5n0Qonsb+SVVfNfIsimO4HEtmnIpPHY8Q1UCzKlQrDMfdobr8nJOOsRgWCyMRqeSBQzmWUMq7zvVig==}
 
+  diacritics@1.3.0:
+    resolution: {integrity: sha512-wlwEkqcsaxvPJML+rDh/2iS824jbREk6DUMUKkEaSlxdYHeS43cClJtsWglvw2RfeXGm6ohKDqsXteJ5sP5enA==}
+
   diff-sequences@29.6.3:
     resolution: {integrity: sha512-EjePK1srD3P08o2j4f0ExnylqRs5B9tJjcp9t1krH2qRi8CCdsYfwe9JgSLurFBWwq4uOlipzfk5fHNvwFKr8Q==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -3600,6 +3610,10 @@ packages:
     resolution: {integrity: sha512-5gs5ytaNjBrh5Ow3zrvdUUY+0VxIuWVL4i9irt6friV+BqdCfmV11CQTWMiBYWHbXhco+J1kHfTOUkePhCDvMA==}
     engines: {node: '>=18'}
     hasBin: true
+
+  i18n-iso-countries@7.13.0:
+    resolution: {integrity: sha512-pVh4CjdgAHZswI98hzG+1BItQlsQfR+yGDsjDISoWIV/jHDAvCmSyZ5vj2YWwAjfVZ8/BhBDqWcFvuGOyHe4vg==}
+    engines: {node: '>= 12'}
 
   iconv-lite@0.4.24:
     resolution: {integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==}
@@ -8439,6 +8453,8 @@ snapshots:
       asap: 2.0.6
       wrappy: 1.0.2
 
+  diacritics@1.3.0: {}
+
   diff-sequences@29.6.3: {}
 
   diff@4.0.2: {}
@@ -9335,6 +9351,10 @@ snapshots:
   human-signals@5.0.0: {}
 
   husky@9.1.7: {}
+
+  i18n-iso-countries@7.13.0:
+    dependencies:
+      diacritics: 1.3.0
 
   iconv-lite@0.4.24:
     dependencies:
