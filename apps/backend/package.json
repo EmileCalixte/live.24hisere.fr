@@ -28,7 +28,7 @@
     "@nestjs/axios": "^4.0.0",
     "@nestjs/common": "^11.0.6",
     "@nestjs/config": "^4.0.0",
-    "@nestjs/core": "^11.0.6",
+    "@nestjs/core": "^11.0.7",
     "@nestjs/mapped-types": "^2.1.0",
     "@nestjs/platform-express": "^11.0.6",
     "@nestjs/schedule": "^5.0.1",
