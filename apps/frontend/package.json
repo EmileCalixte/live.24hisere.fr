@@ -30,7 +30,7 @@
     "nuqs": "^2.3.2",
     "papaparse": "^5.5.2",
     "react": "^19.0.0",
-    "react-bootstrap": "^2.10.8",
+    "react-bootstrap": "^2.10.9",
     "react-dom": "^19.0.0",
     "react-helmet": "^6.1.0",
     "react-router-dom": "^7.1.5",
