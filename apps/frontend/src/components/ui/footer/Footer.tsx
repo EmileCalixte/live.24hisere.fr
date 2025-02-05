@@ -4,6 +4,7 @@ import { Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { formatDateAsString } from "../../../utils/utils";
 import { appContext } from "../../App";
+import LinkBlank from "../LinkBlank";
 
 export default function Footer(): React.ReactElement {
   const {
@@ -24,20 +25,17 @@ export default function Footer(): React.ReactElement {
               imprécisions. Seules les données du poste de chronométrage font foi.
             </p>
 
-            <p>
-              Application développée pour Les 24 Heures de l'Isère par Emile Calixte, avec l'aide de Djeson
-              Pascal-Valette
-            </p>
-
-            <p>
-              <a href="https://github.com/EmileCalixte/live.24hisere.fr" target="_blank" rel="noopener noreferrer">
-                Code source
-              </a>{" "}
-              –{" "}
-              <a href="https://www.24hisere.fr/" target="_blank" rel="noopener noreferrer">
-                Les 24 Heures de l'Isère
-              </a>
-            </p>
+            <ul className="footer-links">
+              <li>
+                <Link to="/about">À propos</Link>
+              </li>
+              <li>
+                <LinkBlank to="https://github.com/EmileCalixte/live.24hisere.fr">Code source</LinkBlank>
+              </li>
+              <li>
+                <LinkBlank to="https://www.24hisere.fr">Les 24 Heures de l'Isère</LinkBlank>
+              </li>
+            </ul>
 
             {!user && (
               <p>
