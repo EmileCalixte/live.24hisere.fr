@@ -31,6 +31,11 @@ export interface PublicRunner {
    * The birth year of the runner
    */
   birthYear: string;
+
+  /**
+   * The ISO 3166-1 Alpha-3 code of the runner's country
+   */
+  countryCode: string | null;
 }
 
 export interface AdminRunner extends PublicRunner {

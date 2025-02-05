@@ -1,8 +1,9 @@
 import { Type } from "class-transformer";
-import { IsBoolean, IsInt, IsNotEmpty, IsString, Max, MaxLength, Min } from "class-validator";
+import { IsBoolean, IsInt, IsNotEmpty, IsOptional, IsString, Max, MaxLength, Min } from "class-validator";
 import { RUNNER_FIRSTNAME_MAX_LENGTH, RUNNER_LASTNAME_MAX_LENGTH } from "@live24hisere/core/constants";
 import { Gender, PostRunnerAdminApiRequest } from "@live24hisere/core/types";
 import { IsGender } from "../../validation/validators/IsGender";
+import { IsISO31661Alpha3Code } from "../../validation/validators/IsISO31661Alpha3Code";
 
 type PostRunnerPayload = PostRunnerAdminApiRequest["payload"];
 
@@ -27,6 +28,11 @@ export class RunnerDto implements PostRunnerPayload {
   @Max(new Date().getFullYear())
   @Type(() => Number) // Allow input to be a string and convert it to number with the `Number` constructor
   birthYear: number;
+
+  @IsString()
+  @IsOptional()
+  @IsISO31661Alpha3Code()
+  countryCode: string | null = null;
 
   @IsBoolean()
   @IsNotEmpty()

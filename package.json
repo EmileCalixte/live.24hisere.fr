@@ -11,6 +11,8 @@
   "scripts": {
     "backend": "pnpm --filter @live24hisere/backend",
     "frontend": "pnpm --filter @live24hisere/frontend",
+    "core": "pnpm --filter @live24hisere/core",
+    "utils": "pnpm --filter @live24hisere/utils",
     "dev": "turbo run dev --parallel",
     "test": "turbo run test --parallel",
     "build": "turbo run build",

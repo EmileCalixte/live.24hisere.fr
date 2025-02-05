@@ -26,6 +26,7 @@
     "bootstrap": "^5.3.3",
     "clsx": "^2.1.1",
     "dompurify": "^3.2.4",
+    "i18n-iso-countries": "^7.13.0",
     "latinize": "^2.0.0",
     "nuqs": "^2.3.2",
     "papaparse": "^5.5.2",

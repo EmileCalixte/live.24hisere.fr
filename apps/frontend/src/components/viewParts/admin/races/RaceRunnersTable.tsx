@@ -2,6 +2,8 @@ import type React from "react";
 import { getCategory } from "@emilecalixte/ffa-categories";
 import { Link } from "react-router-dom";
 import type { AdminRace, AdminRunner, RaceRunner } from "@live24hisere/core/types";
+import { getCountryAlpha2CodeFromAlpha3Code } from "../../../../utils/countryUtils";
+import { Flag } from "../../../ui/countries/Flag";
 
 interface RaceRunnersTableProps {
   race: AdminRace;
@@ -24,14 +26,18 @@ export default function RaceRunnersTable({ race, runners }: RaceRunnersTableProp
       <tbody>
         {runners.map((runner) => {
           const category = getCategory(Number(runner.birthYear), { date: new Date(race.startTime) });
+          const alpha2CountryCode = getCountryAlpha2CodeFromAlpha3Code(runner.countryCode);
 
           return (
             <tr key={runner.id}>
               <td>{runner.bibNumber}</td>
               <td>
-                <Link to={`/admin/runners/${runner.id}`}>
-                  {runner.firstname} {runner.lastname}
-                </Link>
+                <span className="d-flex align-items-center gap-2">
+                  {alpha2CountryCode && <Flag countryCode={alpha2CountryCode} />}
+                  <Link to={`/admin/runners/${runner.id}`}>
+                    {runner.firstname} {runner.lastname}
+                  </Link>
+                </span>
               </td>
               <td>
                 {category.code} - {category.name}

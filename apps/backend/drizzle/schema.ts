@@ -1,5 +1,5 @@
 import { customType, mysqlTable, unique } from "drizzle-orm/mysql-core";
-import { GENDERS } from "@live24hisere/core/constants";
+import { ALPHA3_COUNTRY_CODES, GENDERS } from "@live24hisere/core/constants";
 import { dateUtils } from "@live24hisere/utils";
 
 const TABLE_NAME_ACCESS_TOKEN = "access_token";
@@ -40,6 +40,25 @@ const date = customType<{
   fromDriver(value) {
     // Map YYYY-MM-DD hh:mm:ss to ISO 8601 format (e.g.: 2024-04-06 09:00:03 => 2024-04-06T09:00:03.000Z)
     return new Date(value).toISOString();
+  },
+});
+
+/**
+ * A custom country code which is a VARCHAR(3) type but we ensure that the value is a valid country code
+ */
+const countryCode = customType<{
+  data: string;
+  driverData: string;
+}>({
+  dataType() {
+    return "varchar(3)";
+  },
+  toDriver(value) {
+    if (!ALPHA3_COUNTRY_CODES.includes(value)) {
+      throw new Error(`${value} is not a valid ISO 3166-1 Alpha-3 country code`);
+    }
+
+    return value;
   },
 });
 
@@ -85,6 +104,7 @@ export const TABLE_RUNNER = mysqlTable(TABLE_NAME_RUNNER, (t) => ({
   lastname: t.varchar({ length: 255 }).notNull(),
   gender: t.varchar({ length: 1, enum: GENDERS }).notNull(),
   birthYear: t.varchar({ length: 4 }).notNull(),
+  countryCode: countryCode(),
   isPublic: t.boolean().notNull(),
 }));
 

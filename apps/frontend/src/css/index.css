@@ -463,13 +463,15 @@ table.table th .buttons-container {
 
 .ranking-table-runner-stopped-badge {
   display: inline-block;
-  margin-left: 0.75em;
   font-size: 0.75em;
   background-color: rgb(211 66 66);
   color: white;
   font-weight: bold;
   padding: 0.2em 0.4em;
   border-radius: 0.5em;
+
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
 }
 
 .runner-details-runner-selector-container {

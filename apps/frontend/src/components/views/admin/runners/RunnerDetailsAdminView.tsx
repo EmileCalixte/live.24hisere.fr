@@ -3,6 +3,7 @@ import { Col, Row } from "react-bootstrap";
 import { Navigate, useNavigate } from "react-router-dom";
 import { GENDER } from "@live24hisere/core/constants";
 import type { Gender } from "@live24hisere/core/types";
+import { COUNTRY_NULL_OPTION_VALUE } from "../../../../constants/forms";
 import { useGetAdminEditions } from "../../../../hooks/api/requests/admin/editions/useGetAdminEditions";
 import { useGetAdminRunnerParticipations } from "../../../../hooks/api/requests/admin/participants/useGetAdminRunnerParticipations";
 import { useGetAdminRaces } from "../../../../hooks/api/requests/admin/races/useGetAdminRaces";
@@ -45,6 +46,7 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
   const [runnerLastname, setRunnerLastname] = React.useState("");
   const [runnerGender, setRunnerGender] = React.useState<Gender>(GENDER.M);
   const [runnerBirthYear, setRunnerBirthYear] = React.useState("0");
+  const [runnerCountryCode, setRunnerCountryCode] = React.useState<string | null>(null);
   const [runnerIsPublic, setRunnerIsPublic] = React.useState(false);
 
   const unsavedChanges = React.useMemo(() => {
@@ -57,9 +59,10 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
       runnerLastname === runner.lastname,
       runnerGender === runner.gender,
       runnerBirthYear === runner.birthYear,
+      runnerCountryCode === runner.countryCode,
       runnerIsPublic === runner.isPublic,
     ].includes(false);
-  }, [runner, runnerFirstname, runnerLastname, runnerGender, runnerBirthYear, runnerIsPublic]);
+  }, [runner, runnerFirstname, runnerLastname, runnerGender, runnerBirthYear, runnerCountryCode, runnerIsPublic]);
 
   React.useEffect(() => {
     if (!runner) {
@@ -70,6 +73,7 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
     setRunnerLastname(runner.lastname);
     setRunnerGender(runner.gender);
     setRunnerBirthYear(runner.birthYear);
+    setRunnerCountryCode(runner.countryCode);
     setRunnerIsPublic(runner.isPublic);
   }, [runner]);
 
@@ -84,6 +88,7 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
       firstname: runnerFirstname,
       lastname: runnerLastname,
       birthYear: parseInt(runnerBirthYear),
+      countryCode: runnerCountryCode === COUNTRY_NULL_OPTION_VALUE ? null : runnerCountryCode,
       gender: runnerGender,
       isPublic: runnerIsPublic,
     };
@@ -145,6 +150,8 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
                 setGender={setRunnerGender}
                 birthYear={runnerBirthYear}
                 setBirthYear={setRunnerBirthYear}
+                countryCode={runnerCountryCode}
+                setCountryCode={setRunnerCountryCode}
                 isPublic={runnerIsPublic}
                 setIsPublic={setRunnerIsPublic}
                 submitButtonDisabled={patchRunnerMutation.isPending || !unsavedChanges}

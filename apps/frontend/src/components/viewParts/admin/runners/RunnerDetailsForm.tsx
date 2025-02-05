@@ -1,9 +1,11 @@
-import type React from "react";
+import React from "react";
 import type { Gender } from "@live24hisere/core/types";
-import { GENDER_OPTIONS } from "../../../../constants/forms";
+import { COUNTRY_NULL_OPTION_VALUE, COUNTRY_OPTIONS_WITH_NULL, GENDER_OPTIONS } from "../../../../constants/forms";
+import { sortCountryOptions } from "../../../../utils/countryUtils";
 import { Checkbox } from "../../../ui/forms/Checkbox";
 import { Input } from "../../../ui/forms/Input";
 import RadioGroup from "../../../ui/forms/RadioGroup";
+import Select from "../../../ui/forms/Select";
 
 interface RunnerDetailsFormProps {
   onSubmit: (e: React.FormEvent) => void;
@@ -15,6 +17,8 @@ interface RunnerDetailsFormProps {
   setGender: (gender: Gender) => void;
   birthYear: string;
   setBirthYear: (birthYear: string) => void;
+  countryCode: string | null;
+  setCountryCode: (countryCode: string) => void;
   isPublic: boolean;
   setIsPublic: (stopped: boolean) => void;
   submitButtonDisabled: boolean;
@@ -30,14 +34,13 @@ export default function RunnerDetailsForm({
   setGender,
   birthYear,
   setBirthYear,
+  countryCode,
+  setCountryCode,
   isPublic,
   setIsPublic,
   submitButtonDisabled,
 }: RunnerDetailsFormProps): React.ReactElement {
-  // const racesOptions = useRaceSelectOptions(
-  //   races,
-  //   (race) => `${race.name} (${race.runnerCount} ${race.runnerCount >= 2 ? "coureurs" : "coureur"})`,
-  // );
+  const countryOptions = React.useMemo(() => sortCountryOptions(COUNTRY_OPTIONS_WITH_NULL), []);
 
   return (
     <form onSubmit={onSubmit} className="d-flex flex-column gap-3">
@@ -77,6 +80,15 @@ export default function RunnerDetailsForm({
           }}
         />
       </div>
+
+      <Select
+        label="Pays"
+        options={countryOptions}
+        value={countryCode ?? COUNTRY_NULL_OPTION_VALUE}
+        onChange={(e) => {
+          setCountryCode(e.target.value);
+        }}
+      />
 
       <RadioGroup
         legend="Sexe"

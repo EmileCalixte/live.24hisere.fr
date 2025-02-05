@@ -4,10 +4,12 @@ import { Link } from "react-router-dom";
 import type { GenderWithMixed, PublicRace } from "@live24hisere/core/types";
 import { NO_VALUE_PLACEHOLDER } from "../../../../constants/misc";
 import type { RankingRunner } from "../../../../types/Ranking";
+import { getCountryAlpha2CodeFromAlpha3Code } from "../../../../utils/countryUtils";
 import { getRankingType } from "../../../../utils/rankingUtils";
 import { formatGap } from "../../../../utils/runnerUtils";
 import { formatFloatNumber, formatMsAsDuration } from "../../../../utils/utils";
 import RunnerStoppedBadge from "../../../ui/badges/RunnerStoppedBadge";
+import { Flag } from "../../../ui/countries/Flag";
 import RankingTableRowNCells from "./RankingTableRowNCells";
 
 interface RankingTableRowProps {
@@ -25,6 +27,8 @@ export default function RankingTableRow({
 }: RankingTableRowProps): React.ReactElement {
   const raceInitialDistance = Number(race.initialDistance);
 
+  const alpha2CountryCode = getCountryAlpha2CodeFromAlpha3Code(runner.countryCode);
+
   return (
     <tr>
       <RankingTableRowNCells
@@ -35,8 +39,13 @@ export default function RankingTableRow({
       />
       <td>{runner.id}</td>
       <td>
-        {runner.lastname.toUpperCase()} {runner.firstname}
-        {runner.stopped && <RunnerStoppedBadge />}
+        <span className="d-flex align-items-center gap-2">
+          {alpha2CountryCode && <Flag countryCode={alpha2CountryCode} />}
+          <span>
+            {runner.lastname.toUpperCase()} {runner.firstname}
+          </span>
+          {runner.stopped && <RunnerStoppedBadge />}
+        </span>
       </td>
       <td>{raceInitialDistance > 0 ? Math.max(0, runner.passages.length - 1) : runner.passages.length}</td>
       <td>{formatFloatNumber(runner.distance / 1000, 2)} km</td>

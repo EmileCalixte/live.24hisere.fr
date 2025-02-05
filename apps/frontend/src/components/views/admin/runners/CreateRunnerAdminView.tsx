@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { GENDER } from "@live24hisere/core/constants";
+import { COUNTRY_CODE_FRANCE, GENDER } from "@live24hisere/core/constants";
 import type { Gender } from "@live24hisere/core/types";
+import { COUNTRY_NULL_OPTION_VALUE } from "../../../../constants/forms";
 import { usePostAdminRunner } from "../../../../hooks/api/requests/admin/runners/usePostAdminRunner";
 import { getRunnerCreateBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import Page from "../../../ui/Page";
@@ -13,10 +14,11 @@ export default function CreateRunnerAdminView(): React.ReactElement {
 
   const postRunnerMutation = usePostAdminRunner();
 
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
-  const [gender, setGender] = useState<Gender>(GENDER.M);
-  const [birthYear, setBirthYear] = useState((new Date().getFullYear() - 30).toString());
+  const [firstname, setFirstname] = React.useState("");
+  const [lastname, setLastname] = React.useState("");
+  const [gender, setGender] = React.useState<Gender>(GENDER.M);
+  const [birthYear, setBirthYear] = React.useState((new Date().getFullYear() - 30).toString());
+  const [countryCode, setCountryCode] = React.useState(COUNTRY_CODE_FRANCE);
   const [isPublic, setIsPublic] = React.useState(false);
 
   const onSubmit: React.FormEventHandler = (e) => {
@@ -27,6 +29,7 @@ export default function CreateRunnerAdminView(): React.ReactElement {
       lastname,
       gender,
       birthYear: parseInt(birthYear),
+      countryCode: countryCode === COUNTRY_NULL_OPTION_VALUE ? null : countryCode,
       isPublic,
     };
 
@@ -57,6 +60,8 @@ export default function CreateRunnerAdminView(): React.ReactElement {
             setGender={setGender}
             birthYear={birthYear}
             setBirthYear={setBirthYear}
+            countryCode={countryCode}
+            setCountryCode={setCountryCode}
             isPublic={isPublic}
             setIsPublic={setIsPublic}
             submitButtonDisabled={postRunnerMutation.isPending}
