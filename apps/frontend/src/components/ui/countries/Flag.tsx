@@ -1,7 +1,6 @@
 import React from "react";
 import { getCountryName } from "../../../utils/countryUtils";
 import { Tooltip } from "../Tooltip";
-import { EmptyFlag } from "./EmptyFlag";
 
 interface FlagProps {
   /**
@@ -42,7 +41,7 @@ export function Flag({
       }}
     >
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 513 342" style={{ width: "100%" }}>
-        <EmptyFlag />
+        <path fill="#DDD" d="M0 0h512v342H0z" />
 
         {baseUrl && (
           <image
