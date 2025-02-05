@@ -3,10 +3,12 @@ import { type CategoryCode, getCategory } from "@emilecalixte/ffa-categories";
 import { Link } from "react-router-dom";
 import type { GenderWithMixed, PublicRace } from "@live24hisere/core/types";
 import type { RankingRunner } from "../../../../../types/Ranking";
+import { getCountryAlpha2CodeFromAlpha3Code } from "../../../../../utils/countryUtils";
 import { getRankingType } from "../../../../../utils/rankingUtils";
 import { formatGap } from "../../../../../utils/runnerUtils";
 import { formatFloatNumber, formatMsAsDuration } from "../../../../../utils/utils";
 import RunnerStoppedBadge from "../../../../ui/badges/RunnerStoppedBadge";
+import { Flag } from "../../../../ui/countries/Flag";
 
 interface ResponsiveRankingTableRowProps {
   race: PublicRace;
@@ -87,6 +89,8 @@ export default function ResponsiveRankingTableRow({
     );
   }, [runner, tableCategoryCode, tableGender, runnerCategoryCode]);
 
+  const alpha2CountryCode = getCountryAlpha2CodeFromAlpha3Code(runner.countryCode);
+
   const formattedGap = formatGap(runner.gaps.firstRunner[getRankingType(tableCategoryCode, tableGender)].gap);
 
   const displayedGap = formattedGap && formattedGap !== "=" ? formattedGap : null;
@@ -98,10 +102,15 @@ export default function ResponsiveRankingTableRow({
       </td>
       <td style={{ width: "100%" }}>
         <Link to={`/runner-details/${runner.id}`}>
-          <div>
+          <div className="d-flex align-items-center gap-2">
+            {alpha2CountryCode && <Flag countryCode={alpha2CountryCode} />}
             <strong>
-              {runner.lastname.toUpperCase()} {runner.firstname} – N°{runner.id}
+              {runner.lastname.toUpperCase()} {runner.firstname}
             </strong>
+          </div>
+
+          <div className="d-flex align-items-center gap-2">
+            <strong>N° {runner.id}</strong>
             {runner.stopped && <RunnerStoppedBadge />}
           </div>
 

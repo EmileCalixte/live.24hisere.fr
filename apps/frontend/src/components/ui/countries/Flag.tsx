@@ -8,6 +8,8 @@ interface FlagProps {
    * The ISO 3166-1 Alpha 2 (two-letter) country code
    */
   countryCode: string;
+
+  width?: React.CSSProperties["width"];
 }
 
 /**
@@ -18,7 +20,10 @@ const BASE_URLS = [
   "https://catamphetamine.gitlab.io/country-flag-icons/3x2/",
 ];
 
-export function Flag({ countryCode }: FlagProps): React.ReactElement {
+export function Flag({
+  countryCode,
+  width = "1.5em", // Aspect-ratio 3:2, so it's equivalent to height 1em
+}: FlagProps): React.ReactElement {
   const [baseUrlIndex, setBaseUrlIndex] = React.useState(0);
 
   const baseUrl = BASE_URLS[baseUrlIndex];
@@ -26,8 +31,8 @@ export function Flag({ countryCode }: FlagProps): React.ReactElement {
   const countryName = React.useMemo(() => getCountryName(countryCode), [countryCode]);
 
   const Flag = (): React.ReactElement => (
-    <span style={{ display: "block" }}>
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 513 342">
+    <span style={{ display: "inline-block", width, aspectRatio: "3/2" }}>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 513 342" style={{ width: "100%" }}>
         <EmptyFlag />
 
         {baseUrl && (
@@ -46,7 +51,7 @@ export function Flag({ countryCode }: FlagProps): React.ReactElement {
   );
 
   return countryName ? (
-    <Tooltip title={countryName}>
+    <Tooltip title={countryName} style={{ display: "inline-block", lineHeight: 0 }}>
       <Flag />
     </Tooltip>
   ) : (
