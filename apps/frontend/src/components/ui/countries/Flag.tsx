@@ -31,7 +31,16 @@ export function Flag({
   const countryName = React.useMemo(() => getCountryName(countryCode), [countryCode]);
 
   const Flag = (): React.ReactElement => (
-    <span style={{ display: "inline-block", width, aspectRatio: "3/2" }}>
+    <span
+      style={{
+        display: "inline-block",
+        width,
+        aspectRatio: "3/2",
+        borderRadius: "0.2em",
+        overflow: "hidden",
+        boxShadow: "0.05em 0.05em 0.2em #0005",
+      }}
+    >
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 513 342" style={{ width: "100%" }}>
         <EmptyFlag />
 

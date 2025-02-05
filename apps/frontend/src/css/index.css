@@ -469,6 +469,9 @@ table.table th .buttons-container {
   font-weight: bold;
   padding: 0.2em 0.4em;
   border-radius: 0.5em;
+
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
 }
 
 .runner-details-runner-selector-container {

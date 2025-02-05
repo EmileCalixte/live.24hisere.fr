@@ -5,3 +5,5 @@ export const ALPHA3_TO_ALPHA2_COUNTRY_CODES = getAlpha3Codes();
 
 export const ALPHA2_COUNTRY_CODES = Object.keys(ALPHA2_TO_ALPHA3_COUNTRY_CODES);
 export const ALPHA3_COUNTRY_CODES = Object.keys(ALPHA3_TO_ALPHA2_COUNTRY_CODES);
+
+export const COUNTRY_CODE_FRANCE = "FRA";
