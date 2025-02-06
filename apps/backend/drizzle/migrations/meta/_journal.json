@@ -43,6 +43,13 @@
       "when": 1738705874404,
       "tag": "0005_runner-country-code",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1738870255303,
+      "tag": "0006_distance-after-last-passage",
+      "breakpoints": true
     }
   ]
 }
