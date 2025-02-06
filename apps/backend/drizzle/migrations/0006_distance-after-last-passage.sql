@@ -1,0 +1,1 @@
+ALTER TABLE `participant` ADD `distance_after_last_passage` decimal(10,3) NOT NULL;

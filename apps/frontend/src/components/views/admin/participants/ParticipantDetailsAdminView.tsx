@@ -15,7 +15,6 @@ import { getParticipantBreadcrumbs } from "../../../../services/breadcrumbs/brea
 import { is404Error } from "../../../../utils/apiUtils";
 import { getProcessedPassagesFromPassages } from "../../../../utils/passageUtils";
 import { formatDateAsString, formatDateForApi } from "../../../../utils/utils";
-import { appContext } from "../../../App";
 import CircularLoader from "../../../ui/CircularLoader";
 import Page from "../../../ui/Page";
 import ParticipantDetailsForm from "../../../viewParts/admin/participants/ParticipantDetailsForm";
@@ -23,8 +22,6 @@ import ParticipantDetailsPassages from "../../../viewParts/admin/participants/Pa
 
 export default function ParticipantDetailsAdminView(): React.ReactElement {
   const navigate = useNavigate();
-
-  const { accessToken } = React.useContext(appContext).user;
 
   const { raceId: urlRaceId, runnerId: urlRunnerId } = useRequiredParams(["raceId", "runnerId"]);
 
@@ -50,14 +47,21 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
 
   const [participantBibNumber, setParticipantBibNumber] = React.useState(0);
   const [participantIsStopped, setParticipantIsStopped] = React.useState(false);
+  const [participantDistanceAfterLastPassage, setParticipantDistanceAfterLastPassage] = React.useState<number | string>(
+    0,
+  );
 
   const unsavedChanges = React.useMemo(() => {
     if (!runner) {
       return false;
     }
 
-    return [participantBibNumber === runner.bibNumber, participantIsStopped === runner.stopped].includes(false);
-  }, [runner, participantBibNumber, participantIsStopped]);
+    return [
+      participantBibNumber === runner.bibNumber,
+      participantIsStopped === runner.stopped,
+      participantDistanceAfterLastPassage.toString() === runner.distanceAfterLastPassage.toString(),
+    ].includes(false);
+  }, [runner, participantBibNumber, participantIsStopped, participantDistanceAfterLastPassage]);
 
   const processedPassages = React.useMemo(() => {
     if (!race || !runner) {
@@ -68,7 +72,7 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
   }, [race, runner]);
 
   function updatePassageVisiblity(passage: AdminProcessedPassage, hidden: boolean): void {
-    if (!runner || !accessToken) {
+    if (!runner) {
       return;
     }
 
@@ -91,7 +95,7 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
   }
 
   function updatePassage(passage: AdminProcessedPassage, time: Date): void {
-    if (!runner || !accessToken) {
+    if (!runner) {
       return;
     }
 
@@ -155,16 +159,27 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
   const isBibNumberAvailable =
     participantBibNumber === runner?.bibNumber || !raceUnavailableBibNumbers.has(participantBibNumber);
 
+  React.useEffect(() => {
+    if (!runner) {
+      return;
+    }
+
+    setParticipantBibNumber(runner.bibNumber);
+    setParticipantIsStopped(runner.stopped);
+    setParticipantDistanceAfterLastPassage(runner.distanceAfterLastPassage);
+  }, [runner]);
+
   const onSubmit: React.FormEventHandler = (e) => {
     e.preventDefault();
 
-    if (!accessToken || !race || !runner) {
+    if (!race || !runner) {
       return;
     }
 
     const body = {
       bibNumber: participantBibNumber,
       stopped: participantIsStopped,
+      distanceAfterLastPassage: participantDistanceAfterLastPassage.toString(),
     };
 
     patchRunnerMutation.mutate(body, {
@@ -219,6 +234,8 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
                 isBibNumberAvailable={isBibNumberAvailable}
                 isStopped={participantIsStopped}
                 setIsStopped={setParticipantIsStopped}
+                distanceAfterLastPassage={participantDistanceAfterLastPassage}
+                setDistanceAfterLastPassage={setParticipantDistanceAfterLastPassage}
                 submitButtonDisabled={patchRunnerMutation.isPending || !unsavedChanges || !isBibNumberAvailable}
               />
             </Col>

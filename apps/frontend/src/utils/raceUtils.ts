@@ -72,7 +72,7 @@ export function getRacesSelectOptions<TRace extends PublicRace>(
 /**
  * @param race
  * @param passageCount
- * @return The total distance in meters
+ * @return The total distance in meters. This function **doesn't** take into account the possible distance after the last passage of a participant.
  */
 export function getDistanceFromPassageCount(race: PublicRace, passageCount: number): number {
   if (passageCount === 0) {

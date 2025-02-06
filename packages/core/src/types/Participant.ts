@@ -17,7 +17,12 @@ export interface Participant {
   bibNumber: number;
 
   /**
-   * Whether the rider has stopped competing or not
+   * Whether the runner has stopped competing or not
    */
   stopped: boolean;
+
+  /**
+   * Distance covered by the runner after his last passage, in meters (decimal)
+   */
+  distanceAfterLastPassage: string;
 }

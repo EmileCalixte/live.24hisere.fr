@@ -86,7 +86,7 @@ export default function RankingView(): React.ReactElement {
 
     return runners.map((runner) => ({
       ...runner,
-      ...getRunnerProcessedDataFromPassages(selectedRace, runner.passages),
+      ...getRunnerProcessedDataFromPassages(runner, selectedRace, runner.passages),
       passages: getProcessedPassagesFromPassages(selectedRace, runner.passages),
     }));
   }, [runners, selectedRace]);

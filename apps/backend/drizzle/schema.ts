@@ -122,6 +122,7 @@ export const TABLE_PARTICIPANT = mysqlTable(
       .notNull(),
     bibNumber: t.int().notNull(),
     stopped: t.boolean().notNull(),
+    distanceAfterLastPassage: t.decimal({ precision: 10, scale: 3 }).notNull(),
   }),
   (t) => [unique().on(t.raceId, t.runnerId), unique().on(t.raceId, t.bibNumber)],
 );

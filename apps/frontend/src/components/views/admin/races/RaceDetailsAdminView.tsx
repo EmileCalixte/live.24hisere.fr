@@ -1,5 +1,5 @@
 import React from "react";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faFlagCheckered, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
@@ -42,6 +42,8 @@ export default function RaceDetailsAdminView(): React.ReactElement {
   const [startTime, setStartTime] = React.useState(new Date(0));
   const [duration, setDuration] = React.useState(0);
   const [isPublic, setIsPublic] = React.useState(false);
+
+  const [isEditingFinalDistances, setIsEditingFinalDistances] = React.useState(false);
 
   const editionOptions = React.useMemo<Array<SelectOption<number>>>(() => {
     if (!editions) {
@@ -188,15 +190,49 @@ export default function RaceDetailsAdminView(): React.ReactElement {
 
               {raceRunners && (
                 <>
-                  <p>
-                    <Link to={`/admin/races/${race.id}/add-runner`} className="button">
-                      <FontAwesomeIcon icon={faPlus} className="me-2" />
-                      Ajouter un coureur
-                    </Link>
-                  </p>
+                  <div className="d-flex gap-2 mb-2">
+                    {isEditingFinalDistances ? (
+                      <button
+                        className="button"
+                        onClick={() => {
+                          void getRaceRunnersQuery.refetch({ cancelRefetch: false }).then(() => {
+                            setIsEditingFinalDistances(false);
+                          });
+                        }}
+                        disabled={getRaceRunnersQuery.isPending}
+                      >
+                        <FontAwesomeIcon icon={faCheck} className="me-2" />
+                        Terminer
+                      </button>
+                    ) : (
+                      <>
+                        <p className="m-0">
+                          <Link to={`/admin/races/${race.id}/add-runner`} className="button">
+                            <FontAwesomeIcon icon={faPlus} className="me-2" />
+                            Ajouter un coureur
+                          </Link>
+                        </p>
+                        {raceRunners.length > 0 && (
+                          <button
+                            className="button orange"
+                            onClick={() => {
+                              setIsEditingFinalDistances(true);
+                            }}
+                          >
+                            <FontAwesomeIcon icon={faFlagCheckered} className="me-2" />
+                            Modifier les distances finales
+                          </button>
+                        )}
+                      </>
+                    )}
+                  </div>
 
                   {raceRunners.length > 0 ? (
-                    <RaceRunnersTable race={race} runners={raceRunners} />
+                    <RaceRunnersTable
+                      race={race}
+                      runners={raceRunners}
+                      isEditingFinalDistances={isEditingFinalDistances}
+                    />
                   ) : (
                     <p>Aucun coureur ne participe à cette course</p>
                   )}
