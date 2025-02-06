@@ -15,7 +15,6 @@ import { getParticipantBreadcrumbs } from "../../../../services/breadcrumbs/brea
 import { is404Error } from "../../../../utils/apiUtils";
 import { getProcessedPassagesFromPassages } from "../../../../utils/passageUtils";
 import { formatDateAsString, formatDateForApi } from "../../../../utils/utils";
-import { appContext } from "../../../App";
 import CircularLoader from "../../../ui/CircularLoader";
 import Page from "../../../ui/Page";
 import ParticipantDetailsForm from "../../../viewParts/admin/participants/ParticipantDetailsForm";
@@ -23,8 +22,6 @@ import ParticipantDetailsPassages from "../../../viewParts/admin/participants/Pa
 
 export default function ParticipantDetailsAdminView(): React.ReactElement {
   const navigate = useNavigate();
-
-  const { accessToken } = React.useContext(appContext).user;
 
   const { raceId: urlRaceId, runnerId: urlRunnerId } = useRequiredParams(["raceId", "runnerId"]);
 
@@ -75,7 +72,7 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
   }, [race, runner]);
 
   function updatePassageVisiblity(passage: AdminProcessedPassage, hidden: boolean): void {
-    if (!runner || !accessToken) {
+    if (!runner) {
       return;
     }
 
@@ -98,7 +95,7 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
   }
 
   function updatePassage(passage: AdminProcessedPassage, time: Date): void {
-    if (!runner || !accessToken) {
+    if (!runner) {
       return;
     }
 
@@ -175,7 +172,7 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
   const onSubmit: React.FormEventHandler = (e) => {
     e.preventDefault();
 
-    if (!accessToken || !race || !runner) {
+    if (!race || !runner) {
       return;
     }
 

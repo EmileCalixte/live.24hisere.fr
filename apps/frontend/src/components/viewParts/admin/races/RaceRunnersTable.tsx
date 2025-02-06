@@ -4,13 +4,19 @@ import { Link } from "react-router-dom";
 import type { AdminRace, AdminRunner, RaceRunner } from "@live24hisere/core/types";
 import { getCountryAlpha2CodeFromAlpha3Code } from "../../../../utils/countryUtils";
 import { Flag } from "../../../ui/countries/Flag";
+import RunnerFinalDistanceQuickEdit from "./RunnerFinalDistanceQuickEdit";
 
 interface RaceRunnersTableProps {
   race: AdminRace;
   runners: Array<RaceRunner<AdminRunner>>;
+  isEditingFinalDistances: boolean;
 }
 
-export default function RaceRunnersTable({ race, runners }: RaceRunnersTableProps): React.ReactElement {
+export default function RaceRunnersTable({
+  race,
+  runners,
+  isEditingFinalDistances,
+}: RaceRunnersTableProps): React.ReactElement {
   return (
     <table className="table no-full-width">
       <thead>
@@ -21,6 +27,7 @@ export default function RaceRunnersTable({ race, runners }: RaceRunnersTableProp
           <th>Arrêté</th>
           <th>Visible public</th>
           <th>Détails du participant</th>
+          {isEditingFinalDistances && <th>Dist. après dernier passage (m)</th>}
         </tr>
       </thead>
       <tbody>
@@ -47,6 +54,11 @@ export default function RaceRunnersTable({ race, runners }: RaceRunnersTableProp
               <td>
                 <Link to={`/admin/races/${race.id}/runners/${runner.id}`}>Détails</Link>
               </td>
+              {isEditingFinalDistances && (
+                <td>
+                  <RunnerFinalDistanceQuickEdit runner={runner} />
+                </td>
+              )}
             </tr>
           );
         })}
