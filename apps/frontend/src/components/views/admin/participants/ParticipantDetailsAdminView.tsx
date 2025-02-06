@@ -50,14 +50,21 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
 
   const [participantBibNumber, setParticipantBibNumber] = React.useState(0);
   const [participantIsStopped, setParticipantIsStopped] = React.useState(false);
+  const [participantDistanceAfterLastPassage, setParticipantDistanceAfterLastPassage] = React.useState<number | string>(
+    0,
+  );
 
   const unsavedChanges = React.useMemo(() => {
     if (!runner) {
       return false;
     }
 
-    return [participantBibNumber === runner.bibNumber, participantIsStopped === runner.stopped].includes(false);
-  }, [runner, participantBibNumber, participantIsStopped]);
+    return [
+      participantBibNumber === runner.bibNumber,
+      participantIsStopped === runner.stopped,
+      participantDistanceAfterLastPassage.toString() === runner.distanceAfterLastPassage.toString(),
+    ].includes(false);
+  }, [runner, participantBibNumber, participantIsStopped, participantDistanceAfterLastPassage]);
 
   const processedPassages = React.useMemo(() => {
     if (!race || !runner) {
@@ -155,6 +162,16 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
   const isBibNumberAvailable =
     participantBibNumber === runner?.bibNumber || !raceUnavailableBibNumbers.has(participantBibNumber);
 
+  React.useEffect(() => {
+    if (!runner) {
+      return;
+    }
+
+    setParticipantBibNumber(runner.bibNumber);
+    setParticipantIsStopped(runner.stopped);
+    setParticipantDistanceAfterLastPassage(runner.distanceAfterLastPassage);
+  }, [runner]);
+
   const onSubmit: React.FormEventHandler = (e) => {
     e.preventDefault();
 
@@ -165,6 +182,7 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
     const body = {
       bibNumber: participantBibNumber,
       stopped: participantIsStopped,
+      distanceAfterLastPassage: participantDistanceAfterLastPassage.toString(),
     };
 
     patchRunnerMutation.mutate(body, {
@@ -219,6 +237,8 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
                 isBibNumberAvailable={isBibNumberAvailable}
                 isStopped={participantIsStopped}
                 setIsStopped={setParticipantIsStopped}
+                distanceAfterLastPassage={participantDistanceAfterLastPassage}
+                setDistanceAfterLastPassage={setParticipantDistanceAfterLastPassage}
                 submitButtonDisabled={patchRunnerMutation.isPending || !unsavedChanges || !isBibNumberAvailable}
               />
             </Col>
