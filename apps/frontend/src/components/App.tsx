@@ -17,6 +17,7 @@ import LoginView from "./views/LoginView";
 import Public from "./views/public/Public";
 
 const Admin = React.lazy(async () => await import("./views/admin/Admin"));
+const About = React.lazy(async () => await import("./views/AboutView"));
 
 interface AppContext {
   appData: {
@@ -260,6 +261,14 @@ export default function App(): React.ReactElement {
                   element={
                     <React.Suspense fallback={<CircularLoader />}>
                       <Admin />
+                    </React.Suspense>
+                  }
+                />
+                <Route
+                  path="/about"
+                  element={
+                    <React.Suspense fallback={<CircularLoader />}>
+                      <About />
                     </React.Suspense>
                   }
                 />

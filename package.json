@@ -15,11 +15,12 @@
     "utils": "pnpm --filter @live24hisere/utils",
     "dev": "turbo run dev --parallel",
     "test": "turbo run test --parallel",
-    "build": "turbo run build",
+    "build": "pnpm export-licenses && turbo run build",
     "format": "prettier \"{apps,packages}/**/*.{js,ts,jsx,tsx,css,json}\" --write",
     "lint-path": "eslint --max-warnings=0 --no-warn-ignored",
     "lint": "pnpm lint-path .",
     "lint-fix": "pnpm lint --fix",
+    "export-licenses": "pnpm licenses ls --json > apps/frontend/src/assets/licenses.json",
     "prepare": "husky"
   },
   "lint-staged": {
@@ -43,5 +44,5 @@
     "turbo": "^2.4.0",
     "typescript": "^5.7.3"
   },
-  "packageManager": "pnpm@9.3.0"
+  "packageManager": "pnpm@10.2.0"
 }
