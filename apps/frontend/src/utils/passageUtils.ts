@@ -1,8 +1,10 @@
 import { ONE_HOUR_IN_MILLISECONDS } from "@live24hisere/core/constants";
 import type {
+  Participant,
   ProcessedPassage,
   PublicPassage,
   PublicRace,
+  RaceRunner,
   RunnerProcessedData,
   RunnerProcessedHour,
 } from "@live24hisere/core/types";
@@ -19,13 +21,20 @@ export function getSortedPassages<TPassage extends PublicPassage>(passages: TPas
   );
 }
 
-export function getRunnerProcessedDataFromPassages(race: PublicRace, passages: PublicPassage[]): RunnerProcessedData {
+export function getRunnerProcessedDataFromPassages(
+  participant: Participant | RaceRunner,
+  race: PublicRace,
+  passages: PublicPassage[],
+): RunnerProcessedData {
   if (!passages.length) {
     return {
       lastPassageTime: null,
-      averageSpeed: null,
-      averagePace: null,
-      distance: 0,
+      averageSpeedToLastPassage: null,
+      averagePaceToLastPassage: null,
+      totalAverageSpeed: null,
+      totalAveragePace: null,
+      totalDistance: 0,
+      distanceToLastPassage: 0,
     };
   }
 
@@ -36,16 +45,29 @@ export function getRunnerProcessedDataFromPassages(race: PublicRace, passages: P
     raceTime: getRaceTime(race, lastPassageTimeDate),
   };
 
-  const distance = getDistanceFromPassageCount(race, passages.length);
+  const distanceToLastPassage = getDistanceFromPassageCount(race, passages.length);
 
-  const averageSpeed = getSpeed(distance, lastPassageTime.raceTime);
-  const averagePace = getPaceFromSpeed(averageSpeed);
+  const distanceAfterLastPassage = Number(participant.distanceAfterLastPassage);
+  const totalDistance = distanceToLastPassage + distanceAfterLastPassage;
+
+  const averageSpeedToLastPassage = getSpeed(distanceToLastPassage, lastPassageTime.raceTime);
+  const averagePaceToLastPassage = getPaceFromSpeed(averageSpeedToLastPassage);
+
+  const totalAverageSpeed = getSpeed(
+    totalDistance,
+    distanceAfterLastPassage > 0 ? race.duration * 1000 : lastPassageTime.raceTime,
+  );
+
+  const totalAveragePace = getPaceFromSpeed(totalAverageSpeed);
 
   return {
     lastPassageTime,
-    distance,
-    averageSpeed,
-    averagePace,
+    distanceToLastPassage,
+    averageSpeedToLastPassage,
+    averagePaceToLastPassage,
+    totalDistance,
+    totalAverageSpeed,
+    totalAveragePace,
   };
 }
 

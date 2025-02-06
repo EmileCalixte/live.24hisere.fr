@@ -119,15 +119,15 @@ export default function ResponsiveRankingTableRow({
           <div className="responsive-ranking-table-row-secondary-data-row">{rowSecondaryRankings}</div>
 
           <div className="responsive-ranking-table-row-secondary-data-row">
-            {formatFloatNumber(runner.distance / 1000, 2)} km
+            {formatFloatNumber(runner.totalDistance / 1000, 2)} km
             {(() => {
-              if (runner.averageSpeed === null) {
+              if (runner.totalAverageSpeed === null) {
                 return null;
               } else {
                 return (
                   <>
                     &nbsp;–&nbsp;
-                    {formatFloatNumber(runner.averageSpeed, 2)} km/h moy.
+                    {formatFloatNumber(runner.totalAverageSpeed, 2)} km/h moy.
                   </>
                 );
               }

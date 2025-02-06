@@ -91,17 +91,48 @@ export interface RunnerProcessedData {
   /**
    * The total distance covered by the runner, in meters
    */
-  distance: number;
+  totalDistance: number;
 
   /**
-   * The average speed of the runner, in km/h. Null if runner has no passage
+   * The distance covered by the runner in meters, from the start of the race to his last passage.
+   *
+   * This distance **doesn't** take into account the possible distance after the last passage of the runner
    */
-  averageSpeed: number | null;
+  distanceToLastPassage: number;
 
   /**
-   * The average pace of the runner, in ms/km. Null if runner has no passage
+   * The average speed of the runner in km/h, from the start of the race to his last passage. Null if runner has no passage
+   *
+   * This average speed **doesn't** take into account the possible distance after the last passage of the runner
    */
-  averagePace: number | null;
+  averageSpeedToLastPassage: number | null;
+
+  /**
+   * The average pace of the runner in ms/km, from the start of the race to his last passage. Null if runner has no passage
+   *
+   * This average pace **doesn't** take into account the possible distance after the last passage of the runner
+   */
+  averagePaceToLastPassage: number | null;
+
+  /**
+   * The average speed of the runner, in km/h.
+   *
+   * - If the runner has a non-zero distance after last passage, it's the average speed from start to end of the race
+   * - Otherwise, it's from the start of the race to his last passage
+   *
+   * Null if runner has no passage
+   */
+  totalAverageSpeed: number | null;
+
+  /**
+   * The average pace of the runner, in ms/km.
+   *
+   * - If the runner has a non-zero distance after last passage, it's the average pace from start to end of the race
+   * - Otherwise, it's from the start of the race to his last passage
+   *
+   * Null if runner has no passage
+   */
+  totalAveragePace: number | null;
 
   /**
    * The time of the last passage of the runner. Null if runner has no passage

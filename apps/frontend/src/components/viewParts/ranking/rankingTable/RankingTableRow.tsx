@@ -48,7 +48,7 @@ export default function RankingTableRow({
         </span>
       </td>
       <td>{raceInitialDistance > 0 ? Math.max(0, runner.passages.length - 1) : runner.passages.length}</td>
-      <td>{formatFloatNumber(runner.distance / 1000, 2)} km</td>
+      <td>{formatFloatNumber(runner.totalDistance / 1000, 2)} km</td>
       <td>
         {(() => {
           if (runner.lastPassageTime === null) {
@@ -60,10 +60,10 @@ export default function RankingTableRow({
       </td>
       <td>
         {(() => {
-          if (runner.averageSpeed === null) {
+          if (runner.totalAverageSpeed === null) {
             return NO_VALUE_PLACEHOLDER;
           } else {
-            return <>{formatFloatNumber(runner.averageSpeed, 2)} km/h</>;
+            return <>{formatFloatNumber(runner.totalAverageSpeed, 2)} km/h</>;
           }
         })()}
       </td>
