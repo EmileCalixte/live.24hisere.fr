@@ -1,0 +1,1 @@
+ALTER TABLE `participant` RENAME COLUMN `distance_after_last_passage` TO `final_distance`;

@@ -14,8 +14,8 @@ interface ParticipantDetailsFormProps {
   isBibNumberAvailable: boolean;
   isStopped: boolean;
   setIsStopped: (stopped: boolean) => void;
-  distanceAfterLastPassage: number | string;
-  setDistanceAfterLastPassage: (distance: number | string) => void;
+  finalDistance: number | string;
+  setFinalDistance: (distance: number | string) => void;
   submitButtonDisabled: boolean;
 }
 
@@ -29,8 +29,8 @@ export default function ParticipantDetailsForm({
   isBibNumberAvailable,
   isStopped,
   setIsStopped,
-  distanceAfterLastPassage,
-  setDistanceAfterLastPassage,
+  finalDistance,
+  setFinalDistance,
   submitButtonDisabled,
 }: ParticipantDetailsFormProps): React.ReactElement {
   return (
@@ -75,9 +75,9 @@ export default function ParticipantDetailsForm({
         step={0.001}
         required
         name="initial-distance"
-        value={distanceAfterLastPassage}
+        value={finalDistance}
         onChange={(e) => {
-          setDistanceAfterLastPassage(e.target.value);
+          setFinalDistance(e.target.value);
         }}
       />
 

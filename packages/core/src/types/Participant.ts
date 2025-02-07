@@ -24,5 +24,5 @@ export interface Participant {
   /**
    * Distance covered by the runner after his last passage, in meters (decimal)
    */
-  distanceAfterLastPassage: string;
+  finalDistance: string;
 }

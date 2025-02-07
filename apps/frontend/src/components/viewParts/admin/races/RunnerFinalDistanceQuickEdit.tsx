@@ -16,8 +16,8 @@ export default function RunnerFinalDistanceQuickEdit({
 }: RunnerFinalDistanceQuickEditProps): React.ReactElement {
   const patchRunnerMutation = usePatchAdminRaceRunner(runner.raceId, runner.id);
 
-  const [distance, setDistance] = React.useState(runner.distanceAfterLastPassage);
-  const distanceBeforeEdit = React.useRef(runner.distanceAfterLastPassage);
+  const [distance, setDistance] = React.useState(runner.finalDistance);
+  const distanceBeforeEdit = React.useRef(runner.finalDistance);
   const hasDistanceBeenEdited = distance !== distanceBeforeEdit.current;
 
   function save(): void {
@@ -27,7 +27,7 @@ export default function RunnerFinalDistanceQuickEdit({
 
     patchRunnerMutation.mutate(
       {
-        distanceAfterLastPassage: distance,
+        finalDistance: distance,
       },
       {
         onSuccess: () => {

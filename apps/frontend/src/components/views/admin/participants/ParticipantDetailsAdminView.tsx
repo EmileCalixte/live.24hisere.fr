@@ -47,9 +47,7 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
 
   const [participantBibNumber, setParticipantBibNumber] = React.useState(0);
   const [participantIsStopped, setParticipantIsStopped] = React.useState(false);
-  const [participantDistanceAfterLastPassage, setParticipantDistanceAfterLastPassage] = React.useState<number | string>(
-    0,
-  );
+  const [participantFinalDistance, setParticipantFinalDistance] = React.useState<number | string>(0);
 
   const unsavedChanges = React.useMemo(() => {
     if (!runner) {
@@ -59,9 +57,9 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
     return [
       participantBibNumber === runner.bibNumber,
       participantIsStopped === runner.stopped,
-      participantDistanceAfterLastPassage.toString() === runner.distanceAfterLastPassage.toString(),
+      participantFinalDistance.toString() === runner.finalDistance.toString(),
     ].includes(false);
-  }, [runner, participantBibNumber, participantIsStopped, participantDistanceAfterLastPassage]);
+  }, [runner, participantBibNumber, participantIsStopped, participantFinalDistance]);
 
   const processedPassages = React.useMemo(() => {
     if (!race || !runner) {
@@ -166,7 +164,7 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
 
     setParticipantBibNumber(runner.bibNumber);
     setParticipantIsStopped(runner.stopped);
-    setParticipantDistanceAfterLastPassage(runner.distanceAfterLastPassage);
+    setParticipantFinalDistance(runner.finalDistance);
   }, [runner]);
 
   const onSubmit: React.FormEventHandler = (e) => {
@@ -179,7 +177,7 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
     const body = {
       bibNumber: participantBibNumber,
       stopped: participantIsStopped,
-      distanceAfterLastPassage: participantDistanceAfterLastPassage.toString(),
+      finalDistance: participantFinalDistance.toString(),
     };
 
     patchRunnerMutation.mutate(body, {
@@ -234,8 +232,8 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
                 isBibNumberAvailable={isBibNumberAvailable}
                 isStopped={participantIsStopped}
                 setIsStopped={setParticipantIsStopped}
-                distanceAfterLastPassage={participantDistanceAfterLastPassage}
-                setDistanceAfterLastPassage={setParticipantDistanceAfterLastPassage}
+                finalDistance={participantFinalDistance}
+                setFinalDistance={setParticipantFinalDistance}
                 submitButtonDisabled={patchRunnerMutation.isPending || !unsavedChanges || !isBibNumberAvailable}
               />
             </Col>
