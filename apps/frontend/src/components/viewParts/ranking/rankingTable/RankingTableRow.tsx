@@ -17,6 +17,7 @@ interface RankingTableRowProps {
   runner: RankingRunner;
   tableCategoryCode: CategoryCode | null;
   tableGender: GenderWithMixed;
+  showLastPassageTime: boolean;
 }
 
 export default function RankingTableRow({
@@ -24,6 +25,7 @@ export default function RankingTableRow({
   runner,
   tableCategoryCode,
   tableGender,
+  showLastPassageTime,
 }: RankingTableRowProps): React.ReactElement {
   const raceInitialDistance = Number(race.initialDistance);
 
@@ -49,15 +51,18 @@ export default function RankingTableRow({
       </td>
       <td>{raceInitialDistance > 0 ? Math.max(0, runner.passages.length - 1) : runner.passages.length}</td>
       <td>{formatFloatNumber(runner.totalDistance / 1000, 2)} km</td>
-      <td>
-        {(() => {
-          if (runner.lastPassageTime === null) {
-            return NO_VALUE_PLACEHOLDER;
-          } else {
-            return formatMsAsDuration(runner.lastPassageTime.raceTime);
-          }
-        })()}
-      </td>
+      {showLastPassageTime && (
+        <td>
+          {(() => {
+            if (runner.lastPassageTime === null) {
+              return NO_VALUE_PLACEHOLDER;
+            } else {
+              return formatMsAsDuration(runner.lastPassageTime.raceTime);
+            }
+          })()}
+        </td>
+      )}
+
       <td>
         {(() => {
           if (runner.totalAverageSpeed === null) {

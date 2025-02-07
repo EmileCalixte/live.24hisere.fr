@@ -15,6 +15,7 @@ interface ResponsiveRankingTableRowProps {
   runner: RankingRunner;
   tableCategoryCode: CategoryCode | null;
   tableGender: GenderWithMixed;
+  showLastPassageTime: boolean;
 }
 
 export default function ResponsiveRankingTableRow({
@@ -22,6 +23,7 @@ export default function ResponsiveRankingTableRow({
   runner,
   tableCategoryCode,
   tableGender,
+  showLastPassageTime,
 }: ResponsiveRankingTableRowProps): React.ReactElement {
   const runnerCategoryCode = getCategory(Number(runner.birthYear), { date: new Date(race.startTime) }).code;
 
@@ -132,14 +134,18 @@ export default function ResponsiveRankingTableRow({
                 );
               }
             })()}
-            {(() => {
-              if (runner.lastPassageTime === null) {
-                return null;
-              } else {
-                return <>&nbsp;–&nbsp; Dernier passage {formatMsAsDuration(runner.lastPassageTime.raceTime)}</>;
-              }
-            })()}
           </div>
+          {showLastPassageTime && (
+            <div className="responsive-ranking-table-row-secondary-data-row">
+              {(() => {
+                if (runner.lastPassageTime === null) {
+                  return null;
+                } else {
+                  return <>Dernier passage : {formatMsAsDuration(runner.lastPassageTime.raceTime)}</>;
+                }
+              })()}
+            </div>
+          )}
         </Link>
       </td>
     </tr>

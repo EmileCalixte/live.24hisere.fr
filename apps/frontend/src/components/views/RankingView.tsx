@@ -28,6 +28,8 @@ import { useWindowDimensions } from "../../hooks/useWindowDimensions";
 import { parseAsCategory } from "../../queryStringParsers/parseAsCategory";
 import { parseAsGender } from "../../queryStringParsers/parseAsGender";
 import { getProcessedPassagesFromPassages, getRunnerProcessedDataFromPassages } from "../../utils/passageUtils";
+import { isRaceFinished } from "../../utils/raceUtils";
+import { appContext } from "../App";
 import CircularLoader from "../ui/CircularLoader";
 import Select from "../ui/forms/Select";
 import Page from "../ui/Page";
@@ -47,6 +49,7 @@ export default function RankingView(): React.ReactElement {
   const runners = getRaceRunnersQuery.data?.runners;
 
   const { selectedEdition } = React.useContext(publicContext);
+  const { serverTimeOffset } = React.useContext(appContext).appData;
 
   const { width: windowWidth } = useWindowDimensions();
 
@@ -171,6 +174,9 @@ export default function RankingView(): React.ReactElement {
     }
   }, [categories, selectedCategoryCode, setSelectedCategory]);
 
+  const showLastPassageTime =
+    (!!selectedRace && !isRaceFinished(selectedRace, serverTimeOffset)) || selectedTimeMode === RankingTimeMode.AT;
+
   return (
     <Page id="ranking" title="Classements">
       <Row className="hide-on-print">
@@ -228,6 +234,7 @@ export default function RankingView(): React.ReactElement {
                         tableCategoryCode={selectedCategoryCode}
                         tableGender={selectedGender ?? "mixed"}
                         tableRaceDuration={selectedTimeMode === RankingTimeMode.AT ? selectedRankingTime : null}
+                        showLastPassageTime={showLastPassageTime}
                       />
                     )}
 
@@ -241,6 +248,7 @@ export default function RankingView(): React.ReactElement {
                           tableCategoryCode={selectedCategoryCode}
                           tableGender={selectedGender ?? "mixed"}
                           tableRaceDuration={selectedTimeMode === RankingTimeMode.AT ? selectedRankingTime : null}
+                          showLastPassageTime={showLastPassageTime}
                         />
                       </div>
                     )}

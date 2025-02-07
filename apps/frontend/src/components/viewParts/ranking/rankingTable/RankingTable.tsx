@@ -11,6 +11,7 @@ interface RankingTableProps {
   tableCategoryCode: CategoryCode | null;
   tableGender: GenderWithMixed;
   tableRaceDuration: number | null;
+  showLastPassageTime: boolean;
 }
 
 export default function RankingTable({
@@ -19,6 +20,7 @@ export default function RankingTable({
   tableCategoryCode,
   tableGender,
   tableRaceDuration,
+  showLastPassageTime,
 }: RankingTableProps): React.ReactElement {
   const getRankingTableRow = (rankingRunner: RankingRunner): React.ReactElement | null => {
     const runnerCategory = getCategory(Number(rankingRunner.birthYear), { date: new Date(race.startTime) }).code;
@@ -42,6 +44,7 @@ export default function RankingTable({
         runner={rankingRunner}
         tableCategoryCode={tableCategoryCode}
         tableGender={tableGender}
+        showLastPassageTime={showLastPassageTime}
       />
     );
   };
@@ -63,7 +66,7 @@ export default function RankingTable({
           <th>Nom</th>
           <th>Nb. tours</th>
           <th>Distance</th>
-          <th>Dernier passage</th>
+          {showLastPassageTime && <th>Dernier passage</th>}
           <th>Vitesse moy.</th>
           <th>Écart 1er</th>
           <th className="hide-on-print">Détails</th>

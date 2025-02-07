@@ -11,6 +11,7 @@ interface ResponsiveRankingTableProps {
   tableCategoryCode: CategoryCode | null;
   tableGender: GenderWithMixed;
   tableRaceDuration: number | null;
+  showLastPassageTime: boolean;
 }
 
 export default function ResponsiveRankingTable({
@@ -19,6 +20,7 @@ export default function ResponsiveRankingTable({
   tableCategoryCode,
   tableGender,
   tableRaceDuration,
+  showLastPassageTime,
 }: ResponsiveRankingTableProps): React.ReactElement {
   const getRankingTableRow = React.useCallback(
     (rankingRunner: RankingRunner) => {
@@ -43,10 +45,11 @@ export default function ResponsiveRankingTable({
           runner={rankingRunner}
           tableCategoryCode={tableCategoryCode}
           tableGender={tableGender}
+          showLastPassageTime={showLastPassageTime}
         />
       );
     },
-    [race, tableCategoryCode, tableGender],
+    [race, showLastPassageTime, tableCategoryCode, tableGender],
   );
 
   return (
