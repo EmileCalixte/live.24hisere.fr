@@ -42,7 +42,7 @@ export default function CreateParticipantAdminView(): React.ReactElement {
   const [runnerId, setRunnerId] = React.useState<number | undefined>(undefined);
   const [bibNumber, setBibNumber] = React.useState<number | undefined>(undefined);
   const [isStopped, setIsStopped] = React.useState(false);
-  const [distanceAfterLastPassage, setDistanceAfterLastPassage] = React.useState<number | string>(0);
+  const [finalDistance, setFinalDistance] = React.useState<number | string>(0);
 
   const [redirectToCreatedParticipant, setRedirectToCreatedParticipant] = React.useState(true);
 
@@ -95,7 +95,7 @@ export default function CreateParticipantAdminView(): React.ReactElement {
       runnerId,
       bibNumber,
       stopped: isStopped,
-      distanceAfterLastPassage: distanceAfterLastPassage.toString(),
+      finalDistance: finalDistance.toString(),
     };
 
     postRaceRunnerMutation.mutate(body, {
@@ -151,8 +151,8 @@ export default function CreateParticipantAdminView(): React.ReactElement {
               isBibNumberAvailable={isBibNumberAvailable}
               isStopped={isStopped}
               setIsStopped={setIsStopped}
-              distanceAfterLastPassage={distanceAfterLastPassage}
-              setDistanceAfterLastPassage={setDistanceAfterLastPassage}
+              finalDistance={finalDistance}
+              setFinalDistance={setFinalDistance}
               submitButtonDisabled={
                 postRaceRunnerMutation.isPending ||
                 !isBibNumberAvailable ||

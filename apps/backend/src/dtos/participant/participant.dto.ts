@@ -27,5 +27,5 @@ export class ParticipantDto implements PostParticipantPayload {
   @IsFloatString()
   @FloatStringMin(0)
   @FloatStringMax(RACE_MAX_DISTANCE)
-  distanceAfterLastPassage: string;
+  finalDistance: string;
 }

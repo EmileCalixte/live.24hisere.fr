@@ -47,15 +47,15 @@ export function getRunnerProcessedDataFromPassages(
 
   const distanceToLastPassage = getDistanceFromPassageCount(race, passages.length);
 
-  const distanceAfterLastPassage = Number(participant.distanceAfterLastPassage);
-  const totalDistance = distanceToLastPassage + distanceAfterLastPassage;
+  const finalDistance = Number(participant.finalDistance);
+  const totalDistance = distanceToLastPassage + finalDistance;
 
   const averageSpeedToLastPassage = getSpeed(distanceToLastPassage, lastPassageTime.raceTime);
   const averagePaceToLastPassage = getPaceFromSpeed(averageSpeedToLastPassage);
 
   const totalAverageSpeed = getSpeed(
     totalDistance,
-    distanceAfterLastPassage > 0 ? race.duration * 1000 : lastPassageTime.raceTime,
+    finalDistance > 0 ? race.duration * 1000 : lastPassageTime.raceTime,
   );
 
   const totalAveragePace = getPaceFromSpeed(totalAverageSpeed);
