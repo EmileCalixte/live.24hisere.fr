@@ -26,6 +26,19 @@ export function isValidUrl(string: string): boolean {
 }
 
 /**
+ * Returns a new string with all diacritic and accents removed
+ * @param text The text to transform
+ * @param form The normalization form
+ * @param lowerCase If true, the returned string will be transformed into lower case
+ * @returns
+ */
+export function latinize(text: string, lowerCase = false, form = "NFKD"): string {
+  const normalized = text.normalize(form).replace(/[\u0300-\u036f]/g, "");
+
+  return lowerCase ? normalized.toLowerCase() : normalized;
+}
+
+/**
  * Checks if a substring is included within a string.
  * Both the string and the substring are normalized before performing the check.
  *
@@ -34,14 +47,6 @@ export function isValidUrl(string: string): boolean {
  * @param caseSensitive If true, search will be case-sensitive
  * @returns True if normalized string includes normalized substring, false otherwise
  */
-export function normalizedIncludes(subject: string, search: string, caseSensitive = false): boolean {
-  let string = subject;
-  let subString = search;
-
-  if (!caseSensitive) {
-    string = string.toLowerCase();
-    subString = subString.toLowerCase();
-  }
-
-  return string.normalize().includes(subString.normalize());
+export function latinizedIncludes(subject: string, search: string, caseSensitive = false): boolean {
+  return latinize(subject, !caseSensitive).includes(latinize(search, !caseSensitive));
 }

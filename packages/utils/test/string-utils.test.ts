@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { capitalizeWords, harmonizeName, isValidUrl } from "../src/string-utils";
+import { capitalizeWords, harmonizeName, isValidUrl, latinize } from "../src/string-utils";
 
 describe("Capitalize words", () => {
   it("should capitalize a simple sentence", () => {
@@ -43,5 +43,33 @@ describe("Is valid URL", () => {
     expect(isValidUrl("http://example.com:80000")).toEqual(false);
     expect(isValidUrl("example.com")).toEqual(false);
     expect(isValidUrl("random string obviously not an URL")).toEqual(false);
+  });
+});
+
+describe("Latinize", () => {
+  it("should remove accents from a string", () => {
+    expect(latinize("éèêëàáâäçñ")).toBe("eeeeaaaacn");
+  });
+
+  it("should return the same string if no accents are present", () => {
+    expect(latinize("Hello World")).toBe("Hello World");
+  });
+
+  it("should convert to lowercase if lowerCase is true", () => {
+    expect(latinize("École", true)).toBe("ecole");
+    expect(latinize("Valérie", true)).toBe("valerie");
+  });
+
+  it("should handle empty strings correctly", () => {
+    expect(latinize("")).toBe("");
+  });
+
+  it("should handle strings with only diacritics", () => {
+    expect(latinize("́̀̈̃")) // Only diacritic marks
+      .toBe("");
+  });
+
+  it("should not remove non-accented special characters", () => {
+    expect(latinize("Hello! @Test#")).toBe("Hello! @Test#");
   });
 });

@@ -29,8 +29,8 @@ export default function RunnersAdminView(): React.ReactElement {
     }
 
     return runners.filter((runner) => {
-      const firstnameMatches = stringUtils.normalizedIncludes(runner.firstname, trimmedSearch);
-      const lastnameMatches = stringUtils.normalizedIncludes(runner.lastname, trimmedSearch);
+      const firstnameMatches = stringUtils.latinizedIncludes(runner.firstname, trimmedSearch);
+      const lastnameMatches = stringUtils.latinizedIncludes(runner.lastname, trimmedSearch);
 
       return firstnameMatches || lastnameMatches;
     });
