@@ -17,6 +17,7 @@ export default function RunnersTable({ runners }: RunnersTableProps): React.Reac
           <th>Nom</th>
           <th>Sexe</th>
           <th>Année naissance</th>
+          <th>Public</th>
           <th>Courses</th>
           <th>Détails</th>
         </tr>
@@ -38,6 +39,7 @@ export default function RunnersTable({ runners }: RunnersTableProps): React.Reac
               </td>
               <td>{runner.gender}</td>
               <td>{runner.birthYear}</td>
+              <td>{runner.isPublic ? "Oui" : "Non"}</td>
               <td>{runner.raceCount}</td>
               <td>
                 <Link to={`/admin/runners/${runner.id}`}>Détails</Link>
