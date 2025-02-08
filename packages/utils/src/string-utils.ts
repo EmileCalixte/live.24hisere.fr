@@ -38,7 +38,7 @@ export function normalizedIncludes(subject: string, search: string, caseSensitiv
   let string = subject;
   let subString = search;
 
-  if (caseSensitive) {
+  if (!caseSensitive) {
     string = string.toLowerCase();
     subString = subString.toLowerCase();
   }
