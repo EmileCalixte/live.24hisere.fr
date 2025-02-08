@@ -1,6 +1,5 @@
 import React from "react";
 import clsx from "clsx";
-import latinize from "latinize";
 import { Key } from "../../../constants/keyboardEvent";
 import { useDocumentActiveElement } from "../../../hooks/useDocumentActiveElement";
 import type { SelectOption } from "../../../types/Forms";
@@ -34,12 +33,12 @@ export default function CustomSelect<T extends SelectOption["value"]>({
   const [search, setSearch] = React.useState("");
 
   const filteredOptions = React.useMemo(() => {
-    const simplifiedSearch = latinize(search.trim()).toLowerCase();
+    const normalizedSearch = search.trim().normalize().toLowerCase();
 
     return options.filter((option) => {
-      const simplifiedLabel = latinize(option.label).toLowerCase();
+      const normalizedLabel = option.label.normalize().toLowerCase();
 
-      return simplifiedLabel.includes(simplifiedSearch);
+      return normalizedLabel.includes(normalizedSearch);
     });
   }, [options, search]);
 
