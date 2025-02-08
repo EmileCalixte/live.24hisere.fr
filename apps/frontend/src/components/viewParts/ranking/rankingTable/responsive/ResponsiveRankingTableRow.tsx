@@ -114,7 +114,7 @@ export default function ResponsiveRankingTableRow({
           </div>
 
           <div className="d-flex align-items-center gap-2">
-            <strong>N° {runner.id}</strong>
+            <strong>N° {runner.bibNumber}</strong>
             {runner.stopped && showRunnerStoppedBadges && <RunnerStoppedBadge />}
           </div>
 

@@ -41,7 +41,7 @@ export default function RankingTableRow({
         tableCategoryCode={tableCategoryCode}
         tableGender={tableGender}
       />
-      <td>{runner.id}</td>
+      <td>{runner.bibNumber}</td>
       <td>
         <span className="d-flex align-items-center gap-2">
           {alpha2CountryCode && <Flag countryCode={alpha2CountryCode} />}
