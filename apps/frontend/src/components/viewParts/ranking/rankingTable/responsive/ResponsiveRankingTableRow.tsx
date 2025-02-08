@@ -16,6 +16,7 @@ interface ResponsiveRankingTableRowProps {
   tableCategoryCode: CategoryCode | null;
   tableGender: GenderWithMixed;
   showLastPassageTime: boolean;
+  showRunnerStoppedBadges: boolean;
 }
 
 export default function ResponsiveRankingTableRow({
@@ -24,6 +25,7 @@ export default function ResponsiveRankingTableRow({
   tableCategoryCode,
   tableGender,
   showLastPassageTime,
+  showRunnerStoppedBadges,
 }: ResponsiveRankingTableRowProps): React.ReactElement {
   const runnerCategoryCode = getCategory(Number(runner.birthYear), { date: new Date(race.startTime) }).code;
 
@@ -113,7 +115,7 @@ export default function ResponsiveRankingTableRow({
 
           <div className="d-flex align-items-center gap-2">
             <strong>N° {runner.id}</strong>
-            {runner.stopped && <RunnerStoppedBadge />}
+            {runner.stopped && showRunnerStoppedBadges && <RunnerStoppedBadge />}
           </div>
 
           {displayedGap && <div className="responsive-ranking-table-row-secondary-data-row">{displayedGap}</div>}

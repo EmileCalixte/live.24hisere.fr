@@ -1,0 +1,1 @@
+ALTER TABLE `race` ADD `is_basic_ranking` boolean NOT NULL;

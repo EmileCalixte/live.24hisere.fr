@@ -1,16 +1,21 @@
 import type {
+  Participant,
   PassageWithRunnerIdAndRaceId,
   PublicPassage,
+  PublicRace,
   PublicRunner,
   RaceRunner,
   RaceRunnerWithPassages,
   RaceRunnerWithProcessedData,
   RaceRunnerWithProcessedPassages,
+  RunnerProcessedData,
 } from "@live24hisere/core/types";
 import { compareUtils, dateUtils } from "@live24hisere/utils";
 import type { SelectOption } from "../types/Forms";
 import type { RankingRunnerGap } from "../types/Ranking";
+import { getPaceFromSpeed, getSpeed } from "./mathUtils";
 import { getSortedPassages } from "./passageUtils";
+import { isRaceFinished } from "./raceUtils";
 import { formatMsAsDuration } from "./utils";
 
 export function getRunnersWithPassagesFromRunnersAndPassages<
@@ -48,6 +53,38 @@ export function getRunnerWithPassagesFromRunnerAndPassages<TRunner extends RaceR
   return {
     ...runner,
     passages: getSortedPassages(passages),
+  };
+}
+
+export function getBasicRankingRunnerProcessedData(
+  participant: Participant | RaceRunner,
+  race: PublicRace,
+): RunnerProcessedData {
+  const totalDistance = Number(participant.finalDistance);
+
+  if (!totalDistance) {
+    return {
+      lastPassageTime: null,
+      averageSpeedToLastPassage: null,
+      averagePaceToLastPassage: null,
+      totalAverageSpeed: null,
+      totalAveragePace: null,
+      totalDistance: 0,
+      distanceToLastPassage: 0,
+    };
+  }
+
+  const totalAverageSpeed = getSpeed(totalDistance, race.duration * 1000);
+  const totalAveragePace = getPaceFromSpeed(totalAverageSpeed);
+
+  return {
+    lastPassageTime: null,
+    distanceToLastPassage: 0,
+    averageSpeedToLastPassage: null,
+    averagePaceToLastPassage: null,
+    totalDistance,
+    totalAverageSpeed,
+    totalAveragePace,
   };
 }
 
@@ -132,7 +169,14 @@ export function formatGap(gap: RankingRunnerGap | null, exhaustive = false): str
 export function spaceshipRunners(
   runner1: RaceRunnerWithPassages & RaceRunnerWithProcessedData,
   runner2: RaceRunnerWithPassages & RaceRunnerWithProcessedData,
+  race: PublicRace,
 ): ReturnType<typeof compareUtils.spaceship> {
+  const compareTotalDistance = race.isBasicRanking || isRaceFinished(race);
+
+  if (compareTotalDistance) {
+    return compareUtils.spaceship(Number(runner2.totalDistance), Number(runner1.totalDistance));
+  }
+
   const runner1PassageCount = runner1.passages.length;
   const runner2PassageCount = runner2.passages.length;
 
@@ -151,8 +195,9 @@ export function spaceshipRunners(
 export function areRunnersEqual(
   runner1: RaceRunnerWithPassages & RaceRunnerWithProcessedData,
   runner2: RaceRunnerWithPassages & RaceRunnerWithProcessedData,
+  race: PublicRace,
 ): boolean {
-  return spaceshipRunners(runner1, runner2) === 0;
+  return spaceshipRunners(runner1, runner2, race) === 0;
 }
 
 /**

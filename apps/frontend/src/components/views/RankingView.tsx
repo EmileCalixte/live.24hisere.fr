@@ -29,6 +29,7 @@ import { parseAsCategory } from "../../queryStringParsers/parseAsCategory";
 import { parseAsGender } from "../../queryStringParsers/parseAsGender";
 import { getProcessedPassagesFromPassages, getRunnerProcessedDataFromPassages } from "../../utils/passageUtils";
 import { isRaceFinished } from "../../utils/raceUtils";
+import { getBasicRankingRunnerProcessedData } from "../../utils/runnerUtils";
 import { appContext } from "../App";
 import CircularLoader from "../ui/CircularLoader";
 import Select from "../ui/forms/Select";
@@ -85,6 +86,14 @@ export default function RankingView(): React.ReactElement {
   >(() => {
     if (!runners || !selectedRace) {
       return;
+    }
+
+    if (selectedRace.isBasicRanking) {
+      return runners.map((runner) => ({
+        ...runner,
+        ...getBasicRankingRunnerProcessedData(runner, selectedRace),
+        passages: [],
+      }));
     }
 
     return runners.map((runner) => ({
@@ -174,8 +183,10 @@ export default function RankingView(): React.ReactElement {
     }
   }, [categories, selectedCategoryCode, setSelectedCategory]);
 
+  const isRaceInProgress = !!selectedRace && !isRaceFinished(selectedRace, serverTimeOffset);
+
   const showLastPassageTime =
-    (!!selectedRace && !isRaceFinished(selectedRace, serverTimeOffset)) || selectedTimeMode === RankingTimeMode.AT;
+    (isRaceInProgress || selectedTimeMode === RankingTimeMode.AT) && !selectedRace?.isBasicRanking;
 
   return (
     <Page id="ranking" title="Classements">
@@ -216,6 +227,7 @@ export default function RankingView(): React.ReactElement {
                   onRankingTimeSave={onRankingTimeSave}
                   selectedCategoryCode={selectedCategoryCode}
                   selectedGender={selectedGender ?? "mixed"}
+                  showTimeModeSelect={!selectedRace.isBasicRanking}
                   selectedTimeMode={selectedTimeMode}
                   currentRankingTime={selectedRankingTime ?? selectedRace.duration * 1000}
                   maxRankingTime={selectedRace.duration * 1000}
@@ -235,6 +247,7 @@ export default function RankingView(): React.ReactElement {
                         tableGender={selectedGender ?? "mixed"}
                         tableRaceDuration={selectedTimeMode === RankingTimeMode.AT ? selectedRankingTime : null}
                         showLastPassageTime={showLastPassageTime}
+                        showRunnerStoppedBadges={isRaceInProgress}
                       />
                     )}
 
@@ -249,6 +262,7 @@ export default function RankingView(): React.ReactElement {
                           tableGender={selectedGender ?? "mixed"}
                           tableRaceDuration={selectedTimeMode === RankingTimeMode.AT ? selectedRankingTime : null}
                           showLastPassageTime={showLastPassageTime}
+                          showRunnerStoppedBadges={isRaceInProgress}
                         />
                       </div>
                     )}

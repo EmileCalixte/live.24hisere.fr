@@ -62,7 +62,7 @@ export class RankingCalculator<TRunner extends MinimalRankingRunnerInput> {
   ) {
     this.runners = this.runners.filter((runner) => runner.raceId === this.race.id);
 
-    if (rankingDate) {
+    if (rankingDate && !race.isBasicRanking) {
       this.runners = this.runners.map((runner) => {
         const passages = runner.passages.filter((passage) => new Date(passage.time).getTime() < rankingDate.getTime());
 
@@ -74,7 +74,7 @@ export class RankingCalculator<TRunner extends MinimalRankingRunnerInput> {
       });
     }
 
-    this.runners = this.runners.sort(spaceshipRunners);
+    this.runners = this.runners.sort((a, b) => spaceshipRunners(a, b, race));
   }
 
   public getRanking(): Ranking<TRunner> {
@@ -123,13 +123,13 @@ export class RankingCalculator<TRunner extends MinimalRankingRunnerInput> {
       const categoryGenderPreviousRunner = this.getCurrentLastRunner(runnerCategoryCode, runner.gender, ranking);
 
       const scratchMixedPreviousRunnerEquality =
-        scratchMixedPreviousRunner && areRunnersEqual(runner, scratchMixedPreviousRunner);
+        scratchMixedPreviousRunner && areRunnersEqual(runner, scratchMixedPreviousRunner, this.race);
       const scratchGenderPreviousRunnerEquality =
-        scratchGenderPreviousRunner && areRunnersEqual(runner, scratchGenderPreviousRunner);
+        scratchGenderPreviousRunner && areRunnersEqual(runner, scratchGenderPreviousRunner, this.race);
       const categoryMixedPreviousRunnerEquality =
-        categoryMixedPreviousRunner && areRunnersEqual(runner, categoryMixedPreviousRunner);
+        categoryMixedPreviousRunner && areRunnersEqual(runner, categoryMixedPreviousRunner, this.race);
       const categoryGenderPreviousRunnerEquality =
-        categoryGenderPreviousRunner && areRunnersEqual(runner, categoryGenderPreviousRunner);
+        categoryGenderPreviousRunner && areRunnersEqual(runner, categoryGenderPreviousRunner, this.race);
 
       if (scratchMixedPreviousRunner && scratchMixedPreviousRunnerEquality) {
         rankings.displayed.scratchMixed = scratchMixedPreviousRunner.ranks.displayed.scratchMixed;

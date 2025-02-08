@@ -45,4 +45,8 @@ export class RaceDto implements PostRacePayload {
   @FloatStringMin(0)
   @FloatStringMax(RACE_MAX_DISTANCE)
   lapDistance: string;
+
+  @IsBoolean()
+  @IsNotEmpty()
+  isBasicRanking: boolean;
 }

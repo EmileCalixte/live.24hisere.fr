@@ -18,6 +18,7 @@ interface RankingTableRowProps {
   tableCategoryCode: CategoryCode | null;
   tableGender: GenderWithMixed;
   showLastPassageTime: boolean;
+  showRunnerStoppedBadges: boolean;
 }
 
 export default function RankingTableRow({
@@ -26,6 +27,7 @@ export default function RankingTableRow({
   tableCategoryCode,
   tableGender,
   showLastPassageTime,
+  showRunnerStoppedBadges,
 }: RankingTableRowProps): React.ReactElement {
   const raceInitialDistance = Number(race.initialDistance);
 
@@ -46,10 +48,12 @@ export default function RankingTableRow({
           <span>
             {runner.lastname.toUpperCase()} {runner.firstname}
           </span>
-          {runner.stopped && <RunnerStoppedBadge />}
+          {runner.stopped && showRunnerStoppedBadges && <RunnerStoppedBadge />}
         </span>
       </td>
-      <td>{raceInitialDistance > 0 ? Math.max(0, runner.passages.length - 1) : runner.passages.length}</td>
+      {!race.isBasicRanking && (
+        <td>{raceInitialDistance > 0 ? Math.max(0, runner.passages.length - 1) : runner.passages.length}</td>
+      )}
       <td>{formatFloatNumber(runner.totalDistance / 1000, 2)} km</td>
       {showLastPassageTime && (
         <td>
@@ -72,9 +76,13 @@ export default function RankingTableRow({
           }
         })()}
       </td>
-      <td>
-        {formatGap(runner.gaps.firstRunner[getRankingType(tableCategoryCode, tableGender)].gap) ?? NO_VALUE_PLACEHOLDER}
-      </td>
+
+      {!race.isBasicRanking && (
+        <td>
+          {formatGap(runner.gaps.firstRunner[getRankingType(tableCategoryCode, tableGender)].gap) ??
+            NO_VALUE_PLACEHOLDER}
+        </td>
+      )}
 
       <td className="hide-on-print">
         <Link to={`/runner-details/${runner.id}`}>Détails</Link>

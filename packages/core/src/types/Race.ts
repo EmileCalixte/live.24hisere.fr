@@ -34,6 +34,11 @@ export interface PublicRace {
    * The distance of a lap, in meters (decimal)
    */
   lapDistance: string;
+
+  /**
+   * If true, we don't have the details of the participants' passages in the race but only their final distances
+   */
+  isBasicRanking: boolean;
 }
 
 /**

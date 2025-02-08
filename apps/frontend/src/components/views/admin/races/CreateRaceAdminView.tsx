@@ -30,6 +30,7 @@ export default function CreateRaceAdminView(): React.ReactElement {
   const [startTime, setStartTime] = React.useState(new Date());
   const [duration, setDuration] = React.useState(60 * 60 * 24 * 1000);
   const [isPublic, setIsPublic] = React.useState(false);
+  const [isBasicRanking, setIsBasicRanking] = React.useState(false);
 
   const editionOptions = React.useMemo<Array<SelectOption<number>>>(() => {
     if (!editions) {
@@ -85,6 +86,7 @@ export default function CreateRaceAdminView(): React.ReactElement {
       duration: Math.floor(duration / 1000),
       initialDistance: initialDistance.toString(),
       lapDistance: lapDistance.toString(),
+      isBasicRanking,
     };
 
     postRaceMutation.mutate(body, {
@@ -139,6 +141,8 @@ export default function CreateRaceAdminView(): React.ReactElement {
             setDuration={setDuration}
             isPublic={isPublic}
             setIsPublic={setIsPublic}
+            isBasicRanking={isBasicRanking}
+            setIsBasicRanking={setIsBasicRanking}
             submitButtonDisabled={postRaceMutation.isPending}
           />
         </Col>
