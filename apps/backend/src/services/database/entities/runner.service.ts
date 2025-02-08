@@ -30,7 +30,7 @@ export class RunnerService extends EntityService {
         raceCount: count(TABLE_PARTICIPANT.id),
       })
       .from(TABLE_RUNNER)
-      .innerJoin(TABLE_PARTICIPANT, eq(TABLE_PARTICIPANT.runnerId, TABLE_RUNNER.id))
+      .leftJoin(TABLE_PARTICIPANT, eq(TABLE_PARTICIPANT.runnerId, TABLE_RUNNER.id))
       .where(and(eq(TABLE_RUNNER.id, runnerId), eq(TABLE_RUNNER.isPublic, true)));
 
     return this.getUniqueResult(runners);
@@ -43,7 +43,7 @@ export class RunnerService extends EntityService {
         raceCount: count(TABLE_PARTICIPANT.id),
       })
       .from(TABLE_RUNNER)
-      .innerJoin(TABLE_PARTICIPANT, eq(TABLE_PARTICIPANT.runnerId, TABLE_RUNNER.id))
+      .leftJoin(TABLE_PARTICIPANT, eq(TABLE_PARTICIPANT.runnerId, TABLE_RUNNER.id))
       .where(eq(TABLE_RUNNER.id, runnerId));
 
     return this.getUniqueResult(runners);
