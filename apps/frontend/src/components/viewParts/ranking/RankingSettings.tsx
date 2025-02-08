@@ -24,6 +24,7 @@ interface RankingSettingsProps {
   onRankingTimeSave: (time: number) => void;
   selectedCategoryCode: CategoryCode | null;
   selectedGender: GenderWithMixed;
+  showTimeModeSelect: boolean;
   selectedTimeMode: RankingTimeMode;
   currentRankingTime: number;
   maxRankingTime: number;
@@ -37,6 +38,7 @@ export default function RankingSettings({
   onRankingTimeSave,
   selectedCategoryCode,
   selectedGender,
+  showTimeModeSelect,
   selectedTimeMode,
   currentRankingTime,
   maxRankingTime,
@@ -68,23 +70,25 @@ export default function RankingSettings({
         />
       </Col>
 
-      <Col>
-        <RadioGroup
-          legend="Heure"
-          options={RANKING_TIME_MODE_OPTIONS}
-          value={selectedTimeMode}
-          onSelectOption={(option) => {
-            setTimeMode(option.value);
-          }}
-        />
+      {showTimeModeSelect && (
+        <Col>
+          <RadioGroup
+            legend="Heure"
+            options={RANKING_TIME_MODE_OPTIONS}
+            value={selectedTimeMode}
+            onSelectOption={(option) => {
+              setTimeMode(option.value);
+            }}
+          />
 
-        <RankingSettingsTime
-          isVisible={selectedTimeMode === RankingTimeMode.AT}
-          currentRankingTime={currentRankingTime}
-          onRankingTimeSave={onRankingTimeSave}
-          maxRankingTime={maxRankingTime}
-        />
-      </Col>
+          <RankingSettingsTime
+            isVisible={selectedTimeMode === RankingTimeMode.AT}
+            currentRankingTime={currentRankingTime}
+            onRankingTimeSave={onRankingTimeSave}
+            maxRankingTime={maxRankingTime}
+          />
+        </Col>
+      )}
     </>
   );
 }
