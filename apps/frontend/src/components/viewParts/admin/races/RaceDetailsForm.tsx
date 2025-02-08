@@ -24,6 +24,8 @@ interface RaceDetailsFormProps {
   setDuration: (duration: number) => void;
   isPublic: boolean;
   setIsPublic: (isPublic: boolean) => void;
+  isBasicRanking: boolean;
+  setIsBasicRanking: (isBasicRanking: boolean) => void;
   submitButtonDisabled: boolean;
 }
 
@@ -44,6 +46,8 @@ export default function RaceDetailsForm({
   setDuration,
   isPublic,
   setIsPublic,
+  isBasicRanking,
+  setIsBasicRanking,
   submitButtonDisabled,
 }: RaceDetailsFormProps): React.ReactElement {
   const startTimeDate = useMemo(
@@ -160,6 +164,15 @@ export default function RaceDetailsForm({
         className="mt-3"
         onChange={(e) => {
           setIsPublic(e.target.checked);
+        }}
+      />
+
+      <Checkbox
+        label="Classement simplifié"
+        checked={isBasicRanking}
+        className="mt-3"
+        onChange={(e) => {
+          setIsBasicRanking(e.target.checked);
         }}
       />
 

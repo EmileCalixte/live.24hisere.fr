@@ -57,6 +57,13 @@
       "when": 1738964078446,
       "tag": "0007_rename-distance-after-last-passage-final-distance",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1739001336177,
+      "tag": "0008_basic-ranking",
+      "breakpoints": true
     }
   ]
 }
