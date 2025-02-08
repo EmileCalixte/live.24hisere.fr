@@ -94,39 +94,33 @@ pnpm backend update-password
 
 ## Installation en production
 
-TODO réécrire les instructions pour fonctionner avec PNPM
-
-<details>
-   <summary>Anciennes instructions (Yarn)</summary>
-
-1. Récupérer l'artifact du workflow GitHub, copier le fichier `live.24hisere.fr.zip` dans le dossier souhaité sur le serveur
-2. Dézipper l'archive
+1. Cloner le dépôt GitHub dans le dossier souhaité sur le serveur
+2. S'assurer que la version de node installée est correcte (`cat .nvmrc` - `node -v`). S'assurer également que MariaDB est au moins en version 10.6
+3. Installer les dépendances du projet
    ```bash
-   unzip live.24hisere.fr.zip
-   ```
-3. Installer les dépendances du backend
-   ```bash
-   cd backend
-   yarn install
+   pnpm install
    ```
 4. Créer un fichier `.env` à partir du modèle `.env.default` pour le backend
    ```bash
+   cd apps/backend
    cp .env.default .env
    ```
-5. Dans le fichier `backend/.env`, renseigner
-   1. L'URL de l'application frontend dans la variable `FRONTEND_URL` (exemple : `FRONTEND_URL="https://live.24hisere.fr"`)
-   2. L'URL de connexion à la base de données dans la variable `DATABASE_URL`
-6. Exécuter les migrations pour créer les tables dans la base de données
+5. Dans le fichier `.env` créé, renseigner
+   1. `NODE_ENV=production`
+   2. L'URL de l'application frontend dans la variable `FRONTEND_URL` (exemple : `FRONTEND_URL="https://live.24hisere.fr"`)
+   3. Les identifiants de connexion à la base de données dans les variables `DB_NAME`, `DB_USERNAME` et `DB_PASSWORD`
+6. Générer les builds de production
    ```bash
-   npx prisma migrate deploy
+   pnpm build
    ```
-   L'utilisateur doit avoir les permissions `CREATE`, `ALTER` et `INDEX`.
-7. Créer le build de production pour le backend
+7. Exécuter les migrations pour créer les tables dans la base de données
    ```bash
-   yarn build
+   pnpm backend migrate
    ```
+   L'utilisateur doit avoir les permissions `CREATE`, `ALTER`, `DROP` et `INDEX`.
 8. Lancer l'application
    ```bash
-   pm2 start dist/main.js --name live.24hisere.fr-api
+   cd apps/backend
+   pm2 start /dist/src/main.js --name live.24hisere.fr-api
    ```
-</details>
+   Il est important de se positionner dans le répertoire racine du backend puis de lancer pm2 depuis ce répertoire, car pm2 lit le fichier `.env` situé à l'endroit où la commande est lancée.
