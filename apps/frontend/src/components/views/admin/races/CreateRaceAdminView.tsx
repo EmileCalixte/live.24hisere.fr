@@ -75,6 +75,12 @@ export default function CreateRaceAdminView(): React.ReactElement {
     [existingRaces],
   );
 
+  React.useEffect(() => {
+    if (editionOptions.length > 0) {
+      setRaceEditionId(editionOptions[0].value);
+    }
+  }, [editionOptions]);
+
   const onSubmit: React.FormEventHandler = (e) => {
     e.preventDefault();
 
