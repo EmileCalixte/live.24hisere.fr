@@ -124,3 +124,14 @@ pnpm backend update-password
    pm2 start /dist/src/main.js --name live.24hisere.fr-api
    ```
    Il est important de se positionner dans le répertoire racine du backend puis de lancer pm2 depuis ce répertoire, car pm2 lit le fichier `.env` situé à l'endroit où la commande est lancée.
+
+### Mise à jour
+
+Pour mettre à jour l'application sur le serveur :
+
+1. Télécharger les changements avec `git pull`
+2. Regénérer les builds de production avec `pnpm build`
+3. Relancer le backend
+   ```bash
+   pm2 restart live.24hisere.fr-api
+   ```
