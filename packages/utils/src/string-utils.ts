@@ -50,3 +50,7 @@ export function latinize(text: string, lowerCase = false, form = "NFKD"): string
 export function latinizedIncludes(subject: string, search: string, caseSensitive = false): boolean {
   return latinize(subject, !caseSensitive).includes(latinize(search, !caseSensitive));
 }
+
+export function latinizedEquals(a: string, b: string, caseSensitive = false): boolean {
+  return latinize(a, !caseSensitive) === latinize(b, !caseSensitive);
+}

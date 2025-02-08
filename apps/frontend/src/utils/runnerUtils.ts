@@ -10,7 +10,8 @@ import type {
   RaceRunnerWithProcessedPassages,
   RunnerProcessedData,
 } from "@live24hisere/core/types";
-import { compareUtils, dateUtils } from "@live24hisere/utils";
+import { compareUtils, dateUtils, stringUtils } from "@live24hisere/utils";
+import { spaceship } from "../../../../packages/utils/src/compare-utils";
 import type { SelectOption } from "../types/Forms";
 import type { RankingRunnerGap } from "../types/Ranking";
 import { getPaceFromSpeed, getSpeed } from "./mathUtils";
@@ -187,6 +188,17 @@ export function spaceshipRunners(
   }
 
   return compareUtils.spaceship(runner2PassageCount, runner1PassageCount);
+}
+
+export function spaceshipRunnersByName(
+  runner1: PublicRunner,
+  runner2: PublicRunner,
+): ReturnType<typeof compareUtils.spaceship> {
+  if (stringUtils.latinizedEquals(runner1.lastname, runner2.lastname)) {
+    return spaceship(stringUtils.latinize(runner1.firstname), stringUtils.latinize(runner2.firstname));
+  }
+
+  return spaceship(stringUtils.latinize(runner1.lastname), stringUtils.latinize(runner2.lastname));
 }
 
 /**

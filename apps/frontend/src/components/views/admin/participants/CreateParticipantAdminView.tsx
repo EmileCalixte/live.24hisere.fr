@@ -11,6 +11,7 @@ import { useRequiredParams } from "../../../../hooks/useRequiredParams";
 import { getCreateParticipantBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import type { SelectOption } from "../../../../types/Forms";
 import { is404Error } from "../../../../utils/apiUtils";
+import { spaceshipRunnersByName } from "../../../../utils/runnerUtils";
 import { appContext } from "../../../App";
 import CircularLoader from "../../../ui/CircularLoader";
 import { Checkbox } from "../../../ui/forms/Checkbox";
@@ -66,7 +67,7 @@ export default function CreateParticipantAdminView(): React.ReactElement {
 
   const runnerOptions = React.useMemo<Array<SelectOption<AdminRunner["id"]>>>(
     () =>
-      allRunners?.map((runner) => {
+      allRunners?.toSorted(spaceshipRunnersByName).map((runner) => {
         const isAlreadyParticipating = alreadyParticipatingRunnerIds.has(runner.id);
 
         return {
