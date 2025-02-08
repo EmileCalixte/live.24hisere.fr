@@ -1,9 +1,10 @@
 import type React from "react";
 import { Col, Row } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import { spaceship } from "../../../../../packages/utils/src/compare-utils";
+// If this crashes, run `pnpm export-licenses`
 import licenses from "../../assets/licenses.json";
 import LinkBlank from "../ui/LinkBlank";
-// If this crashes, run `pnpm export-licenses`
 import Page from "../ui/Page";
 
 interface ThirdParty {
@@ -24,6 +25,13 @@ const thirdPartySoftwares = Object.values(licenses as Licenses)
 export default function AboutView(): React.ReactElement {
   return (
     <Page id="about" title="À propos">
+      <Row>
+        <Col>
+          <p>
+            <Link to="/">Retour à l'accueil</Link>
+          </p>
+        </Col>
+      </Row>
       <Row>
         <Col>
           <h1>À propos</h1>
@@ -54,8 +62,8 @@ export default function AboutView(): React.ReactElement {
           <p>Cette application fonctionne grâce à des programmes tiers :</p>
 
           <ul>
-            {thirdPartySoftwares.map((software) => (
-              <li key={software.name}>
+            {thirdPartySoftwares.map((software, index) => (
+              <li key={index}>
                 <LinkBlank to={software.homepage}>{software.name}</LinkBlank> ({software.versions.sort().join(", ")})
                 {software.author && <> – {software.author}</>} – <i>{software.license}</i>
               </li>

@@ -131,6 +131,9 @@ export default function App(): React.ReactElement {
 
   const isLoginRoute = !!useMatch("/login");
   const isAdminRoute = !!useMatch("/admin/*");
+  const isAboutRoute = !!useMatch("/about");
+
+  const isBypassDisabledAppRoute = isLoginRoute || isAdminRoute || isAboutRoute;
 
   const incrementFetchLevel = React.useCallback(() => {
     setFetchLevel((level) => level + 1);
@@ -238,7 +241,7 @@ export default function App(): React.ReactElement {
     },
   };
 
-  const showDisabledAppMessage = !user && !isAppEnabled && !isLoginRoute && !isAdminRoute;
+  const showDisabledAppMessage = !user && !isBypassDisabledAppRoute;
 
   return (
     <div id="app">
