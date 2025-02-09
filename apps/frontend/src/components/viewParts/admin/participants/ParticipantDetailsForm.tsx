@@ -5,6 +5,7 @@ import { Input } from "../../../ui/forms/Input";
 import Select from "../../../ui/forms/Select";
 
 interface ParticipantDetailsFormProps {
+  isBasicRanking: boolean;
   onSubmit: (e: React.FormEvent) => void;
   runnerOptions?: SelectOption[] | false;
   runnerId?: number | undefined;
@@ -20,6 +21,7 @@ interface ParticipantDetailsFormProps {
 }
 
 export default function ParticipantDetailsForm({
+  isBasicRanking,
   onSubmit,
   runnerOptions,
   runnerId,
@@ -69,7 +71,7 @@ export default function ParticipantDetailsForm({
       />
 
       <Input
-        label="Distance après dernier passage (m)"
+        label={isBasicRanking ? "Distance (m)" : "Distance après dernier passage (m)"}
         type="number"
         min={0}
         step={0.001}

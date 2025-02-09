@@ -226,6 +226,7 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
           <Row>
             <Col xxl={3} xl={4} lg={6} md={9} sm={12}>
               <ParticipantDetailsForm
+                isBasicRanking={race.isBasicRanking}
                 onSubmit={onSubmit}
                 bibNumber={participantBibNumber}
                 setBibNumber={setParticipantBibNumber}

@@ -141,6 +141,7 @@ export default function CreateParticipantAdminView(): React.ReactElement {
 
           <Col xxl={3} xl={4} lg={6} md={9} sm={12}>
             <ParticipantDetailsForm
+              isBasicRanking={race.isBasicRanking}
               onSubmit={onSubmit}
               runnerOptions={allRunners && raceRunners ? runnerOptions : false}
               runnerId={runnerId}
