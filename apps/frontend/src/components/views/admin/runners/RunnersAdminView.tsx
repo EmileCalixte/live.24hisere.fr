@@ -19,7 +19,7 @@ export default function RunnersAdminView(): React.ReactElement {
 
   const displayedRunners = React.useMemo(() => {
     if (!runners) {
-      return false;
+      return undefined;
     }
 
     const trimmedSearch = search.trim();
@@ -42,7 +42,7 @@ export default function RunnersAdminView(): React.ReactElement {
         <Col>{getRunnersBreadcrumbs()}</Col>
       </Row>
 
-      {displayedRunners === false && (
+      {!displayedRunners && (
         <Row>
           <Col>
             <CircularLoader />
@@ -50,7 +50,7 @@ export default function RunnersAdminView(): React.ReactElement {
         </Row>
       )}
 
-      {displayedRunners !== false && (
+      {displayedRunners && (
         <>
           <Row>
             <Col className="d-flex gap-2">

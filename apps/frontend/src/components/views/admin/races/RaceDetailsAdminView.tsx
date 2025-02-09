@@ -3,6 +3,8 @@ import { faCheck, faFlagCheckered, faPlus } from "@fortawesome/free-solid-svg-ic
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import { stringUtils } from "@live24hisere/utils";
+import { spaceship } from "../../../../../../../packages/utils/src/compare-utils";
 import { useGetAdminEditions } from "../../../../hooks/api/requests/admin/editions/useGetAdminEditions";
 import { useDeleteAdminRace } from "../../../../hooks/api/requests/admin/races/useDeleteAdminRace";
 import { useGetAdminRace } from "../../../../hooks/api/requests/admin/races/useGetAdminRace";
@@ -13,6 +15,7 @@ import type { SelectOption } from "../../../../types/Forms";
 import { is404Error } from "../../../../utils/apiUtils";
 import { formatDateForApi } from "../../../../utils/utils";
 import CircularLoader from "../../../ui/CircularLoader";
+import { Input } from "../../../ui/forms/Input";
 import Page from "../../../ui/Page";
 import RaceDetailsForm from "../../../viewParts/admin/races/RaceDetailsForm";
 import RaceRunnersTable from "../../../viewParts/admin/races/RaceRunnersTable";
@@ -45,6 +48,36 @@ export default function RaceDetailsAdminView(): React.ReactElement {
   const [isBasicRanking, setIsBasicRanking] = React.useState(false);
 
   const [isEditingFinalDistances, setIsEditingFinalDistances] = React.useState(false);
+
+  const [search, setSearch] = React.useState("");
+
+  const sortedRaceRunners = React.useMemo(() => {
+    if (!raceRunners) {
+      return undefined;
+    }
+
+    return raceRunners.toSorted((a, b) => spaceship(a.bibNumber, b.bibNumber));
+  }, [raceRunners]);
+
+  const displayedRaceRunners = React.useMemo(() => {
+    if (!sortedRaceRunners) {
+      return undefined;
+    }
+
+    const trimmedSearch = search.trim();
+
+    if (trimmedSearch.length < 1) {
+      return sortedRaceRunners;
+    }
+
+    return sortedRaceRunners.filter((runner) => {
+      const firstnameMatches = stringUtils.latinizedIncludes(runner.firstname, trimmedSearch);
+      const lastnameMatches = stringUtils.latinizedIncludes(runner.lastname, trimmedSearch);
+      const bibNumberMatches = runner.bibNumber.toString().includes(trimmedSearch);
+
+      return firstnameMatches || lastnameMatches || bibNumberMatches;
+    });
+  }, [search, sortedRaceRunners]);
 
   const editionOptions = React.useMemo<Array<SelectOption<number>>>(() => {
     if (!editions) {
@@ -189,63 +222,98 @@ export default function RaceDetailsAdminView(): React.ReactElement {
           <Row>
             <Col>
               <h3>Participants</h3>
-
-              {raceRunners === undefined && <CircularLoader />}
-
-              {getRaceRunnersQuery.error && <p>Impossible de récupérer les coureurs</p>}
-
-              {raceRunners && (
-                <>
-                  <div className="d-flex gap-2 mb-2">
-                    {isEditingFinalDistances ? (
-                      <button
-                        className="button"
-                        onClick={() => {
-                          void getRaceRunnersQuery.refetch({ cancelRefetch: false }).then(() => {
-                            setIsEditingFinalDistances(false);
-                          });
-                        }}
-                        disabled={getRaceRunnersQuery.isPending}
-                      >
-                        <FontAwesomeIcon icon={faCheck} className="me-2" />
-                        Terminer
-                      </button>
-                    ) : (
-                      <>
-                        <p className="m-0">
-                          <Link to={`/admin/races/${race.id}/add-runner`} className="button">
-                            <FontAwesomeIcon icon={faPlus} className="me-2" />
-                            Ajouter un coureur
-                          </Link>
-                        </p>
-                        {raceRunners.length > 0 && (
-                          <button
-                            className="button orange"
-                            onClick={() => {
-                              setIsEditingFinalDistances(true);
-                            }}
-                          >
-                            <FontAwesomeIcon icon={faFlagCheckered} className="me-2" />
-                            Modifier les distances finales
-                          </button>
-                        )}
-                      </>
-                    )}
-                  </div>
-
-                  {raceRunners.length > 0 ? (
-                    <RaceRunnersTable
-                      race={race}
-                      runners={raceRunners}
-                      isEditingFinalDistances={isEditingFinalDistances}
-                    />
-                  ) : (
-                    <p>Aucun coureur ne participe à cette course</p>
-                  )}
-                </>
-              )}
             </Col>
           </Row>
+
+          {raceRunners === undefined && <CircularLoader />}
+
+          {getRaceRunnersQuery.error && (
+            <Row>
+              <Col>
+                <p>Impossible de récupérer les coureurs</p>
+              </Col>
+            </Row>
+          )}
+
+          {displayedRaceRunners && (
+            <>
+              <Row>
+                <Col className="d-flex gap-2 mb-2">
+                  {isEditingFinalDistances ? (
+                    <button
+                      className="button"
+                      onClick={() => {
+                        void getRaceRunnersQuery.refetch({ cancelRefetch: false }).then(() => {
+                          setIsEditingFinalDistances(false);
+                        });
+                      }}
+                      disabled={getRaceRunnersQuery.isPending}
+                    >
+                      <FontAwesomeIcon icon={faCheck} className="me-2" />
+                      Terminer
+                    </button>
+                  ) : (
+                    <>
+                      <p className="m-0">
+                        <Link to={`/admin/races/${race.id}/add-runner`} className="button">
+                          <FontAwesomeIcon icon={faPlus} className="me-2" />
+                          Ajouter un coureur
+                        </Link>
+                      </p>
+                      {displayedRaceRunners.length > 0 && (
+                        <button
+                          className="button orange"
+                          onClick={() => {
+                            setIsEditingFinalDistances(true);
+                          }}
+                        >
+                          <FontAwesomeIcon icon={faFlagCheckered} className="me-2" />
+                          Modifier les distances finales
+                        </button>
+                      )}
+                    </>
+                  )}
+                </Col>
+              </Row>
+
+              {sortedRaceRunners && sortedRaceRunners.length > 0 && (
+                <Row>
+                  <Col lg={3} md={4} sm={6} xs={12}>
+                    <Input
+                      label="Rechercher"
+                      placeholder="Nom, prénom ou dossard"
+                      autoComplete="off"
+                      value={search}
+                      onChange={(e) => {
+                        setSearch(e.target.value);
+                      }}
+                      disabled={isEditingFinalDistances}
+                    />
+                  </Col>
+                </Row>
+              )}
+
+              <Row>
+                <Col>
+                  {displayedRaceRunners.length > 0 && (
+                    <RaceRunnersTable
+                      race={race}
+                      runners={displayedRaceRunners}
+                      isEditingFinalDistances={isEditingFinalDistances}
+                    />
+                  )}
+
+                  {sortedRaceRunners && sortedRaceRunners.length > 0 && displayedRaceRunners.length === 0 && (
+                    <p>Aucun coureur ne correspond à cette recherche.</p>
+                  )}
+
+                  {sortedRaceRunners && sortedRaceRunners.length === 0 && (
+                    <p>Aucun coureur ne participe à cette course.</p>
+                  )}
+                </Col>
+              </Row>
+            </>
+          )}
 
           <Row>
             <Col>
