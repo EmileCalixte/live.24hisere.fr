@@ -241,7 +241,7 @@ export default function App(): React.ReactElement {
     },
   };
 
-  const showDisabledAppMessage = !user && !isBypassDisabledAppRoute;
+  const showDisabledAppMessage = !user && !isAppEnabled && !isBypassDisabledAppRoute;
 
   return (
     <div id="app">
