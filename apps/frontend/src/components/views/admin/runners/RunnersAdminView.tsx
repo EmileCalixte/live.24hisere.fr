@@ -5,6 +5,7 @@ import { Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { stringUtils } from "@live24hisere/utils";
 import { useGetAdminRunners } from "../../../../hooks/api/requests/admin/runners/useGetAdminRunners";
+import { useNameSortedRunners } from "../../../../hooks/runners/useNameSortedRunners";
 import { getRunnersBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import CircularLoader from "../../../ui/CircularLoader";
 import { Input } from "../../../ui/forms/Input";
@@ -17,24 +18,26 @@ export default function RunnersAdminView(): React.ReactElement {
 
   const [search, setSearch] = React.useState("");
 
+  const sortedRunners = useNameSortedRunners(runners);
+
   const displayedRunners = React.useMemo(() => {
-    if (!runners) {
+    if (!sortedRunners) {
       return undefined;
     }
 
     const trimmedSearch = search.trim();
 
     if (trimmedSearch.length < 1) {
-      return runners;
+      return sortedRunners;
     }
 
-    return runners.filter((runner) => {
+    return sortedRunners.filter((runner) => {
       const firstnameMatches = stringUtils.latinizedIncludes(runner.firstname, trimmedSearch);
       const lastnameMatches = stringUtils.latinizedIncludes(runner.lastname, trimmedSearch);
 
       return firstnameMatches || lastnameMatches;
     });
-  }, [runners, search]);
+  }, [sortedRunners, search]);
 
   return (
     <Page id="admin-runners" title="Coureurs">

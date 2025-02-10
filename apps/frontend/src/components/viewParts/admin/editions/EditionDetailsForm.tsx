@@ -34,7 +34,7 @@ export default function EditionDetailsForm({
       />
 
       <Checkbox
-        label="Visible par les utilisateurs"
+        label="Visible publiquement"
         checked={isPublic}
         className="mt-3"
         onChange={(e) => {
