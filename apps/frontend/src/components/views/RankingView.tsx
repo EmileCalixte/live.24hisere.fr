@@ -183,6 +183,13 @@ export default function RankingView(): React.ReactElement {
     }
   }, [categories, selectedCategoryCode, setSelectedCategory]);
 
+  // Auto-select the first race in the selected edition
+  React.useEffect(() => {
+    if (races && races.length > 0 && selectedRace === null) {
+      void setSelectedRaceId(races[0].id);
+    }
+  }, [races, selectedRace, setSelectedRaceId]);
+
   const isRaceInProgress = !!selectedRace && !isRaceFinished(selectedRace, serverTimeOffset);
 
   const showLastPassageTime =
