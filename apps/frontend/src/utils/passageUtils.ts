@@ -25,6 +25,7 @@ export function getRunnerProcessedDataFromPassages(
   participant: Participant | RaceRunner,
   race: PublicRace,
   passages: PublicPassage[],
+  includeDistanceAfterLastPassage: boolean,
 ): RunnerProcessedData {
   if (!passages.length) {
     return {
@@ -47,7 +48,7 @@ export function getRunnerProcessedDataFromPassages(
 
   const distanceToLastPassage = getDistanceFromPassageCount(race, passages.length);
 
-  const finalDistance = Number(participant.finalDistance);
+  const finalDistance = includeDistanceAfterLastPassage ? Number(participant.finalDistance) : 0;
   const totalDistance = distanceToLastPassage + finalDistance;
 
   const averageSpeedToLastPassage = getSpeed(distanceToLastPassage, lastPassageTime.raceTime);

@@ -98,10 +98,10 @@ export default function RankingView(): React.ReactElement {
 
     return runners.map((runner) => ({
       ...runner,
-      ...getRunnerProcessedDataFromPassages(runner, selectedRace, runner.passages),
+      ...getRunnerProcessedDataFromPassages(runner, selectedRace, runner.passages, !rankingDate),
       passages: getProcessedPassagesFromPassages(selectedRace, runner.passages),
     }));
-  }, [runners, selectedRace]);
+  }, [rankingDate, runners, selectedRace]);
 
   const ranking = useRanking(selectedRace ?? undefined, processedRunners, rankingDate);
 
@@ -231,6 +231,7 @@ export default function RankingView(): React.ReactElement {
                   selectedTimeMode={selectedTimeMode}
                   currentRankingTime={selectedRankingTime ?? selectedRace.duration * 1000}
                   maxRankingTime={selectedRace.duration * 1000}
+                  isRaceFinished={isRaceFinished(selectedRace, serverTimeOffset)}
                 />
               </Row>
 

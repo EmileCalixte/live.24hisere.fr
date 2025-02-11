@@ -68,7 +68,7 @@ export class RankingCalculator<TRunner extends MinimalRankingRunnerInput> {
 
         return {
           ...runner,
-          ...getRunnerProcessedDataFromPassages(runner, this.race, passages),
+          ...getRunnerProcessedDataFromPassages(runner, this.race, passages, false),
           passages,
         };
       });

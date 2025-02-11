@@ -20,9 +20,16 @@ export const GENDER_WITH_MIXED_OPTIONS: Array<SelectOption<GenderWithMixed>> = [
   ...GENDER_OPTIONS,
 ];
 
+const RANKING_TIME_MODE_AT_OPTION = { label: "Au temps de course", value: RankingTimeMode.AT };
+
 export const RANKING_TIME_MODE_OPTIONS: Array<SelectOption<RankingTimeMode>> = [
   { label: "Classement actuel", value: RankingTimeMode.NOW },
-  { label: "Au temps de course", value: RankingTimeMode.AT },
+  RANKING_TIME_MODE_AT_OPTION,
+];
+
+export const RANKING_TIME_MODE_RACE_FINISHED_OPTIONS: Array<SelectOption<RankingTimeMode>> = [
+  { label: "Classement final", value: RankingTimeMode.NOW },
+  RANKING_TIME_MODE_AT_OPTION,
 ];
 
 export const COUNTRY_OPTIONS: Array<SelectOption<string>> = [

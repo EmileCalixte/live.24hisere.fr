@@ -1,5 +1,4 @@
-import type React from "react";
-import { useMemo } from "react";
+import React from "react";
 import type { CategoryCode, CategoryList } from "@emilecalixte/ffa-categories";
 import { Col } from "react-bootstrap";
 import type { GenderWithMixed } from "@live24hisere/core/types";
@@ -8,6 +7,7 @@ import {
   CATEGORY_SCRATCH_SELECT_OPTION,
   GENDER_WITH_MIXED_OPTIONS,
   RANKING_TIME_MODE_OPTIONS,
+  RANKING_TIME_MODE_RACE_FINISHED_OPTIONS,
 } from "../../../constants/forms";
 import { RankingTimeMode } from "../../../constants/rankingTimeMode";
 import type { SelectOption } from "../../../types/Forms";
@@ -28,6 +28,7 @@ interface RankingSettingsProps {
   selectedTimeMode: RankingTimeMode;
   currentRankingTime: number;
   maxRankingTime: number;
+  isRaceFinished: boolean;
 }
 
 export default function RankingSettings({
@@ -42,11 +43,14 @@ export default function RankingSettings({
   selectedTimeMode,
   currentRankingTime,
   maxRankingTime,
+  isRaceFinished,
 }: RankingSettingsProps): React.ReactElement {
-  const categoriesOptions = useMemo<Array<SelectOption<CategoryCode | "scratch">>>(
+  const categoriesOptions = React.useMemo<Array<SelectOption<CategoryCode | "scratch">>>(
     () => [CATEGORY_SCRATCH_SELECT_OPTION, ...getCategoriesSelectOptions(categories)],
     [categories],
   );
+
+  const rankingTimeModeOptions = isRaceFinished ? RANKING_TIME_MODE_RACE_FINISHED_OPTIONS : RANKING_TIME_MODE_OPTIONS;
 
   return (
     <>
@@ -74,7 +78,7 @@ export default function RankingSettings({
         <Col>
           <RadioGroup
             legend="Heure"
-            options={RANKING_TIME_MODE_OPTIONS}
+            options={rankingTimeModeOptions}
             value={selectedTimeMode}
             onSelectOption={(option) => {
               setTimeMode(option.value);
