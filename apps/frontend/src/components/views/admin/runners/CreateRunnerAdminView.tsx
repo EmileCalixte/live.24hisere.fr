@@ -19,7 +19,7 @@ export default function CreateRunnerAdminView(): React.ReactElement {
   const [gender, setGender] = React.useState<Gender>(GENDER.M);
   const [birthYear, setBirthYear] = React.useState((new Date().getFullYear() - 30).toString());
   const [countryCode, setCountryCode] = React.useState(COUNTRY_CODE_FRANCE);
-  const [isPublic, setIsPublic] = React.useState(false);
+  const [isPublic, setIsPublic] = React.useState(true);
 
   const onSubmit: React.FormEventHandler = (e) => {
     e.preventDefault();
