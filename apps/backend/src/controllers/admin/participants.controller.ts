@@ -149,8 +149,8 @@ export class ParticipantsController {
 
   private async ensureBibNumberIsAvailable(bibNumber: number, raceId: number): Promise<void> {
     const existingParticipant = await this.participantService.getAdminParticipantByRaceIdAndBibNumber(
-      bibNumber,
       raceId,
+      bibNumber,
     );
 
     if (existingParticipant) {
