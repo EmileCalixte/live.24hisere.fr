@@ -7,8 +7,8 @@ interface AsProp<E extends React.ElementType> {
   as?: E;
 }
 
-type TooltipProps<E extends React.ElementType> = Omit<MuiTooltipProps, "arrow" | "children"> &
-  AsProp<E> & {
+type TooltipProps<E extends React.ElementType> = Omit<MuiTooltipProps, "arrow" | "children">
+  & AsProp<E> & {
     children: MuiTooltipProps["children"] | string;
   };
 

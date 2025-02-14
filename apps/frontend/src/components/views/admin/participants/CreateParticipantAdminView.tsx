@@ -156,10 +156,10 @@ export default function CreateParticipantAdminView(): React.ReactElement {
               finalDistance={finalDistance}
               setFinalDistance={setFinalDistance}
               submitButtonDisabled={
-                postRaceRunnerMutation.isPending ||
-                !isBibNumberAvailable ||
-                bibNumber === undefined ||
-                runnerId === undefined
+                postRaceRunnerMutation.isPending
+                || !isBibNumberAvailable
+                || bibNumber === undefined
+                || runnerId === undefined
               }
             />
           </Col>

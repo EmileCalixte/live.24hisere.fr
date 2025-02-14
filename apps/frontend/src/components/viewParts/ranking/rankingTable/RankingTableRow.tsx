@@ -79,8 +79,8 @@ export default function RankingTableRow({
 
       {!race.isBasicRanking && (
         <td>
-          {formatGap(runner.gaps.firstRunner[getRankingType(tableCategoryCode, tableGender)].gap) ??
-            NO_VALUE_PLACEHOLDER}
+          {formatGap(runner.gaps.firstRunner[getRankingType(tableCategoryCode, tableGender)].gap)
+            ?? NO_VALUE_PLACEHOLDER}
         </td>
       )}
 

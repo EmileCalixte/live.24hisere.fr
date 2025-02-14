@@ -44,9 +44,9 @@ export default function CustomSelect<T extends SelectOption["value"]>({
 
   const isOpened = React.useMemo<boolean>(
     () =>
-      ((documentActiveElement === selectRef.current && shouldOpenOnSelectFocus) ||
-        openedContainerRef.current?.contains(documentActiveElement)) ??
-      false,
+      ((documentActiveElement === selectRef.current && shouldOpenOnSelectFocus)
+        || openedContainerRef.current?.contains(documentActiveElement))
+      ?? false,
     [documentActiveElement, shouldOpenOnSelectFocus],
   );
 
@@ -140,8 +140,8 @@ export default function CustomSelect<T extends SelectOption["value"]>({
     const valueIndex = filteredOptions.findIndex((option) => option.value.toString() === value.toString());
 
     if (
-      (valueIndex === 0 && key === Key.ARROW_UP) ||
-      (valueIndex === filteredOptions.length - 1 && key === Key.ARROW_DOWN)
+      (valueIndex === 0 && key === Key.ARROW_UP)
+      || (valueIndex === filteredOptions.length - 1 && key === Key.ARROW_DOWN)
     ) {
       return;
     }

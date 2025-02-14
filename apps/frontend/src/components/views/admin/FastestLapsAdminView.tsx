@@ -119,8 +119,8 @@ export default function FastestLapsAdminView(): React.ReactElement {
         }
 
         if (
-          p2.processed.lapSpeed === p1.processed.lapSpeed &&
-          p2.processed.lapStartRaceTime >= p1.processed.lapStartRaceTime
+          p2.processed.lapSpeed === p1.processed.lapSpeed
+          && p2.processed.lapStartRaceTime >= p1.processed.lapStartRaceTime
         ) {
           return 1;
         }

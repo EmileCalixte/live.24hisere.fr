@@ -44,8 +44,8 @@ export default function RunnerDetailsStatsRankingTable({
     () =>
       ranking.filter(
         (rankingRunner) =>
-          rankingRunner.gender === runner.gender &&
-          getCategory(Number(rankingRunner.birthYear), { date: new Date(race.startTime) }).code === categoryCode,
+          rankingRunner.gender === runner.gender
+          && getCategory(Number(rankingRunner.birthYear), { date: new Date(race.startTime) }).code === categoryCode,
       ).length,
     [categoryCode, race.startTime, ranking, runner.gender],
   );

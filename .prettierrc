@@ -6,6 +6,7 @@
     "tabWidth": 2,
     "printWidth": 120,
     "trailingComma": "all",
+    "experimentalOperatorPosition": "start",
     "importOrder": ["^react$", "<THIRD_PARTY_MODULES>", "^@live24hisere/(.*)$", "^[./]"],
     "importOrderSortSpecifiers": true,
     "importOrderCaseInsensitive": true

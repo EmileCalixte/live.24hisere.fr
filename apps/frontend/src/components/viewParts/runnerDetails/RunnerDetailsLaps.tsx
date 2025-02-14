@@ -144,9 +144,9 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
   }, [setSortColumn, setSortDirection, sortColumn]);
 
   const showCurrentLap =
-    isRaceStarted(race, serverTimeOffset) &&
-    !isRaceFinished(race, serverTimeOffset) &&
-    sortColumn === SortColumn.RACE_TIME;
+    isRaceStarted(race, serverTimeOffset)
+    && !isRaceFinished(race, serverTimeOffset)
+    && sortColumn === SortColumn.RACE_TIME;
 
   const showCurrentLapAtTopOfTable = showCurrentLap && sortDirection === SortDirection.ASC;
   const showCurrentLapAtBottomOfTable = showCurrentLap && sortDirection === SortDirection.DESC;

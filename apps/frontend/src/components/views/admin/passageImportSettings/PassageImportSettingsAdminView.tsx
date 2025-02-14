@@ -69,10 +69,10 @@ export default function PassageImportSettingsAdminView(): React.ReactElement {
               className="button mt-3"
               type="submit"
               disabled={
-                getPassageImportSettingsQuery.isPending ||
-                patchPassageImportSettingsMutation.isPending ||
-                !unsavedChanges ||
-                !isDagFileUrlValid
+                getPassageImportSettingsQuery.isPending
+                || patchPassageImportSettingsMutation.isPending
+                || !unsavedChanges
+                || !isDagFileUrlValid
               }
             >
               Enregistrer
