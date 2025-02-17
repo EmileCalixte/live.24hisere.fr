@@ -15344,7 +15344,6 @@ ALTER TABLE `participant`
 --
 ALTER TABLE `passage`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `passage_detection_id_unique` (`detection_id`),
   ADD KEY `passage_runner_id_runner_id_fk` (`participant_id`);
 
 --

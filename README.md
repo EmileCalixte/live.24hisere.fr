@@ -90,7 +90,9 @@ pnpm backend update-password
 
 ## Tests
 
-```pnpm test```
+```sh
+pnpm test
+```
 
 ## Installation en production
 
@@ -130,8 +132,10 @@ pnpm backend update-password
 Pour mettre à jour l'application sur le serveur :
 
 1. Télécharger les changements avec `git pull`
-2. Regénérer les builds de production avec `pnpm build`
-3. Relancer le backend
+2. Installer les éventuelles nouvelles dépendances avec `pnpm install`
+3. Regénérer les builds de production avec `pnpm build`
+4. Exécuter les migrations de base de données avec `pnpm backend migrate`
+5. Relancer le backend
    ```bash
    pm2 restart live.24hisere.fr-api
    ```
