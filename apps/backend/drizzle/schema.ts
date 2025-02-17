@@ -130,7 +130,7 @@ export const TABLE_PARTICIPANT = mysqlTable(
 
 export const TABLE_PASSAGE = mysqlTable(TABLE_NAME_PASSAGE, (t) => ({
   id: t.int().primaryKey().autoincrement(),
-  detectionId: t.int().unique(), // Not null if the passage comes from a detection of the timing system
+  detectionId: t.int(), // Not null if the passage comes from a detection of the timing system
   importTime: date(DEFAULT_DATE_PARAMS), // same
   participantId: t
     .int()
