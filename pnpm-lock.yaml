@@ -108,6 +108,9 @@ importers:
         specifier: ^7.2.0
         version: 7.8.1
     devDependencies:
+      '@faker-js/faker':
+        specifier: ^9.5.0
+        version: 9.5.0
       '@nestjs/cli':
         specifier: ^11.0.2
         version: 11.0.2(@swc/core@1.10.15(@swc/helpers@0.5.15))(@types/node@22.10.2)(esbuild@0.19.12)
@@ -1127,6 +1130,10 @@ packages:
   '@eslint/plugin-kit@0.2.5':
     resolution: {integrity: sha512-lB05FkqEdUg2AA0xEbUz0SnkXT1LcCTa438W4IWTUh4hdOnVbQyOJ81OrDXsJk/LSiJHubgGEFoR5EHq1NsH1A==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@faker-js/faker@9.5.0':
+    resolution: {integrity: sha512-3qbjLv+fzuuCg3umxc9/7YjrEXNaKwHgmig949nfyaTx8eL4FAsvFbu+1JcFUj1YAXofhaDn6JdEUBTYuk0Ssw==}
+    engines: {node: '>=18.0.0', npm: '>=9.0.0'}
 
   '@fig/complete-commander@3.2.0':
     resolution: {integrity: sha512-1Holl3XtRiANVKURZwgpjCnPuV4RsHp+XC0MhgvyAX/avQwj7F2HUItYOvGi/bXjJCkEzgBZmVfCr0HBA+q+Bw==}
@@ -6726,6 +6733,8 @@ snapshots:
     dependencies:
       '@eslint/core': 0.10.0
       levn: 0.4.1
+
+  '@faker-js/faker@9.5.0': {}
 
   '@fig/complete-commander@3.2.0(commander@11.1.0)':
     dependencies:

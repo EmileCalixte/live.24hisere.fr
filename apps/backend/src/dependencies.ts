@@ -1,5 +1,6 @@
 import { Type } from "@nestjs/common/interfaces/type.interface";
 import { CreateUserCommand } from "./commands/createUser.command";
+import { AnonymizeRunnersCommand } from "./commands/db/anonymizeRunners.command";
 import { MigrateCommand } from "./commands/db/migrate.command";
 import { CreatePasswordQuestionSet } from "./commands/questionSets/createPassword.questionSet";
 import { CurrentPasswordQuestionSet } from "./commands/questionSets/currentPassword.questionSet";
@@ -84,6 +85,6 @@ export const dependencies: Dependencies = {
   },
   tasks: [ImportPassagesService],
   validationRules: [EditionIdExistsRule, RaceIdExistsRule, RunnerIdExistsRule],
-  commands: [CreateUserCommand, UpdateUserPasswordCommand, MigrateCommand],
+  commands: [AnonymizeRunnersCommand, CreateUserCommand, UpdateUserPasswordCommand, MigrateCommand],
   questionSets: [CreatePasswordQuestionSet, CurrentPasswordQuestionSet, UsernameQuestionSet],
 };

@@ -5,6 +5,7 @@
   "scripts": {
     "create-user": "node dist/src/cli.js create-user",
     "update-password": "node dist/src/cli.js update-user-password",
+    "anonymize-runners": "node dist/src/cli.js anonymize-runners",
     "drizzle-kit": "drizzle-kit",
     "createmigration": "drizzle-kit generate --name",
     "migrate": "node dist/src/cli.js migrate",
@@ -45,6 +46,7 @@
     "rxjs": "^7.2.0"
   },
   "devDependencies": {
+    "@faker-js/faker": "^9.5.0",
     "@nestjs/cli": "^11.0.2",
     "@nestjs/schematics": "^11.0.0",
     "@nestjs/testing": "^11.0.9",
