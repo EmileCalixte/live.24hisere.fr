@@ -21,7 +21,7 @@ export default [
     },
   },
   {
-    files: [`apps/backend/src/commands/*.${ext}`],
+    files: [`apps/backend/src/commands/**/*.${ext}`],
     rules: {
       "no-console": "off",
     },
