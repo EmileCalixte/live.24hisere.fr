@@ -12,3 +12,12 @@ updates:
     open-pull-requests-limit: 100
     labels:
       - dependencies
+    groups:
+      nestjs: # Group minor/patch updates of nest dependencies in one PR
+        applies-to: version-updates
+        patterns:
+          - "@nestjs/*"
+        update-types:
+          - "minor"
+          - "patch"
+
