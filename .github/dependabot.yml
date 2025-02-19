@@ -13,11 +13,21 @@ updates:
     labels:
       - dependencies
     groups:
-      nestjs: # Group minor/patch updates of nest dependencies in one PR
+      nestjs: # Group minor/patch updates of nest dependencies
         applies-to: version-updates
         patterns:
           - "@nestjs/*"
         update-types:
           - "minor"
           - "patch"
+      fontawesome: # Group all fontawesome dependency updates
+        patterns:
+          - "@fortawesome/*"
+      react: # Group react, react-dom and corresponding types dependency updates
+        patterns:
+          - "react"
+          - "@types/react"
+          - "react-dom"
+          - "@types/react-dom"
+          
 
