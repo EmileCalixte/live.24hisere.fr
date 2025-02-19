@@ -166,15 +166,39 @@ export function formatGap(gap: RankingRunnerGap | null, exhaustive = false): str
 /**
  * Compare two runners
  * Returns -1 if `runner1` is faster, 1 if `runner2` is faster and 0 if the runners are equal
+ *
+ * - If race is in basic ranking mode, simply compare total distance of the two runners
+ * - Else
+ *   - If race is not finished yet
+ *     - If the two runners have a different passage count, the one with the most passages is considered faster
+ *     - If the two runners have the same passage count, the one with the earliest last passage is considered faster
+ *     - If both runners have the same passage count and the same last passage time, they are equal
+ *   - If race is finished
+ *     - If the two runners don't have the same total distance, the one with the greater distance is considered faster
+ *     - If the two runners have the same total distance
+ *       - If at least one of the two runners have a `finalDistance`, they are considered equal
+ *       - If neither runner has a `totalDistance`, the one with the earliest last passage is considered faster. They are equal if they have the same last passage time
  */
 export function spaceshipRunners(
   runner1: RaceRunnerWithPassages & RaceRunnerWithProcessedData,
   runner2: RaceRunnerWithPassages & RaceRunnerWithProcessedData,
   race: PublicRace,
 ): ReturnType<typeof compareUtils.spaceship> {
-  const compareTotalDistance = race.isBasicRanking || isRaceFinished(race);
+  if (race.isBasicRanking) {
+    return compareUtils.spaceship(Number(runner2.totalDistance), Number(runner1.totalDistance));
+  }
 
-  if (compareTotalDistance) {
+  if (isRaceFinished(race)) {
+    if (
+      runner1.totalDistance === runner2.totalDistance
+      && !parseFloat(runner1.finalDistance)
+      && !parseFloat(runner2.finalDistance)
+    ) {
+      // When two runners have covered the same distance before the end of the race,
+      // the one who has completed them the fastest is considered to be faster than the other.
+      return compareUtils.spaceship(runner1.lastPassageTime?.raceTime, runner2.lastPassageTime?.raceTime);
+    }
+
     return compareUtils.spaceship(Number(runner2.totalDistance), Number(runner1.totalDistance));
   }
 

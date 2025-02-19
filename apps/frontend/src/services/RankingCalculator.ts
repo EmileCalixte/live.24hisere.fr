@@ -74,7 +74,7 @@ export class RankingCalculator<TRunner extends MinimalRankingRunnerInput> {
       });
     }
 
-    this.runners = this.runners.sort((a, b) => spaceshipRunners(a, b, race));
+    this.runners = this.runners.toSorted((a, b) => spaceshipRunners(a, b, race));
   }
 
   public getRanking(): Ranking<TRunner> {
