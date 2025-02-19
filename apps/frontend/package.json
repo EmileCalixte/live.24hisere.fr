@@ -25,7 +25,7 @@
     "bootstrap": "^5.3.3",
     "clsx": "^2.1.1",
     "dompurify": "^3.2.4",
-    "i18n-iso-countries": "^7.13.0",
+    "i18n-iso-countries": "^7.14.0",
     "nuqs": "^2.4.0",
     "papaparse": "^5.5.2",
     "react": "^19.0.0",
