@@ -10,6 +10,7 @@ import {
 import { parseAsInteger, useQueryState } from "nuqs";
 import { Col, Row } from "react-bootstrap";
 import type {
+  EditionWithRaceCount,
   GenderWithMixed,
   RaceRunnerWithProcessedData,
   RaceRunnerWithProcessedPassages,
@@ -19,9 +20,11 @@ import { objectUtils } from "@live24hisere/utils";
 import { RankingTimeMode } from "../../constants/rankingTimeMode";
 import { SearchParam } from "../../constants/searchParams";
 import "../../css/print-ranking-table.css";
+import { useGetPublicEditions } from "../../hooks/api/requests/public/editions/useGetPublicEditions";
 import { useGetPublicRaces } from "../../hooks/api/requests/public/races/useGetPublicRaces";
 import { useGetPublicRaceRunners } from "../../hooks/api/requests/public/runners/useGetPublicRaceRunners";
 import { useRankingTimeQueryString } from "../../hooks/queryString/useRankingTimeQueryString";
+import { useEditionSelectOptions } from "../../hooks/useEditionSelectOptions";
 import { useRaceSelectOptions } from "../../hooks/useRaceSelectOptions";
 import { useRanking } from "../../hooks/useRanking";
 import { useWindowDimensions } from "../../hooks/useWindowDimensions";
@@ -37,11 +40,11 @@ import Page from "../ui/Page";
 import RankingSettings from "../viewParts/ranking/RankingSettings";
 import RankingTable from "../viewParts/ranking/rankingTable/RankingTable";
 import ResponsiveRankingTable from "../viewParts/ranking/rankingTable/responsive/ResponsiveRankingTable";
-import { publicContext } from "./public/Public";
 
 const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
 
 export default function RankingView(): React.ReactElement {
+  const [selectedEditionId, setSelectedEditionId] = useQueryState(SearchParam.EDITION, parseAsInteger);
   const [selectedRaceId, setSelectedRaceId] = useQueryState(SearchParam.RACE, parseAsInteger);
   const [selectedCategoryCode, setSelectedCategory] = useQueryState(SearchParam.CATEGORY, parseAsCategory);
   const [selectedGender, setSelectedGender] = useQueryState(SearchParam.GENDER, parseAsGender);
@@ -49,10 +52,17 @@ export default function RankingView(): React.ReactElement {
   const getRaceRunnersQuery = useGetPublicRaceRunners(selectedRaceId ?? undefined);
   const runners = getRaceRunnersQuery.data?.runners;
 
-  const { selectedEdition } = React.useContext(publicContext);
   const { serverTimeOffset } = React.useContext(appContext).appData;
 
   const { width: windowWidth } = useWindowDimensions();
+
+  const getEditionsQuery = useGetPublicEditions();
+  const editions = getEditionsQuery.data?.editions;
+
+  const selectedEdition = React.useMemo<EditionWithRaceCount | null>(
+    () => editions?.find((edition) => edition.id === selectedEditionId) ?? null,
+    [editions, selectedEditionId],
+  );
 
   const getRacesQuery = useGetPublicRaces(selectedEdition?.id);
   const races = getRacesQuery.data?.races;
@@ -79,7 +89,8 @@ export default function RankingView(): React.ReactElement {
     setRankingTimeMemory,
   } = useRankingTimeQueryString(selectedRace);
 
-  const racesOptions = useRaceSelectOptions(races);
+  const editionOptions = useEditionSelectOptions(editions);
+  const raceOptions = useRaceSelectOptions(races);
 
   const processedRunners = React.useMemo<
     Array<RaceRunnerWithProcessedPassages & RaceRunnerWithProcessedData> | undefined
@@ -105,7 +116,11 @@ export default function RankingView(): React.ReactElement {
 
   const ranking = useRanking(selectedRace ?? undefined, processedRunners, rankingDate);
 
-  const onRaceSelect = (e: React.ChangeEvent<HTMLSelectElement>): void => {
+  const onEditionSelect: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
+    void setSelectedEditionId(parseInt(e.target.value));
+  };
+
+  const onRaceSelect: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
     void setSelectedRaceId(parseInt(e.target.value));
   };
 
@@ -183,6 +198,13 @@ export default function RankingView(): React.ReactElement {
     }
   }, [categories, selectedCategoryCode, setSelectedCategory]);
 
+  // Auto-select the first edition
+  React.useEffect(() => {
+    if (editions && editions.length > 0 && selectedEdition === null) {
+      void setSelectedEditionId(editions[0].id);
+    }
+  }, [editions, selectedEdition, setSelectedEditionId]);
+
   // Auto-select the first race in the selected edition
   React.useEffect(() => {
     if (races && races.length > 0 && selectedRace === null) {
@@ -203,81 +225,92 @@ export default function RankingView(): React.ReactElement {
         </Col>
       </Row>
 
-      {selectedEdition === null ? (
+      {editions && editions.length < 1 && (
         <Row>
           <Col>
-            <p>Sélectionnez une édition ci-dessus pour accéder aux courses et à leurs classements</p>
+            <p>Aucune donnée disponible.</p>
           </Col>
         </Row>
-      ) : (
+      )}
+
+      <Row className="hide-on-print mb-3 gap-3">
+        {editions && editions.length >= 2 && (
+          <Col xl={3} lg={4} md={6} sm={9} xs={12}>
+            <Select
+              label="Édition"
+              options={editionOptions}
+              onChange={onEditionSelect}
+              value={selectedEdition ? selectedEdition.id : undefined}
+              placeholderLabel="Sélectionnez une édition"
+            />
+          </Col>
+        )}
+        {selectedEdition && (
+          <Col xl={3} lg={4} md={6} sm={9} xs={12}>
+            <Select
+              label="Course"
+              options={raceOptions}
+              onChange={onRaceSelect}
+              value={selectedRace ? selectedRace.id : undefined}
+              placeholderLabel="Sélectionnez une course"
+            />
+          </Col>
+        )}
+      </Row>
+
+      {selectedRace && (
         <>
-          <Row className="hide-on-print mb-3">
-            <Col xl={3} lg={4} md={6} sm={9} xs={12}>
-              <Select
-                label="Course"
-                options={racesOptions}
-                onChange={onRaceSelect}
-                value={selectedRace ? selectedRace.id : undefined}
-                placeholderLabel="Sélectionnez une course"
-              />
-            </Col>
+          <Row className="hide-on-print mb-3 row-cols-auto gap-3">
+            <RankingSettings
+              categories={categories}
+              onCategorySelect={onCategorySelect}
+              onGenderSelect={onGenderSelect}
+              setTimeMode={onTimeModeSelect}
+              onRankingTimeSave={onRankingTimeSave}
+              selectedCategoryCode={selectedCategoryCode}
+              selectedGender={selectedGender ?? "mixed"}
+              showTimeModeSelect={!selectedRace.isBasicRanking}
+              selectedTimeMode={selectedTimeMode}
+              currentRankingTime={selectedRankingTime ?? selectedRace.duration * 1000}
+              maxRankingTime={selectedRace.duration * 1000}
+              isRaceFinished={isRaceFinished(selectedRace, serverTimeOffset)}
+            />
           </Row>
 
-          {selectedRace && (
-            <>
-              <Row className="hide-on-print mb-3 row-cols-auto gap-3">
-                <RankingSettings
-                  categories={categories}
-                  onCategorySelect={onCategorySelect}
-                  onGenderSelect={onGenderSelect}
-                  setTimeMode={onTimeModeSelect}
-                  onRankingTimeSave={onRankingTimeSave}
-                  selectedCategoryCode={selectedCategoryCode}
-                  selectedGender={selectedGender ?? "mixed"}
-                  showTimeModeSelect={!selectedRace.isBasicRanking}
-                  selectedTimeMode={selectedTimeMode}
-                  currentRankingTime={selectedRankingTime ?? selectedRace.duration * 1000}
-                  maxRankingTime={selectedRace.duration * 1000}
-                  isRaceFinished={isRaceFinished(selectedRace, serverTimeOffset)}
-                />
-              </Row>
+          {!ranking && <CircularLoader />}
 
-              {!ranking && <CircularLoader />}
+          {ranking && (
+            <Row>
+              <Col>
+                {windowWidth > RESPONSIVE_TABLE_MAX_WINDOW_WIDTH && (
+                  <RankingTable
+                    race={selectedRace}
+                    ranking={ranking}
+                    tableCategoryCode={selectedCategoryCode}
+                    tableGender={selectedGender ?? "mixed"}
+                    tableRaceDuration={selectedTimeMode === RankingTimeMode.AT ? selectedRankingTime : null}
+                    showLastPassageTime={showLastPassageTime}
+                    showRunnerStoppedBadges={isRaceInProgress}
+                  />
+                )}
 
-              {ranking && (
-                <Row>
-                  <Col>
-                    {windowWidth > RESPONSIVE_TABLE_MAX_WINDOW_WIDTH && (
-                      <RankingTable
-                        race={selectedRace}
-                        ranking={ranking}
-                        tableCategoryCode={selectedCategoryCode}
-                        tableGender={selectedGender ?? "mixed"}
-                        tableRaceDuration={selectedTimeMode === RankingTimeMode.AT ? selectedRankingTime : null}
-                        showLastPassageTime={showLastPassageTime}
-                        showRunnerStoppedBadges={isRaceInProgress}
-                      />
-                    )}
+                {windowWidth <= RESPONSIVE_TABLE_MAX_WINDOW_WIDTH && (
+                  <div>
+                    <div className="mb-3">Cliquez sur un coureur pour consulter ses données de course</div>
 
-                    {windowWidth <= RESPONSIVE_TABLE_MAX_WINDOW_WIDTH && (
-                      <div>
-                        <div className="mb-3">Cliquez sur un coureur pour consulter ses données de course</div>
-
-                        <ResponsiveRankingTable
-                          race={selectedRace}
-                          ranking={ranking}
-                          tableCategoryCode={selectedCategoryCode}
-                          tableGender={selectedGender ?? "mixed"}
-                          tableRaceDuration={selectedTimeMode === RankingTimeMode.AT ? selectedRankingTime : null}
-                          showLastPassageTime={showLastPassageTime}
-                          showRunnerStoppedBadges={isRaceInProgress}
-                        />
-                      </div>
-                    )}
-                  </Col>
-                </Row>
-              )}
-            </>
+                    <ResponsiveRankingTable
+                      race={selectedRace}
+                      ranking={ranking}
+                      tableCategoryCode={selectedCategoryCode}
+                      tableGender={selectedGender ?? "mixed"}
+                      tableRaceDuration={selectedTimeMode === RankingTimeMode.AT ? selectedRankingTime : null}
+                      showLastPassageTime={showLastPassageTime}
+                      showRunnerStoppedBadges={isRaceInProgress}
+                    />
+                  </div>
+                )}
+              </Col>
+            </Row>
           )}
         </>
       )}

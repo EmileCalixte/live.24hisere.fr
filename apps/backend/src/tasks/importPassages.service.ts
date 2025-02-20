@@ -56,7 +56,7 @@ export class ImportPassagesService extends TaskService {
 
     this.logger.log(`Successfully downloaded DAG file: ${data.length} bytes`);
 
-    await this.importPassagesFromDagFileContent(data);
+    // await this.importPassagesFromDagFileContent(data);
 
     await this.miscService.saveLastUpdateTime(new Date());
 
