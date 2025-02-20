@@ -233,29 +233,35 @@ export default function RankingView(): React.ReactElement {
         </Row>
       )}
 
-      <Row className="hide-on-print mb-3 gap-3">
-        {editions && editions.length >= 2 && (
-          <Col xl={3} lg={4} md={6} sm={9} xs={12}>
-            <Select
-              label="Édition"
-              options={editionOptions}
-              onChange={onEditionSelect}
-              value={selectedEdition ? selectedEdition.id : undefined}
-              placeholderLabel="Sélectionnez une édition"
-            />
-          </Col>
-        )}
-        {selectedEdition && (
-          <Col xl={3} lg={4} md={6} sm={9} xs={12}>
-            <Select
-              label="Course"
-              options={raceOptions}
-              onChange={onRaceSelect}
-              value={selectedRace ? selectedRace.id : undefined}
-              placeholderLabel="Sélectionnez une course"
-            />
-          </Col>
-        )}
+      <Row className="hide-on-print mb-3">
+        <Col>
+          <div className="card">
+            <Row className="gap-2">
+              {editions && editions.length >= 2 && (
+                <Col xl={3} lg={4} md={6} sm={9} xs={12}>
+                  <Select
+                    label="Édition"
+                    options={editionOptions}
+                    onChange={onEditionSelect}
+                    value={selectedEdition ? selectedEdition.id : undefined}
+                    placeholderLabel="Sélectionnez une édition"
+                  />
+                </Col>
+              )}
+              {selectedEdition && (
+                <Col xl={3} lg={4} md={6} sm={9} xs={12}>
+                  <Select
+                    label="Course"
+                    options={raceOptions}
+                    onChange={onRaceSelect}
+                    value={selectedRace ? selectedRace.id : undefined}
+                    placeholderLabel="Sélectionnez une course"
+                  />
+                </Col>
+              )}
+            </Row>
+          </div>
+        </Col>
       </Row>
 
       {selectedRace && (
