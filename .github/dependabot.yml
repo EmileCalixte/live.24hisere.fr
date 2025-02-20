@@ -12,6 +12,8 @@ updates:
     open-pull-requests-limit: 100
     labels:
       - dependencies
+    commit-message:
+      prefix: "chore"
     groups:
       nestjs: # Group minor/patch updates of nest dependencies
         applies-to: version-updates
