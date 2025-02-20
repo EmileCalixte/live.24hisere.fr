@@ -52,11 +52,9 @@ export function getDateFromRaceTime(race: PublicRace, raceTime: number): Date {
  * Returns an array of select options from an array of races
  * @param races
  * @param label an optional callback function to format the label
- *
- * TODO delete false from races types
  */
 export function getRacesSelectOptions<TRace extends PublicRace>(
-  races: TRace[] | false | null | undefined,
+  races: TRace[] | undefined,
   label?: (race: TRace) => string,
 ): SelectOption[] {
   if (!races) {

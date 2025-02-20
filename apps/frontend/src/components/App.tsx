@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import React from "react";
 import { Helmet } from "react-helmet";
-import { Route, Routes, useMatch, useNavigate } from "react-router-dom";
+import { Navigate, Route, Routes, useMatch, useNavigate } from "react-router-dom";
 import type { PublicUser } from "@live24hisere/core/types";
 import { APP_BASE_TITLE } from "../constants/app";
 import { useGetCurrentUser } from "../hooks/api/requests/auth/useGetCurrentUser";
@@ -14,10 +14,11 @@ import Footer from "./ui/footer/Footer";
 import Header from "./ui/header/Header";
 import DisabledAppView from "./views/DisabledAppView";
 import LoginView from "./views/LoginView";
-import Public from "./views/public/Public";
 
 const Admin = React.lazy(async () => await import("./views/admin/Admin"));
 const About = React.lazy(async () => await import("./views/AboutView"));
+const RankingView = React.lazy(async () => await import("./views/RankingView"));
+const RunnerDetailsView = React.lazy(async () => await import("./views/RunnerDetailsView"));
 
 interface AppContext {
   appData: {
@@ -275,7 +276,33 @@ export default function App(): React.ReactElement {
                     </React.Suspense>
                   }
                 />
-                <Route path="*" element={<Public />} />
+                <Route
+                  path="/ranking"
+                  element={
+                    <React.Suspense fallback={<CircularLoader />}>
+                      <RankingView />
+                    </React.Suspense>
+                  }
+                />
+                <Route
+                  path="/runner-details"
+                  element={
+                    <React.Suspense fallback={<CircularLoader />}>
+                      <RunnerDetailsView />
+                    </React.Suspense>
+                  }
+                />
+                <Route
+                  path="/runner-details/:runnerId"
+                  element={
+                    <React.Suspense fallback={<CircularLoader />}>
+                      <RunnerDetailsView />
+                    </React.Suspense>
+                  }
+                />
+
+                {/* Redirect any unresolved route to /ranking */}
+                <Route path="*" element={<Navigate to="/ranking" replace />} />
               </Routes>
             )}
           </main>

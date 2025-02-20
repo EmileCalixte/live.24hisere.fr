@@ -5,7 +5,6 @@ import { useGetPublicRunners } from "../../hooks/api/requests/public/runners/use
 import CircularLoader from "../ui/CircularLoader";
 import Page from "../ui/Page";
 import RunnerSelector from "../viewParts/runnerDetails/RunnerSelector";
-import { publicContext } from "./public/Public";
 
 // const enum Tab {
 //   Stats = "stats",
@@ -13,8 +12,6 @@ import { publicContext } from "./public/Public";
 // }
 
 export default function RunnerDetailsView(): React.ReactElement {
-  const { selectedEdition } = React.useContext(publicContext);
-
   const { runnerId } = useParams();
 
   const navigate = useNavigate();
@@ -123,21 +120,13 @@ export default function RunnerDetailsView(): React.ReactElement {
         </Col>
       </Row>
 
-      {selectedEdition === null ? (
-        <Row>
-          <Col>
-            <p>Sélectionnez une édition ci-dessus pour accéder aux détails des coureurs</p>
-          </Col>
-        </Row>
-      ) : (
-        <>
-          <Row className="hide-on-print">
-            <Col>
-              <RunnerSelector runners={runners} onSelectRunner={onSelectRunner} selectedRunnerId={runnerId} />
-            </Col>
-          </Row>
+      <Row className="hide-on-print">
+        <Col>
+          <RunnerSelector runners={runners} onSelectRunner={onSelectRunner} selectedRunnerId={runnerId} />
+        </Col>
+      </Row>
 
-          {/* {selectedRunner && race ? (
+      {/* {selectedRunner && race ? (
             <>
               <Row className="mt-3">
                 <Col className="mb-3">
@@ -219,18 +208,16 @@ export default function RunnerDetailsView(): React.ReactElement {
               </Row>
             </>
           ) : ( */}
-          <>
-            {runnerId !== undefined && (
-              <Row className="mt-3">
-                <Col>
-                  <CircularLoader asideText="Chargement des données" />
-                </Col>
-              </Row>
-            )}
-          </>
-          {/* )} */}
-        </>
-      )}
+      <>
+        {runnerId !== undefined && (
+          <Row className="mt-3">
+            <Col>
+              <CircularLoader asideText="Chargement des données" />
+            </Col>
+          </Row>
+        )}
+      </>
+      {/* )} */}
     </Page>
   );
 }
