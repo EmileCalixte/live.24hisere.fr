@@ -12,8 +12,9 @@ updates:
     open-pull-requests-limit: 100
     labels:
       - dependencies
-    commit-message:
-      prefix: "chore"
+    commit-message: # PR name: 'chore(deps|deps-dev): ...'
+      prefix: "chore" # chore
+      include: "scope" # deps|deps-dev
     groups:
       nestjs: # Group minor/patch updates of nest dependencies
         applies-to: version-updates
