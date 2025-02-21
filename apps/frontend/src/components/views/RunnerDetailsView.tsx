@@ -1,6 +1,8 @@
 import React from "react";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useGetPublicRunners } from "../../hooks/api/requests/public/runners/useGetPublicRunners";
 import CircularLoader from "../ui/CircularLoader";
 import Page from "../ui/Page";
@@ -117,6 +119,16 @@ export default function RunnerDetailsView(): React.ReactElement {
       <Row className="hide-on-print">
         <Col>
           <h1>Détails coureur</h1>
+        </Col>
+      </Row>
+
+      <Row className="hide-on-print">
+        <Col>
+          <p>
+            <Link to="/search-runner" className="button">
+              <FontAwesomeIcon icon={faSearch} className="me-1" /> Rechercher un coureur
+            </Link>
+          </p>
         </Col>
       </Row>
 
