@@ -124,8 +124,8 @@ export default function RunnerDetailsView(): React.ReactElement {
 
       <Row className="hide-on-print">
         <Col>
-          <p>
-            <Link to="/search-runner" className="button">
+          <p className="mt-0">
+            <Link to="/runner-details/search" className="button">
               <FontAwesomeIcon icon={faSearch} className="me-1" /> Rechercher un coureur
             </Link>
           </p>

@@ -294,18 +294,18 @@ export default function App(): React.ReactElement {
                   }
                 />
                 <Route
-                  path="/runner-details/:runnerId"
+                  path="/runner-details/search"
                   element={
                     <React.Suspense fallback={<CircularLoader />}>
-                      <RunnerDetailsView />
+                      <SearchRunnerView />
                     </React.Suspense>
                   }
                 />
                 <Route
-                  path="/search-runner"
+                  path="/runner-details/:runnerId"
                   element={
                     <React.Suspense fallback={<CircularLoader />}>
-                      <SearchRunnerView />
+                      <RunnerDetailsView />
                     </React.Suspense>
                   }
                 />

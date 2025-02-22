@@ -246,7 +246,7 @@ label span.hidden-label {
   font-size: 0.8em;
 }
 
-.button:hover {
+.button:not(.loading):hover {
   cursor: pointer;
 
   background-color: #33cc33;
@@ -256,7 +256,7 @@ label span.hidden-label {
   background-color: #d79a1d;
 }
 
-.button.orange:hover {
+.button.orange:not(.loading):hover {
   background-color: #edb138;
 }
 
@@ -264,7 +264,7 @@ label span.hidden-label {
   background-color: #d72a1d;
 }
 
-.button.red:hover {
+.button.red:not(.loading):hover {
   background-color: #f1453a;
 }
 
@@ -273,7 +273,7 @@ label span.hidden-label {
   color: #666;
 }
 
-.button.grey:hover {
+.button.grey:not(.loading):hover {
   background-color: #d8d8d8;
   color: #555;
 }
