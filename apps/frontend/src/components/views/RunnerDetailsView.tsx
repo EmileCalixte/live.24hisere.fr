@@ -1,10 +1,19 @@
 import React from "react";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useQueryState } from "nuqs";
 import { Col, Row } from "react-bootstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { SearchParam } from "../../constants/searchParams";
+import { useGetPublicEditions } from "../../hooks/api/requests/public/editions/useGetPublicEditions";
+import { useGetPublicRunnerParticipations } from "../../hooks/api/requests/public/participants/useGetPublicRunnerParticipations";
+import { useGetPublicRaces } from "../../hooks/api/requests/public/races/useGetPublicRaces";
 import { useGetPublicRunners } from "../../hooks/api/requests/public/runners/useGetPublicRunners";
+import { useRaceSelectOptions } from "../../hooks/useRaceSelectOptions";
+import { getCountryAlpha2CodeFromAlpha3Code } from "../../utils/countryUtils";
+import { getRaceRunnerFromRunnerAndParticipant } from "../../utils/runnerUtils";
 import CircularLoader from "../ui/CircularLoader";
+import { Flag } from "../ui/countries/Flag";
 import Page from "../ui/Page";
 import RunnerSelector from "../viewParts/runnerDetails/RunnerSelector";
 
@@ -14,7 +23,9 @@ import RunnerSelector from "../viewParts/runnerDetails/RunnerSelector";
 // }
 
 export default function RunnerDetailsView(): React.ReactElement {
-  const { runnerId } = useParams();
+  const { runnerId } = useParams(); // This param is optional, undefined if no runner selected
+
+  const [selectedRaceId, setSelectedRaceId] = useQueryState(SearchParam.RACE);
 
   const navigate = useNavigate();
 
@@ -23,34 +34,62 @@ export default function RunnerDetailsView(): React.ReactElement {
   //   parseAsEnum([Tab.Stats, Tab.Laps]).withDefault(Tab.Stats),
   // );
 
+  const getEditionsQuery = useGetPublicEditions();
+  const editions = getEditionsQuery.data?.editions;
+
+  const getRacesQuery = useGetPublicRaces();
+  const races = getRacesQuery.data?.races;
+
+  const selectedRace = React.useMemo(
+    () => races?.find((race) => race.id.toString() === selectedRaceId),
+    [races, selectedRaceId],
+  );
+
+  const allRacesOptions = useRaceSelectOptions(races, (race) => {
+    const edition = editions?.find((edition) => edition.id === race.editionId);
+
+    if (edition) {
+      return `${edition.name} – ${race.name}`;
+    }
+
+    return race.name;
+  });
+
   const getRunnersQuery = useGetPublicRunners();
   const runners = getRunnersQuery.data?.runners;
 
-  // const raceId: number | undefined = React.useMemo(() => {
-  //   if (runnerId === undefined) {
-  //     return undefined;
-  //   }
+  const selectedRunner = React.useMemo(() => {
+    if (!runners || runnerId === undefined) {
+      return undefined;
+    }
 
-  //   return runners?.find((runner) => runner.id.toString() === runnerId)?.raceId;
-  // }, [runnerId, runners]);
+    return runners.find((runner) => runner.id.toString() === runnerId);
+  }, [runnerId, runners]);
 
-  // const fetchRace = React.useMemo(() => {
-  //   if (raceId === undefined) {
-  //     return;
-  //   }
+  const getRunnerParticipationsQuery = useGetPublicRunnerParticipations(selectedRunner?.id);
+  const runnerParticipations = getRunnerParticipationsQuery.data?.participations;
 
-  //   return async () => await getRace(raceId);
-  // }, [raceId]);
+  const runnerRaceIds = React.useMemo(
+    () => new Set(runnerParticipations?.map((participation) => participation.raceId)),
+    [runnerParticipations],
+  );
 
-  // const race = useIntervalSimpleApiRequest(fetchRace).json?.race;
+  const runnerRaceOptions = allRacesOptions.filter((option) => runnerRaceIds.has(option.value));
 
-  // const fetchRaceRunners = React.useMemo(() => {
-  //   if (raceId === undefined) {
-  //     return;
-  //   }
+  const selectedParticipation = React.useMemo(
+    () => runnerParticipations?.find((participation) => participation.raceId === selectedRace?.id),
+    [runnerParticipations, selectedRace?.id],
+  );
 
-  //   return async () => await getRaceRunners(raceId);
-  // }, [raceId]);
+  const selectedRaceRunner = React.useMemo(() => {
+    if (!selectedRunner || !selectedParticipation) {
+      return undefined;
+    }
+
+    return getRaceRunnerFromRunnerAndParticipant(selectedRunner, selectedParticipation);
+  }, [selectedParticipation, selectedRunner]);
+
+  const alpha2CountryCode = getCountryAlpha2CodeFromAlpha3Code(selectedRaceRunner?.countryCode ?? null);
 
   // const raceRunners = useIntervalSimpleApiRequest(fetchRaceRunners).json?.runners;
 
@@ -87,15 +126,16 @@ export default function RunnerDetailsView(): React.ReactElement {
   );
 
   // const exportRunnerToXlsx = React.useCallback(() => {
-  //   if (!selectedRunner) {
+  //   if (!selectedRaceRunner) {
   //     return;
   //   }
 
-  //   const filename = `${selectedRunner.firstname} ${selectedRunner.lastname}`.trim();
+  //   const filename = `${selectedRaceRunner.firstname} ${selectedRaceRunner.lastname}`.trim();
 
-  //   generateXlsxFromData(getDataForExcelExport(selectedRunner), filename);
-  // }, [selectedRunner]);
+  //   generateXlsxFromData(getDataForExcelExport(selectedRaceRunner), filename);
+  // }, [selectedRaceRunner]);
 
+  // Redirect to runner-details without selected runner if selected runner ID is unknown
   React.useEffect(() => {
     if (!runners || runnerId === undefined) {
       return;
@@ -106,14 +146,37 @@ export default function RunnerDetailsView(): React.ReactElement {
     }
   }, [runners, runnerId, navigate]);
 
+  // Remove race query param if selected runner has no participation in corresponding race
+  React.useEffect(() => {
+    if (!selectedRunner || !runnerParticipations) {
+      return;
+    }
+
+    if (
+      runnerParticipations.find((participation) => participation.raceId.toString() === selectedRaceId) === undefined
+    ) {
+      void setSelectedRaceId(null);
+    }
+  }, [runnerParticipations, selectedRaceId, selectedRunner, setSelectedRaceId]);
+
+  // Auto-select first participation race (participations are ordered by edition order and race order) if no race selected
+  React.useEffect(() => {
+    if (!selectedRunner || !runnerParticipations) {
+      return;
+    }
+
+    if (selectedRaceId === null && runnerParticipations.length > 0) {
+      void setSelectedRaceId(runnerParticipations[0].raceId.toString());
+    }
+  }, [runnerParticipations, selectedRaceId, selectedRunner, setSelectedRaceId]);
+
   return (
     <Page
       id="runner-details"
       title={
-        "TODO"
-        // selectedRunner === undefined
-        //   ? "Détails coureur"
-        //   : `Détails coureur ${selectedRunner.firstname} ${selectedRunner.lastname}`
+        selectedRunner === undefined
+          ? "Détails coureur"
+          : `Détails coureur ${selectedRunner.firstname} ${selectedRunner.lastname}`
       }
     >
       <Row className="hide-on-print">
@@ -137,6 +200,40 @@ export default function RunnerDetailsView(): React.ReactElement {
           <RunnerSelector runners={runners} onSelectRunner={onSelectRunner} selectedRunnerId={runnerId} />
         </Col>
       </Row>
+
+      {runnerId === undefined && (
+        <Row>
+          <Col>
+            <p>Sélectionnez un coureur ci-dessus pour afficher ses détails.</p>
+          </Col>
+        </Row>
+      )}
+
+      {runnerId !== undefined && !selectedRaceRunner && (
+        <Row>
+          <Col>
+            <p>
+              <CircularLoader asideText="Chargement des données" />
+            </p>
+          </Col>
+        </Row>
+      )}
+
+      {selectedRaceRunner && (
+        <Row>
+          <Col>
+            <h2 className="d-flex align-items-center gap-2">
+              {alpha2CountryCode && <Flag countryCode={alpha2CountryCode} />}
+
+              <span>
+                {selectedRaceRunner.lastname.toUpperCase()} {selectedRaceRunner.firstname}
+              </span>
+            </h2>
+          </Col>
+
+          {runnerRaceOptions.length > 1 && <p>TODO race selector</p>}
+        </Row>
+      )}
 
       {/* {selectedRunner && race ? (
             <>
@@ -220,15 +317,6 @@ export default function RunnerDetailsView(): React.ReactElement {
               </Row>
             </>
           ) : ( */}
-      <>
-        {runnerId !== undefined && (
-          <Row className="mt-3">
-            <Col>
-              <CircularLoader asideText="Chargement des données" />
-            </Col>
-          </Row>
-        )}
-      </>
       {/* )} */}
     </Page>
   );

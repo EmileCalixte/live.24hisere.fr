@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { asc, count, eq, getTableColumns, max } from "drizzle-orm";
+import { and, asc, count, eq, getTableColumns, max } from "drizzle-orm";
 import { AdminEditionWithOrder, AdminEditionWithRaceCount, EditionWithRaceCount } from "@live24hisere/core/types";
 import { objectUtils } from "@live24hisere/utils";
 import { TABLE_EDITION, TABLE_RACE } from "../../../../drizzle/schema";
@@ -59,6 +59,21 @@ export class EditionService extends EntityService {
       .orderBy(asc(TABLE_EDITION.order))
       .groupBy(TABLE_EDITION.id)
       .where(eq(TABLE_EDITION.isPublic, true));
+  }
+
+  async getPublicEditionById(editionId: number): Promise<EditionWithRaceCount | null> {
+    const editions = await this.db
+      .select({
+        ...this.getPublicEditionColumns(),
+        raceCount: count(TABLE_RACE.id),
+      })
+      .from(TABLE_EDITION)
+      .leftJoin(TABLE_RACE, eq(TABLE_RACE.editionId, TABLE_EDITION.id))
+      .orderBy(asc(TABLE_EDITION.order))
+      .groupBy(TABLE_EDITION.id)
+      .where(and(eq(TABLE_EDITION.isPublic, true), eq(TABLE_EDITION.id, editionId)));
+
+    return this.getUniqueResult(editions);
   }
 
   async createEdition(editionData: Omit<AdminEditionWithOrder, "id">): Promise<AdminEditionWithRaceCount> {

@@ -56,7 +56,7 @@ export function getDateFromRaceTime(race: PublicRace, raceTime: number): Date {
 export function getRacesSelectOptions<TRace extends PublicRace>(
   races: TRace[] | undefined,
   label?: (race: TRace) => string,
-): SelectOption[] {
+): Array<SelectOption<number>> {
   if (!races) {
     return [];
   }

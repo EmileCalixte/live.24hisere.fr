@@ -2,11 +2,18 @@ import type {
   ApiResponse,
   GetRaceParticipantAdminApiRequest,
   GetRunnerParticipationsAdminApiRequest,
+  GetRunnerParticipationsApiRequest,
   PatchParticipantAdminApiRequest,
   PostParticipantAdminApiRequest,
 } from "@live24hisere/core/types";
 import type { UrlId } from "../../types/utils/api";
-import { performAuthenticatedApiRequest } from "./apiService";
+import { performApiRequest, performAuthenticatedApiRequest } from "./apiService";
+
+export async function getPublicRunnerParticipations(
+  runnerId: UrlId,
+): Promise<ApiResponse<GetRunnerParticipationsAdminApiRequest>> {
+  return await performApiRequest<GetRunnerParticipationsApiRequest>(`/runners/${runnerId}/participations`);
+}
 
 export async function getAdminRunnerParticipations(
   accessToken: string,

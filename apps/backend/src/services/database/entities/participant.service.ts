@@ -2,11 +2,29 @@ import { Injectable } from "@nestjs/common";
 import { and, asc, eq, getTableColumns } from "drizzle-orm";
 import { Participant } from "@live24hisere/core/types";
 import { objectUtils } from "@live24hisere/utils";
-import { TABLE_EDITION, TABLE_PARTICIPANT, TABLE_RACE } from "../../../../drizzle/schema";
+import { TABLE_EDITION, TABLE_PARTICIPANT, TABLE_RACE, TABLE_RUNNER } from "../../../../drizzle/schema";
 import { EntityService } from "../entity.service";
 
 @Injectable()
 export class ParticipantService extends EntityService {
+  async getPublicParticipantByRunnerId(runnerId: number): Promise<Participant[]> {
+    return await this.db
+      .select(getTableColumns(TABLE_PARTICIPANT))
+      .from(TABLE_PARTICIPANT)
+      .innerJoin(TABLE_RUNNER, eq(TABLE_RUNNER.id, TABLE_PARTICIPANT.runnerId))
+      .innerJoin(TABLE_RACE, eq(TABLE_RACE.id, TABLE_PARTICIPANT.raceId))
+      .innerJoin(TABLE_EDITION, eq(TABLE_EDITION.id, TABLE_RACE.editionId))
+      .where(
+        and(
+          eq(TABLE_PARTICIPANT.runnerId, runnerId),
+          eq(TABLE_RUNNER.isPublic, true),
+          eq(TABLE_RACE.isPublic, true),
+          eq(TABLE_EDITION.isPublic, true),
+        ),
+      )
+      .orderBy(asc(TABLE_EDITION.order), asc(TABLE_RACE.order));
+  }
+
   async getAdminParticipantById(id: number): Promise<Participant | null> {
     const participants = await this.db.select().from(TABLE_PARTICIPANT).where(eq(TABLE_PARTICIPANT.id, id));
 

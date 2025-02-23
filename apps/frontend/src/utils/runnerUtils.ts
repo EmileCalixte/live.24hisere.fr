@@ -12,12 +12,23 @@ import type {
 } from "@live24hisere/core/types";
 import { compareUtils, dateUtils, stringUtils } from "@live24hisere/utils";
 import { spaceship } from "../../../../packages/utils/src/compare-utils";
+import { excludeKeys } from "../../../../packages/utils/src/object-utils";
 import type { SelectOption } from "../types/Forms";
 import type { RankingRunnerGap } from "../types/Ranking";
 import { getPaceFromSpeed, getSpeed } from "./mathUtils";
 import { getSortedPassages } from "./passageUtils";
 import { isRaceFinished } from "./raceUtils";
 import { formatMsAsDuration } from "./utils";
+
+export function getRaceRunnerFromRunnerAndParticipant<TRunner extends PublicRunner>(
+  runner: TRunner,
+  participant: Participant,
+): RaceRunner<TRunner> {
+  return {
+    ...runner,
+    ...excludeKeys(participant, ["id", "runnerId"]),
+  };
+}
 
 export function getRunnersWithPassagesFromRunnersAndPassages<
   TRunner extends RaceRunner,

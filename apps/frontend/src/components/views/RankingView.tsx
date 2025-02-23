@@ -21,7 +21,7 @@ import { RankingTimeMode } from "../../constants/rankingTimeMode";
 import { SearchParam } from "../../constants/searchParams";
 import "../../css/print-ranking-table.css";
 import { useGetPublicEditions } from "../../hooks/api/requests/public/editions/useGetPublicEditions";
-import { useGetPublicRaces } from "../../hooks/api/requests/public/races/useGetPublicRaces";
+import { useGetPublicEditionRaces } from "../../hooks/api/requests/public/races/useGetPublicEditionRaces";
 import { useGetPublicRaceRunners } from "../../hooks/api/requests/public/runners/useGetPublicRaceRunners";
 import { useRankingTimeQueryString } from "../../hooks/queryString/useRankingTimeQueryString";
 import { useEditionSelectOptions } from "../../hooks/useEditionSelectOptions";
@@ -64,7 +64,7 @@ export default function RankingView(): React.ReactElement {
     [editions, selectedEditionId],
   );
 
-  const getRacesQuery = useGetPublicRaces(selectedEdition?.id);
+  const getRacesQuery = useGetPublicEditionRaces(selectedEdition?.id);
   const races = getRacesQuery.data?.races;
 
   const selectedRace = React.useMemo<RaceWithRunnerCount | null>(
