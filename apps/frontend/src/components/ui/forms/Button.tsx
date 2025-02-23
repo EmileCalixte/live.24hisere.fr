@@ -20,7 +20,7 @@ export function Button({ className, isLoading, icon, children, ...props }: Butto
 
   return (
     <button
-      className={clsx("button", className, isLoading && "loading")}
+      className={clsx("button d-flex align-items-center justify-content-center", className, isLoading && "loading")}
       style={{ position: "relative" }}
       {...props}
       onClick={handleClick}

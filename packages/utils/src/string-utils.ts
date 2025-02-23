@@ -44,7 +44,7 @@ export function latinize(text: string, lowerCase = false, form = "NFKD"): string
  *
  * @param subject The string in which the substring will be searched
  * @param search The substring to be searched
- * @param caseSensitive If true, search will be case-sensitive
+ * @param caseSensitive If true, search will be case-sensitive. Default `false`
  * @returns True if normalized string includes normalized substring, false otherwise
  */
 export function latinizedIncludes(subject: string, search: string, caseSensitive = false): boolean {
