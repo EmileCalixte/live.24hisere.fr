@@ -61,10 +61,11 @@ export class RankingCalculator<TRunner extends MinimalRankingRunnerInput> {
   constructor(
     private readonly race: PublicRace,
     private readonly runners: TRunner[],
+    private readonly serverTimeOffset: number,
     rankingDate?: Date,
   ) {
     this.runners = this.runners.filter((runner) => runner.raceId === this.race.id);
-    this.isRaceFinished = isRaceFinished(race) && !rankingDate;
+    this.isRaceFinished = isRaceFinished(race, serverTimeOffset) && !rankingDate;
 
     if (rankingDate && !race.isBasicRanking) {
       this.runners = this.runners.map((runner) => {
