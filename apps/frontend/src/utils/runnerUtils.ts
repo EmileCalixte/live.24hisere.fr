@@ -17,7 +17,6 @@ import type { SelectOption } from "../types/Forms";
 import type { RankingRunnerGap } from "../types/Ranking";
 import { getPaceFromSpeed, getSpeed } from "./mathUtils";
 import { getSortedPassages } from "./passageUtils";
-import { isRaceFinished } from "./raceUtils";
 import { formatMsAsDuration } from "./utils";
 
 export function getRaceRunnerFromRunnerAndParticipant<TRunner extends PublicRunner>(
@@ -155,7 +154,7 @@ export function formatGap(gap: RankingRunnerGap | null, exhaustive = false): str
     return null;
   }
 
-  if (gap.time === 0) {
+  if (gap.time < 0 && gap.laps < 1) {
     return "=";
   }
 
@@ -167,7 +166,7 @@ export function formatGap(gap: RankingRunnerGap | null, exhaustive = false): str
 
   const lapsGap = `+${gap.laps} ${gap.laps > 1 ? "tours" : "tour"}`;
 
-  if (!exhaustive) {
+  if (!exhaustive || gap.time < 0) {
     return lapsGap;
   }
 
@@ -193,13 +192,14 @@ export function formatGap(gap: RankingRunnerGap | null, exhaustive = false): str
 export function spaceshipRunners(
   runner1: RaceRunnerWithPassages & RaceRunnerWithProcessedData,
   runner2: RaceRunnerWithPassages & RaceRunnerWithProcessedData,
-  race: PublicRace,
+  isBasicRanking: boolean,
+  isRaceFinished: boolean,
 ): ReturnType<typeof compareUtils.spaceship> {
-  if (race.isBasicRanking) {
+  if (isBasicRanking) {
     return compareUtils.spaceship(Number(runner2.totalDistance), Number(runner1.totalDistance));
   }
 
-  if (isRaceFinished(race)) {
+  if (isRaceFinished) {
     if (
       runner1.totalDistance === runner2.totalDistance
       && !parseFloat(runner1.finalDistance)
@@ -242,9 +242,10 @@ export function spaceshipRunnersByName(
 export function areRunnersEqual(
   runner1: RaceRunnerWithPassages & RaceRunnerWithProcessedData,
   runner2: RaceRunnerWithPassages & RaceRunnerWithProcessedData,
-  race: PublicRace,
+  isBasicRanking: boolean,
+  isRaceFinished: boolean,
 ): boolean {
-  return spaceshipRunners(runner1, runner2, race) === 0;
+  return spaceshipRunners(runner1, runner2, isBasicRanking, isRaceFinished) === 0;
 }
 
 /**

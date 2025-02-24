@@ -85,7 +85,7 @@ export default function RankingTableRow({
       )}
 
       <td className="hide-on-print">
-        <Link to={`/runner-details/${runner.id}`}>Détails</Link>
+        <Link to={`/runner-details/${runner.id}?race=${race.id}`}>Détails</Link>
       </td>
     </tr>
   );

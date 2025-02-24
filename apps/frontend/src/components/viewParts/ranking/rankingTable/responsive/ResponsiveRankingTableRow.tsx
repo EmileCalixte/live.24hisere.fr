@@ -105,7 +105,7 @@ export default function ResponsiveRankingTableRow({
         <strong>{rowRanking}</strong>
       </td>
       <td style={{ width: "100%" }}>
-        <Link to={`/runner-details/${runner.id}`}>
+        <Link to={`/runner-details/${runner.id}?race=${race.id}`}>
           <div className="d-flex align-items-center gap-2">
             {alpha2CountryCode && <Flag countryCode={alpha2CountryCode} />}
             <strong>

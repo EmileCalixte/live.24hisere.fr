@@ -50,56 +50,76 @@ export default function RunnerDetailsStatsRankingTable({
     [categoryCode, race.startTime, ranking, runner.gender],
   );
 
+  const showGaps = !race.isBasicRanking;
+
   return (
-    <table className="table no-full-width">
+    <table className="table">
       <thead>
         <tr>
-          <th colSpan={42}>Classements</th>
-        </tr>
-        <tr>
-          <th rowSpan={2}>Classement</th>
+          <th rowSpan={2}>Cat.</th>
           <th rowSpan={2}>N°</th>
-          <th colSpan={2}>Écarts</th>
+          {showGaps && <th colSpan={2}>Écarts</th>}
         </tr>
-        <tr>
-          <th>Premier coureur</th>
-          <th>Coureur précédent</th>
-        </tr>
+        {showGaps && (
+          <tr>
+            <th>Premier coureur</th>
+            <th>Coureur précédent</th>
+          </tr>
+        )}
       </thead>
       <tbody>
         <tr>
           <td>Scratch</td>
           <td>
-            {runner.ranks.displayed.scratchMixed} / {scratchMixedRunnerCount}
+            <strong>{runner.ranks.displayed.scratchMixed}</strong>&nbsp;<small>/&nbsp;{scratchMixedRunnerCount}</small>
           </td>
-          <td>{formatGapForTable(runner.gaps.firstRunner.scratchMixed.gap)}</td>
-          <td>{formatGapForTable(runner.gaps.previousRunner.scratchMixed.gap)}</td>
+          {showGaps && (
+            <>
+              <td>{formatGapForTable(runner.gaps.firstRunner.scratchMixed.gap)}</td>
+              <td>{formatGapForTable(runner.gaps.previousRunner.scratchMixed.gap)}</td>
+            </>
+          )}
         </tr>
         <tr>
           <td>{genderString}</td>
           <td>
-            {runner.ranks.displayed.scratchGender} / {scratchGenderRunnerCount}
+            <strong>{runner.ranks.displayed.scratchGender}</strong>&nbsp;
+            <small>/&nbsp;{scratchGenderRunnerCount}</small>
           </td>
-          <td>{formatGapForTable(runner.gaps.firstRunner.scratchGender.gap)}</td>
-          <td>{formatGapForTable(runner.gaps.previousRunner.scratchGender.gap)}</td>
+          {showGaps && (
+            <>
+              <td>{formatGapForTable(runner.gaps.firstRunner.scratchGender.gap)}</td>
+              <td>{formatGapForTable(runner.gaps.previousRunner.scratchGender.gap)}</td>
+            </>
+          )}
         </tr>
         <tr>
           <td>{categoryCode} mixte</td>
           <td>
-            {runner.ranks.displayed.categoryMixed} / {categoryMixedRunnerCount}
+            <strong>{runner.ranks.displayed.categoryMixed}</strong>&nbsp;
+            <small>/&nbsp;{categoryMixedRunnerCount}</small>
           </td>
-          <td>{formatGapForTable(runner.gaps.firstRunner.categoryMixed.gap)}</td>
-          <td>{formatGapForTable(runner.gaps.previousRunner.categoryMixed.gap)}</td>
+          {showGaps && (
+            <>
+              <td>{formatGapForTable(runner.gaps.firstRunner.categoryMixed.gap)}</td>
+              <td>{formatGapForTable(runner.gaps.previousRunner.categoryMixed.gap)}</td>
+            </>
+          )}
         </tr>
         <tr>
           <td>
             {categoryCode} {genderString}
           </td>
           <td>
-            {runner.ranks.displayed.categoryGender} / {categoryGenderRunnerCount}
+            <strong>{runner.ranks.displayed.categoryGender}</strong>&nbsp;
+            <small>/&nbsp;{categoryGenderRunnerCount}</small>
           </td>
-          <td>{formatGapForTable(runner.gaps.firstRunner.categoryGender.gap)}</td>
-          <td>{formatGapForTable(runner.gaps.previousRunner.categoryGender.gap)}</td>
+          {showGaps && (
+            <>
+              <td>{formatGapForTable(runner.gaps.firstRunner.categoryGender.gap)}</td>
+              <td>{formatGapForTable(runner.gaps.previousRunner.categoryGender.gap)}</td>
+            </>
+          )}
         </tr>
       </tbody>
     </table>

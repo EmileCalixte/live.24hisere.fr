@@ -8,6 +8,7 @@ import type {
   RankingRunnerRanks,
 } from "../types/Ranking";
 import { getRunnerProcessedDataFromPassages } from "../utils/passageUtils";
+import { isRaceFinished } from "../utils/raceUtils";
 import { areRunnersEqual, getGapBetweenRunners, spaceshipRunners } from "../utils/runnerUtils";
 
 type CategoryGenderRanks = Record<
@@ -55,12 +56,15 @@ export class RankingCalculator<TRunner extends MinimalRankingRunnerInput> {
     // Other categories will be appended here
   };
 
+  private readonly isRaceFinished: boolean;
+
   constructor(
     private readonly race: PublicRace,
     private readonly runners: TRunner[],
     rankingDate?: Date,
   ) {
     this.runners = this.runners.filter((runner) => runner.raceId === this.race.id);
+    this.isRaceFinished = isRaceFinished(race) && !rankingDate;
 
     if (rankingDate && !race.isBasicRanking) {
       this.runners = this.runners.map((runner) => {
@@ -74,7 +78,7 @@ export class RankingCalculator<TRunner extends MinimalRankingRunnerInput> {
       });
     }
 
-    this.runners = this.runners.toSorted((a, b) => spaceshipRunners(a, b, race));
+    this.runners = this.runners.toSorted((a, b) => spaceshipRunners(a, b, race.isBasicRanking, this.isRaceFinished));
   }
 
   public getRanking(): Ranking<TRunner> {
@@ -123,13 +127,20 @@ export class RankingCalculator<TRunner extends MinimalRankingRunnerInput> {
       const categoryGenderPreviousRunner = this.getCurrentLastRunner(runnerCategoryCode, runner.gender, ranking);
 
       const scratchMixedPreviousRunnerEquality =
-        scratchMixedPreviousRunner && areRunnersEqual(runner, scratchMixedPreviousRunner, this.race);
+        scratchMixedPreviousRunner
+        && areRunnersEqual(runner, scratchMixedPreviousRunner, this.race.isBasicRanking, this.isRaceFinished);
+
       const scratchGenderPreviousRunnerEquality =
-        scratchGenderPreviousRunner && areRunnersEqual(runner, scratchGenderPreviousRunner, this.race);
+        scratchGenderPreviousRunner
+        && areRunnersEqual(runner, scratchGenderPreviousRunner, this.race.isBasicRanking, this.isRaceFinished);
+
       const categoryMixedPreviousRunnerEquality =
-        categoryMixedPreviousRunner && areRunnersEqual(runner, categoryMixedPreviousRunner, this.race);
+        categoryMixedPreviousRunner
+        && areRunnersEqual(runner, categoryMixedPreviousRunner, this.race.isBasicRanking, this.isRaceFinished);
+
       const categoryGenderPreviousRunnerEquality =
-        categoryGenderPreviousRunner && areRunnersEqual(runner, categoryGenderPreviousRunner, this.race);
+        categoryGenderPreviousRunner
+        && areRunnersEqual(runner, categoryGenderPreviousRunner, this.race.isBasicRanking, this.isRaceFinished);
 
       if (scratchMixedPreviousRunner && scratchMixedPreviousRunnerEquality) {
         rankings.displayed.scratchMixed = scratchMixedPreviousRunner.ranks.displayed.scratchMixed;

@@ -9,14 +9,18 @@ import { SearchParam } from "../../constants/searchParams";
 import { useGetPublicEditions } from "../../hooks/api/requests/public/editions/useGetPublicEditions";
 import { useGetPublicRunnerParticipations } from "../../hooks/api/requests/public/participants/useGetPublicRunnerParticipations";
 import { useGetPublicRaces } from "../../hooks/api/requests/public/races/useGetPublicRaces";
+import { useGetPublicRaceRunners } from "../../hooks/api/requests/public/runners/useGetPublicRaceRunners";
 import { useGetPublicRunners } from "../../hooks/api/requests/public/runners/useGetPublicRunners";
+import { useProcessedRunnersWithProcessedHours } from "../../hooks/runners/useProcessedRunnersWithProcessedHours";
 import { useRaceSelectOptions } from "../../hooks/useRaceSelectOptions";
+import { useRanking } from "../../hooks/useRanking";
 import { getCountryAlpha2CodeFromAlpha3Code } from "../../utils/countryUtils";
 import { getRaceRunnerFromRunnerAndParticipant } from "../../utils/runnerUtils";
 import CircularLoader from "../ui/CircularLoader";
 import { Flag } from "../ui/countries/Flag";
 import Select from "../ui/forms/Select";
 import Page from "../ui/Page";
+import RunnerDetailsStats from "../viewParts/runnerDetails/RunnerDetailsStats";
 import RunnerSelector from "../viewParts/runnerDetails/RunnerSelector";
 
 // const enum Tab {
@@ -25,6 +29,8 @@ import RunnerSelector from "../viewParts/runnerDetails/RunnerSelector";
 // }
 
 export default function RunnerDetailsView(): React.ReactElement {
+  // const { serverTimeOffset } = React.useContext(appContext).appData;
+
   const { runnerId } = useParams(); // This param is optional, undefined if no runner selected
 
   const [selectedRaceId, setSelectedRaceId] = useQueryState(SearchParam.RACE);
@@ -101,34 +107,13 @@ export default function RunnerDetailsView(): React.ReactElement {
     return getRaceRunnerFromRunnerAndParticipant(selectedRunner, selectedParticipation);
   }, [selectedParticipation, selectedRunner]);
 
-  const alpha2CountryCode = getCountryAlpha2CodeFromAlpha3Code(selectedRaceRunner?.countryCode ?? null);
+  const getRaceRunnersQuery = useGetPublicRaceRunners(selectedRaceId ?? undefined);
+  const raceRunners = getRaceRunnersQuery.data?.runners;
 
-  // const raceRunners = useIntervalSimpleApiRequest(fetchRaceRunners).json?.runners;
+  const processedRaceRunners = useProcessedRunnersWithProcessedHours(raceRunners, selectedRace);
 
-  // const processedRaceRunners = React.useMemo<
-  //   Array<RunnerWithProcessedPassages & RunnerWithProcessedHours & RaceRunnerWithProcessedData> | undefined
-  // >(() => {
-  //   if (!raceRunners || !race) {
-  //     return;
-  //   }
-
-  //   return raceRunners.map((runner) => {
-  //     const processedPassages = getProcessedPassagesFromPassages(race, runner.passages);
-
-  //     return {
-  //       ...runner,
-  //       ...getRunnerProcessedDataFromPassages(race, runner.passages),
-  //       passages: processedPassages,
-  //       hours: getProcessedHoursFromPassages(race, processedPassages),
-  //     };
-  //   });
-  // }, [raceRunners, race]);
-
-  // const ranking = useRanking(race, processedRaceRunners);
-
-  // const selectedRunner = React.useMemo(() => {
-  //   return ranking?.find((rankingRunner) => rankingRunner.id.toString() === runnerId);
-  // }, [ranking, runnerId]);
+  const ranking = useRanking(selectedRace, processedRaceRunners);
+  const selectedRankingRunner = ranking?.find((runner) => runner.id === selectedRaceRunner?.id);
 
   const onSelectRunner = React.useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -182,6 +167,10 @@ export default function RunnerDetailsView(): React.ReactElement {
     }
   }, [runnerParticipations, selectedRaceId, selectedRunner, setSelectedRaceId]);
 
+  const alpha2CountryCode = getCountryAlpha2CodeFromAlpha3Code(selectedRaceRunner?.countryCode ?? null);
+
+  // const isRaceInProgress = !!selectedRace && !isRaceFinished(selectedRace, serverTimeOffset);
+
   return (
     <Page
       id="runner-details"
@@ -216,7 +205,7 @@ export default function RunnerDetailsView(): React.ReactElement {
       {runnerId === undefined && (
         <Row>
           <Col>
-            <p>Sélectionnez un coureur ci-dessus pour afficher ses détails.</p>
+            <p>Sélectionnez un coureur ci-dessus pour consulter ses détails.</p>
           </Col>
         </Row>
       )}
@@ -247,7 +236,7 @@ export default function RunnerDetailsView(): React.ReactElement {
             </Col>
           </Row>
 
-          <Row className="mt-1">
+          <Row className="mt-1 mb-4">
             {runnerHasMultipleParticipations ? (
               <Col xxl={3} xl={4} lg={6} md={8} sm={12}>
                 <Select
@@ -267,6 +256,16 @@ export default function RunnerDetailsView(): React.ReactElement {
               </Col>
             )}
           </Row>
+
+          {selectedRankingRunner && selectedRace && ranking ? (
+            <>
+              <RunnerDetailsStats runner={selectedRankingRunner} race={selectedRace} ranking={ranking} />
+            </>
+          ) : (
+            <p>
+              <CircularLoader asideText="Chargement des données" />
+            </p>
+          )}
         </div>
       )}
 
