@@ -54,3 +54,7 @@ export function latinizedIncludes(subject: string, search: string, caseSensitive
 export function latinizedEquals(a: string, b: string, caseSensitive = false): boolean {
   return latinize(a, !caseSensitive) === latinize(b, !caseSensitive);
 }
+
+export function joinNonEmpty(strings: Array<string | undefined | null | false>, separator = ", "): string {
+  return strings.filter(Boolean).join(separator);
+}

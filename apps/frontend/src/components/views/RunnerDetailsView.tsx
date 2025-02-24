@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQueryState } from "nuqs";
 import { Col, Row } from "react-bootstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { stringUtils } from "@live24hisere/utils";
 import { SearchParam } from "../../constants/searchParams";
 import { useGetPublicEditions } from "../../hooks/api/requests/public/editions/useGetPublicEditions";
 import { useGetPublicRunnerParticipations } from "../../hooks/api/requests/public/participants/useGetPublicRunnerParticipations";
@@ -14,6 +15,7 @@ import { getCountryAlpha2CodeFromAlpha3Code } from "../../utils/countryUtils";
 import { getRaceRunnerFromRunnerAndParticipant } from "../../utils/runnerUtils";
 import CircularLoader from "../ui/CircularLoader";
 import { Flag } from "../ui/countries/Flag";
+import Select from "../ui/forms/Select";
 import Page from "../ui/Page";
 import RunnerSelector from "../viewParts/runnerDetails/RunnerSelector";
 
@@ -45,6 +47,14 @@ export default function RunnerDetailsView(): React.ReactElement {
     [races, selectedRaceId],
   );
 
+  const selectedRaceEdition = React.useMemo(() => {
+    if (!editions || !selectedRace) {
+      return undefined;
+    }
+
+    return editions.find((edition) => edition.id === selectedRace.editionId);
+  }, [editions, selectedRace]);
+
   const allRacesOptions = useRaceSelectOptions(races, (race) => {
     const edition = editions?.find((edition) => edition.id === race.editionId);
 
@@ -73,6 +83,8 @@ export default function RunnerDetailsView(): React.ReactElement {
     () => new Set(runnerParticipations?.map((participation) => participation.raceId)),
     [runnerParticipations],
   );
+
+  const runnerHasMultipleParticipations = runnerParticipations && runnerParticipations.length >= 2;
 
   const runnerRaceOptions = allRacesOptions.filter((option) => runnerRaceIds.has(option.value));
 
@@ -210,29 +222,52 @@ export default function RunnerDetailsView(): React.ReactElement {
       )}
 
       {runnerId !== undefined && !selectedRaceRunner && (
-        <Row>
-          <Col>
-            <p>
-              <CircularLoader asideText="Chargement des données" />
-            </p>
-          </Col>
-        </Row>
+        <div className="card mt-3">
+          <Row>
+            <Col>
+              <p>
+                <CircularLoader asideText="Chargement des données" />
+              </p>
+            </Col>
+          </Row>
+        </div>
       )}
 
       {selectedRaceRunner && (
-        <Row>
-          <Col>
-            <h2 className="d-flex align-items-center gap-2">
-              {alpha2CountryCode && <Flag countryCode={alpha2CountryCode} />}
+        <div className="card mt-3">
+          <Row>
+            <Col>
+              <h2 className="m-0 d-flex align-items-center gap-2">
+                {alpha2CountryCode && <Flag countryCode={alpha2CountryCode} />}
 
-              <span>
-                {selectedRaceRunner.lastname.toUpperCase()} {selectedRaceRunner.firstname}
-              </span>
-            </h2>
-          </Col>
+                <span>
+                  {selectedRaceRunner.lastname.toUpperCase()} {selectedRaceRunner.firstname}
+                </span>
+              </h2>
+            </Col>
+          </Row>
 
-          {runnerRaceOptions.length > 1 && <p>TODO race selector</p>}
-        </Row>
+          <Row className="mt-1">
+            {runnerHasMultipleParticipations ? (
+              <Col xxl={3} xl={4} lg={6} md={8} sm={12}>
+                <Select
+                  label="Course"
+                  options={runnerRaceOptions}
+                  value={selectedRace?.id}
+                  onChange={(e) => {
+                    void setSelectedRaceId(e.target.value);
+                  }}
+                />
+              </Col>
+            ) : (
+              <Col>
+                <p className="m-0">
+                  {stringUtils.joinNonEmpty([selectedRaceEdition?.name, selectedRace?.name], " – ")}
+                </p>
+              </Col>
+            )}
+          </Row>
+        </div>
       )}
 
       {/* {selectedRunner && race ? (
