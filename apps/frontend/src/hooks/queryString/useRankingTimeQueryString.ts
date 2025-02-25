@@ -54,7 +54,7 @@ export function useRankingTimeQueryString(race: PublicRace | null): UseRankingTi
   const shouldResetRankingTime = React.useCallback(
     (newRaceDuration: number) => {
       if (rankingTimeMemory === null) {
-        return true;
+        return false;
       }
 
       if (rankingTimeMemory < 0) {
