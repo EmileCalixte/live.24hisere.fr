@@ -1,26 +1,31 @@
 import React from "react";
-import { faSortDown, faSortUp } from "@fortawesome/free-solid-svg-icons";
+import { faFileExcel, faSortDown, faSortUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Col, Row } from "react-bootstrap";
 import type { PublicRace, RaceRunnerWithProcessedPassages } from "@live24hisere/core/types";
 import { RUNNER_DETAILS_LAPS_SORT_COLUMNS, SortColumn, SortDirection } from "../../../constants/sort";
 import { useSortQueryString } from "../../../hooks/queryString/useSortQueryString";
 import { useRaceTime } from "../../../hooks/useRaceTime";
 import { useWindowDimensions } from "../../../hooks/useWindowDimensions";
 import type { MinimalRankingRunnerInput, RankingRunner } from "../../../types/Ranking";
+import { formatDurationHms, formatMsAsDuration } from "../../../utils/durationUtils";
 import { isRaceFinished, isRaceStarted } from "../../../utils/raceUtils";
 import { getOppositeSortDirection } from "../../../utils/sortUtils";
-import { formatMsAsDuration } from "../../../utils/utils";
 import { appContext } from "../../App";
+import { Button } from "../../ui/forms/Button";
 
 const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
 
 interface RunnerDetailsLapsProps {
   runner: RankingRunner<MinimalRankingRunnerInput & RaceRunnerWithProcessedPassages>;
   race: PublicRace;
+  exportRunnerToXlsx: () => unknown;
 }
 
-export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsProps): React.ReactElement {
+export default function RunnerDetailsLaps({
+  runner,
+  race,
+  exportRunnerToXlsx,
+}: RunnerDetailsLapsProps): React.ReactElement {
   const { serverTimeOffset } = React.useContext(appContext).appData;
 
   const { sortColumn, sortDirection, setSortColumn, setSortDirection } = useSortQueryString(
@@ -86,7 +91,7 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
       <tr>
         <td colSpan={2}>Tour en cours</td>
         <td>{formatMsAsDuration(raceTime)}</td>
-        <td>{formatMsAsDuration(currentLapTime)}</td>
+        <td>{formatDurationHms(currentLapTime)}</td>
         <td colSpan={42} />
       </tr>
     );
@@ -108,7 +113,7 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
 
           <div className="responsive-runner-laps-table-row-secondary-data">
             Durée&nbsp;:&nbsp;
-            <strong>{formatMsAsDuration(currentLapTime)}</strong>
+            <strong>{formatDurationHms(currentLapTime)}</strong>
           </div>
         </td>
       </tr>
@@ -148,144 +153,144 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
     && !isRaceFinished(race, serverTimeOffset)
     && sortColumn === SortColumn.RACE_TIME;
 
-  const showCurrentLapAtTopOfTable = showCurrentLap && sortDirection === SortDirection.ASC;
-  const showCurrentLapAtBottomOfTable = showCurrentLap && sortDirection === SortDirection.DESC;
+  const showCurrentLapAtTopOfTable = showCurrentLap && sortDirection === SortDirection.DESC;
+  const showCurrentLapAtBottomOfTable = showCurrentLap && sortDirection === SortDirection.ASC;
 
   return (
-    <Row>
-      <Col>
-        <h2>Détails des tours</h2>
+    <div className="card">
+      <h3 className="mt-0">Détails des tours</h3>
 
-        {windowWidth > RESPONSIVE_TABLE_MAX_WINDOW_WIDTH && (
-          <div style={{ maxWidth: 1400 }}>
-            <table id="runner-laps-table" className="table">
-              <thead>
-                <tr>
-                  <th>Nb. tours</th>
-                  <th>Distance</th>
-                  <th>
-                    <button
-                      className="a"
-                      onClick={(e) => {
-                        updateSort(e, SortColumn.RACE_TIME);
-                      }}
-                    >
-                      Temps de course
-                      {sortColumn === SortColumn.RACE_TIME && (
-                        <>
-                          {sortDirection === SortDirection.ASC && (
-                            <FontAwesomeIcon icon={faSortDown} className="ms-1" />
-                          )}
-                          {sortDirection === SortDirection.DESC && <FontAwesomeIcon icon={faSortUp} className="ms-1" />}
-                        </>
-                      )}
-                    </button>
-                  </th>
-                  <th>Temps au tour</th>
-                  <th>
-                    <button
-                      className="a"
-                      onClick={(e) => {
-                        updateSort(e, SortColumn.LAP_SPEED);
-                      }}
-                    >
-                      Vitesse
-                      {sortColumn === SortColumn.LAP_SPEED && (
-                        <>
-                          {sortDirection === SortDirection.ASC && (
-                            <FontAwesomeIcon icon={faSortDown} className="ms-1" />
-                          )}
-                          {sortDirection === SortDirection.DESC && <FontAwesomeIcon icon={faSortUp} className="ms-1" />}
-                        </>
-                      )}
-                    </button>
-                  </th>
-                  <th>Allure</th>
-                  <th>Vmoy. depuis le début</th>
-                  <th>Allure depuis le début</th>
+      <p className="mb-4">
+        <Button variant="a" onClick={exportRunnerToXlsx} icon={<FontAwesomeIcon icon={faFileExcel} />}>
+          Télécharger au format Excel
+        </Button>
+      </p>
+
+      {windowWidth > RESPONSIVE_TABLE_MAX_WINDOW_WIDTH && (
+        <div style={{ maxWidth: 1400 }}>
+          <table id="runner-laps-table" className="table">
+            <thead style={{ position: "sticky", top: 0 }}>
+              <tr>
+                <th>Nb. tours</th>
+                <th>Distance</th>
+                <th>
+                  <button
+                    className="a"
+                    onClick={(e) => {
+                      updateSort(e, SortColumn.RACE_TIME);
+                    }}
+                  >
+                    Temps de course
+                    {sortColumn === SortColumn.RACE_TIME && (
+                      <>
+                        {sortDirection === SortDirection.ASC && <FontAwesomeIcon icon={faSortDown} className="ms-1" />}
+                        {sortDirection === SortDirection.DESC && <FontAwesomeIcon icon={faSortUp} className="ms-1" />}
+                      </>
+                    )}
+                  </button>
+                </th>
+                <th>Temps au tour</th>
+                <th>
+                  <button
+                    className="a"
+                    onClick={(e) => {
+                      updateSort(e, SortColumn.LAP_SPEED);
+                    }}
+                  >
+                    Vitesse
+                    {sortColumn === SortColumn.LAP_SPEED && (
+                      <>
+                        {sortDirection === SortDirection.ASC && <FontAwesomeIcon icon={faSortDown} className="ms-1" />}
+                        {sortDirection === SortDirection.DESC && <FontAwesomeIcon icon={faSortUp} className="ms-1" />}
+                      </>
+                    )}
+                  </button>
+                </th>
+                <th>Allure</th>
+                <th>Vmoy. depuis le début</th>
+                <th>Allure depuis le début</th>
+              </tr>
+            </thead>
+            <tbody>
+              {showCurrentLapAtTopOfTable && <>{currentLapTableRow}</>}
+
+              {passagesToDisplay.map((passage, index) => (
+                <tr key={index}>
+                  <td>{passage.processed.lapNumber ?? "–"}</td>
+                  <td>{(passage.processed.totalDistance / 1000).toFixed(2)} km</td>
+                  <td>{formatMsAsDuration(passage.processed.lapEndRaceTime)}</td>
+                  <td>{formatDurationHms(passage.processed.lapDuration)}</td>
+                  <td>{passage.processed.lapSpeed.toFixed(2)} km/h</td>
+                  <td>
+                    {formatDurationHms(passage.processed.lapPace)}
+                    <> </>/ km
+                  </td>
+                  <td>{passage.processed.averageSpeedSinceRaceStart.toFixed(2)} km/h</td>
+                  <td>
+                    {formatDurationHms(passage.processed.averagePaceSinceRaceStart)}
+                    <> </>/ km
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {showCurrentLapAtTopOfTable && <>{currentLapTableRow}</>}
+              ))}
 
-                {passagesToDisplay.map((passage, index) => (
-                  <tr key={index}>
-                    <td>{passage.processed.lapNumber ?? "–"}</td>
-                    <td>{(passage.processed.totalDistance / 1000).toFixed(2)} km</td>
-                    <td>{formatMsAsDuration(passage.processed.lapEndRaceTime)}</td>
-                    <td>{formatMsAsDuration(passage.processed.lapDuration)}</td>
-                    <td>{passage.processed.lapSpeed.toFixed(2)} km/h</td>
-                    <td>
-                      {formatMsAsDuration(passage.processed.lapPace, false)}
-                      /km
-                    </td>
-                    <td>{passage.processed.averageSpeedSinceRaceStart.toFixed(2)} km/h</td>
-                    <td>
-                      {formatMsAsDuration(passage.processed.averagePaceSinceRaceStart, false)}
-                      /km
-                    </td>
-                  </tr>
-                ))}
+              {showCurrentLapAtBottomOfTable && <>{currentLapTableRow}</>}
+            </tbody>
+          </table>
+        </div>
+      )}
 
-                {showCurrentLapAtBottomOfTable && <>{currentLapTableRow}</>}
-              </tbody>
-            </table>
+      {windowWidth <= RESPONSIVE_TABLE_MAX_WINDOW_WIDTH && (
+        <div>
+          <div className="mb-3">
+            <button className="button" onClick={onResponsiveSortButtonClick}>
+              {sortColumn === SortColumn.RACE_TIME && <>Trier par vitesse</>}
+
+              {sortColumn === SortColumn.LAP_SPEED && <>Trier par temps de passage</>}
+            </button>
           </div>
-        )}
 
-        {windowWidth <= RESPONSIVE_TABLE_MAX_WINDOW_WIDTH && (
-          <div>
-            <div className="mb-3">
-              <button className="button" onClick={onResponsiveSortButtonClick}>
-                {sortColumn === SortColumn.RACE_TIME && <>Trier par vitesse</>}
+          <table id="runner-laps-table" className="table responsive-runner-laps-table">
+            <tbody>
+              {showCurrentLapAtTopOfTable && <>{currentLapResponsiveTableRow}</>}
 
-                {sortColumn === SortColumn.LAP_SPEED && <>Trier par temps de passage</>}
-              </button>
-            </div>
+              {passagesToDisplay.map((passage, index) => (
+                <tr key={index}>
+                  <td>
+                    <div>
+                      <strong>
+                        {passage.processed.lapNumber === null && <>Premier passage</>}
 
-            <table id="runner-laps-table" className="table responsive-runner-laps-table">
-              <tbody>
-                {showCurrentLapAtTopOfTable && <>{currentLapResponsiveTableRow}</>}
+                        {passage.processed.lapNumber !== null && <>Tour {passage.processed.lapNumber}</>}
+                      </strong>
+                      &nbsp;–&nbsp;
+                      {formatMsAsDuration(passage.processed.lapEndRaceTime)}
+                    </div>
 
-                {passagesToDisplay.map((passage, index) => (
-                  <tr key={index}>
-                    <td>
-                      <div>
-                        <strong>
-                          {passage.processed.lapNumber === null && <>Premier passage</>}
+                    <div className="responsive-runner-laps-table-row-secondary-data">
+                      Durée&nbsp;:&nbsp;
+                      <strong>{formatDurationHms(passage.processed.lapDuration)}</strong>
+                      <> </>|<> </>
+                      <strong>{passage.processed.lapSpeed.toFixed(2)} km/h</strong>
+                      <> </>|<> </>
+                      {formatDurationHms(passage.processed.lapPace)}
+                      <> </>/ km
+                    </div>
 
-                          {passage.processed.lapNumber !== null && <>Tour {passage.processed.lapNumber}</>}
-                        </strong>
-                        &nbsp;–&nbsp;
-                        {formatMsAsDuration(passage.processed.lapEndRaceTime)}
-                      </div>
+                    <div className="responsive-runner-laps-table-row-secondary-data">
+                      Depuis départ&nbsp;:&nbsp; {passage.processed.averageSpeedSinceRaceStart.toFixed(2)} km/h
+                      <> </>|<> </>
+                      {formatDurationHms(passage.processed.averagePaceSinceRaceStart)}
+                      <> </>/ km
+                    </div>
+                  </td>
+                </tr>
+              ))}
 
-                      <div className="responsive-runner-laps-table-row-secondary-data">
-                        Durée&nbsp;:&nbsp;
-                        <strong>{formatMsAsDuration(passage.processed.lapDuration)}</strong>
-                        <> </>|<> </>
-                        <strong>{passage.processed.lapSpeed.toFixed(2)} km/h</strong>
-                        <> </>|<> </>
-                        {formatMsAsDuration(passage.processed.lapPace, false)}
-                        /km
-                      </div>
-
-                      <div className="responsive-runner-laps-table-row-secondary-data">
-                        Depuis départ&nbsp;:&nbsp; {passage.processed.averageSpeedSinceRaceStart.toFixed(2)} km/h
-                        <> </>|<> </>
-                        {formatMsAsDuration(passage.processed.averagePaceSinceRaceStart, false)}
-                        /km
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-
-                {showCurrentLapAtBottomOfTable && <>{currentLapResponsiveTableRow}</>}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </Col>
-    </Row>
+              {showCurrentLapAtBottomOfTable && <>{currentLapResponsiveTableRow}</>}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
   );
 }

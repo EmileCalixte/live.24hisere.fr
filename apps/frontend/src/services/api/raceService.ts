@@ -13,8 +13,12 @@ import type {
 import type { UrlId } from "../../types/utils/api";
 import { performApiRequest, performAuthenticatedApiRequest } from "./apiService";
 
-export async function getRaces(editionId: UrlId): Promise<ApiResponse<GetRacesApiRequest>> {
-  return await performApiRequest<GetRacesApiRequest>(`/races?edition=${editionId}`);
+export async function getRaces(): Promise<ApiResponse<GetRacesApiRequest>> {
+  return await performApiRequest<GetRacesApiRequest>("/races");
+}
+
+export async function getEditionRaces(editionId: UrlId): Promise<ApiResponse<GetRacesApiRequest>> {
+  return await performApiRequest<GetRacesApiRequest>(`/editions/${editionId}/races`);
 }
 
 export async function getRace(raceId: UrlId): Promise<ApiResponse<GetRaceApiRequest>> {

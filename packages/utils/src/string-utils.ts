@@ -44,7 +44,7 @@ export function latinize(text: string, lowerCase = false, form = "NFKD"): string
  *
  * @param subject The string in which the substring will be searched
  * @param search The substring to be searched
- * @param caseSensitive If true, search will be case-sensitive
+ * @param caseSensitive If true, search will be case-sensitive. Default `false`
  * @returns True if normalized string includes normalized substring, false otherwise
  */
 export function latinizedIncludes(subject: string, search: string, caseSensitive = false): boolean {
@@ -53,4 +53,8 @@ export function latinizedIncludes(subject: string, search: string, caseSensitive
 
 export function latinizedEquals(a: string, b: string, caseSensitive = false): boolean {
   return latinize(a, !caseSensitive) === latinize(b, !caseSensitive);
+}
+
+export function joinNonEmpty(strings: Array<string | undefined | null | false>, separator = ", "): string {
+  return strings.filter(Boolean).join(separator);
 }

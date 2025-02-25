@@ -3,7 +3,6 @@ import { and, count, eq, getTableColumns, sql } from "drizzle-orm";
 import {
   AdminRaceRunnerWithPassages,
   AdminRunner,
-  PublicRunner,
   RaceRunner,
   RaceRunnerWithPassages,
   RunnerWithRaceCount,
@@ -78,11 +77,18 @@ export class RunnerService extends EntityService {
   //   };
   // }
 
-  async getPublicRunners(): Promise<PublicRunner[]> {
+  async getPublicRunners(): Promise<RunnerWithRaceCount[]> {
     return await this.db
-      .select(this.getPublicRunnerColumns())
+      .select({
+        ...this.getPublicRunnerColumns(),
+        raceCount: count(TABLE_PARTICIPANT.id),
+      })
       .from(TABLE_RUNNER)
-      .where(eq(TABLE_RUNNER.isPublic, true));
+      .leftJoin(TABLE_PARTICIPANT, eq(TABLE_PARTICIPANT.runnerId, TABLE_RUNNER.id))
+      .innerJoin(TABLE_RACE, eq(TABLE_RACE.id, TABLE_PARTICIPANT.raceId))
+      .innerJoin(TABLE_EDITION, eq(TABLE_EDITION.id, TABLE_RACE.editionId))
+      .where(and(eq(TABLE_RUNNER.isPublic, true), eq(TABLE_RACE.isPublic, true), eq(TABLE_EDITION.isPublic, true)))
+      .groupBy(TABLE_RUNNER.id);
   }
 
   async getPublicRunnersOfEdition(editionId: number): Promise<RaceRunner[]> {

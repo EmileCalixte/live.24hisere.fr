@@ -1,18 +1,8 @@
 import { describe, expect, it } from "vitest";
-import type { PublicRace, RaceRunnerWithPassages, RaceRunnerWithProcessedData } from "@live24hisere/core/types";
+import type { RaceRunnerWithPassages, RaceRunnerWithProcessedData } from "@live24hisere/core/types";
 import { spaceshipRunners } from "../../src/utils/runnerUtils";
 
 describe("Spaceship runners", () => {
-  const baseRace: PublicRace = {
-    id: 0,
-    name: "Any race",
-    startTime: new Date().toISOString(),
-    duration: 0,
-    initialDistance: "0",
-    lapDistance: "0",
-    isBasicRanking: false,
-  };
-
   const baseRunner: SpaceshipableRunner = {
     id: 1,
     firstname: "Any",
@@ -40,20 +30,15 @@ describe("Spaceship runners", () => {
   type SpaceshipableRunner = RaceRunnerWithPassages & RaceRunnerWithProcessedData;
 
   it("Basic ranking: Should sort runners by total distance only", () => {
-    const race: PublicRace = {
-      ...baseRace,
-      isBasicRanking: true,
-    };
-
     const runner1: SpaceshipableRunner = { ...baseRunner, totalDistance: 123456 };
     const runner2: SpaceshipableRunner = { ...baseRunner, totalDistance: 123457 }; // Faster than runner1 because greater distance covered during the race
 
-    expect(spaceshipRunners(runner1, runner2, race)).toBe(1);
-    expect(spaceshipRunners(runner2, runner1, race)).toBe(-1);
+    expect(spaceshipRunners(runner1, runner2, true, false)).toBe(1);
+    expect(spaceshipRunners(runner2, runner1, true, false)).toBe(-1);
 
     const runner3: SpaceshipableRunner = { ...baseRunner, totalDistance: 123456 };
 
-    expect(spaceshipRunners(runner1, runner3, race)).toBe(0);
+    expect(spaceshipRunners(runner1, runner3, true, false)).toBe(0);
 
     const runner4: SpaceshipableRunner = {
       ...baseRunner,
@@ -71,23 +56,17 @@ describe("Spaceship runners", () => {
       passages: [{ id: 234, time: "2024-04-06T10:30:00Z" }],
     };
 
-    expect(spaceshipRunners(runner4, runner5, race)).toBe(1);
+    expect(spaceshipRunners(runner4, runner5, true, false)).toBe(1);
   });
 
   describe("Detailed ranking", () => {
     describe("Race finished", () => {
-      const race: PublicRace = {
-        ...baseRace,
-        duration: 86400,
-        startTime: new Date("2022-01-01T09:00:00Z").toISOString(),
-      };
-
       it("Should sort runners by total distance if different", () => {
         const runner1: SpaceshipableRunner = { ...baseRunner, totalDistance: 123456 };
         const runner2: SpaceshipableRunner = { ...baseRunner, totalDistance: 123457 }; // Faster than runner1 because greater distance covered during the race
 
-        expect(spaceshipRunners(runner1, runner2, race)).toBe(1);
-        expect(spaceshipRunners(runner2, runner1, race)).toBe(-1);
+        expect(spaceshipRunners(runner1, runner2, false, true)).toBe(1);
+        expect(spaceshipRunners(runner2, runner1, false, true)).toBe(-1);
       });
 
       it("Should sort runners by total distance if equal with non-zero final distance", () => {
@@ -103,7 +82,7 @@ describe("Spaceship runners", () => {
           lastPassageTime: { time: new Date(), raceTime: 38000 },
         };
 
-        expect(spaceshipRunners(runner1, runner2, race)).toBe(0);
+        expect(spaceshipRunners(runner1, runner2, false, true)).toBe(0);
       });
 
       it("Should sort runners by last passage race time if total distance are equal with zero final distances", () => {
@@ -120,17 +99,12 @@ describe("Spaceship runners", () => {
           lastPassageTime: { time: new Date(), raceTime: 48000 },
         };
 
-        expect(spaceshipRunners(runner1, runner2, race)).toBe(1);
-        expect(spaceshipRunners(runner2, runner1, race)).toBe(-1);
+        expect(spaceshipRunners(runner1, runner2, false, true)).toBe(1);
+        expect(spaceshipRunners(runner2, runner1, false, true)).toBe(-1);
       });
     });
 
     describe("Race not finished", () => {
-      const race: PublicRace = {
-        ...baseRace,
-        duration: 86400,
-      };
-
       it("Should sort runners by passage count if different", () => {
         const runner1: SpaceshipableRunner = {
           ...baseRunner,
@@ -153,7 +127,7 @@ describe("Spaceship runners", () => {
           passages: [{ id: 234, time: "2024-04-06T10:30:00Z" }],
         };
 
-        expect(spaceshipRunners(runner1, runner2, race)).toBe(-1);
+        expect(spaceshipRunners(runner1, runner2, false, false)).toBe(-1);
       });
 
       it("Should sort runners by last passage race time if passage count are equal", () => {
@@ -181,7 +155,7 @@ describe("Spaceship runners", () => {
           ],
         };
 
-        expect(spaceshipRunners(runner1, runner2, race)).toBe(1);
+        expect(spaceshipRunners(runner1, runner2, false, false)).toBe(1);
       });
     });
   });

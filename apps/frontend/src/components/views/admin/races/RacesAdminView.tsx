@@ -6,7 +6,8 @@ import { Link } from "react-router-dom";
 import { useGetAdminEditions } from "../../../../hooks/api/requests/admin/editions/useGetAdminEditions";
 import { useGetAdminRaces } from "../../../../hooks/api/requests/admin/races/useGetAdminRaces";
 import { getRacesBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
-import { formatDateAsString, formatMsAsDuration } from "../../../../utils/utils";
+import { formatMsAsDuration } from "../../../../utils/durationUtils";
+import { formatDateAsString } from "../../../../utils/utils";
 import CircularLoader from "../../../ui/CircularLoader";
 import Page from "../../../ui/Page";
 

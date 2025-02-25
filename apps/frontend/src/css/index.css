@@ -482,13 +482,21 @@ table.table th .buttons-container {
 .card {
   background-color: #fff;
   border: 1px solid #ddd;
+  box-shadow: rgba(0, 0, 0, 0.2) 0.05rem 0.05rem 0.2rem;
   padding: 0.75em;
 }
 
-.runner-details-chart-container {
-  border: 1px solid #ddd;
-  padding: 0.75em;
-  box-shadow: 0 0 3px #ddd;
+a > .card {
+  transition: background-color 0.1s ease-out;
+}
+
+a:has(.card) {
+  color: initial;
+  text-decoration: initial;
+}
+
+a:hover > .card {
+  background-color: #f8f8f8;
 }
 
 .responsive-runner-laps-table .responsive-runner-laps-table-row-secondary-data {

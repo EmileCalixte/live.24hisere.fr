@@ -9,30 +9,23 @@ import {
 } from "@emilecalixte/ffa-categories";
 import { parseAsInteger, useQueryState } from "nuqs";
 import { Col, Row } from "react-bootstrap";
-import type {
-  EditionWithRaceCount,
-  GenderWithMixed,
-  RaceRunnerWithProcessedData,
-  RaceRunnerWithProcessedPassages,
-  RaceWithRunnerCount,
-} from "@live24hisere/core/types";
+import type { EditionWithRaceCount, GenderWithMixed, RaceWithRunnerCount } from "@live24hisere/core/types";
 import { objectUtils } from "@live24hisere/utils";
 import { RankingTimeMode } from "../../constants/rankingTimeMode";
 import { SearchParam } from "../../constants/searchParams";
 import "../../css/print-ranking-table.css";
 import { useGetPublicEditions } from "../../hooks/api/requests/public/editions/useGetPublicEditions";
-import { useGetPublicRaces } from "../../hooks/api/requests/public/races/useGetPublicRaces";
+import { useGetPublicEditionRaces } from "../../hooks/api/requests/public/races/useGetPublicEditionRaces";
 import { useGetPublicRaceRunners } from "../../hooks/api/requests/public/runners/useGetPublicRaceRunners";
 import { useRankingTimeQueryString } from "../../hooks/queryString/useRankingTimeQueryString";
+import { useProcessedRunners } from "../../hooks/runners/useProcessedRunners";
 import { useEditionSelectOptions } from "../../hooks/useEditionSelectOptions";
 import { useRaceSelectOptions } from "../../hooks/useRaceSelectOptions";
 import { useRanking } from "../../hooks/useRanking";
 import { useWindowDimensions } from "../../hooks/useWindowDimensions";
 import { parseAsCategory } from "../../queryStringParsers/parseAsCategory";
 import { parseAsGender } from "../../queryStringParsers/parseAsGender";
-import { getProcessedPassagesFromPassages, getRunnerProcessedDataFromPassages } from "../../utils/passageUtils";
 import { isRaceFinished } from "../../utils/raceUtils";
-import { getBasicRankingRunnerProcessedData } from "../../utils/runnerUtils";
 import { appContext } from "../App";
 import CircularLoader from "../ui/CircularLoader";
 import Select from "../ui/forms/Select";
@@ -64,7 +57,7 @@ export default function RankingView(): React.ReactElement {
     [editions, selectedEditionId],
   );
 
-  const getRacesQuery = useGetPublicRaces(selectedEdition?.id);
+  const getRacesQuery = useGetPublicEditionRaces(selectedEdition?.id);
   const races = getRacesQuery.data?.races;
 
   const selectedRace = React.useMemo<RaceWithRunnerCount | null>(
@@ -92,27 +85,7 @@ export default function RankingView(): React.ReactElement {
   const editionOptions = useEditionSelectOptions(editions);
   const raceOptions = useRaceSelectOptions(races);
 
-  const processedRunners = React.useMemo<
-    Array<RaceRunnerWithProcessedPassages & RaceRunnerWithProcessedData> | undefined
-  >(() => {
-    if (!runners || !selectedRace) {
-      return;
-    }
-
-    if (selectedRace.isBasicRanking) {
-      return runners.map((runner) => ({
-        ...runner,
-        ...getBasicRankingRunnerProcessedData(runner, selectedRace),
-        passages: [],
-      }));
-    }
-
-    return runners.map((runner) => ({
-      ...runner,
-      ...getRunnerProcessedDataFromPassages(runner, selectedRace, runner.passages, !rankingDate),
-      passages: getProcessedPassagesFromPassages(selectedRace, runner.passages),
-    }));
-  }, [rankingDate, runners, selectedRace]);
+  const processedRunners = useProcessedRunners(runners, selectedRace, !rankingDate);
 
   const ranking = useRanking(selectedRace ?? undefined, processedRunners, rankingDate);
 

@@ -6,7 +6,8 @@ import type {
   RaceDict,
   RaceRunner,
 } from "@live24hisere/core/types";
-import { formatFloatNumber, formatMsAsDuration } from "../../../../utils/utils";
+import { formatMsAsDuration } from "../../../../utils/durationUtils";
+import { formatFloatNumber } from "../../../../utils/utils";
 
 interface FastestLapsTableProps {
   passages: Array<ProcessedPassage<AdminPassageWithRunnerIdAndRaceId>>;
@@ -46,7 +47,7 @@ export default function FastestLapsTable({ passages, races, runners }: FastestLa
                 </Link>
               </td>
               <td>{race.name}</td>
-              <td>{formatMsAsDuration(passage.processed.lapDuration, false)}</td>
+              <td>{formatMsAsDuration(passage.processed.lapDuration, { forceDisplayHours: false })}</td>
               <td>{`${formatFloatNumber(passage.processed.lapSpeed, 2)} km/h`}</td>
               <td>
                 {`${formatMsAsDuration(passage.processed.lapStartRaceTime)} – ${formatMsAsDuration(passage.processed.lapEndRaceTime)}`}

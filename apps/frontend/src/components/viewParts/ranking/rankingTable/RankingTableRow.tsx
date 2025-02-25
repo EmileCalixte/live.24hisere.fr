@@ -5,9 +5,10 @@ import type { GenderWithMixed, PublicRace } from "@live24hisere/core/types";
 import { NO_VALUE_PLACEHOLDER } from "../../../../constants/misc";
 import type { RankingRunner } from "../../../../types/Ranking";
 import { getCountryAlpha2CodeFromAlpha3Code } from "../../../../utils/countryUtils";
+import { formatMsAsDuration } from "../../../../utils/durationUtils";
 import { getRankingType } from "../../../../utils/rankingUtils";
 import { formatGap } from "../../../../utils/runnerUtils";
-import { formatFloatNumber, formatMsAsDuration } from "../../../../utils/utils";
+import { formatFloatNumber } from "../../../../utils/utils";
 import RunnerStoppedBadge from "../../../ui/badges/RunnerStoppedBadge";
 import { Flag } from "../../../ui/countries/Flag";
 import RankingTableRowNCells from "./RankingTableRowNCells";
@@ -85,7 +86,7 @@ export default function RankingTableRow({
       )}
 
       <td className="hide-on-print">
-        <Link to={`/runner-details/${runner.id}`}>Détails</Link>
+        <Link to={`/runner-details/${runner.id}?race=${race.id}`}>Détails</Link>
       </td>
     </tr>
   );

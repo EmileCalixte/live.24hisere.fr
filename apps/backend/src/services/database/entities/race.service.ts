@@ -1,6 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { and, asc, count, eq, getTableColumns, max } from "drizzle-orm";
-import { AdminRaceWithOrder, AdminRaceWithRunnerCount, RaceWithRunnerCount } from "@live24hisere/core/types";
+import {
+  AdminRaceWithOrder,
+  AdminRaceWithRunnerCount,
+  RaceWithEditionId,
+  RaceWithRunnerCount,
+} from "@live24hisere/core/types";
 import { objectUtils } from "@live24hisere/utils";
 import { TABLE_EDITION, TABLE_PARTICIPANT, TABLE_RACE, TABLE_RUNNER } from "../../../../drizzle/schema";
 import { DrizzleTableColumns } from "../../../types/utils/drizzle";
@@ -62,7 +67,21 @@ export class RaceService extends EntityService {
     return this.getUniqueResult(races);
   }
 
-  async getPublicRaces(editionId: number): Promise<RaceWithRunnerCount[]> {
+  async getPublicRaces(): Promise<Array<RaceWithEditionId<RaceWithRunnerCount>>> {
+    return await this.db
+      .select({
+        ...this.getPublicRaceColumns(),
+        runnerCount: count(TABLE_PARTICIPANT.id),
+      })
+      .from(TABLE_RACE)
+      .leftJoin(TABLE_PARTICIPANT, eq(TABLE_PARTICIPANT.raceId, TABLE_RACE.id))
+      .innerJoin(TABLE_EDITION, eq(TABLE_EDITION.id, TABLE_RACE.editionId))
+      .orderBy(asc(TABLE_EDITION.order), asc(TABLE_RACE.order))
+      .groupBy(TABLE_RACE.id)
+      .where(and(eq(TABLE_RACE.isPublic, true), eq(TABLE_EDITION.isPublic, true)));
+  }
+
+  async getPublicEditionRaces(editionId: number): Promise<RaceWithRunnerCount[]> {
     return await this.db
       .select({
         ...this.getPublicRaceColumns(),

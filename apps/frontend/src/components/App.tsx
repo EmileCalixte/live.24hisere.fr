@@ -19,6 +19,7 @@ const Admin = React.lazy(async () => await import("./views/admin/Admin"));
 const About = React.lazy(async () => await import("./views/AboutView"));
 const RankingView = React.lazy(async () => await import("./views/RankingView"));
 const RunnerDetailsView = React.lazy(async () => await import("./views/RunnerDetailsView"));
+const SearchRunnerView = React.lazy(async () => await import("./views/SearchRunnerView"));
 
 interface AppContext {
   appData: {
@@ -289,6 +290,14 @@ export default function App(): React.ReactElement {
                   element={
                     <React.Suspense fallback={<CircularLoader />}>
                       <RunnerDetailsView />
+                    </React.Suspense>
+                  }
+                />
+                <Route
+                  path="/runner-details/search"
+                  element={
+                    <React.Suspense fallback={<CircularLoader />}>
+                      <SearchRunnerView />
                     </React.Suspense>
                   }
                 />

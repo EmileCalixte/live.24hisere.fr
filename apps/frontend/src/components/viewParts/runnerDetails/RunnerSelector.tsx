@@ -15,57 +15,28 @@ export default function RunnerSelector({
   onSelectRunner,
   selectedRunnerId,
 }: RunnerSelectorProps): React.ReactElement {
-  const selectedRunnerExists = React.useMemo(() => {
+  const sortedRunners = React.useMemo<PublicRunner[] | false>(() => {
     if (!runners) {
       return false;
     }
 
-    if (selectedRunnerId === undefined) {
-      return false;
-    }
-
-    const searchedRunnerId = parseInt(selectedRunnerId);
-
-    const runner = runners.find((runner) => runner.id === searchedRunnerId);
-
-    return runner !== undefined;
-  }, [runners, selectedRunnerId]);
-
-  const idSortedRunners = React.useMemo<PublicRunner[] | false>(() => {
-    if (!runners) {
-      return false;
-    }
-
-    return [...runners].sort((a, b) => compareUtils.spaceship(a.id, b.id));
+    return [...runners].sort((a, b) => compareUtils.spaceship(a.lastname + a.firstname, b.lastname + b.firstname));
   }, [runners]);
 
-  const nameSortedRunners = React.useMemo<PublicRunner[] | false>(() => {
-    if (!runners) {
-      return false;
-    }
-
-    return [...runners].sort((a, b) =>
-      compareUtils.spaceship(a.lastname + a.firstname + a.id, b.lastname + b.firstname + b.id),
-    );
-  }, [runners]);
-
-  const selectOptions = [
-    ...getRunnersSelectOptions(idSortedRunners),
-    ...getRunnersSelectOptions(
-      nameSortedRunners,
-      (runner) => `${runner.lastname.toUpperCase()} ${runner.firstname} – N° ${runner.id}`,
-    ),
-  ];
+  const selectOptions = getRunnersSelectOptions(
+    sortedRunners,
+    (runner) => `${runner.lastname.toUpperCase()} ${runner.firstname}`,
+  );
 
   return (
     <div className="runner-details-runner-selector-container">
       <Select
         label="Coureur"
         options={selectOptions}
-        isLoading={!idSortedRunners}
+        isLoading={!sortedRunners}
         loadingOptionLabel="Chargement des coureurs"
         placeholderLabel="Cliquez ici pour sélectionner un coureur"
-        value={selectedRunnerExists ? selectedRunnerId : undefined}
+        value={selectedRunnerId}
         onChange={onSelectRunner}
       />
     </div>

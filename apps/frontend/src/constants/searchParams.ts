@@ -4,6 +4,7 @@ export const enum SearchParam {
   GENDER = "gender",
   RACE = "race",
   RANKING_TIME = "rankingTime",
+  SEARCH = "search",
   SHOW_AVG_SPEED = "showAvgSpeed",
   SHOW_AVG_SPEED_EVOLUTION = "showAvgSpeedEvolution",
   SHOW_HOUR_SPEED = "showHourSpeed",

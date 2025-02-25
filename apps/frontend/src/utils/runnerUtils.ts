@@ -12,12 +12,22 @@ import type {
 } from "@live24hisere/core/types";
 import { compareUtils, dateUtils, stringUtils } from "@live24hisere/utils";
 import { spaceship } from "../../../../packages/utils/src/compare-utils";
+import { excludeKeys } from "../../../../packages/utils/src/object-utils";
 import type { SelectOption } from "../types/Forms";
 import type { RankingRunnerGap } from "../types/Ranking";
+import { formatDurationHms, formatMsAsDuration } from "./durationUtils";
 import { getPaceFromSpeed, getSpeed } from "./mathUtils";
 import { getSortedPassages } from "./passageUtils";
-import { isRaceFinished } from "./raceUtils";
-import { formatMsAsDuration } from "./utils";
+
+export function getRaceRunnerFromRunnerAndParticipant<TRunner extends PublicRunner>(
+  runner: TRunner,
+  participant: Participant,
+): RaceRunner<TRunner> {
+  return {
+    ...runner,
+    ...excludeKeys(participant, ["id", "runnerId"]),
+  };
+}
 
 export function getRunnersWithPassagesFromRunnersAndPassages<
   TRunner extends RaceRunner,
@@ -144,11 +154,11 @@ export function formatGap(gap: RankingRunnerGap | null, exhaustive = false): str
     return null;
   }
 
-  if (gap.time === 0) {
+  if (gap.time < 0 && gap.laps < 1) {
     return "=";
   }
 
-  const timeGap = `+${formatMsAsDuration(gap.time, false)}`;
+  const timeGap = `+${formatDurationHms(gap.time)}`;
 
   if (gap.laps === 0) {
     return timeGap;
@@ -156,7 +166,7 @@ export function formatGap(gap: RankingRunnerGap | null, exhaustive = false): str
 
   const lapsGap = `+${gap.laps} ${gap.laps > 1 ? "tours" : "tour"}`;
 
-  if (!exhaustive) {
+  if (!exhaustive || gap.time < 0) {
     return lapsGap;
   }
 
@@ -182,13 +192,14 @@ export function formatGap(gap: RankingRunnerGap | null, exhaustive = false): str
 export function spaceshipRunners(
   runner1: RaceRunnerWithPassages & RaceRunnerWithProcessedData,
   runner2: RaceRunnerWithPassages & RaceRunnerWithProcessedData,
-  race: PublicRace,
+  isBasicRanking: boolean,
+  isRaceFinished: boolean,
 ): ReturnType<typeof compareUtils.spaceship> {
-  if (race.isBasicRanking) {
+  if (isBasicRanking) {
     return compareUtils.spaceship(Number(runner2.totalDistance), Number(runner1.totalDistance));
   }
 
-  if (isRaceFinished(race)) {
+  if (isRaceFinished) {
     if (
       runner1.totalDistance === runner2.totalDistance
       && !parseFloat(runner1.finalDistance)
@@ -231,9 +242,10 @@ export function spaceshipRunnersByName(
 export function areRunnersEqual(
   runner1: RaceRunnerWithPassages & RaceRunnerWithProcessedData,
   runner2: RaceRunnerWithPassages & RaceRunnerWithProcessedData,
-  race: PublicRace,
+  isBasicRanking: boolean,
+  isRaceFinished: boolean,
 ): boolean {
-  return spaceshipRunners(runner1, runner2, race) === 0;
+  return spaceshipRunners(runner1, runner2, isBasicRanking, isRaceFinished) === 0;
 }
 
 /**
@@ -267,13 +279,15 @@ export function getDataForExcelExport(runner: RaceRunnerWithProcessedPassages): 
       "Temps total": formatMsAsDuration(passage.processed.lapEndRaceTime),
       "Temps total (s)": Math.round(passage.processed.lapEndRaceTime / 1000),
       "Distance totale (m)": passage.processed.totalDistance,
-      "Temps tour": formatMsAsDuration(passage.processed.lapDuration, false),
+      "Temps tour": formatMsAsDuration(passage.processed.lapDuration, { forceDisplayHours: false }),
       "Temps tour (s)": Math.round(passage.processed.lapDuration / 1000),
       "Distance tour (m)": passage.processed.lapDistance,
       "Vitesse tour (km/h)": passage.processed.lapSpeed,
-      "Allure tour (min/km)": formatMsAsDuration(passage.processed.lapPace, false),
+      "Allure tour (min/km)": formatMsAsDuration(passage.processed.lapPace, { forceDisplayHours: false }),
       "Vitesse moyenne depuis départ (km/h)": passage.processed.averageSpeedSinceRaceStart,
-      "Allure moyenne depuis départ (min/km)": formatMsAsDuration(passage.processed.averagePaceSinceRaceStart, false),
+      "Allure moyenne depuis départ (min/km)": formatMsAsDuration(passage.processed.averagePaceSinceRaceStart, {
+        forceDisplayHours: false,
+      }),
     });
   });
 

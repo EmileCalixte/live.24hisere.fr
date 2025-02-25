@@ -1,21 +1,44 @@
-import { BadRequestException, Controller, Get, NotFoundException, Param, Query } from "@nestjs/common";
-import { ApiResponse, GetRaceApiRequest, GetRacesApiRequest } from "@live24hisere/core/types";
+import { BadRequestException, Controller, Get, NotFoundException, Param } from "@nestjs/common";
+import {
+  ApiResponse,
+  GetEditionRacesApiRequest,
+  GetRaceApiRequest,
+  GetRacesApiRequest,
+} from "@live24hisere/core/types";
+import { EditionService } from "../services/database/entities/edition.service";
 import { RaceService } from "../services/database/entities/race.service";
-import { QueryParam } from "../types/utils/query";
 
 @Controller()
 export class RacesController {
-  constructor(private readonly raceService: RaceService) {}
+  constructor(
+    private readonly editionService: EditionService,
+    private readonly raceService: RaceService,
+  ) {}
 
   @Get("/races")
-  async getRaces(@Query("edition") edition: QueryParam): Promise<ApiResponse<GetRacesApiRequest>> {
-    const editionId = parseInt(edition ?? "");
+  async getRaces(): Promise<ApiResponse<GetRacesApiRequest>> {
+    const races = await this.raceService.getPublicRaces();
 
-    if (isNaN(editionId)) {
-      throw new BadRequestException("edition param must be provided in query string and must be numeric");
+    return {
+      races,
+    };
+  }
+
+  @Get("/editions/:editionId/races")
+  async getEditionRaces(@Param("editionId") editionId: string): Promise<ApiResponse<GetEditionRacesApiRequest>> {
+    const id = Number(editionId);
+
+    if (isNaN(id)) {
+      throw new BadRequestException("Edition ID must be a number");
     }
 
-    const races = await this.raceService.getPublicRaces(editionId);
+    const edition = await this.editionService.getPublicEditionById(id);
+
+    if (!edition) {
+      throw new NotFoundException("Edition not found");
+    }
+
+    const races = await this.raceService.getPublicEditionRaces(edition.id);
 
     return {
       races,

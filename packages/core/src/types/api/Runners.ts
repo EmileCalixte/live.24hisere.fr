@@ -1,11 +1,11 @@
-import type { AdminRunner, PublicRunner, RaceRunner, RaceRunnerWithPassages, RunnerWithRaceCount } from "../Runner";
+import type { AdminRunner, RaceRunner, RaceRunnerWithPassages, RunnerWithRaceCount } from "../Runner";
 import type { ApiRequest } from "./ApiRequest";
 
 export interface GetRunnersApiRequest extends ApiRequest {
   payload: never;
 
   response: {
-    runners: PublicRunner[];
+    runners: RunnerWithRaceCount[];
   };
 }
 

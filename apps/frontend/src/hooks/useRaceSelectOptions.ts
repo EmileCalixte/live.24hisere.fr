@@ -6,6 +6,6 @@ import { getRacesSelectOptions } from "../utils/raceUtils";
 export function useRaceSelectOptions<TRace extends PublicRace>(
   races: TRace[] | undefined,
   label?: (race: TRace) => string,
-): SelectOption[] {
+): Array<SelectOption<number>> {
   return React.useMemo(() => getRacesSelectOptions(races, label), [races, label]);
 }

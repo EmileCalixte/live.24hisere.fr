@@ -5,3 +5,16 @@
 .gap-y-2 {
   gap: 0.5rem 0;
 }
+
+.gap-y-3 {
+  gap: 1rem 0;
+}
+
+ul.no-ul-style {
+  padding: 0;
+  list-style: none;
+}
+
+.border-box {
+  box-sizing: border-box;
+}

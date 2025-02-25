@@ -5,7 +5,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
 import { Col, Row } from "react-bootstrap";
 import type { AdminProcessedPassage, AdminRaceWithRunnerCount } from "@live24hisere/core/types";
-import { formatDateAsString, formatMsAsDuration } from "../../../../utils/utils";
+import { formatMsAsDuration } from "../../../../utils/durationUtils";
+import { formatDateAsString } from "../../../../utils/utils";
 import RunnerDetailsCreatePassage from "../runners/RunnerDetailsCreatePassage";
 import RunnerDetailsEditPassage from "../runners/RunnerDetailsEditPassage";
 

@@ -58,26 +58,6 @@ export function formatFloatNumber(number: number, decimalsCount: number): string
   return number.toFixed(decimalsCount);
 }
 
-export function formatMsAsDuration(ms: number, forceDisplayHours = true): string {
-  if (ms < 0) {
-    return "−" + formatMsAsDuration((ms - 1000) * -1);
-  }
-
-  const seconds = Math.floor((ms / 1000) % 60);
-  const minutes = Math.floor((ms / (1000 * 60)) % 60);
-  const hours = Math.floor(ms / (1000 * 60 * 60));
-
-  const stringSeconds = seconds < 10 ? "0" + seconds.toString() : seconds.toString();
-  const stringMinutes = minutes < 10 ? "0" + minutes.toString() : minutes.toString();
-  const stringHours = hours < 10 ? "0" + hours.toString() : hours.toString();
-
-  if (!forceDisplayHours && hours === 0) {
-    return stringMinutes + ":" + stringSeconds;
-  }
-
-  return stringHours + ":" + stringMinutes + ":" + stringSeconds;
-}
-
 /**
  * Prefix a number with 0's so that the integer part of the number has at least minDigits digits
  * @return {string|NaN}
