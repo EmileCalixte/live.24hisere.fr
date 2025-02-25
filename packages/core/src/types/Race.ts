@@ -41,7 +41,7 @@ export interface PublicRace {
   isBasicRanking: boolean;
 }
 
-export type RaceWithEditionId<TRace extends PublicRace> = TRace & {
+export type RaceWithEditionId<TRace extends PublicRace = PublicRace> = TRace & {
   /**
    * The ID of the edition to which the race belongs to
    */

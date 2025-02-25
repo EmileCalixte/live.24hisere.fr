@@ -15,11 +15,14 @@ import { useProcessedRunnersWithProcessedHours } from "../../hooks/runners/usePr
 import { useRaceSelectOptions } from "../../hooks/useRaceSelectOptions";
 import { useRanking } from "../../hooks/useRanking";
 import { getCountryAlpha2CodeFromAlpha3Code } from "../../utils/countryUtils";
-import { getRaceRunnerFromRunnerAndParticipant } from "../../utils/runnerUtils";
+import { generateXlsxFromData } from "../../utils/excelUtils";
+import { getDataForExcelExport, getRaceRunnerFromRunnerAndParticipant } from "../../utils/runnerUtils";
 import CircularLoader from "../ui/CircularLoader";
 import { Flag } from "../ui/countries/Flag";
 import Select from "../ui/forms/Select";
 import Page from "../ui/Page";
+import SpeedChart from "../viewParts/runnerDetails/charts/SpeedChart";
+import RunnerDetailsLaps from "../viewParts/runnerDetails/RunnerDetailsLaps";
 import RunnerDetailsStats from "../viewParts/runnerDetails/RunnerDetailsStats";
 import RunnerSelector from "../viewParts/runnerDetails/RunnerSelector";
 
@@ -122,15 +125,16 @@ export default function RunnerDetailsView(): React.ReactElement {
     [navigate],
   );
 
-  // const exportRunnerToXlsx = React.useCallback(() => {
-  //   if (!selectedRaceRunner) {
-  //     return;
-  //   }
+  const exportRunnerToXlsx = React.useCallback(() => {
+    if (!selectedRace || !selectedRaceEdition || !selectedRankingRunner) {
+      return;
+    }
 
-  //   const filename = `${selectedRaceRunner.firstname} ${selectedRaceRunner.lastname}`.trim();
+    const filename =
+      `${selectedRankingRunner.firstname} ${selectedRankingRunner.lastname} - ${selectedRace.name} - ${selectedRaceEdition.name}`.trim();
 
-  //   generateXlsxFromData(getDataForExcelExport(selectedRaceRunner), filename);
-  // }, [selectedRaceRunner]);
+    generateXlsxFromData(getDataForExcelExport(selectedRankingRunner), filename);
+  }, [selectedRace, selectedRaceEdition, selectedRankingRunner]);
 
   // Redirect to runner-details without selected runner if selected runner ID is unknown
   React.useEffect(() => {
@@ -260,6 +264,30 @@ export default function RunnerDetailsView(): React.ReactElement {
           {selectedRankingRunner && selectedRace && ranking ? (
             <>
               <RunnerDetailsStats runner={selectedRankingRunner} race={selectedRace} ranking={ranking} />
+
+              {selectedRankingRunner.totalAverageSpeed !== null && !selectedRace.isBasicRanking && (
+                <Row className="mt-3">
+                  <Col>
+                    <SpeedChart
+                      runner={selectedRankingRunner}
+                      race={selectedRace}
+                      averageSpeed={selectedRankingRunner.totalAverageSpeed}
+                    />
+                  </Col>
+                </Row>
+              )}
+
+              {!selectedRace.isBasicRanking && (
+                <Row className="mt-3">
+                  <Col>
+                    <RunnerDetailsLaps
+                      runner={selectedRankingRunner}
+                      race={selectedRace}
+                      exportRunnerToXlsx={exportRunnerToXlsx}
+                    />
+                  </Col>
+                </Row>
+              )}
             </>
           ) : (
             <p>
@@ -270,39 +298,6 @@ export default function RunnerDetailsView(): React.ReactElement {
       )}
 
       {/* {selectedRunner && race ? (
-            <>
-              <Row className="mt-3">
-                <Col className="mb-3">
-                  <button className="a" onClick={exportRunnerToXlsx}>
-                    <FontAwesomeIcon icon={faFileExcel} /> Générer un fichier Excel
-                  </button>
-                </Col>
-              </Row>
-
-              <Row>
-                <Col>
-                  <div className="runner-details-data-container">
-                    <ul className="tabs-container">
-                      <li className={selectedTab === Tab.Stats ? "active" : ""}>
-                        <button
-                          onClick={() => {
-                            void setSelectedTab(Tab.Stats);
-                          }}
-                        >
-                          Statistiques
-                        </button>
-                      </li>
-                      <li className={selectedTab === Tab.Laps ? "active" : ""}>
-                        <button
-                          onClick={() => {
-                            void setSelectedTab(Tab.Laps);
-                          }}
-                        >
-                          Détails des tours
-                        </button>
-                      </li>
-                    </ul>
-
                     <div className="card">
                       {selectedRunner.stopped && (
                         <div>
@@ -326,31 +321,6 @@ export default function RunnerDetailsView(): React.ReactElement {
                         </div>
                       )}
 
-                      {(() => {
-                        switch (selectedTab) {
-                          case Tab.Stats:
-                            return (
-                              <>
-                                <RunnerDetailsRaceDetails race={race} />
-                                {ranking ? (
-                                  <RunnerDetailsStats runner={selectedRunner} race={race} ranking={ranking} />
-                                ) : (
-                                  <CircularLoader />
-                                )}
-                              </>
-                            );
-                          case Tab.Laps:
-                            return <RunnerDetailsLaps runner={selectedRunner} race={race} />;
-                          default:
-                            return null;
-                        }
-                      })()}
-                    </div>
-                  </div>
-                </Col>
-              </Row>
-            </>
-          ) : ( */}
       {/* )} */}
     </Page>
   );

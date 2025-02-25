@@ -365,8 +365,12 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
   ]);
 
   return (
-    <div className="runner-details-chart-container speed-chart-container">
+    <div className="card">
       <Row>
+        <Col xs={12}>
+          <h3 className="mt-0">Vitesse</h3>
+        </Col>
+
         <Col xxl={2} xl={3} lg={12}>
           <fieldset className="mb-3">
             <legend className="mb-2">Éléments à afficher</legend>

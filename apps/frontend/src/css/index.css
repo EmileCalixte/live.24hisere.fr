@@ -499,12 +499,6 @@ a:hover > .card {
   background-color: #f8f8f8;
 }
 
-.runner-details-chart-container {
-  border: 1px solid #ddd;
-  padding: 0.75em;
-  box-shadow: 0 0 3px #ddd;
-}
-
 .responsive-runner-laps-table .responsive-runner-laps-table-row-secondary-data {
   font-size: 0.9em;
 }

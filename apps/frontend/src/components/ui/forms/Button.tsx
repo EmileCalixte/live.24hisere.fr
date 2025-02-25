@@ -3,12 +3,20 @@ import clsx from "clsx";
 import CircularLoader from "../CircularLoader";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: "button" | "a";
   isLoading?: boolean;
   icon?: React.ReactNode;
   click?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
-export function Button({ className, isLoading, icon, children, ...props }: ButtonProps): React.ReactElement {
+export function Button({
+  variant = "button",
+  className,
+  isLoading,
+  icon,
+  children,
+  ...props
+}: ButtonProps): React.ReactElement {
   const handleClick: React.MouseEventHandler<HTMLButtonElement> = (e) => {
     if (isLoading) {
       e.preventDefault();
@@ -20,7 +28,7 @@ export function Button({ className, isLoading, icon, children, ...props }: Butto
 
   return (
     <button
-      className={clsx("button d-flex align-items-center justify-content-center", className, isLoading && "loading")}
+      className={clsx(variant, "d-flex align-items-center justify-content-center", className, isLoading && "loading")}
       style={{ position: "relative" }}
       {...props}
       onClick={handleClick}

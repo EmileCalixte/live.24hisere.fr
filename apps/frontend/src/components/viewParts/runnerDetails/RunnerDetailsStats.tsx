@@ -1,18 +1,18 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
-import type { ProcessedPassage, PublicRace, RunnerWithProcessedHours } from "@live24hisere/core/types";
+import { Link } from "react-router-dom";
+import type { ProcessedPassage, RaceWithEditionId, RunnerWithProcessedHours } from "@live24hisere/core/types";
 import { NO_VALUE_PLACEHOLDER } from "../../../constants/misc";
 import type { Ranking, RankingRunner } from "../../../types/Ranking";
 import { formatDurationHms } from "../../../utils/durationUtils";
 import { getFastestLapPassage, getSlowestLapPassage } from "../../../utils/passageUtils";
 import InfoIconTooltip from "../../ui/InfoIconTooltip";
-import SpeedChart from "./charts/SpeedChart";
 import { RunnerDetailsStatsLapCard } from "./RunnerDetailsStatsLapCard";
 import RunnerDetailsStatsRankingTable from "./RunnerDetailsStatsRankingTable";
 
 interface RunnerDetailsStatsProps {
   runner: RankingRunner & RunnerWithProcessedHours;
-  race: PublicRace;
+  race: RaceWithEditionId;
   ranking: Ranking;
 }
 
@@ -46,6 +46,12 @@ export default function RunnerDetailsStats({ runner, race, ranking }: RunnerDeta
       <Row className="gap-y-3">
         <Col xl={6} lg={8} md={12}>
           <RunnerDetailsStatsRankingTable race={race} runner={runner} ranking={ranking} />
+
+          <p className="mt-1 mb-0">
+            <Link to={`/ranking?edition=${race.editionId}&race=${race.id}`}>
+              Cliquez ici pour voir le classement complet
+            </Link>
+          </p>
         </Col>
 
         {!isBasicRanking && (
@@ -102,16 +108,6 @@ export default function RunnerDetailsStats({ runner, race, ranking }: RunnerDeta
           </>
         )}
       </Row>
-
-      {runner.totalAverageSpeed !== null && (
-        <Row>
-          <Col>
-            <h2>Vitesse</h2>
-
-            <SpeedChart runner={runner} race={race} averageSpeed={runner.totalAverageSpeed} />
-          </Col>
-        </Row>
-      )}
     </>
   );
 }
