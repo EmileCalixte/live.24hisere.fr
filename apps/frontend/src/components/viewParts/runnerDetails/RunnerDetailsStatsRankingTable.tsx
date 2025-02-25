@@ -56,6 +56,9 @@ export default function RunnerDetailsStatsRankingTable({
     <table className="table">
       <thead>
         <tr>
+          <th colSpan={42}>Classements</th>
+        </tr>
+        <tr>
           <th rowSpan={2}>Cat.</th>
           <th rowSpan={2}>N°</th>
           {showGaps && <th colSpan={2}>Écarts</th>}
