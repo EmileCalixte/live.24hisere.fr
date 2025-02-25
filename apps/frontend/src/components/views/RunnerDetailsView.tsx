@@ -1,5 +1,5 @@
 import React from "react";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faCircleInfo, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQueryState } from "nuqs";
 import { Col, Row } from "react-bootstrap";
@@ -16,34 +16,27 @@ import { useRaceSelectOptions } from "../../hooks/useRaceSelectOptions";
 import { useRanking } from "../../hooks/useRanking";
 import { getCountryAlpha2CodeFromAlpha3Code } from "../../utils/countryUtils";
 import { generateXlsxFromData } from "../../utils/excelUtils";
+import { isRaceFinished } from "../../utils/raceUtils";
 import { getDataForExcelExport, getRaceRunnerFromRunnerAndParticipant } from "../../utils/runnerUtils";
+import { appContext } from "../App";
 import CircularLoader from "../ui/CircularLoader";
 import { Flag } from "../ui/countries/Flag";
 import Select from "../ui/forms/Select";
 import Page from "../ui/Page";
+import RunnerStoppedTooltip from "../ui/tooltips/RunnerStoppedTooltip";
 import SpeedChart from "../viewParts/runnerDetails/charts/SpeedChart";
 import RunnerDetailsLaps from "../viewParts/runnerDetails/RunnerDetailsLaps";
 import RunnerDetailsStats from "../viewParts/runnerDetails/RunnerDetailsStats";
 import RunnerSelector from "../viewParts/runnerDetails/RunnerSelector";
 
-// const enum Tab {
-//   Stats = "stats",
-//   Laps = "laps",
-// }
-
 export default function RunnerDetailsView(): React.ReactElement {
-  // const { serverTimeOffset } = React.useContext(appContext).appData;
+  const { serverTimeOffset } = React.useContext(appContext).appData;
 
   const { runnerId } = useParams(); // This param is optional, undefined if no runner selected
 
   const [selectedRaceId, setSelectedRaceId] = useQueryState(SearchParam.RACE);
 
   const navigate = useNavigate();
-
-  // const [selectedTab, setSelectedTab] = useQueryState(
-  //   SearchParam.TAB,
-  //   parseAsEnum([Tab.Stats, Tab.Laps]).withDefault(Tab.Stats),
-  // );
 
   const getEditionsQuery = useGetPublicEditions();
   const editions = getEditionsQuery.data?.editions;
@@ -240,7 +233,7 @@ export default function RunnerDetailsView(): React.ReactElement {
             </Col>
           </Row>
 
-          <Row className="mt-1 mb-4">
+          <Row className="mt-1">
             {runnerHasMultipleParticipations ? (
               <Col xxl={3} xl={4} lg={6} md={8} sm={12}>
                 <Select
@@ -260,6 +253,35 @@ export default function RunnerDetailsView(): React.ReactElement {
               </Col>
             )}
           </Row>
+
+          {selectedParticipation && (
+            <Row>
+              <Col>
+                <p className="mt-1">
+                  <strong>Dossard n° {selectedParticipation.bibNumber}</strong>
+                </p>
+              </Col>
+            </Row>
+          )}
+
+          {selectedRace && !isRaceFinished(selectedRace, serverTimeOffset) && selectedRankingRunner?.stopped && (
+            <Row>
+              <Col>
+                <p
+                  className="mt-0"
+                  style={{
+                    fontWeight: "bold",
+                    color: "#db1616",
+                  }}
+                >
+                  Coureur arrêté
+                  <RunnerStoppedTooltip className="ms-2">
+                    <FontAwesomeIcon icon={faCircleInfo} />
+                  </RunnerStoppedTooltip>
+                </p>
+              </Col>
+            </Row>
+          )}
 
           {selectedRankingRunner && selectedRace && ranking ? (
             <>

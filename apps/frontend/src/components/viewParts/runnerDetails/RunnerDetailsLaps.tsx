@@ -153,8 +153,8 @@ export default function RunnerDetailsLaps({
     && !isRaceFinished(race, serverTimeOffset)
     && sortColumn === SortColumn.RACE_TIME;
 
-  const showCurrentLapAtTopOfTable = showCurrentLap && sortDirection === SortDirection.ASC;
-  const showCurrentLapAtBottomOfTable = showCurrentLap && sortDirection === SortDirection.DESC;
+  const showCurrentLapAtTopOfTable = showCurrentLap && sortDirection === SortDirection.DESC;
+  const showCurrentLapAtBottomOfTable = showCurrentLap && sortDirection === SortDirection.ASC;
 
   return (
     <div className="card">
