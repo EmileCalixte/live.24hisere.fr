@@ -4,9 +4,10 @@ import { Link } from "react-router-dom";
 import type { GenderWithMixed, PublicRace } from "@live24hisere/core/types";
 import type { RankingRunner } from "../../../../../types/Ranking";
 import { getCountryAlpha2CodeFromAlpha3Code } from "../../../../../utils/countryUtils";
+import { formatMsAsDuration } from "../../../../../utils/durationUtils";
 import { getRankingType } from "../../../../../utils/rankingUtils";
 import { formatGap } from "../../../../../utils/runnerUtils";
-import { formatFloatNumber, formatMsAsDuration } from "../../../../../utils/utils";
+import { formatFloatNumber } from "../../../../../utils/utils";
 import RunnerStoppedBadge from "../../../../ui/badges/RunnerStoppedBadge";
 import { Flag } from "../../../../ui/countries/Flag";
 

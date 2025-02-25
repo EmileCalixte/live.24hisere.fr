@@ -8,9 +8,9 @@ import { useSortQueryString } from "../../../hooks/queryString/useSortQueryStrin
 import { useRaceTime } from "../../../hooks/useRaceTime";
 import { useWindowDimensions } from "../../../hooks/useWindowDimensions";
 import type { MinimalRankingRunnerInput, RankingRunner } from "../../../types/Ranking";
+import { formatMsAsDuration } from "../../../utils/durationUtils";
 import { isRaceFinished, isRaceStarted } from "../../../utils/raceUtils";
 import { getOppositeSortDirection } from "../../../utils/sortUtils";
-import { formatMsAsDuration } from "../../../utils/utils";
 import { appContext } from "../../App";
 
 const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
@@ -216,12 +216,12 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
                     <td>{formatMsAsDuration(passage.processed.lapDuration)}</td>
                     <td>{passage.processed.lapSpeed.toFixed(2)} km/h</td>
                     <td>
-                      {formatMsAsDuration(passage.processed.lapPace, false)}
+                      {formatMsAsDuration(passage.processed.lapPace, { forceDisplayHours: false })}
                       /km
                     </td>
                     <td>{passage.processed.averageSpeedSinceRaceStart.toFixed(2)} km/h</td>
                     <td>
-                      {formatMsAsDuration(passage.processed.averagePaceSinceRaceStart, false)}
+                      {formatMsAsDuration(passage.processed.averagePaceSinceRaceStart, { forceDisplayHours: false })}
                       /km
                     </td>
                   </tr>
@@ -266,14 +266,14 @@ export default function RunnerDetailsLaps({ runner, race }: RunnerDetailsLapsPro
                         <> </>|<> </>
                         <strong>{passage.processed.lapSpeed.toFixed(2)} km/h</strong>
                         <> </>|<> </>
-                        {formatMsAsDuration(passage.processed.lapPace, false)}
+                        {formatMsAsDuration(passage.processed.lapPace, { forceDisplayHours: false })}
                         /km
                       </div>
 
                       <div className="responsive-runner-laps-table-row-secondary-data">
                         Depuis départ&nbsp;:&nbsp; {passage.processed.averageSpeedSinceRaceStart.toFixed(2)} km/h
                         <> </>|<> </>
-                        {formatMsAsDuration(passage.processed.averagePaceSinceRaceStart, false)}
+                        {formatMsAsDuration(passage.processed.averagePaceSinceRaceStart, { forceDisplayHours: false })}
                         /km
                       </div>
                     </td>

@@ -7,7 +7,7 @@ import type { PublicRace, RaceRunnerWithProcessedPassages, RunnerWithProcessedHo
 import { SearchParam } from "../../../../constants/searchParams";
 import { useWindowDimensions } from "../../../../hooks/useWindowDimensions";
 import CanvasjsReact from "../../../../lib/canvasjs/canvasjs.react";
-import { formatMsAsDuration } from "../../../../utils/utils";
+import { formatMsAsDuration } from "../../../../utils/durationUtils";
 import { Checkbox } from "../../../ui/forms/Checkbox";
 
 const CanvasJSChart = CanvasjsReact.CanvasJSChart;
@@ -108,7 +108,7 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
             </div>
 
             <div>
-              Durée : <strong>{formatMsAsDuration(passage.processed.lapDuration, false)}</strong>
+              Durée : <strong>{formatMsAsDuration(passage.processed.lapDuration, { forceDisplayHours: false })}</strong>
             </div>
 
             <div>
@@ -118,7 +118,7 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
             <div>
               Allure :{" "}
               <strong>
-                {formatMsAsDuration(passage.processed.lapPace, false)}
+                {formatMsAsDuration(passage.processed.lapPace, { forceDisplayHours: false })}
                 /km
               </strong>
             </div>
@@ -135,7 +135,7 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
             <div>
               Allure moyenne :{" "}
               <strong>
-                {formatMsAsDuration(passage.processed.averagePaceSinceRaceStart, false)}
+                {formatMsAsDuration(passage.processed.averagePaceSinceRaceStart, { forceDisplayHours: false })}
                 /km
               </strong>
             </div>
@@ -159,7 +159,11 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
             </div>
             <div>
               Allure :{" "}
-              <strong>{hour.averagePace !== null ? formatMsAsDuration(hour.averagePace, false) + "/km" : "–"}</strong>
+              <strong>
+                {hour.averagePace !== null
+                  ? formatMsAsDuration(hour.averagePace, { forceDisplayHours: false }) + "/km"
+                  : "–"}
+              </strong>
             </div>
           </div>,
         );

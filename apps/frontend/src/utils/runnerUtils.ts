@@ -15,9 +15,9 @@ import { spaceship } from "../../../../packages/utils/src/compare-utils";
 import { excludeKeys } from "../../../../packages/utils/src/object-utils";
 import type { SelectOption } from "../types/Forms";
 import type { RankingRunnerGap } from "../types/Ranking";
+import { formatDurationHms, formatMsAsDuration } from "./durationUtils";
 import { getPaceFromSpeed, getSpeed } from "./mathUtils";
 import { getSortedPassages } from "./passageUtils";
-import { formatMsAsDuration } from "./utils";
 
 export function getRaceRunnerFromRunnerAndParticipant<TRunner extends PublicRunner>(
   runner: TRunner,
@@ -158,7 +158,7 @@ export function formatGap(gap: RankingRunnerGap | null, exhaustive = false): str
     return "=";
   }
 
-  const timeGap = `+${formatMsAsDuration(gap.time, false)}`;
+  const timeGap = `+${formatDurationHms(gap.time)}`;
 
   if (gap.laps === 0) {
     return timeGap;
@@ -279,13 +279,15 @@ export function getDataForExcelExport(runner: RaceRunnerWithProcessedPassages): 
       "Temps total": formatMsAsDuration(passage.processed.lapEndRaceTime),
       "Temps total (s)": Math.round(passage.processed.lapEndRaceTime / 1000),
       "Distance totale (m)": passage.processed.totalDistance,
-      "Temps tour": formatMsAsDuration(passage.processed.lapDuration, false),
+      "Temps tour": formatMsAsDuration(passage.processed.lapDuration, { forceDisplayHours: false }),
       "Temps tour (s)": Math.round(passage.processed.lapDuration / 1000),
       "Distance tour (m)": passage.processed.lapDistance,
       "Vitesse tour (km/h)": passage.processed.lapSpeed,
-      "Allure tour (min/km)": formatMsAsDuration(passage.processed.lapPace, false),
+      "Allure tour (min/km)": formatMsAsDuration(passage.processed.lapPace, { forceDisplayHours: false }),
       "Vitesse moyenne depuis départ (km/h)": passage.processed.averageSpeedSinceRaceStart,
-      "Allure moyenne depuis départ (min/km)": formatMsAsDuration(passage.processed.averagePaceSinceRaceStart, false),
+      "Allure moyenne depuis départ (min/km)": formatMsAsDuration(passage.processed.averagePaceSinceRaceStart, {
+        forceDisplayHours: false,
+      }),
     });
   });
 
