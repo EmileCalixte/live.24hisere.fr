@@ -7,7 +7,7 @@ import { useSortQueryString } from "../../../hooks/queryString/useSortQueryStrin
 import { useRaceTime } from "../../../hooks/useRaceTime";
 import { useWindowDimensions } from "../../../hooks/useWindowDimensions";
 import type { MinimalRankingRunnerInput, RankingRunner } from "../../../types/Ranking";
-import { formatMsAsDuration } from "../../../utils/durationUtils";
+import { formatDurationHms, formatMsAsDuration } from "../../../utils/durationUtils";
 import { isRaceFinished, isRaceStarted } from "../../../utils/raceUtils";
 import { getOppositeSortDirection } from "../../../utils/sortUtils";
 import { appContext } from "../../App";
@@ -91,7 +91,7 @@ export default function RunnerDetailsLaps({
       <tr>
         <td colSpan={2}>Tour en cours</td>
         <td>{formatMsAsDuration(raceTime)}</td>
-        <td>{formatMsAsDuration(currentLapTime)}</td>
+        <td>{formatDurationHms(currentLapTime)}</td>
         <td colSpan={42} />
       </tr>
     );
@@ -113,7 +113,7 @@ export default function RunnerDetailsLaps({
 
           <div className="responsive-runner-laps-table-row-secondary-data">
             Durée&nbsp;:&nbsp;
-            <strong>{formatMsAsDuration(currentLapTime)}</strong>
+            <strong>{formatDurationHms(currentLapTime)}</strong>
           </div>
         </td>
       </tr>
@@ -219,16 +219,16 @@ export default function RunnerDetailsLaps({
                   <td>{passage.processed.lapNumber ?? "–"}</td>
                   <td>{(passage.processed.totalDistance / 1000).toFixed(2)} km</td>
                   <td>{formatMsAsDuration(passage.processed.lapEndRaceTime)}</td>
-                  <td>{formatMsAsDuration(passage.processed.lapDuration)}</td>
+                  <td>{formatDurationHms(passage.processed.lapDuration)}</td>
                   <td>{passage.processed.lapSpeed.toFixed(2)} km/h</td>
                   <td>
-                    {formatMsAsDuration(passage.processed.lapPace, { forceDisplayHours: false })}
-                    /km
+                    {formatDurationHms(passage.processed.lapPace)}
+                    <> </>/ km
                   </td>
                   <td>{passage.processed.averageSpeedSinceRaceStart.toFixed(2)} km/h</td>
                   <td>
-                    {formatMsAsDuration(passage.processed.averagePaceSinceRaceStart, { forceDisplayHours: false })}
-                    /km
+                    {formatDurationHms(passage.processed.averagePaceSinceRaceStart)}
+                    <> </>/ km
                   </td>
                 </tr>
               ))}
@@ -268,19 +268,19 @@ export default function RunnerDetailsLaps({
 
                     <div className="responsive-runner-laps-table-row-secondary-data">
                       Durée&nbsp;:&nbsp;
-                      <strong>{formatMsAsDuration(passage.processed.lapDuration)}</strong>
+                      <strong>{formatDurationHms(passage.processed.lapDuration)}</strong>
                       <> </>|<> </>
                       <strong>{passage.processed.lapSpeed.toFixed(2)} km/h</strong>
                       <> </>|<> </>
-                      {formatMsAsDuration(passage.processed.lapPace, { forceDisplayHours: false })}
-                      /km
+                      {formatDurationHms(passage.processed.lapPace)}
+                      <> </>/ km
                     </div>
 
                     <div className="responsive-runner-laps-table-row-secondary-data">
                       Depuis départ&nbsp;:&nbsp; {passage.processed.averageSpeedSinceRaceStart.toFixed(2)} km/h
                       <> </>|<> </>
-                      {formatMsAsDuration(passage.processed.averagePaceSinceRaceStart, { forceDisplayHours: false })}
-                      /km
+                      {formatDurationHms(passage.processed.averagePaceSinceRaceStart)}
+                      <> </>/ km
                     </div>
                   </td>
                 </tr>
