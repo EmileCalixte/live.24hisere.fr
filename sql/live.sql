@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : database
--- Généré le : mar. 18 fév. 2025 à 20:24
+-- Généré le : mer. 26 fév. 2025 à 19:05
 -- Version du serveur : 10.6.14-MariaDB-1:10.6.14+maria~ubu2004
 -- Version de PHP : 8.2.27
 
@@ -22651,6 +22651,7 @@ CREATE TABLE `race` (
   `lap_distance` decimal(10,3) NOT NULL,
   `order` int(11) NOT NULL,
   `is_public` tinyint(1) NOT NULL,
+  `is_immediate_stop` tinyint(1) NOT NULL,
   `is_basic_ranking` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -22658,23 +22659,23 @@ CREATE TABLE `race` (
 -- Déchargement des données de la table `race`
 --
 
-INSERT INTO `race` (`id`, `edition_id`, `name`, `start_time`, `duration`, `initial_distance`, `lap_distance`, `order`, `is_public`, `is_basic_ranking`) VALUES
-(1, 1, '24 heures - Solo', '2017-04-08 08:00:00', 86400, 0.000, 0.000, 1, 0, 1),
-(2, 1, '24 heures - Équipes', '2017-04-08 08:00:00', 86400, 0.000, 0.000, 2, 1, 1),
-(3, 2, '24 heures - Solo', '2018-04-07 08:00:00', 86400, 0.000, 0.000, 3, 1, 1),
-(4, 2, '24 heures - Équipes', '2018-04-07 08:00:00', 86400, 0.000, 0.000, 4, 1, 1),
-(5, 3, '24 heures - Solo', '2019-04-06 08:00:00', 86400, 0.000, 0.000, 5, 1, 1),
-(6, 3, '24 heures - Équipes', '2019-04-06 08:00:00', 86400, 0.000, 0.000, 6, 1, 1),
-(7, 4, '24 heures - Solo', '2022-04-02 07:00:00', 86400, 297.000, 1016.000, 7, 1, 0),
-(8, 4, '24 heures - Équipes', '2022-04-02 07:00:00', 86400, 297.000, 1016.000, 8, 1, 0),
-(9, 5, '24 heures', '2023-04-01 07:00:00', 86400, 560.000, 1058.000, 9, 1, 1),
-(10, 5, '12 heures', '2023-04-01 19:00:00', 43200, 0.000, 1058.000, 10, 1, 1),
-(11, 5, '6 heures', '2023-04-01 08:00:00', 21600, 0.000, 1058.000, 11, 1, 0),
-(12, 5, '3 heures', '2023-04-01 11:00:00', 10800, 0.000, 1058.000, 12, 1, 0),
-(13, 6, '24 heures', '2024-04-06 07:00:00', 86400, 523.000, 1000.000, 13, 1, 0),
-(14, 6, '12 heures', '2024-04-06 19:00:00', 43200, 0.000, 1000.000, 14, 1, 0),
-(15, 6, '6 heures', '2024-04-06 08:00:00', 21600, 0.000, 1000.000, 15, 1, 0),
-(16, 6, '3 heures', '2024-04-06 11:00:00', 10800, 0.000, 1000.000, 16, 1, 0);
+INSERT INTO `race` (`id`, `edition_id`, `name`, `start_time`, `duration`, `initial_distance`, `lap_distance`, `order`, `is_public`, `is_immediate_stop`, `is_basic_ranking`) VALUES
+(1, 1, '24 heures - Solo', '2017-04-08 08:00:00', 86400, 0.000, 0.000, 1, 0, 1, 1),
+(2, 1, '24 heures - Équipes', '2017-04-08 08:00:00', 86400, 0.000, 0.000, 2, 1, 1, 1),
+(3, 2, '24 heures - Solo', '2018-04-07 08:00:00', 86400, 0.000, 0.000, 3, 1, 1, 1),
+(4, 2, '24 heures - Équipes', '2018-04-07 08:00:00', 86400, 0.000, 0.000, 4, 1, 1, 1),
+(5, 3, '24 heures - Solo', '2019-04-06 08:00:00', 86400, 0.000, 0.000, 5, 1, 1, 1),
+(6, 3, '24 heures - Équipes', '2019-04-06 08:00:00', 86400, 0.000, 0.000, 6, 1, 1, 1),
+(7, 4, '24 heures - Solo', '2022-04-02 07:00:00', 86400, 297.000, 1016.000, 7, 1, 1, 0),
+(8, 4, '24 heures - Équipes', '2022-04-02 07:00:00', 86400, 297.000, 1016.000, 8, 1, 1, 0),
+(9, 5, '24 heures', '2023-04-01 07:00:00', 86400, 560.000, 1058.000, 9, 1, 1, 1),
+(10, 5, '12 heures', '2023-04-01 19:00:00', 43200, 0.000, 1058.000, 10, 1, 1, 1),
+(11, 5, '6 heures', '2023-04-01 08:00:00', 21600, 0.000, 1058.000, 11, 1, 0, 0),
+(12, 5, '3 heures', '2023-04-01 11:00:00', 10800, 0.000, 1058.000, 12, 1, 0, 0),
+(13, 6, '24 heures', '2024-04-06 07:00:00', 86400, 523.000, 1000.000, 13, 1, 1, 0),
+(14, 6, '12 heures', '2024-04-06 19:00:00', 43200, 0.000, 1000.000, 14, 1, 1, 0),
+(15, 6, '6 heures', '2024-04-06 08:00:00', 21600, 0.000, 1000.000, 15, 1, 0, 0),
+(16, 6, '3 heures', '2024-04-06 11:00:00', 10800, 0.000, 1000.000, 16, 1, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -23098,7 +23099,8 @@ INSERT INTO `__drizzle_migrations` (`id`, `hash`, `created_at`) VALUES
 (7, 'f81d50e9913e33cf8917404f8f2afd2611ebf66d23dfef93600d22cc5d2d54bb', 1738870255303),
 (8, 'a65a238793472a476ad1d43c97d964468ef3ce75528fbf5278f7c609b46255d6', 1738964078446),
 (9, '051f59d95ea0d6695ec26f0c8a8b2418ec20589ba7c76a1db3fa52834a0670a5', 1739001336177),
-(10, '4282d7ed97864c0dfd79fad82746a72244093f9e3bb4a205eababe9b5616c360', 1739773074175);
+(10, '4282d7ed97864c0dfd79fad82746a72244093f9e3bb4a205eababe9b5616c360', 1739773074175),
+(11, '50023a80e7d56902f4c96e824f8174e8829265ce8b2ccad62c1b64c2b21ae2b0', 1740596211735);
 
 --
 -- Index pour les tables déchargées
@@ -23217,7 +23219,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT pour la table `__drizzle_migrations`
 --
 ALTER TABLE `__drizzle_migrations`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- Contraintes pour les tables déchargées

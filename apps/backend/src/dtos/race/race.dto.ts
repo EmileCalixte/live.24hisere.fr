@@ -48,5 +48,9 @@ export class RaceDto implements PostRacePayload {
 
   @IsBoolean()
   @IsNotEmpty()
+  isImmediateStop: boolean;
+
+  @IsBoolean()
+  @IsNotEmpty()
   isBasicRanking: boolean;
 }

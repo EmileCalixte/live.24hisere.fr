@@ -1,11 +1,11 @@
-import type { AdminRace, AdminRaceWithRunnerCount, RaceWithEditionId, RaceWithRunnerCount } from "../Race";
+import type { AdminRace, AdminRaceWithRunnerCount, RaceWithRunnerCount } from "../Race";
 import type { ApiRequest } from "./ApiRequest";
 
 export interface GetRacesApiRequest extends ApiRequest {
   payload: never;
 
   response: {
-    races: Array<RaceWithEditionId<RaceWithRunnerCount>>;
+    races: RaceWithRunnerCount[];
   };
 }
 

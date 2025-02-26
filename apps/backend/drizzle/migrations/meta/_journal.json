@@ -71,6 +71,13 @@
       "when": 1739773074175,
       "tag": "0009_remove-passage-detectionid-unique",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1740596211735,
+      "tag": "0010_race-isimmediatestop",
+      "breakpoints": true
     }
   ]
 }
