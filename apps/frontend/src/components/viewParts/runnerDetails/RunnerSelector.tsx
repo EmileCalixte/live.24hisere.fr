@@ -29,16 +29,14 @@ export default function RunnerSelector({
   );
 
   return (
-    <div className="runner-details-runner-selector-container">
-      <Select
-        label="Coureur"
-        options={selectOptions}
-        isLoading={!sortedRunners}
-        loadingOptionLabel="Chargement des coureurs"
-        placeholderLabel="Cliquez ici pour sélectionner un coureur"
-        value={selectedRunnerId}
-        onChange={onSelectRunner}
-      />
-    </div>
+    <Select
+      label="Coureur"
+      options={selectOptions}
+      isLoading={!sortedRunners}
+      loadingOptionLabel="Chargement des coureurs"
+      placeholderLabel="Cliquez ici pour sélectionner un coureur"
+      value={selectedRunnerId}
+      onChange={onSelectRunner}
+    />
   );
 }

@@ -184,23 +184,20 @@ export default function RunnerDetailsView(): React.ReactElement {
       </Row>
 
       <Row className="hide-on-print">
-        <Col>
-          <p className="mt-0">
-            <Link to="/runner-details/search" className="button">
-              <FontAwesomeIcon icon={faSearch} className="me-1" /> Rechercher un coureur
-            </Link>
-          </p>
-        </Col>
-      </Row>
-
-      <Row className="hide-on-print">
-        <Col>
+        <Col xxl={3} xl={4} lg={6} md={8} sm={10} xs={12}>
           <RunnerSelector runners={runners} onSelectRunner={onSelectRunner} selectedRunnerId={runnerId} />
+
+          <div className="d-flex justify-content-end mt-2">
+            <Link to="/runner-details/search" className="d-flex align-items-center gap-2">
+              <FontAwesomeIcon icon={faSearch} />
+              <span>Rechercher un coureur</span>
+            </Link>
+          </div>
         </Col>
       </Row>
 
       {runnerId === undefined && (
-        <Row>
+        <Row className="mt-4">
           <Col>
             <p>Sélectionnez un coureur ci-dessus pour consulter ses détails.</p>
           </Col>
@@ -318,32 +315,6 @@ export default function RunnerDetailsView(): React.ReactElement {
           )}
         </div>
       )}
-
-      {/* {selectedRunner && race ? (
-                    <div className="card">
-                      {selectedRunner.stopped && (
-                        <div>
-                          <p
-                            className="mt-3 mb-0"
-                            style={{
-                              fontWeight: "bold",
-                              color: "#db1616",
-                            }}
-                          >
-                            Coureur arrêté
-                            <RunnerStoppedTooltip className="ms-2">
-                              <FontAwesomeIcon
-                                icon={faCircleInfo}
-                                style={{
-                                  fontSize: "0.85em",
-                                }}
-                              />
-                            </RunnerStoppedTooltip>
-                          </p>
-                        </div>
-                      )}
-
-      {/* )} */}
     </Page>
   );
 }

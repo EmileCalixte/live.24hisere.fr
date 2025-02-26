@@ -475,10 +475,6 @@ table.table th .buttons-container {
   -webkit-print-color-adjust: exact;
 }
 
-.runner-details-runner-selector-container {
-  max-width: 500px;
-}
-
 .card {
   background-color: #fff;
   border: 1px solid #ddd;
