@@ -1,11 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { and, asc, count, eq, getTableColumns, max } from "drizzle-orm";
-import {
-  AdminRaceWithOrder,
-  AdminRaceWithRunnerCount,
-  RaceWithEditionId,
-  RaceWithRunnerCount,
-} from "@live24hisere/core/types";
+import { AdminRaceWithOrder, AdminRaceWithRunnerCount, RaceWithRunnerCount } from "@live24hisere/core/types";
 import { objectUtils } from "@live24hisere/utils";
 import { TABLE_EDITION, TABLE_PARTICIPANT, TABLE_RACE, TABLE_RUNNER } from "../../../../drizzle/schema";
 import { DrizzleTableColumns } from "../../../types/utils/drizzle";
@@ -67,7 +62,7 @@ export class RaceService extends EntityService {
     return this.getUniqueResult(races);
   }
 
-  async getPublicRaces(): Promise<Array<RaceWithEditionId<RaceWithRunnerCount>>> {
+  async getPublicRaces(): Promise<RaceWithRunnerCount[]> {
     return await this.db
       .select({
         ...this.getPublicRaceColumns(),

@@ -1,7 +1,7 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import type { ProcessedPassage, RaceWithEditionId, RunnerWithProcessedHours } from "@live24hisere/core/types";
+import type { ProcessedPassage, PublicRace, RunnerWithProcessedHours } from "@live24hisere/core/types";
 import { NO_VALUE_PLACEHOLDER } from "../../../constants/misc";
 import type { Ranking, RankingRunner } from "../../../types/Ranking";
 import { formatDurationHms } from "../../../utils/durationUtils";
@@ -12,7 +12,7 @@ import RunnerDetailsStatsRankingTable from "./RunnerDetailsStatsRankingTable";
 
 interface RunnerDetailsStatsProps {
   runner: RankingRunner & RunnerWithProcessedHours;
-  race: RaceWithEditionId;
+  race: PublicRace;
   ranking: Ranking;
 }
 

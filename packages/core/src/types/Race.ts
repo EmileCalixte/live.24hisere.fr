@@ -11,6 +11,11 @@ export interface PublicRace {
   id: number;
 
   /**
+   * The ID of the edition to which the race belongs to
+   */
+  editionId: number;
+
+  /**
    * The name of the race
    */
   name: string;
@@ -36,17 +41,15 @@ export interface PublicRace {
   lapDistance: string;
 
   /**
+   * If true, runners stop immediately when the race finishes. If false, runners finish their current lap when the race finishes
+   */
+  isImmediateStop: boolean;
+
+  /**
    * If true, we don't have the details of the participants' passages in the race but only their final distances
    */
   isBasicRanking: boolean;
 }
-
-export type RaceWithEditionId<TRace extends PublicRace = PublicRace> = TRace & {
-  /**
-   * The ID of the edition to which the race belongs to
-   */
-  editionId: number;
-};
 
 /**
  * An object representing a race with additional admin properties

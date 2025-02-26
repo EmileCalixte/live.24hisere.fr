@@ -45,6 +45,7 @@ export default function RaceDetailsAdminView(): React.ReactElement {
   const [startTime, setStartTime] = React.useState(new Date(0));
   const [duration, setDuration] = React.useState(0);
   const [isPublic, setIsPublic] = React.useState(false);
+  const [isImmediateStop, setIsImmediateStop] = React.useState(false);
   const [isBasicRanking, setIsBasicRanking] = React.useState(false);
 
   const [isEditingFinalDistances, setIsEditingFinalDistances] = React.useState(false);
@@ -111,9 +112,21 @@ export default function RaceDetailsAdminView(): React.ReactElement {
       startTime.getTime() === new Date(race.startTime).getTime(),
       duration === race.duration * 1000,
       isPublic === race.isPublic,
+      isImmediateStop === race.isImmediateStop,
       isBasicRanking === race.isBasicRanking,
     ].includes(false);
-  }, [race, raceEditionId, raceName, initialDistance, lapDistance, startTime, duration, isPublic, isBasicRanking]);
+  }, [
+    race,
+    raceEditionId,
+    raceName,
+    initialDistance,
+    lapDistance,
+    startTime,
+    duration,
+    isPublic,
+    isImmediateStop,
+    isBasicRanking,
+  ]);
 
   React.useEffect(() => {
     if (!race) {
@@ -127,6 +140,7 @@ export default function RaceDetailsAdminView(): React.ReactElement {
     setStartTime(new Date(race.startTime));
     setDuration(race.duration * 1000);
     setIsPublic(race.isPublic);
+    setIsImmediateStop(race.isImmediateStop);
     setIsBasicRanking(race.isBasicRanking);
   }, [race]);
 
@@ -141,6 +155,7 @@ export default function RaceDetailsAdminView(): React.ReactElement {
       duration: Math.floor(duration / 1000),
       initialDistance: initialDistance.toString(),
       lapDistance: lapDistance.toString(),
+      isImmediateStop,
       isBasicRanking,
     };
 
@@ -212,6 +227,8 @@ export default function RaceDetailsAdminView(): React.ReactElement {
                 setDuration={setDuration}
                 isPublic={isPublic}
                 setIsPublic={setIsPublic}
+                isImmediateStop={isImmediateStop}
+                setIsImmediateStop={setIsImmediateStop}
                 isBasicRanking={isBasicRanking}
                 setIsBasicRanking={setIsBasicRanking}
                 submitButtonDisabled={patchRaceMutation.isPending || getRaceQuery.isPending || !unsavedChanges}

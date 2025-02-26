@@ -10,7 +10,7 @@ import type {
   RaceRunnerWithProcessedPassages,
   RunnerProcessedData,
 } from "@live24hisere/core/types";
-import { compareUtils, dateUtils, stringUtils } from "@live24hisere/utils";
+import { compareUtils, dateUtils, objectUtils, stringUtils } from "@live24hisere/utils";
 import { spaceship } from "../../../../packages/utils/src/compare-utils";
 import { excludeKeys } from "../../../../packages/utils/src/object-utils";
 import type { SelectOption } from "../types/Forms";
@@ -149,9 +149,32 @@ export function getGapBetweenRunners(
   };
 }
 
-export function formatGap(gap: RankingRunnerGap | null, exhaustive = false): string | null {
+const formatGapDefaultOptions = {
+  /**
+   * If false (default), gap will be formatted with the number of gap laps only if it is greater than 1, and with the gap duration otherwise.
+   * If true, gap will be formatted with the number of gap laps if it is greater than 1 AND with the gap duration.
+   */
+  exhaustive: false,
+
+  /**
+   * If true, the gap will not be formatted with time only when the gap is less than one lap. If there is at least one lap gap, the `exhaustive` rule applies.
+   */
+  noOnlyTime: false,
+};
+
+export function formatGap(
+  gap: RankingRunnerGap | null,
+  options: Partial<typeof formatGapDefaultOptions> = {},
+): string | null {
+  const opt = objectUtils.assignDefined(formatGapDefaultOptions, options);
+  const { exhaustive, noOnlyTime: onlyLaps } = opt;
+
   if (!gap) {
     return null;
+  }
+
+  if (gap.laps < 1 && onlyLaps) {
+    return "=";
   }
 
   if (gap.time < 0 && gap.laps < 1) {

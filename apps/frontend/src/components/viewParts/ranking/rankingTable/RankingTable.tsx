@@ -12,6 +12,7 @@ interface RankingTableProps {
   tableGender: GenderWithMixed;
   tableRaceDuration: number | null;
   showLastPassageTime: boolean;
+  formatGapWithOnlyLaps: boolean;
   showRunnerStoppedBadges: boolean;
 }
 
@@ -22,6 +23,7 @@ export default function RankingTable({
   tableGender,
   tableRaceDuration,
   showLastPassageTime,
+  formatGapWithOnlyLaps,
   showRunnerStoppedBadges,
 }: RankingTableProps): React.ReactElement {
   const getRankingTableRow = (rankingRunner: RankingRunner): React.ReactElement | null => {
@@ -47,6 +49,7 @@ export default function RankingTable({
         tableCategoryCode={tableCategoryCode}
         tableGender={tableGender}
         showLastPassageTime={showLastPassageTime}
+        formatGapWithOnlyLaps={formatGapWithOnlyLaps}
         showRunnerStoppedBadges={showRunnerStoppedBadges}
       />
     );

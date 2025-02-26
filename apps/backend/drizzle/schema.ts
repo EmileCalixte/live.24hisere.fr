@@ -94,6 +94,7 @@ export const TABLE_RACE = mysqlTable(
     lapDistance: t.decimal({ precision: 10, scale: 3 }).notNull(),
     order: t.int().notNull(),
     isPublic: t.boolean().notNull(),
+    isImmediateStop: t.boolean().notNull(),
     isBasicRanking: t.boolean().notNull(),
   }),
   (t) => [unique().on(t.name, t.editionId)],
