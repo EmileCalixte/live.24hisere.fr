@@ -6,6 +6,7 @@ import { Checkbox } from "../../../ui/forms/Checkbox";
 import DurationInputs from "../../../ui/forms/DurationInputs";
 import { Input } from "../../../ui/forms/Input";
 import Select from "../../../ui/forms/Select";
+import InfoIconTooltip from "../../../ui/InfoIconTooltip";
 
 interface RaceDetailsFormProps {
   onSubmit: (e: React.FormEvent) => void;
@@ -24,6 +25,8 @@ interface RaceDetailsFormProps {
   setDuration: (duration: number) => void;
   isPublic: boolean;
   setIsPublic: (isPublic: boolean) => void;
+  isImmediateStop: boolean;
+  setIsImmediateStop: (isImmediateStop: boolean) => void;
   isBasicRanking: boolean;
   setIsBasicRanking: (isBasicRanking: boolean) => void;
   submitButtonDisabled: boolean;
@@ -46,6 +49,8 @@ export default function RaceDetailsForm({
   setDuration,
   isPublic,
   setIsPublic,
+  isImmediateStop,
+  setIsImmediateStop,
   isBasicRanking,
   setIsBasicRanking,
   submitButtonDisabled,
@@ -164,6 +169,20 @@ export default function RaceDetailsForm({
         className="mt-3"
         onChange={(e) => {
           setIsPublic(e.target.checked);
+        }}
+      />
+
+      <Checkbox
+        label={
+          <span className="d-flex gap-2">
+            Arrêt immédiat
+            <InfoIconTooltip tooltipText="Si oui, les coureurs s'arrêtent immédiatement à la fin de la course. Si non, ils terminent leur tour en cours à la fin de la course." />
+          </span>
+        }
+        checked={isImmediateStop}
+        className="mt-3"
+        onChange={(e) => {
+          setIsImmediateStop(e.target.checked);
         }}
       />
 
