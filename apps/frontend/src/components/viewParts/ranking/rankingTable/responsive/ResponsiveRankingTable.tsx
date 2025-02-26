@@ -12,6 +12,7 @@ interface ResponsiveRankingTableProps {
   tableGender: GenderWithMixed;
   tableRaceDuration: number | null;
   showLastPassageTime: boolean;
+  formatGapWithOnlyLaps: boolean;
   showRunnerStoppedBadges: boolean;
 }
 
@@ -22,6 +23,7 @@ export default function ResponsiveRankingTable({
   tableGender,
   tableRaceDuration,
   showLastPassageTime,
+  formatGapWithOnlyLaps,
   showRunnerStoppedBadges,
 }: ResponsiveRankingTableProps): React.ReactElement {
   const getRankingTableRow = React.useCallback(
@@ -48,11 +50,12 @@ export default function ResponsiveRankingTable({
           tableCategoryCode={tableCategoryCode}
           tableGender={tableGender}
           showLastPassageTime={showLastPassageTime}
+          formatGapWithOnlyLaps={formatGapWithOnlyLaps}
           showRunnerStoppedBadges={showRunnerStoppedBadges}
         />
       );
     },
-    [race, showLastPassageTime, showRunnerStoppedBadges, tableCategoryCode, tableGender],
+    [formatGapWithOnlyLaps, race, showLastPassageTime, showRunnerStoppedBadges, tableCategoryCode, tableGender],
   );
 
   return (

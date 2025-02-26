@@ -185,10 +185,32 @@ export default function RankingView(): React.ReactElement {
     }
   }, [races, selectedRace, setSelectedRaceId]);
 
-  const isRaceInProgress = !!selectedRace && !isRaceFinished(selectedRace, serverTimeOffset);
+  const isRaceNotFinished = !!selectedRace && !isRaceFinished(selectedRace, serverTimeOffset);
 
-  const showLastPassageTime =
-    (isRaceInProgress || selectedTimeMode === RankingTimeMode.AT) && !selectedRace?.isBasicRanking;
+  const showLastPassageTime = React.useMemo(() => {
+    if (selectedRace?.isBasicRanking) {
+      return false;
+    }
+
+    if (isRaceNotFinished) {
+      return true;
+    }
+
+    return !selectedRace?.isImmediateStop || selectedTimeMode === RankingTimeMode.AT;
+  }, [isRaceNotFinished, selectedRace?.isBasicRanking, selectedRace?.isImmediateStop, selectedTimeMode]);
+
+  // TODO change to 'formatGapWithDistanceIf0Laps' ? Maybe later
+  const formatGapWithOnlyLaps = React.useMemo(() => {
+    if (isRaceNotFinished) {
+      return false;
+    }
+
+    if (selectedTimeMode === RankingTimeMode.AT) {
+      return false;
+    }
+
+    return !!selectedRace?.isImmediateStop;
+  }, [isRaceNotFinished, selectedRace?.isImmediateStop, selectedTimeMode]);
 
   return (
     <Page id="ranking" title="Classements">
@@ -269,7 +291,8 @@ export default function RankingView(): React.ReactElement {
                     tableGender={selectedGender ?? "mixed"}
                     tableRaceDuration={selectedTimeMode === RankingTimeMode.AT ? selectedRankingTime : null}
                     showLastPassageTime={showLastPassageTime}
-                    showRunnerStoppedBadges={isRaceInProgress}
+                    formatGapWithOnlyLaps={formatGapWithOnlyLaps}
+                    showRunnerStoppedBadges={isRaceNotFinished}
                   />
                 )}
 
@@ -284,7 +307,8 @@ export default function RankingView(): React.ReactElement {
                       tableGender={selectedGender ?? "mixed"}
                       tableRaceDuration={selectedTimeMode === RankingTimeMode.AT ? selectedRankingTime : null}
                       showLastPassageTime={showLastPassageTime}
-                      showRunnerStoppedBadges={isRaceInProgress}
+                      formatGapWithOnlyLaps={formatGapWithOnlyLaps}
+                      showRunnerStoppedBadges={isRaceNotFinished}
                     />
                   </div>
                 )}

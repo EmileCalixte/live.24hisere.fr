@@ -4,7 +4,9 @@ import { GENDER } from "@live24hisere/core/constants";
 import type { PublicRace } from "@live24hisere/core/types";
 import { NO_VALUE_PLACEHOLDER } from "../../../constants/misc";
 import type { Ranking, RankingRunner, RankingRunnerGap } from "../../../types/Ranking";
+import { isRaceFinished } from "../../../utils/raceUtils";
 import { formatGap } from "../../../utils/runnerUtils";
+import { appContext } from "../../App";
 
 interface RunnerDetailsStatsGapsTableProps {
   race: PublicRace;
@@ -12,8 +14,8 @@ interface RunnerDetailsStatsGapsTableProps {
   ranking: Ranking;
 }
 
-function formatGapForTable(gap: RankingRunnerGap | null): string {
-  return formatGap(gap, true) ?? NO_VALUE_PLACEHOLDER;
+function formatGapForTable(gap: RankingRunnerGap | null, noOnlyTime: boolean): string {
+  return formatGap(gap, { exhaustive: true, noOnlyTime }) ?? NO_VALUE_PLACEHOLDER;
 }
 
 export default function RunnerDetailsStatsRankingTable({
@@ -21,6 +23,8 @@ export default function RunnerDetailsStatsRankingTable({
   runner,
   ranking,
 }: RunnerDetailsStatsGapsTableProps): React.ReactElement {
+  const { serverTimeOffset } = React.useContext(appContext).appData;
+
   const categoryCode = getCategory(Number(runner.birthYear), { date: new Date(race.startTime) }).code;
   const genderString = runner.gender === GENDER.F ? "Féminin" : "Masculin";
 
@@ -52,6 +56,9 @@ export default function RunnerDetailsStatsRankingTable({
 
   const showGaps = !race.isBasicRanking;
 
+  // TODO change to 'formatGapWithDistanceIf0Laps' ? Maybe later
+  const formatGapWithOnlyLaps = isRaceFinished(race, serverTimeOffset) && race.isImmediateStop;
+
   return (
     <table className="table">
       <thead>
@@ -78,8 +85,8 @@ export default function RunnerDetailsStatsRankingTable({
           </td>
           {showGaps && (
             <>
-              <td>{formatGapForTable(runner.gaps.firstRunner.scratchMixed.gap)}</td>
-              <td>{formatGapForTable(runner.gaps.previousRunner.scratchMixed.gap)}</td>
+              <td>{formatGapForTable(runner.gaps.firstRunner.scratchMixed.gap, formatGapWithOnlyLaps)}</td>
+              <td>{formatGapForTable(runner.gaps.previousRunner.scratchMixed.gap, formatGapWithOnlyLaps)}</td>
             </>
           )}
         </tr>
@@ -91,8 +98,8 @@ export default function RunnerDetailsStatsRankingTable({
           </td>
           {showGaps && (
             <>
-              <td>{formatGapForTable(runner.gaps.firstRunner.scratchGender.gap)}</td>
-              <td>{formatGapForTable(runner.gaps.previousRunner.scratchGender.gap)}</td>
+              <td>{formatGapForTable(runner.gaps.firstRunner.scratchGender.gap, formatGapWithOnlyLaps)}</td>
+              <td>{formatGapForTable(runner.gaps.previousRunner.scratchGender.gap, formatGapWithOnlyLaps)}</td>
             </>
           )}
         </tr>
@@ -104,8 +111,8 @@ export default function RunnerDetailsStatsRankingTable({
           </td>
           {showGaps && (
             <>
-              <td>{formatGapForTable(runner.gaps.firstRunner.categoryMixed.gap)}</td>
-              <td>{formatGapForTable(runner.gaps.previousRunner.categoryMixed.gap)}</td>
+              <td>{formatGapForTable(runner.gaps.firstRunner.categoryMixed.gap, formatGapWithOnlyLaps)}</td>
+              <td>{formatGapForTable(runner.gaps.previousRunner.categoryMixed.gap, formatGapWithOnlyLaps)}</td>
             </>
           )}
         </tr>
@@ -119,8 +126,8 @@ export default function RunnerDetailsStatsRankingTable({
           </td>
           {showGaps && (
             <>
-              <td>{formatGapForTable(runner.gaps.firstRunner.categoryGender.gap)}</td>
-              <td>{formatGapForTable(runner.gaps.previousRunner.categoryGender.gap)}</td>
+              <td>{formatGapForTable(runner.gaps.firstRunner.categoryGender.gap, formatGapWithOnlyLaps)}</td>
+              <td>{formatGapForTable(runner.gaps.previousRunner.categoryGender.gap, formatGapWithOnlyLaps)}</td>
             </>
           )}
         </tr>

@@ -19,6 +19,7 @@ interface RankingTableRowProps {
   tableCategoryCode: CategoryCode | null;
   tableGender: GenderWithMixed;
   showLastPassageTime: boolean;
+  formatGapWithOnlyLaps: boolean;
   showRunnerStoppedBadges: boolean;
 }
 
@@ -28,6 +29,7 @@ export default function RankingTableRow({
   tableCategoryCode,
   tableGender,
   showLastPassageTime,
+  formatGapWithOnlyLaps,
   showRunnerStoppedBadges,
 }: RankingTableRowProps): React.ReactElement {
   const raceInitialDistance = Number(race.initialDistance);
@@ -80,8 +82,9 @@ export default function RankingTableRow({
 
       {!race.isBasicRanking && (
         <td>
-          {formatGap(runner.gaps.firstRunner[getRankingType(tableCategoryCode, tableGender)].gap)
-            ?? NO_VALUE_PLACEHOLDER}
+          {formatGap(runner.gaps.firstRunner[getRankingType(tableCategoryCode, tableGender)].gap, {
+            noOnlyTime: formatGapWithOnlyLaps,
+          }) ?? NO_VALUE_PLACEHOLDER}
         </td>
       )}
 

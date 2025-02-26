@@ -17,6 +17,7 @@ interface ResponsiveRankingTableRowProps {
   tableCategoryCode: CategoryCode | null;
   tableGender: GenderWithMixed;
   showLastPassageTime: boolean;
+  formatGapWithOnlyLaps: boolean;
   showRunnerStoppedBadges: boolean;
 }
 
@@ -26,6 +27,7 @@ export default function ResponsiveRankingTableRow({
   tableCategoryCode,
   tableGender,
   showLastPassageTime,
+  formatGapWithOnlyLaps,
   showRunnerStoppedBadges,
 }: ResponsiveRankingTableRowProps): React.ReactElement {
   const runnerCategoryCode = getCategory(Number(runner.birthYear), { date: new Date(race.startTime) }).code;
@@ -96,7 +98,9 @@ export default function ResponsiveRankingTableRow({
 
   const alpha2CountryCode = getCountryAlpha2CodeFromAlpha3Code(runner.countryCode);
 
-  const formattedGap = formatGap(runner.gaps.firstRunner[getRankingType(tableCategoryCode, tableGender)].gap);
+  const formattedGap = formatGap(runner.gaps.firstRunner[getRankingType(tableCategoryCode, tableGender)].gap, {
+    noOnlyTime: formatGapWithOnlyLaps,
+  });
 
   const displayedGap = formattedGap && formattedGap !== "=" ? formattedGap : null;
 
