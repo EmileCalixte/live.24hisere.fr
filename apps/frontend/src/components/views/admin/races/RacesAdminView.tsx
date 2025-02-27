@@ -50,6 +50,7 @@ export default function RacesAdminView(): React.ReactElement {
                       <th>Nb. coureurs</th>
                       <th>Publique</th>
                       <th>Class. simplifié</th>
+                      <th>Arrêt immédiat</th>
                       <th>Date</th>
                       <th>Durée</th>
                       <th>Distance</th>
@@ -91,6 +92,7 @@ export default function RacesAdminView(): React.ReactElement {
                             )}
                           </td>
                           <td>{race.isBasicRanking ? "Oui" : "Non"}</td>
+                          <td>{race.isImmediateStop ? "Oui" : "Non"}</td>
                           <td>{formatDateAsString(new Date(race.startTime))}</td>
                           <td>{formatMsAsDuration(race.duration * 1000)}</td>
                           <td>
