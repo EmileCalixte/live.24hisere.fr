@@ -7,7 +7,7 @@ import type { RankingRunner } from "../../../../types/Ranking";
 import { getCountryAlpha2CodeFromAlpha3Code } from "../../../../utils/countryUtils";
 import { formatMsAsDuration } from "../../../../utils/durationUtils";
 import { getRankingType } from "../../../../utils/rankingUtils";
-import { formatGap } from "../../../../utils/runnerUtils";
+import { formatGap, type FormatGapMode } from "../../../../utils/runnerUtils";
 import { formatFloatNumber } from "../../../../utils/utils";
 import RunnerStoppedBadge from "../../../ui/badges/RunnerStoppedBadge";
 import { Flag } from "../../../ui/countries/Flag";
@@ -19,7 +19,7 @@ interface RankingTableRowProps {
   tableCategoryCode: CategoryCode | null;
   tableGender: GenderWithMixed;
   showLastPassageTime: boolean;
-  formatGapWithOnlyLaps: boolean;
+  formatGapMode: FormatGapMode;
   showRunnerStoppedBadges: boolean;
 }
 
@@ -29,7 +29,7 @@ export default function RankingTableRow({
   tableCategoryCode,
   tableGender,
   showLastPassageTime,
-  formatGapWithOnlyLaps,
+  formatGapMode,
   showRunnerStoppedBadges,
 }: RankingTableRowProps): React.ReactElement {
   const raceInitialDistance = Number(race.initialDistance);
@@ -83,7 +83,7 @@ export default function RankingTableRow({
       {!race.isBasicRanking && (
         <td>
           {formatGap(runner.gaps.firstRunner[getRankingType(tableCategoryCode, tableGender)].gap, {
-            noOnlyTime: formatGapWithOnlyLaps,
+            mode: formatGapMode,
           }) ?? NO_VALUE_PLACEHOLDER}
         </td>
       )}

@@ -50,6 +50,11 @@ export interface RankingRunnerGap {
    * The number of laps behind the compared runner
    */
   laps: number;
+
+  /**
+   * The distance difference with the compared runner, in meters
+   */
+  distance: number;
 }
 
 export interface RankingRunnerGapData<T extends MinimalRankingRunnerInput> {

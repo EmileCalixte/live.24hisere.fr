@@ -15,9 +15,10 @@ import { spaceship } from "../../../../packages/utils/src/compare-utils";
 import { excludeKeys } from "../../../../packages/utils/src/object-utils";
 import type { SelectOption } from "../types/Forms";
 import type { RankingRunnerGap } from "../types/Ranking";
-import { formatDurationHms, formatMsAsDuration } from "./durationUtils";
+import { formatMsAsDuration, formatMsDurationHms } from "./durationUtils";
 import { getPaceFromSpeed, getSpeed } from "./mathUtils";
 import { getSortedPassages } from "./passageUtils";
+import { formatFloatNumber } from "./utils";
 
 export function getRaceRunnerFromRunnerAndParticipant<TRunner extends PublicRunner>(
   runner: TRunner,
@@ -125,6 +126,7 @@ export function getGapBetweenRunners(
     return {
       laps: runner1LastPassage.processed.lapNumber ?? 0,
       time: runner1LastPassage.processed.lapEndRaceTime,
+      distance: runner1.totalDistance,
     };
   }
 
@@ -137,29 +139,40 @@ export function getGapBetweenRunners(
   );
 
   if (!runner1SameLapNumberPassage) {
-    throw new Error("Runner 1");
+    throw new Error("Runner 1 has fewer passages than Runner 2");
   }
 
   const passageTimeGap =
     runner2LastPassage.processed.lapEndRaceTime - runner1SameLapNumberPassage.processed.lapEndRaceTime;
 
+  const distanceGap = runner1.totalDistance - runner2.totalDistance;
+
   return {
     laps: passageCountDifference,
     time: passageTimeGap,
+    distance: distanceGap,
   };
 }
 
-const formatGapDefaultOptions = {
+export const enum FormatGapMode {
   /**
-   * If false (default), gap will be formatted with the number of gap laps only if it is greater than 1, and with the gap duration otherwise.
-   * If true, gap will be formatted with the number of gap laps if it is greater than 1 AND with the gap duration.
+   * Default. Show lap number, or time if less than 1 lap difference
    */
-  exhaustive: false,
+  LAPS_OR_TIME = "lapsOrTime",
 
   /**
-   * If true, the gap will not be formatted with time only when the gap is less than one lap. If there is at least one lap gap, the `exhaustive` rule applies.
+   * Show lap number if greater than 0, and time
    */
-  noOnlyTime: false,
+  LAPS_AND_TIME = "lapsAndTime",
+
+  /**
+   * Show lap number, or distance if less than 1 lap difference
+   */
+  LAPS_OR_DISTANCE = "lapsOrDistance",
+}
+
+const formatGapDefaultOptions = {
+  mode: FormatGapMode.LAPS_OR_TIME,
 };
 
 export function formatGap(
@@ -167,33 +180,51 @@ export function formatGap(
   options: Partial<typeof formatGapDefaultOptions> = {},
 ): string | null {
   const opt = objectUtils.assignDefined(formatGapDefaultOptions, options);
-  const { exhaustive, noOnlyTime: onlyLaps } = opt;
+  const { mode } = opt;
 
   if (!gap) {
     return null;
   }
 
-  if (gap.laps < 1 && onlyLaps) {
-    return "=";
+  const lapsGap = `+${gap.laps}\xa0${gap.laps > 1 ? "tours" : "tour"}`;
+
+  if (mode === FormatGapMode.LAPS_OR_DISTANCE) {
+    if (gap.laps > 0) {
+      return lapsGap;
+    }
+
+    if (gap.distance >= 1000) {
+      return `+${formatFloatNumber(gap.distance / 1000, 2)}\xa0km`;
+    }
+
+    if (gap.distance >= 1) {
+      return `+${gap.distance.toFixed(0)}\xa0m`;
+    }
   }
 
-  if (gap.time < 0 && gap.laps < 1) {
-    return "=";
+  const timeGap = `+${formatMsDurationHms(gap.time)}`;
+
+  if (mode === FormatGapMode.LAPS_OR_TIME) {
+    if (gap.laps > 0) {
+      return lapsGap;
+    }
+
+    if (gap.time > 0) {
+      return timeGap;
+    }
   }
 
-  const timeGap = `+${formatDurationHms(gap.time)}`;
-
-  if (gap.laps === 0) {
-    return timeGap;
+  if (mode === FormatGapMode.LAPS_AND_TIME) {
+    if (gap.laps > 0 && gap.time > 0) {
+      return `${lapsGap} (${timeGap})`;
+    } else if (gap.laps > 0) {
+      return lapsGap;
+    } else if (gap.time > 0) {
+      return timeGap;
+    }
   }
 
-  const lapsGap = `+${gap.laps} ${gap.laps > 1 ? "tours" : "tour"}`;
-
-  if (!exhaustive || gap.time < 0) {
-    return lapsGap;
-  }
-
-  return `${lapsGap} (${timeGap})`;
+  return "=";
 }
 
 /**

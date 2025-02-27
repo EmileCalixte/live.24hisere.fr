@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import type { ProcessedPassage, PublicRace, RunnerWithProcessedHours } from "@live24hisere/core/types";
 import { NO_VALUE_PLACEHOLDER } from "../../../constants/misc";
 import type { Ranking, RankingRunner } from "../../../types/Ranking";
-import { formatDurationHms } from "../../../utils/durationUtils";
+import { formatMsDurationHms } from "../../../utils/durationUtils";
 import { getFastestLapPassage, getSlowestLapPassage } from "../../../utils/passageUtils";
 import InfoIconTooltip from "../../ui/InfoIconTooltip";
 import { RunnerDetailsStatsLapCard } from "./RunnerDetailsStatsLapCard";
@@ -89,7 +89,7 @@ export default function RunnerDetailsStats({ runner, race, ranking }: RunnerDeta
                     Allure moyenne&nbsp;:
                     <> </>
                     {runner.totalAveragePace ? (
-                      <strong>{formatDurationHms(runner.totalAveragePace)} / km</strong>
+                      <strong>{formatMsDurationHms(runner.totalAveragePace)} / km</strong>
                     ) : (
                       NO_VALUE_PLACEHOLDER
                     )}

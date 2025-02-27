@@ -5,7 +5,7 @@ import type { PublicRace } from "@live24hisere/core/types";
 import { NO_VALUE_PLACEHOLDER } from "../../../constants/misc";
 import type { Ranking, RankingRunner, RankingRunnerGap } from "../../../types/Ranking";
 import { isRaceFinished } from "../../../utils/raceUtils";
-import { formatGap } from "../../../utils/runnerUtils";
+import { formatGap, FormatGapMode } from "../../../utils/runnerUtils";
 import { appContext } from "../../App";
 
 interface RunnerDetailsStatsGapsTableProps {
@@ -14,8 +14,8 @@ interface RunnerDetailsStatsGapsTableProps {
   ranking: Ranking;
 }
 
-function formatGapForTable(gap: RankingRunnerGap | null, noOnlyTime: boolean): string {
-  return formatGap(gap, { exhaustive: true, noOnlyTime }) ?? NO_VALUE_PLACEHOLDER;
+function formatGapForTable(gap: RankingRunnerGap | null, mode: FormatGapMode): string {
+  return formatGap(gap, { mode }) ?? NO_VALUE_PLACEHOLDER;
 }
 
 export default function RunnerDetailsStatsRankingTable({
@@ -56,8 +56,10 @@ export default function RunnerDetailsStatsRankingTable({
 
   const showGaps = !race.isBasicRanking;
 
-  // TODO change to 'formatGapWithDistanceIf0Laps' ? Maybe later
-  const formatGapWithOnlyLaps = isRaceFinished(race, serverTimeOffset) && race.isImmediateStop;
+  const formatGapMode =
+    isRaceFinished(race, serverTimeOffset) && race.isImmediateStop
+      ? FormatGapMode.LAPS_OR_DISTANCE
+      : FormatGapMode.LAPS_AND_TIME;
 
   return (
     <table className="table">
@@ -85,8 +87,8 @@ export default function RunnerDetailsStatsRankingTable({
           </td>
           {showGaps && (
             <>
-              <td>{formatGapForTable(runner.gaps.firstRunner.scratchMixed.gap, formatGapWithOnlyLaps)}</td>
-              <td>{formatGapForTable(runner.gaps.previousRunner.scratchMixed.gap, formatGapWithOnlyLaps)}</td>
+              <td>{formatGapForTable(runner.gaps.firstRunner.scratchMixed.gap, formatGapMode)}</td>
+              <td>{formatGapForTable(runner.gaps.previousRunner.scratchMixed.gap, formatGapMode)}</td>
             </>
           )}
         </tr>
@@ -98,8 +100,8 @@ export default function RunnerDetailsStatsRankingTable({
           </td>
           {showGaps && (
             <>
-              <td>{formatGapForTable(runner.gaps.firstRunner.scratchGender.gap, formatGapWithOnlyLaps)}</td>
-              <td>{formatGapForTable(runner.gaps.previousRunner.scratchGender.gap, formatGapWithOnlyLaps)}</td>
+              <td>{formatGapForTable(runner.gaps.firstRunner.scratchGender.gap, formatGapMode)}</td>
+              <td>{formatGapForTable(runner.gaps.previousRunner.scratchGender.gap, formatGapMode)}</td>
             </>
           )}
         </tr>
@@ -111,8 +113,8 @@ export default function RunnerDetailsStatsRankingTable({
           </td>
           {showGaps && (
             <>
-              <td>{formatGapForTable(runner.gaps.firstRunner.categoryMixed.gap, formatGapWithOnlyLaps)}</td>
-              <td>{formatGapForTable(runner.gaps.previousRunner.categoryMixed.gap, formatGapWithOnlyLaps)}</td>
+              <td>{formatGapForTable(runner.gaps.firstRunner.categoryMixed.gap, formatGapMode)}</td>
+              <td>{formatGapForTable(runner.gaps.previousRunner.categoryMixed.gap, formatGapMode)}</td>
             </>
           )}
         </tr>
@@ -126,8 +128,8 @@ export default function RunnerDetailsStatsRankingTable({
           </td>
           {showGaps && (
             <>
-              <td>{formatGapForTable(runner.gaps.firstRunner.categoryGender.gap, formatGapWithOnlyLaps)}</td>
-              <td>{formatGapForTable(runner.gaps.previousRunner.categoryGender.gap, formatGapWithOnlyLaps)}</td>
+              <td>{formatGapForTable(runner.gaps.firstRunner.categoryGender.gap, formatGapMode)}</td>
+              <td>{formatGapForTable(runner.gaps.previousRunner.categoryGender.gap, formatGapMode)}</td>
             </>
           )}
         </tr>

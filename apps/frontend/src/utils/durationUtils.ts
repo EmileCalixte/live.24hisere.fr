@@ -38,6 +38,6 @@ export function formatMsAsDuration(ms: number, options: Partial<typeof formatMsA
   return `${stringHours}${opt.hoursSuffix}${minutesSeconds}`.trim();
 }
 
-export function formatDurationHms(ms: number): string {
+export function formatMsDurationHms(ms: number): string {
   return formatMsAsDuration(ms, { forceDisplayHours: false, ...LAP_DURATION_SUFFIXES });
 }

@@ -6,7 +6,7 @@ import type { RankingRunner } from "../../../../../types/Ranking";
 import { getCountryAlpha2CodeFromAlpha3Code } from "../../../../../utils/countryUtils";
 import { formatMsAsDuration } from "../../../../../utils/durationUtils";
 import { getRankingType } from "../../../../../utils/rankingUtils";
-import { formatGap } from "../../../../../utils/runnerUtils";
+import { formatGap, type FormatGapMode } from "../../../../../utils/runnerUtils";
 import { formatFloatNumber } from "../../../../../utils/utils";
 import RunnerStoppedBadge from "../../../../ui/badges/RunnerStoppedBadge";
 import { Flag } from "../../../../ui/countries/Flag";
@@ -17,7 +17,7 @@ interface ResponsiveRankingTableRowProps {
   tableCategoryCode: CategoryCode | null;
   tableGender: GenderWithMixed;
   showLastPassageTime: boolean;
-  formatGapWithOnlyLaps: boolean;
+  formatGapMode: FormatGapMode;
   showRunnerStoppedBadges: boolean;
 }
 
@@ -27,7 +27,7 @@ export default function ResponsiveRankingTableRow({
   tableCategoryCode,
   tableGender,
   showLastPassageTime,
-  formatGapWithOnlyLaps,
+  formatGapMode,
   showRunnerStoppedBadges,
 }: ResponsiveRankingTableRowProps): React.ReactElement {
   const runnerCategoryCode = getCategory(Number(runner.birthYear), { date: new Date(race.startTime) }).code;
@@ -99,7 +99,7 @@ export default function ResponsiveRankingTableRow({
   const alpha2CountryCode = getCountryAlpha2CodeFromAlpha3Code(runner.countryCode);
 
   const formattedGap = formatGap(runner.gaps.firstRunner[getRankingType(tableCategoryCode, tableGender)].gap, {
-    noOnlyTime: formatGapWithOnlyLaps,
+    mode: formatGapMode,
   });
 
   const displayedGap = formattedGap && formattedGap !== "=" ? formattedGap : null;

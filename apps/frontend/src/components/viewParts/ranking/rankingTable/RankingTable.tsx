@@ -2,6 +2,7 @@ import type React from "react";
 import { type CategoryCode, getCategory } from "@emilecalixte/ffa-categories";
 import type { GenderWithMixed, PublicRace } from "@live24hisere/core/types";
 import type { Ranking, RankingRunner } from "../../../../types/Ranking";
+import type { FormatGapMode } from "../../../../utils/runnerUtils";
 import RankingTableInfoHeader from "./RankingTableInfoHeader";
 import RankingTableRow from "./RankingTableRow";
 
@@ -12,7 +13,7 @@ interface RankingTableProps {
   tableGender: GenderWithMixed;
   tableRaceDuration: number | null;
   showLastPassageTime: boolean;
-  formatGapWithOnlyLaps: boolean;
+  formatGapMode: FormatGapMode;
   showRunnerStoppedBadges: boolean;
 }
 
@@ -23,7 +24,7 @@ export default function RankingTable({
   tableGender,
   tableRaceDuration,
   showLastPassageTime,
-  formatGapWithOnlyLaps,
+  formatGapMode,
   showRunnerStoppedBadges,
 }: RankingTableProps): React.ReactElement {
   const getRankingTableRow = (rankingRunner: RankingRunner): React.ReactElement | null => {
@@ -49,7 +50,7 @@ export default function RankingTable({
         tableCategoryCode={tableCategoryCode}
         tableGender={tableGender}
         showLastPassageTime={showLastPassageTime}
-        formatGapWithOnlyLaps={formatGapWithOnlyLaps}
+        formatGapMode={formatGapMode}
         showRunnerStoppedBadges={showRunnerStoppedBadges}
       />
     );

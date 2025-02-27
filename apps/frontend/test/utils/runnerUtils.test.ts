@@ -1,6 +1,132 @@
 import { describe, expect, it } from "vitest";
 import type { RaceRunnerWithPassages, RaceRunnerWithProcessedData } from "@live24hisere/core/types";
-import { spaceshipRunners } from "../../src/utils/runnerUtils";
+import type { RankingRunnerGap } from "../../src/types/Ranking";
+import { formatGap, FormatGapMode, spaceshipRunners } from "../../src/utils/runnerUtils";
+
+describe("Format gap", () => {
+  it("Should return null if gap is null", () => {
+    expect(formatGap(null, { mode: FormatGapMode.LAPS_OR_TIME })).toBe(null);
+    expect(formatGap(null, { mode: FormatGapMode.LAPS_AND_TIME })).toBe(null);
+    expect(formatGap(null, { mode: FormatGapMode.LAPS_OR_DISTANCE })).toBe(null);
+  });
+
+  const gapLapGreater0TimeGreater0DistanceGreater0: RankingRunnerGap = {
+    laps: 12,
+    time: 1234000,
+    distance: 567,
+  };
+
+  const gapLapGreater0TimeLower0DistanceGreater0: RankingRunnerGap = {
+    laps: 12,
+    time: -2345000,
+    distance: 567,
+  };
+
+  const gapLap0TimeGreater0DistanceGreater0: RankingRunnerGap = {
+    laps: 0,
+    time: 1234000,
+    distance: 567,
+  };
+
+  const gapLap0TimeLower0DistanceGreater0: RankingRunnerGap = {
+    laps: 0,
+    time: -2345000,
+    distance: 567,
+  };
+
+  // I don't know if this case could really happen but I want my function to handle this case too
+  const gapLapGreater0Time0DistanceGreater0: RankingRunnerGap = {
+    laps: 12,
+    time: 0,
+    distance: 567,
+  };
+
+  const gapLap0Time0DistanceGreater0: RankingRunnerGap = {
+    laps: 0,
+    time: 0,
+    distance: 567,
+  };
+
+  const gapLap0TimeGreater0Distance0: RankingRunnerGap = {
+    laps: 0,
+    time: 1234000,
+    distance: 0,
+  };
+
+  const gapLap0TimeGreater0DistanceGreater1000: RankingRunnerGap = {
+    laps: 0,
+    time: 1234000,
+    distance: 5678,
+  };
+
+  describe("Mode Laps Or Time", () => {
+    const mode = FormatGapMode.LAPS_OR_TIME;
+
+    it("Should show only laps if lap gap is greater than 0", () => {
+      expect(formatGap(gapLapGreater0TimeGreater0DistanceGreater0, { mode })).toBe("+12\xa0tours");
+    });
+
+    it("Should show only time if lap gap is 0", () => {
+      expect(formatGap(gapLap0TimeGreater0DistanceGreater0, { mode })).toBe("+20m\xa034s");
+    });
+
+    it("Should show '=' if time and lap gap are 0", () => {
+      expect(formatGap(gapLap0Time0DistanceGreater0, { mode })).toBe("=");
+    });
+
+    it("Should show '=' if lap gap is 0 and time gap is lower than 0", () => {
+      expect(formatGap(gapLap0TimeLower0DistanceGreater0, { mode })).toBe("=");
+    });
+  });
+
+  describe("Mode Laps And Time", () => {
+    const mode = FormatGapMode.LAPS_AND_TIME;
+
+    it("Should show laps and time if both are greater than 0", () => {
+      expect(formatGap(gapLapGreater0TimeGreater0DistanceGreater0, { mode })).toBe("+12\xa0tours (+20m\xa034s)");
+    });
+
+    it("Should show only time if lap gap is 0", () => {
+      expect(formatGap(gapLap0TimeGreater0Distance0, { mode })).toBe("+20m\xa034s");
+    });
+
+    it("Should show only laps if time gap is 0", () => {
+      expect(formatGap(gapLapGreater0Time0DistanceGreater0, { mode })).toBe("+12\xa0tours");
+    });
+
+    it("Should show only laps if time gap lower than 0", () => {
+      expect(formatGap(gapLapGreater0TimeLower0DistanceGreater0, { mode })).toBe("+12\xa0tours");
+    });
+
+    it("Should show '=' if time and lap gap are 0", () => {
+      expect(formatGap(gapLap0Time0DistanceGreater0, { mode })).toBe("=");
+    });
+
+    it("Should show '=' if lap gap is 0 and time gap is lower than 0", () => {
+      expect(formatGap(gapLap0TimeLower0DistanceGreater0, { mode })).toBe("=");
+    });
+  });
+
+  describe("Mode Laps Or Distance", () => {
+    const mode = FormatGapMode.LAPS_OR_DISTANCE;
+
+    it("Should show only laps if lap gap is greater than 0", () => {
+      expect(formatGap(gapLapGreater0TimeGreater0DistanceGreater0, { mode })).toBe("+12\xa0tours");
+    });
+
+    it("Should show only distance in meters if lap gap is 0 and distance is between 1 and 1000", () => {
+      expect(formatGap(gapLap0TimeGreater0DistanceGreater0, { mode })).toBe("+567\xa0m");
+    });
+
+    it("Should show only distance in km if lap gap is 0 and distance is at least 1000", () => {
+      expect(formatGap(gapLap0TimeGreater0DistanceGreater1000, { mode })).toBe("+5.68\xa0km");
+    });
+
+    it("Should show '=' if distance and lap gap are 0", () => {
+      expect(formatGap(gapLap0TimeGreater0Distance0, { mode })).toBe("=");
+    });
+  });
+});
 
 describe("Spaceship runners", () => {
   const baseRunner: SpaceshipableRunner = {

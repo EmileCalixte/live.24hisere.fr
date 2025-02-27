@@ -3,7 +3,7 @@ import clsx from "clsx";
 import { Col, Row } from "react-bootstrap";
 import type { ProcessedPassage } from "@live24hisere/core/types";
 import { NO_VALUE_PLACEHOLDER } from "../../../constants/misc";
-import { formatDurationHms, formatMsAsDuration } from "../../../utils/durationUtils";
+import { formatMsAsDuration, formatMsDurationHms } from "../../../utils/durationUtils";
 
 interface RunnerDetailsStatsLapCardProps {
   title: string;
@@ -14,7 +14,7 @@ export function RunnerDetailsStatsLapCard({ title, passage }: RunnerDetailsStats
   return (
     <div className="card">
       <h3 className={clsx("mt-0", !passage && "mb-0")}>
-        {title}&nbsp;: {passage ? formatDurationHms(passage.processed.lapDuration) : NO_VALUE_PLACEHOLDER}
+        {title}&nbsp;: {passage ? formatMsDurationHms(passage.processed.lapDuration) : NO_VALUE_PLACEHOLDER}
       </h3>
 
       {passage && (
@@ -32,7 +32,7 @@ export function RunnerDetailsStatsLapCard({ title, passage }: RunnerDetailsStats
             Allure&nbsp;:
             <> </>
             <strong>
-              {formatDurationHms(passage.processed.lapPace)}
+              {formatMsDurationHms(passage.processed.lapPace)}
               <> </>/ km
             </strong>
           </Col>

@@ -26,6 +26,7 @@ import { useWindowDimensions } from "../../hooks/useWindowDimensions";
 import { parseAsCategory } from "../../queryStringParsers/parseAsCategory";
 import { parseAsGender } from "../../queryStringParsers/parseAsGender";
 import { isRaceFinished } from "../../utils/raceUtils";
+import { FormatGapMode } from "../../utils/runnerUtils";
 import { appContext } from "../App";
 import CircularLoader from "../ui/CircularLoader";
 import Select from "../ui/forms/Select";
@@ -199,17 +200,12 @@ export default function RankingView(): React.ReactElement {
     return !selectedRace?.isImmediateStop || selectedTimeMode === RankingTimeMode.AT;
   }, [isRaceNotFinished, selectedRace?.isBasicRanking, selectedRace?.isImmediateStop, selectedTimeMode]);
 
-  // TODO change to 'formatGapWithDistanceIf0Laps' ? Maybe later
-  const formatGapWithOnlyLaps = React.useMemo(() => {
-    if (isRaceNotFinished) {
-      return false;
+  const formatGapMode = React.useMemo<FormatGapMode>(() => {
+    if (isRaceNotFinished || selectedTimeMode === RankingTimeMode.AT || !selectedRace?.isImmediateStop) {
+      return FormatGapMode.LAPS_OR_TIME;
     }
 
-    if (selectedTimeMode === RankingTimeMode.AT) {
-      return false;
-    }
-
-    return !!selectedRace?.isImmediateStop;
+    return FormatGapMode.LAPS_OR_DISTANCE;
   }, [isRaceNotFinished, selectedRace?.isImmediateStop, selectedTimeMode]);
 
   return (
@@ -291,7 +287,7 @@ export default function RankingView(): React.ReactElement {
                     tableGender={selectedGender ?? "mixed"}
                     tableRaceDuration={selectedTimeMode === RankingTimeMode.AT ? selectedRankingTime : null}
                     showLastPassageTime={showLastPassageTime}
-                    formatGapWithOnlyLaps={formatGapWithOnlyLaps}
+                    formatGapMode={formatGapMode}
                     showRunnerStoppedBadges={isRaceNotFinished}
                   />
                 )}
@@ -307,7 +303,7 @@ export default function RankingView(): React.ReactElement {
                       tableGender={selectedGender ?? "mixed"}
                       tableRaceDuration={selectedTimeMode === RankingTimeMode.AT ? selectedRankingTime : null}
                       showLastPassageTime={showLastPassageTime}
-                      formatGapWithOnlyLaps={formatGapWithOnlyLaps}
+                      formatGapMode={formatGapMode}
                       showRunnerStoppedBadges={isRaceNotFinished}
                     />
                   </div>
