@@ -62,66 +62,68 @@ export default function RunnerDetailsStats({ runner, race, ranking }: RunnerDeta
           </p>
         </Col>
 
+        <Col xl={6} lg={4} md={12}>
+          <div className="card h-100 border-box">
+            <h3 className="mt-0">Données générales</h3>
+
+            <Row as="ul" className="no-ul-style gap-y-3">
+              {!race.isBasicRanking && (
+                <Col as="li" xl={6} lg={12} md={6} sm={12}>
+                  Nombre de tours&nbsp;: <strong>{completeLapCount}</strong>
+                  {hasInitialDistance && (
+                    <>
+                      <> </>
+                      <InfoIconTooltip tooltipText="Il s'agit du nombre de tours complets effectués. La distance initiale parcourue avant le premier passage du coureur au point de chronométrage n'est pas considérée comme un tour." />
+                    </>
+                  )}
+                </Col>
+              )}
+
+              <Col as="li" xl={6} lg={12} md={6} sm={12}>
+                Distance totale&nbsp;: <strong>{(runner.totalDistance / 1000).toFixed(3)} km</strong>
+              </Col>
+
+              <Col as="li" xl={6} lg={12} md={6} sm={12}>
+                Vitesse moyenne&nbsp;:
+                <> </>
+                {runner.totalAverageSpeed ? (
+                  <strong>{runner.totalAverageSpeed.toFixed(2)} km/h</strong>
+                ) : (
+                  NO_VALUE_PLACEHOLDER
+                )}
+              </Col>
+
+              <Col as="li" xl={6} lg={12} md={6} sm={12}>
+                Allure moyenne&nbsp;:
+                <> </>
+                {runner.totalAveragePace ? (
+                  <strong>{formatMsDurationHms(runner.totalAveragePace)} / km</strong>
+                ) : (
+                  NO_VALUE_PLACEHOLDER
+                )}
+              </Col>
+
+              {splitTime100Km && splitTime100Km.raceTime !== null && (
+                <Col as="li" xl={6} lg={12} md={6} sm={12}>
+                  100 km split&nbsp;:
+                  <> </>
+                  <strong>
+                    {!splitTime100Km.exact && <>≈&nbsp;</>}
+
+                    {formatMsAsDuration(splitTime100Km.raceTime)}
+                  </strong>
+                  <> </>
+                  {!splitTime100Km.exact && (
+                    <InfoIconTooltip tooltipText="Il s'agit d'une estimation du temps de course auquel le coureur a atteint les 100 km, basée sur ses temps de passage au point de chronométrage avant et après." />
+                  )}
+                </Col>
+              )}
+            </Row>
+          </div>
+        </Col>
+
         {!isBasicRanking && (
           <>
-            <Col xl={6} lg={4} md={12}>
-              <div className="card h-100 border-box">
-                <h3 className="mt-0">Données générales</h3>
-
-                <Row as="ul" className="no-ul-style gap-y-3">
-                  <Col as="li" xl={6} lg={12} md={6} sm={12}>
-                    Nombre de tours&nbsp;: <strong>{completeLapCount}</strong>
-                    {hasInitialDistance && (
-                      <>
-                        <> </>
-                        <InfoIconTooltip tooltipText="Il s'agit du nombre de tours complets effectués. La distance initiale parcourue avant le premier passage du coureur au point de chronométrage n'est pas considérée comme un tour." />
-                      </>
-                    )}
-                  </Col>
-
-                  <Col as="li" xl={6} lg={12} md={6} sm={12}>
-                    Distance totale&nbsp;: <strong>{(runner.totalDistance / 1000).toFixed(3)} km</strong>
-                  </Col>
-
-                  <Col as="li" xl={6} lg={12} md={6} sm={12}>
-                    Vitesse moyenne&nbsp;:
-                    <> </>
-                    {runner.totalAverageSpeed ? (
-                      <strong>{runner.totalAverageSpeed.toFixed(2)} km/h</strong>
-                    ) : (
-                      NO_VALUE_PLACEHOLDER
-                    )}
-                  </Col>
-
-                  <Col as="li" xl={6} lg={12} md={6} sm={12}>
-                    Allure moyenne&nbsp;:
-                    <> </>
-                    {runner.totalAveragePace ? (
-                      <strong>{formatMsDurationHms(runner.totalAveragePace)} / km</strong>
-                    ) : (
-                      NO_VALUE_PLACEHOLDER
-                    )}
-                  </Col>
-
-                  {splitTime100Km && splitTime100Km.raceTime !== null && (
-                    <Col as="li" xl={6} lg={12} md={6} sm={12}>
-                      100 km split&nbsp;:
-                      <> </>
-                      <strong>
-                        {!splitTime100Km.exact && <>≈&nbsp;</>}
-
-                        {formatMsAsDuration(splitTime100Km.raceTime)}
-                      </strong>
-                      <> </>
-                      {!splitTime100Km.exact && (
-                        <InfoIconTooltip tooltipText="Il s'agit d'une estimation du temps de course auquel le coureur a atteint les 100 km, basée sur ses temps de passage au point de chronométrage avant et après." />
-                      )}
-                    </Col>
-                  )}
-                </Row>
-              </div>
-            </Col>
-
             <Col md={6} sm={12}>
               <RunnerDetailsStatsLapCard title="Tour le plus rapide" passage={fastestLapPassage} />
             </Col>
