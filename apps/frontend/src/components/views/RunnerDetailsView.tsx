@@ -236,7 +236,7 @@ export default function RunnerDetailsView(): React.ReactElement {
 
           <Row className="mt-1">
             {runnerHasMultipleParticipations ? (
-              <Col xxl={3} xl={4} lg={6} md={8} sm={12}>
+              <Col xxl={3} xl={4} lg={6} md={8} sm={10} xs={12}>
                 <Select
                   label="Course"
                   options={runnerRaceOptions}
