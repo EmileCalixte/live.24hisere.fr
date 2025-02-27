@@ -109,7 +109,11 @@ export default function RunnerDetailsView(): React.ReactElement {
   const processedRaceRunners = useProcessedRunnersWithProcessedHours(raceRunners, selectedRace);
 
   const ranking = useRanking(selectedRace, processedRaceRunners);
-  const selectedRankingRunner = ranking?.find((runner) => runner.id === selectedRaceRunner?.id);
+
+  const selectedRankingRunner = React.useMemo(
+    () => ranking?.find((runner) => runner.id === selectedRaceRunner?.id),
+    [ranking, selectedRaceRunner?.id],
+  );
 
   const onSelectRunner = React.useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {

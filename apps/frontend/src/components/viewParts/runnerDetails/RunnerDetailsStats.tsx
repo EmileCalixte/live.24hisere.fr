@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 import type { ProcessedPassage, PublicRace, RunnerWithProcessedHours } from "@live24hisere/core/types";
 import { NO_VALUE_PLACEHOLDER } from "../../../constants/misc";
 import type { Ranking, RankingRunner } from "../../../types/Ranking";
-import { formatMsDurationHms } from "../../../utils/durationUtils";
-import { getFastestLapPassage, getSlowestLapPassage } from "../../../utils/passageUtils";
+import { formatMsAsDuration, formatMsDurationHms } from "../../../utils/durationUtils";
+import { approximateTimeToDistance, getFastestLapPassage, getSlowestLapPassage } from "../../../utils/passageUtils";
 import InfoIconTooltip from "../../ui/InfoIconTooltip";
 import { RunnerDetailsStatsLapCard } from "./RunnerDetailsStatsLapCard";
 import RunnerDetailsStatsRankingTable from "./RunnerDetailsStatsRankingTable";
@@ -38,6 +38,14 @@ export default function RunnerDetailsStats({ runner, race, ranking }: RunnerDeta
     () => getSlowestLapPassage(runner.passages),
     [runner],
   );
+
+  const splitTime100Km = React.useMemo(() => {
+    if (race.isBasicRanking) {
+      return undefined;
+    }
+
+    return approximateTimeToDistance(100000, runner.passages, runner.totalDistance, race.duration);
+  }, [race, runner]);
 
   const isBasicRanking = race.isBasicRanking;
 
@@ -94,6 +102,22 @@ export default function RunnerDetailsStats({ runner, race, ranking }: RunnerDeta
                       NO_VALUE_PLACEHOLDER
                     )}
                   </Col>
+
+                  {splitTime100Km && splitTime100Km.raceTime !== null && (
+                    <Col as="li" xl={6} lg={12} md={6} sm={12}>
+                      100 km split&nbsp;:
+                      <> </>
+                      <strong>
+                        {!splitTime100Km.exact && <>≈&nbsp;</>}
+
+                        {formatMsAsDuration(splitTime100Km.raceTime)}
+                      </strong>
+                      <> </>
+                      {!splitTime100Km.exact && (
+                        <InfoIconTooltip tooltipText="Il s'agit d'une estimation du temps de course auquel le coureur a atteint les 100 km, basée sur ses temps de passage au point de chronométrage avant et après." />
+                      )}
+                    </Col>
+                  )}
                 </Row>
               </div>
             </Col>
