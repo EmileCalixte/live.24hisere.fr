@@ -289,3 +289,70 @@ export function getAverageSpeedInInterval(
 
   return speedSum / durationSum;
 }
+
+/**
+ * Estimates the time it took to reach the given distance by interpolating the nearest passages before and after the given distance
+ *
+ * @param distance The desired distance, in meters
+ * @param passages The list of passages, in which the two passages closest to the requested distance will be searched for in order to approximate the race time
+ * @param runnerTotalDistance The total distance covered by the runner in meters, used for the calculation if it's greater than the desired distance and if there is no passage beyond the desired distance
+ * @param raceDuration The total race duration in seconds, used for calculation in the same way as `runnerTotalDistance`
+ */
+export function approximateTimeToDistance(
+  distance: number,
+  passages: ProcessedPassage[],
+  runnerTotalDistance: number,
+  raceDuration: number,
+): {
+  /**
+   * If true, a passage has been found at the exact distance requested, so the time is not approximate but exact
+   */
+  exact: boolean;
+
+  /**
+   * The calculated race time, in milliseconds. Null if the runner has not reached the required distance
+   */
+  raceTime: number | null;
+} {
+  const sortedPassages = getSortedPassages(passages);
+
+  let closestPassageBeforeDistance: (typeof passages)[number] | null = null;
+  let closestPassageAfterDistance: (typeof passages)[number] | null = null;
+
+  for (const passage of sortedPassages) {
+    if (passage.processed.totalDistance === distance) {
+      return {
+        exact: true,
+        raceTime: passage.processed.lapEndRaceTime,
+      };
+    }
+
+    if (passage.processed.totalDistance > distance) {
+      closestPassageAfterDistance = passage;
+      break;
+    }
+
+    if (
+      closestPassageBeforeDistance === null
+      || closestPassageBeforeDistance.processed.totalDistance < passage.processed.totalDistance
+    ) {
+      closestPassageBeforeDistance = passage;
+    }
+  }
+
+  if (closestPassageAfterDistance === null && runnerTotalDistance < distance) {
+    return { exact: false, raceTime: null };
+  }
+
+  const beforeDistance = closestPassageBeforeDistance?.processed.totalDistance ?? 0;
+  const beforeRaceTime = closestPassageBeforeDistance?.processed.lapEndRaceTime ?? 0;
+
+  const afterDistance = closestPassageAfterDistance?.processed.totalDistance ?? runnerTotalDistance;
+  const afterRaceTime = closestPassageAfterDistance?.processed.lapEndRaceTime ?? raceDuration * 1000;
+
+  const raceTime =
+    beforeRaceTime
+    + (afterRaceTime - beforeRaceTime) * ((distance - beforeDistance) / (afterDistance - beforeDistance));
+
+  return { exact: false, raceTime };
+}
