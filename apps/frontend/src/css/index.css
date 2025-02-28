@@ -1,3 +1,59 @@
+@media (prefers-color-scheme: light) {
+ :root{
+  --color-background: #f8f8f8;
+  --color-text: #222;
+  --color-text-accent: #2a2;
+  --color-shadow: #0003;
+  --color-background-admin: #ffc048;
+  --color-background-error: #fa7676;
+  --color-text-error: #4f0a0a;
+  --color-background-highlight: #fff;
+  --color-background-header: #fff;
+  --color-background-footer: #121118;
+  --color-text-footer: #fff;
+  --color-text-header: #444;
+  --color-accent: #3c3;
+  --color-background-alternate: #f0f0f0;
+  --color-background-hover: #e8e8e8;
+  --color-border-table: #aaa;
+  --color-background--ranking-table-runner-stopped-badge: #d34242;
+  --color-text--ranking-table-runner-stopped-badge: #fff;
+  --color-border-card: #ddd;
+  --color-border-button: #eee;
+  --color-background-button: #fff;
+  --color-text-button-accent: #fff;
+  --color-accent-desaturated: #9c9;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root{
+   --color-background: #1a1a1a;
+   --color-text: #ddd;
+   --color-text-accent: #2a2;
+   --color-shadow: #000a;
+   --color-background-admin: #ffc048;
+   --color-background-error: #8a0505;
+   --color-text-error: #f5b2b2;
+   --color-background-highlight: #111;
+   --color-background-header: #111;
+   --color-background-footer: #040208;
+   --color-text-footer: #fff;
+   --color-text-header: #fff;
+   --color-accent: #3c3;
+   --color-background-alternate: #222;
+   --color-background-hover: #233523;
+   --color-border-table: #333;
+   --color-background--ranking-table-runner-stopped-badge: #d34242;
+   --color-text--ranking-table-runner-stopped-badge: #fff;
+   --color-border-card: #222;
+   --color-border-button: #111;
+   --color-background-button: #000;
+   --color-text-button-accent: #000;
+   --color-accent-desaturated: #363;
+   }
+ }
+
 body {
   margin: 0;
   font-family:
@@ -6,13 +62,13 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  background-color: #f8f8f8;
-  color: #222;
+  background-color: var(--color-background);
+  color: var(--color-text);
 }
 
 a,
 button.a {
-  color: #22aa22;
+  color: var(--color-text-accent);
   text-decoration: underline;
   cursor: pointer;
 
@@ -44,21 +100,21 @@ a.no-style {
 }
 
 #app-header {
-  box-shadow: 0 1px 2px rgb(208 208 208);
+  box-shadow: 0 1px 2px var(--color-shadow);
 }
 
 #app-header-admin-section {
   display: flex;
   justify-content: space-between;
 
-  background-color: #ffc048;
+  background-color: var(--color-background-admin);
 
   padding: 5px 20px;
 }
 
 #app-header-error-section {
-  background-color: #fa7676;
-  color: #4f0a0a;
+  background-color: var(--color-background-error);
+  color: var(--color-text-error);
 
   padding: 5px 20px;
 }
@@ -81,7 +137,7 @@ a.no-style {
 
   display: flex;
 
-  background-color: #fff;
+  background-color: var(--color-background-header);
 }
 
 #app-header-logo-container {
@@ -127,7 +183,7 @@ a.no-style {
   text-decoration: none;
 
   font-weight: 700;
-  color: #444;
+  color: var(--color-text-header);
 
   padding-left: 5px;
   padding-right: 5px;
@@ -161,12 +217,12 @@ a.no-style {
 }
 
 #app-header-main-section nav ul li a.active {
-  color: #33cc33;
+  color: var(--color-accent);
 }
 
 #app-header-main-section nav ul li a.active::after {
   content: " ";
-  border-bottom: 3px solid #33cc33;
+  border-bottom: 3px solid var(--color-accent);
   position: absolute;
   bottom: 0;
   left: 0;
@@ -196,7 +252,7 @@ a.no-style {
   margin-right: 20px;
 
   font-weight: 700;
-  color: #444;
+  color: var(--color-text-header);
 }
 
 .circular-loader svg {
@@ -267,12 +323,12 @@ dialog.modal .close-button {
 dialog.modal .close-button:hover {
   cursor: pointer;
 
-  color: #333;
+  color: hsl(0, 0%, 20%);
 }
 
 .breadcrumbs {
-  border: 1px solid #eee;
-  background-color: #fff;
+  border: 1px solid var(--color-border-button);
+  background-color: var(--color-background-button);
   list-style: none;
   padding: 10px 20px;
   margin-top: 1rem;
@@ -293,9 +349,9 @@ dialog.modal .close-button:hover {
   top: calc(100% + 5px);
   right: 0;
 
-  background-color: #fff;
-  border: 1px solid #ddd;
-  box-shadow: 0 1px 2px rgb(220 220 220);
+  background-color: var(--color-background-button);
+  border: 1px solid var(--color-border-button);
+  box-shadow: 0 1px 2px var(--color-shadow);
   border-radius: 5px;
 }
 
@@ -331,7 +387,7 @@ dialog.modal .close-button:hover {
 
 .options-dropdown li a:hover,
 .options-dropdown li button:hover {
-  background-color: #eee;
+  background-color: var(--color-background-hover);
   cursor: pointer;
 }
 
@@ -353,7 +409,7 @@ table.table:not(.no-full-width) {
 table.table,
 table.table td,
 table.table th {
-  border: 1px solid #aaa;
+  border: 1px solid var(--color-border-table);
 }
 
 table.table td:not(.clickable),
@@ -364,17 +420,17 @@ table.table th.clickable a {
 }
 
 table.table th {
-  background-color: #fff;
+  background-color: var(--color-background-highlight);
   border-bottom-style: double;
   border-bottom-width: 3px;
 }
 
 table.table tbody tr:nth-child(2n) {
-  background-color: #f0f0f0;
+  background-color: var(--color-background-alternate);
 }
 
 table.table tbody tr:hover {
-  background-color: #e8e8e8;
+  background-color: var(--color-background-hover);
 }
 
 table.table td .buttons-container,
@@ -401,17 +457,17 @@ table.table th .buttons-container {
 .tabs-container li {
   display: inline-block;
 
-  background-color: #eee;
-  border-left: 1px solid #eee;
-  border-right: 1px solid #eee;
+  background-color: var(--color-border-button);
+  border-left: 1px solid var(--color-border-button);
+  border-right: 1px solid var(--color-border-button);
 }
 
 .tabs-container li.active {
-  background-color: #fff;
+  background-color: var(--color-background-button);
 
-  border-left: 1px solid #ddd;
-  border-top: 1px solid #ddd;
-  border-right: 1px solid #ddd;
+  border-left: 1px solid var(--color-border-card);
+  border-top: 1px solid var(--color-border-card);
+  border-right: 1px solid var(--color-border-card);
   border-bottom: transparent;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
@@ -438,7 +494,7 @@ table.table th .buttons-container {
 }
 
 .ranking-table-info-header {
-  background-color: #fff;
+  background-color: var(--color-background-highlight);
 }
 
 .ranking-table-chevron {
@@ -464,8 +520,8 @@ table.table th .buttons-container {
 .ranking-table-runner-stopped-badge {
   display: inline-block;
   font-size: 0.75em;
-  background-color: rgb(211 66 66);
-  color: white;
+  background-color: var(--color-background--ranking-table-runner-stopped-badge);
+  color: var(--color-text--ranking-table-runner-stopped-badge);
   font-weight: bold;
   padding: 0.2em 0.4em;
   border-radius: 0.5em;
@@ -475,9 +531,9 @@ table.table th .buttons-container {
 }
 
 .card {
-  background-color: #fff;
-  border: 1px solid #ddd;
-  box-shadow: rgba(0, 0, 0, 0.2) 0.05rem 0.05rem 0.2rem;
+  background-color: var(--color-background-highlight);
+  border: 1px solid var(--color-border-card);
+  box-shadow: var(--color-shadow) 0.05rem 0.05rem 0.2rem;
   padding: 0.75em;
 }
 
@@ -491,7 +547,7 @@ a:has(.card) {
 }
 
 a:hover > .card {
-  background-color: #f8f8f8;
+  background-color: var(--color-background);
 }
 
 .responsive-runner-laps-table .responsive-runner-laps-table-row-secondary-data {
@@ -523,14 +579,14 @@ a:hover > .card {
   text-decoration: none;
 
   padding: 5px 15px;
-  border: 1px solid #eee;
-  background-color: #fff;
-  box-shadow: 0 1px 2px rgb(220 220 220);
+  border: 1px solid var(--color-border-button);
+  background-color: var(--color-background-button);
+  box-shadow: 0 1px 2px var(--color-shadow);
   transition: box-shadow 0.05s ease-out;
 }
 
 .admin-list li a:hover {
-  box-shadow: 0 1px 3px rgb(180 180 180);
+  box-shadow: 0 1px 3px var(--color-shadow);
 }
 
 .admin-list li.sorting a:hover {
@@ -542,12 +598,12 @@ a:hover > .card {
 }
 
 .admin-list li.sorting a.dragged-over {
-  border: 1px solid #2eb72e;
+  border: 1px solid var(--color-accent);
 }
 
 .admin-list-link-drag-icon {
   margin-right: 15px;
-  color: #99cc99;
+  color: var(--color-accent-desaturated);
 }
 
 .admin-list-link-icon {
@@ -587,19 +643,19 @@ a:hover > .card {
   justify-content: center;
 
   border-radius: 0;
-  border: 1px solid #ccc;
+  border: 1px solid var(--color-border-button);
   background-color: transparent;
 }
 
 .pagination button:not(:disabled):hover {
   cursor: pointer;
-  background-color: #ddd;
+  background-color: var(--color-background-hover);
 }
 
 .pagination button.pagination-button-current-page {
-  background-color: #33cc33;
-  border-color: #33cc33;
-  color: #fff;
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-text-button-accent);
   z-index: 1;
 }
 
@@ -618,8 +674,8 @@ a:hover > .card {
 }
 
 #app-footer {
-  background-color: #131119;
-  color: #fff;
+  background-color: var(--color-background-footer);
+  color: var(--color-text-footer);
 
   font-size: 0.9em;
 
