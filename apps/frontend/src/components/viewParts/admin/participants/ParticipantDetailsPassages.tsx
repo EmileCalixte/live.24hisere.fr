@@ -146,7 +146,7 @@ export default function ParticipantDetailsPassages({
                       </td>
                       <td>{formatDateAsString(passage.processed.lapEndTime)}</td>
                       <td>{formatMsAsDuration(passage.processed.lapEndRaceTime)}</td>
-                      <td className="no-padding-vertical">
+                      <td className="py-0">
                         <div className="buttons-container">
                           {passage.isHidden && (
                             <button

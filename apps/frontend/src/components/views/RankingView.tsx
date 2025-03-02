@@ -293,20 +293,16 @@ export default function RankingView(): React.ReactElement {
                 )}
 
                 {windowWidth <= RESPONSIVE_TABLE_MAX_WINDOW_WIDTH && (
-                  <div>
-                    <div className="mb-3">Cliquez sur un coureur pour consulter ses données de course</div>
-
-                    <ResponsiveRankingTable
-                      race={selectedRace}
-                      ranking={ranking}
-                      tableCategoryCode={selectedCategoryCode}
-                      tableGender={selectedGender ?? "mixed"}
-                      tableRaceDuration={selectedTimeMode === RankingTimeMode.AT ? selectedRankingTime : null}
-                      showLastPassageTime={showLastPassageTime}
-                      formatGapMode={formatGapMode}
-                      showRunnerStoppedBadges={isRaceNotFinished}
-                    />
-                  </div>
+                  <ResponsiveRankingTable
+                    race={selectedRace}
+                    ranking={ranking}
+                    tableCategoryCode={selectedCategoryCode}
+                    tableGender={selectedGender ?? "mixed"}
+                    tableRaceDuration={selectedTimeMode === RankingTimeMode.AT ? selectedRankingTime : null}
+                    showLastPassageTime={showLastPassageTime}
+                    formatGapMode={formatGapMode}
+                    showRunnerStoppedBadges={isRaceNotFinished}
+                  />
                 )}
               </Col>
             </Row>
