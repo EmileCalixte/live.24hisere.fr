@@ -1,27 +1,65 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(body[theme="dark"] *));
+
+@theme {
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply font-bold;
+}
+
+h1 {
+  @apply text-[2rem];
+}
+
+h2 {
+  @apply text-[1.35rem];
+}
+
+h3 {
+  @apply text-[1.15rem];
+}
+
+h4 {
+  @apply text-[1.05rem];
+}
+
+h5 {
+  @apply text-base;
+}
+
+h6 {
+  @apply text-[0.95rem];
+}
+
 /*
  * Tweak to prevent the screen from flashing before javascript is loaded if user's device is in shadow mode
  */
 
 @media (prefers-color-scheme: light) {
   :root {
-    --color-background-header: #fff;
-    --color-background: #f8f8f8;
+    --color-background: var(--color-stone-100);
+    --color-header-background: var(--color-white);
   }
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-background: #080808;
-    --color-background-header: #1a1a1a;
+    --color-background: var(--color-stone-950);
+    --color-header-background: var(--color-neutral-900);
   }
 }
 
 /* The `theme` attribute is added to the body only once React has loaded */
 body[theme="light"] {
-  --color-background: #f8f8f8;
-  --color-background-header: #fff;
+  --color-background: var(--color-stone-100);
+  --color-header-background: var(--color-white);
 }
 
 /*
@@ -30,15 +68,10 @@ body[theme="light"] {
 
 body,
 body[theme="light"] {
-  --color-text: #222;
+  --color-text: var(--color-neutral-900);
   --color-text-accent: #2a2;
   --color-shadow: #0003;
-  --color-background-admin: #ffc048;
-  --color-background-error: #fa7676;
-  --color-text-error: #4f0a0a;
   --color-background-highlight: #fff;
-  --color-background-footer: #121118;
-  --color-text-footer: #fff;
   --color-text-header: #444;
   --color-accent: #3c3;
   --color-background-alternate: #f0f0f0;
@@ -54,17 +87,12 @@ body[theme="light"] {
 }
 
 body[theme="dark"] {
-  --color-background: #080808;
-  --color-text: #ddd;
+  --color-background: var(--color-stone-950);
+  --color-text: var(--color-neutral-200);
   --color-text-accent: #2a2;
   --color-shadow: #000a;
-  --color-background-admin: #ffc048;
-  --color-background-error: #8a0505;
-  --color-text-error: #f5b2b2;
   --color-background-highlight: #1a1a1a;
-  --color-background-header: #1a1a1a;
-  --color-background-footer: #040208;
-  --color-text-footer: #fff;
+  --color-header-background: var(--color-neutral-900);
   --color-text-header: #fff;
   --color-accent: #3c3;
   --color-background-alternate: #222;
@@ -109,39 +137,11 @@ a.no-style {
   text-decoration: inherit;
 }
 
-.container-fluid {
-  width: calc(100% - var(--bs-gutter-x));
-}
-
 #app {
   min-height: 100vh;
 
   display: flex;
   flex-direction: column;
-}
-
-#app-content-wrapper {
-  flex: 1;
-}
-
-#app-header {
-  box-shadow: 0 1px 2px var(--color-shadow);
-}
-
-#app-header-admin-section {
-  display: flex;
-  justify-content: space-between;
-
-  background-color: var(--color-background-admin);
-
-  padding: 5px 20px;
-}
-
-#app-header-error-section {
-  background-color: var(--color-background-error);
-  color: var(--color-text-error);
-
-  padding: 5px 20px;
 }
 
 .admin-header-user-button {
@@ -162,7 +162,7 @@ a.no-style {
 
   display: flex;
 
-  background-color: var(--color-background-header);
+  background-color: var(--color-header-background);
 }
 
 #app-header-logo-container {
@@ -555,13 +555,6 @@ table.table th .buttons-container {
   -webkit-print-color-adjust: exact;
 }
 
-.card {
-  background-color: var(--color-background-highlight);
-  border: 1px solid var(--color-border-card);
-  box-shadow: var(--color-shadow) 0.05rem 0.05rem 0.2rem;
-  padding: 0.75em;
-}
-
 a > .card {
   transition: background-color 0.1s ease-out;
 }
@@ -696,19 +689,6 @@ a:hover > .card {
 .pagination button:last-child {
   border-top-right-radius: 0.5em;
   border-bottom-right-radius: 0.5em;
-}
-
-#app-footer {
-  background-color: var(--color-background-footer);
-  color: var(--color-text-footer);
-
-  font-size: 0.9em;
-
-  padding-top: 0.75em;
-  padding-bottom: 0.75em;
-
-  display: flex;
-  align-items: center;
 }
 
 #app-footer a {

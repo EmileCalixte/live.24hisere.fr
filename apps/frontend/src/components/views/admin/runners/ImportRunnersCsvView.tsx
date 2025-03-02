@@ -13,6 +13,7 @@ import type { SelectOption } from "../../../../types/Forms";
 import type { RunnerFromCsv, RunnersCsvMapping } from "../../../../types/ImportCsv";
 import { getRunnerFromCsv, parseCsv } from "../../../../utils/csvUtils";
 import { appContext } from "../../../App";
+import { Card } from "../../../ui/Card";
 import { Input } from "../../../ui/forms/Input";
 import Select from "../../../ui/forms/Select";
 import Page from "../../../ui/Page";
@@ -324,7 +325,7 @@ export default function ImportRunnersCsvView(): React.ReactElement {
       {csvHeader && !isMappingValidated && (
         <Row className="mt-3">
           <Col>
-            <div className="card">
+            <Card>
               <h2 className="mt-0">Mapping CSV</h2>
 
               <CsvMapping
@@ -333,7 +334,7 @@ export default function ImportRunnersCsvView(): React.ReactElement {
                 csvColumns={csvHeader}
                 onValidateMapping={onValidateMapping}
               />
-            </div>
+            </Card>
           </Col>
         </Row>
       )}
@@ -355,7 +356,7 @@ export default function ImportRunnersCsvView(): React.ReactElement {
 
           <Row className="mt-3">
             <Col>
-              <div className="card">
+              <Card>
                 <Row>
                   <Col>
                     <h2 className="m-0">Import des coureurs</h2>
@@ -461,7 +462,7 @@ export default function ImportRunnersCsvView(): React.ReactElement {
                             />
                           </Col>
 
-                          <Col className="flex-grow-2">
+                          <Col className="grow-2">
                             <Input
                               label="Prénom"
                               labelClassName="text-nowrap"
@@ -472,7 +473,7 @@ export default function ImportRunnersCsvView(): React.ReactElement {
                             />
                           </Col>
 
-                          <Col className="flex-grow-2">
+                          <Col className="grow-2">
                             <Input
                               label="Nom de famille"
                               labelClassName="text-nowrap"
@@ -507,10 +508,10 @@ export default function ImportRunnersCsvView(): React.ReactElement {
                         </Row>
                       </Col>
 
-                      <Col className="flex-grow-0 d-flex align-items-end">
+                      <Col className="d-flex align-items-end flex-grow-0">
                         <div className="d-flex gap-2">
                           <button
-                            className={clsx("button text-nowrap d-flex align-items-center", !toImport && "red")}
+                            className={clsx("button d-flex align-items-center text-nowrap", !toImport && "red")}
                             onClick={() => {
                               toggleRunnerImport(index);
                             }}
@@ -530,7 +531,7 @@ export default function ImportRunnersCsvView(): React.ReactElement {
                     </Row>
                   );
                 })}
-              </div>
+              </Card>
             </Col>
           </Row>
         </>

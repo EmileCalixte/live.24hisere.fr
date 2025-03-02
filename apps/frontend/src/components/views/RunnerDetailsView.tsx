@@ -19,6 +19,7 @@ import { generateXlsxFromData } from "../../utils/excelUtils";
 import { isRaceFinished } from "../../utils/raceUtils";
 import { getDataForExcelExport, getRaceRunnerFromRunnerAndParticipant } from "../../utils/runnerUtils";
 import { appContext } from "../App";
+import { Card } from "../ui/Card";
 import CircularLoader from "../ui/CircularLoader";
 import { Flag } from "../ui/countries/Flag";
 import Select from "../ui/forms/Select";
@@ -209,7 +210,7 @@ export default function RunnerDetailsView(): React.ReactElement {
       )}
 
       {runnerId !== undefined && !selectedRaceRunner && (
-        <div className="card mt-3">
+        <Card>
           <Row>
             <Col>
               <p>
@@ -217,14 +218,14 @@ export default function RunnerDetailsView(): React.ReactElement {
               </p>
             </Col>
           </Row>
-        </div>
+        </Card>
       )}
 
       {selectedRaceRunner && (
-        <div className="card mt-3">
+        <Card>
           <Row>
             <Col>
-              <h2 className="m-0 d-flex align-items-center gap-2">
+              <h2 className="flex items-center gap-2">
                 {alpha2CountryCode && <Flag countryCode={alpha2CountryCode} />}
 
                 <span>
@@ -317,7 +318,7 @@ export default function RunnerDetailsView(): React.ReactElement {
               <CircularLoader asideText="Chargement des données" />
             </p>
           )}
-        </div>
+        </Card>
       )}
     </Page>
   );

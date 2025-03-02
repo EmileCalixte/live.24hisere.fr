@@ -60,7 +60,7 @@ export default function SearchRunnerView(): React.ReactElement {
       ) : (
         <Row>
           <Col xxl={4} xl={4} lg={6} md={8} sm={12}>
-            <form className="d-flex flex-sm-row flex-column gap-2 align-items-sm-end" onSubmit={onSubmit}>
+            <form className="d-flex flex-sm-row flex-column align-items-sm-end gap-2" onSubmit={onSubmit}>
               <Input
                 className="flex-grow-1"
                 label="Nom et/ou prénom"
@@ -93,7 +93,7 @@ export default function SearchRunnerView(): React.ReactElement {
 
           {matchingRunners.length >= 1 && (
             <Col xxl={4} xl={4} lg={6} md={8} sm={12}>
-              <ul className="no-ul-style d-flex flex-column gap-2">
+              <ul className="d-flex flex-column gap-2">
                 {matchingRunners.map((runner) => (
                   <li key={runner.id}>
                     <Link to={`/runner-details/${runner.id}`}>

@@ -11,6 +11,7 @@ import { formatMsAsDuration, formatMsDurationHms } from "../../../utils/duration
 import { isRaceFinished, isRaceStarted } from "../../../utils/raceUtils";
 import { getOppositeSortDirection } from "../../../utils/sortUtils";
 import { appContext } from "../../App";
+import { Card } from "../../ui/Card";
 import { Button } from "../../ui/forms/Button";
 
 const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
@@ -157,7 +158,7 @@ export default function RunnerDetailsLaps({
   const showCurrentLapAtBottomOfTable = showCurrentLap && sortDirection === SortDirection.ASC;
 
   return (
-    <div className="card">
+    <Card>
       <h3 className="mt-0">Détails des tours</h3>
 
       <p className="mb-4">
@@ -249,7 +250,7 @@ export default function RunnerDetailsLaps({
             </button>
           </div>
 
-          <table id="runner-laps-table" className="table responsive-runner-laps-table">
+          <table id="runner-laps-table" className="responsive-runner-laps-table table">
             <tbody>
               {showCurrentLapAtTopOfTable && <>{currentLapResponsiveTableRow}</>}
 
@@ -291,6 +292,6 @@ export default function RunnerDetailsLaps({
           </table>
         </div>
       )}
-    </div>
+    </Card>
   );
 }

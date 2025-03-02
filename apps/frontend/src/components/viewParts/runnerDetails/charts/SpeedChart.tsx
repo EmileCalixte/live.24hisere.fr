@@ -8,6 +8,7 @@ import { SearchParam } from "../../../../constants/searchParams";
 import { useWindowDimensions } from "../../../../hooks/useWindowDimensions";
 import CanvasjsReact from "../../../../lib/canvasjs/canvasjs.react";
 import { formatMsAsDuration } from "../../../../utils/durationUtils";
+import { Card } from "../../../ui/Card";
 import { Checkbox } from "../../../ui/forms/Checkbox";
 
 const CanvasJSChart = CanvasjsReact.CanvasJSChart;
@@ -365,7 +366,7 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
   ]);
 
   return (
-    <div className="card">
+    <Card>
       <Row>
         <Col xs={12}>
           <h3 className="mt-0">Vitesse</h3>
@@ -415,6 +416,6 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
           <CanvasJSChart options={options} />
         </Col>
       </Row>
-    </div>
+    </Card>
   );
 }

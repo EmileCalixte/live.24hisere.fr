@@ -2,6 +2,7 @@ import React from "react";
 import DOMPurify from "dompurify";
 import { Col, Row } from "react-bootstrap";
 import { appContext } from "../App";
+import { Card } from "../ui/Card";
 import Page from "../ui/Page";
 
 export default function DisabledAppView(): React.ReactElement {
@@ -15,8 +16,8 @@ export default function DisabledAppView(): React.ReactElement {
     <Page id="disabled-app" title="Application désactivée">
       <Row>
         <Col>
-          <div
-            className="card mt-3"
+          <Card
+            className="mt-3"
             dangerouslySetInnerHTML={{
               __html: DOMPurify.sanitize(message),
             }}

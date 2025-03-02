@@ -28,6 +28,7 @@ import { parseAsGender } from "../../queryStringParsers/parseAsGender";
 import { isRaceFinished } from "../../utils/raceUtils";
 import { FormatGapMode } from "../../utils/runnerUtils";
 import { appContext } from "../App";
+import { Card } from "../ui/Card";
 import CircularLoader from "../ui/CircularLoader";
 import Select from "../ui/forms/Select";
 import Page from "../ui/Page";
@@ -226,7 +227,7 @@ export default function RankingView(): React.ReactElement {
 
       <Row className="hide-on-print mb-3">
         <Col>
-          <div className="card">
+          <Card>
             <Row className="gap-2">
               {editions && editions.length >= 2 && (
                 <Col xl={3} lg={4} md={6} sm={9} xs={12}>
@@ -251,13 +252,13 @@ export default function RankingView(): React.ReactElement {
                 </Col>
               )}
             </Row>
-          </div>
+          </Card>
         </Col>
       </Row>
 
       {selectedRace && (
         <>
-          <Row className="hide-on-print mb-3 row-cols-auto gap-3">
+          <Row className="hide-on-print row-cols-auto mb-3 gap-3">
             <RankingSettings
               categories={categories}
               onCategorySelect={onCategorySelect}

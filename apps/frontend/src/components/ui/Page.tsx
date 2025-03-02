@@ -1,4 +1,5 @@
 import type React from "react";
+import clsx from "clsx";
 import { Helmet } from "react-helmet";
 import { APP_BASE_TITLE } from "../../constants/app";
 
@@ -15,7 +16,7 @@ export default function Page({ children, id, title, className }: PageProps): Rea
   }
 
   return (
-    <div id={`page-${id}`} className={className}>
+    <div id={`page-${id}`} className={clsx("mx-3 md:mx-5", className)}>
       <Helmet>
         <title>{[title, APP_BASE_TITLE].join(" - ")}</title>
       </Helmet>

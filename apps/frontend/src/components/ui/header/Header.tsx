@@ -16,7 +16,7 @@ export default function Header(): React.ReactElement {
   } = useContext(appContext);
 
   return (
-    <header id="app-header">
+    <header id="app-header" className="shadow-sm">
       {user && <AdminHeader />}
 
       <div id="app-header-main-section">

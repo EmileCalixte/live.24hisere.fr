@@ -4,6 +4,7 @@ import { Col, Row } from "react-bootstrap";
 import type { ProcessedPassage } from "@live24hisere/core/types";
 import { NO_VALUE_PLACEHOLDER } from "../../../constants/misc";
 import { formatMsAsDuration, formatMsDurationHms } from "../../../utils/durationUtils";
+import { Card } from "../../ui/Card";
 
 interface RunnerDetailsStatsLapCardProps {
   title: string;
@@ -12,13 +13,13 @@ interface RunnerDetailsStatsLapCardProps {
 
 export function RunnerDetailsStatsLapCard({ title, passage }: RunnerDetailsStatsLapCardProps): React.ReactElement {
   return (
-    <div className="card">
+    <Card>
       <h3 className={clsx("mt-0", !passage && "mb-0")}>
         {title}&nbsp;: {passage ? formatMsDurationHms(passage.processed.lapDuration) : NO_VALUE_PLACEHOLDER}
       </h3>
 
       {passage && (
-        <Row as="ul" className="no-ul-style gap-y-3">
+        <Row as="ul" className="gap-y-3">
           <Col as="li" xxl={12}>
             Tour n° {passage.processed.lapNumber}
             <> </>à <strong>{formatMsAsDuration(passage.processed.lapEndRaceTime)}</strong> de course
@@ -38,6 +39,6 @@ export function RunnerDetailsStatsLapCard({ title, passage }: RunnerDetailsStats
           </Col>
         </Row>
       )}
-    </div>
+    </Card>
   );
 }

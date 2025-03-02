@@ -6,6 +6,7 @@ import { NO_VALUE_PLACEHOLDER } from "../../../constants/misc";
 import type { Ranking, RankingRunner } from "../../../types/Ranking";
 import { formatMsAsDuration, formatMsDurationHms } from "../../../utils/durationUtils";
 import { approximateTimeToDistance, getFastestLapPassage, getSlowestLapPassage } from "../../../utils/passageUtils";
+import { Card } from "../../ui/Card";
 import InfoIconTooltip from "../../ui/InfoIconTooltip";
 import { RunnerDetailsStatsLapCard } from "./RunnerDetailsStatsLapCard";
 import RunnerDetailsStatsRankingTable from "./RunnerDetailsStatsRankingTable";
@@ -55,7 +56,7 @@ export default function RunnerDetailsStats({ runner, race, ranking }: RunnerDeta
         <Col xl={6} lg={8} md={12}>
           <RunnerDetailsStatsRankingTable race={race} runner={runner} ranking={ranking} />
 
-          <p className="mt-1 mb-0">
+          <p className="mb-0 mt-1">
             <Link to={`/ranking?edition=${race.editionId}&race=${race.id}`}>
               Cliquez ici pour voir le classement complet
             </Link>
@@ -63,10 +64,10 @@ export default function RunnerDetailsStats({ runner, race, ranking }: RunnerDeta
         </Col>
 
         <Col xl={6} lg={4} md={12}>
-          <div className="card h-100 border-box">
+          <Card className="box-border h-full">
             <h3 className="mt-0">Données générales</h3>
 
-            <Row as="ul" className="no-ul-style gap-y-3">
+            <Row as="ul" className="gap-y-3">
               {!race.isBasicRanking && (
                 <Col as="li" xl={6} lg={12} md={6} sm={12}>
                   Nombre de tours&nbsp;: <strong>{completeLapCount}</strong>
@@ -119,7 +120,7 @@ export default function RunnerDetailsStats({ runner, race, ranking }: RunnerDeta
                 </Col>
               )}
             </Row>
-          </div>
+          </Card>
         </Col>
 
         {!isBasicRanking && (

@@ -5,6 +5,7 @@ import { useGetDisabledAppData } from "../../../hooks/api/requests/admin/config/
 import { usePatchDisabledAppData } from "../../../hooks/api/requests/admin/config/usePatchDisabledAppData";
 import { getDisabledAppBreadcrumbs } from "../../../services/breadcrumbs/breadcrumbService";
 import { appContext } from "../../App";
+import { Card } from "../../ui/Card";
 import { Checkbox } from "../../ui/forms/Checkbox";
 import { TextArea } from "../../ui/forms/TextArea";
 import Page from "../../ui/Page";
@@ -100,8 +101,7 @@ export default function DisabledAppAdminView(): React.ReactElement {
           <Col>
             <p>Aperçu :</p>
 
-            <div
-              className="card"
+            <Card
               id="disabled-app-message-preview"
               dangerouslySetInnerHTML={{
                 __html: DOMPurify.sanitize(disabledAppMessage),
