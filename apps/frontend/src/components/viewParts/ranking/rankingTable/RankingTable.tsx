@@ -76,7 +76,6 @@ export default function RankingTable({
           {showLastPassageTime && <th>Dernier passage</th>}
           <th>Vitesse moy.</th>
           {!race.isBasicRanking && <th>Écart 1er</th>}
-          <th className="hide-on-print">Détails</th>
         </tr>
       </thead>
       <tbody>{ranking.map((runner) => getRankingTableRow(runner))}</tbody>

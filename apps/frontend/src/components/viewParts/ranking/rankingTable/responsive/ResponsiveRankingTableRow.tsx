@@ -1,5 +1,7 @@
 import React from "react";
 import { type CategoryCode, getCategory } from "@emilecalixte/ffa-categories";
+import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 import type { GenderWithMixed, PublicRace } from "@live24hisere/core/types";
 import type { RankingRunner } from "../../../../../types/Ranking";
@@ -106,53 +108,63 @@ export default function ResponsiveRankingTableRow({
 
   return (
     <tr>
-      <td>
+      <td className="text-center">
         <strong>{rowRanking}</strong>
       </td>
       <td style={{ width: "100%" }}>
-        <Link to={`/runner-details/${runner.id}?race=${race.id}`}>
-          <div className="d-flex align-items-center gap-2">
-            {alpha2CountryCode && <Flag countryCode={alpha2CountryCode} />}
-            <strong>
-              {runner.lastname.toUpperCase()} {runner.firstname}
-            </strong>
-          </div>
+        <div className="d-flex align-items-center gap-2">
+          {alpha2CountryCode && <Flag countryCode={alpha2CountryCode} />}
+          <strong>
+            {runner.lastname.toUpperCase()} {runner.firstname}
+          </strong>
+        </div>
 
-          <div className="d-flex align-items-center gap-2">
-            <strong>N° {runner.bibNumber}</strong>
-            {runner.stopped && showRunnerStoppedBadges && <RunnerStoppedBadge />}
-          </div>
+        <div className="d-flex align-items-center gap-2">
+          <strong>N° {runner.bibNumber}</strong>
+          {runner.stopped && showRunnerStoppedBadges && <RunnerStoppedBadge />}
+        </div>
 
-          {displayedGap && <div className="responsive-ranking-table-row-secondary-data-row">{displayedGap}</div>}
+        {displayedGap && <div className="responsive-ranking-table-row-secondary-data-row">{displayedGap}</div>}
 
-          <div className="responsive-ranking-table-row-secondary-data-row">{rowSecondaryRankings}</div>
+        <div className="responsive-ranking-table-row-secondary-data-row">{rowSecondaryRankings}</div>
 
+        <div className="responsive-ranking-table-row-secondary-data-row">
+          {formatFloatNumber(runner.totalDistance / 1000, 2)} km
+          {(() => {
+            if (runner.totalAverageSpeed === null) {
+              return null;
+            } else {
+              return (
+                <>
+                  &nbsp;–&nbsp;
+                  {formatFloatNumber(runner.totalAverageSpeed, 2)} km/h moy.
+                </>
+              );
+            }
+          })()}
+        </div>
+        {showLastPassageTime && (
           <div className="responsive-ranking-table-row-secondary-data-row">
-            {formatFloatNumber(runner.totalDistance / 1000, 2)} km
             {(() => {
-              if (runner.totalAverageSpeed === null) {
+              if (runner.lastPassageTime === null) {
                 return null;
               } else {
-                return (
-                  <>
-                    &nbsp;–&nbsp;
-                    {formatFloatNumber(runner.totalAverageSpeed, 2)} km/h moy.
-                  </>
-                );
+                return <>Dernier passage : {formatMsAsDuration(runner.lastPassageTime.raceTime)}</>;
               }
             })()}
           </div>
-          {showLastPassageTime && (
-            <div className="responsive-ranking-table-row-secondary-data-row">
-              {(() => {
-                if (runner.lastPassageTime === null) {
-                  return null;
-                } else {
-                  return <>Dernier passage : {formatMsAsDuration(runner.lastPassageTime.raceTime)}</>;
-                }
-              })()}
-            </div>
-          )}
+        )}
+      </td>
+      <td className="position-relative clickable">
+        <span className="px-3 opacity-0">
+          <FontAwesomeIcon icon={faChevronRight} />
+        </span>
+        <Link
+          to={`/runner-details/${runner.id}?race=${race.id}`}
+          className="px-3 position-absolute inset-0 d-flex align-items-center"
+          aria-label={`Consulter les détails du coureur ${runner.firstname} ${runner.lastname}`}
+        >
+          <FontAwesomeIcon icon={faChevronRight} />
         </Link>
       </td>
     </tr>

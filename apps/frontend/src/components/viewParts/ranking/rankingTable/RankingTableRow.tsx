@@ -1,5 +1,7 @@
 import type React from "react";
 import type { CategoryCode } from "@emilecalixte/ffa-categories";
+import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 import type { GenderWithMixed, PublicRace } from "@live24hisere/core/types";
 import { NO_VALUE_PLACEHOLDER } from "../../../../constants/misc";
@@ -45,14 +47,18 @@ export default function RankingTableRow({
         tableGender={tableGender}
       />
       <td>{runner.bibNumber}</td>
-      <td>
-        <span className="d-flex align-items-center gap-2">
+      <td className="clickable">
+        <Link to={`/runner-details/${runner.id}?race=${race.id}`} className="d-flex align-items-center gap-2 no-style">
           {alpha2CountryCode && <Flag countryCode={alpha2CountryCode} />}
-          <span>
+          <strong>
             {runner.lastname.toUpperCase()} {runner.firstname}
-          </span>
+          </strong>
           {runner.stopped && showRunnerStoppedBadges && <RunnerStoppedBadge />}
-        </span>
+          <span className="flex-grow-1" />
+          <span className="hide-on-print ranking-table-chevron">
+            <FontAwesomeIcon icon={faChevronRight} />
+          </span>
+        </Link>
       </td>
       {!race.isBasicRanking && (
         <td>{raceInitialDistance > 0 ? Math.max(0, runner.passages.length - 1) : runner.passages.length}</td>
@@ -87,10 +93,6 @@ export default function RankingTableRow({
           }) ?? NO_VALUE_PLACEHOLDER}
         </td>
       )}
-
-      <td className="hide-on-print">
-        <Link to={`/runner-details/${runner.id}?race=${race.id}`}>Détails</Link>
-      </td>
     </tr>
   );
 }

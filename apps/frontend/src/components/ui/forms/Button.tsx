@@ -39,7 +39,7 @@ export function Button({
       </span>
 
       {isLoading && (
-        <span className="d-flex align-items-center justify-content-center" style={{ position: "absolute", inset: 0 }}>
+        <span className="d-flex align-items-center justify-content-center position-absolute inset-0">
           <CircularLoader />
         </span>
       )}

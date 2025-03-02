@@ -18,3 +18,7 @@ ul.no-ul-style {
 .border-box {
   box-sizing: border-box;
 }
+
+.inset-0 {
+  inset: 0;
+}

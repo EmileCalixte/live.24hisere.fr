@@ -23,6 +23,11 @@ button.a {
   font-family: inherit;
 }
 
+a.no-style {
+  color: inherit;
+  text-decoration: inherit;
+}
+
 .container-fluid {
   width: calc(100% - var(--bs-gutter-x));
 }
@@ -351,16 +356,11 @@ table.table th {
   border: 1px solid #aaa;
 }
 
-table.table td:not(.no-padding-vertical),
-table.table th:not(.no-padding-vertical) {
-  padding-top: 7px;
-  padding-bottom: 7px;
-}
-
-table.table td:not(.no-padding-horizontal),
-table.table th:not(.no-padding-horizontal) {
-  padding-left: 7px;
-  padding-right: 7px;
+table.table td:not(.clickable),
+table.table th:not(.clickable),
+table.table td.clickable a,
+table.table th.clickable a {
+  padding: 0.5em;
 }
 
 table.table th {
@@ -441,15 +441,14 @@ table.table th .buttons-container {
   background-color: #fff;
 }
 
-.responsive-ranking-table tbody td:nth-child(2) {
-  padding: 0;
+.ranking-table-chevron {
+  color: #444;
+  font-size: 0.85em;
 }
 
-.responsive-ranking-table tbody td:nth-child(2) > a {
+.responsive-ranking-table tbody td.clickable > a {
   text-decoration: none;
-  color: inherit;
-  display: block;
-  padding: 7px;
+  color: #444;
 }
 
 @media (max-width: 460px) {
