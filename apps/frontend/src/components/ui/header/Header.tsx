@@ -1,5 +1,6 @@
 import type React from "react";
 import { useContext } from "react";
+import { Theme } from "../../../constants/theme";
 import { appContext } from "../../App";
 import AdminHeader from "./AdminHeader";
 import FetchAppDataErrorHeader from "./FetchAppDataErrorHeader";
@@ -11,6 +12,7 @@ export default function Header(): React.ReactElement {
     user: { user },
     headerFetchLoader: { fetchLevel },
     appData: { fetchError, isAppEnabled },
+    theme: { setTheme },
   } = useContext(appContext);
 
   return (
@@ -23,6 +25,16 @@ export default function Header(): React.ReactElement {
         </div>
 
         {(isAppEnabled || user) && <Navbar />}
+
+        <div>
+          <button
+            onClick={() => {
+              setTheme((current) => (current === Theme.DARK ? Theme.LIGHT : Theme.DARK));
+            }}
+          >
+            toggle theme
+          </button>
+        </div>
 
         <div className="flex-grow-1" />
 
