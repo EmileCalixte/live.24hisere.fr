@@ -1,5 +1,4 @@
-@media (prefers-color-scheme: light) {
- :root{
+body {
   --color-background: #f8f8f8;
   --color-text: #222;
   --color-text-accent: #2a2;
@@ -23,36 +22,33 @@
   --color-background-button: #fff;
   --color-text-button-accent: #fff;
   --color-accent-desaturated: #9c9;
-  }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root{
-   --color-background: #1a1a1a;
-   --color-text: #ddd;
-   --color-text-accent: #2a2;
-   --color-shadow: #000a;
-   --color-background-admin: #ffc048;
-   --color-background-error: #8a0505;
-   --color-text-error: #f5b2b2;
-   --color-background-highlight: #111;
-   --color-background-header: #111;
-   --color-background-footer: #040208;
-   --color-text-footer: #fff;
-   --color-text-header: #fff;
-   --color-accent: #3c3;
-   --color-background-alternate: #222;
-   --color-background-hover: #233523;
-   --color-border-table: #333;
-   --color-background--ranking-table-runner-stopped-badge: #d34242;
-   --color-text--ranking-table-runner-stopped-badge: #fff;
-   --color-border-card: #222;
-   --color-border-button: #111;
-   --color-background-button: #000;
-   --color-text-button-accent: #000;
-   --color-accent-desaturated: #363;
-   }
- }
+body[data-bs-theme="dark"] {
+  --color-background: #1a1a1a;
+  --color-text: #ddd;
+  --color-text-accent: #2a2;
+  --color-shadow: #000a;
+  --color-background-admin: #ffc048;
+  --color-background-error: #8a0505;
+  --color-text-error: #f5b2b2;
+  --color-background-highlight: #111;
+  --color-background-header: #111;
+  --color-background-footer: #040208;
+  --color-text-footer: #fff;
+  --color-text-header: #fff;
+  --color-accent: #3c3;
+  --color-background-alternate: #222;
+  --color-background-hover: #233523;
+  --color-border-table: #333;
+  --color-background--ranking-table-runner-stopped-badge: #d34242;
+  --color-text--ranking-table-runner-stopped-badge: #fff;
+  --color-border-card: #222;
+  --color-border-button: #111;
+  --color-background-button: #000;
+  --color-text-button-accent: #000;
+  --color-accent-desaturated: #363;
+}
 
 body {
   margin: 0;

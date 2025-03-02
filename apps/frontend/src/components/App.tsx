@@ -4,9 +4,12 @@ import { Helmet } from "react-helmet";
 import { Navigate, Route, Routes, useMatch, useNavigate } from "react-router-dom";
 import type { PublicUser } from "@live24hisere/core/types";
 import { APP_BASE_TITLE } from "../constants/app";
+import { Theme } from "../constants/theme";
 import { useGetCurrentUser } from "../hooks/api/requests/auth/useGetCurrentUser";
 import { useLogout } from "../hooks/api/requests/auth/useLogout";
 import { useGetAppData } from "../hooks/api/requests/public/appData/useGetAppData";
+import { useTheme } from "../hooks/useTheme";
+import type { ReactStateSetter } from "../types/utils/react";
 import { EVENT_API_REQUEST_ENDED, EVENT_API_REQUEST_STARTED } from "../utils/apiUtils";
 import { verbose } from "../utils/utils";
 import CircularLoader from "./ui/CircularLoader";
@@ -83,6 +86,11 @@ interface AppContext {
 
     logout: () => void;
   };
+
+  theme: {
+    theme: Theme;
+    setTheme: ReactStateSetter<Theme>;
+  };
 }
 
 export const appContext = React.createContext<AppContext>({
@@ -107,10 +115,16 @@ export const appContext = React.createContext<AppContext>({
     setUser: () => {},
     logout: () => {},
   },
+  theme: {
+    theme: Theme.LIGHT,
+    setTheme: () => {},
+  },
 });
 
 export default function App(): React.ReactElement {
   const navigate = useNavigate();
+
+  const { theme, setTheme } = useTheme();
 
   const [isLoading, setIsLoading] = React.useState(true);
   const [fetchLevel, setFetchLevel] = React.useState(0);
@@ -240,6 +254,10 @@ export default function App(): React.ReactElement {
       user,
       setUser,
       logout,
+    },
+    theme: {
+      theme,
+      setTheme,
     },
   };
 
