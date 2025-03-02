@@ -1,6 +1,7 @@
 // We can't use `import "vitest"` because it's bundled into `require()` which does not work with vitest
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference types="vitest" />
+import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react-swc";
 import { visualizer } from "rollup-plugin-visualizer";
 import { defineConfig } from "vite";
@@ -10,6 +11,7 @@ export default defineConfig({
   base: "/",
   plugins: [
     react(),
+    tailwindcss(),
     visualizer({
       filename: "bundle-visualization.html",
       gzipSize: true,

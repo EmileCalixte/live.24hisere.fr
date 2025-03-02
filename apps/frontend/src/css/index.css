@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 /*
  * Tweak to prevent the screen from flashing before javascript is loaded if user's device is in shadow mode
  */
