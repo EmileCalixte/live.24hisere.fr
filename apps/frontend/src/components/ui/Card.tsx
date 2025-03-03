@@ -1,8 +1,25 @@
 import clsx from "clsx";
 
-export function Card({ children, className, ...props }: React.HTMLProps<HTMLDivElement>): React.ReactElement {
+type PolymorphicProps<TElement extends React.ElementType> = React.PropsWithChildren<
+  React.ComponentPropsWithoutRef<TElement> & {
+    as?: TElement;
+  }
+>;
+
+type CardProps<TElement extends React.ElementType> = PolymorphicProps<TElement> & {
+  className?: string;
+};
+
+export function Card<TElement extends React.ElementType = "div">({
+  as,
+  children,
+  className,
+  ...props
+}: CardProps<TElement>): React.ReactElement {
+  const Component = as ?? "div";
+
   return (
-    <div
+    <Component
       className={clsx(
         "border border-neutral-300 bg-white p-4 shadow-sm dark:border-neutral-700 dark:bg-neutral-800",
         className,
@@ -10,6 +27,6 @@ export function Card({ children, className, ...props }: React.HTMLProps<HTMLDivE
       )}
     >
       {children}
-    </div>
+    </Component>
   );
 }

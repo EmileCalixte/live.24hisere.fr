@@ -8,7 +8,7 @@ export default function AdminHomeView(): React.ReactElement {
     <Page id="admin-home" title="Administration">
       <Row>
         <Col>
-          <h1>Administration</h1>
+          <h1 className="mt-3">Administration</h1>
         </Col>
       </Row>
 

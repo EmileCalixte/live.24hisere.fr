@@ -182,25 +182,8 @@ dialog.modal .close-button:hover {
   color: hsl(0, 0%, 20%);
 }
 
-.breadcrumbs {
-  border: 1px solid var(--color-border-button);
-  background-color: var(--color-background-button);
-  list-style: none;
-  padding: 10px 20px;
-  margin-top: 1rem;
-}
-
-.breadcrumbs .crumb {
-  display: inline-block;
-}
-
-.breadcrumbs .crumb-separator {
-  font-size: 0.7em;
-  margin-left: 10px;
-  margin-right: 10px;
-}
-
 .options-dropdown {
+  z-index: 1;
   position: absolute;
   top: calc(100% + 5px);
   right: 0;
