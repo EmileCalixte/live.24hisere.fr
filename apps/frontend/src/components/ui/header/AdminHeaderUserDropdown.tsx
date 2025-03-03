@@ -1,6 +1,6 @@
 import type React from "react";
 import { useCallback, useContext, useEffect, useRef } from "react";
-import { appContext } from "../../App";
+import { appContext } from "../../../contexts/AppContext";
 
 interface AdminHeaderUserDropdownProps {
   hideDropdown: () => void;

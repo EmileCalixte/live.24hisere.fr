@@ -1,7 +1,7 @@
 import type React from "react";
 import { useContext } from "react";
 import { Theme } from "../../../constants/theme";
-import { appContext } from "../../App";
+import { appContext } from "../../../contexts/AppContext";
 import AdminHeader from "./AdminHeader";
 import FetchAppDataErrorHeader from "./FetchAppDataErrorHeader";
 import HeaderFetchLoader from "./HeaderFetchLoader";
@@ -19,9 +19,9 @@ export default function Header(): React.ReactElement {
     <header id="app-header" className="shadow-sm">
       {user && <AdminHeader />}
 
-      <div id="app-header-main-section">
-        <div id="app-header-logo-container">
-          <img alt="Logo" src="/img/24hisere.svg" />
+      <div id="app-header-main-section" className="flex h-[64px] bg-white px-3 md:px-5 dark:bg-neutral-800">
+        <div className="inline-flex h-full items-center pr-3 md:pr-5">
+          <img alt="" src="/img/24hisere.svg" className="h-[70%] md:h-[90%]" />
         </div>
 
         {(isAppEnabled || user) && <Navbar />}
@@ -36,7 +36,7 @@ export default function Header(): React.ReactElement {
           </button>
         </div>
 
-        <div className="flex-grow-1" />
+        <div className="grow-1" />
 
         {fetchLevel > 0 && <HeaderFetchLoader />}
       </div>

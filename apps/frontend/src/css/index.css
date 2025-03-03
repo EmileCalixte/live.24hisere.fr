@@ -3,6 +3,11 @@
 @custom-variant dark (&:where(body[theme="dark"] *));
 
 @theme {
+  --color-app-green-500: oklch(64.4% 0.2032 142.76);
+  --color-app-green-700: oklch(57% 0.23 143.48);
+
+  --default-transition-duration: 0.1s;
+  --default-transition-timing-function: ease-out;
 }
 
 h1,
@@ -44,22 +49,19 @@ h6 {
 
 @media (prefers-color-scheme: light) {
   :root {
-    --color-background: var(--color-stone-100);
-    --color-header-background: var(--color-white);
+    --color-background: var(--color-neutral-100);
   }
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-background: var(--color-stone-950);
-    --color-header-background: var(--color-neutral-900);
+    --color-background: var(--color-neutral-900);
   }
 }
 
 /* The `theme` attribute is added to the body only once React has loaded */
 body[theme="light"] {
-  --color-background: var(--color-stone-100);
-  --color-header-background: var(--color-white);
+  --color-background: var(--color-neutral-100);
 }
 
 /*
@@ -72,14 +74,12 @@ body[theme="light"] {
   --color-text-accent: #2a2;
   --color-shadow: #0003;
   --color-background-highlight: #fff;
-  --color-text-header: #444;
   --color-accent: #3c3;
   --color-background-alternate: #f0f0f0;
   --color-background-hover: #e8e8e8;
   --color-border-table: #aaa;
   --color-background--ranking-table-runner-stopped-badge: #d34242;
   --color-text--ranking-table-runner-stopped-badge: #fff;
-  --color-border-card: #ddd;
   --color-border-button: #eee;
   --color-background-button: #fff;
   --color-text-button-accent: #fff;
@@ -87,20 +87,17 @@ body[theme="light"] {
 }
 
 body[theme="dark"] {
-  --color-background: var(--color-stone-950);
+  --color-background: var(--color-neutral-900);
   --color-text: var(--color-neutral-200);
   --color-text-accent: #2a2;
   --color-shadow: #000a;
   --color-background-highlight: #1a1a1a;
-  --color-header-background: var(--color-neutral-900);
-  --color-text-header: #fff;
   --color-accent: #3c3;
   --color-background-alternate: #222;
   --color-background-hover: #233523;
   --color-border-table: #333;
   --color-background--ranking-table-runner-stopped-badge: #d34242;
   --color-text--ranking-table-runner-stopped-badge: #fff;
-  --color-border-card: #222;
   --color-border-button: #111;
   --color-background-button: #000;
   --color-text-button-accent: #000;
@@ -127,6 +124,9 @@ button.a {
 
   border: none;
   background-color: transparent;
+}
+
+button.a {
   font-size: inherit;
   font-weight: inherit;
   font-family: inherit;
@@ -135,175 +135,6 @@ button.a {
 a.no-style {
   color: inherit;
   text-decoration: inherit;
-}
-
-#app {
-  min-height: 100vh;
-
-  display: flex;
-  flex-direction: column;
-}
-
-.admin-header-user-button {
-  border: none;
-  background-color: transparent;
-  padding: 0;
-  font-size: inherit;
-  font-family: inherit;
-  line-height: inherit;
-}
-
-.admin-header-user-button:hover {
-  cursor: pointer;
-}
-
-#app-header-main-section {
-  height: 64px;
-
-  display: flex;
-
-  background-color: var(--color-header-background);
-}
-
-#app-header-logo-container {
-  height: 100%;
-
-  display: inline-flex;
-  align-items: center;
-
-  padding-left: 15px;
-  padding-right: 15px;
-}
-
-#app-header-logo-container img {
-  height: 90%;
-}
-
-#app-header-main-section nav {
-  height: 100%;
-}
-
-#app-header-main-section nav ul {
-  height: 100%;
-
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
-
-#app-header-main-section nav ul li {
-  height: 100%;
-
-  display: inline-block;
-}
-
-#app-header-main-section nav ul li a {
-  height: 100%;
-
-  display: flex;
-  align-items: center;
-
-  position: relative;
-
-  text-decoration: none;
-
-  font-weight: 700;
-  color: var(--color-text-header);
-
-  padding-left: 5px;
-  padding-right: 5px;
-
-  margin-left: 10px;
-  margin-right: 10px;
-
-  transition:
-    color 0.1s ease-out,
-    border 0.1s ease-out;
-}
-
-@media (max-width: 480px) {
-  #app-header-logo-container {
-    padding-left: 5px;
-    padding-right: 5px;
-  }
-
-  #app-header-logo-container img {
-    height: 70%;
-  }
-
-  #app-header-main-section nav ul li {
-    font-size: 0.9em;
-  }
-
-  #app-header-main-section nav ul li a {
-    margin-left: 0;
-    margin-right: 0;
-  }
-}
-
-#app-header-main-section nav ul li a.active {
-  color: var(--color-accent);
-}
-
-#app-header-main-section nav ul li a.active::after {
-  content: " ";
-  border-bottom: 3px solid var(--color-accent);
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-}
-
-#app-header-main-section .header-fetch-loader-container {
-  height: 100%;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  margin-left: 10px;
-  margin-right: 10px;
-}
-
-#app-header-main-section .header-timer-container {
-  height: 100%;
-
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-}
-
-#app-header-main-section .header-timer-container .header-timer {
-  margin-right: 20px;
-
-  font-weight: 700;
-  color: var(--color-text-header);
-}
-
-.circular-loader svg {
-  animation-duration: 0.5s;
-  animation-name: circular-loader;
-  animation-iteration-count: infinite;
-  animation-timing-function: linear;
-}
-
-@keyframes circular-loader {
-  from {
-    transform: rotate(0);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-#page-content {
-  padding-bottom: 20px;
-}
-
-.flex-space-between-container {
-  display: flex;
-  justify-content: space-between;
 }
 
 dialog.modal::backdrop {
@@ -466,56 +297,6 @@ table.table th .buttons-container {
 
 .admin-runner-passages-table tr.passage-hidden td:nth-child(n + 3):nth-child(-n + 4) {
   text-decoration: line-through;
-}
-
-.tabs-container {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-
-  /* Move tabs over border below */
-  position: relative;
-  top: 1px;
-  margin-top: -1px;
-}
-
-.tabs-container li {
-  display: inline-block;
-
-  background-color: var(--color-border-button);
-  border-left: 1px solid var(--color-border-button);
-  border-right: 1px solid var(--color-border-button);
-}
-
-.tabs-container li.active {
-  background-color: var(--color-background-button);
-
-  border-left: 1px solid var(--color-border-card);
-  border-top: 1px solid var(--color-border-card);
-  border-right: 1px solid var(--color-border-card);
-  border-bottom: transparent;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-}
-
-.tabs-container li a,
-.tabs-container li button {
-  display: inline-block;
-
-  font-size: 1em;
-  font-family: inherit;
-  line-height: inherit;
-  color: inherit;
-  text-decoration: none;
-  border: none;
-  background-color: transparent;
-
-  padding: 0.6em 0.8em;
-}
-
-.tabs-container li:not(.active) a,
-.tabs-container li:not(.active) button {
-  cursor: pointer;
 }
 
 .ranking-table-info-header {

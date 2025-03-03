@@ -1,8 +1,8 @@
 import type React from "react";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { appContext } from "../../../contexts/AppContext";
 import { formatDateAsString } from "../../../utils/utils";
-import { appContext } from "../../App";
 import LinkBlank from "../LinkBlank";
 
 export default function Footer(): React.ReactElement {

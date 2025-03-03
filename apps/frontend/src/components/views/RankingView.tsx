@@ -13,6 +13,7 @@ import type { EditionWithRaceCount, GenderWithMixed, RaceWithRunnerCount } from 
 import { objectUtils } from "@live24hisere/utils";
 import { RankingTimeMode } from "../../constants/rankingTimeMode";
 import { SearchParam } from "../../constants/searchParams";
+import { appContext } from "../../contexts/AppContext";
 import "../../css/print-ranking-table.css";
 import { useGetPublicEditions } from "../../hooks/api/requests/public/editions/useGetPublicEditions";
 import { useGetPublicEditionRaces } from "../../hooks/api/requests/public/races/useGetPublicEditionRaces";
@@ -27,7 +28,6 @@ import { parseAsCategory } from "../../queryStringParsers/parseAsCategory";
 import { parseAsGender } from "../../queryStringParsers/parseAsGender";
 import { isRaceFinished } from "../../utils/raceUtils";
 import { FormatGapMode } from "../../utils/runnerUtils";
-import { appContext } from "../App";
 import { Card } from "../ui/Card";
 import CircularLoader from "../ui/CircularLoader";
 import Select from "../ui/forms/Select";

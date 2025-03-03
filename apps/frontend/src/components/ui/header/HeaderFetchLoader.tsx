@@ -3,7 +3,7 @@ import CircularLoader from "../CircularLoader";
 
 export default function HeaderFetchLoader(): React.ReactElement {
   return (
-    <div className="header-fetch-loader-container">
+    <div className="flex h-full items-center justify-center">
       <CircularLoader />
     </div>
   );

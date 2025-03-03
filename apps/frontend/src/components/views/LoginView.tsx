@@ -1,8 +1,8 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { Navigate } from "react-router-dom";
+import { appContext } from "../../contexts/AppContext";
 import { useLogin } from "../../hooks/api/requests/auth/useLogin";
-import { appContext } from "../App";
 import { Input } from "../ui/forms/Input";
 import Page from "../ui/Page";
 

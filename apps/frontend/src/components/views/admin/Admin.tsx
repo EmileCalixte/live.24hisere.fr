@@ -1,6 +1,6 @@
 import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { appContext } from "../../App";
+import { appContext } from "../../../contexts/AppContext";
 import CircularLoader from "../../ui/CircularLoader";
 import AdminHomeView from "./AdminHomeView";
 import DisabledAppAdminView from "./DisabledAppAdminView";

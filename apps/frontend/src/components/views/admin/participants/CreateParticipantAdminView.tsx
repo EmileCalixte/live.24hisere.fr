@@ -2,6 +2,7 @@ import React from "react";
 import { Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import type { AdminRunner } from "@live24hisere/core/types";
+import { appContext } from "../../../../contexts/AppContext";
 import { useGetAdminEdition } from "../../../../hooks/api/requests/admin/editions/useGetAdminEdition";
 import { usePostAdminRaceRunner } from "../../../../hooks/api/requests/admin/participants/usePostAdminRaceRunner";
 import { useGetAdminRace } from "../../../../hooks/api/requests/admin/races/useGetAdminRace";
@@ -12,7 +13,6 @@ import { getCreateParticipantBreadcrumbs } from "../../../../services/breadcrumb
 import type { SelectOption } from "../../../../types/Forms";
 import { is404Error } from "../../../../utils/apiUtils";
 import { spaceshipRunnersByName } from "../../../../utils/runnerUtils";
-import { appContext } from "../../../App";
 import CircularLoader from "../../../ui/CircularLoader";
 import { Checkbox } from "../../../ui/forms/Checkbox";
 import Page from "../../../ui/Page";

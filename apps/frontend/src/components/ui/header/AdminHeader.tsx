@@ -2,7 +2,7 @@ import type React from "react";
 import { useContext, useState } from "react";
 import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { appContext } from "../../App";
+import { appContext } from "../../../contexts/AppContext";
 import AdminHeaderUserDropdown from "./AdminHeaderUserDropdown";
 
 export default function AdminHeader(): React.ReactElement {
@@ -37,7 +37,7 @@ export default function AdminHeader(): React.ReactElement {
       </span>
       <div style={{ position: "relative" }}>
         <button
-          className="admin-header-user-button"
+          className="hover:cursor-pointer"
           onClick={() => {
             setUserDropdownShown(!userDropdownShown);
           }}

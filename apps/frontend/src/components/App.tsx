@@ -1,15 +1,13 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import React from "react";
 import { Helmet } from "react-helmet";
 import { Navigate, Route, Routes, useMatch, useNavigate } from "react-router-dom";
 import type { PublicUser } from "@live24hisere/core/types";
 import { APP_BASE_TITLE } from "../constants/app";
-import { Theme } from "../constants/theme";
+import { appContext, type AppContext } from "../contexts/AppContext";
 import { useGetCurrentUser } from "../hooks/api/requests/auth/useGetCurrentUser";
 import { useLogout } from "../hooks/api/requests/auth/useLogout";
 import { useGetAppData } from "../hooks/api/requests/public/appData/useGetAppData";
 import { useTheme } from "../hooks/useTheme";
-import type { ReactStateSetter } from "../types/utils/react";
 import { EVENT_API_REQUEST_ENDED, EVENT_API_REQUEST_STARTED } from "../utils/apiUtils";
 import { verbose } from "../utils/utils";
 import CircularLoader from "./ui/CircularLoader";
@@ -23,103 +21,6 @@ const About = React.lazy(async () => await import("./views/AboutView"));
 const RankingView = React.lazy(async () => await import("./views/RankingView"));
 const RunnerDetailsView = React.lazy(async () => await import("./views/RunnerDetailsView"));
 const SearchRunnerView = React.lazy(async () => await import("./views/SearchRunnerView"));
-
-interface AppContext {
-  appData: {
-    /**
-     * The error triggered if last app data request failed
-     */
-    fetchError: unknown;
-
-    /**
-     * Date and time the runners' data was exported from the timing system
-     */
-    lastUpdateTime: Date;
-
-    /**
-     * Difference between server time and client time in seconds. > 0 if the server is ahead, < 0 otherwise.
-     */
-    serverTimeOffset: number;
-
-    /**
-     * Whether the app is accessible or not
-     */
-    isAppEnabled: boolean;
-    setIsAppEnabled: (isAppEnabled: boolean) => void;
-
-    /**
-     * The ID of the edition to be auto-selected if no edition is selected
-     */
-    currentEditionId: number | null;
-
-    /**
-     * If the app is disabled, the message to be displayed
-     */
-    disabledAppMessage: string | null;
-  };
-
-  headerFetchLoader: {
-    /**
-     * A value incremented when a request is in progress, decremented when a request is completed.
-     * The header loader should be displayed if this value is > 0.
-     */
-    fetchLevel: number;
-
-    incrementFetchLevel: () => void;
-    decrementFetchLevel: () => void;
-  };
-
-  user: {
-    /**
-     * The access token used for authenticated API requests
-     */
-    accessToken: string | null;
-
-    saveAccessToken: (accessToken: string) => void;
-
-    /**
-     * The user logged in. If undefined, user info was not fetched yet.
-     */
-    user: PublicUser | null | undefined;
-
-    setUser: (user: PublicUser | null | undefined) => void;
-
-    logout: () => void;
-  };
-
-  theme: {
-    theme: Theme;
-    setTheme: ReactStateSetter<Theme>;
-  };
-}
-
-export const appContext = React.createContext<AppContext>({
-  appData: {
-    fetchError: null,
-    lastUpdateTime: new Date(),
-    serverTimeOffset: 0,
-    isAppEnabled: false,
-    setIsAppEnabled: () => {},
-    currentEditionId: null,
-    disabledAppMessage: null,
-  },
-  headerFetchLoader: {
-    fetchLevel: 0,
-    incrementFetchLevel: () => {},
-    decrementFetchLevel: () => {},
-  },
-  user: {
-    accessToken: null,
-    saveAccessToken: () => {},
-    user: undefined,
-    setUser: () => {},
-    logout: () => {},
-  },
-  theme: {
-    theme: Theme.LIGHT,
-    setTheme: () => {},
-  },
-});
 
 export default function App(): React.ReactElement {
   const navigate = useNavigate();
@@ -264,14 +165,14 @@ export default function App(): React.ReactElement {
   const showDisabledAppMessage = !user && !isAppEnabled && !isBypassDisabledAppRoute;
 
   return (
-    <div id="app">
+    <div id="app" className="flex min-h-[100vh] flex-col">
       <Helmet>
         <title>{APP_BASE_TITLE}</title>
       </Helmet>
       <appContext.Provider value={appContextValues}>
         <div id="app-content-wrapper" className="flex-1">
           <Header />
-          <main id="page-content">
+          <main id="page-content" className="pb-5">
             {isLoading ? (
               <CircularLoader />
             ) : showDisabledAppMessage ? (

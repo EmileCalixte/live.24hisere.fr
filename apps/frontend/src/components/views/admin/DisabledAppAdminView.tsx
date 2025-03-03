@@ -1,10 +1,10 @@
 import React from "react";
 import DOMPurify from "dompurify";
 import { Col, Row } from "react-bootstrap";
+import { appContext } from "../../../contexts/AppContext";
 import { useGetDisabledAppData } from "../../../hooks/api/requests/admin/config/useGetDisabledAppData";
 import { usePatchDisabledAppData } from "../../../hooks/api/requests/admin/config/usePatchDisabledAppData";
 import { getDisabledAppBreadcrumbs } from "../../../services/breadcrumbs/breadcrumbService";
-import { appContext } from "../../App";
 import { Card } from "../../ui/Card";
 import { Checkbox } from "../../ui/forms/Checkbox";
 import { TextArea } from "../../ui/forms/TextArea";

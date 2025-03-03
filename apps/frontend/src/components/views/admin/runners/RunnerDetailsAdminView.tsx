@@ -4,6 +4,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { GENDER } from "@live24hisere/core/constants";
 import type { Gender } from "@live24hisere/core/types";
 import { COUNTRY_NULL_OPTION_VALUE } from "../../../../constants/forms";
+import { appContext } from "../../../../contexts/AppContext";
 import { useGetAdminEditions } from "../../../../hooks/api/requests/admin/editions/useGetAdminEditions";
 import { useGetAdminRunnerParticipations } from "../../../../hooks/api/requests/admin/participants/useGetAdminRunnerParticipations";
 import { useGetAdminRaces } from "../../../../hooks/api/requests/admin/races/useGetAdminRaces";
@@ -13,7 +14,6 @@ import { usePatchAdminRunner } from "../../../../hooks/api/requests/admin/runner
 import { useRequiredParams } from "../../../../hooks/useRequiredParams";
 import { getRunnerDetailsBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import { is404Error } from "../../../../utils/apiUtils";
-import { appContext } from "../../../App";
 import CircularLoader from "../../../ui/CircularLoader";
 import Page from "../../../ui/Page";
 import RunnerDetailsForm from "../../../viewParts/admin/runners/RunnerDetailsForm";

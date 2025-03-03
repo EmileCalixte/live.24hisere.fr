@@ -1,7 +1,7 @@
 import React from "react";
 import DOMPurify from "dompurify";
 import { Col, Row } from "react-bootstrap";
-import { appContext } from "../App";
+import { appContext } from "../../contexts/AppContext";
 import { Card } from "../ui/Card";
 import Page from "../ui/Page";
 

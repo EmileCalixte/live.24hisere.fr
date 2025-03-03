@@ -3,10 +3,10 @@ import { getCategory } from "@emilecalixte/ffa-categories";
 import { GENDER } from "@live24hisere/core/constants";
 import type { PublicRace } from "@live24hisere/core/types";
 import { NO_VALUE_PLACEHOLDER } from "../../../constants/misc";
+import { appContext } from "../../../contexts/AppContext";
 import type { Ranking, RankingRunner, RankingRunnerGap } from "../../../types/Ranking";
 import { isRaceFinished } from "../../../utils/raceUtils";
 import { formatGap, FormatGapMode } from "../../../utils/runnerUtils";
-import { appContext } from "../../App";
 
 interface RunnerDetailsStatsGapsTableProps {
   race: PublicRace;

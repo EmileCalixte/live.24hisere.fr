@@ -2,9 +2,9 @@ import React from "react";
 import type { CategoryCode } from "@emilecalixte/ffa-categories";
 import { GENDER } from "@live24hisere/core/constants";
 import type { GenderWithMixed, PublicRace } from "@live24hisere/core/types";
+import { appContext } from "../../../../contexts/AppContext";
 import { formatMsAsDuration } from "../../../../utils/durationUtils";
 import { isRaceFinished } from "../../../../utils/raceUtils";
-import { appContext } from "../../../App";
 import RaceTimer from "../../RaceTimer";
 
 interface RankingTableInfoHeaderProps {

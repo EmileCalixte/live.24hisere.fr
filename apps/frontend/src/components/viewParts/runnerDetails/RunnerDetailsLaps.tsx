@@ -3,6 +3,7 @@ import { faFileExcel, faSortDown, faSortUp } from "@fortawesome/free-solid-svg-i
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { PublicRace, RaceRunnerWithProcessedPassages } from "@live24hisere/core/types";
 import { RUNNER_DETAILS_LAPS_SORT_COLUMNS, SortColumn, SortDirection } from "../../../constants/sort";
+import { appContext } from "../../../contexts/AppContext";
 import { useSortQueryString } from "../../../hooks/queryString/useSortQueryString";
 import { useRaceTime } from "../../../hooks/useRaceTime";
 import { useWindowDimensions } from "../../../hooks/useWindowDimensions";
@@ -10,7 +11,6 @@ import type { MinimalRankingRunnerInput, RankingRunner } from "../../../types/Ra
 import { formatMsAsDuration, formatMsDurationHms } from "../../../utils/durationUtils";
 import { isRaceFinished, isRaceStarted } from "../../../utils/raceUtils";
 import { getOppositeSortDirection } from "../../../utils/sortUtils";
-import { appContext } from "../../App";
 import { Card } from "../../ui/Card";
 import { Button } from "../../ui/forms/Button";
 

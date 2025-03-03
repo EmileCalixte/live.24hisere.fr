@@ -53,7 +53,7 @@ export default function RunnerDetailsPassageForm({
 
             {time && <p>Date et heure : {formatDateAsString(time)}</p>}
 
-            <div className="flex-space-between-container">
+            <div className="flex justify-between">
               <button
                 className="button grey"
                 type="button"
