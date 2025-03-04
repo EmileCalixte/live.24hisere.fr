@@ -1,7 +1,4 @@
-import type React from "react";
-import { useContext, useState } from "react";
-import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React from "react";
 import { appContext } from "../../../contexts/AppContext";
 import AdminHeaderUserDropdown from "./AdminHeaderUserDropdown";
 
@@ -9,13 +6,7 @@ export default function AdminHeader(): React.ReactElement {
   const {
     user: { user },
     appData: { isAppEnabled },
-  } = useContext(appContext);
-
-  const [userDropdownShown, setUserDropdownShown] = useState(false);
-
-  const hideUserDropdown = (): void => {
-    setUserDropdownShown(false);
-  };
+  } = React.useContext(appContext);
 
   if (!user) {
     throw new Error("User is not defined");
@@ -35,20 +26,7 @@ export default function AdminHeader(): React.ReactElement {
           </>
         )}
       </span>
-      <div style={{ position: "relative" }}>
-        <button
-          className="hover:cursor-pointer"
-          onClick={() => {
-            setUserDropdownShown(!userDropdownShown);
-          }}
-        >
-          {user.username}
-          &nbsp;
-          {userDropdownShown ? <FontAwesomeIcon icon={faAngleUp} /> : <FontAwesomeIcon icon={faAngleDown} />}
-        </button>
-
-        {userDropdownShown && <AdminHeaderUserDropdown hideDropdown={hideUserDropdown} />}
-      </div>
+      <AdminHeaderUserDropdown />
     </div>
   );
 }
