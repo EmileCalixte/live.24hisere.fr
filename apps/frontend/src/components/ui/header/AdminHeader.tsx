@@ -26,7 +26,7 @@ export default function AdminHeader(): React.ReactElement {
           </>
         )}
       </span>
-      <AdminHeaderUserDropdown />
+      <AdminHeaderUserDropdown user={user} />
     </div>
   );
 }
