@@ -2,7 +2,7 @@ import React from "react";
 import { faCheck, faFlagCheckered, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
-import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { stringUtils } from "@live24hisere/utils";
 import { spaceship } from "../../../../../../../packages/utils/src/compare-utils";
 import { useGetAdminEditions } from "../../../../hooks/api/requests/admin/editions/useGetAdminEditions";
@@ -16,6 +16,7 @@ import { is404Error } from "../../../../utils/apiUtils";
 import { formatDateForApi } from "../../../../utils/utils";
 import CircularLoader from "../../../ui/CircularLoader";
 import { Input } from "../../../ui/forms/Input";
+import { Link } from "../../../ui/Link";
 import Page from "../../../ui/Page";
 import RaceDetailsForm from "../../../viewParts/admin/races/RaceDetailsForm";
 import RaceRunnersTable from "../../../viewParts/admin/races/RaceRunnersTable";
@@ -272,7 +273,7 @@ export default function RaceDetailsAdminView(): React.ReactElement {
                   ) : (
                     <>
                       <p className="m-0">
-                        <Link to={`/admin/races/${race.id}/add-runner`} className="button">
+                        <Link to={`/admin/races/${race.id}/add-runner`} variant="button">
                           <FontAwesomeIcon icon={faPlus} className="me-2" />
                           Ajouter un coureur
                         </Link>

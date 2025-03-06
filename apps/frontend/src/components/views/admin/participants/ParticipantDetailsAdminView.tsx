@@ -1,6 +1,6 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import type { AdminProcessedPassage } from "@live24hisere/core/types";
 import { useGetAdminEdition } from "../../../../hooks/api/requests/admin/editions/useGetAdminEdition";
 import { useGetAdminRaceRunner } from "../../../../hooks/api/requests/admin/participants/useGetAdminRaceRunner";
@@ -16,6 +16,7 @@ import { is404Error } from "../../../../utils/apiUtils";
 import { getProcessedPassagesFromPassages } from "../../../../utils/passageUtils";
 import { formatDateAsString, formatDateForApi } from "../../../../utils/utils";
 import CircularLoader from "../../../ui/CircularLoader";
+import { Link } from "../../../ui/Link";
 import Page from "../../../ui/Page";
 import ParticipantDetailsForm from "../../../viewParts/admin/participants/ParticipantDetailsForm";
 import ParticipantDetailsPassages from "../../../viewParts/admin/participants/ParticipantDetailsPassages";

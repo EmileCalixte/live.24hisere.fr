@@ -66,6 +66,18 @@ export default [
   eslintConfigPrettier,
   {
     rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: [
+            {
+              name: "react-router-dom",
+              importNames: ["Link"],
+            },
+          ],
+        },
+      ],
+
       complexity: "off",
       "eslint-comments/require-description": "off",
       "guard-for-in": "off", // TODO enable ?

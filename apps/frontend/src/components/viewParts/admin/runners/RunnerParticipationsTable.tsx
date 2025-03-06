@@ -1,7 +1,7 @@
 import type React from "react";
-import { Link } from "react-router-dom";
 import type { AdminEdition, AdminRace, Participant } from "@live24hisere/core/types";
 import CircularLoader from "../../../ui/CircularLoader";
+import { Link } from "../../../ui/Link";
 
 interface RunnerParticipationsTableProps {
   participations: Participant[];
@@ -15,7 +15,7 @@ export default function RunnerParticipationsTable({
   races,
 }: RunnerParticipationsTableProps): React.ReactElement {
   return (
-    <table className="table no-full-width">
+    <table className="no-full-width table">
       <thead>
         <tr>
           <th>Édition</th>

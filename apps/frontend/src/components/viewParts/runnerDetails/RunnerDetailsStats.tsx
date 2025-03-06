@@ -1,6 +1,5 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
-import { Link } from "react-router-dom";
 import type { ProcessedPassage, PublicRace, RunnerWithProcessedHours } from "@live24hisere/core/types";
 import { NO_VALUE_PLACEHOLDER } from "../../../constants/misc";
 import type { Ranking, RankingRunner } from "../../../types/Ranking";
@@ -8,6 +7,7 @@ import { formatMsAsDuration, formatMsDurationHms } from "../../../utils/duration
 import { approximateTimeToDistance, getFastestLapPassage, getSlowestLapPassage } from "../../../utils/passageUtils";
 import { Card } from "../../ui/Card";
 import InfoIconTooltip from "../../ui/InfoIconTooltip";
+import { Link } from "../../ui/Link";
 import { RunnerDetailsStatsLapCard } from "./RunnerDetailsStatsLapCard";
 import RunnerDetailsStatsRankingTable from "./RunnerDetailsStatsRankingTable";
 

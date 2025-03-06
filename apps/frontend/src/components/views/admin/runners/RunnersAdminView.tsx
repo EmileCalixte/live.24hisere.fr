@@ -2,13 +2,13 @@ import React from "react";
 import { faFileCsv, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
-import { Link } from "react-router-dom";
 import { stringUtils } from "@live24hisere/utils";
 import { useGetAdminRunners } from "../../../../hooks/api/requests/admin/runners/useGetAdminRunners";
 import { useNameSortedRunners } from "../../../../hooks/runners/useNameSortedRunners";
 import { getRunnersBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import CircularLoader from "../../../ui/CircularLoader";
 import { Input } from "../../../ui/forms/Input";
+import { Link } from "../../../ui/Link";
 import Page from "../../../ui/Page";
 import RunnersTable from "../../../viewParts/admin/runners/RunnersTable";
 
@@ -57,13 +57,11 @@ export default function RunnersAdminView(): React.ReactElement {
         <>
           <Row>
             <Col className="d-flex gap-2">
-              <Link to="/admin/runners/create" className="button">
-                <FontAwesomeIcon icon={faPlus} className="me-2" />
+              <Link to="/admin/runners/create" variant="button" icon={<FontAwesomeIcon icon={faPlus} />}>
                 Ajouter un coureur
               </Link>
 
-              <Link to="/admin/runners/import-csv" className="button">
-                <FontAwesomeIcon icon={faFileCsv} className="me-2" />
+              <Link to="/admin/runners/import-csv" variant="button" icon={<FontAwesomeIcon icon={faFileCsv} />}>
                 Importer via fichier CSV
               </Link>
             </Col>

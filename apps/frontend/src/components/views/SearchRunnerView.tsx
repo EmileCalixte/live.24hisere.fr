@@ -3,7 +3,6 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQueryState } from "nuqs";
 import { Col, Row } from "react-bootstrap";
-import { Link } from "react-router-dom";
 import type { RunnerWithRaceCount } from "@live24hisere/core/types";
 import { latinizedIncludes } from "../../../../../packages/utils/src/string-utils";
 import { SearchParam } from "../../constants/searchParams";
@@ -12,6 +11,7 @@ import { spaceshipRunnersByName } from "../../utils/runnerUtils";
 import CircularLoader from "../ui/CircularLoader";
 import { Button } from "../ui/forms/Button";
 import { Input } from "../ui/forms/Input";
+import { Link } from "../ui/Link";
 import Page from "../ui/Page";
 import { FoundRunnerCard } from "../viewParts/runnerDetails/searchRunner/FoundRunnerCard";
 

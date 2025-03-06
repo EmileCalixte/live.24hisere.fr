@@ -1,9 +1,9 @@
 import type React from "react";
 import { getCategory } from "@emilecalixte/ffa-categories";
-import { Link } from "react-router-dom";
 import type { AdminRace, AdminRunner, RaceRunner } from "@live24hisere/core/types";
 import { getCountryAlpha2CodeFromAlpha3Code } from "../../../../utils/countryUtils";
 import { Flag } from "../../../ui/countries/Flag";
+import { Link } from "../../../ui/Link";
 import RunnerFinalDistanceQuickEdit from "./RunnerFinalDistanceQuickEdit";
 
 interface RaceRunnersTableProps {
@@ -18,7 +18,7 @@ export default function RaceRunnersTable({
   isEditingFinalDistances,
 }: RaceRunnersTableProps): React.ReactElement {
   return (
-    <table className="table no-full-width">
+    <table className="no-full-width table">
       <thead>
         <tr>
           <th>Dossard</th>

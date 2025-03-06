@@ -2,7 +2,6 @@ import React from "react";
 import { type CategoryCode, getCategory } from "@emilecalixte/ffa-categories";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link } from "react-router-dom";
 import type { GenderWithMixed, PublicRace } from "@live24hisere/core/types";
 import type { RankingRunner } from "../../../../../types/Ranking";
 import { getCountryAlpha2CodeFromAlpha3Code } from "../../../../../utils/countryUtils";
@@ -12,6 +11,7 @@ import { formatGap, type FormatGapMode } from "../../../../../utils/runnerUtils"
 import { formatFloatNumber } from "../../../../../utils/utils";
 import RunnerStoppedBadge from "../../../../ui/badges/RunnerStoppedBadge";
 import { Flag } from "../../../../ui/countries/Flag";
+import { Link } from "../../../../ui/Link";
 
 interface ResponsiveRankingTableRowProps {
   race: PublicRace;
@@ -155,13 +155,13 @@ export default function ResponsiveRankingTableRow({
           </div>
         )}
       </td>
-      <td className="position-relative clickable">
+      <td className="clickable relative">
         <span className="px-3 opacity-0">
           <FontAwesomeIcon icon={faChevronRight} />
         </span>
         <Link
           to={`/runner-details/${runner.id}?race=${race.id}`}
-          className="px-3 position-absolute inset-0 d-flex align-items-center"
+          className="absolute inset-0 flex items-center px-3"
           aria-label={`Consulter les détails du coureur ${runner.firstname} ${runner.lastname}`}
         >
           <FontAwesomeIcon icon={faChevronRight} />

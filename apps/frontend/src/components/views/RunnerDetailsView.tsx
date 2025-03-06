@@ -3,7 +3,7 @@ import { faCircleInfo, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQueryState } from "nuqs";
 import { Col, Row } from "react-bootstrap";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { stringUtils } from "@live24hisere/utils";
 import { SearchParam } from "../../constants/searchParams";
 import { appContext } from "../../contexts/AppContext";
@@ -23,6 +23,7 @@ import { Card } from "../ui/Card";
 import CircularLoader from "../ui/CircularLoader";
 import { Flag } from "../ui/countries/Flag";
 import Select from "../ui/forms/Select";
+import { Link } from "../ui/Link";
 import Page from "../ui/Page";
 import RunnerStoppedTooltip from "../ui/tooltips/RunnerStoppedTooltip";
 import SpeedChart from "../viewParts/runnerDetails/charts/SpeedChart";
@@ -193,7 +194,7 @@ export default function RunnerDetailsView(): React.ReactElement {
           <RunnerSelector runners={runners} onSelectRunner={onSelectRunner} selectedRunnerId={runnerId} />
 
           <div className="d-flex justify-content-end mt-2">
-            <Link to="/runner-details/search" className="d-flex align-items-center gap-2">
+            <Link to="/runner-details/search" className="flex items-center gap-2">
               <FontAwesomeIcon icon={faSearch} />
               <span>Rechercher un coureur</span>
             </Link>

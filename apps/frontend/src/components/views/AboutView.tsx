@@ -1,12 +1,11 @@
 import type React from "react";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link } from "react-router-dom";
 import { spaceship } from "../../../../../packages/utils/src/compare-utils";
 // If this crashes, run `pnpm export-licenses`
 import licenses from "../../assets/licenses.json";
 import { Card } from "../ui/Card";
-import LinkBlank from "../ui/LinkBlank";
+import { Link } from "../ui/Link";
 import Page from "../ui/Page";
 
 interface ThirdParty {
@@ -43,10 +42,19 @@ export default function AboutView(): React.ReactElement {
     >
       <Card className="flex flex-col gap-3">
         <p>
-          Application développée pour <LinkBlank to="https://www.24hisere.fr">Les 24 Heures de l'Isère</LinkBlank> par
-          Emile Calixte, avec l'aide précieuse de{" "}
-          <LinkBlank to="https://github.com/DjesonPV">Djeson Pascal-Valette</LinkBlank> et{" "}
-          <LinkBlank to="https://github.com/Draphikas">Thomas Bocquez</LinkBlank>.
+          Application développée pour{" "}
+          <Link to="https://www.24hisere.fr" target="_blank">
+            Les 24 Heures de l'Isère
+          </Link>{" "}
+          par Emile Calixte, avec l'aide précieuse de{" "}
+          <Link to="https://github.com/DjesonPV" target="_blank">
+            Djeson Pascal-Valette
+          </Link>{" "}
+          et{" "}
+          <Link to="https://github.com/Draphikas" target="_blank">
+            Thomas Bocquez
+          </Link>
+          .
         </p>
 
         <p>
@@ -56,13 +64,21 @@ export default function AboutView(): React.ReactElement {
         </p>
 
         <p>
-          <LinkBlank to="https://github.com/EmileCalixte/live.24hisere.fr">Code source</LinkBlank>
+          <Link to="https://github.com/EmileCalixte/live.24hisere.fr" target="_blank">
+            Code source
+          </Link>
         </p>
 
         <p>
           Les drapeaux nationaux proviennent de la bibliothèque{" "}
-          <LinkBlank to="https://www.npmjs.com/package/country-flag-icons">country-flag-icons</LinkBlank> de{" "}
-          <LinkBlank to="https://gitlab.com/catamphetamine">Nikolay Kuchumov</LinkBlank>.
+          <Link to="https://www.npmjs.com/package/country-flag-icons" target="_blank">
+            country-flag-icons
+          </Link>{" "}
+          de{" "}
+          <Link to="https://gitlab.com/catamphetamine" target="_blank">
+            Nikolay Kuchumov
+          </Link>
+          .
         </p>
 
         <p>Cette application fonctionne grâce à des programmes tiers :</p>
@@ -70,8 +86,11 @@ export default function AboutView(): React.ReactElement {
         <ul>
           {thirdPartySoftwares.map((software, index) => (
             <li key={index}>
-              <LinkBlank to={software.homepage}>{software.name}</LinkBlank> ({software.versions.sort().join(", ")})
-              {software.author && <> – {software.author}</>} – <i>{software.license}</i>
+              <Link to={software.homepage} target="_blank">
+                {software.name}
+              </Link>{" "}
+              ({software.versions.sort().join(", ")}){software.author && <> – {software.author}</>} –{" "}
+              <i>{software.license}</i>
             </li>
           ))}
         </ul>

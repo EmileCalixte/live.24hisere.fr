@@ -2,13 +2,13 @@ import type React from "react";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Row } from "react-bootstrap";
-import { Link } from "react-router-dom";
 import { useGetAdminEditions } from "../../../../hooks/api/requests/admin/editions/useGetAdminEditions";
 import { useGetAdminRaces } from "../../../../hooks/api/requests/admin/races/useGetAdminRaces";
 import { getRacesBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import { formatMsAsDuration } from "../../../../utils/durationUtils";
 import { formatDateAsString } from "../../../../utils/utils";
 import CircularLoader from "../../../ui/CircularLoader";
+import { Link } from "../../../ui/Link";
 import Page from "../../../ui/Page";
 
 export default function RacesAdminView(): React.ReactElement {
@@ -30,7 +30,7 @@ export default function RacesAdminView(): React.ReactElement {
         <>
           <Row>
             <Col>
-              <Link to="/admin/races/create" className="button">
+              <Link to="/admin/races/create" variant="button">
                 <FontAwesomeIcon icon={faPlus} className="me-2" />
                 Créer une course
               </Link>

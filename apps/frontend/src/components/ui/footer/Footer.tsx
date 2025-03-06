@@ -1,9 +1,8 @@
 import type React from "react";
 import { useContext } from "react";
-import { Link } from "react-router-dom";
 import { appContext } from "../../../contexts/AppContext";
 import { formatDateAsString } from "../../../utils/utils";
-import LinkBlank from "../LinkBlank";
+import { Link } from "../Link";
 
 export default function Footer(): React.ReactElement {
   const {
@@ -29,10 +28,14 @@ export default function Footer(): React.ReactElement {
           <Link to="/about">À propos</Link>
         </li>
         <li>
-          <LinkBlank to="https://github.com/EmileCalixte/live.24hisere.fr">Code source</LinkBlank>
+          <Link to="https://github.com/EmileCalixte/live.24hisere.fr" target="_blank">
+            Code source
+          </Link>
         </li>
         <li>
-          <LinkBlank to="https://www.24hisere.fr">Les 24 Heures de l'Isère</LinkBlank>
+          <Link to="https://www.24hisere.fr" target="_blank">
+            Les 24 Heures de l'Isère
+          </Link>
         </li>
       </ul>
 

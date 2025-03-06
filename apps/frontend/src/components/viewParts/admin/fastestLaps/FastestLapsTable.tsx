@@ -1,5 +1,4 @@
 import type React from "react";
-import { Link } from "react-router-dom";
 import type {
   AdminPassageWithRunnerIdAndRaceId,
   ProcessedPassage,
@@ -8,6 +7,7 @@ import type {
 } from "@live24hisere/core/types";
 import { formatMsAsDuration } from "../../../../utils/durationUtils";
 import { formatFloatNumber } from "../../../../utils/utils";
+import { Link } from "../../../ui/Link";
 
 interface FastestLapsTableProps {
   passages: Array<ProcessedPassage<AdminPassageWithRunnerIdAndRaceId>>;

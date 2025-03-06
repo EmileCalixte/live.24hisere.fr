@@ -123,27 +123,6 @@ body {
   color: var(--color-text);
 }
 
-a,
-button.a {
-  color: var(--color-text-accent);
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-button.a {
-  font-size: inherit;
-  font-weight: inherit;
-  font-family: inherit;
-
-  border: none;
-  background-color: transparent;
-}
-
-a.no-style {
-  color: inherit;
-  text-decoration: inherit;
-}
-
 dialog.modal::backdrop {
   background-color: #000;
   transition: background-color 1s ease-out;
@@ -187,54 +166,6 @@ dialog.modal .close-button:hover {
   cursor: pointer;
 
   color: hsl(0, 0%, 20%);
-}
-
-.options-dropdown {
-  z-index: 1;
-  position: absolute;
-  top: calc(100% + 5px);
-  right: 0;
-
-  background-color: var(--color-background-button);
-  border: 1px solid var(--color-border-button);
-  box-shadow: 0 1px 2px var(--color-shadow);
-  border-radius: 5px;
-}
-
-.options-dropdown ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.options-dropdown li {
-  white-space: nowrap;
-}
-
-.options-dropdown li a,
-.options-dropdown li button {
-  display: inline-block;
-  width: 100%;
-  padding: 5px 10px;
-}
-
-.options-dropdown li a {
-  text-decoration: none;
-  color: inherit;
-}
-
-.options-dropdown li button {
-  border: none;
-  background-color: transparent;
-  font-size: inherit;
-  font-family: inherit;
-  line-height: inherit;
-}
-
-.options-dropdown li a:hover,
-.options-dropdown li button:hover {
-  background-color: var(--color-background-hover);
-  cursor: pointer;
 }
 
 .race-time-input {

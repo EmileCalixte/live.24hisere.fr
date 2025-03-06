@@ -1,8 +1,8 @@
 import type React from "react";
-import { Link } from "react-router-dom";
 import type { AdminRunner, RunnerWithRaceCount } from "@live24hisere/core/types";
 import { getCountryAlpha2CodeFromAlpha3Code } from "../../../../utils/countryUtils";
 import { Flag } from "../../../ui/countries/Flag";
+import { Link } from "../../../ui/Link";
 
 interface RunnersTableProps {
   runners: Array<RunnerWithRaceCount<AdminRunner>>;
@@ -10,7 +10,7 @@ interface RunnersTableProps {
 
 export default function RunnersTable({ runners }: RunnersTableProps): React.ReactElement {
   return (
-    <table className="table no-full-width">
+    <table className="no-full-width table">
       <thead>
         <tr>
           <th>ID</th>
