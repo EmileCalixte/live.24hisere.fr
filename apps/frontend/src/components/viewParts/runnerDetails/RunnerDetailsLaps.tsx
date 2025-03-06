@@ -162,7 +162,7 @@ export default function RunnerDetailsLaps({
       <h3 className="mt-0">Détails des tours</h3>
 
       <p className="mb-4">
-        <Button variant="a" onClick={exportRunnerToXlsx} icon={<FontAwesomeIcon icon={faFileExcel} />}>
+        <Button variant="link" onClick={exportRunnerToXlsx} icon={<FontAwesomeIcon icon={faFileExcel} />}>
           Télécharger au format Excel
         </Button>
       </p>

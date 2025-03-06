@@ -1,8 +1,8 @@
 import React from "react";
-import { Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { usePostAdminEdition } from "../../../../hooks/api/requests/admin/editions/usePostAdminEdition";
 import { getEditionCreateBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
+import { Card } from "../../../ui/Card";
 import Page from "../../../ui/Page";
 import EditionDetailsForm from "../../../viewParts/admin/editions/EditionDetailsForm";
 
@@ -30,15 +30,14 @@ export default function CreateEditionAdminView(): React.ReactElement {
   };
 
   return (
-    <Page id="admin-create-edition" htmlTitle="Créer une édition">
-      <Row>
-        <Col>{getEditionCreateBreadcrumbs()}</Col>
-      </Row>
-
-      <Row>
-        <Col xxl={3} xl={4} lg={6} md={9} sm={12}>
-          <h2>Créer une édition</h2>
-
+    <Page
+      id="admin-create-edition"
+      htmlTitle="Créer une édition"
+      title="Créer une édition"
+      breadCrumbs={getEditionCreateBreadcrumbs()}
+    >
+      <Card>
+        <div className="w-full md:w-[50%] xl:w-[25%]">
           <EditionDetailsForm
             onSubmit={onSubmit}
             name={editionName}
@@ -47,8 +46,8 @@ export default function CreateEditionAdminView(): React.ReactElement {
             setIsPublic={setIsPublic}
             submitButtonDisabled={postEditionMutation.isPending}
           />
-        </Col>
-      </Row>
+        </div>
+      </Card>
     </Page>
   );
 }

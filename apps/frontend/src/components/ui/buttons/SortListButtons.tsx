@@ -25,7 +25,7 @@ export default function SortListButtons({
           }}
           icon={<FontAwesomeIcon icon={faArrowsUpDown} />}
         >
-          Changer l'ordre
+          Réordonner
         </Button>
       )}
 

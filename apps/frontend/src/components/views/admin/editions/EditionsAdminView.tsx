@@ -6,6 +6,7 @@ import { useGetAdminEditions } from "../../../../hooks/api/requests/admin/editio
 import { usePutAdminEditionOrder } from "../../../../hooks/api/requests/admin/editions/usePutAdminEditionOrder";
 import { getEditionsBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import SortListButtons from "../../../ui/buttons/SortListButtons";
+import { Card } from "../../../ui/Card";
 import CircularLoader from "../../../ui/CircularLoader";
 import { Link } from "../../../ui/Link";
 import SortList from "../../../ui/lists/SortList";
@@ -66,7 +67,7 @@ export default function EditionsAdminView(): React.ReactElement {
       {getEditionsQuery.isLoading && <CircularLoader />}
 
       {editions && (
-        <>
+        <Card>
           {editions.length === 0 && <p>Aucune édition</p>}
 
           {editions.length > 0 && (
@@ -99,7 +100,7 @@ export default function EditionsAdminView(): React.ReactElement {
               </div>
             </div>
           )}
-        </>
+        </Card>
       )}
     </Page>
   );

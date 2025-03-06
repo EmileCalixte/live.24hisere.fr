@@ -49,10 +49,14 @@ export const Link = ({
       rel={props.target === "_blank" ? "noreferrer" : undefined}
       {...props}
     >
-      <span className="flex items-center gap-2">
-        {icon}
-        {children}
-      </span>
+      {icon ? (
+        <span className="flex items-center gap-2">
+          {icon}
+          {children}
+        </span>
+      ) : (
+        children
+      )}
     </ReactRouterLink>
   );
 };

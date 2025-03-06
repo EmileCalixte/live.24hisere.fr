@@ -52,55 +52,53 @@ export default function EditionRaces({ editionId, races, getRacesQuery }: Editio
   }, [isSorting, races]);
 
   return (
-    <Row>
-      <Col>
-        <h3>Courses</h3>
+    <>
+      <h2>Courses</h2>
 
-        {(() => {
-          if (races === undefined) {
-            return <CircularLoader />;
-          }
+      {(() => {
+        if (races === undefined) {
+          return <CircularLoader />;
+        }
 
-          if (races === null) {
-            return <p>Une erreur est survenue lors de la récupération des courses de l'édition</p>;
-          }
+        if (races === null) {
+          return <p>Une erreur est survenue lors de la récupération des courses de l'édition</p>;
+        }
 
-          if (races.length < 1) {
-            return <p>Aucune course dans cette édition</p>;
-          }
+        if (races.length < 1) {
+          return <p>Aucune course dans cette édition</p>;
+        }
 
-          return (
-            <>
-              <SortListButtons
-                isSorting={isSorting}
-                setIsSorting={setIsSorting}
-                saveSort={saveSort}
-                disabled={isSaving}
-              />
+        return (
+          <>
+            <SortListButtons
+              isSorting={isSorting}
+              setIsSorting={setIsSorting}
+              saveSort={saveSort}
+              disabled={isSaving}
+            />
 
-              <Row>
-                <Col>
-                  <SortList
-                    items={sortingRaces || []}
-                    keyFunction={(race) => race.id}
-                    setItems={setSortingRaces}
-                    isSorting={isSorting}
-                  >
-                    {(race, isDragged, isDraggedOver) => (
-                      <RaceListItem
-                        race={race}
-                        isSorting={isSorting}
-                        isDragged={isDragged}
-                        isDraggedOver={isDraggedOver}
-                      />
-                    )}
-                  </SortList>
-                </Col>
-              </Row>
-            </>
-          );
-        })()}
-      </Col>
-    </Row>
+            <Row>
+              <Col>
+                <SortList
+                  items={sortingRaces || []}
+                  keyFunction={(race) => race.id}
+                  setItems={setSortingRaces}
+                  isSorting={isSorting}
+                >
+                  {(race, isDragged, isDraggedOver) => (
+                    <RaceListItem
+                      race={race}
+                      isSorting={isSorting}
+                      isDragged={isDragged}
+                      isDraggedOver={isDraggedOver}
+                    />
+                  )}
+                </SortList>
+              </Col>
+            </Row>
+          </>
+        );
+      })()}
+    </>
   );
 }

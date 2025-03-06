@@ -172,7 +172,7 @@ export default function App(): React.ReactElement {
       <appContext.Provider value={appContextValues}>
         <div id="app-content-wrapper" className="flex-1">
           <Header />
-          <main id="page-content" className="pb-5">
+          <main id="page-wrapper" className="mt-3 pb-5">
             {isLoading ? (
               <CircularLoader />
             ) : showDisabledAppMessage ? (

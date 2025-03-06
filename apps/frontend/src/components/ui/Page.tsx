@@ -27,18 +27,18 @@ export default function Page({
   }
 
   return (
-    <div id={`page-${id}`} className={clsx("mx-3 md:mx-5", className)}>
+    <div id={`page-${id}`} className={clsx("mx-3 flex flex-col gap-3 md:mx-5", className)}>
       <Helmet>
         <title>{[htmlTitle, APP_BASE_TITLE].join(" - ")}</title>
       </Helmet>
 
       {aboveTitle}
 
-      {breadCrumbs && <div className="mt-3">{breadCrumbs}</div>}
+      {breadCrumbs}
 
-      {title && <h1 className="my-3">{title}</h1>}
+      {title && <h1 id="page-title">{title}</h1>}
 
-      {children}
+      <div id="page-content">{children}</div>
     </div>
   );
 }
