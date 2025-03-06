@@ -19,7 +19,7 @@ export default function RacesAdminView(): React.ReactElement {
   const editions = getEditionsQuery.data?.editions;
 
   return (
-    <Page id="admin-races" title="Courses">
+    <Page id="admin-races" htmlTitle="Courses">
       <Row>
         <Col>{getRacesBreadcrumbs()}</Col>
       </Row>
@@ -42,7 +42,7 @@ export default function RacesAdminView(): React.ReactElement {
               {races.length === 0 && <p>Aucune course</p>}
 
               {races.length > 0 && (
-                <table className="table mt-3">
+                <table className="mt-3 table">
                   <thead>
                     <tr>
                       <th>Nom</th>

@@ -176,7 +176,7 @@ export default function RunnerDetailsView(): React.ReactElement {
   return (
     <Page
       id="runner-details"
-      title={
+      htmlTitle={
         selectedRunner === undefined
           ? "Détails coureur"
           : `Détails coureur ${selectedRunner.firstname} ${selectedRunner.lastname}`

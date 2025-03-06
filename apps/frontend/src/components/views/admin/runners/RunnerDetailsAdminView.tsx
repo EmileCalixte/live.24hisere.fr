@@ -119,7 +119,7 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
   return (
     <Page
       id="admin-runner-details"
-      title={runner === undefined ? "Chargement" : `Détails du coureur ${runner.firstname} ${runner.lastname}`}
+      htmlTitle={runner === undefined ? "Chargement" : `Détails du coureur ${runner.firstname} ${runner.lastname}`}
       className="d-flex flex-column gap-3"
     >
       <Row>

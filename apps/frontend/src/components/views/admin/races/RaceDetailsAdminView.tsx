@@ -189,7 +189,7 @@ export default function RaceDetailsAdminView(): React.ReactElement {
   return (
     <Page
       id="admin-race-details"
-      title={race === undefined ? "Chargement" : `Détails de la course ${race.name}`}
+      htmlTitle={race === undefined ? "Chargement" : `Détails de la course ${race.name}`}
       className="d-flex flex-column gap-3"
     >
       <Row>
@@ -255,7 +255,7 @@ export default function RaceDetailsAdminView(): React.ReactElement {
           {displayedRaceRunners && (
             <>
               <Row>
-                <Col className="d-flex gap-2 mb-2">
+                <Col className="d-flex mb-2 gap-2">
                   {isEditingFinalDistances ? (
                     <button
                       className="button"

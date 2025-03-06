@@ -210,7 +210,7 @@ export default function RankingView(): React.ReactElement {
   }, [isRaceNotFinished, selectedRace?.isImmediateStop, selectedTimeMode]);
 
   return (
-    <Page id="ranking" title="Classements">
+    <Page id="ranking" htmlTitle="Classements">
       <Row className="hide-on-print">
         <Col>
           <h1>Classements</h1>

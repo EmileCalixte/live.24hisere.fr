@@ -13,7 +13,7 @@ export default function DisabledAppView(): React.ReactElement {
   const message = disabledAppMessage ?? "<p>Suivi live désactivé</p>";
 
   return (
-    <Page id="disabled-app" title="Application désactivée">
+    <Page id="disabled-app" htmlTitle="Application désactivée">
       <Row>
         <Col>
           <Card

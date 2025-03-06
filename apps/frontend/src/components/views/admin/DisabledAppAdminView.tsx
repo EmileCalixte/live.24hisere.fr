@@ -60,7 +60,7 @@ export default function DisabledAppAdminView(): React.ReactElement {
   }, [disabledAppData, setAppDataIsAppEnabled]);
 
   return (
-    <Page id="admin-disabled-app" title="Accès à l'application">
+    <Page id="admin-disabled-app" htmlTitle="Accès à l'application">
       <Row>
         <Col>{getDisabledAppBreadcrumbs()}</Col>
       </Row>

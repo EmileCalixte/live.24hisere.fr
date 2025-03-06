@@ -220,7 +220,7 @@ export default function FastestLapsAdminView(): React.ReactElement {
   };
 
   return (
-    <Page id="admin-fastest-laps" title="Tours les plus rapides">
+    <Page id="admin-fastest-laps" htmlTitle="Tours les plus rapides">
       <Row>
         <Col>{getFastestLapsBreadcrumbs()}</Col>
       </Row>
@@ -263,7 +263,7 @@ export default function FastestLapsAdminView(): React.ReactElement {
 
               {pageCount > 1 && (
                 <Row>
-                  <Col className="mt-3 pagination-container">
+                  <Col className="pagination-container mt-3">
                     <Pagination minPage={1} maxPage={pageCount} currentPage={page} setPage={setPage} />
                   </Col>
                 </Row>

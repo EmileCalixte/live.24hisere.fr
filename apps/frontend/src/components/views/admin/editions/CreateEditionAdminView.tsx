@@ -30,7 +30,7 @@ export default function CreateEditionAdminView(): React.ReactElement {
   };
 
   return (
-    <Page id="admin-create-edition" title="Créer une édition">
+    <Page id="admin-create-edition" htmlTitle="Créer une édition">
       <Row>
         <Col>{getEditionCreateBreadcrumbs()}</Col>
       </Row>

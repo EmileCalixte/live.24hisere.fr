@@ -41,7 +41,7 @@ export default function CreateRunnerAdminView(): React.ReactElement {
   };
 
   return (
-    <Page id="admin-create-runner" title="Créer un coureur">
+    <Page id="admin-create-runner" htmlTitle="Créer un coureur">
       <Row>
         <Col>{getRunnerCreateBreadcrumbs()}</Col>
       </Row>

@@ -86,7 +86,7 @@ export default function EditionDetailsAdminView(): React.ReactElement {
   return (
     <Page
       id="admin-edition-details"
-      title={edition === undefined ? "Chargement" : `Détails de l'édition ${edition.name}`}
+      htmlTitle={edition === undefined ? "Chargement" : `Détails de l'édition ${edition.name}`}
     >
       <Row>
         <Col>{getEditionDetailsBreadcrumbs(edition)}</Col>

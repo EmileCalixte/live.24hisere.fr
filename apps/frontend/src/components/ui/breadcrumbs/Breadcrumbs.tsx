@@ -8,7 +8,7 @@ interface BreadcrumbsProps {
 }
 
 export default function Breadcrumbs({ children }: BreadcrumbsProps): React.ReactElement {
-  const className = "my-5 flex gap-2 items-baseline";
+  const className = "flex gap-2 items-baseline";
 
   if (!Array.isArray(children)) {
     return (

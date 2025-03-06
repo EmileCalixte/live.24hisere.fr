@@ -3,8 +3,17 @@
 @custom-variant dark (&:where(body[theme="dark"] *));
 
 @theme {
-  --color-app-green-500: oklch(64.4% 0.2032 142.76);
-  --color-app-green-700: oklch(57% 0.23 143.48);
+  --color-app-green-50: oklch(98.06% 0.0179 142.82);
+  --color-app-green-100: oklch(95.73% 0.0473 145.19);
+  --color-app-green-200: oklch(91.54% 0.0873 144.34);
+  --color-app-green-300: oklch(85.24% 0.1511 143.88);
+  --color-app-green-400: oklch(77.37% 0.2057 143.27);
+  --color-app-green-500: oklch(69.25% 0.2141 142.83);
+  --color-app-green-600: oklch(64.4% 0.2032 142.76);
+  --color-app-green-700: oklch(50.46% 0.1524 143.02);
+  --color-app-green-800: oklch(43.09% 0.1219 143.29);
+  --color-app-green-900: oklch(37.84% 0.1013 143.8);
+  --color-app-green-950: oklch(25.51% 0.0707 143.6);
 
   --default-transition-duration: 0.1s;
   --default-transition-timing-function: ease-out;
@@ -83,7 +92,6 @@ body[theme="light"] {
   --color-border-button: #eee;
   --color-background-button: #fff;
   --color-text-button-accent: #fff;
-  --color-accent-desaturated: #9c9;
 }
 
 body[theme="dark"] {
@@ -101,7 +109,6 @@ body[theme="dark"] {
   --color-border-button: #111;
   --color-background-button: #000;
   --color-text-button-accent: #000;
-  --color-accent-desaturated: #363;
 }
 
 body {
@@ -121,15 +128,15 @@ button.a {
   color: var(--color-text-accent);
   text-decoration: underline;
   cursor: pointer;
-
-  border: none;
-  background-color: transparent;
 }
 
 button.a {
   font-size: inherit;
   font-weight: inherit;
   font-family: inherit;
+
+  border: none;
+  background-color: transparent;
 }
 
 a.no-style {
@@ -340,71 +347,6 @@ a:hover > .card {
   .responsive-runner-laps-table {
     font-size: 0.9em;
   }
-}
-
-.admin-list {
-  padding: 0;
-  margin: 0;
-  list-style: none;
-  display: inline-block;
-}
-
-.admin-list li {
-  font-size: 1.2em;
-  font-weight: bold;
-  margin-top: 0.5em;
-  margin-bottom: 0.5em;
-}
-
-.admin-list li a {
-  display: flex;
-  text-decoration: none;
-
-  padding: 5px 15px;
-  border: 1px solid var(--color-border-button);
-  background-color: var(--color-background-button);
-  box-shadow: 0 1px 2px var(--color-shadow);
-  transition: box-shadow 0.05s ease-out;
-}
-
-.admin-list li a:hover {
-  box-shadow: 0 1px 3px var(--color-shadow);
-}
-
-.admin-list li.sorting a:hover {
-  cursor: grab;
-}
-
-.admin-list li.sorting a.dragged {
-  opacity: 50%;
-}
-
-.admin-list li.sorting a.dragged-over {
-  border: 1px solid var(--color-accent);
-}
-
-.admin-list-link-drag-icon {
-  margin-right: 15px;
-  color: var(--color-accent-desaturated);
-}
-
-.admin-list-link-icon {
-  width: 1.75em;
-}
-
-.admin-list-link-secondary-icons {
-  font-size: 0.8em;
-  margin-left: 0.8em;
-
-  display: flex;
-  flex: 1;
-  align-items: flex-end;
-  justify-content: right;
-}
-
-.admin-list-link-secondary-icon-group {
-  margin-left: 0.4em;
-  margin-right: 0.4em;
 }
 
 .pagination-container {

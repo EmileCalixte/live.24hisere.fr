@@ -2,7 +2,8 @@ import type React from "react";
 import { faCalendar } from "@fortawesome/free-regular-svg-icons";
 import { faDownload, faFlagCheckered, faHand, faPersonRunning, faStopwatch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import MenuItem from "./MenuItem";
+import { MenuList } from "../../../ui/lists/MenuList/MenuList";
+import MenuListItem from "../../../ui/lists/MenuList/MenuListItem";
 
 const menuItems: Array<{
   url: string;
@@ -41,12 +42,12 @@ const menuItems: Array<{
   },
 ];
 
-export default function MenuList(): React.ReactElement {
+export default function AdminHomeMenuList(): React.ReactElement {
   return (
-    <ul className="admin-list">
+    <MenuList>
       {menuItems.map(({ url, icon, label }, key) => (
-        <MenuItem key={key} url={url} icon={icon} label={label} />
+        <MenuListItem key={key} link={url} icon={icon} label={label} />
       ))}
-    </ul>
+    </MenuList>
   );
 }

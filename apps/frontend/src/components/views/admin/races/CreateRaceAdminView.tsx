@@ -105,7 +105,7 @@ export default function CreateRaceAdminView(): React.ReactElement {
   };
 
   return (
-    <Page id="admin-create-race" title="Créer une course">
+    <Page id="admin-create-race" htmlTitle="Créer une course">
       <Row>
         <Col>{getRaceCreateBreadcrumbs()}</Col>
       </Row>

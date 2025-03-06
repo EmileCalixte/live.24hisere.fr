@@ -311,7 +311,7 @@ export default function ImportRunnersCsvView(): React.ReactElement {
   const runnersFromCsvCount = runnersFromCsv.length;
 
   return (
-    <Page id="admin-import-runners-csv" title="Import de coureurs">
+    <Page id="admin-import-runners-csv" htmlTitle="Import de coureurs">
       <Row>
         <Col>{getImportRunnersCsvBreadcrumbs()}</Col>
       </Row>

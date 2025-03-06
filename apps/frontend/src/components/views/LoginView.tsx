@@ -35,7 +35,7 @@ export default function LoginView(): React.ReactElement {
   }
 
   return (
-    <Page id="login" title="Connexion">
+    <Page id="login" htmlTitle="Connexion">
       <Row>
         <Col xl={3} lg={4} md={6} sm={12}>
           <h1>Connexion</h1>

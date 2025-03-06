@@ -198,7 +198,7 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
   return (
     <Page
       id="admin-race-runner-details"
-      title={runner ? `Détails de la participation de ${runner.firstname} ${runner.lastname}` : "Chargement"}
+      htmlTitle={runner ? `Détails de la participation de ${runner.firstname} ${runner.lastname}` : "Chargement"}
       className="d-flex flex-column gap-3"
     >
       <Row>

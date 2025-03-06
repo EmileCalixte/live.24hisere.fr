@@ -1,10 +1,5 @@
 import clsx from "clsx";
-
-type PolymorphicProps<TElement extends React.ElementType> = React.PropsWithChildren<
-  React.ComponentPropsWithoutRef<TElement> & {
-    as?: TElement;
-  }
->;
+import type { PolymorphicProps } from "../../types/utils/react";
 
 type CardProps<TElement extends React.ElementType> = PolymorphicProps<TElement> & {
   className?: string;

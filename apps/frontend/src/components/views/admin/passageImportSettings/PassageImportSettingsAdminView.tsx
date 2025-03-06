@@ -48,7 +48,7 @@ export default function PassageImportSettingsAdminView(): React.ReactElement {
   const isDagFileUrlValid = !dagFileUrl || stringUtils.isValidUrl(dagFileUrl);
 
   return (
-    <Page id="admin-passage-import-settings" title="Paramètres d'import des passages">
+    <Page id="admin-passage-import-settings" htmlTitle="Paramètres d'import des passages">
       <Row>
         <Col>{getImportPassagesSettingsBreadcrumbs()}</Col>
       </Row>

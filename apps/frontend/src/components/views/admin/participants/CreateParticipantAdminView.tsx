@@ -118,7 +118,7 @@ export default function CreateParticipantAdminView(): React.ReactElement {
   return (
     <Page
       id="admin-create-participant"
-      title={race ? `Ajouter un coureur à la course ${race.name}` : "Chargement"}
+      htmlTitle={race ? `Ajouter un coureur à la course ${race.name}` : "Chargement"}
       className="d-flex flex-column gap-3"
     >
       <Row>

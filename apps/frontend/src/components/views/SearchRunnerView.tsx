@@ -48,7 +48,7 @@ export default function SearchRunnerView(): React.ReactElement {
   }, [querySearch, runners]);
 
   return (
-    <Page id="search-runners" title="Rechercher un coureur">
+    <Page id="search-runners" htmlTitle="Rechercher un coureur">
       <Row>
         <Col>
           <h1>Rechercher un coureur</h1>

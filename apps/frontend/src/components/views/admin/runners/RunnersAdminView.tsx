@@ -40,7 +40,7 @@ export default function RunnersAdminView(): React.ReactElement {
   }, [sortedRunners, search]);
 
   return (
-    <Page id="admin-runners" title="Coureurs">
+    <Page id="admin-runners" htmlTitle="Coureurs">
       <Row>
         <Col>{getRunnersBreadcrumbs()}</Col>
       </Row>

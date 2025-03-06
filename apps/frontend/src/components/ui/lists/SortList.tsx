@@ -1,4 +1,6 @@
 import React from "react";
+import clsx from "clsx";
+import { MenuList } from "./MenuList/MenuList";
 
 interface SortListProps<T> {
   children: (item: T, isDragged: boolean, isDraggedOver: boolean) => React.ReactElement;
@@ -52,11 +54,11 @@ export default function SortList<T>({
   }, [handleSort]);
 
   return (
-    <ul className={className}>
+    <MenuList className={className}>
       {items.map((item, index) => (
         <li
           key={keyFunction(item)}
-          className={isSorting ? "sorting" : ""}
+          className={clsx(isSorting && "sorting")}
           draggable={isSorting}
           onDragStart={
             isSorting
@@ -84,6 +86,6 @@ export default function SortList<T>({
           {children(item, index === dragItemIndex, index === dragOverItemIndex)}
         </li>
       ))}
-    </ul>
+    </MenuList>
   );
 }

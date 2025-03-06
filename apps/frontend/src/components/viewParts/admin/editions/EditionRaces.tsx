@@ -85,7 +85,6 @@ export default function EditionRaces({ editionId, races, getRacesQuery }: Editio
                     keyFunction={(race) => race.id}
                     setItems={setSortingRaces}
                     isSorting={isSorting}
-                    className="admin-list"
                   >
                     {(race, isDragged, isDraggedOver) => (
                       <RaceListItem
