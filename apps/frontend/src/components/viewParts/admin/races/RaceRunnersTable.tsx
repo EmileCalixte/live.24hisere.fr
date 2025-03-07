@@ -39,7 +39,7 @@ export default function RaceRunnersTable({
             <tr key={runner.id}>
               <td>{runner.bibNumber}</td>
               <td>
-                <span className="d-flex align-items-center gap-2">
+                <span className="flex items-center gap-2">
                   {alpha2CountryCode && <Flag countryCode={alpha2CountryCode} />}
                   <Link to={`/admin/runners/${runner.id}`}>
                     {runner.firstname} {runner.lastname}

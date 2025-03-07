@@ -96,7 +96,7 @@ export default function EditionDetailsAdminView(): React.ReactElement {
         <CircularLoader />
       ) : (
         <Card className="flex flex-col gap-3">
-          <h2>Informations</h2>
+          <h2>Détails de l'édition</h2>
 
           <div className="w-full md:w-[50%] xl:w-[25%]">
             <EditionDetailsForm
