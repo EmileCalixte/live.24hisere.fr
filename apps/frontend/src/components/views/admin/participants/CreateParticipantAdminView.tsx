@@ -1,5 +1,4 @@
 import React from "react";
-import { Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import type { AdminRunner } from "@live24hisere/core/types";
 import { appContext } from "../../../../contexts/AppContext";
@@ -13,6 +12,7 @@ import { getCreateParticipantBreadcrumbs } from "../../../../services/breadcrumb
 import type { SelectOption } from "../../../../types/Forms";
 import { is404Error } from "../../../../utils/apiUtils";
 import { spaceshipRunnersByName } from "../../../../utils/runnerUtils";
+import { Card } from "../../../ui/Card";
 import CircularLoader from "../../../ui/CircularLoader";
 import { Checkbox } from "../../../ui/forms/Checkbox";
 import Page from "../../../ui/Page";
@@ -119,27 +119,23 @@ export default function CreateParticipantAdminView(): React.ReactElement {
     <Page
       id="admin-create-participant"
       htmlTitle={race ? `Ajouter un coureur à la course ${race.name}` : "Chargement"}
-      className="d-flex flex-column gap-3"
+      title={race ? `Ajouter un coureur à la course ${race.name}` : undefined}
+      breadCrumbs={getCreateParticipantBreadcrumbs(edition ?? undefined, race ?? undefined)}
     >
-      <Row>
-        <Col>{getCreateParticipantBreadcrumbs(edition ?? undefined, race ?? undefined)}</Col>
-      </Row>
+      {race === undefined ? (
+        <CircularLoader />
+      ) : (
+        <Card className="flex flex-col gap-3">
+          <h2>Détails de la participation</h2>
+          <Checkbox
+            label="Rediriger vers les détails de la participation une fois le coureur ajouté à la course"
+            checked={redirectToCreatedParticipant}
+            onChange={() => {
+              setRedirectToCreatedParticipant((value) => !value);
+            }}
+          />
 
-      {!race && <CircularLoader />}
-
-      {race && (
-        <Row className="d-flex flex-column gap-3">
-          <Col sm={12}>
-            <Checkbox
-              label="Rediriger vers les détails de la participation une fois le coureur ajouté à la course"
-              checked={redirectToCreatedParticipant}
-              onChange={() => {
-                setRedirectToCreatedParticipant((value) => !value);
-              }}
-            />
-          </Col>
-
-          <Col xxl={3} xl={4} lg={6} md={9} sm={12}>
+          <div className="w-full md:w-[50%] xl:w-[25%]">
             <ParticipantDetailsForm
               isBasicRanking={race.isBasicRanking}
               onSubmit={onSubmit}
@@ -162,8 +158,8 @@ export default function CreateParticipantAdminView(): React.ReactElement {
                 || runnerId === undefined
               }
             />
-          </Col>
-        </Row>
+          </div>
+        </Card>
       )}
     </Page>
   );

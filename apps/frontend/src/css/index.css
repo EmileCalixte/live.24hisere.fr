@@ -210,16 +210,6 @@ table.table tbody tr:hover {
   background-color: var(--color-background-hover);
 }
 
-table.table td .buttons-container,
-table.table th .buttons-container {
-  display: flex;
-  gap: 0.5em;
-}
-
-.admin-runner-passages-table tr.passage-hidden td:nth-child(n + 3):nth-child(-n + 4) {
-  text-decoration: line-through;
-}
-
 .ranking-table-info-header {
   background-color: var(--color-background-highlight);
 }
