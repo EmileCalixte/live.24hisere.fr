@@ -55,6 +55,8 @@ export default function EditionRaces({ editionId, races, getRacesQuery }: Editio
     <>
       <h2>Courses</h2>
 
+      <p>Les courses seront ordonnées dans le même ordre que celui visible ici.</p>
+
       {(() => {
         if (races === undefined) {
           return <CircularLoader />;
