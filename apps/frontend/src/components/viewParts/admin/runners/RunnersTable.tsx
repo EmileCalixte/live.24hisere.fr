@@ -30,7 +30,7 @@ export default function RunnersTable({ runners }: RunnersTableProps): React.Reac
             <tr key={runner.id}>
               <td>{runner.id}</td>
               <td>
-                <span className="d-flex align-items-center gap-2">
+                <span className="flex items-center gap-2">
                   {alpha2CountryCode && <Flag countryCode={alpha2CountryCode} />}
                   <span>
                     {runner.lastname.toUpperCase()} {runner.firstname}

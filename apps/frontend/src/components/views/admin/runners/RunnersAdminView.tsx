@@ -1,11 +1,11 @@
 import React from "react";
-import { faFileCsv, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Col, Row } from "react-bootstrap";
 import { stringUtils } from "@live24hisere/utils";
 import { useGetAdminRunners } from "../../../../hooks/api/requests/admin/runners/useGetAdminRunners";
 import { useNameSortedRunners } from "../../../../hooks/runners/useNameSortedRunners";
 import { getRunnersBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
+import { Card } from "../../../ui/Card";
 import CircularLoader from "../../../ui/CircularLoader";
 import { Input } from "../../../ui/forms/Input";
 import { Link } from "../../../ui/Link";
@@ -40,55 +40,44 @@ export default function RunnersAdminView(): React.ReactElement {
   }, [sortedRunners, search]);
 
   return (
-    <Page id="admin-runners" htmlTitle="Coureurs">
-      <Row>
-        <Col>{getRunnersBreadcrumbs()}</Col>
-      </Row>
+    <Page
+      id="admin-runners"
+      htmlTitle="Coureurs"
+      title={
+        <span className="flex flex-wrap items-center gap-5">
+          Coureurs
+          <> </>
+          <span className="text-base">
+            <Link variant="button" to="/admin/runners/create" icon={<FontAwesomeIcon icon={faPlus} />}>
+              Créer
+            </Link>
+          </span>
+        </span>
+      }
+      breadCrumbs={getRunnersBreadcrumbs()}
+    >
+      {!displayedRunners ? (
+        <CircularLoader />
+      ) : (
+        <Card className="flex flex-col gap-3">
+          <div className="w-full md:w-[50%] xl:w-[25%]">
+            <Input
+              label="Rechercher"
+              placeholder="Nom ou prénom"
+              autoComplete="off"
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+              }}
+            />
+          </div>
 
-      {!displayedRunners && (
-        <Row>
-          <Col>
-            <CircularLoader />
-          </Col>
-        </Row>
-      )}
+          <div>
+            {displayedRunners.length === 0 && <p>Aucun coureur</p>}
 
-      {displayedRunners && (
-        <>
-          <Row>
-            <Col className="d-flex gap-2">
-              <Link to="/admin/runners/create" variant="button" icon={<FontAwesomeIcon icon={faPlus} />}>
-                Ajouter un coureur
-              </Link>
-
-              <Link to="/admin/runners/import-csv" variant="button" icon={<FontAwesomeIcon icon={faFileCsv} />}>
-                Importer via fichier CSV
-              </Link>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col lg={3} md={4} sm={6} xs={12} className="mt-3">
-              <Input
-                label="Rechercher"
-                placeholder="Nom ou prénom"
-                autoComplete="off"
-                value={search}
-                onChange={(e) => {
-                  setSearch(e.target.value);
-                }}
-              />
-            </Col>
-          </Row>
-
-          <Row>
-            <Col className="mt-3">
-              {displayedRunners.length === 0 && <p>Aucun coureur</p>}
-
-              {displayedRunners.length > 0 && <RunnersTable runners={displayedRunners} />}
-            </Col>
-          </Row>
-        </>
+            {displayedRunners.length > 0 && <RunnersTable runners={displayedRunners} />}
+          </div>
+        </Card>
       )}
     </Page>
   );
