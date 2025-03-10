@@ -1,6 +1,7 @@
 import type React from "react";
 import { faAngleLeft, faAngleRight, faAnglesLeft, faAnglesRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { twMerge } from "tailwind-merge";
 
 interface PaginationProps {
   minPage: number;
@@ -9,6 +10,15 @@ interface PaginationProps {
   setPage: (page: number) => void;
 }
 
+const buttonClassName = twMerge(
+  "text-[0.95em] flex items-center justify-center h-[2.1rem] min-w-[2.1rem] px-0.5",
+  "border-1 border-neutral-200 dark:border-neutral-600",
+  "[&:not(:disabled)]:cursor-pointer [&:not(:disabled)]:hover:bg-neutral-200 [&:not(:disabled)]:dark:hover:bg-neutral-700",
+  "ml-[-1px]",
+);
+
+const activeButtonClassName = "z-1 bg-app-green-500 dark:bg-app-green-700 text-white";
+
 export default function Pagination({
   minPage = 1,
   maxPage,
@@ -16,8 +26,9 @@ export default function Pagination({
   setPage,
 }: PaginationProps): React.ReactElement {
   return (
-    <div className="pagination">
+    <div className="pagination flex">
       <button
+        className={twMerge(buttonClassName, "ml-0 rounded-l-md")}
         onClick={() => {
           setPage(minPage);
         }}
@@ -25,7 +36,9 @@ export default function Pagination({
       >
         <FontAwesomeIcon icon={faAnglesLeft} />
       </button>
+
       <button
+        className={buttonClassName}
         onClick={() => {
           setPage(Math.max(minPage, currentPage - 1));
         }}
@@ -36,6 +49,7 @@ export default function Pagination({
 
       {currentPage + 1 > maxPage && currentPage > minPage + 3 && (
         <button
+          className={buttonClassName}
           onClick={() => {
             setPage(currentPage - 4);
           }}
@@ -46,6 +60,7 @@ export default function Pagination({
 
       {currentPage + 2 > maxPage && currentPage > minPage + 2 && (
         <button
+          className={buttonClassName}
           onClick={() => {
             setPage(currentPage - 3);
           }}
@@ -56,6 +71,7 @@ export default function Pagination({
 
       {currentPage - 2 >= minPage && (
         <button
+          className={buttonClassName}
           onClick={() => {
             setPage(currentPage - 2);
           }}
@@ -66,6 +82,7 @@ export default function Pagination({
 
       {currentPage - 1 >= minPage && (
         <button
+          className={buttonClassName}
           onClick={() => {
             setPage(currentPage - 1);
           }}
@@ -74,12 +91,13 @@ export default function Pagination({
         </button>
       )}
 
-      <button className="pagination-button-current-page" disabled={true}>
+      <button className={twMerge(buttonClassName, activeButtonClassName)} disabled>
         {currentPage}
       </button>
 
       {currentPage + 1 <= maxPage && (
         <button
+          className={buttonClassName}
           onClick={() => {
             setPage(currentPage + 1);
           }}
@@ -90,6 +108,7 @@ export default function Pagination({
 
       {currentPage + 2 <= maxPage && (
         <button
+          className={buttonClassName}
           onClick={() => {
             setPage(currentPage + 2);
           }}
@@ -100,6 +119,7 @@ export default function Pagination({
 
       {currentPage - 2 < minPage && currentPage < maxPage - 2 && (
         <button
+          className={buttonClassName}
           onClick={() => {
             setPage(currentPage + 3);
           }}
@@ -110,6 +130,7 @@ export default function Pagination({
 
       {currentPage - 1 < minPage && currentPage < maxPage - 3 && (
         <button
+          className={buttonClassName}
           onClick={() => {
             setPage(currentPage + 4);
           }}
@@ -119,6 +140,7 @@ export default function Pagination({
       )}
 
       <button
+        className={buttonClassName}
         onClick={() => {
           setPage(Math.min(maxPage, currentPage + 1));
         }}
@@ -126,7 +148,9 @@ export default function Pagination({
       >
         <FontAwesomeIcon icon={faAngleRight} />
       </button>
+
       <button
+        className={twMerge(buttonClassName, "rounded-r-md")}
         onClick={() => {
           setPage(maxPage);
         }}
