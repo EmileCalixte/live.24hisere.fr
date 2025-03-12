@@ -80,35 +80,11 @@ body[theme="light"] {
 body,
 body[theme="light"] {
   --color-text: var(--color-neutral-900);
-  --color-text-accent: #2a2;
-  --color-shadow: #0003;
-  --color-background-highlight: #fff;
-  --color-accent: #3c3;
-  --color-background-alternate: #f0f0f0;
-  --color-background-hover: #e8e8e8;
-  --color-border-table: #aaa;
-  --color-background--ranking-table-runner-stopped-badge: #d34242;
-  --color-text--ranking-table-runner-stopped-badge: #fff;
-  --color-border-button: #eee;
-  --color-background-button: #fff;
-  --color-text-button-accent: #fff;
 }
 
 body[theme="dark"] {
   --color-background: var(--color-neutral-900);
   --color-text: var(--color-neutral-200);
-  --color-text-accent: #2a2;
-  --color-shadow: #000a;
-  --color-background-highlight: #1a1a1a;
-  --color-accent: #3c3;
-  --color-background-alternate: #222;
-  --color-background-hover: #233523;
-  --color-border-table: #333;
-  --color-background--ranking-table-runner-stopped-badge: #d34242;
-  --color-text--ranking-table-runner-stopped-badge: #fff;
-  --color-border-button: #111;
-  --color-background-button: #000;
-  --color-text-button-accent: #000;
 }
 
 body {
@@ -123,49 +99,9 @@ body {
   color: var(--color-text);
 }
 
-dialog.modal::backdrop {
-  background-color: #000;
-  transition: background-color 1s ease-out;
-  opacity: 0.5;
-}
-
-dialog.modal {
-  width: max(460px, 30vw);
-
-  border: none;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
-
-  padding: 0;
-
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-dialog.modal .modal-content {
-  padding: 1em;
-}
-
-dialog.modal .close-button {
-  font-size: 1.25em;
-  padding: 0 0.125em;
-  line-height: 1;
-  margin: 0;
-  background-color: transparent;
-  border: none;
-
-  color: #666;
-  transition: color 0.05s ease-out;
-
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  z-index: 1;
-}
-
-dialog.modal .close-button:hover {
-  cursor: pointer;
-
-  color: hsl(0, 0%, 20%);
+.print-exact {
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
 }
 
 .race-time-input {
@@ -173,78 +109,6 @@ dialog.modal .close-button:hover {
   width: 6ch;
   margin-left: 5px;
   margin-right: 2px;
-}
-
-table.table {
-  border-collapse: collapse;
-}
-
-table.table:not(.no-full-width) {
-  width: 100%;
-}
-
-table.table,
-table.table td,
-table.table th {
-  border: 1px solid var(--color-border-table);
-}
-
-table.table td:not(.clickable),
-table.table th:not(.clickable),
-table.table td.clickable a,
-table.table th.clickable a {
-  padding: 0.5em;
-}
-
-table.table th {
-  background-color: var(--color-background-highlight);
-  border-bottom-style: double;
-  border-bottom-width: 3px;
-}
-
-table.table tbody tr:nth-child(2n) {
-  background-color: var(--color-background-alternate);
-}
-
-table.table tbody tr:hover {
-  background-color: var(--color-background-hover);
-}
-
-.ranking-table-info-header {
-  background-color: var(--color-background-highlight);
-}
-
-.ranking-table-chevron {
-  color: #444;
-  font-size: 0.85em;
-}
-
-.responsive-ranking-table tbody td.clickable > a {
-  text-decoration: none;
-  color: #444;
-}
-
-@media (max-width: 460px) {
-  .responsive-ranking-table {
-    font-size: 0.9em;
-  }
-}
-
-.responsive-ranking-table-row-secondary-data-row {
-  font-size: 0.9em;
-}
-
-.ranking-table-runner-stopped-badge {
-  display: inline-block;
-  font-size: 0.75em;
-  background-color: var(--color-background--ranking-table-runner-stopped-badge);
-  color: var(--color-text--ranking-table-runner-stopped-badge);
-  font-weight: bold;
-  padding: 0.2em 0.4em;
-  border-radius: 0.5em;
-
-  print-color-adjust: exact;
-  -webkit-print-color-adjust: exact;
 }
 
 a > .card {
@@ -258,16 +122,6 @@ a:has(.card) {
 
 a:hover > .card {
   background-color: var(--color-background);
-}
-
-.responsive-runner-laps-table .responsive-runner-laps-table-row-secondary-data {
-  font-size: 0.9em;
-}
-
-@media (max-width: 460px) {
-  .responsive-runner-laps-table {
-    font-size: 0.9em;
-  }
 }
 
 #app-footer a {

@@ -3,6 +3,7 @@ import type { AdminRunner, RunnerWithRaceCount } from "@live24hisere/core/types"
 import { getCountryAlpha2CodeFromAlpha3Code } from "../../../../utils/countryUtils";
 import { Flag } from "../../../ui/countries/Flag";
 import { Link } from "../../../ui/Link";
+import { Table, Td, Th, Tr } from "../../../ui/Table";
 
 interface RunnersTableProps {
   runners: Array<RunnerWithRaceCount<AdminRunner>>;
@@ -10,44 +11,44 @@ interface RunnersTableProps {
 
 export default function RunnersTable({ runners }: RunnersTableProps): React.ReactElement {
   return (
-    <table className="no-full-width table">
+    <Table>
       <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nom</th>
-          <th>Sexe</th>
-          <th>Année naissance</th>
-          <th>Public</th>
-          <th>Courses</th>
-          <th>Détails</th>
-        </tr>
+        <Tr>
+          <Th>ID</Th>
+          <Th>Nom</Th>
+          <Th>Sexe</Th>
+          <Th>Année naissance</Th>
+          <Th>Public</Th>
+          <Th>Courses</Th>
+          <Th>Détails</Th>
+        </Tr>
       </thead>
       <tbody>
         {runners.map((runner) => {
           const alpha2CountryCode = getCountryAlpha2CodeFromAlpha3Code(runner.countryCode);
 
           return (
-            <tr key={runner.id}>
-              <td>{runner.id}</td>
-              <td>
+            <Tr key={runner.id}>
+              <Td>{runner.id}</Td>
+              <Td>
                 <span className="flex items-center gap-2">
                   {alpha2CountryCode && <Flag countryCode={alpha2CountryCode} />}
                   <span>
                     {runner.lastname.toUpperCase()} {runner.firstname}
                   </span>
                 </span>
-              </td>
-              <td>{runner.gender}</td>
-              <td>{runner.birthYear}</td>
-              <td>{runner.isPublic ? "Oui" : "Non"}</td>
-              <td>{runner.raceCount}</td>
-              <td>
+              </Td>
+              <Td>{runner.gender}</Td>
+              <Td>{runner.birthYear}</Td>
+              <Td>{runner.isPublic ? "Oui" : "Non"}</Td>
+              <Td>{runner.raceCount}</Td>
+              <Td>
                 <Link to={`/admin/runners/${runner.id}`}>Détails</Link>
-              </td>
-            </tr>
+              </Td>
+            </Tr>
           );
         })}
       </tbody>
-    </table>
+    </Table>
   );
 }

@@ -2,6 +2,7 @@ import type React from "react";
 import { type CategoryCode, getCategory } from "@emilecalixte/ffa-categories";
 import type { GenderWithMixed, PublicRace } from "@live24hisere/core/types";
 import type { RankingRunner } from "../../../../types/Ranking";
+import { Td } from "../../../ui/Table";
 
 interface RankingTableRowNCellsProps {
   race: PublicRace;
@@ -22,35 +23,35 @@ export default function RankingTableRowNCells({
     if (tableGender === "mixed") {
       return (
         <>
-          <td>
+          <Td>
             <strong>{runner.ranks.displayed.scratchMixed}</strong>
-          </td>
-          <td>
+          </Td>
+          <Td>
             {runner.ranks.displayed.scratchGender} {runner.gender.toUpperCase()}
-          </td>
-          <td>
+          </Td>
+          <Td>
             {runner.ranks.displayed.categoryMixed} {runnerCategoryCode}
-          </td>
-          <td>
+          </Td>
+          <Td>
             {runner.ranks.displayed.categoryGender} {runnerCategoryCode}-{runner.gender.toUpperCase()}
-          </td>
+          </Td>
         </>
       );
     } else {
       return (
         <>
-          <td>
+          <Td>
             <strong>
               {runner.ranks.displayed.scratchGender} {runner.gender.toUpperCase()}
             </strong>
-          </td>
-          <td>{runner.ranks.displayed.scratchMixed}</td>
-          <td>
+          </Td>
+          <Td>{runner.ranks.displayed.scratchMixed}</Td>
+          <Td>
             {runner.ranks.displayed.categoryMixed} {runnerCategoryCode}
-          </td>
-          <td>
+          </Td>
+          <Td>
             {runner.ranks.displayed.categoryGender} {runnerCategoryCode}-{runner.gender.toUpperCase()}
-          </td>
+          </Td>
         </>
       );
     }
@@ -58,35 +59,35 @@ export default function RankingTableRowNCells({
     if (tableGender === "mixed") {
       return (
         <>
-          <td>
+          <Td>
             <strong>
               {runner.ranks.displayed.categoryMixed} {runnerCategoryCode}
             </strong>
-          </td>
-          <td>{runner.ranks.displayed.scratchMixed}</td>
-          <td>
+          </Td>
+          <Td>{runner.ranks.displayed.scratchMixed}</Td>
+          <Td>
             {runner.ranks.displayed.scratchGender} {runner.gender.toUpperCase()}
-          </td>
-          <td>
+          </Td>
+          <Td>
             {runner.ranks.displayed.categoryGender} {runnerCategoryCode}-{runner.gender.toUpperCase()}
-          </td>
+          </Td>
         </>
       );
     } else {
       return (
         <>
-          <td>
+          <Td>
             <strong>
               {runner.ranks.displayed.categoryGender} {runnerCategoryCode}-{runner.gender.toUpperCase()}
             </strong>
-          </td>
-          <td>{runner.ranks.displayed.scratchMixed}</td>
-          <td>
+          </Td>
+          <Td>{runner.ranks.displayed.scratchMixed}</Td>
+          <Td>
             {runner.ranks.displayed.scratchGender} {runner.gender.toUpperCase()}
-          </td>
-          <td>
+          </Td>
+          <Td>
             {runner.ranks.displayed.categoryMixed} {runnerCategoryCode}
-          </td>
+          </Td>
         </>
       );
     }

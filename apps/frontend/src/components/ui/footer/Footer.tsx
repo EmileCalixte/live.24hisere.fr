@@ -13,7 +13,7 @@ export default function Footer(): React.ReactElement {
   return (
     <footer
       id="app-footer"
-      className="flex flex-col gap-3 border-t border-transparent bg-neutral-950 px-3 py-3 text-center text-sm text-neutral-50 md:px-5 dark:border-neutral-600"
+      className="flex flex-col gap-3 border-t border-transparent bg-neutral-950 px-3 py-3 text-center text-sm text-neutral-50 md:px-5 dark:border-neutral-600 print:hidden"
     >
       {(isAppEnabled || user) && <p>Dernière mise à jour des données : {formatDateAsString(lastUpdateTime)}</p>}
 

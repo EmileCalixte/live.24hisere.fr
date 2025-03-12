@@ -183,13 +183,13 @@ export default function RunnerDetailsView(): React.ReactElement {
           : `Détails coureur ${selectedRunner.firstname} ${selectedRunner.lastname}`
       }
     >
-      <Row className="hide-on-print">
+      <Row className="print:hidden">
         <Col>
           <h1>Détails coureur</h1>
         </Col>
       </Row>
 
-      <Row className="hide-on-print">
+      <Row className="print:hidden">
         <Col xxl={3} xl={4} lg={6} md={8} sm={10} xs={12}>
           <RunnerSelector runners={runners} onSelectRunner={onSelectRunner} selectedRunnerId={runnerId} />
 

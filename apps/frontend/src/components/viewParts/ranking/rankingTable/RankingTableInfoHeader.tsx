@@ -5,6 +5,7 @@ import type { GenderWithMixed, PublicRace } from "@live24hisere/core/types";
 import { appContext } from "../../../../contexts/AppContext";
 import { formatMsAsDuration } from "../../../../utils/durationUtils";
 import { isRaceFinished } from "../../../../utils/raceUtils";
+import { TABLE_HEADER_BG_CLASSNAME, Td } from "../../../ui/Table";
 import RaceTimer from "../../RaceTimer";
 
 interface RankingTableInfoHeaderProps {
@@ -23,7 +24,7 @@ export default function RankingTableInfoHeader({
   const { serverTimeOffset } = React.useContext(appContext).appData;
 
   return (
-    <td colSpan={42} className="ranking-table-info-header">
+    <Td colSpan={42} className={TABLE_HEADER_BG_CLASSNAME}>
       {race.name} : Classement{" "}
       {(() => {
         if (tableCategoryCode === null) {
@@ -55,6 +56,6 @@ export default function RankingTableInfoHeader({
           );
         }
       })()}
-    </td>
+    </Td>
   );
 }

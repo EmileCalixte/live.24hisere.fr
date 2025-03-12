@@ -14,7 +14,7 @@ import { objectUtils } from "@live24hisere/utils";
 import { RankingTimeMode } from "../../constants/rankingTimeMode";
 import { SearchParam } from "../../constants/searchParams";
 import { appContext } from "../../contexts/AppContext";
-import "../../css/print-ranking-table.css";
+// import "../../css/print.css";
 import { useGetPublicEditions } from "../../hooks/api/requests/public/editions/useGetPublicEditions";
 import { useGetPublicEditionRaces } from "../../hooks/api/requests/public/races/useGetPublicEditionRaces";
 import { useGetPublicRaceRunners } from "../../hooks/api/requests/public/runners/useGetPublicRaceRunners";
@@ -211,7 +211,7 @@ export default function RankingView(): React.ReactElement {
 
   return (
     <Page id="ranking" htmlTitle="Classements">
-      <Row className="hide-on-print">
+      <Row className="print:hidden">
         <Col>
           <h1>Classements</h1>
         </Col>
@@ -225,7 +225,7 @@ export default function RankingView(): React.ReactElement {
         </Row>
       )}
 
-      <Row className="hide-on-print mb-3">
+      <Row className="mb-3 print:hidden">
         <Col>
           <Card>
             <Row className="gap-2">
@@ -258,7 +258,7 @@ export default function RankingView(): React.ReactElement {
 
       {selectedRace && (
         <>
-          <Row className="hide-on-print row-cols-auto mb-3 gap-3">
+          <Row className="row-cols-auto mb-3 gap-3 print:hidden">
             <RankingSettings
               categories={categories}
               onCategorySelect={onCategorySelect}

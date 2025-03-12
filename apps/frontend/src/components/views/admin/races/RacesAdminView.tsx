@@ -10,6 +10,7 @@ import { Card } from "../../../ui/Card";
 import CircularLoader from "../../../ui/CircularLoader";
 import { Link } from "../../../ui/Link";
 import Page from "../../../ui/Page";
+import { Table, Td, Th, Tr } from "../../../ui/Table";
 
 export default function RacesAdminView(): React.ReactElement {
   const getRacesQuery = useGetAdminRaces();
@@ -42,19 +43,19 @@ export default function RacesAdminView(): React.ReactElement {
           {races.length === 0 && <p>Aucune course</p>}
 
           {races.length > 0 && (
-            <table className="mt-3 table">
+            <Table className="w-full">
               <thead>
-                <tr>
-                  <th>Nom</th>
-                  <th>Édition</th>
-                  <th>Nb. coureurs</th>
-                  <th>Publique</th>
-                  <th>Class. simplifié</th>
-                  <th>Arrêt immédiat</th>
-                  <th>Date</th>
-                  <th>Durée</th>
-                  <th>Distance</th>
-                </tr>
+                <Tr>
+                  <Th>Nom</Th>
+                  <Th>Édition</Th>
+                  <Th>Nb. coureurs</Th>
+                  <Th>Publique</Th>
+                  <Th>Class. simplifié</Th>
+                  <Th>Arrêt immédiat</Th>
+                  <Th>Date</Th>
+                  <Th>Durée</Th>
+                  <Th>Distance</Th>
+                </Tr>
               </thead>
               <tbody>
                 {races.map((race) => {
@@ -64,19 +65,19 @@ export default function RacesAdminView(): React.ReactElement {
                   const initialDistance = parseFloat(race.initialDistance);
 
                   return (
-                    <tr key={race.id}>
-                      <td>
+                    <Tr key={race.id}>
+                      <Td>
                         <Link to={`/admin/races/${race.id}`}>{race.name}</Link>
-                      </td>
-                      <td>
+                      </Td>
+                      <Td>
                         {edition ? (
                           <Link to={`/admin/editions/${edition.id}`}>{edition.name}</Link>
                         ) : (
                           <CircularLoader />
                         )}
-                      </td>
-                      <td>{race.runnerCount}</td>
-                      <td>
+                      </Td>
+                      <Td>{race.runnerCount}</Td>
+                      <Td>
                         {edition ? (
                           edition.isPublic ? (
                             race.isPublic ? (
@@ -90,19 +91,19 @@ export default function RacesAdminView(): React.ReactElement {
                         ) : (
                           <CircularLoader />
                         )}
-                      </td>
-                      <td>{race.isBasicRanking ? "Oui" : "Non"}</td>
-                      <td>{race.isImmediateStop ? "Oui" : "Non"}</td>
-                      <td>{formatDateAsString(new Date(race.startTime))}</td>
-                      <td>{formatMsAsDuration(race.duration * 1000)}</td>
-                      <td>
+                      </Td>
+                      <Td>{race.isBasicRanking ? "Oui" : "Non"}</Td>
+                      <Td>{race.isImmediateStop ? "Oui" : "Non"}</Td>
+                      <Td>{formatDateAsString(new Date(race.startTime))}</Td>
+                      <Td>{formatMsAsDuration(race.duration * 1000)}</Td>
+                      <Td>
                         {lapDistance} m{!!initialDistance && <> (dist. initiale {initialDistance} m)</>}
-                      </td>
-                    </tr>
+                      </Td>
+                    </Tr>
                   );
                 })}
               </tbody>
-            </table>
+            </Table>
           )}
         </Card>
       )}

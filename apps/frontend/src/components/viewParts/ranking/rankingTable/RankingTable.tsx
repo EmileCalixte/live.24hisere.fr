@@ -3,6 +3,7 @@ import { type CategoryCode, getCategory } from "@emilecalixte/ffa-categories";
 import type { GenderWithMixed, PublicRace } from "@live24hisere/core/types";
 import type { Ranking, RankingRunner } from "../../../../types/Ranking";
 import type { FormatGapMode } from "../../../../utils/runnerUtils";
+import { Table, Th, Tr } from "../../../ui/Table";
 import RankingTableInfoHeader from "./RankingTableInfoHeader";
 import RankingTableRow from "./RankingTableRow";
 
@@ -57,28 +58,28 @@ export default function RankingTable({
   };
 
   return (
-    <table id="ranking-table" className="table">
+    <Table id="ranking-table" className="w-full">
       <thead>
-        <tr>
+        <Tr hoverEffect={false} alternateBgColors={false}>
           <RankingTableInfoHeader
             race={race}
             tableCategoryCode={tableCategoryCode}
             tableGender={tableGender}
             tableRaceDuration={tableRaceDuration}
           />
-        </tr>
-        <tr>
-          <th colSpan={4}>Classement</th>
-          <th>Doss.</th>
-          <th>Nom</th>
-          {!race.isBasicRanking && <th>Nb. tours</th>}
-          <th>Distance</th>
-          {showLastPassageTime && <th>Dernier passage</th>}
-          <th>Vitesse moy.</th>
-          {!race.isBasicRanking && <th>Écart 1er</th>}
-        </tr>
+        </Tr>
+        <Tr>
+          <Th colSpan={4}>Classement</Th>
+          <Th>Doss.</Th>
+          <Th>Nom</Th>
+          {!race.isBasicRanking && <Th>Nb. tours</Th>}
+          <Th>Distance</Th>
+          {showLastPassageTime && <Th>Dernier passage</Th>}
+          <Th>Vitesse moy.</Th>
+          {!race.isBasicRanking && <Th>Écart 1er</Th>}
+        </Tr>
       </thead>
       <tbody>{ranking.map((runner) => getRankingTableRow(runner))}</tbody>
-    </table>
+    </Table>
   );
 }

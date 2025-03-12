@@ -13,6 +13,7 @@ import { isRaceFinished, isRaceStarted } from "../../../utils/raceUtils";
 import { getOppositeSortDirection } from "../../../utils/sortUtils";
 import { Card } from "../../ui/Card";
 import { Button } from "../../ui/forms/Button";
+import { Table, Td, Th, Tr } from "../../ui/Table";
 
 const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
 
@@ -89,12 +90,12 @@ export default function RunnerDetailsLaps({
     }
 
     return (
-      <tr>
-        <td colSpan={2}>Tour en cours</td>
-        <td>{formatMsAsDuration(raceTime)}</td>
-        <td>{formatMsDurationHms(currentLapTime)}</td>
-        <td colSpan={42} />
-      </tr>
+      <Tr>
+        <Td colSpan={2}>Tour en cours</Td>
+        <Td>{formatMsAsDuration(raceTime)}</Td>
+        <Td>{formatMsDurationHms(currentLapTime)}</Td>
+        <Td colSpan={42} />
+      </Tr>
     );
   }, [currentLapTime, runner.stopped, raceTime]);
 
@@ -104,20 +105,20 @@ export default function RunnerDetailsLaps({
     }
 
     return (
-      <tr>
-        <td>
+      <Tr>
+        <Td>
           <div>
             <strong>Tour en cours</strong>
             &nbsp;–&nbsp;
             {formatMsAsDuration(raceTime)}
           </div>
 
-          <div className="responsive-runner-laps-table-row-secondary-data">
+          <div className="text-sm">
             Durée&nbsp;:&nbsp;
             <strong>{formatMsDurationHms(currentLapTime)}</strong>
           </div>
-        </td>
-      </tr>
+        </Td>
+      </Tr>
     );
   }, [currentLapTime, runner.stopped, raceTime]);
 
@@ -169,12 +170,12 @@ export default function RunnerDetailsLaps({
 
       {windowWidth > RESPONSIVE_TABLE_MAX_WINDOW_WIDTH && (
         <div style={{ maxWidth: 1400 }}>
-          <table id="runner-laps-table" className="table">
+          <Table id="runner-laps-table" className="w-full">
             <thead style={{ position: "sticky", top: 0 }}>
-              <tr>
-                <th>Nb. tours</th>
-                <th>Distance</th>
-                <th>
+              <Tr>
+                <Th>Nb. tours</Th>
+                <Th>Distance</Th>
+                <Th>
                   <button
                     className="a"
                     onClick={(e) => {
@@ -189,9 +190,9 @@ export default function RunnerDetailsLaps({
                       </>
                     )}
                   </button>
-                </th>
-                <th>Temps au tour</th>
-                <th>
+                </Th>
+                <Th>Temps au tour</Th>
+                <Th>
                   <button
                     className="a"
                     onClick={(e) => {
@@ -206,37 +207,37 @@ export default function RunnerDetailsLaps({
                       </>
                     )}
                   </button>
-                </th>
-                <th>Allure</th>
-                <th>Vmoy. depuis le début</th>
-                <th>Allure depuis le début</th>
-              </tr>
+                </Th>
+                <Th>Allure</Th>
+                <Th>Vmoy. depuis le début</Th>
+                <Th>Allure depuis le début</Th>
+              </Tr>
             </thead>
             <tbody>
               {showCurrentLapAtTopOfTable && <>{currentLapTableRow}</>}
 
               {passagesToDisplay.map((passage, index) => (
-                <tr key={index}>
-                  <td>{passage.processed.lapNumber ?? "–"}</td>
-                  <td>{(passage.processed.totalDistance / 1000).toFixed(2)} km</td>
-                  <td>{formatMsAsDuration(passage.processed.lapEndRaceTime)}</td>
-                  <td>{formatMsDurationHms(passage.processed.lapDuration)}</td>
-                  <td>{passage.processed.lapSpeed.toFixed(2)} km/h</td>
-                  <td>
+                <Tr key={index}>
+                  <Td>{passage.processed.lapNumber ?? "–"}</Td>
+                  <Td>{(passage.processed.totalDistance / 1000).toFixed(2)} km</Td>
+                  <Td>{formatMsAsDuration(passage.processed.lapEndRaceTime)}</Td>
+                  <Td>{formatMsDurationHms(passage.processed.lapDuration)}</Td>
+                  <Td>{passage.processed.lapSpeed.toFixed(2)} km/h</Td>
+                  <Td>
                     {formatMsDurationHms(passage.processed.lapPace)}
                     <> </>/ km
-                  </td>
-                  <td>{passage.processed.averageSpeedSinceRaceStart.toFixed(2)} km/h</td>
-                  <td>
+                  </Td>
+                  <Td>{passage.processed.averageSpeedSinceRaceStart.toFixed(2)} km/h</Td>
+                  <Td>
                     {formatMsDurationHms(passage.processed.averagePaceSinceRaceStart)}
                     <> </>/ km
-                  </td>
-                </tr>
+                  </Td>
+                </Tr>
               ))}
 
               {showCurrentLapAtBottomOfTable && <>{currentLapTableRow}</>}
             </tbody>
-          </table>
+          </Table>
         </div>
       )}
 
@@ -250,13 +251,13 @@ export default function RunnerDetailsLaps({
             </button>
           </div>
 
-          <table id="runner-laps-table" className="responsive-runner-laps-table table">
+          <Table id="runner-laps-table" className="w-full">
             <tbody>
               {showCurrentLapAtTopOfTable && <>{currentLapResponsiveTableRow}</>}
 
               {passagesToDisplay.map((passage, index) => (
-                <tr key={index}>
-                  <td>
+                <Tr key={index}>
+                  <Td>
                     <div>
                       <strong>
                         {passage.processed.lapNumber === null && <>Premier passage</>}
@@ -267,7 +268,7 @@ export default function RunnerDetailsLaps({
                       {formatMsAsDuration(passage.processed.lapEndRaceTime)}
                     </div>
 
-                    <div className="responsive-runner-laps-table-row-secondary-data">
+                    <div className="text-sm">
                       Durée&nbsp;:&nbsp;
                       <strong>{formatMsDurationHms(passage.processed.lapDuration)}</strong>
                       <> </>|<> </>
@@ -277,19 +278,19 @@ export default function RunnerDetailsLaps({
                       <> </>/ km
                     </div>
 
-                    <div className="responsive-runner-laps-table-row-secondary-data">
+                    <div className="text-sm">
                       Depuis départ&nbsp;:&nbsp; {passage.processed.averageSpeedSinceRaceStart.toFixed(2)} km/h
                       <> </>|<> </>
                       {formatMsDurationHms(passage.processed.averagePaceSinceRaceStart)}
                       <> </>/ km
                     </div>
-                  </td>
-                </tr>
+                  </Td>
+                </Tr>
               ))}
 
               {showCurrentLapAtBottomOfTable && <>{currentLapResponsiveTableRow}</>}
             </tbody>
-          </table>
+          </Table>
         </div>
       )}
     </Card>

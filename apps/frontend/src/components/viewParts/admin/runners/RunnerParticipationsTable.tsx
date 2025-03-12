@@ -2,6 +2,7 @@ import type React from "react";
 import type { AdminEdition, AdminRace, Participant } from "@live24hisere/core/types";
 import CircularLoader from "../../../ui/CircularLoader";
 import { Link } from "../../../ui/Link";
+import { Table, Td, Th, Tr } from "../../../ui/Table";
 
 interface RunnerParticipationsTableProps {
   participations: Participant[];
@@ -15,15 +16,15 @@ export default function RunnerParticipationsTable({
   races,
 }: RunnerParticipationsTableProps): React.ReactElement {
   return (
-    <table className="no-full-width table">
+    <Table>
       <thead>
-        <tr>
-          <th>Édition</th>
-          <th>Course</th>
-          <th>Dossard</th>
-          <th>Arrêté</th>
-          <th>Détails participation</th>
-        </tr>
+        <Tr>
+          <Th>Édition</Th>
+          <Th>Course</Th>
+          <Th>Dossard</Th>
+          <Th>Arrêté</Th>
+          <Th>Détails participation</Th>
+        </Tr>
       </thead>
       <tbody>
         {participations.map((participation) => {
@@ -31,28 +32,28 @@ export default function RunnerParticipationsTable({
           const edition = editions?.find((edition) => edition.id === race?.editionId);
 
           return (
-            <tr key={participation.id}>
-              <td>
+            <Tr key={participation.id}>
+              <Td>
                 {!editions && <CircularLoader />}
 
                 {edition && <Link to={`/admin/editions/${edition.id}`}>{edition.name}</Link>}
-              </td>
-              <td>
+              </Td>
+              <Td>
                 {!races && <CircularLoader />}
 
                 {race && <Link to={`/admin/races/${race.id}`}>{race.name}</Link>}
-              </td>
-              <td>{participation.bibNumber}</td>
-              <td>{participation.stopped ? "Oui" : "Non"}</td>
-              <td>
+              </Td>
+              <Td>{participation.bibNumber}</Td>
+              <Td>{participation.stopped ? "Oui" : "Non"}</Td>
+              <Td>
                 {!races && <CircularLoader />}
 
                 {race && <Link to={`/admin/races/${race.id}/runners/${participation.runnerId}`}>Détails</Link>}
-              </td>
-            </tr>
+              </Td>
+            </Tr>
           );
         })}
       </tbody>
-    </table>
+    </Table>
   );
 }

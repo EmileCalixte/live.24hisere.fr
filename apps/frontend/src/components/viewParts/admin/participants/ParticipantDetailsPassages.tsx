@@ -8,6 +8,7 @@ import type { ReactStateSetter } from "../../../../types/utils/react";
 import { formatMsAsDuration } from "../../../../utils/durationUtils";
 import { formatDateAsString } from "../../../../utils/utils";
 import { Button } from "../../../ui/forms/Button";
+import { Table, Td, Th, Tr } from "../../../ui/Table";
 import RunnerDetailsCreatePassageDialog from "../runners/RunnerDetailsCreatePassage";
 import RunnerDetailsEditPassageDialog from "../runners/RunnerDetailsEditPassage";
 
@@ -97,21 +98,21 @@ export default function ParticipantDetailsPassages({
                 {hiddenPassageCount > 0 && `, dont ${hiddenPassageCount} masqué${hiddenPassageCount >= 2 ? "s" : ""}`}
               </p>
 
-              <table className="no-full-width admin-runner-passages-table table">
+              <Table>
                 <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Type</th>
-                    <th>Date et heure</th>
-                    <th>Temps de course</th>
-                    <th colSpan={3}>Actions</th>
-                  </tr>
+                  <Tr>
+                    <Th>#</Th>
+                    <Th>Type</Th>
+                    <Th>Date et heure</Th>
+                    <Th>Temps de course</Th>
+                    <Th colSpan={3}>Actions</Th>
+                  </Tr>
                 </thead>
                 <tbody>
                   {passages.map((passage) => (
-                    <tr key={passage.id} className={clsx(passage.isHidden && "passage-hidden")}>
-                      <td className="text-xs">{passage.id}</td>
-                      <td className="text-xs">
+                    <Tr key={passage.id} className={clsx(passage.isHidden && "passage-hidden")}>
+                      <Td className="text-xs">{passage.id}</Td>
+                      <Td className="text-xs">
                         {(() => {
                           if (passage.detectionId !== null) {
                             let text = `Auto (${passage.detectionId})`;
@@ -125,14 +126,14 @@ export default function ParticipantDetailsPassages({
 
                           return "Manuel";
                         })()}
-                      </td>
-                      <td className={clsx(passage.isHidden && "line-through")}>
+                      </Td>
+                      <Td className={clsx(passage.isHidden && "line-through")}>
                         {formatDateAsString(passage.processed.lapEndTime)}
-                      </td>
-                      <td className={clsx(passage.isHidden && "line-through")}>
+                      </Td>
+                      <Td className={clsx(passage.isHidden && "line-through")}>
                         {formatMsAsDuration(passage.processed.lapEndRaceTime)}
-                      </td>
-                      <td>
+                      </Td>
+                      <Td>
                         {passage.isHidden ? (
                           <Button
                             size="sm"
@@ -155,8 +156,8 @@ export default function ParticipantDetailsPassages({
                             Masquer
                           </Button>
                         )}
-                      </td>
-                      <td>
+                      </Td>
+                      <Td>
                         <Button
                           size="sm"
                           icon={<FontAwesomeIcon icon={faPen} />}
@@ -166,8 +167,8 @@ export default function ParticipantDetailsPassages({
                         >
                           Modifier
                         </Button>
-                      </td>
-                      <td>
+                      </Td>
+                      <Td>
                         <Button
                           color="red"
                           size="sm"
@@ -178,11 +179,11 @@ export default function ParticipantDetailsPassages({
                         >
                           Supprimer
                         </Button>
-                      </td>
-                    </tr>
+                      </Td>
+                    </Tr>
                   ))}
                 </tbody>
-              </table>
+              </Table>
             </>
           )}
         </Col>
