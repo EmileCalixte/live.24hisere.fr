@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access  */
 import React from "react";
 import { parseAsBoolean, useQueryState } from "nuqs";
-import { Col, Row } from "react-bootstrap";
 import ReactDOMServer from "react-dom/server";
 import type { PublicRace, RaceRunnerWithProcessedPassages, RunnerWithProcessedHours } from "@live24hisere/core/types";
 import { SearchParam } from "../../../../constants/searchParams";
@@ -366,13 +365,11 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
   ]);
 
   return (
-    <Card>
-      <Row>
-        <Col xs={12}>
-          <h3 className="mt-0">Vitesse</h3>
-        </Col>
+    <Card className="flex flex-col gap-3">
+      <h3>Vitesse</h3>
 
-        <Col xxl={2} xl={3} lg={12}>
+      <div className="grid-rows-auto grid grid-cols-6 gap-3">
+        <div className="col-span-6 xl:col-span-2 2xl:col-span-1">
           <fieldset className="mb-3">
             <legend className="mb-2">Éléments à afficher</legend>
 
@@ -411,11 +408,12 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
               }}
             />
           </fieldset>
-        </Col>
-        <Col xxl={10} xl={9} lg={12}>
+        </div>
+
+        <div className="col-span-6 xl:col-span-4 2xl:col-span-5">
           <CanvasJSChart options={options} />
-        </Col>
-      </Row>
+        </div>
+      </div>
     </Card>
   );
 }

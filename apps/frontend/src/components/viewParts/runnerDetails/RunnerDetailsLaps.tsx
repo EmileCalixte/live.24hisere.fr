@@ -159,25 +159,25 @@ export default function RunnerDetailsLaps({
   const showCurrentLapAtBottomOfTable = showCurrentLap && sortDirection === SortDirection.ASC;
 
   return (
-    <Card>
-      <h3 className="mt-0">Détails des tours</h3>
+    <Card className="flex flex-col gap-3">
+      <h3>Détails des tours</h3>
 
-      <p className="mb-4">
+      <p>
         <Button variant="link" onClick={exportRunnerToXlsx} icon={<FontAwesomeIcon icon={faFileExcel} />}>
           Télécharger au format Excel
         </Button>
       </p>
 
       {windowWidth > RESPONSIVE_TABLE_MAX_WINDOW_WIDTH && (
-        <div style={{ maxWidth: 1400 }}>
-          <Table id="runner-laps-table" className="w-full">
-            <thead style={{ position: "sticky", top: 0 }}>
+        <div>
+          <Table id="runner-laps-table">
+            <thead>
               <Tr>
                 <Th>Nb. tours</Th>
                 <Th>Distance</Th>
                 <Th>
-                  <button
-                    className="a"
+                  <Button
+                    variant="link"
                     onClick={(e) => {
                       updateSort(e, SortColumn.RACE_TIME);
                     }}
@@ -189,12 +189,12 @@ export default function RunnerDetailsLaps({
                         {sortDirection === SortDirection.DESC && <FontAwesomeIcon icon={faSortUp} className="ms-1" />}
                       </>
                     )}
-                  </button>
+                  </Button>
                 </Th>
                 <Th>Temps au tour</Th>
                 <Th>
-                  <button
-                    className="a"
+                  <Button
+                    variant="link"
                     onClick={(e) => {
                       updateSort(e, SortColumn.LAP_SPEED);
                     }}
@@ -206,7 +206,7 @@ export default function RunnerDetailsLaps({
                         {sortDirection === SortDirection.DESC && <FontAwesomeIcon icon={faSortUp} className="ms-1" />}
                       </>
                     )}
-                  </button>
+                  </Button>
                 </Th>
                 <Th>Allure</Th>
                 <Th>Vmoy. depuis le début</Th>
@@ -242,13 +242,13 @@ export default function RunnerDetailsLaps({
       )}
 
       {windowWidth <= RESPONSIVE_TABLE_MAX_WINDOW_WIDTH && (
-        <div>
-          <div className="mb-3">
-            <button className="button" onClick={onResponsiveSortButtonClick}>
+        <>
+          <div>
+            <Button onClick={onResponsiveSortButtonClick}>
               {sortColumn === SortColumn.RACE_TIME && <>Trier par vitesse</>}
 
               {sortColumn === SortColumn.LAP_SPEED && <>Trier par temps de passage</>}
-            </button>
+            </Button>
           </div>
 
           <Table id="runner-laps-table" className="w-full">
@@ -291,7 +291,7 @@ export default function RunnerDetailsLaps({
               {showCurrentLapAtBottomOfTable && <>{currentLapResponsiveTableRow}</>}
             </tbody>
           </Table>
-        </div>
+        </>
       )}
     </Card>
   );

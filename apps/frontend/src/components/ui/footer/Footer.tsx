@@ -23,17 +23,19 @@ export default function Footer(): React.ReactElement {
         Seules les données du poste de chronométrage font foi.
       </p>
 
-      <ul className="footer-links">
+      <ul className="footer-links flex flex-col justify-center gap-4 md:flex-row md:gap-0">
         <li>
-          <Link to="/about">À propos</Link>
+          <Link to="/about" className="text-inherit">
+            À propos
+          </Link>
         </li>
         <li>
-          <Link to="https://github.com/EmileCalixte/live.24hisere.fr" target="_blank">
+          <Link to="https://github.com/EmileCalixte/live.24hisere.fr" className="text-inherit" target="_blank">
             Code source
           </Link>
         </li>
         <li>
-          <Link to="https://www.24hisere.fr" target="_blank">
+          <Link to="https://www.24hisere.fr" className="text-inherit" target="_blank">
             Les 24 Heures de l'Isère
           </Link>
         </li>

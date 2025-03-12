@@ -2,7 +2,7 @@ import clsx from "clsx";
 import type { PolymorphicProps } from "../../types/utils/react";
 
 type CardProps<TElement extends React.ElementType> = PolymorphicProps<TElement> & {
-  className?: string;
+  className?: string | undefined;
 };
 
 export function Card<TElement extends React.ElementType = "div">({

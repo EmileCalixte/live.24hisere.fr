@@ -2,7 +2,6 @@ import React from "react";
 import { faCircleInfo, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQueryState } from "nuqs";
-import { Col, Row } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { stringUtils } from "@live24hisere/utils";
 import { SearchParam } from "../../constants/searchParams";
@@ -182,138 +181,94 @@ export default function RunnerDetailsView(): React.ReactElement {
           ? "Détails coureur"
           : `Détails coureur ${selectedRunner.firstname} ${selectedRunner.lastname}`
       }
+      contentClassName="flex flex-col gap-4"
     >
-      <Row className="print:hidden">
-        <Col>
-          <h1>Détails coureur</h1>
-        </Col>
-      </Row>
+      <h1>Détails coureur</h1>
 
-      <Row className="print:hidden">
-        <Col xxl={3} xl={4} lg={6} md={8} sm={10} xs={12}>
-          <RunnerSelector runners={runners} onSelectRunner={onSelectRunner} selectedRunnerId={runnerId} />
+      <div className="flex w-full flex-col gap-1 md:w-[50%] xl:w-[25%] print:hidden">
+        <RunnerSelector runners={runners} onSelectRunner={onSelectRunner} selectedRunnerId={runnerId} />
 
-          <div className="d-flex justify-content-end mt-2">
-            <Link to="/runner-details/search" className="flex items-center gap-2">
-              <FontAwesomeIcon icon={faSearch} />
-              <span>Rechercher un coureur</span>
-            </Link>
-          </div>
-        </Col>
-      </Row>
+        <div className="flex justify-end">
+          <Link to="/runner-details/search" icon={<FontAwesomeIcon icon={faSearch} />}>
+            <span>Rechercher un coureur</span>
+          </Link>
+        </div>
+      </div>
 
-      {runnerId === undefined && (
-        <Row className="mt-4">
-          <Col>
-            <p>Sélectionnez un coureur ci-dessus pour consulter ses détails.</p>
-          </Col>
-        </Row>
-      )}
+      {runnerId === undefined && <p>Sélectionnez un coureur ci-dessus pour consulter ses détails.</p>}
 
       {runnerId !== undefined && !selectedRaceRunner && (
         <Card>
-          <Row>
-            <Col>
-              <p>
-                <CircularLoader asideText="Chargement des données" />
-              </p>
-            </Col>
-          </Row>
+          <p>
+            <CircularLoader asideText="Chargement des données" />
+          </p>
         </Card>
       )}
 
       {selectedRaceRunner && (
-        <Card>
-          <Row>
-            <Col>
-              <h2 className="flex items-center gap-2">
-                {alpha2CountryCode && <Flag countryCode={alpha2CountryCode} />}
+        <Card className="flex flex-col gap-3">
+          <div className="flex flex-col gap-1">
+            <h2 className="flex items-center gap-2">
+              {alpha2CountryCode && <Flag countryCode={alpha2CountryCode} />}
 
-                <span>
-                  {selectedRaceRunner.lastname.toUpperCase()} {selectedRaceRunner.firstname}
-                </span>
-              </h2>
-            </Col>
-          </Row>
+              <span>
+                {selectedRaceRunner.lastname.toUpperCase()} {selectedRaceRunner.firstname}
+              </span>
+            </h2>
 
-          <Row className="mt-1">
-            {runnerHasMultipleParticipations ? (
-              <Col xxl={3} xl={4} lg={6} md={8} sm={10} xs={12}>
-                <Select
-                  label="Course"
-                  options={runnerRaceOptions}
-                  value={selectedRace?.id}
-                  onChange={(e) => {
-                    void setSelectedRaceId(e.target.value);
-                  }}
-                />
-              </Col>
-            ) : (
-              <Col>
-                <p className="m-0">
-                  {stringUtils.joinNonEmpty([selectedRaceEdition?.name, selectedRace?.name], " – ")}
-                </p>
-              </Col>
+            <div>
+              {runnerHasMultipleParticipations ? (
+                <div className="w-full md:w-[50%] xl:w-[25%]">
+                  <Select
+                    label="Course"
+                    options={runnerRaceOptions}
+                    value={selectedRace?.id}
+                    onChange={(e) => {
+                      void setSelectedRaceId(e.target.value);
+                    }}
+                  />
+                </div>
+              ) : (
+                <p>{stringUtils.joinNonEmpty([selectedRaceEdition?.name, selectedRace?.name], " – ")}</p>
+              )}
+            </div>
+
+            {selectedParticipation && (
+              <p>
+                <strong>Dossard n° {selectedParticipation.bibNumber}</strong>
+              </p>
             )}
-          </Row>
 
-          {selectedParticipation && (
-            <Row>
-              <Col>
-                <p className="mt-1">
-                  <strong>Dossard n° {selectedParticipation.bibNumber}</strong>
-                </p>
-              </Col>
-            </Row>
-          )}
-
-          {selectedRace && !isRaceFinished(selectedRace, serverTimeOffset) && selectedRankingRunner?.stopped && (
-            <Row>
-              <Col>
-                <p
-                  className="mt-0"
-                  style={{
-                    fontWeight: "bold",
-                    color: "#db1616",
-                  }}
-                >
-                  Coureur arrêté
-                  <RunnerStoppedTooltip className="ms-2">
-                    <FontAwesomeIcon icon={faCircleInfo} />
-                  </RunnerStoppedTooltip>
-                </p>
-              </Col>
-            </Row>
-          )}
+            {selectedRace && !isRaceFinished(selectedRace, serverTimeOffset) && selectedRankingRunner?.stopped && (
+              <p className="font-bold text-red-600">
+                Coureur arrêté
+                <RunnerStoppedTooltip className="ms-2">
+                  <FontAwesomeIcon icon={faCircleInfo} />
+                </RunnerStoppedTooltip>
+              </p>
+            )}
+          </div>
 
           {selectedRankingRunner && selectedRace && ranking ? (
-            <>
+            <div className="flex flex-col gap-3">
               <RunnerDetailsStats runner={selectedRankingRunner} race={selectedRace} ranking={ranking} />
 
               {selectedRankingRunner.totalAverageSpeed !== null && !selectedRace.isBasicRanking && (
-                <Row className="mt-3">
-                  <Col>
-                    <SpeedChart
-                      runner={selectedRankingRunner}
-                      race={selectedRace}
-                      averageSpeed={selectedRankingRunner.totalAverageSpeed}
-                    />
-                  </Col>
-                </Row>
+                <SpeedChart
+                  runner={selectedRankingRunner}
+                  race={selectedRace}
+                  averageSpeed={selectedRankingRunner.totalAverageSpeed}
+                />
               )}
 
               {!selectedRace.isBasicRanking && (
-                <Row className="mt-3">
-                  <Col>
-                    <RunnerDetailsLaps
-                      runner={selectedRankingRunner}
-                      race={selectedRace}
-                      exportRunnerToXlsx={exportRunnerToXlsx}
-                    />
-                  </Col>
-                </Row>
+                <RunnerDetailsLaps
+                  runner={selectedRankingRunner}
+                  race={selectedRace}
+                  exportRunnerToXlsx={exportRunnerToXlsx}
+                />
               )}
-            </>
+            </div>
           ) : (
             <p>
               <CircularLoader asideText="Chargement des données" />

@@ -1,5 +1,4 @@
 import React from "react";
-import { Col, Row } from "react-bootstrap";
 import type { ProcessedPassage, PublicRace, RunnerWithProcessedHours } from "@live24hisere/core/types";
 import { NO_VALUE_PLACEHOLDER } from "../../../constants/misc";
 import type { Ranking, RankingRunner } from "../../../types/Ranking";
@@ -52,8 +51,8 @@ export default function RunnerDetailsStats({ runner, race, ranking }: RunnerDeta
 
   return (
     <>
-      <Row className="gap-y-3">
-        <Col xl={6} lg={8} md={12}>
+      <div className="grid-rows-auto grid grid-cols-6 gap-3">
+        <div className="col-span-6 lg:col-span-4 xl:col-span-3">
           <RunnerDetailsStatsRankingTable race={race} runner={runner} ranking={ranking} />
 
           <p className="mb-0 mt-1">
@@ -61,80 +60,82 @@ export default function RunnerDetailsStats({ runner, race, ranking }: RunnerDeta
               Cliquez ici pour voir le classement complet
             </Link>
           </p>
-        </Col>
+        </div>
 
-        <Col xl={6} lg={4} md={12}>
-          <Card className="box-border h-full">
-            <h3 className="mt-0">Données générales</h3>
+        <Card className="col-span-6 flex h-full flex-col gap-3 lg:col-span-2 xl:col-span-3">
+          <h3>Données générales</h3>
 
-            <Row as="ul" className="gap-y-3">
-              {!race.isBasicRanking && (
-                <Col as="li" xl={6} lg={12} md={6} sm={12}>
-                  Nombre de tours&nbsp;: <strong>{completeLapCount}</strong>
-                  {hasInitialDistance && (
-                    <>
-                      <> </>
-                      <InfoIconTooltip tooltipText="Il s'agit du nombre de tours complets effectués. La distance initiale parcourue avant le premier passage du coureur au point de chronométrage n'est pas considérée comme un tour." />
-                    </>
-                  )}
-                </Col>
-              )}
-
-              <Col as="li" xl={6} lg={12} md={6} sm={12}>
-                Distance totale&nbsp;: <strong>{(runner.totalDistance / 1000).toFixed(3)} km</strong>
-              </Col>
-
-              <Col as="li" xl={6} lg={12} md={6} sm={12}>
-                Vitesse moyenne&nbsp;:
-                <> </>
-                {runner.totalAverageSpeed ? (
-                  <strong>{runner.totalAverageSpeed.toFixed(2)} km/h</strong>
-                ) : (
-                  NO_VALUE_PLACEHOLDER
+          <ul className="grid-rows-auto grid grid-cols-2 gap-3">
+            {!race.isBasicRanking && (
+              <li className="col-span-2 md:col-span-1 lg:col-span-2 xl:col-span-1">
+                Nombre de tours&nbsp;: <strong>{completeLapCount}</strong>
+                {hasInitialDistance && (
+                  <>
+                    <> </>
+                    <InfoIconTooltip tooltipText="Il s'agit du nombre de tours complets effectués. La distance initiale parcourue avant le premier passage du coureur au point de chronométrage n'est pas considérée comme un tour." />
+                  </>
                 )}
-              </Col>
+              </li>
+            )}
 
-              <Col as="li" xl={6} lg={12} md={6} sm={12}>
-                Allure moyenne&nbsp;:
-                <> </>
-                {runner.totalAveragePace ? (
-                  <strong>{formatMsDurationHms(runner.totalAveragePace)} / km</strong>
-                ) : (
-                  NO_VALUE_PLACEHOLDER
-                )}
-              </Col>
+            <li className="col-span-2 md:col-span-1 lg:col-span-2 xl:col-span-1">
+              Distance totale&nbsp;: <strong>{(runner.totalDistance / 1000).toFixed(3)} km</strong>
+            </li>
 
-              {splitTime100Km && splitTime100Km.raceTime !== null && (
-                <Col as="li" xl={6} lg={12} md={6} sm={12}>
-                  100 km split&nbsp;:
-                  <> </>
-                  <strong>
-                    {!splitTime100Km.exact && <>≈&nbsp;</>}
-
-                    {formatMsAsDuration(splitTime100Km.raceTime)}
-                  </strong>
-                  <> </>
-                  {!splitTime100Km.exact && (
-                    <InfoIconTooltip tooltipText="Il s'agit d'une estimation du temps de course auquel le coureur a atteint les 100 km, basée sur ses temps de passage au point de chronométrage avant et après." />
-                  )}
-                </Col>
+            <li className="col-span-2 md:col-span-1 lg:col-span-2 xl:col-span-1">
+              Vitesse moyenne&nbsp;:
+              <> </>
+              {runner.totalAverageSpeed ? (
+                <strong>{runner.totalAverageSpeed.toFixed(2)} km/h</strong>
+              ) : (
+                NO_VALUE_PLACEHOLDER
               )}
-            </Row>
-          </Card>
-        </Col>
+            </li>
+
+            <li className="col-span-2 md:col-span-1 lg:col-span-2 xl:col-span-1">
+              Allure moyenne&nbsp;:
+              <> </>
+              {runner.totalAveragePace ? (
+                <strong>{formatMsDurationHms(runner.totalAveragePace)} / km</strong>
+              ) : (
+                NO_VALUE_PLACEHOLDER
+              )}
+            </li>
+
+            {splitTime100Km && splitTime100Km.raceTime !== null && (
+              <li className="col-span-2 md:col-span-1 lg:col-span-2 xl:col-span-1">
+                100 km split&nbsp;:
+                <> </>
+                <strong>
+                  {!splitTime100Km.exact && <>≈&nbsp;</>}
+
+                  {formatMsAsDuration(splitTime100Km.raceTime)}
+                </strong>
+                <> </>
+                {!splitTime100Km.exact && (
+                  <InfoIconTooltip tooltipText="Il s'agit d'une estimation du temps de course auquel le coureur a atteint les 100 km, basée sur ses temps de passage au point de chronométrage avant et après." />
+                )}
+              </li>
+            )}
+          </ul>
+        </Card>
 
         {!isBasicRanking && (
           <>
-            <Col md={6} sm={12}>
-              <RunnerDetailsStatsLapCard title="Tour le plus rapide" passage={fastestLapPassage} />
-            </Col>
+            <RunnerDetailsStatsLapCard
+              className="col-span-6 sm:col-span-3"
+              title="Tour le plus rapide"
+              passage={fastestLapPassage}
+            />
 
-            <Col md={6} sm={12}>
-              <RunnerDetailsStatsLapCard title="Tour le plus lent" passage={slowestLapPassage} />
-            </Col>
+            <RunnerDetailsStatsLapCard
+              className="col-span-6 sm:col-span-3"
+              title="Tour le plus lent"
+              passage={slowestLapPassage}
+            />
           </>
         )}
-      </Row>
+      </div>
     </>
   );
 }

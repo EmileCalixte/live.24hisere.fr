@@ -11,6 +11,7 @@ interface PageProps {
   aboveTitle?: React.ReactNode;
   breadCrumbs?: React.ReactNode;
   className?: string;
+  contentClassName?: string;
 }
 
 export default function Page({
@@ -21,6 +22,7 @@ export default function Page({
   aboveTitle,
   breadCrumbs,
   className,
+  contentClassName,
 }: PageProps): React.ReactElement {
   if (Array.isArray(children)) {
     children = [children];
@@ -38,7 +40,9 @@ export default function Page({
 
       {title && <h1 id="page-title">{title}</h1>}
 
-      <div id="page-content">{children}</div>
+      <div id="page-content" className={contentClassName}>
+        {children}
+      </div>
     </div>
   );
 }
