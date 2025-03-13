@@ -12,8 +12,8 @@ export function FoundRunnerCard({ runner }: FoundRunnerCardProps): React.ReactEl
   const alpha2CountryCode = getCountryAlpha2CodeFromAlpha3Code(runner.countryCode);
 
   return (
-    <Card>
-      <p className="d-flex align-items-center m-0 gap-2">
+    <Card className="transition-colors hover:bg-neutral-100 hover:dark:bg-neutral-700">
+      <p className="flex items-center gap-2">
         {alpha2CountryCode && <Flag countryCode={alpha2CountryCode} />}
         <strong>
           {runner.lastname.toUpperCase()} {runner.firstname}
