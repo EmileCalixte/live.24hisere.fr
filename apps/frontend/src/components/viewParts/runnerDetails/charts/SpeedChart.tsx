@@ -79,11 +79,11 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
   const getXAxisInterval = React.useCallback((): number => {
     const baseInterval = getBaseXAxisInterval(race.duration);
 
-    if (windowWidth < 640) {
+    if (windowWidth < 768) {
       return baseInterval * 4;
     }
 
-    if (windowWidth < 968) {
+    if (windowWidth < 1024) {
       return baseInterval * 2;
     }
 
