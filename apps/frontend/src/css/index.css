@@ -104,26 +104,6 @@ body {
   -webkit-print-color-adjust: exact;
 }
 
-.race-time-input {
-  font-size: 0.9em;
-  width: 6ch;
-  margin-left: 5px;
-  margin-right: 2px;
-}
-
-a > .card {
-  transition: background-color 0.1s ease-out;
-}
-
-a:has(.card) {
-  color: initial;
-  text-decoration: initial;
-}
-
-a:hover > .card {
-  background-color: var(--color-background);
-}
-
 @media (min-width: 768px) {
   .footer-links li:not(:last-child)::after {
     content: "•";

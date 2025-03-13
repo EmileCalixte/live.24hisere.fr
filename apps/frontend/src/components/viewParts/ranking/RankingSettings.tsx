@@ -1,6 +1,5 @@
 import React from "react";
 import type { CategoryCode, CategoryList } from "@emilecalixte/ffa-categories";
-import { Col } from "react-bootstrap";
 import type { GenderWithMixed } from "@live24hisere/core/types";
 import { CATEGORY_SCRATCH } from "../../../constants/category";
 import {
@@ -54,28 +53,25 @@ export default function RankingSettings({
 
   return (
     <>
-      <Col xxl={2} xl={3} lg={3} md={4} sm={6} xs={12}>
-        <Select
-          label="Catégorie"
-          options={categoriesOptions}
-          value={selectedCategoryCode ?? CATEGORY_SCRATCH}
-          onChange={onCategorySelect}
-        />
-      </Col>
+      <Select
+        className="w-full sm:w-auto"
+        label="Catégorie"
+        options={categoriesOptions}
+        value={selectedCategoryCode ?? CATEGORY_SCRATCH}
+        onChange={onCategorySelect}
+      />
 
-      <Col>
-        <RadioGroup
-          legend="Genre"
-          options={GENDER_WITH_MIXED_OPTIONS}
-          value={selectedGender}
-          onSelectOption={(option) => {
-            onGenderSelect(option.value);
-          }}
-        />
-      </Col>
+      <RadioGroup
+        legend="Genre"
+        options={GENDER_WITH_MIXED_OPTIONS}
+        value={selectedGender}
+        onSelectOption={(option) => {
+          onGenderSelect(option.value);
+        }}
+      />
 
       {showTimeModeSelect && (
-        <Col>
+        <div>
           <RadioGroup
             legend="Heure"
             options={rankingTimeModeOptions}
@@ -91,7 +87,7 @@ export default function RankingSettings({
             onRankingTimeSave={onRankingTimeSave}
             maxRankingTime={maxRankingTime}
           />
-        </Col>
+        </div>
       )}
     </>
   );

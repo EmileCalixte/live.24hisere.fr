@@ -1,5 +1,6 @@
 import type React from "react";
 import { useEffect, useState } from "react";
+import { Button } from "../../ui/forms/Button";
 import DurationInputs from "../../ui/forms/DurationInputs";
 
 interface RankingSettingsTimeProps {
@@ -30,15 +31,9 @@ export default function RankingSettingsTime({
   }, [currentRankingTime]);
 
   return (
-    <form
-      className="inline-input-group d-flex"
-      style={{ visibility: isVisible ? "visible" : "hidden" }}
-      onSubmit={onSubmit}
-    >
+    <form className="flex gap-3" style={{ visibility: isVisible ? "visible" : "hidden" }} onSubmit={onSubmit}>
       <DurationInputs duration={time} setDuration={setTime} maxDuration={maxRankingTime} />
-      <button className="button" disabled={time === currentRankingTime} style={{ marginLeft: 10 }}>
-        OK
-      </button>
+      <Button disabled={time === currentRankingTime}>OK</Button>
     </form>
   );
 }
