@@ -15,7 +15,6 @@ import CreateRaceAdminView from "./races/CreateRaceAdminView";
 import RaceDetailsAdminView from "./races/RaceDetailsAdminView";
 import RacesAdminView from "./races/RacesAdminView";
 import CreateRunnerAdminView from "./runners/CreateRunnerAdminView";
-import ImportRunnersCsvView from "./runners/ImportRunnersCsvView";
 import RunnerDetailsAdminView from "./runners/RunnerDetailsAdminView";
 import RunnersAdminView from "./runners/RunnersAdminView";
 
@@ -38,7 +37,6 @@ export default function Admin(): React.ReactElement {
       <Route path="editions/:editionId" element={<EditionDetailsAdminView />} />
       <Route path="runners" element={<RunnersAdminView />} />
       <Route path="runners/create" element={<CreateRunnerAdminView />} />
-      <Route path="runners/import-csv" element={<ImportRunnersCsvView />} />
       <Route path="runners/:runnerId" element={<RunnerDetailsAdminView />} />
       <Route path="races" element={<RacesAdminView />} />
       <Route path="races/create" element={<CreateRaceAdminView />} />

@@ -1,13 +1,17 @@
 import React from "react";
-import clsx from "clsx";
+import { twMerge } from "tailwind-merge";
+import { COMMON_INPUT_CLASSNAME } from "../../../constants/ui/input";
 import type { InputType } from "../../../types/Forms";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
+  labelPosition?: "before" | "after";
+  inline?: boolean;
   type?: InputType;
   value?: string | number | undefined;
   className?: string;
-  labelClassName?: string;
+  labelTextClassName?: string;
+  inputClassName?: string;
   hasError?: boolean;
   inputRef?: React.Ref<HTMLInputElement>;
 }
@@ -18,12 +22,15 @@ function valueToString(value: string | number | undefined): string {
 
 export function Input({
   label,
+  labelPosition = "before",
+  inline = false,
   type = "text",
   value,
   onChange,
   onBlur,
   className,
-  labelClassName,
+  labelTextClassName,
+  inputClassName,
   hasError = false,
   inputRef,
   ...props
@@ -58,19 +65,20 @@ export function Input({
   }, [value]);
 
   return (
-    <div className={clsx("input-group", className, hasError && "error")}>
-      <label>
-        <span className={labelClassName}>{label}</span>
-        <input
-          className="input"
-          type={type}
-          value={internalValue}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          ref={inputRef}
-          {...props}
-        />
-      </label>
-    </div>
+    <label className={twMerge("flex", inline ? "items-center" : "flex-col", className)}>
+      {labelPosition === "before" && <span className={labelTextClassName}>{label}</span>}
+
+      <input
+        className={twMerge(COMMON_INPUT_CLASSNAME, inputClassName, hasError && "border-red-500 dark:border-red-700")}
+        type={type}
+        value={internalValue}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        ref={inputRef}
+        {...props}
+      />
+
+      {labelPosition === "after" && <span className={labelTextClassName}>{label}</span>}
+    </label>
   );
 }

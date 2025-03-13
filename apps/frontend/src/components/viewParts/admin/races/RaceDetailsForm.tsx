@@ -132,28 +132,32 @@ export default function RaceDetailsForm({
         }}
       />
 
-      <div className="input-group">
-        <label>
-          Date et heure de départ
-          <input
-            className="input"
+      <fieldset>
+        <legend>Date et heure de départ</legend>
+
+        <div className="flex flex-col gap-1">
+          <Input
+            label="Date de départ"
+            labelTextClassName="sr-only"
             type="date"
-            required={true}
+            required
             value={startTimeDate}
             name="start-date"
             onChange={onStartTimeDateChange}
           />
-          <input
-            className="input"
+
+          <Input
+            label="Heure de départ"
+            labelTextClassName="sr-only"
             type="time"
             step={1}
-            required={true}
+            required
             value={startTimeTime}
             name="start-time"
             onChange={onStartTimeTimeChange}
           />
-        </label>
-      </div>
+        </div>
+      </fieldset>
 
       <DurationInputs legend="Durée" duration={duration} setDuration={setDuration} />
 

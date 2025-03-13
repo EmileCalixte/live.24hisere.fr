@@ -47,7 +47,7 @@ export default function RunnerFinalDistanceQuickEdit({
 
       <Input
         label="Distance après dernier passage (m)"
-        labelClassName="sr-only"
+        labelTextClassName="sr-only"
         type="number"
         min={0}
         step={0.001}

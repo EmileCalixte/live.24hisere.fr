@@ -3,6 +3,7 @@ import { useCallback, useMemo } from "react";
 import clsx from "clsx";
 import { getDurationAsMs } from "../../../utils/mathUtils";
 import { prefixNumber } from "../../../utils/utils";
+import { Input } from "./Input";
 
 const LABEL_CLASSNAME = "flex items-center gap-0.5";
 const INPUT_CLASSNAME = "text-[0.9em] w-[6ch]";
@@ -129,33 +130,38 @@ export default function DurationInputs({
     <fieldset className={clsx("flex gap-1.5", className)}>
       {legend && <legend>{legend}</legend>}
 
-      <label className={LABEL_CLASSNAME}>
-        <input
-          className={clsx("input", INPUT_CLASSNAME)}
-          type="number"
-          value={prefixNumber(hours, 2)}
-          onChange={onHoursChange}
-        />
-        h
-      </label>
-      <label className={LABEL_CLASSNAME}>
-        <input
-          className={clsx("input", INPUT_CLASSNAME)}
-          type="number"
-          value={prefixNumber(minutes, 2)}
-          onChange={onMinutesChange}
-        />
-        m
-      </label>
-      <label className={LABEL_CLASSNAME}>
-        <input
-          className={clsx("input", INPUT_CLASSNAME)}
-          type="number"
-          value={prefixNumber(seconds, 2)}
-          onChange={onSecondsChange}
-        />
-        s
-      </label>
+      <Input
+        label="h"
+        labelPosition="after"
+        inline
+        className={LABEL_CLASSNAME}
+        inputClassName={INPUT_CLASSNAME}
+        type="number"
+        value={prefixNumber(hours, 2)}
+        onChange={onHoursChange}
+      />
+
+      <Input
+        label="m"
+        labelPosition="after"
+        inline
+        className={LABEL_CLASSNAME}
+        inputClassName={INPUT_CLASSNAME}
+        type="number"
+        value={prefixNumber(minutes, 2)}
+        onChange={onMinutesChange}
+      />
+
+      <Input
+        label="s"
+        labelPosition="after"
+        inline
+        className={LABEL_CLASSNAME}
+        inputClassName={INPUT_CLASSNAME}
+        type="number"
+        value={prefixNumber(seconds, 2)}
+        onChange={onSecondsChange}
+      />
     </fieldset>
   );
 }
