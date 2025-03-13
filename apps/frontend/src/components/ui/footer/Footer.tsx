@@ -43,7 +43,9 @@ export default function Footer(): React.ReactElement {
 
       {!user && (
         <p>
-          <Link to="/login">Connexion admin</Link>
+          <Link to="/login" className="text-inherit">
+            Connexion admin
+          </Link>
         </p>
       )}
     </footer>
