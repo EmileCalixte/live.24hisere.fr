@@ -93,6 +93,7 @@ export default function RunnerDetailsForm({
 
       <RadioGroup
         legend="Sexe"
+        name="gender"
         options={GENDER_OPTIONS}
         value={gender}
         onSelectOption={(option) => {
