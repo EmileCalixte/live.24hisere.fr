@@ -1,6 +1,6 @@
 import React from "react";
 import { getCountryName } from "../../../utils/countryUtils";
-import { Tooltip } from "../Tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../Tooltip";
 
 interface FlagProps {
   /**
@@ -59,8 +59,12 @@ export function Flag({
   );
 
   return countryName ? (
-    <Tooltip title={countryName} style={{ display: "inline-block", lineHeight: 0 }}>
-      <Flag />
+    <Tooltip>
+      <TooltipTrigger>
+        <Flag />
+      </TooltipTrigger>
+
+      <TooltipContent>{countryName}</TooltipContent>
     </Tooltip>
   ) : (
     <Flag />

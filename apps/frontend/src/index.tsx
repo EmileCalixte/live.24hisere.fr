@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import "toastr2/dist/toastr.min.css";
 import App from "./components/App";
+import { TooltipProvider } from "./components/ui/Tooltip";
 import "./css/index.css";
 import "./css/toastr-override.css";
 import ToastService from "./services/ToastService";
@@ -55,7 +56,9 @@ root.render(
   <NuqsAdapter>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <App />
+        <TooltipProvider delayDuration={0}>
+          <App />
+        </TooltipProvider>
       </BrowserRouter>
     </QueryClientProvider>
   </NuqsAdapter>,

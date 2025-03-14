@@ -1,28 +1,30 @@
-import type React from "react";
-import { Tooltip as MuiTooltip } from "@mui/material";
+import React from "react";
+import { Tooltip as Primitive } from "radix-ui";
+import { twMerge } from "tailwind-merge";
 
-type MuiTooltipProps = React.ComponentProps<typeof MuiTooltip>;
+const CONTENT_STYLE_CLASSNAME =
+  "border-1 rounded-sm border-neutral-200 bg-white/95 px-2 py-1 shadow-md dark:border-neutral-600 dark:bg-neutral-700/95 max-w-[min(90vw,500px)]";
+const CONTENT_ANIMATION_CLASSNAME =
+  "will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade";
 
-interface AsProp<E extends React.ElementType> {
-  as?: E;
-}
+export const TooltipProvider = Primitive.Provider;
+export const Tooltip = Primitive.Root;
+export const TooltipTrigger = Primitive.Trigger;
 
-type TooltipProps<E extends React.ElementType> = Omit<MuiTooltipProps, "arrow" | "children">
-  & AsProp<E> & {
-    children: MuiTooltipProps["children"] | string;
-  };
-
-export function Tooltip<E extends React.ElementType>({
-  as,
-  children,
-  placement = "top",
-  ...props
-}: TooltipProps<E>): React.ReactElement {
-  const Component = as ?? "span";
-
-  return (
-    <MuiTooltip placement={placement} enterDelay={0} enterTouchDelay={0} leaveTouchDelay={5000} arrow {...props}>
-      <Component onClick={(e) => false}>{children}</Component>
-    </MuiTooltip>
-  );
-}
+export const TooltipContent = React.forwardRef<
+  React.ComponentRef<typeof Primitive.Content>,
+  React.ComponentPropsWithoutRef<typeof Primitive.Content>
+>(({ children, style, ...props }, ref) => (
+  <Primitive.Portal>
+    <Primitive.Content
+      {...props}
+      className={twMerge(CONTENT_STYLE_CLASSNAME, CONTENT_ANIMATION_CLASSNAME)}
+      sideOffset={5}
+      ref={ref}
+    >
+      {children}
+      <Primitive.Arrow height={8} width={12} className="fill-white dark:fill-neutral-700" />
+    </Primitive.Content>
+  </Primitive.Portal>
+));
+TooltipContent.displayName = "TooltipContent";
