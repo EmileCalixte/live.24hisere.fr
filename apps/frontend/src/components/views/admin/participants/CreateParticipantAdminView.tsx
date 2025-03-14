@@ -135,7 +135,7 @@ export default function CreateParticipantAdminView(): React.ReactElement {
             }}
           />
 
-          <div className="w-full md:w-[50%] xl:w-[25%]">
+          <div className="w-full md:w-1/2 xl:w-1/4">
             <ParticipantDetailsForm
               isBasicRanking={race.isBasicRanking}
               onSubmit={onSubmit}

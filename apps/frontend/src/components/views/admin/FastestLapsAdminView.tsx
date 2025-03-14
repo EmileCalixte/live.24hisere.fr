@@ -230,7 +230,7 @@ export default function FastestLapsAdminView(): React.ReactElement {
         <CircularLoader />
       ) : (
         <Card className="flex flex-col gap-3">
-          <div className="w-full md:w-[50%] xl:w-[25%]">
+          <div className="w-full md:w-1/2 xl:w-1/4">
             <Select
               label="Course"
               placeholderLabel="Sélectionnez une course"

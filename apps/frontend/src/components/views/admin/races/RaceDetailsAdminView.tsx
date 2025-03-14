@@ -202,7 +202,7 @@ export default function RaceDetailsAdminView(): React.ReactElement {
         <Card className="flex flex-col gap-3">
           <h2>Détails de la course</h2>
 
-          <div className="w-full md:w-[50%] xl:w-[25%]">
+          <div className="w-full md:w-1/2 xl:w-1/4">
             <RaceDetailsForm
               onSubmit={onSubmit}
               editionOptions={editionOptions}
@@ -277,7 +277,7 @@ export default function RaceDetailsAdminView(): React.ReactElement {
               )}
 
               {sortedRaceRunners && sortedRaceRunners.length > 0 && (
-                <div className="w-full md:w-[50%] xl:w-[25%]">
+                <div className="w-full md:w-1/2 xl:w-1/4">
                   <Input
                     label="Rechercher"
                     placeholder="Nom, prénom ou dossard"

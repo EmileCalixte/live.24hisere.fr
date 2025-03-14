@@ -98,7 +98,7 @@ export default function EditionDetailsAdminView(): React.ReactElement {
         <Card className="flex flex-col gap-3">
           <h2>Détails de l'édition</h2>
 
-          <div className="w-full md:w-[50%] xl:w-[25%]">
+          <div className="w-full md:w-1/2 xl:w-1/4">
             <EditionDetailsForm
               onSubmit={onSubmit}
               name={editionName}

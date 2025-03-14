@@ -131,7 +131,7 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
         <Card className="flex flex-col gap-3">
           <h2>Détails du coureur</h2>
 
-          <div className="w-full md:w-[50%] xl:w-[25%]">
+          <div className="w-full md:w-1/2 xl:w-1/4">
             <RunnerDetailsForm
               onSubmit={onSubmit}
               firstname={runnerFirstname}

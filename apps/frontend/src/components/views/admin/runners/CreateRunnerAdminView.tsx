@@ -48,7 +48,7 @@ export default function CreateRunnerAdminView(): React.ReactElement {
       breadCrumbs={getRunnerCreateBreadcrumbs()}
     >
       <Card>
-        <div className="md:w-[50%] xl:w-[25%]">
+        <div className="md:w-1/2 xl:w-1/4">
           <RunnerDetailsForm
             onSubmit={onSubmit}
             firstname={firstname}

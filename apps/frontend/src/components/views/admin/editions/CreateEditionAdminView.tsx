@@ -37,7 +37,7 @@ export default function CreateEditionAdminView(): React.ReactElement {
       breadCrumbs={getEditionCreateBreadcrumbs()}
     >
       <Card>
-        <div className="w-full md:w-[50%] xl:w-[25%]">
+        <div className="w-full md:w-1/2 xl:w-1/4">
           <EditionDetailsForm
             onSubmit={onSubmit}
             name={editionName}

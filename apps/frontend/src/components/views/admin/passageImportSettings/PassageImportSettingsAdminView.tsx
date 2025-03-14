@@ -56,7 +56,7 @@ export default function PassageImportSettingsAdminView(): React.ReactElement {
       breadCrumbs={getImportPassagesSettingsBreadcrumbs()}
     >
       <Card>
-        <div className="w-full md:w-[50%] xl:w-[25%]">
+        <div className="w-full md:w-1/2 xl:w-1/4">
           <form onSubmit={onSubmit} className="flex flex-col gap-3">
             <Input
               label="URL du fichier DAG à importer"
