@@ -1,5 +1,7 @@
 import type React from "react";
 import { useContext } from "react";
+import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Theme } from "../../../constants/theme";
 import { appContext } from "../../../contexts/AppContext";
 import AdminHeader from "./AdminHeader";
@@ -12,7 +14,7 @@ export default function Header(): React.ReactElement {
     user: { user },
     headerFetchLoader: { fetchLevel },
     appData: { fetchError, isAppEnabled },
-    theme: { setTheme },
+    theme: { theme, setTheme },
   } = useContext(appContext);
 
   return (
@@ -26,19 +28,18 @@ export default function Header(): React.ReactElement {
 
         {(isAppEnabled || user) && <Navbar />}
 
-        <div>
-          <button
-            onClick={() => {
-              setTheme((current) => (current === Theme.DARK ? Theme.LIGHT : Theme.DARK));
-            }}
-          >
-            toggle theme
-          </button>
-        </div>
-
         <div className="grow-1" />
 
         {fetchLevel > 0 && <HeaderFetchLoader />}
+
+        <button
+          className="flex cursor-pointer items-center p-2"
+          onClick={() => {
+            setTheme((current) => (current === Theme.DARK ? Theme.LIGHT : Theme.DARK));
+          }}
+        >
+          <FontAwesomeIcon icon={theme === Theme.DARK ? faMoon : faSun} />
+        </button>
       </div>
 
       {!!fetchError && <FetchAppDataErrorHeader />}
