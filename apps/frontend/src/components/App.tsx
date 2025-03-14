@@ -41,6 +41,11 @@ export default function App(): React.ReactElement {
   const getAppDataQuery = useGetAppData();
   const appData = getAppDataQuery.data;
 
+  const forgetAccessToken = React.useCallback(() => {
+    localStorage.removeItem("accessToken");
+    setAccessToken(null);
+  }, []);
+
   const getCurrentUserQuery = useGetCurrentUser(accessToken, forgetAccessToken);
   const lastFetchedCurrentUser = getCurrentUserQuery.data?.user;
 
@@ -60,15 +65,24 @@ export default function App(): React.ReactElement {
     setFetchLevel((level) => Math.max(0, level - 1));
   }, []);
 
-  function saveAccessToken(token: string): void {
+  const saveAccessToken = React.useCallback((token: string) => {
     localStorage.setItem("accessToken", token);
     setAccessToken(token);
-  }
+  }, []);
 
-  function forgetAccessToken(): void {
-    localStorage.removeItem("accessToken");
-    setAccessToken(null);
-  }
+  const logout = React.useCallback(() => {
+    if (!accessToken) {
+      return;
+    }
+
+    logoutMutation.mutate(accessToken, {
+      onSuccess: () => {
+        forgetAccessToken();
+        setUser(null);
+        void navigate("/");
+      },
+    });
+  }, [accessToken, forgetAccessToken, logoutMutation, navigate]);
 
   React.useEffect(() => {
     if (!appData) {
@@ -97,20 +111,6 @@ export default function App(): React.ReactElement {
   React.useEffect(() => {
     setFetchAppDataError(getAppDataQuery.error);
   }, [getAppDataQuery.error]);
-
-  function logout(): void {
-    if (!accessToken) {
-      return;
-    }
-
-    logoutMutation.mutate(accessToken, {
-      onSuccess: () => {
-        forgetAccessToken();
-        setUser(null);
-        void navigate("/");
-      },
-    });
-  }
 
   React.useEffect(() => {
     window.addEventListener(EVENT_API_REQUEST_STARTED, incrementFetchLevel);
