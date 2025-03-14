@@ -49,6 +49,10 @@ export default function AboutView(): React.ReactElement {
           par Emile Calixte, avec l'aide précieuse de{" "}
           <Link to="https://github.com/DjesonPV" target="_blank">
             Djeson Pascal-Valette
+          </Link>
+          ,{" "}
+          <Link to="https://github.com/Kalvineur" target="_blank">
+            Kalvin Pascal-Valette
           </Link>{" "}
           et{" "}
           <Link to="https://github.com/Draphikas" target="_blank">
