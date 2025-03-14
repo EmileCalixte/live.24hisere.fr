@@ -24,7 +24,7 @@ export default function RadioGroup<T extends SelectOption["value"]>({
       <legend>{legend}</legend>
       {options.map((option) => (
         <div className="flex" key={option.value}>
-          <label className="flex gap-1">
+          <label className="flex items-center gap-1">
             <input
               type="radio"
               className="accent-app-green-600 dark:accent-app-green-500"

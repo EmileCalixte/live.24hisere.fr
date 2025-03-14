@@ -10,7 +10,7 @@ interface CheckboxProps {
 export function Checkbox({ label, checked, name, onChange }: CheckboxProps): React.ReactElement {
   return (
     <div className="flex">
-      <label className="flex gap-1">
+      <label className="flex items-center gap-1">
         <input
           type="checkbox"
           className="accent-app-green-600 dark:accent-app-green-500"
