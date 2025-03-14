@@ -1,5 +1,4 @@
 import React from "react";
-import { Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useGetAdminEditions } from "../../../../hooks/api/requests/admin/editions/useGetAdminEditions";
 import { useGetAdminRaces } from "../../../../hooks/api/requests/admin/races/useGetAdminRaces";
@@ -8,8 +7,10 @@ import { useRaceSelectOptions } from "../../../../hooks/useRaceSelectOptions";
 import { getRaceCreateBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import type { SelectOption } from "../../../../types/Forms";
 import { formatDateForApi } from "../../../../utils/utils";
+import { Card } from "../../../ui/Card";
 import Select from "../../../ui/forms/Select";
 import Page from "../../../ui/Page";
+import { Separator } from "../../../ui/Separator";
 import RaceDetailsForm from "../../../viewParts/admin/races/RaceDetailsForm";
 
 export default function CreateRaceAdminView(): React.ReactElement {
@@ -105,13 +106,14 @@ export default function CreateRaceAdminView(): React.ReactElement {
   };
 
   return (
-    <Page id="admin-create-race" htmlTitle="Créer une course">
-      <Row>
-        <Col>{getRaceCreateBreadcrumbs()}</Col>
-      </Row>
-
-      <Row>
-        <Col xxl={3} xl={4} lg={6} md={9} sm={12}>
+    <Page
+      id="admin-create-race"
+      htmlTitle="Créer une course"
+      title="Créer une course"
+      breadCrumbs={getRaceCreateBreadcrumbs()}
+    >
+      <Card className="flex flex-col gap-3">
+        <div className="w-full md:w-1/2 xl:w-1/4">
           <Select
             label="Copier les paramètres d'une course existante"
             options={existingRacesOptions}
@@ -125,12 +127,8 @@ export default function CreateRaceAdminView(): React.ReactElement {
             }
             onChange={onSelectRaceToCopy}
           />
-        </Col>
-      </Row>
 
-      <Row>
-        <Col xxl={3} xl={4} lg={6} md={9} sm={12}>
-          <h2>Créer une course</h2>
+          <Separator className="my-8" />
 
           <RaceDetailsForm
             onSubmit={onSubmit}
@@ -155,8 +153,8 @@ export default function CreateRaceAdminView(): React.ReactElement {
             setIsBasicRanking={setIsBasicRanking}
             submitButtonDisabled={postRaceMutation.isPending}
           />
-        </Col>
-      </Row>
+        </div>
+      </Card>
     </Page>
   );
 }
