@@ -378,7 +378,7 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
 
       <div className="grid-rows-auto grid grid-cols-6 gap-3">
         <div className="col-span-6 xl:col-span-2 2xl:col-span-1">
-          <fieldset className="mb-3">
+          <fieldset className="mb-3 flex flex-col gap-1">
             <legend className="mb-2">Éléments à afficher</legend>
 
             <Checkbox
@@ -391,7 +391,6 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
 
             <Checkbox
               label="Vitesse moyenne à chaque heure"
-              className="mt-2"
               checked={showEachHourSpeed}
               onChange={() => {
                 void setShowEachHourSpeed(!showEachHourSpeed);
@@ -400,7 +399,6 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
 
             <Checkbox
               label="Vitesse moyenne générale"
-              className="mt-2"
               checked={showAverageSpeed}
               onChange={() => {
                 void setShowAverageSpeed(!showAverageSpeed);
@@ -409,7 +407,6 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
 
             <Checkbox
               label="Évolution de la vitesse moyenne"
-              className="mt-2"
               checked={showAverageSpeedEvolution}
               onChange={() => {
                 void setShowAverageSpeedEvolution(!showAverageSpeedEvolution);

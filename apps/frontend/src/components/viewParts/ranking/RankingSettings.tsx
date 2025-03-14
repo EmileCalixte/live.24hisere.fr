@@ -63,6 +63,7 @@ export default function RankingSettings({
 
       <RadioGroup
         legend="Genre"
+        name="gender"
         options={GENDER_WITH_MIXED_OPTIONS}
         value={selectedGender}
         onSelectOption={(option) => {
@@ -74,6 +75,7 @@ export default function RankingSettings({
         <div>
           <RadioGroup
             legend="Heure"
+            name="timeMode"
             options={rankingTimeModeOptions}
             value={selectedTimeMode}
             onSelectOption={(option) => {
