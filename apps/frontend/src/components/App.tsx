@@ -1,12 +1,13 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import React from "react";
 import { Helmet } from "react-helmet";
 import { Navigate, Route, Routes, useMatch, useNavigate } from "react-router-dom";
 import type { PublicUser } from "@live24hisere/core/types";
 import { APP_BASE_TITLE } from "../constants/app";
+import { appContext, type AppContext } from "../contexts/AppContext";
 import { useGetCurrentUser } from "../hooks/api/requests/auth/useGetCurrentUser";
 import { useLogout } from "../hooks/api/requests/auth/useLogout";
 import { useGetAppData } from "../hooks/api/requests/public/appData/useGetAppData";
+import { useTheme } from "../hooks/useTheme";
 import { EVENT_API_REQUEST_ENDED, EVENT_API_REQUEST_STARTED } from "../utils/apiUtils";
 import { verbose } from "../utils/utils";
 import CircularLoader from "./ui/CircularLoader";
@@ -21,96 +22,10 @@ const RankingView = React.lazy(async () => await import("./views/RankingView"));
 const RunnerDetailsView = React.lazy(async () => await import("./views/RunnerDetailsView"));
 const SearchRunnerView = React.lazy(async () => await import("./views/SearchRunnerView"));
 
-interface AppContext {
-  appData: {
-    /**
-     * The error triggered if last app data request failed
-     */
-    fetchError: unknown;
-
-    /**
-     * Date and time the runners' data was exported from the timing system
-     */
-    lastUpdateTime: Date;
-
-    /**
-     * Difference between server time and client time in seconds. > 0 if the server is ahead, < 0 otherwise.
-     */
-    serverTimeOffset: number;
-
-    /**
-     * Whether the app is accessible or not
-     */
-    isAppEnabled: boolean;
-    setIsAppEnabled: (isAppEnabled: boolean) => void;
-
-    /**
-     * The ID of the edition to be auto-selected if no edition is selected
-     */
-    currentEditionId: number | null;
-
-    /**
-     * If the app is disabled, the message to be displayed
-     */
-    disabledAppMessage: string | null;
-  };
-
-  headerFetchLoader: {
-    /**
-     * A value incremented when a request is in progress, decremented when a request is completed.
-     * The header loader should be displayed if this value is > 0.
-     */
-    fetchLevel: number;
-
-    incrementFetchLevel: () => void;
-    decrementFetchLevel: () => void;
-  };
-
-  user: {
-    /**
-     * The access token used for authenticated API requests
-     */
-    accessToken: string | null;
-
-    saveAccessToken: (accessToken: string) => void;
-
-    /**
-     * The user logged in. If undefined, user info was not fetched yet.
-     */
-    user: PublicUser | null | undefined;
-
-    setUser: (user: PublicUser | null | undefined) => void;
-
-    logout: () => void;
-  };
-}
-
-export const appContext = React.createContext<AppContext>({
-  appData: {
-    fetchError: null,
-    lastUpdateTime: new Date(),
-    serverTimeOffset: 0,
-    isAppEnabled: false,
-    setIsAppEnabled: () => {},
-    currentEditionId: null,
-    disabledAppMessage: null,
-  },
-  headerFetchLoader: {
-    fetchLevel: 0,
-    incrementFetchLevel: () => {},
-    decrementFetchLevel: () => {},
-  },
-  user: {
-    accessToken: null,
-    saveAccessToken: () => {},
-    user: undefined,
-    setUser: () => {},
-    logout: () => {},
-  },
-});
-
 export default function App(): React.ReactElement {
   const navigate = useNavigate();
+
+  const { theme, setTheme } = useTheme();
 
   const [isLoading, setIsLoading] = React.useState(true);
   const [fetchLevel, setFetchLevel] = React.useState(0);
@@ -125,6 +40,11 @@ export default function App(): React.ReactElement {
 
   const getAppDataQuery = useGetAppData();
   const appData = getAppDataQuery.data;
+
+  const forgetAccessToken = React.useCallback(() => {
+    localStorage.removeItem("accessToken");
+    setAccessToken(null);
+  }, []);
 
   const getCurrentUserQuery = useGetCurrentUser(accessToken, forgetAccessToken);
   const lastFetchedCurrentUser = getCurrentUserQuery.data?.user;
@@ -145,15 +65,24 @@ export default function App(): React.ReactElement {
     setFetchLevel((level) => Math.max(0, level - 1));
   }, []);
 
-  function saveAccessToken(token: string): void {
+  const saveAccessToken = React.useCallback((token: string) => {
     localStorage.setItem("accessToken", token);
     setAccessToken(token);
-  }
+  }, []);
 
-  function forgetAccessToken(): void {
-    localStorage.removeItem("accessToken");
-    setAccessToken(null);
-  }
+  const logout = React.useCallback(() => {
+    if (!accessToken) {
+      return;
+    }
+
+    logoutMutation.mutate(accessToken, {
+      onSuccess: () => {
+        forgetAccessToken();
+        setUser(null);
+        void navigate("/");
+      },
+    });
+  }, [accessToken, forgetAccessToken, logoutMutation, navigate]);
 
   React.useEffect(() => {
     if (!appData) {
@@ -182,20 +111,6 @@ export default function App(): React.ReactElement {
   React.useEffect(() => {
     setFetchAppDataError(getAppDataQuery.error);
   }, [getAppDataQuery.error]);
-
-  function logout(): void {
-    if (!accessToken) {
-      return;
-    }
-
-    logoutMutation.mutate(accessToken, {
-      onSuccess: () => {
-        forgetAccessToken();
-        setUser(null);
-        void navigate("/");
-      },
-    });
-  }
 
   React.useEffect(() => {
     window.addEventListener(EVENT_API_REQUEST_STARTED, incrementFetchLevel);
@@ -241,19 +156,23 @@ export default function App(): React.ReactElement {
       setUser,
       logout,
     },
+    theme: {
+      theme,
+      setTheme,
+    },
   };
 
   const showDisabledAppMessage = !user && !isAppEnabled && !isBypassDisabledAppRoute;
 
   return (
-    <div id="app">
+    <div id="app" className="flex min-h-[100vh] flex-col">
       <Helmet>
         <title>{APP_BASE_TITLE}</title>
       </Helmet>
       <appContext.Provider value={appContextValues}>
-        <div id="app-content-wrapper">
+        <div id="app-content-wrapper" className="flex-1">
           <Header />
-          <main id="page-content" className="container-fluid">
+          <main id="page-wrapper" className="mt-3 pb-5">
             {isLoading ? (
               <CircularLoader />
             ) : showDisabledAppMessage ? (

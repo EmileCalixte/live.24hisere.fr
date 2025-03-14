@@ -1,13 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access  */
 import React from "react";
 import { parseAsBoolean, useQueryState } from "nuqs";
-import { Col, Row } from "react-bootstrap";
 import ReactDOMServer from "react-dom/server";
 import type { PublicRace, RaceRunnerWithProcessedPassages, RunnerWithProcessedHours } from "@live24hisere/core/types";
 import { SearchParam } from "../../../../constants/searchParams";
+import { Theme } from "../../../../constants/theme";
+import { appContext } from "../../../../contexts/AppContext";
 import { useWindowDimensions } from "../../../../hooks/useWindowDimensions";
 import CanvasjsReact from "../../../../lib/canvasjs/canvasjs.react";
 import { formatMsAsDuration } from "../../../../utils/durationUtils";
+import { Card } from "../../../ui/Card";
 import { Checkbox } from "../../../ui/forms/Checkbox";
 
 const CanvasJSChart = CanvasjsReact.CanvasJSChart;
@@ -50,6 +52,8 @@ interface SpeedChartProps {
 }
 
 export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartProps): React.ReactElement {
+  const { theme } = React.useContext(appContext).theme;
+
   const { width: windowWidth } = useWindowDimensions();
 
   const [showEachLapSpeed, setShowEachLapSpeed] = useQueryState(
@@ -75,11 +79,11 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
   const getXAxisInterval = React.useCallback((): number => {
     const baseInterval = getBaseXAxisInterval(race.duration);
 
-    if (windowWidth < 640) {
+    if (windowWidth < 768) {
       return baseInterval * 4;
     }
 
-    if (windowWidth < 968) {
+    if (windowWidth < 1024) {
       return baseInterval * 2;
     }
 
@@ -202,7 +206,8 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
 
   const options = React.useMemo(() => {
     const options = {
-      theme: "light2",
+      backgroundColor: "transparent",
+      theme: theme === Theme.DARK ? "dark2" : "light2",
       animationEnabled: false,
       // animationDuration: 200,
       toolTip: {
@@ -351,28 +356,29 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
 
     return options;
   }, [
-    runner,
-    race,
-    averageSpeed,
+    theme,
+    getTooltipContent,
+    race.duration,
+    race.startTime,
+    getXAxisInterval,
     minSpeed,
     maxSpeed,
-    getXAxisInterval,
-    getTooltipContent,
     showEachLapSpeed,
     showEachHourSpeed,
     showAverageSpeed,
     showAverageSpeedEvolution,
+    averageSpeed,
+    runner.passages,
+    runner.hours,
   ]);
 
   return (
-    <div className="card">
-      <Row>
-        <Col xs={12}>
-          <h3 className="mt-0">Vitesse</h3>
-        </Col>
+    <Card className="flex flex-col gap-3">
+      <h3>Vitesse</h3>
 
-        <Col xxl={2} xl={3} lg={12}>
-          <fieldset className="mb-3">
+      <div className="grid-rows-auto grid grid-cols-6 gap-3">
+        <div className="col-span-6 xl:col-span-2 2xl:col-span-1">
+          <fieldset className="mb-3 flex flex-col gap-1">
             <legend className="mb-2">Éléments à afficher</legend>
 
             <Checkbox
@@ -385,7 +391,6 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
 
             <Checkbox
               label="Vitesse moyenne à chaque heure"
-              className="mt-2"
               checked={showEachHourSpeed}
               onChange={() => {
                 void setShowEachHourSpeed(!showEachHourSpeed);
@@ -394,7 +399,6 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
 
             <Checkbox
               label="Vitesse moyenne générale"
-              className="mt-2"
               checked={showAverageSpeed}
               onChange={() => {
                 void setShowAverageSpeed(!showAverageSpeed);
@@ -403,18 +407,18 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
 
             <Checkbox
               label="Évolution de la vitesse moyenne"
-              className="mt-2"
               checked={showAverageSpeedEvolution}
               onChange={() => {
                 void setShowAverageSpeedEvolution(!showAverageSpeedEvolution);
               }}
             />
           </fieldset>
-        </Col>
-        <Col xxl={10} xl={9} lg={12}>
+        </div>
+
+        <div className="col-span-6 xl:col-span-4 2xl:col-span-5">
           <CanvasJSChart options={options} />
-        </Col>
-      </Row>
-    </div>
+        </div>
+      </div>
+    </Card>
   );
 }

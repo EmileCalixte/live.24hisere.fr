@@ -2,7 +2,7 @@ import type React from "react";
 import { useCallback, useMemo, useState } from "react";
 import type { AdminRaceWithRunnerCount } from "@live24hisere/core/types";
 import ToastService from "../../../../services/ToastService";
-import RunnerDetailsPassageForm from "./RunnerDetailsPassageForm";
+import RunnerDetailsPassageFormDialog from "./RunnerDetailsPassageFormDialog";
 
 interface RunnerDetailsCreatePassageProps {
   runnerRace: AdminRaceWithRunnerCount | null;
@@ -10,7 +10,7 @@ interface RunnerDetailsCreatePassageProps {
   onClose: () => void;
 }
 
-export default function RunnerDetailsCreatePassage({
+export default function RunnerDetailsCreatePassageDialog({
   runnerRace,
   savePassage,
   onClose,
@@ -56,11 +56,11 @@ export default function RunnerDetailsCreatePassage({
   );
 
   return (
-    <RunnerDetailsPassageForm
+    <RunnerDetailsPassageFormDialog
       raceTime={passageRaceTime}
       setRaceTime={setPassageRaceTime}
       time={passageTime}
-      modalTitle="Ajouter un passage"
+      title="Ajouter un passage"
       onSubmit={onSubmit}
       submitButtonDisabled={isSaving}
       onClose={onClose}

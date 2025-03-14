@@ -1,11 +1,11 @@
 import React from "react";
-import { Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { COUNTRY_CODE_FRANCE, GENDER } from "@live24hisere/core/constants";
 import type { Gender } from "@live24hisere/core/types";
 import { COUNTRY_NULL_OPTION_VALUE } from "../../../../constants/forms";
 import { usePostAdminRunner } from "../../../../hooks/api/requests/admin/runners/usePostAdminRunner";
 import { getRunnerCreateBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
+import { Card } from "../../../ui/Card";
 import Page from "../../../ui/Page";
 import RunnerDetailsForm from "../../../viewParts/admin/runners/RunnerDetailsForm";
 
@@ -41,15 +41,14 @@ export default function CreateRunnerAdminView(): React.ReactElement {
   };
 
   return (
-    <Page id="admin-create-runner" title="Créer un coureur">
-      <Row>
-        <Col>{getRunnerCreateBreadcrumbs()}</Col>
-      </Row>
-
-      <Row>
-        <Col xxl={3} xl={4} lg={6} md={9} sm={12}>
-          <h2>Créer un coureur</h2>
-
+    <Page
+      id="admin-create-runner"
+      htmlTitle="Créer un coureur"
+      title="Créer un coureur"
+      breadCrumbs={getRunnerCreateBreadcrumbs()}
+    >
+      <Card>
+        <div className="md:w-1/2 xl:w-1/4">
           <RunnerDetailsForm
             onSubmit={onSubmit}
             firstname={firstname}
@@ -66,8 +65,8 @@ export default function CreateRunnerAdminView(): React.ReactElement {
             setIsPublic={setIsPublic}
             submitButtonDisabled={postRunnerMutation.isPending}
           />
-        </Col>
-      </Row>
+        </div>
+      </Card>
     </Page>
   );
 }

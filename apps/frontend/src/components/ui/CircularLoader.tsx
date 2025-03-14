@@ -9,11 +9,11 @@ interface CircularLoaderProps {
 export default function CircularLoader({ asideText }: CircularLoaderProps): React.ReactElement {
   return (
     <span>
-      <span className="circular-loader">
-        <FontAwesomeIcon icon={faCircleNotch} />
+      <span>
+        <FontAwesomeIcon icon={faCircleNotch} className="animate-[spin_500ms_linear_infinite]" />
       </span>
 
-      {asideText && <span className="ms-2">{asideText}</span>}
+      {asideText && <span className="ml-2">{asideText}</span>}
     </span>
   );
 }

@@ -2,10 +2,10 @@ import React from "react";
 import { faCircleInfo, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQueryState } from "nuqs";
-import { Col, Row } from "react-bootstrap";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { stringUtils } from "@live24hisere/utils";
 import { SearchParam } from "../../constants/searchParams";
+import { appContext } from "../../contexts/AppContext";
 import { useGetPublicEditions } from "../../hooks/api/requests/public/editions/useGetPublicEditions";
 import { useGetPublicRunnerParticipations } from "../../hooks/api/requests/public/participants/useGetPublicRunnerParticipations";
 import { useGetPublicRaces } from "../../hooks/api/requests/public/races/useGetPublicRaces";
@@ -15,15 +15,18 @@ import { useProcessedRunnersWithProcessedHours } from "../../hooks/runners/usePr
 import { useRaceSelectOptions } from "../../hooks/useRaceSelectOptions";
 import { useRanking } from "../../hooks/useRanking";
 import { getCountryAlpha2CodeFromAlpha3Code } from "../../utils/countryUtils";
+import { formatMsAsDuration } from "../../utils/durationUtils";
 import { generateXlsxFromData } from "../../utils/excelUtils";
 import { isRaceFinished } from "../../utils/raceUtils";
 import { getDataForExcelExport, getRaceRunnerFromRunnerAndParticipant } from "../../utils/runnerUtils";
-import { appContext } from "../App";
+import { Card } from "../ui/Card";
 import CircularLoader from "../ui/CircularLoader";
 import { Flag } from "../ui/countries/Flag";
 import Select from "../ui/forms/Select";
+import { Link } from "../ui/Link";
 import Page from "../ui/Page";
 import RunnerStoppedTooltip from "../ui/tooltips/RunnerStoppedTooltip";
+import RaceTimer from "../viewParts/RaceTimer";
 import SpeedChart from "../viewParts/runnerDetails/charts/SpeedChart";
 import RunnerDetailsLaps from "../viewParts/runnerDetails/RunnerDetailsLaps";
 import RunnerDetailsStats from "../viewParts/runnerDetails/RunnerDetailsStats";
@@ -175,149 +178,116 @@ export default function RunnerDetailsView(): React.ReactElement {
   return (
     <Page
       id="runner-details"
-      title={
+      htmlTitle={
         selectedRunner === undefined
           ? "Détails coureur"
           : `Détails coureur ${selectedRunner.firstname} ${selectedRunner.lastname}`
       }
+      contentClassName="flex flex-col gap-4"
     >
-      <Row className="hide-on-print">
-        <Col>
-          <h1>Détails coureur</h1>
-        </Col>
-      </Row>
+      <h1>Détails coureur</h1>
 
-      <Row className="hide-on-print">
-        <Col xxl={3} xl={4} lg={6} md={8} sm={10} xs={12}>
-          <RunnerSelector runners={runners} onSelectRunner={onSelectRunner} selectedRunnerId={runnerId} />
+      <div className="flex w-full flex-col gap-1 md:w-1/2 xl:w-1/4 print:hidden">
+        <RunnerSelector runners={runners} onSelectRunner={onSelectRunner} selectedRunnerId={runnerId} />
 
-          <div className="d-flex justify-content-end mt-2">
-            <Link to="/runner-details/search" className="d-flex align-items-center gap-2">
-              <FontAwesomeIcon icon={faSearch} />
-              <span>Rechercher un coureur</span>
-            </Link>
-          </div>
-        </Col>
-      </Row>
+        <div className="flex justify-end">
+          <Link to="/runner-details/search" icon={<FontAwesomeIcon icon={faSearch} />}>
+            <span>Rechercher un coureur</span>
+          </Link>
+        </div>
+      </div>
 
-      {runnerId === undefined && (
-        <Row className="mt-4">
-          <Col>
-            <p>Sélectionnez un coureur ci-dessus pour consulter ses détails.</p>
-          </Col>
-        </Row>
-      )}
+      {runnerId === undefined && <p>Sélectionnez un coureur ci-dessus pour consulter ses détails.</p>}
 
       {runnerId !== undefined && !selectedRaceRunner && (
-        <div className="card mt-3">
-          <Row>
-            <Col>
-              <p>
-                <CircularLoader asideText="Chargement des données" />
-              </p>
-            </Col>
-          </Row>
-        </div>
+        <Card>
+          <p>
+            <CircularLoader asideText="Chargement des données" />
+          </p>
+        </Card>
       )}
 
       {selectedRaceRunner && (
-        <div className="card mt-3">
-          <Row>
-            <Col>
-              <h2 className="m-0 d-flex align-items-center gap-2">
-                {alpha2CountryCode && <Flag countryCode={alpha2CountryCode} />}
+        <Card className="flex flex-col gap-3">
+          <div className="flex flex-col gap-1">
+            <h2 className="flex items-center gap-2">
+              {alpha2CountryCode && <Flag countryCode={alpha2CountryCode} />}
 
-                <span>
-                  {selectedRaceRunner.lastname.toUpperCase()} {selectedRaceRunner.firstname}
-                </span>
-              </h2>
-            </Col>
-          </Row>
+              <span>
+                {selectedRaceRunner.lastname.toUpperCase()} {selectedRaceRunner.firstname}
+              </span>
+            </h2>
 
-          <Row className="mt-1">
-            {runnerHasMultipleParticipations ? (
-              <Col xxl={3} xl={4} lg={6} md={8} sm={10} xs={12}>
-                <Select
-                  label="Course"
-                  options={runnerRaceOptions}
-                  value={selectedRace?.id}
-                  onChange={(e) => {
-                    void setSelectedRaceId(e.target.value);
-                  }}
-                />
-              </Col>
-            ) : (
-              <Col>
-                <p className="m-0">
-                  {stringUtils.joinNonEmpty([selectedRaceEdition?.name, selectedRace?.name], " – ")}
-                </p>
-              </Col>
+            {selectedRace && (
+              <div className="flex flex-wrap gap-x-3 gap-y-1">
+                {runnerHasMultipleParticipations ? (
+                  <div className="w-full md:w-1/2 xl:w-1/4">
+                    <Select
+                      label="Course"
+                      options={runnerRaceOptions}
+                      value={selectedRace.id}
+                      onChange={(e) => {
+                        void setSelectedRaceId(e.target.value);
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <p>{stringUtils.joinNonEmpty([selectedRaceEdition?.name, selectedRace.name], " – ")}</p>
+                )}
+
+                {!isRaceFinished(selectedRace) && (
+                  <span>
+                    <b>
+                      <RaceTimer race={selectedRace} />
+                    </b>{" "}
+                    / {formatMsAsDuration(selectedRace.duration * 1000)}
+                  </span>
+                )}
+              </div>
             )}
-          </Row>
 
-          {selectedParticipation && (
-            <Row>
-              <Col>
-                <p className="mt-1">
-                  <strong>Dossard n° {selectedParticipation.bibNumber}</strong>
-                </p>
-              </Col>
-            </Row>
-          )}
+            {selectedParticipation && (
+              <p>
+                <strong>Dossard n° {selectedParticipation.bibNumber}</strong>
+              </p>
+            )}
 
-          {selectedRace && !isRaceFinished(selectedRace, serverTimeOffset) && selectedRankingRunner?.stopped && (
-            <Row>
-              <Col>
-                <p
-                  className="mt-0"
-                  style={{
-                    fontWeight: "bold",
-                    color: "#db1616",
-                  }}
-                >
-                  Coureur arrêté
-                  <RunnerStoppedTooltip className="ms-2">
-                    <FontAwesomeIcon icon={faCircleInfo} />
-                  </RunnerStoppedTooltip>
-                </p>
-              </Col>
-            </Row>
-          )}
+            {selectedRace && !isRaceFinished(selectedRace, serverTimeOffset) && selectedRankingRunner?.stopped && (
+              <p className="font-bold text-red-600">
+                Coureur arrêté
+                <RunnerStoppedTooltip className="ms-2">
+                  <FontAwesomeIcon icon={faCircleInfo} />
+                </RunnerStoppedTooltip>
+              </p>
+            )}
+          </div>
 
           {selectedRankingRunner && selectedRace && ranking ? (
-            <>
+            <div className="flex flex-col gap-3">
               <RunnerDetailsStats runner={selectedRankingRunner} race={selectedRace} ranking={ranking} />
 
               {selectedRankingRunner.totalAverageSpeed !== null && !selectedRace.isBasicRanking && (
-                <Row className="mt-3">
-                  <Col>
-                    <SpeedChart
-                      runner={selectedRankingRunner}
-                      race={selectedRace}
-                      averageSpeed={selectedRankingRunner.totalAverageSpeed}
-                    />
-                  </Col>
-                </Row>
+                <SpeedChart
+                  runner={selectedRankingRunner}
+                  race={selectedRace}
+                  averageSpeed={selectedRankingRunner.totalAverageSpeed}
+                />
               )}
 
               {!selectedRace.isBasicRanking && (
-                <Row className="mt-3">
-                  <Col>
-                    <RunnerDetailsLaps
-                      runner={selectedRankingRunner}
-                      race={selectedRace}
-                      exportRunnerToXlsx={exportRunnerToXlsx}
-                    />
-                  </Col>
-                </Row>
+                <RunnerDetailsLaps
+                  runner={selectedRankingRunner}
+                  race={selectedRace}
+                  exportRunnerToXlsx={exportRunnerToXlsx}
+                />
               )}
-            </>
+            </div>
           ) : (
             <p>
               <CircularLoader asideText="Chargement des données" />
             </p>
           )}
-        </div>
+        </Card>
       )}
     </Page>
   );

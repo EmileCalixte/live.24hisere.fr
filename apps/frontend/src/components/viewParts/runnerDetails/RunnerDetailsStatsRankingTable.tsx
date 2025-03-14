@@ -3,10 +3,11 @@ import { getCategory } from "@emilecalixte/ffa-categories";
 import { GENDER } from "@live24hisere/core/constants";
 import type { PublicRace } from "@live24hisere/core/types";
 import { NO_VALUE_PLACEHOLDER } from "../../../constants/misc";
+import { appContext } from "../../../contexts/AppContext";
 import type { Ranking, RankingRunner, RankingRunnerGap } from "../../../types/Ranking";
 import { isRaceFinished } from "../../../utils/raceUtils";
 import { formatGap, FormatGapMode } from "../../../utils/runnerUtils";
-import { appContext } from "../../App";
+import { Table, Td, Th, Tr } from "../../ui/Table";
 
 interface RunnerDetailsStatsGapsTableProps {
   race: PublicRace;
@@ -62,78 +63,78 @@ export default function RunnerDetailsStatsRankingTable({
       : FormatGapMode.LAPS_AND_TIME;
 
   return (
-    <table className="table">
+    <Table className="w-full">
       <thead>
-        <tr>
-          <th colSpan={42}>Classements</th>
-        </tr>
-        <tr>
-          <th rowSpan={2}>Cat.</th>
-          <th rowSpan={2}>N°</th>
-          {showGaps && <th colSpan={2}>Écarts</th>}
-        </tr>
+        <Tr>
+          <Th colSpan={42}>Classements</Th>
+        </Tr>
+        <Tr>
+          <Th rowSpan={2}>Cat.</Th>
+          <Th rowSpan={2}>N°</Th>
+          {showGaps && <Th colSpan={2}>Écarts</Th>}
+        </Tr>
         {showGaps && (
-          <tr>
-            <th>Premier coureur</th>
-            <th>Coureur précédent</th>
-          </tr>
+          <Tr>
+            <Th>Premier coureur</Th>
+            <Th>Coureur précédent</Th>
+          </Tr>
         )}
       </thead>
       <tbody>
-        <tr>
-          <td>Scratch</td>
-          <td>
+        <Tr>
+          <Td>Scratch</Td>
+          <Td>
             <strong>{runner.ranks.displayed.scratchMixed}</strong>&nbsp;<small>/&nbsp;{scratchMixedRunnerCount}</small>
-          </td>
+          </Td>
           {showGaps && (
             <>
-              <td>{formatGapForTable(runner.gaps.firstRunner.scratchMixed.gap, formatGapMode)}</td>
-              <td>{formatGapForTable(runner.gaps.previousRunner.scratchMixed.gap, formatGapMode)}</td>
+              <Td>{formatGapForTable(runner.gaps.firstRunner.scratchMixed.gap, formatGapMode)}</Td>
+              <Td>{formatGapForTable(runner.gaps.previousRunner.scratchMixed.gap, formatGapMode)}</Td>
             </>
           )}
-        </tr>
-        <tr>
-          <td>{genderString}</td>
-          <td>
+        </Tr>
+        <Tr>
+          <Td>{genderString}</Td>
+          <Td>
             <strong>{runner.ranks.displayed.scratchGender}</strong>&nbsp;
             <small>/&nbsp;{scratchGenderRunnerCount}</small>
-          </td>
+          </Td>
           {showGaps && (
             <>
-              <td>{formatGapForTable(runner.gaps.firstRunner.scratchGender.gap, formatGapMode)}</td>
-              <td>{formatGapForTable(runner.gaps.previousRunner.scratchGender.gap, formatGapMode)}</td>
+              <Td>{formatGapForTable(runner.gaps.firstRunner.scratchGender.gap, formatGapMode)}</Td>
+              <Td>{formatGapForTable(runner.gaps.previousRunner.scratchGender.gap, formatGapMode)}</Td>
             </>
           )}
-        </tr>
-        <tr>
-          <td>{categoryCode} mixte</td>
-          <td>
+        </Tr>
+        <Tr>
+          <Td>{categoryCode} mixte</Td>
+          <Td>
             <strong>{runner.ranks.displayed.categoryMixed}</strong>&nbsp;
             <small>/&nbsp;{categoryMixedRunnerCount}</small>
-          </td>
+          </Td>
           {showGaps && (
             <>
-              <td>{formatGapForTable(runner.gaps.firstRunner.categoryMixed.gap, formatGapMode)}</td>
-              <td>{formatGapForTable(runner.gaps.previousRunner.categoryMixed.gap, formatGapMode)}</td>
+              <Td>{formatGapForTable(runner.gaps.firstRunner.categoryMixed.gap, formatGapMode)}</Td>
+              <Td>{formatGapForTable(runner.gaps.previousRunner.categoryMixed.gap, formatGapMode)}</Td>
             </>
           )}
-        </tr>
-        <tr>
-          <td>
+        </Tr>
+        <Tr>
+          <Td>
             {categoryCode} {genderString}
-          </td>
-          <td>
+          </Td>
+          <Td>
             <strong>{runner.ranks.displayed.categoryGender}</strong>&nbsp;
             <small>/&nbsp;{categoryGenderRunnerCount}</small>
-          </td>
+          </Td>
           {showGaps && (
             <>
-              <td>{formatGapForTable(runner.gaps.firstRunner.categoryGender.gap, formatGapMode)}</td>
-              <td>{formatGapForTable(runner.gaps.previousRunner.categoryGender.gap, formatGapMode)}</td>
+              <Td>{formatGapForTable(runner.gaps.firstRunner.categoryGender.gap, formatGapMode)}</Td>
+              <Td>{formatGapForTable(runner.gaps.previousRunner.categoryGender.gap, formatGapMode)}</Td>
             </>
           )}
-        </tr>
+        </Tr>
       </tbody>
-    </table>
+    </Table>
   );
 }

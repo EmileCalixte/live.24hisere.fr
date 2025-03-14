@@ -1,5 +1,4 @@
 import React from "react";
-import { Col, Row } from "react-bootstrap";
 import type { AdminPassageWithRunnerIdAndRaceId, ProcessedPassage, RaceRunner } from "@live24hisere/core/types";
 import { useGetAdminEditions } from "../../../hooks/api/requests/admin/editions/useGetAdminEditions";
 import { useGetAdminRacePassages } from "../../../hooks/api/requests/admin/passages/useGetAdminRacePassages";
@@ -9,6 +8,7 @@ import { getFastestLapsBreadcrumbs } from "../../../services/breadcrumbs/breadcr
 import type { SelectOption } from "../../../types/Forms";
 import { getProcessedPassagesFromPassages } from "../../../utils/passageUtils";
 import { getRaceDictFromRaces } from "../../../utils/raceUtils";
+import { Card } from "../../ui/Card";
 import CircularLoader from "../../ui/CircularLoader";
 import { Checkbox } from "../../ui/forms/Checkbox";
 import Select from "../../ui/forms/Select";
@@ -220,59 +220,48 @@ export default function FastestLapsAdminView(): React.ReactElement {
   };
 
   return (
-    <Page id="admin-fastest-laps" title="Tours les plus rapides">
-      <Row>
-        <Col>{getFastestLapsBreadcrumbs()}</Col>
-      </Row>
-
-      {races ? (
-        <>
-          <Row className="mb-3">
-            <Col xxl={2} xl={3} lg={4} md={6} sm={12}>
-              <Select
-                label="Course"
-                placeholderLabel="Sélectionnez une course"
-                options={raceOptions}
-                value={selectedRaceId}
-                onChange={onSelectRace}
-              />
-            </Col>
-          </Row>
+    <Page
+      id="admin-fastest-laps"
+      htmlTitle="Tours les plus rapides"
+      title="Tours les plus rapides"
+      breadCrumbs={getFastestLapsBreadcrumbs()}
+    >
+      {!races ? (
+        <CircularLoader />
+      ) : (
+        <Card className="flex flex-col gap-3">
+          <div className="w-full md:w-1/2 xl:w-1/4">
+            <Select
+              label="Course"
+              placeholderLabel="Sélectionnez une course"
+              options={raceOptions}
+              value={selectedRaceId}
+              onChange={onSelectRace}
+            />
+          </div>
 
           {selectedRaceId !== undefined && passagesInPage === false && <CircularLoader />}
 
           {passagesInPage && (
             <>
-              <Row className="mb-3">
-                <Col>
-                  <Checkbox
-                    label="N'afficher que le tour le plus rapide de chaque coureur"
-                    checked={displayOnlyOneFastestLapPerRunner}
-                    onChange={(e) => {
-                      setDisplayOnlyOneFastestLapPerRunner(e.target.checked);
-                    }}
-                  />
-                </Col>
-              </Row>
+              <Checkbox
+                label="N'afficher que le tour le plus rapide de chaque coureur"
+                checked={displayOnlyOneFastestLapPerRunner}
+                onChange={(e) => {
+                  setDisplayOnlyOneFastestLapPerRunner(e.target.checked);
+                }}
+              />
 
-              <Row>
-                <Col>
-                  <FastestLapsTable passages={passagesInPage} races={raceDict} runners={runners as RaceRunner[]} />
-                </Col>
-              </Row>
+              <FastestLapsTable passages={passagesInPage} races={raceDict} runners={runners as RaceRunner[]} />
 
               {pageCount > 1 && (
-                <Row>
-                  <Col className="mt-3 pagination-container">
-                    <Pagination minPage={1} maxPage={pageCount} currentPage={page} setPage={setPage} />
-                  </Col>
-                </Row>
+                <div className="flex justify-center">
+                  <Pagination minPage={1} maxPage={pageCount} currentPage={page} setPage={setPage} />
+                </div>
               )}
             </>
           )}
-        </>
-      ) : (
-        <CircularLoader />
+        </Card>
       )}
     </Page>
   );

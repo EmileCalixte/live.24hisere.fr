@@ -3,6 +3,7 @@ import { type CategoryCode, getCategory } from "@emilecalixte/ffa-categories";
 import type { GenderWithMixed, PublicRace } from "@live24hisere/core/types";
 import type { Ranking, RankingRunner } from "../../../../../types/Ranking";
 import type { FormatGapMode } from "../../../../../utils/runnerUtils";
+import { Table, Tr } from "../../../../ui/Table";
 import RankingTableInfoHeader from "../RankingTableInfoHeader";
 import ResponsiveRankingTableRow from "./ResponsiveRankingTableRow";
 
@@ -60,18 +61,18 @@ export default function ResponsiveRankingTable({
   );
 
   return (
-    <table id="ranking-table" className="table responsive-ranking-table">
+    <Table id="ranking-table">
       <thead>
-        <tr>
+        <Tr hoverEffect={false} alternateBgColors={false}>
           <RankingTableInfoHeader
             race={race}
             tableCategoryCode={tableCategoryCode}
             tableGender={tableGender}
             tableRaceDuration={tableRaceDuration}
           />
-        </tr>
+        </Tr>
       </thead>
       <tbody>{ranking.map((runner) => getRankingTableRow(runner))}</tbody>
-    </table>
+    </Table>
   );
 }

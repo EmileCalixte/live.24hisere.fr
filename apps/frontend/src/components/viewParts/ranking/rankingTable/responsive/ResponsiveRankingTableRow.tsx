@@ -2,7 +2,6 @@ import React from "react";
 import { type CategoryCode, getCategory } from "@emilecalixte/ffa-categories";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link } from "react-router-dom";
 import type { GenderWithMixed, PublicRace } from "@live24hisere/core/types";
 import type { RankingRunner } from "../../../../../types/Ranking";
 import { getCountryAlpha2CodeFromAlpha3Code } from "../../../../../utils/countryUtils";
@@ -12,6 +11,8 @@ import { formatGap, type FormatGapMode } from "../../../../../utils/runnerUtils"
 import { formatFloatNumber } from "../../../../../utils/utils";
 import RunnerStoppedBadge from "../../../../ui/badges/RunnerStoppedBadge";
 import { Flag } from "../../../../ui/countries/Flag";
+import { Link } from "../../../../ui/Link";
+import { Td, Tr } from "../../../../ui/Table";
 
 interface ResponsiveRankingTableRowProps {
   race: PublicRace;
@@ -107,28 +108,28 @@ export default function ResponsiveRankingTableRow({
   const displayedGap = formattedGap && formattedGap !== "=" ? formattedGap : null;
 
   return (
-    <tr>
-      <td className="text-center">
+    <Tr>
+      <Td className="text-center">
         <strong>{rowRanking}</strong>
-      </td>
-      <td style={{ width: "100%" }}>
-        <div className="d-flex align-items-center gap-2">
+      </Td>
+      <Td className="w-full">
+        <div className="flex items-center gap-2">
           {alpha2CountryCode && <Flag countryCode={alpha2CountryCode} />}
           <strong>
             {runner.lastname.toUpperCase()} {runner.firstname}
           </strong>
         </div>
 
-        <div className="d-flex align-items-center gap-2">
+        <div className="flex items-center gap-2">
           <strong>N° {runner.bibNumber}</strong>
           {runner.stopped && showRunnerStoppedBadges && <RunnerStoppedBadge />}
         </div>
 
-        {displayedGap && <div className="responsive-ranking-table-row-secondary-data-row">{displayedGap}</div>}
+        {displayedGap && <div className="text-sm">{displayedGap}</div>}
 
-        <div className="responsive-ranking-table-row-secondary-data-row">{rowSecondaryRankings}</div>
+        <div className="text-sm">{rowSecondaryRankings}</div>
 
-        <div className="responsive-ranking-table-row-secondary-data-row">
+        <div className="text-sm">
           {formatFloatNumber(runner.totalDistance / 1000, 2)} km
           {(() => {
             if (runner.totalAverageSpeed === null) {
@@ -144,7 +145,7 @@ export default function ResponsiveRankingTableRow({
           })()}
         </div>
         {showLastPassageTime && (
-          <div className="responsive-ranking-table-row-secondary-data-row">
+          <div className="text-sm">
             {(() => {
               if (runner.lastPassageTime === null) {
                 return null;
@@ -154,19 +155,19 @@ export default function ResponsiveRankingTableRow({
             })()}
           </div>
         )}
-      </td>
-      <td className="position-relative clickable">
+      </Td>
+      <Td className="relative p-0">
         <span className="px-3 opacity-0">
           <FontAwesomeIcon icon={faChevronRight} />
         </span>
         <Link
           to={`/runner-details/${runner.id}?race=${race.id}`}
-          className="px-3 position-absolute inset-0 d-flex align-items-center"
+          className="absolute inset-0 flex items-center px-3 text-neutral-500 dark:text-neutral-500"
           aria-label={`Consulter les détails du coureur ${runner.firstname} ${runner.lastname}`}
         >
           <FontAwesomeIcon icon={faChevronRight} />
         </Link>
-      </td>
-    </tr>
+      </Td>
+    </Tr>
   );
 }

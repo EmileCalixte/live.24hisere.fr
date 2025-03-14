@@ -2,6 +2,7 @@ import type React from "react";
 import { useMemo } from "react";
 import type { SelectOption } from "../../../../types/Forms";
 import { getDateStringFromDate, getTimeStringFromDate } from "../../../../utils/utils";
+import { Button } from "../../../ui/forms/Button";
 import { Checkbox } from "../../../ui/forms/Checkbox";
 import DurationInputs from "../../../ui/forms/DurationInputs";
 import { Input } from "../../../ui/forms/Input";
@@ -85,11 +86,7 @@ export default function RaceDetailsForm({
   };
 
   return (
-    <form
-      onSubmit={(e) => {
-        onSubmit(e);
-      }}
-    >
+    <form onSubmit={onSubmit} className="flex flex-col gap-3">
       <Select
         label="Édition"
         options={editionOptions}
@@ -100,7 +97,6 @@ export default function RaceDetailsForm({
 
       <Input
         label="Nom"
-        className="mt-3"
         maxLength={50}
         required
         name="name"
@@ -112,7 +108,6 @@ export default function RaceDetailsForm({
 
       <Input
         label="Distance avant premier passage (m)"
-        className="mt-3"
         type="number"
         min={0}
         step={0.001}
@@ -126,7 +121,6 @@ export default function RaceDetailsForm({
 
       <Input
         label="Distance du tour (m)"
-        className="mt-3"
         type="number"
         min={0}
         step={0.001}
@@ -138,35 +132,38 @@ export default function RaceDetailsForm({
         }}
       />
 
-      <div className="input-group mt-3">
-        <label>
-          Date et heure de départ
-          <input
-            className="input"
+      <fieldset>
+        <legend>Date et heure de départ</legend>
+
+        <div className="flex flex-col gap-1">
+          <Input
+            label="Date de départ"
+            labelTextClassName="sr-only"
             type="date"
-            required={true}
+            required
             value={startTimeDate}
             name="start-date"
             onChange={onStartTimeDateChange}
           />
-          <input
-            className="input"
+
+          <Input
+            label="Heure de départ"
+            labelTextClassName="sr-only"
             type="time"
             step={1}
-            required={true}
+            required
             value={startTimeTime}
             name="start-time"
             onChange={onStartTimeTimeChange}
           />
-        </label>
-      </div>
+        </div>
+      </fieldset>
 
-      <DurationInputs legend="Durée" className="mt-3" duration={duration} setDuration={setDuration} />
+      <DurationInputs legend="Durée" duration={duration} setDuration={setDuration} />
 
       <Checkbox
         label="Visible publiquement"
         checked={isPublic}
-        className="mt-3"
         onChange={(e) => {
           setIsPublic(e.target.checked);
         }}
@@ -174,13 +171,12 @@ export default function RaceDetailsForm({
 
       <Checkbox
         label={
-          <span className="d-flex gap-2">
+          <span className="inline-flex gap-2">
             Arrêt immédiat
             <InfoIconTooltip tooltipText="Si oui, les coureurs s'arrêtent immédiatement à la fin de la course. Si non, ils terminent leur tour en cours à la fin de la course." />
           </span>
         }
         checked={isImmediateStop}
-        className="mt-3"
         onChange={(e) => {
           setIsImmediateStop(e.target.checked);
         }}
@@ -189,15 +185,16 @@ export default function RaceDetailsForm({
       <Checkbox
         label="Classement simplifié"
         checked={isBasicRanking}
-        className="mt-3"
         onChange={(e) => {
           setIsBasicRanking(e.target.checked);
         }}
       />
 
-      <button className="button mt-3" type="submit" disabled={submitButtonDisabled}>
-        Enregistrer
-      </button>
+      <div>
+        <Button type="submit" disabled={submitButtonDisabled}>
+          Enregistrer
+        </Button>
+      </div>
     </form>
   );
 }

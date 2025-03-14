@@ -1,5 +1,4 @@
 import React from "react";
-import { Col, Row } from "react-bootstrap";
 import type { AdminRaceWithRunnerCount } from "@live24hisere/core/types";
 import type { useGetAdminEditionRaces } from "../../../../hooks/api/requests/admin/races/useGetAdminEditionRaces";
 import { usePutAdminRaceOrder } from "../../../../hooks/api/requests/admin/races/usePutAdminRaceOrder";
@@ -52,56 +51,48 @@ export default function EditionRaces({ editionId, races, getRacesQuery }: Editio
   }, [isSorting, races]);
 
   return (
-    <Row>
-      <Col>
-        <h3>Courses</h3>
+    <>
+      <h2>Courses</h2>
 
-        {(() => {
-          if (races === undefined) {
-            return <CircularLoader />;
-          }
+      <p>Les courses seront ordonnées dans le même ordre que celui visible ici.</p>
 
-          if (races === null) {
-            return <p>Une erreur est survenue lors de la récupération des courses de l'édition</p>;
-          }
+      {(() => {
+        if (races === undefined) {
+          return <CircularLoader />;
+        }
 
-          if (races.length < 1) {
-            return <p>Aucune course dans cette édition</p>;
-          }
+        if (races === null) {
+          return <p>Une erreur est survenue lors de la récupération des courses de l'édition</p>;
+        }
 
-          return (
-            <>
-              <SortListButtons
+        if (races.length < 1) {
+          return <p>Aucune course dans cette édition</p>;
+        }
+
+        return (
+          <>
+            <SortListButtons
+              isSorting={isSorting}
+              setIsSorting={setIsSorting}
+              saveSort={saveSort}
+              disabled={isSaving}
+            />
+
+            <div>
+              <SortList
+                items={sortingRaces || []}
+                keyFunction={(race) => race.id}
+                setItems={setSortingRaces}
                 isSorting={isSorting}
-                setIsSorting={setIsSorting}
-                saveSort={saveSort}
-                disabled={isSaving}
-              />
-
-              <Row>
-                <Col>
-                  <SortList
-                    items={sortingRaces || []}
-                    keyFunction={(race) => race.id}
-                    setItems={setSortingRaces}
-                    isSorting={isSorting}
-                    className="admin-list"
-                  >
-                    {(race, isDragged, isDraggedOver) => (
-                      <RaceListItem
-                        race={race}
-                        isSorting={isSorting}
-                        isDragged={isDragged}
-                        isDraggedOver={isDraggedOver}
-                      />
-                    )}
-                  </SortList>
-                </Col>
-              </Row>
-            </>
-          );
-        })()}
-      </Col>
-    </Row>
+              >
+                {(race, isDragged, isDraggedOver) => (
+                  <RaceListItem race={race} isSorting={isSorting} isDragged={isDragged} isDraggedOver={isDraggedOver} />
+                )}
+              </SortList>
+            </div>
+          </>
+        );
+      })()}
+    </>
   );
 }

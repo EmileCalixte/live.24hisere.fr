@@ -66,11 +66,24 @@ export default [
   eslintConfigPrettier,
   {
     rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: [
+            {
+              name: "react-router-dom",
+              importNames: ["Link"],
+            },
+          ],
+        },
+      ],
+
       complexity: "off",
       "eslint-comments/require-description": "off",
       "guard-for-in": "off", // TODO enable ?
       "max-lines": "off",
       "no-alert": "off",
+      "no-octal-escape": "off", // Only octal escape works with tailwind
       "promise/avoid-new": "off",
       "react/no-unescaped-entities": "off",
       "@typescript-eslint/ban-ts-comment": "off",

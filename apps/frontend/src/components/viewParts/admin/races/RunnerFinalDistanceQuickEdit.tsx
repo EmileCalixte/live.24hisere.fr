@@ -38,8 +38,8 @@ export default function RunnerFinalDistanceQuickEdit({
   }
 
   return (
-    <div className="d-flex gap-2">
-      <span className="d-flex align-items-center justify-content-center" style={{ width: "1em" }}>
+    <div className="flex gap-2">
+      <span className="flex items-center justify-center" style={{ width: "1em" }}>
         {patchRunnerMutation.isPending && <CircularLoader />}
 
         {patchRunnerMutation.isSuccess && <FontAwesomeIcon icon={faCheck} />}
@@ -47,8 +47,7 @@ export default function RunnerFinalDistanceQuickEdit({
 
       <Input
         label="Distance après dernier passage (m)"
-        labelClassName="d-none"
-        className=""
+        labelTextClassName="sr-only"
         type="number"
         min={0}
         step={0.001}

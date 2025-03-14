@@ -1,5 +1,4 @@
 import type React from "react";
-import { Link } from "react-router-dom";
 import type {
   AdminPassageWithRunnerIdAndRaceId,
   ProcessedPassage,
@@ -8,6 +7,8 @@ import type {
 } from "@live24hisere/core/types";
 import { formatMsAsDuration } from "../../../../utils/durationUtils";
 import { formatFloatNumber } from "../../../../utils/utils";
+import { Link } from "../../../ui/Link";
+import { Table, Td, Th, Tr } from "../../../ui/Table";
 
 interface FastestLapsTableProps {
   passages: Array<ProcessedPassage<AdminPassageWithRunnerIdAndRaceId>>;
@@ -17,16 +18,16 @@ interface FastestLapsTableProps {
 
 export default function FastestLapsTable({ passages, races, runners }: FastestLapsTableProps): React.ReactElement {
   return (
-    <table className="table">
+    <Table className="w-full">
       <thead>
-        <tr>
-          <th>#</th>
-          <th>Coureur</th>
-          <th>Course</th>
-          <th>Durée tour</th>
-          <th>Vitesse tour</th>
-          <th>Temps de course</th>
-        </tr>
+        <Tr>
+          <Th>#</Th>
+          <Th>Coureur</Th>
+          <Th>Course</Th>
+          <Th>Durée tour</Th>
+          <Th>Vitesse tour</Th>
+          <Th>Temps de course</Th>
+        </Tr>
       </thead>
       <tbody>
         {passages.map((passage) => {
@@ -39,23 +40,23 @@ export default function FastestLapsTable({ passages, races, runners }: FastestLa
           const race = races[runner.raceId];
 
           return (
-            <tr key={passage.id}>
-              <td style={{ fontSize: "0.85em" }}>{passage.id}</td>
-              <td>
+            <Tr key={passage.id}>
+              <Td style={{ fontSize: "0.85em" }}>{passage.id}</Td>
+              <Td>
                 <Link to={`/runner-details/${runner.id}`}>
                   {`${runner.id} – ${runner.firstname} ${runner.lastname}`}
                 </Link>
-              </td>
-              <td>{race.name}</td>
-              <td>{formatMsAsDuration(passage.processed.lapDuration, { forceDisplayHours: false })}</td>
-              <td>{`${formatFloatNumber(passage.processed.lapSpeed, 2)} km/h`}</td>
-              <td>
+              </Td>
+              <Td>{race.name}</Td>
+              <Td>{formatMsAsDuration(passage.processed.lapDuration, { forceDisplayHours: false })}</Td>
+              <Td>{`${formatFloatNumber(passage.processed.lapSpeed, 2)} km/h`}</Td>
+              <Td>
                 {`${formatMsAsDuration(passage.processed.lapStartRaceTime)} – ${formatMsAsDuration(passage.processed.lapEndRaceTime)}`}
-              </td>
-            </tr>
+              </Td>
+            </Tr>
           );
         })}
       </tbody>
-    </table>
+    </Table>
   );
 }

@@ -1,13 +1,15 @@
 import React from "react";
 import DOMPurify from "dompurify";
-import { Col, Row } from "react-bootstrap";
+import { appContext } from "../../../contexts/AppContext";
 import { useGetDisabledAppData } from "../../../hooks/api/requests/admin/config/useGetDisabledAppData";
 import { usePatchDisabledAppData } from "../../../hooks/api/requests/admin/config/usePatchDisabledAppData";
 import { getDisabledAppBreadcrumbs } from "../../../services/breadcrumbs/breadcrumbService";
-import { appContext } from "../../App";
+import { Card } from "../../ui/Card";
+import { Button } from "../../ui/forms/Button";
 import { Checkbox } from "../../ui/forms/Checkbox";
 import { TextArea } from "../../ui/forms/TextArea";
 import Page from "../../ui/Page";
+import { Separator } from "../../ui/Separator";
 
 export default function DisabledAppAdminView(): React.ReactElement {
   const {
@@ -59,57 +61,59 @@ export default function DisabledAppAdminView(): React.ReactElement {
   }, [disabledAppData, setAppDataIsAppEnabled]);
 
   return (
-    <Page id="admin-disabled-app" title="Accès à l'application">
-      <Row>
-        <Col>{getDisabledAppBreadcrumbs()}</Col>
-      </Row>
+    <Page
+      id="admin-disabled-app"
+      htmlTitle="Accès à l'application"
+      title="Accès à l'application"
+      breadCrumbs={getDisabledAppBreadcrumbs()}
+    >
+      <Card>
+        <form onSubmit={onSubmit} className="flex flex-col gap-3">
+          <Checkbox
+            label="Application active"
+            checked={isAppEnabled}
+            onChange={(e) => {
+              setIsAppEnabled(e.target.checked);
+            }}
+          />
 
-      <Row>
-        <Col>
-          <form onSubmit={onSubmit}>
-            <Checkbox
-              label="Application active"
-              checked={isAppEnabled}
-              onChange={(e) => {
-                setIsAppEnabled(e.target.checked);
-              }}
-            />
+          <TextArea
+            label="Message affiché si application non active"
+            value={disabledAppMessage}
+            onChange={(e) => {
+              setDisabledAppMessage(e.target.value);
+            }}
+          />
 
-            <TextArea
-              label="Message affiché si application non active"
-              value={disabledAppMessage}
-              onChange={(e) => {
-                setDisabledAppMessage(e.target.value);
-              }}
-              className="mt-3"
-            />
-
-            <button
-              className="button mt-3"
+          <div>
+            <Button
               type="submit"
               disabled={getDisabledAppDataQuery.isPending || patchDisabledAppDataMutation.isPending || !unsavedChanges}
             >
               Enregistrer
-            </button>
-          </form>
-        </Col>
-      </Row>
+            </Button>
+          </div>
+        </form>
 
-      {disabledAppMessage && (
-        <Row>
-          <Col>
-            <p>Aperçu :</p>
+        {disabledAppMessage && (
+          <>
+            <Separator className="my-5" />
 
-            <div
-              className="card"
-              id="disabled-app-message-preview"
-              dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(disabledAppMessage),
-              }}
-            />
-          </Col>
-        </Row>
-      )}
+            <div className="flex flex-col gap-3">
+              <p>Aperçu :</p>
+
+              <Card>
+                <div
+                  id="disabled-app-message-preview"
+                  dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(disabledAppMessage),
+                  }}
+                ></div>
+              </Card>
+            </div>
+          </>
+        )}
+      </Card>
     </Page>
   );
 }

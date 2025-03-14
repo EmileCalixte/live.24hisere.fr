@@ -3,6 +3,7 @@ import { faFileExcel, faSortDown, faSortUp } from "@fortawesome/free-solid-svg-i
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { PublicRace, RaceRunnerWithProcessedPassages } from "@live24hisere/core/types";
 import { RUNNER_DETAILS_LAPS_SORT_COLUMNS, SortColumn, SortDirection } from "../../../constants/sort";
+import { appContext } from "../../../contexts/AppContext";
 import { useSortQueryString } from "../../../hooks/queryString/useSortQueryString";
 import { useRaceTime } from "../../../hooks/useRaceTime";
 import { useWindowDimensions } from "../../../hooks/useWindowDimensions";
@@ -10,8 +11,9 @@ import type { MinimalRankingRunnerInput, RankingRunner } from "../../../types/Ra
 import { formatMsAsDuration, formatMsDurationHms } from "../../../utils/durationUtils";
 import { isRaceFinished, isRaceStarted } from "../../../utils/raceUtils";
 import { getOppositeSortDirection } from "../../../utils/sortUtils";
-import { appContext } from "../../App";
+import { Card } from "../../ui/Card";
 import { Button } from "../../ui/forms/Button";
+import { Table, Td, Th, Tr } from "../../ui/Table";
 
 const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
 
@@ -88,12 +90,12 @@ export default function RunnerDetailsLaps({
     }
 
     return (
-      <tr>
-        <td colSpan={2}>Tour en cours</td>
-        <td>{formatMsAsDuration(raceTime)}</td>
-        <td>{formatMsDurationHms(currentLapTime)}</td>
-        <td colSpan={42} />
-      </tr>
+      <Tr>
+        <Td colSpan={2}>Tour en cours</Td>
+        <Td>{formatMsAsDuration(raceTime)}</Td>
+        <Td>{formatMsDurationHms(currentLapTime)}</Td>
+        <Td colSpan={42} />
+      </Tr>
     );
   }, [currentLapTime, runner.stopped, raceTime]);
 
@@ -103,20 +105,20 @@ export default function RunnerDetailsLaps({
     }
 
     return (
-      <tr>
-        <td>
+      <Tr>
+        <Td>
           <div>
             <strong>Tour en cours</strong>
             &nbsp;–&nbsp;
             {formatMsAsDuration(raceTime)}
           </div>
 
-          <div className="responsive-runner-laps-table-row-secondary-data">
+          <div className="text-sm">
             Durée&nbsp;:&nbsp;
             <strong>{formatMsDurationHms(currentLapTime)}</strong>
           </div>
-        </td>
-      </tr>
+        </Td>
+      </Tr>
     );
   }, [currentLapTime, runner.stopped, raceTime]);
 
@@ -157,25 +159,25 @@ export default function RunnerDetailsLaps({
   const showCurrentLapAtBottomOfTable = showCurrentLap && sortDirection === SortDirection.ASC;
 
   return (
-    <div className="card">
-      <h3 className="mt-0">Détails des tours</h3>
+    <Card className="flex flex-col gap-3">
+      <h3>Détails des tours</h3>
 
-      <p className="mb-4">
-        <Button variant="a" onClick={exportRunnerToXlsx} icon={<FontAwesomeIcon icon={faFileExcel} />}>
+      <p>
+        <Button variant="link" onClick={exportRunnerToXlsx} icon={<FontAwesomeIcon icon={faFileExcel} />}>
           Télécharger au format Excel
         </Button>
       </p>
 
       {windowWidth > RESPONSIVE_TABLE_MAX_WINDOW_WIDTH && (
-        <div style={{ maxWidth: 1400 }}>
-          <table id="runner-laps-table" className="table">
-            <thead style={{ position: "sticky", top: 0 }}>
-              <tr>
-                <th>Nb. tours</th>
-                <th>Distance</th>
-                <th>
-                  <button
-                    className="a"
+        <div>
+          <Table id="runner-laps-table">
+            <thead>
+              <Tr>
+                <Th>Nb. tours</Th>
+                <Th>Distance</Th>
+                <Th>
+                  <Button
+                    variant="link"
                     onClick={(e) => {
                       updateSort(e, SortColumn.RACE_TIME);
                     }}
@@ -187,12 +189,12 @@ export default function RunnerDetailsLaps({
                         {sortDirection === SortDirection.DESC && <FontAwesomeIcon icon={faSortUp} className="ms-1" />}
                       </>
                     )}
-                  </button>
-                </th>
-                <th>Temps au tour</th>
-                <th>
-                  <button
-                    className="a"
+                  </Button>
+                </Th>
+                <Th>Temps au tour</Th>
+                <Th>
+                  <Button
+                    variant="link"
                     onClick={(e) => {
                       updateSort(e, SortColumn.LAP_SPEED);
                     }}
@@ -204,58 +206,58 @@ export default function RunnerDetailsLaps({
                         {sortDirection === SortDirection.DESC && <FontAwesomeIcon icon={faSortUp} className="ms-1" />}
                       </>
                     )}
-                  </button>
-                </th>
-                <th>Allure</th>
-                <th>Vmoy. depuis le début</th>
-                <th>Allure depuis le début</th>
-              </tr>
+                  </Button>
+                </Th>
+                <Th>Allure</Th>
+                <Th>Vmoy. depuis le début</Th>
+                <Th>Allure depuis le début</Th>
+              </Tr>
             </thead>
             <tbody>
               {showCurrentLapAtTopOfTable && <>{currentLapTableRow}</>}
 
               {passagesToDisplay.map((passage, index) => (
-                <tr key={index}>
-                  <td>{passage.processed.lapNumber ?? "–"}</td>
-                  <td>{(passage.processed.totalDistance / 1000).toFixed(2)} km</td>
-                  <td>{formatMsAsDuration(passage.processed.lapEndRaceTime)}</td>
-                  <td>{formatMsDurationHms(passage.processed.lapDuration)}</td>
-                  <td>{passage.processed.lapSpeed.toFixed(2)} km/h</td>
-                  <td>
+                <Tr key={index}>
+                  <Td>{passage.processed.lapNumber ?? "–"}</Td>
+                  <Td>{(passage.processed.totalDistance / 1000).toFixed(2)} km</Td>
+                  <Td>{formatMsAsDuration(passage.processed.lapEndRaceTime)}</Td>
+                  <Td>{formatMsDurationHms(passage.processed.lapDuration)}</Td>
+                  <Td>{passage.processed.lapSpeed.toFixed(2)} km/h</Td>
+                  <Td>
                     {formatMsDurationHms(passage.processed.lapPace)}
                     <> </>/ km
-                  </td>
-                  <td>{passage.processed.averageSpeedSinceRaceStart.toFixed(2)} km/h</td>
-                  <td>
+                  </Td>
+                  <Td>{passage.processed.averageSpeedSinceRaceStart.toFixed(2)} km/h</Td>
+                  <Td>
                     {formatMsDurationHms(passage.processed.averagePaceSinceRaceStart)}
                     <> </>/ km
-                  </td>
-                </tr>
+                  </Td>
+                </Tr>
               ))}
 
               {showCurrentLapAtBottomOfTable && <>{currentLapTableRow}</>}
             </tbody>
-          </table>
+          </Table>
         </div>
       )}
 
       {windowWidth <= RESPONSIVE_TABLE_MAX_WINDOW_WIDTH && (
-        <div>
-          <div className="mb-3">
-            <button className="button" onClick={onResponsiveSortButtonClick}>
+        <>
+          <div>
+            <Button onClick={onResponsiveSortButtonClick}>
               {sortColumn === SortColumn.RACE_TIME && <>Trier par vitesse</>}
 
               {sortColumn === SortColumn.LAP_SPEED && <>Trier par temps de passage</>}
-            </button>
+            </Button>
           </div>
 
-          <table id="runner-laps-table" className="table responsive-runner-laps-table">
+          <Table id="runner-laps-table" className="w-full">
             <tbody>
               {showCurrentLapAtTopOfTable && <>{currentLapResponsiveTableRow}</>}
 
               {passagesToDisplay.map((passage, index) => (
-                <tr key={index}>
-                  <td>
+                <Tr key={index}>
+                  <Td>
                     <div>
                       <strong>
                         {passage.processed.lapNumber === null && <>Premier passage</>}
@@ -266,7 +268,7 @@ export default function RunnerDetailsLaps({
                       {formatMsAsDuration(passage.processed.lapEndRaceTime)}
                     </div>
 
-                    <div className="responsive-runner-laps-table-row-secondary-data">
+                    <div className="text-sm">
                       Durée&nbsp;:&nbsp;
                       <strong>{formatMsDurationHms(passage.processed.lapDuration)}</strong>
                       <> </>|<> </>
@@ -276,21 +278,21 @@ export default function RunnerDetailsLaps({
                       <> </>/ km
                     </div>
 
-                    <div className="responsive-runner-laps-table-row-secondary-data">
+                    <div className="text-sm">
                       Depuis départ&nbsp;:&nbsp; {passage.processed.averageSpeedSinceRaceStart.toFixed(2)} km/h
                       <> </>|<> </>
                       {formatMsDurationHms(passage.processed.averagePaceSinceRaceStart)}
                       <> </>/ km
                     </div>
-                  </td>
-                </tr>
+                  </Td>
+                </Tr>
               ))}
 
               {showCurrentLapAtBottomOfTable && <>{currentLapResponsiveTableRow}</>}
             </tbody>
-          </table>
-        </div>
+          </Table>
+        </>
       )}
-    </div>
+    </Card>
   );
 }

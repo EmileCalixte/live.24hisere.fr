@@ -1,14 +1,14 @@
 import React from "react";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Col, Row } from "react-bootstrap";
-import { Link } from "react-router-dom";
 import type { AdminEditionWithRaceCount } from "@live24hisere/core/types";
 import { useGetAdminEditions } from "../../../../hooks/api/requests/admin/editions/useGetAdminEditions";
 import { usePutAdminEditionOrder } from "../../../../hooks/api/requests/admin/editions/usePutAdminEditionOrder";
 import { getEditionsBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import SortListButtons from "../../../ui/buttons/SortListButtons";
+import { Card } from "../../../ui/Card";
 import CircularLoader from "../../../ui/CircularLoader";
+import { Link } from "../../../ui/Link";
 import SortList from "../../../ui/lists/SortList";
 import Page from "../../../ui/Page";
 import EditionListItem from "../../../viewParts/admin/editions/EditionListItem";
@@ -49,63 +49,58 @@ export default function EditionsAdminView(): React.ReactElement {
   }
 
   return (
-    <Page id="admin-editions" title="Éditions">
-      <Row>
-        <Col>{getEditionsBreadcrumbs()}</Col>
-      </Row>
-
+    <Page
+      id="admin-editions"
+      htmlTitle="Éditions"
+      title={
+        <span className="flex flex-wrap items-center gap-5">
+          Éditions
+          <span className="text-base">
+            <Link to="/admin/editions/create" variant="button" icon={<FontAwesomeIcon icon={faPlus} />}>
+              Créer
+            </Link>
+          </span>
+        </span>
+      }
+      breadCrumbs={getEditionsBreadcrumbs()}
+    >
       {getEditionsQuery.isLoading && <CircularLoader />}
 
       {editions && (
-        <>
-          <Row>
-            <Col>
-              <Link to="/admin/editions/create" className="button">
-                <FontAwesomeIcon icon={faPlus} className="me-2" />
-                Créer une édition
-              </Link>
-            </Col>
-          </Row>
+        <Card>
+          {editions.length === 0 && <p>Aucune édition</p>}
 
-          <Row>
-            <Col>
-              {editions.length === 0 && <p>Aucune édition</p>}
+          {editions.length > 0 && (
+            <div className="flex flex-col gap-3">
+              <p>Les éditions seront ordonnées dans le même ordre que celui visible ici.</p>
 
-              {editions.length > 0 && (
-                <>
-                  <SortListButtons
-                    isSorting={isSorting}
-                    setIsSorting={setIsSorting}
-                    saveSort={saveSort}
-                    disabled={isSaving}
-                    className="mt-4"
-                  />
+              <SortListButtons
+                isSorting={isSorting}
+                setIsSorting={setIsSorting}
+                saveSort={saveSort}
+                disabled={isSaving}
+              />
 
-                  <Row>
-                    <Col>
-                      <SortList
-                        items={sortingEditions || []}
-                        keyFunction={(edition) => edition.id}
-                        setItems={setSortingEditions}
-                        isSorting={isSorting}
-                        className="admin-list"
-                      >
-                        {(edition, isDragged, isDraggedOver) => (
-                          <EditionListItem
-                            edition={edition}
-                            isSorting={isSorting}
-                            isDragged={isDragged}
-                            isDraggedOver={isDraggedOver}
-                          />
-                        )}
-                      </SortList>
-                    </Col>
-                  </Row>
-                </>
-              )}
-            </Col>
-          </Row>
-        </>
+              <div>
+                <SortList
+                  items={sortingEditions || []}
+                  keyFunction={(edition) => edition.id}
+                  setItems={setSortingEditions}
+                  isSorting={isSorting}
+                >
+                  {(edition, isDragged, isDraggedOver) => (
+                    <EditionListItem
+                      edition={edition}
+                      isSorting={isSorting}
+                      isDragged={isDragged}
+                      isDraggedOver={isDraggedOver}
+                    />
+                  )}
+                </SortList>
+              </div>
+            </div>
+          )}
+        </Card>
       )}
     </Page>
   );

@@ -2,7 +2,7 @@ import type React from "react";
 import { useCallback, useMemo, useState } from "react";
 import type { AdminProcessedPassage, AdminRaceWithRunnerCount } from "@live24hisere/core/types";
 import ToastService from "../../../../services/ToastService";
-import RunnerDetailsPassageForm from "./RunnerDetailsPassageForm";
+import RunnerDetailsPassageFormDialog from "./RunnerDetailsPassageFormDialog";
 
 interface RunnerDetailsEditPassageProps {
   passage: AdminProcessedPassage;
@@ -11,7 +11,7 @@ interface RunnerDetailsEditPassageProps {
   onClose: () => void;
 }
 
-export default function RunnerDetailsEditPassage({
+export default function RunnerDetailsEditPassageDialog({
   passage,
   runnerRace,
   updatePassage,
@@ -63,11 +63,11 @@ export default function RunnerDetailsEditPassage({
   );
 
   return (
-    <RunnerDetailsPassageForm
+    <RunnerDetailsPassageFormDialog
       raceTime={passageRaceTime}
       setRaceTime={setPassageRaceTime}
       time={passageTime}
-      modalTitle={`Modification passage #${passage.id}`}
+      title={`Modification du passage #${passage.id}`}
       onSubmit={onSubmit}
       submitButtonDisabled={isSaving || !unsavedChanges}
       onClose={onClose}

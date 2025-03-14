@@ -9,3 +9,11 @@ export type ReactStateSetter<S> = React.Dispatch<React.SetStateAction<S>>;
 export type ReactUseStateResultWithNonNullableSetter<S> = [S, React.Dispatch<React.SetStateAction<NonNullable<S>>>];
 
 export type ComponentElement<T extends JSXElementConstructor<any>> = React.ReactElement<React.ComponentProps<T>, T>;
+
+export type HtmlElementFromTag<T extends keyof HTMLElementTagNameMap> = HTMLElementTagNameMap[T];
+
+export type PolymorphicProps<TElement extends React.ElementType> = React.PropsWithChildren<
+  React.ComponentPropsWithoutRef<TElement> & {
+    as?: TElement;
+  }
+>;

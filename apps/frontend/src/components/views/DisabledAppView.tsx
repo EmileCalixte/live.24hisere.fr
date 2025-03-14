@@ -1,7 +1,7 @@
 import React from "react";
 import DOMPurify from "dompurify";
-import { Col, Row } from "react-bootstrap";
-import { appContext } from "../App";
+import { appContext } from "../../contexts/AppContext";
+import { Card } from "../ui/Card";
 import Page from "../ui/Page";
 
 export default function DisabledAppView(): React.ReactElement {
@@ -12,17 +12,19 @@ export default function DisabledAppView(): React.ReactElement {
   const message = disabledAppMessage ?? "<p>Suivi live désactivé</p>";
 
   return (
-    <Page id="disabled-app" title="Application désactivée">
-      <Row>
-        <Col>
-          <div
-            className="card mt-3"
-            dangerouslySetInnerHTML={{
-              __html: DOMPurify.sanitize(message),
-            }}
-          />
-        </Col>
-      </Row>
+    <Page id="disabled-app" htmlTitle="Application désactivée">
+      <Card
+        className="mt-3"
+        dangerouslySetInnerHTML={{
+          __html: DOMPurify.sanitize(message),
+        }}
+      >
+        <div
+          dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(message),
+          }}
+        />
+      </Card>
     </Page>
   );
 }

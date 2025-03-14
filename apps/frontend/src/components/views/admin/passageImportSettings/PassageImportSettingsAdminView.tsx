@@ -1,9 +1,10 @@
 import React from "react";
-import { Col, Row } from "react-bootstrap";
 import { stringUtils } from "@live24hisere/utils";
 import { useGetPassageImportSettings } from "../../../../hooks/api/requests/admin/config/useGetPassageImportSettings";
 import { usePatchPassageImportSettings } from "../../../../hooks/api/requests/admin/config/usePatchPassageImportSettings";
 import { getImportPassagesSettingsBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
+import { Card } from "../../../ui/Card";
+import { Button } from "../../../ui/forms/Button";
 import { Input } from "../../../ui/forms/Input";
 import Page from "../../../ui/Page";
 
@@ -48,14 +49,15 @@ export default function PassageImportSettingsAdminView(): React.ReactElement {
   const isDagFileUrlValid = !dagFileUrl || stringUtils.isValidUrl(dagFileUrl);
 
   return (
-    <Page id="admin-passage-import-settings" title="Paramètres d'import des passages">
-      <Row>
-        <Col>{getImportPassagesSettingsBreadcrumbs()}</Col>
-      </Row>
-
-      <Row>
-        <Col lg={6} md={9} sm={12}>
-          <form onSubmit={onSubmit}>
+    <Page
+      id="admin-passage-import-settings"
+      htmlTitle="Paramètres d'import des passages"
+      title="Paramètres d'import des passages"
+      breadCrumbs={getImportPassagesSettingsBreadcrumbs()}
+    >
+      <Card>
+        <div className="w-full md:w-1/2 xl:w-1/4">
+          <form onSubmit={onSubmit} className="flex flex-col gap-3">
             <Input
               label="URL du fichier DAG à importer"
               value={dagFileUrl}
@@ -65,21 +67,22 @@ export default function PassageImportSettingsAdminView(): React.ReactElement {
               hasError={!isDagFileUrlValid}
             />
 
-            <button
-              className="button mt-3"
-              type="submit"
-              disabled={
-                getPassageImportSettingsQuery.isPending
-                || patchPassageImportSettingsMutation.isPending
-                || !unsavedChanges
-                || !isDagFileUrlValid
-              }
-            >
-              Enregistrer
-            </button>
+            <div>
+              <Button
+                type="submit"
+                disabled={
+                  getPassageImportSettingsQuery.isPending
+                  || patchPassageImportSettingsMutation.isPending
+                  || !unsavedChanges
+                  || !isDagFileUrlValid
+                }
+              >
+                Enregistrer
+              </Button>
+            </div>
           </form>
-        </Col>
-      </Row>
+        </div>
+      </Card>
     </Page>
   );
 }

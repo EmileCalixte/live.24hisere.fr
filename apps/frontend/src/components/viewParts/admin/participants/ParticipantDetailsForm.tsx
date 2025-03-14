@@ -1,5 +1,6 @@
 import type React from "react";
 import type { SelectOption } from "../../../../types/Forms";
+import { Button } from "../../../ui/forms/Button";
 import { Checkbox } from "../../../ui/forms/Checkbox";
 import { Input } from "../../../ui/forms/Input";
 import Select from "../../../ui/forms/Select";
@@ -36,7 +37,7 @@ export default function ParticipantDetailsForm({
   submitButtonDisabled,
 }: ParticipantDetailsFormProps): React.ReactElement {
   return (
-    <form onSubmit={onSubmit} className="d-flex flex-column gap-3">
+    <form onSubmit={onSubmit} className="flex flex-col gap-3">
       {onRunnerChange && (
         <Select
           label="Coureur"
@@ -84,9 +85,9 @@ export default function ParticipantDetailsForm({
       />
 
       <div>
-        <button className="button" type="submit" disabled={submitButtonDisabled}>
+        <Button type="submit" disabled={submitButtonDisabled}>
           Enregistrer
-        </button>
+        </Button>
       </div>
     </form>
   );

@@ -2,7 +2,7 @@ import type React from "react";
 import type { CategoryCode } from "@emilecalixte/ffa-categories";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link } from "react-router-dom";
+import { twMerge } from "tailwind-merge";
 import type { GenderWithMixed, PublicRace } from "@live24hisere/core/types";
 import { NO_VALUE_PLACEHOLDER } from "../../../../constants/misc";
 import type { RankingRunner } from "../../../../types/Ranking";
@@ -13,6 +13,8 @@ import { formatGap, type FormatGapMode } from "../../../../utils/runnerUtils";
 import { formatFloatNumber } from "../../../../utils/utils";
 import RunnerStoppedBadge from "../../../ui/badges/RunnerStoppedBadge";
 import { Flag } from "../../../ui/countries/Flag";
+import { Link } from "../../../ui/Link";
+import { TABLE_CELL_PADDING_CLASSNAME, Td, Tr } from "../../../ui/Table";
 import RankingTableRowNCells from "./RankingTableRowNCells";
 
 interface RankingTableRowProps {
@@ -39,33 +41,39 @@ export default function RankingTableRow({
   const alpha2CountryCode = getCountryAlpha2CodeFromAlpha3Code(runner.countryCode);
 
   return (
-    <tr>
+    <Tr>
       <RankingTableRowNCells
         race={race}
         runner={runner}
         tableCategoryCode={tableCategoryCode}
         tableGender={tableGender}
       />
-      <td>{runner.bibNumber}</td>
-      <td className="clickable">
-        <Link to={`/runner-details/${runner.id}?race=${race.id}`} className="d-flex align-items-center gap-2 no-style">
+      <Td>{runner.bibNumber}</Td>
+      <Td className="p-0">
+        <Link
+          to={`/runner-details/${runner.id}?race=${race.id}`}
+          className={twMerge(
+            TABLE_CELL_PADDING_CLASSNAME,
+            "flex items-center gap-2 text-neutral-800 no-underline dark:text-neutral-200",
+          )}
+        >
           {alpha2CountryCode && <Flag countryCode={alpha2CountryCode} />}
           <strong>
             {runner.lastname.toUpperCase()} {runner.firstname}
           </strong>
           {runner.stopped && showRunnerStoppedBadges && <RunnerStoppedBadge />}
           <span className="flex-grow-1" />
-          <span className="hide-on-print ranking-table-chevron">
+          <span className="text-sm text-neutral-500 print:hidden">
             <FontAwesomeIcon icon={faChevronRight} />
           </span>
         </Link>
-      </td>
+      </Td>
       {!race.isBasicRanking && (
-        <td>{raceInitialDistance > 0 ? Math.max(0, runner.passages.length - 1) : runner.passages.length}</td>
+        <Td>{raceInitialDistance > 0 ? Math.max(0, runner.passages.length - 1) : runner.passages.length}</Td>
       )}
-      <td>{formatFloatNumber(runner.totalDistance / 1000, 2)} km</td>
+      <Td>{formatFloatNumber(runner.totalDistance / 1000, 2)} km</Td>
       {showLastPassageTime && (
-        <td>
+        <Td>
           {(() => {
             if (runner.lastPassageTime === null) {
               return NO_VALUE_PLACEHOLDER;
@@ -73,10 +81,10 @@ export default function RankingTableRow({
               return formatMsAsDuration(runner.lastPassageTime.raceTime);
             }
           })()}
-        </td>
+        </Td>
       )}
 
-      <td>
+      <Td>
         {(() => {
           if (runner.totalAverageSpeed === null) {
             return NO_VALUE_PLACEHOLDER;
@@ -84,15 +92,15 @@ export default function RankingTableRow({
             return <>{formatFloatNumber(runner.totalAverageSpeed, 2)} km/h</>;
           }
         })()}
-      </td>
+      </Td>
 
       {!race.isBasicRanking && (
-        <td>
+        <Td>
           {formatGap(runner.gaps.firstRunner[getRankingType(tableCategoryCode, tableGender)].gap, {
             mode: formatGapMode,
           }) ?? NO_VALUE_PLACEHOLDER}
-        </td>
+        </Td>
       )}
-    </tr>
+    </Tr>
   );
 }

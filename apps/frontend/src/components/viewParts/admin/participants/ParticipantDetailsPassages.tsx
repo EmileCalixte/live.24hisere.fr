@@ -1,18 +1,21 @@
-import type React from "react";
-import { useEffect, useMemo, useState } from "react";
-import { faEye, faEyeSlash, faPen, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
+import React from "react";
+import { faEye, faEyeSlash, faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
-import { Col, Row } from "react-bootstrap";
 import type { AdminProcessedPassage, AdminRaceWithRunnerCount } from "@live24hisere/core/types";
+import type { ReactStateSetter } from "../../../../types/utils/react";
 import { formatMsAsDuration } from "../../../../utils/durationUtils";
 import { formatDateAsString } from "../../../../utils/utils";
-import RunnerDetailsCreatePassage from "../runners/RunnerDetailsCreatePassage";
-import RunnerDetailsEditPassage from "../runners/RunnerDetailsEditPassage";
+import { Button } from "../../../ui/forms/Button";
+import { Table, Td, Th, Tr } from "../../../ui/Table";
+import RunnerDetailsCreatePassageDialog from "../runners/RunnerDetailsCreatePassage";
+import RunnerDetailsEditPassageDialog from "../runners/RunnerDetailsEditPassage";
 
 interface ParticipantDetailsPassagesProps {
   passages: AdminProcessedPassage[];
   runnerRace: AdminRaceWithRunnerCount | null;
+  isAddingPassage: boolean;
+  setIsAddingPassage: ReactStateSetter<boolean>;
   updatePassageVisiblity: (passage: AdminProcessedPassage, hidden: boolean) => unknown;
   updatePassage: (passage: AdminProcessedPassage, time: Date) => unknown;
   saveNewPassage: (time: Date) => unknown;
@@ -22,21 +25,21 @@ interface ParticipantDetailsPassagesProps {
 export default function ParticipantDetailsPassages({
   passages,
   runnerRace,
+  isAddingPassage,
+  setIsAddingPassage,
   updatePassageVisiblity,
   updatePassage,
   saveNewPassage,
   deletePassage,
 }: ParticipantDetailsPassagesProps): React.ReactElement {
-  const [isAdding, setIsAdding] = useState(false);
-
   // The passage for which user is currently editing the time
-  const [editingPassage, setEditingPassage] = useState<AdminProcessedPassage | null>(null);
+  const [editingPassage, setEditingPassage] = React.useState<AdminProcessedPassage | null>(null);
 
-  const passageCount = useMemo(() => passages.length, [passages]);
+  const passageCount = React.useMemo(() => passages.length, [passages]);
 
-  const hiddenPassageCount = useMemo(() => passages.filter((passage) => passage.isHidden).length, [passages]);
+  const hiddenPassageCount = React.useMemo(() => passages.filter((passage) => passage.isHidden).length, [passages]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const scrollX = window.scrollX;
     const scrollY = window.scrollY;
 
@@ -44,161 +47,142 @@ export default function ParticipantDetailsPassages({
       window.scrollTo(scrollX, scrollY);
     }
 
-    if (editingPassage !== null || isAdding) {
+    if (editingPassage !== null || isAddingPassage) {
       window.addEventListener("scroll", onScroll);
     }
 
     return () => {
       window.removeEventListener("scroll", onScroll);
     };
-  }, [editingPassage, isAdding]);
+  }, [editingPassage, isAddingPassage]);
 
   return (
     <>
-      <Row>
-        {isAdding && (
-          <RunnerDetailsCreatePassage
-            runnerRace={runnerRace}
-            savePassage={saveNewPassage}
-            onClose={() => {
-              setIsAdding(false);
-            }}
-          />
-        )}
+      {isAddingPassage && (
+        <RunnerDetailsCreatePassageDialog
+          runnerRace={runnerRace}
+          savePassage={saveNewPassage}
+          onClose={() => {
+            setIsAddingPassage(false);
+          }}
+        />
+      )}
 
-        {editingPassage !== null && (
-          <RunnerDetailsEditPassage
-            passage={editingPassage}
-            runnerRace={runnerRace}
-            updatePassage={updatePassage}
-            onClose={() => {
-              setEditingPassage(null);
-            }}
-          />
-        )}
+      {editingPassage !== null && (
+        <RunnerDetailsEditPassageDialog
+          passage={editingPassage}
+          runnerRace={runnerRace}
+          updatePassage={updatePassage}
+          onClose={() => {
+            setEditingPassage(null);
+          }}
+        />
+      )}
 
-        <Col className="mb-3">
-          <button
-            className="button"
-            onClick={() => {
-              setIsAdding(true);
-            }}
-          >
-            <FontAwesomeIcon icon={faPlus} /> Ajouter manuellement
-          </button>
-        </Col>
-      </Row>
+      {passages.length === 0 && (
+        <p>
+          <i>Aucun passage</i>
+        </p>
+      )}
 
-      <Row>
-        <Col>
-          {passages.length === 0 && (
-            <p>
-              <i>Aucun passage</i>
-            </p>
-          )}
+      {passages.length > 0 && (
+        <>
+          <p>
+            {passageCount} passage
+            {passageCount >= 2 ? "s" : ""}
+            {hiddenPassageCount > 0 && `, dont ${hiddenPassageCount} masqué${hiddenPassageCount >= 2 ? "s" : ""}`}
+          </p>
 
-          {passages.length > 0 && (
-            <>
-              <p>
-                {passageCount} passage
-                {passageCount >= 2 ? "s" : ""}
-                {hiddenPassageCount > 0 && `, dont ${hiddenPassageCount} masqué${hiddenPassageCount >= 2 ? "s" : ""}`}
-              </p>
+          <div>
+            <Table>
+              <thead>
+                <Tr>
+                  <Th>#</Th>
+                  <Th>Type</Th>
+                  <Th>Date et heure</Th>
+                  <Th>Temps de course</Th>
+                  <Th colSpan={3}>Actions</Th>
+                </Tr>
+              </thead>
+              <tbody>
+                {passages.map((passage) => (
+                  <Tr key={passage.id} className={clsx(passage.isHidden && "passage-hidden")}>
+                    <Td className="text-xs">{passage.id}</Td>
+                    <Td className="text-xs">
+                      {(() => {
+                        if (passage.detectionId !== null) {
+                          let text = `Auto (${passage.detectionId})`;
 
-              <table className="table no-full-width admin-runner-passages-table">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Type</th>
-                    <th>Date et heure</th>
-                    <th>Temps de course</th>
-                    <th colSpan={3}>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {passages.map((passage) => (
-                    <tr key={passage.id} className={clsx(passage.isHidden && "passage-hidden")}>
-                      <td
-                        style={{
-                          fontSize: "0.85em",
-                        }}
-                      >
-                        {passage.id}
-                      </td>
-                      <td
-                        style={{
-                          fontSize: "0.85em",
-                        }}
-                      >
-                        {(() => {
-                          if (passage.detectionId !== null) {
-                            let text = `Auto (${passage.detectionId})`;
-
-                            if (passage.importTime !== null) {
-                              text = `${text} (${formatDateAsString(new Date(passage.importTime))})`;
-                            }
-
-                            return text;
+                          if (passage.importTime !== null) {
+                            text = `${text} (${formatDateAsString(new Date(passage.importTime))})`;
                           }
 
-                          return "Manuel";
-                        })()}
-                      </td>
-                      <td>{formatDateAsString(passage.processed.lapEndTime)}</td>
-                      <td>{formatMsAsDuration(passage.processed.lapEndRaceTime)}</td>
-                      <td className="py-0">
-                        <div className="buttons-container">
-                          {passage.isHidden && (
-                            <button
-                              className="button small"
-                              onClick={() => {
-                                void updatePassageVisiblity(passage, false);
-                              }}
-                            >
-                              <FontAwesomeIcon icon={faEye} /> Ne plus masquer
-                            </button>
-                          )}
+                          return text;
+                        }
 
-                          {!passage.isHidden && (
-                            <button
-                              className="button orange small"
-                              onClick={() => {
-                                void updatePassageVisiblity(passage, true);
-                              }}
-                            >
-                              <FontAwesomeIcon icon={faEyeSlash} /> Masquer
-                            </button>
-                          )}
-                        </div>
-                      </td>
-                      <td>
-                        <button
-                          className="button small"
+                        return "Manuel";
+                      })()}
+                    </Td>
+                    <Td className={clsx(passage.isHidden && "line-through")}>
+                      {formatDateAsString(passage.processed.lapEndTime)}
+                    </Td>
+                    <Td className={clsx(passage.isHidden && "line-through")}>
+                      {formatMsAsDuration(passage.processed.lapEndRaceTime)}
+                    </Td>
+                    <Td>
+                      {passage.isHidden ? (
+                        <Button
+                          size="sm"
+                          icon={<FontAwesomeIcon icon={faEye} />}
                           onClick={() => {
-                            setEditingPassage(passage);
+                            void updatePassageVisiblity(passage, false);
                           }}
                         >
-                          <FontAwesomeIcon icon={faPen} /> Modifier
-                        </button>
-                      </td>
-                      <td>
-                        <button
-                          className="button red small"
+                          Ne plus masquer
+                        </Button>
+                      ) : (
+                        <Button
+                          size="sm"
+                          color="orange"
+                          icon={<FontAwesomeIcon icon={faEyeSlash} />}
                           onClick={() => {
-                            void deletePassage(passage);
+                            void updatePassageVisiblity(passage, true);
                           }}
                         >
-                          <FontAwesomeIcon icon={faTrash} /> Supprimer
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </>
-          )}
-        </Col>
-      </Row>
+                          Masquer
+                        </Button>
+                      )}
+                    </Td>
+                    <Td>
+                      <Button
+                        size="sm"
+                        icon={<FontAwesomeIcon icon={faPen} />}
+                        onClick={() => {
+                          setEditingPassage(passage);
+                        }}
+                      >
+                        Modifier
+                      </Button>
+                    </Td>
+                    <Td>
+                      <Button
+                        color="red"
+                        size="sm"
+                        icon={<FontAwesomeIcon icon={faTrash} />}
+                        onClick={() => {
+                          void deletePassage(passage);
+                        }}
+                      >
+                        Supprimer
+                      </Button>
+                    </Td>
+                  </Tr>
+                ))}
+              </tbody>
+            </Table>
+          </div>
+        </>
+      )}
     </>
   );
 }

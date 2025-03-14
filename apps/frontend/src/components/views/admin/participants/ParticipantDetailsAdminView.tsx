@@ -1,6 +1,7 @@
 import React from "react";
-import { Col, Row } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useNavigate } from "react-router-dom";
 import type { AdminProcessedPassage } from "@live24hisere/core/types";
 import { useGetAdminEdition } from "../../../../hooks/api/requests/admin/editions/useGetAdminEdition";
 import { useGetAdminRaceRunner } from "../../../../hooks/api/requests/admin/participants/useGetAdminRaceRunner";
@@ -15,8 +16,12 @@ import { getParticipantBreadcrumbs } from "../../../../services/breadcrumbs/brea
 import { is404Error } from "../../../../utils/apiUtils";
 import { getProcessedPassagesFromPassages } from "../../../../utils/passageUtils";
 import { formatDateAsString, formatDateForApi } from "../../../../utils/utils";
+import { Card } from "../../../ui/Card";
 import CircularLoader from "../../../ui/CircularLoader";
+import { Button } from "../../../ui/forms/Button";
+import { Link } from "../../../ui/Link";
 import Page from "../../../ui/Page";
+import { Separator } from "../../../ui/Separator";
 import ParticipantDetailsForm from "../../../viewParts/admin/participants/ParticipantDetailsForm";
 import ParticipantDetailsPassages from "../../../viewParts/admin/participants/ParticipantDetailsPassages";
 
@@ -48,6 +53,8 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
   const [participantBibNumber, setParticipantBibNumber] = React.useState(0);
   const [participantIsStopped, setParticipantIsStopped] = React.useState(false);
   const [participantFinalDistance, setParticipantFinalDistance] = React.useState<number | string>(0);
+
+  const [isAddingPassage, setIsAddingPassage] = React.useState(false);
 
   const unsavedChanges = React.useMemo(() => {
     if (!runner) {
@@ -198,63 +205,70 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
   return (
     <Page
       id="admin-race-runner-details"
-      title={runner ? `Détails de la participation de ${runner.firstname} ${runner.lastname}` : "Chargement"}
-      className="d-flex flex-column gap-3"
+      htmlTitle={runner ? `Détails de la participation de ${runner.firstname} ${runner.lastname}` : "Chargement"}
+      title={
+        !runner || !race ? undefined : (
+          <>
+            Détails de la participation de
+            <> </>
+            <Link to={`/admin/runners/${runner.id}`}>
+              {runner.firstname} {runner.lastname}
+            </Link>
+            <> </>à la course
+            <> </>
+            <Link to={`/admin/races/${race.id}`}>{race.name}</Link>
+          </>
+        )
+      }
+      breadCrumbs={getParticipantBreadcrumbs(edition ?? undefined, race ?? undefined, runner ?? undefined)}
     >
-      <Row>
-        <Col>{getParticipantBreadcrumbs(edition ?? undefined, race ?? undefined, runner ?? undefined)}</Col>
-      </Row>
+      {!race || !runner ? (
+        <CircularLoader />
+      ) : (
+        <Card className="flex flex-col gap-3">
+          <div className="w-full md:w-1/2 xl:w-1/4">
+            <ParticipantDetailsForm
+              isBasicRanking={race.isBasicRanking}
+              onSubmit={onSubmit}
+              bibNumber={participantBibNumber}
+              setBibNumber={setParticipantBibNumber}
+              isBibNumberAvailable={isBibNumberAvailable}
+              isStopped={participantIsStopped}
+              setIsStopped={setParticipantIsStopped}
+              finalDistance={participantFinalDistance}
+              setFinalDistance={setParticipantFinalDistance}
+              submitButtonDisabled={patchRunnerMutation.isPending || !unsavedChanges || !isBibNumberAvailable}
+            />
+          </div>
 
-      {(!race || !runner) && <CircularLoader />}
-      {race && runner && (
-        <>
-          <Row>
-            <Col>
-              <h2>
-                Détails de la participation de
-                <> </>
-                <Link to={`/admin/runners/${runner.id}`}>
-                  {runner.firstname} {runner.lastname}
-                </Link>
-                <> </>à la course
-                <> </>
-                <Link to={`/admin/races/${race.id}`}>{race.name}</Link>
-              </h2>
-            </Col>
-          </Row>
+          <Separator className="my-5" />
 
-          <Row>
-            <Col xxl={3} xl={4} lg={6} md={9} sm={12}>
-              <ParticipantDetailsForm
-                isBasicRanking={race.isBasicRanking}
-                onSubmit={onSubmit}
-                bibNumber={participantBibNumber}
-                setBibNumber={setParticipantBibNumber}
-                isBibNumberAvailable={isBibNumberAvailable}
-                isStopped={participantIsStopped}
-                setIsStopped={setParticipantIsStopped}
-                finalDistance={participantFinalDistance}
-                setFinalDistance={setParticipantFinalDistance}
-                submitButtonDisabled={patchRunnerMutation.isPending || !unsavedChanges || !isBibNumberAvailable}
-              />
-            </Col>
-          </Row>
+          <h2 className="flex flex-wrap items-center gap-5">
+            Passages
+            <span className="text-base">
+              <Button
+                variant="button"
+                icon={<FontAwesomeIcon icon={faPlus} />}
+                onClick={() => {
+                  setIsAddingPassage(true);
+                }}
+              >
+                Ajouter manuellement
+              </Button>
+            </span>
+          </h2>
 
-          <Row>
-            <Col>
-              <h3>Passages</h3>
-
-              <ParticipantDetailsPassages
-                passages={processedPassages}
-                runnerRace={race}
-                updatePassageVisiblity={updatePassageVisiblity}
-                updatePassage={updatePassage}
-                saveNewPassage={saveNewPassage}
-                deletePassage={deletePassage}
-              />
-            </Col>
-          </Row>
-        </>
+          <ParticipantDetailsPassages
+            passages={processedPassages}
+            runnerRace={race}
+            isAddingPassage={isAddingPassage}
+            setIsAddingPassage={setIsAddingPassage}
+            updatePassageVisiblity={updatePassageVisiblity}
+            updatePassage={updatePassage}
+            saveNewPassage={saveNewPassage}
+            deletePassage={deletePassage}
+          />
+        </Card>
       )}
     </Page>
   );

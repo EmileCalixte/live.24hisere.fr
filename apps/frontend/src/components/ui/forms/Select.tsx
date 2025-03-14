@@ -1,5 +1,5 @@
 import type React from "react";
-import clsx from "clsx";
+import { COMMON_INPUT_CLASSNAME } from "../../../constants/ui/input";
 import type { SelectOption } from "../../../types/Forms";
 
 export interface SelectProps<TValue extends SelectOption["value"]>
@@ -26,12 +26,12 @@ export default function Select<TValue extends SelectOption["value"]>({
   ...props
 }: SelectProps<TValue>): React.ReactElement {
   return (
-    <div className={clsx("input-group", className)}>
-      <label>
+    <div className={className}>
+      <label className="flex flex-col">
         {label}
         <select
           ref={selectRef}
-          className="input-select"
+          className={COMMON_INPUT_CLASSNAME}
           disabled={disabled || isLoading}
           value={isLoading ? "_loading" : (value ?? "_placeholder")}
           {...props}

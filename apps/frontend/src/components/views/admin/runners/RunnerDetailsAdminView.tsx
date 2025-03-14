@@ -1,9 +1,9 @@
 import React from "react";
-import { Col, Row } from "react-bootstrap";
 import { Navigate, useNavigate } from "react-router-dom";
 import { GENDER } from "@live24hisere/core/constants";
 import type { Gender } from "@live24hisere/core/types";
 import { COUNTRY_NULL_OPTION_VALUE } from "../../../../constants/forms";
+import { appContext } from "../../../../contexts/AppContext";
 import { useGetAdminEditions } from "../../../../hooks/api/requests/admin/editions/useGetAdminEditions";
 import { useGetAdminRunnerParticipations } from "../../../../hooks/api/requests/admin/participants/useGetAdminRunnerParticipations";
 import { useGetAdminRaces } from "../../../../hooks/api/requests/admin/races/useGetAdminRaces";
@@ -13,9 +13,11 @@ import { usePatchAdminRunner } from "../../../../hooks/api/requests/admin/runner
 import { useRequiredParams } from "../../../../hooks/useRequiredParams";
 import { getRunnerDetailsBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import { is404Error } from "../../../../utils/apiUtils";
-import { appContext } from "../../../App";
+import { Card } from "../../../ui/Card";
 import CircularLoader from "../../../ui/CircularLoader";
+import { Button } from "../../../ui/forms/Button";
 import Page from "../../../ui/Page";
+import { Separator } from "../../../ui/Separator";
 import RunnerDetailsForm from "../../../viewParts/admin/runners/RunnerDetailsForm";
 import RunnerParticipationsTable from "../../../viewParts/admin/runners/RunnerParticipationsTable";
 
@@ -119,81 +121,70 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
   return (
     <Page
       id="admin-runner-details"
-      title={runner === undefined ? "Chargement" : `Détails du coureur ${runner.firstname} ${runner.lastname}`}
-      className="d-flex flex-column gap-3"
+      htmlTitle={runner === undefined ? "Chargement" : `Détails du coureur ${runner.firstname} ${runner.lastname}`}
+      title={runner === undefined ? undefined : `Détails du coureur ${runner.firstname} ${runner.lastname}`}
+      breadCrumbs={getRunnerDetailsBreadcrumbs(runner)}
     >
-      <Row>
-        <Col>{getRunnerDetailsBreadcrumbs(runner)}</Col>
-      </Row>
+      {runner === undefined ? (
+        <CircularLoader />
+      ) : (
+        <Card className="flex flex-col gap-3">
+          <h2>Détails du coureur</h2>
 
-      {runner === undefined && (
-        <Row>
-          <Col>
-            <CircularLoader />
-          </Col>
-        </Row>
-      )}
+          <div className="w-full md:w-1/2 xl:w-1/4">
+            <RunnerDetailsForm
+              onSubmit={onSubmit}
+              firstname={runnerFirstname}
+              setFirstname={setRunnerFirstname}
+              lastname={runnerLastname}
+              setLastname={setRunnerLastname}
+              gender={runnerGender}
+              setGender={setRunnerGender}
+              birthYear={runnerBirthYear}
+              setBirthYear={setRunnerBirthYear}
+              countryCode={runnerCountryCode}
+              setCountryCode={setRunnerCountryCode}
+              isPublic={runnerIsPublic}
+              setIsPublic={setRunnerIsPublic}
+              submitButtonDisabled={patchRunnerMutation.isPending || !unsavedChanges}
+            />
+          </div>
 
-      {runner !== undefined && (
-        <>
-          <Row>
-            <Col xxl={3} xl={4} lg={6} md={9} sm={12}>
-              <h3>Détails du coureur</h3>
+          <Separator className="my-5" />
 
-              <RunnerDetailsForm
-                onSubmit={onSubmit}
-                firstname={runnerFirstname}
-                setFirstname={setRunnerFirstname}
-                lastname={runnerLastname}
-                setLastname={setRunnerLastname}
-                gender={runnerGender}
-                setGender={setRunnerGender}
-                birthYear={runnerBirthYear}
-                setBirthYear={setRunnerBirthYear}
-                countryCode={runnerCountryCode}
-                setCountryCode={setRunnerCountryCode}
-                isPublic={runnerIsPublic}
-                setIsPublic={setRunnerIsPublic}
-                submitButtonDisabled={patchRunnerMutation.isPending || !unsavedChanges}
+          <h2>Participations</h2>
+
+          {participations === undefined && <CircularLoader />}
+
+          {participations && participations.length <= 0 && (
+            <p>Ce coureur n'est enregistré comme participant sur aucune course.</p>
+          )}
+
+          {participations && participations.length > 0 && (
+            <div>
+              <RunnerParticipationsTable
+                participations={participations}
+                races={races ?? undefined}
+                editions={editions}
               />
-            </Col>
-          </Row>
+            </div>
+          )}
 
-          <Row>
-            <Col>
-              <h3>Participations</h3>
+          <Separator className="my-5" />
 
-              {participations === undefined && <CircularLoader />}
+          <h3>Supprimer le coureur</h3>
 
-              {participations && participations.length <= 0 && (
-                <p>Ce coureur n'est enregistré comme participant sur aucune course.</p>
-              )}
+          <p>
+            Toutes les participations et tous les passages liés à ce coureur seront également supprimés. Cette action
+            est irréversible.
+          </p>
 
-              {participations && participations.length > 0 && (
-                <RunnerParticipationsTable
-                  participations={participations}
-                  races={races ?? undefined}
-                  editions={editions}
-                />
-              )}
-            </Col>
-          </Row>
-
-          <Row>
-            <Col>
-              <h3>Supprimer le coureur</h3>
-
-              <p>
-                Toutes les participations et tous les passages liés à ce coureur seront également supprimés. Cette
-                action est irréversible.
-              </p>
-
-              <button className="button red" onClick={deleteRunner}>
-                Supprimer le coureur
-              </button>
-            </Col>
-          </Row>
-        </>
+          <div>
+            <Button color="red" onClick={deleteRunner}>
+              Supprimer le coureur
+            </Button>
+          </div>
+        </Card>
       )}
     </Page>
   );

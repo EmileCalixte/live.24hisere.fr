@@ -1,6 +1,7 @@
 {
-    "plugins": ["@trivago/prettier-plugin-sort-imports"],
+    "plugins": ["@trivago/prettier-plugin-sort-imports", "prettier-plugin-tailwindcss"],
     "importOrderParserPlugins": ["typescript", "jsx", "decorators-legacy"],
+    "tailwindStylesheet": "./apps/frontend/src/css/index.css",
     "semi": true,
     "singleQuote": false,
     "tabWidth": 2,

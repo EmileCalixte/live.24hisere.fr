@@ -1,46 +1,32 @@
-import type React from "react";
-import { useCallback, useContext, useEffect, useRef } from "react";
-import { appContext } from "../../App";
+import React from "react";
+import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import type { PublicUser } from "@live24hisere/core/types";
+import { appContext } from "../../../contexts/AppContext";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../DropdownMenu";
 
 interface AdminHeaderUserDropdownProps {
-  hideDropdown: () => void;
+  user: PublicUser;
 }
 
-export default function AdminHeaderUserDropdown({ hideDropdown }: AdminHeaderUserDropdownProps): React.ReactElement {
-  const { logout } = useContext(appContext).user;
+export default function AdminHeaderUserDropdown({ user }: AdminHeaderUserDropdownProps): React.ReactElement {
+  const { logout } = React.useContext(appContext).user;
 
-  const dropdownNode = useRef<HTMLDivElement>(null);
-
-  const onClickOutside = useCallback(
-    (e: MouseEvent) => {
-      if (!dropdownNode.current) {
-        return;
-      }
-
-      if (!dropdownNode.current.contains(e.target as Node)) {
-        hideDropdown();
-      }
-    },
-    [dropdownNode, hideDropdown],
-  );
-
-  useEffect(() => {
-    setTimeout(() => {
-      document.addEventListener("click", onClickOutside);
-    }, 0);
-
-    return () => {
-      document.removeEventListener("click", onClickOutside);
-    };
-  }, [onClickOutside]);
+  const [isOpened, setIsOpened] = React.useState(false);
 
   return (
-    <div className="options-dropdown" ref={dropdownNode}>
-      <ul>
-        <li>
-          <button onClick={logout}>Déconnexion</button>
-        </li>
-      </ul>
-    </div>
+    <DropdownMenu onOpenChange={setIsOpened}>
+      <DropdownMenuTrigger asChild>
+        <button className="hover:cursor-pointer">
+          {user.username}
+          <> </>
+          <FontAwesomeIcon icon={isOpened ? faAngleUp : faAngleDown} />
+        </button>
+      </DropdownMenuTrigger>
+
+      <DropdownMenuContent className="mr-2">
+        <DropdownMenuItem onClick={logout}>Déconnexion</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

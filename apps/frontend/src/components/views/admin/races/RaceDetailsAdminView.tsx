@@ -1,8 +1,7 @@
 import React from "react";
 import { faCheck, faFlagCheckered, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Col, Row } from "react-bootstrap";
-import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { stringUtils } from "@live24hisere/utils";
 import { spaceship } from "../../../../../../../packages/utils/src/compare-utils";
 import { useGetAdminEditions } from "../../../../hooks/api/requests/admin/editions/useGetAdminEditions";
@@ -14,9 +13,13 @@ import { getRaceDetailsBreadcrumbs } from "../../../../services/breadcrumbs/brea
 import type { SelectOption } from "../../../../types/Forms";
 import { is404Error } from "../../../../utils/apiUtils";
 import { formatDateForApi } from "../../../../utils/utils";
+import { Card } from "../../../ui/Card";
 import CircularLoader from "../../../ui/CircularLoader";
+import { Button } from "../../../ui/forms/Button";
 import { Input } from "../../../ui/forms/Input";
+import { Link } from "../../../ui/Link";
 import Page from "../../../ui/Page";
+import { Separator } from "../../../ui/Separator";
 import RaceDetailsForm from "../../../viewParts/admin/races/RaceDetailsForm";
 import RaceRunnersTable from "../../../viewParts/admin/races/RaceRunnersTable";
 
@@ -189,165 +192,139 @@ export default function RaceDetailsAdminView(): React.ReactElement {
   return (
     <Page
       id="admin-race-details"
-      title={race === undefined ? "Chargement" : `Détails de la course ${race.name}`}
-      className="d-flex flex-column gap-3"
+      htmlTitle={race === undefined ? "Chargement" : `Détails de la course ${race.name}`}
+      title={race === undefined ? undefined : `Détails de la course ${race.name}`}
+      breadCrumbs={getRaceDetailsBreadcrumbs(edition, race)}
     >
-      <Row>
-        <Col>{getRaceDetailsBreadcrumbs(edition, race)}</Col>
-      </Row>
+      {race === undefined ? (
+        <CircularLoader />
+      ) : (
+        <Card className="flex flex-col gap-3">
+          <h2>Détails de la course</h2>
 
-      {race === undefined && (
-        <Row>
-          <Col>
-            <CircularLoader />
-          </Col>
-        </Row>
-      )}
+          <div className="w-full md:w-1/2 xl:w-1/4">
+            <RaceDetailsForm
+              onSubmit={onSubmit}
+              editionOptions={editionOptions}
+              editionId={raceEditionId}
+              setEditionId={setRaceEditionId}
+              name={raceName}
+              setName={setRaceName}
+              initialDistance={initialDistance}
+              setInitialDistance={setInitialDistance}
+              lapDistance={lapDistance}
+              setLapDistance={setLapDistance}
+              startTime={startTime}
+              setStartTime={setStartTime}
+              duration={duration}
+              setDuration={setDuration}
+              isPublic={isPublic}
+              setIsPublic={setIsPublic}
+              isImmediateStop={isImmediateStop}
+              setIsImmediateStop={setIsImmediateStop}
+              isBasicRanking={isBasicRanking}
+              setIsBasicRanking={setIsBasicRanking}
+              submitButtonDisabled={patchRaceMutation.isPending || getRaceQuery.isPending || !unsavedChanges}
+            />
+          </div>
 
-      {race !== undefined && (
-        <>
-          <Row>
-            <Col xxl={3} xl={4} lg={6} md={9} sm={12}>
-              <h3>Détails de la course</h3>
+          <Separator className="my-5" />
 
-              <RaceDetailsForm
-                onSubmit={onSubmit}
-                editionOptions={editionOptions}
-                editionId={raceEditionId}
-                setEditionId={setRaceEditionId}
-                name={raceName}
-                setName={setRaceName}
-                initialDistance={initialDistance}
-                setInitialDistance={setInitialDistance}
-                lapDistance={lapDistance}
-                setLapDistance={setLapDistance}
-                startTime={startTime}
-                setStartTime={setStartTime}
-                duration={duration}
-                setDuration={setDuration}
-                isPublic={isPublic}
-                setIsPublic={setIsPublic}
-                isImmediateStop={isImmediateStop}
-                setIsImmediateStop={setIsImmediateStop}
-                isBasicRanking={isBasicRanking}
-                setIsBasicRanking={setIsBasicRanking}
-                submitButtonDisabled={patchRaceMutation.isPending || getRaceQuery.isPending || !unsavedChanges}
-              />
-            </Col>
-          </Row>
-
-          <Row>
-            <Col>
-              <h3>Participants</h3>
-            </Col>
-          </Row>
+          <h2 className="flex flex-wrap items-center gap-5">
+            Participants
+            <span className="text-base">
+              <Link to={`/admin/races/${race.id}/add-runner`} variant="button" icon={<FontAwesomeIcon icon={faPlus} />}>
+                Ajouter
+              </Link>
+            </span>
+          </h2>
 
           {raceRunners === undefined && <CircularLoader />}
 
-          {getRaceRunnersQuery.error && (
-            <Row>
-              <Col>
-                <p>Impossible de récupérer les coureurs</p>
-              </Col>
-            </Row>
-          )}
+          {getRaceRunnersQuery.error && <p>Impossible de récupérer les coureurs</p>}
 
           {displayedRaceRunners && (
             <>
-              <Row>
-                <Col className="d-flex gap-2 mb-2">
-                  {isEditingFinalDistances ? (
-                    <button
-                      className="button"
+              {isEditingFinalDistances ? (
+                <div>
+                  <Button
+                    className="button"
+                    icon={<FontAwesomeIcon icon={faCheck} />}
+                    onClick={() => {
+                      void getRaceRunnersQuery.refetch({ cancelRefetch: false }).then(() => {
+                        setIsEditingFinalDistances(false);
+                      });
+                    }}
+                    disabled={getRaceRunnersQuery.isPending}
+                  >
+                    Terminer
+                  </Button>
+                </div>
+              ) : (
+                <div>
+                  {displayedRaceRunners.length > 0 && (
+                    <Button
+                      color="orange"
+                      icon={<FontAwesomeIcon icon={faFlagCheckered} />}
                       onClick={() => {
-                        void getRaceRunnersQuery.refetch({ cancelRefetch: false }).then(() => {
-                          setIsEditingFinalDistances(false);
-                        });
+                        setIsEditingFinalDistances(true);
                       }}
-                      disabled={getRaceRunnersQuery.isPending}
                     >
-                      <FontAwesomeIcon icon={faCheck} className="me-2" />
-                      Terminer
-                    </button>
-                  ) : (
-                    <>
-                      <p className="m-0">
-                        <Link to={`/admin/races/${race.id}/add-runner`} className="button">
-                          <FontAwesomeIcon icon={faPlus} className="me-2" />
-                          Ajouter un coureur
-                        </Link>
-                      </p>
-                      {displayedRaceRunners.length > 0 && (
-                        <button
-                          className="button orange"
-                          onClick={() => {
-                            setIsEditingFinalDistances(true);
-                          }}
-                        >
-                          <FontAwesomeIcon icon={faFlagCheckered} className="me-2" />
-                          Modifier les distances finales
-                        </button>
-                      )}
-                    </>
+                      Modifier les distances finales
+                    </Button>
                   )}
-                </Col>
-              </Row>
-
-              {sortedRaceRunners && sortedRaceRunners.length > 0 && (
-                <Row>
-                  <Col lg={3} md={4} sm={6} xs={12}>
-                    <Input
-                      label="Rechercher"
-                      placeholder="Nom, prénom ou dossard"
-                      autoComplete="off"
-                      value={search}
-                      onChange={(e) => {
-                        setSearch(e.target.value);
-                      }}
-                      disabled={isEditingFinalDistances}
-                    />
-                  </Col>
-                </Row>
+                </div>
               )}
 
-              <Row>
-                <Col>
-                  {displayedRaceRunners.length > 0 && (
-                    <RaceRunnersTable
-                      race={race}
-                      runners={displayedRaceRunners}
-                      isEditingFinalDistances={isEditingFinalDistances}
-                    />
-                  )}
+              {sortedRaceRunners && sortedRaceRunners.length > 0 && (
+                <div className="w-full md:w-1/2 xl:w-1/4">
+                  <Input
+                    label="Rechercher"
+                    placeholder="Nom, prénom ou dossard"
+                    autoComplete="off"
+                    value={search}
+                    onChange={(e) => {
+                      setSearch(e.target.value);
+                    }}
+                    disabled={isEditingFinalDistances}
+                  />
+                </div>
+              )}
 
-                  {sortedRaceRunners && sortedRaceRunners.length > 0 && displayedRaceRunners.length === 0 && (
-                    <p>Aucun coureur ne correspond à cette recherche.</p>
-                  )}
+              {displayedRaceRunners.length > 0 && (
+                <div>
+                  <RaceRunnersTable
+                    race={race}
+                    runners={displayedRaceRunners}
+                    isEditingFinalDistances={isEditingFinalDistances}
+                  />
+                </div>
+              )}
 
-                  {sortedRaceRunners && sortedRaceRunners.length === 0 && (
-                    <p>Aucun coureur ne participe à cette course.</p>
-                  )}
-                </Col>
-              </Row>
+              {sortedRaceRunners && sortedRaceRunners.length > 0 && displayedRaceRunners.length === 0 && (
+                <p>Aucun coureur ne correspond à cette recherche.</p>
+              )}
+
+              {sortedRaceRunners && sortedRaceRunners.length === 0 && <p>Aucun coureur ne participe à cette course.</p>}
             </>
           )}
 
-          <Row>
-            <Col>
-              <h3>Supprimer la course</h3>
+          <Separator className="my-5" />
 
-              {race.runnerCount > 0 ? (
-                <p>La course ne peut pas être supprimée tant qu'elle contient des coureurs.</p>
-              ) : (
-                <p>Cette action est irréversible.</p>
-              )}
+          <h2>Supprimer la course</h2>
 
-              <button className="button red" disabled={race.runnerCount > 0} onClick={deleteRace}>
-                Supprimer la course
-              </button>
-            </Col>
-          </Row>
-        </>
+          {race.runnerCount > 0 ? (
+            <p>La course ne peut pas être supprimée tant qu'elle contient des coureurs.</p>
+          ) : (
+            <p>Cette action est irréversible.</p>
+          )}
+
+          <div>
+            <Button color="red" disabled={race.runnerCount > 0} onClick={deleteRace}>
+              Supprimer la course
+            </Button>
+          </div>
+        </Card>
       )}
     </Page>
   );

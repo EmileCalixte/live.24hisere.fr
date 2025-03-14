@@ -1,37 +1,40 @@
-import type React from "react";
+import React from "react";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Card } from "../Card";
 
 interface BreadcrumbsProps {
   children: React.ReactNode[] | React.ReactNode;
 }
 
 export default function Breadcrumbs({ children }: BreadcrumbsProps): React.ReactElement {
+  const className = "flex gap-2 items-baseline";
+
   if (!Array.isArray(children)) {
     return (
-      <ul className="breadcrumbs">
+      <Card as="ol" className={className}>
         <span>{children}</span>
-      </ul>
+      </Card>
     );
   }
 
   return (
-    <ul className="breadcrumbs">
+    <Card as="ol" className={className}>
       {children.map((child, key) => {
         const renderSeparator = key <= children.length - 2;
 
         return (
-          <span key={key}>
+          <React.Fragment key={key}>
             {child}
 
             {renderSeparator && (
-              <span className="crumb-separator">
+              <span className="text-[0.7em]">
                 <FontAwesomeIcon icon={faChevronRight} />
               </span>
             )}
-          </span>
+          </React.Fragment>
         );
       })}
-    </ul>
+    </Card>
   );
 }

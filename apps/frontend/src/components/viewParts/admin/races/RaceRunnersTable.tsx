@@ -1,9 +1,10 @@
 import type React from "react";
 import { getCategory } from "@emilecalixte/ffa-categories";
-import { Link } from "react-router-dom";
 import type { AdminRace, AdminRunner, RaceRunner } from "@live24hisere/core/types";
 import { getCountryAlpha2CodeFromAlpha3Code } from "../../../../utils/countryUtils";
 import { Flag } from "../../../ui/countries/Flag";
+import { Link } from "../../../ui/Link";
+import { Table, Td, Th, Tr } from "../../../ui/Table";
 import RunnerFinalDistanceQuickEdit from "./RunnerFinalDistanceQuickEdit";
 
 interface RaceRunnersTableProps {
@@ -18,17 +19,17 @@ export default function RaceRunnersTable({
   isEditingFinalDistances,
 }: RaceRunnersTableProps): React.ReactElement {
   return (
-    <table className="table no-full-width">
+    <Table>
       <thead>
-        <tr>
-          <th>Dossard</th>
-          <th>Nom</th>
-          <th>Catégorie</th>
-          <th>Arrêté</th>
-          <th>Visible public</th>
-          <th>Détails du participant</th>
-          {isEditingFinalDistances && <th>Dist. après dernier passage (m)</th>}
-        </tr>
+        <Tr>
+          <Th>Dossard</Th>
+          <Th>Nom</Th>
+          <Th>Catégorie</Th>
+          <Th>Arrêté</Th>
+          <Th>Visible public</Th>
+          <Th>Détails du participant</Th>
+          {isEditingFinalDistances && <Th>Dist. après dernier passage (m)</Th>}
+        </Tr>
       </thead>
       <tbody>
         {runners.map((runner) => {
@@ -36,33 +37,33 @@ export default function RaceRunnersTable({
           const alpha2CountryCode = getCountryAlpha2CodeFromAlpha3Code(runner.countryCode);
 
           return (
-            <tr key={runner.id}>
-              <td>{runner.bibNumber}</td>
-              <td>
-                <span className="d-flex align-items-center gap-2">
+            <Tr key={runner.id}>
+              <Td>{runner.bibNumber}</Td>
+              <Td>
+                <span className="flex items-center gap-2">
                   {alpha2CountryCode && <Flag countryCode={alpha2CountryCode} />}
                   <Link to={`/admin/runners/${runner.id}`}>
                     {runner.firstname} {runner.lastname}
                   </Link>
                 </span>
-              </td>
-              <td>
+              </Td>
+              <Td>
                 {category.code} - {category.name}
-              </td>
-              <td>{runner.stopped ? "Oui" : "Non"}</td>
-              <td>{runner.isPublic ? "Oui" : "Non"}</td>
-              <td>
+              </Td>
+              <Td>{runner.stopped ? "Oui" : "Non"}</Td>
+              <Td>{runner.isPublic ? "Oui" : "Non"}</Td>
+              <Td>
                 <Link to={`/admin/races/${race.id}/runners/${runner.id}`}>Détails</Link>
-              </td>
+              </Td>
               {isEditingFinalDistances && (
-                <td>
+                <Td>
                   <RunnerFinalDistanceQuickEdit runner={runner} />
-                </td>
+                </Td>
               )}
-            </tr>
+            </Tr>
           );
         })}
       </tbody>
-    </table>
+    </Table>
   );
 }

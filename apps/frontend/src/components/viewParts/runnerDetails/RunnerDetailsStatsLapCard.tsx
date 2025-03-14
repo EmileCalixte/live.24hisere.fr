@@ -1,43 +1,48 @@
 import type React from "react";
 import clsx from "clsx";
-import { Col, Row } from "react-bootstrap";
 import type { ProcessedPassage } from "@live24hisere/core/types";
 import { NO_VALUE_PLACEHOLDER } from "../../../constants/misc";
 import { formatMsAsDuration, formatMsDurationHms } from "../../../utils/durationUtils";
+import { Card } from "../../ui/Card";
 
 interface RunnerDetailsStatsLapCardProps {
   title: string;
   passage: ProcessedPassage | null;
+  className?: string;
 }
 
-export function RunnerDetailsStatsLapCard({ title, passage }: RunnerDetailsStatsLapCardProps): React.ReactElement {
+export function RunnerDetailsStatsLapCard({
+  title,
+  passage,
+  className,
+}: RunnerDetailsStatsLapCardProps): React.ReactElement {
   return (
-    <div className="card">
-      <h3 className={clsx("mt-0", !passage && "mb-0")}>
+    <Card className={clsx("flex flex-col gap-3", className)}>
+      <h3>
         {title}&nbsp;: {passage ? formatMsDurationHms(passage.processed.lapDuration) : NO_VALUE_PLACEHOLDER}
       </h3>
 
       {passage && (
-        <Row as="ul" className="no-ul-style gap-y-3">
-          <Col as="li" xxl={12}>
+        <ul className="grid-rows-auto grid grid-cols-2 gap-3">
+          <li className="col-span-full">
             Tour n° {passage.processed.lapNumber}
             <> </>à <strong>{formatMsAsDuration(passage.processed.lapEndRaceTime)}</strong> de course
-          </Col>
+          </li>
 
-          <Col as="li" xl={6} md={12} sm={6} xs={12}>
+          <li className="col-span-2 lg:col-span-1">
             Vitesse&nbsp;: <strong>{passage.processed.lapSpeed.toFixed(2)} km/h</strong>
-          </Col>
+          </li>
 
-          <Col as="li" xl={6} md={12} sm={6} xs={12}>
+          <li className="col-span-2 lg:col-span-1">
             Allure&nbsp;:
             <> </>
             <strong>
               {formatMsDurationHms(passage.processed.lapPace)}
               <> </>/ km
             </strong>
-          </Col>
-        </Row>
+          </li>
+        </ul>
       )}
-    </div>
+    </Card>
   );
 }
