@@ -253,9 +253,9 @@ export default function RunnerDetailsView(): React.ReactElement {
             )}
 
             {selectedRace && !isRaceFinished(selectedRace, serverTimeOffset) && selectedRankingRunner?.stopped && (
-              <p className="font-bold text-red-600">
+              <p className="flex gap-2 font-bold text-red-600">
                 Coureur arrêté
-                <RunnerStoppedTooltip className="ms-2">
+                <RunnerStoppedTooltip>
                   <FontAwesomeIcon icon={faCircleInfo} />
                 </RunnerStoppedTooltip>
               </p>
