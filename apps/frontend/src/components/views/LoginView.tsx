@@ -1,8 +1,9 @@
 import React from "react";
-import { Col, Row } from "react-bootstrap";
 import { Navigate } from "react-router-dom";
 import { appContext } from "../../contexts/AppContext";
 import { useLogin } from "../../hooks/api/requests/auth/useLogin";
+import { Card } from "../ui/Card";
+import { Button } from "../ui/forms/Button";
 import { Input } from "../ui/forms/Input";
 import Page from "../ui/Page";
 
@@ -35,11 +36,10 @@ export default function LoginView(): React.ReactElement {
   }
 
   return (
-    <Page id="login" htmlTitle="Connexion">
-      <Row>
-        <Col xl={3} lg={4} md={6} sm={12}>
-          <h1>Connexion</h1>
-          <form onSubmit={onSubmit}>
+    <Page id="login" htmlTitle="Connexion" title="Connexion">
+      <Card>
+        <div className="w-full md:w-1/2 xl:w-1/4">
+          <form onSubmit={onSubmit} className="flex flex-col gap-3">
             <Input
               label="Nom d'utilisateur"
               name="username"
@@ -53,7 +53,6 @@ export default function LoginView(): React.ReactElement {
 
             <Input
               label="Mot de passe"
-              className="mt-3"
               type="password"
               name="password"
               value={password}
@@ -63,12 +62,14 @@ export default function LoginView(): React.ReactElement {
               }}
             />
 
-            <button className="button mt-3" type="submit" disabled={loginMutation.isPending || !username || !password}>
-              Connexion
-            </button>
+            <div>
+              <Button type="submit" disabled={loginMutation.isPending || !username || !password}>
+                Connexion
+              </Button>
+            </div>
           </form>
-        </Col>
-      </Row>
+        </div>
+      </Card>
     </Page>
   );
 }

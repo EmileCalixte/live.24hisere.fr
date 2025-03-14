@@ -27,13 +27,6 @@ export function useTheme(): UseTheme {
 
     localStorage.setItem("preferredTheme", theme);
     body.setAttribute("theme", theme);
-
-    // Bootstrap specific
-    if (theme === Theme.DARK) {
-      body.setAttribute("data-bs-theme", "dark");
-    } else {
-      body.removeAttribute("data-bs-theme");
-    }
   }, [theme]);
 
   return { theme, setTheme };

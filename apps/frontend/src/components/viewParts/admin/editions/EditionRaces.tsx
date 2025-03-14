@@ -1,5 +1,4 @@
 import React from "react";
-import { Col, Row } from "react-bootstrap";
 import type { AdminRaceWithRunnerCount } from "@live24hisere/core/types";
 import type { useGetAdminEditionRaces } from "../../../../hooks/api/requests/admin/races/useGetAdminEditionRaces";
 import { usePutAdminRaceOrder } from "../../../../hooks/api/requests/admin/races/usePutAdminRaceOrder";
@@ -79,25 +78,18 @@ export default function EditionRaces({ editionId, races, getRacesQuery }: Editio
               disabled={isSaving}
             />
 
-            <Row>
-              <Col>
-                <SortList
-                  items={sortingRaces || []}
-                  keyFunction={(race) => race.id}
-                  setItems={setSortingRaces}
-                  isSorting={isSorting}
-                >
-                  {(race, isDragged, isDraggedOver) => (
-                    <RaceListItem
-                      race={race}
-                      isSorting={isSorting}
-                      isDragged={isDragged}
-                      isDraggedOver={isDraggedOver}
-                    />
-                  )}
-                </SortList>
-              </Col>
-            </Row>
+            <div>
+              <SortList
+                items={sortingRaces || []}
+                keyFunction={(race) => race.id}
+                setItems={setSortingRaces}
+                isSorting={isSorting}
+              >
+                {(race, isDragged, isDraggedOver) => (
+                  <RaceListItem race={race} isSorting={isSorting} isDragged={isDragged} isDraggedOver={isDraggedOver} />
+                )}
+              </SortList>
+            </div>
           </>
         );
       })()}

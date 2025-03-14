@@ -15,6 +15,7 @@ import { useProcessedRunnersWithProcessedHours } from "../../hooks/runners/usePr
 import { useRaceSelectOptions } from "../../hooks/useRaceSelectOptions";
 import { useRanking } from "../../hooks/useRanking";
 import { getCountryAlpha2CodeFromAlpha3Code } from "../../utils/countryUtils";
+import { formatMsAsDuration } from "../../utils/durationUtils";
 import { generateXlsxFromData } from "../../utils/excelUtils";
 import { isRaceFinished } from "../../utils/raceUtils";
 import { getDataForExcelExport, getRaceRunnerFromRunnerAndParticipant } from "../../utils/runnerUtils";
@@ -25,6 +26,7 @@ import Select from "../ui/forms/Select";
 import { Link } from "../ui/Link";
 import Page from "../ui/Page";
 import RunnerStoppedTooltip from "../ui/tooltips/RunnerStoppedTooltip";
+import RaceTimer from "../viewParts/RaceTimer";
 import SpeedChart from "../viewParts/runnerDetails/charts/SpeedChart";
 import RunnerDetailsLaps from "../viewParts/runnerDetails/RunnerDetailsLaps";
 import RunnerDetailsStats from "../viewParts/runnerDetails/RunnerDetailsStats";
@@ -216,22 +218,33 @@ export default function RunnerDetailsView(): React.ReactElement {
               </span>
             </h2>
 
-            <div>
-              {runnerHasMultipleParticipations ? (
-                <div className="w-full md:w-1/2 xl:w-1/4">
-                  <Select
-                    label="Course"
-                    options={runnerRaceOptions}
-                    value={selectedRace?.id}
-                    onChange={(e) => {
-                      void setSelectedRaceId(e.target.value);
-                    }}
-                  />
-                </div>
-              ) : (
-                <p>{stringUtils.joinNonEmpty([selectedRaceEdition?.name, selectedRace?.name], " – ")}</p>
-              )}
-            </div>
+            {selectedRace && (
+              <div className="flex flex-wrap gap-x-3 gap-y-1">
+                {runnerHasMultipleParticipations ? (
+                  <div className="w-full md:w-1/2 xl:w-1/4">
+                    <Select
+                      label="Course"
+                      options={runnerRaceOptions}
+                      value={selectedRace.id}
+                      onChange={(e) => {
+                        void setSelectedRaceId(e.target.value);
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <p>{stringUtils.joinNonEmpty([selectedRaceEdition?.name, selectedRace.name], " – ")}</p>
+                )}
+
+                {!isRaceFinished(selectedRace) && (
+                  <span>
+                    <b>
+                      <RaceTimer race={selectedRace} />
+                    </b>{" "}
+                    / {formatMsAsDuration(selectedRace.duration * 1000)}
+                  </span>
+                )}
+              </div>
+            )}
 
             {selectedParticipation && (
               <p>
