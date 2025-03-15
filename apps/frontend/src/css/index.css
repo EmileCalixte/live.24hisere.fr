@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:where(body[theme="dark"] *));
+@custom-variant dark (&:where(body[data-theme="dark"] *));
 
 @theme {
   --color-app-green-50: oklch(98.06% 0.0179 142.82);
@@ -69,7 +69,7 @@ h6 {
 }
 
 /* The `theme` attribute is added to the body only once React has loaded */
-body[theme="light"] {
+body[data-theme="light"] {
   --color-background: var(--color-neutral-100);
 }
 
@@ -78,11 +78,11 @@ body[theme="light"] {
  */
 
 body,
-body[theme="light"] {
+body[data-theme="light"] {
   --color-text: var(--color-neutral-900);
 }
 
-body[theme="dark"] {
+body[data-theme="dark"] {
   --color-background: var(--color-neutral-900);
   --color-text: var(--color-neutral-200);
 }
