@@ -1,21 +1,28 @@
 import { Injectable } from "@nestjs/common";
-import { and, asc, count, eq, getTableColumns, max } from "drizzle-orm";
-import { AdminEditionWithOrder, AdminEditionWithRaceCount, EditionWithRaceCount } from "@live24hisere/core/types";
+import { and, asc, count, countDistinct, eq, getTableColumns, max } from "drizzle-orm";
+import {
+  AdminEditionWithOrder,
+  AdminEditionWithRaceAndRunnerCount,
+  AdminEditionWithRaceCount,
+  EditionWithRaceCount,
+} from "@live24hisere/core/types";
 import { objectUtils } from "@live24hisere/utils";
-import { TABLE_EDITION, TABLE_RACE } from "../../../../drizzle/schema";
+import { TABLE_EDITION, TABLE_PARTICIPANT, TABLE_RACE } from "../../../../drizzle/schema";
 import { DrizzleTableColumns } from "../../../types/utils/drizzle";
 import { EntityService } from "../entity.service";
 
 @Injectable()
 export class EditionService extends EntityService {
-  async getAdminEditions(): Promise<AdminEditionWithRaceCount[]> {
+  async getAdminEditions(): Promise<AdminEditionWithRaceAndRunnerCount[]> {
     return await this.db
       .select({
         ...this.getAdminEditionColumns(),
-        raceCount: count(TABLE_RACE.id),
+        raceCount: countDistinct(TABLE_RACE.id),
+        runnerCount: countDistinct(TABLE_PARTICIPANT.id),
       })
       .from(TABLE_EDITION)
       .leftJoin(TABLE_RACE, eq(TABLE_RACE.editionId, TABLE_EDITION.id))
+      .leftJoin(TABLE_PARTICIPANT, eq(TABLE_PARTICIPANT.raceId, TABLE_RACE.id))
       .orderBy(asc(TABLE_EDITION.order))
       .groupBy(TABLE_EDITION.id);
   }

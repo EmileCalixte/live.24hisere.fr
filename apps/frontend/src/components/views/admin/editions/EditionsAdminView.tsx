@@ -1,7 +1,7 @@
 import React from "react";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import type { AdminEditionWithRaceCount } from "@live24hisere/core/types";
+import type { AdminEditionWithRaceAndRunnerCount } from "@live24hisere/core/types";
 import { useGetAdminEditions } from "../../../../hooks/api/requests/admin/editions/useGetAdminEditions";
 import { usePutAdminEditionOrder } from "../../../../hooks/api/requests/admin/editions/usePutAdminEditionOrder";
 import { getEditionsBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
@@ -21,7 +21,7 @@ export default function EditionsAdminView(): React.ReactElement {
   const putEditionOrderMutation = usePutAdminEditionOrder();
 
   // Used when user is reordering the list
-  const [sortingEditions, setSortingEditions] = React.useState<AdminEditionWithRaceCount[] | false>(false);
+  const [sortingEditions, setSortingEditions] = React.useState<AdminEditionWithRaceAndRunnerCount[] | false>(false);
   const [isSorting, setIsSorting] = React.useState(false);
   const [isSaving, setIsSaving] = React.useState(false);
 

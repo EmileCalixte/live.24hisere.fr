@@ -1,4 +1,9 @@
-import type { AdminEdition, AdminEditionWithRaceCount, EditionWithRaceCount } from "../Edition";
+import type {
+  AdminEdition,
+  AdminEditionWithRaceAndRunnerCount,
+  AdminEditionWithRaceCount,
+  EditionWithRaceCount,
+} from "../Edition";
 import type { ApiRequest } from "./ApiRequest";
 
 export interface GetEditionsApiRequest extends ApiRequest {
@@ -13,7 +18,7 @@ export interface GetEditionsAdminApiRequest extends ApiRequest {
   payload: never;
 
   response: {
-    editions: AdminEditionWithRaceCount[];
+    editions: AdminEditionWithRaceAndRunnerCount[];
   };
 }
 

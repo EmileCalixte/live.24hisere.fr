@@ -31,4 +31,13 @@ export type EditionWithRaceCount<TEdition extends PublicEdition = PublicEdition>
   raceCount: number;
 };
 
+export type EditionWithRunnerCount<TEdition extends PublicEdition = PublicEdition> = TEdition & {
+  /**
+   * The number of runners taking part in the races in this edition
+   */
+  runnerCount: number;
+};
+
 export type AdminEditionWithRaceCount = EditionWithRaceCount<AdminEdition>;
+
+export type AdminEditionWithRaceAndRunnerCount = EditionWithRaceCount<EditionWithRunnerCount<AdminEdition>>;
