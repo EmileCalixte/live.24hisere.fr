@@ -157,18 +157,11 @@ export default function ResponsiveRankingTableRow({
         )}
       </Td>
       <Td className="relative p-0">
-        {/*
-        This is a little hack to make the clickable link take up the full height of the cell. We can't put a
-        "height: 100%"" element in a cell, so we display our icon with 1% opacity (because 0% doesn't work well on some browsers (hello iOS)),
-        and then on top of that, we set our link with the same icon with "position: absolute; inset: 0" so that it covers all cell
-        */}
-        <span className="opacity-1 px-3">
-          <FontAwesomeIcon icon={faChevronRight} />
-        </span>
-
+        {/* As we cannot set up the link to take all available height in the cel, we use the 'after' pseudo-element to
+        create a clickable zone which covers all the cell. Yes, it works */}
         <Link
           to={`/runner-details/${runner.id}?race=${race.id}`}
-          className="absolute inset-0 flex items-center px-3 text-neutral-500 dark:text-neutral-500"
+          className="flex items-center px-3 text-neutral-500 after:absolute after:inset-0 dark:text-neutral-500"
           aria-label={`Consulter les détails du coureur ${runner.firstname} ${runner.lastname}`}
         >
           <FontAwesomeIcon icon={faChevronRight} />
