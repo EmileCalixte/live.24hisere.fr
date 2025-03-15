@@ -6,7 +6,7 @@ import { prefixNumber } from "../../../utils/utils";
 import { Input } from "./Input";
 
 const LABEL_CLASSNAME = "flex items-center gap-0.5";
-const INPUT_CLASSNAME = "text-[0.9em] w-[6ch]";
+const INPUT_CLASSNAME = "w-[6ch]";
 
 interface DurationInputsProps {
   legend?: string;

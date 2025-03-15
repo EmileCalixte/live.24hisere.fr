@@ -157,12 +157,11 @@ export default function ResponsiveRankingTableRow({
         )}
       </Td>
       <Td className="relative p-0">
-        <span className="px-3 opacity-0">
-          <FontAwesomeIcon icon={faChevronRight} />
-        </span>
+        {/* As we cannot set up the link to take all available height in the cel, we use the 'after' pseudo-element to
+        create a clickable zone which covers all the cell. Yes, it works */}
         <Link
           to={`/runner-details/${runner.id}?race=${race.id}`}
-          className="absolute inset-0 flex items-center px-3 text-neutral-500 dark:text-neutral-500"
+          className="flex items-center px-3 text-neutral-500 after:absolute after:inset-0 dark:text-neutral-500"
           aria-label={`Consulter les détails du coureur ${runner.firstname} ${runner.lastname}`}
         >
           <FontAwesomeIcon icon={faChevronRight} />
