@@ -175,8 +175,8 @@ importers:
   apps/frontend:
     dependencies:
       '@emilecalixte/ffa-categories':
-        specifier: ^0.2.0
-        version: 0.2.0
+        specifier: ^0.2.2
+        version: 0.2.2
       '@emotion/react':
         specifier: ^11.14.0
         version: 11.14.0(@types/react@19.0.10)(react@19.0.0)
@@ -615,8 +615,8 @@ packages:
   '@drizzle-team/brocli@0.10.2':
     resolution: {integrity: sha512-z33Il7l5dKjUgGULTqBsQBQwckHh5AbIuxhdsIxDDiZAzBOrZO6q9ogcWC65kU382AfynTfgNumVcNIjuIua6w==}
 
-  '@emilecalixte/ffa-categories@0.2.0':
-    resolution: {integrity: sha512-ifSBM9lRF4vhClgO5KT1rCG/2aLfEOmC5WHxN972vVjP/RJ/dTffIs1bKvofhoIkxvsQhxqwxrnUN4Qbvm4tsg==}
+  '@emilecalixte/ffa-categories@0.2.2':
+    resolution: {integrity: sha512-9tZiuI1DwyFcrHCYUA/NekqQI2hFMZVOv7OzqYgW0l2pCongpjYQqxEKYL164RBgWENqiYaiA7eKR68xfKYraw==}
 
   '@emotion/babel-plugin@11.13.5':
     resolution: {integrity: sha512-pxHCpT2ex+0q+HH91/zsdHkw/lXd468DIN2zvfvLtPKLLMo6gQj7oLObq8PhkrxOZb/gGCq03S3Z7PDhS8pduQ==}
@@ -7105,7 +7105,7 @@ snapshots:
 
   '@drizzle-team/brocli@0.10.2': {}
 
-  '@emilecalixte/ffa-categories@0.2.0': {}
+  '@emilecalixte/ffa-categories@0.2.2': {}
 
   '@emotion/babel-plugin@11.13.5':
     dependencies:
