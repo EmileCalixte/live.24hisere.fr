@@ -35,5 +35,9 @@ updates:
           - "@types/react"
           - "react-dom"
           - "@types/react-dom"
+      tailwind: # Group tailwindcss and its vite plugin
+        patterns:
+          - "tailwindcss"
+          - "@tailwindcss/vite"
           
 
