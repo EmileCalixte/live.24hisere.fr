@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@emilecalixte/ffa-categories": "^0.2.0",
+    "@emilecalixte/ffa-categories": "^0.2.2",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@fortawesome/fontawesome-common-types": "^6.7.2",
