@@ -39,5 +39,9 @@ updates:
         patterns:
           - "tailwindcss"
           - "@tailwindcss/vite"
+      vitest:
+        patterns:
+          - "vitest"
+          - "@vitest/coverage-v8"
           
 
