@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : database
--- Généré le : mer. 26 fév. 2025 à 19:05
+-- Généré le : lun. 17 mars 2025 à 20:28
 -- Version du serveur : 10.6.14-MariaDB-1:10.6.14+maria~ubu2004
 -- Version de PHP : 8.2.27
 
@@ -22638,6 +22638,47 @@ INSERT INTO `passage` (`id`, `detection_id`, `import_time`, `participant_id`, `t
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `passage_import_rule`
+--
+
+CREATE TABLE `passage_import_rule` (
+  `id` int(11) NOT NULL,
+  `url` varchar(2000) NOT NULL,
+  `is_active` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `passage_import_rule`
+--
+
+INSERT INTO `passage_import_rule` (`id`, `url`, `is_active`) VALUES
+(1, 'http://localhost:8081/dag-passages-24h.txt', 1),
+(2, 'http://localhost:8081/dag-passages-3h-6h-12h.txt', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `passage_import_rule_race`
+--
+
+CREATE TABLE `passage_import_rule_race` (
+  `rule_id` int(11) NOT NULL,
+  `race_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `passage_import_rule_race`
+--
+
+INSERT INTO `passage_import_rule_race` (`rule_id`, `race_id`) VALUES
+(1, 13),
+(2, 16),
+(2, 15),
+(2, 14);
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `race`
 --
 
@@ -23100,7 +23141,8 @@ INSERT INTO `__drizzle_migrations` (`id`, `hash`, `created_at`) VALUES
 (8, 'a65a238793472a476ad1d43c97d964468ef3ce75528fbf5278f7c609b46255d6', 1738964078446),
 (9, '051f59d95ea0d6695ec26f0c8a8b2418ec20589ba7c76a1db3fa52834a0670a5', 1739001336177),
 (10, '4282d7ed97864c0dfd79fad82746a72244093f9e3bb4a205eababe9b5616c360', 1739773074175),
-(11, '50023a80e7d56902f4c96e824f8174e8829265ce8b2ccad62c1b64c2b21ae2b0', 1740596211735);
+(11, '50023a80e7d56902f4c96e824f8174e8829265ce8b2ccad62c1b64c2b21ae2b0', 1740596211735),
+(12, 'e5cf0570c7432683e9356a661dd7e72c717e50b2f2d70bff73b37467b1f597ef', 1742242078530);
 
 --
 -- Index pour les tables déchargées
@@ -23147,6 +23189,19 @@ ALTER TABLE `participant`
 ALTER TABLE `passage`
   ADD PRIMARY KEY (`id`),
   ADD KEY `passage_participant_id_participant_id_fk` (`participant_id`);
+
+--
+-- Index pour la table `passage_import_rule`
+--
+ALTER TABLE `passage_import_rule`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Index pour la table `passage_import_rule_race`
+--
+ALTER TABLE `passage_import_rule_race`
+  ADD KEY `passage_import_rule_race_rule_id_passage_import_rule_id_fk` (`rule_id`),
+  ADD KEY `passage_import_rule_race_race_id_race_id_fk` (`race_id`);
 
 --
 -- Index pour la table `race`
@@ -23198,6 +23253,12 @@ ALTER TABLE `passage`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30329;
 
 --
+-- AUTO_INCREMENT pour la table `passage_import_rule`
+--
+ALTER TABLE `passage_import_rule`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT pour la table `race`
 --
 ALTER TABLE `race`
@@ -23219,7 +23280,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT pour la table `__drizzle_migrations`
 --
 ALTER TABLE `__drizzle_migrations`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- Contraintes pour les tables déchargées
@@ -23243,6 +23304,13 @@ ALTER TABLE `participant`
 --
 ALTER TABLE `passage`
   ADD CONSTRAINT `passage_participant_id_participant_id_fk` FOREIGN KEY (`participant_id`) REFERENCES `participant` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Contraintes pour la table `passage_import_rule_race`
+--
+ALTER TABLE `passage_import_rule_race`
+  ADD CONSTRAINT `passage_import_rule_race_race_id_race_id_fk` FOREIGN KEY (`race_id`) REFERENCES `race` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `passage_import_rule_race_rule_id_passage_import_rule_id_fk` FOREIGN KEY (`rule_id`) REFERENCES `passage_import_rule` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Contraintes pour la table `race`
