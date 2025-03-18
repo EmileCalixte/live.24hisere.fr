@@ -5,28 +5,12 @@ import { TABLE_CONFIG } from "../../../../drizzle/schema";
 import { Config } from "../../../types/Config";
 import { EntityService } from "../entity.service";
 
-const KEY_IMPORT_DAG_FILE_PATH = "import_dag_file_path";
 const KEY_IS_APP_ENABLED = "is_app_enabled";
 const KEY_DISABLED_APP_MESSAGE = "disabled_app_message";
 const KEY_CURRENT_EDITION_ID = "current_edition_id";
 
 @Injectable()
 export class ConfigService extends EntityService {
-  public async getImportDagFilePath(): Promise<string | null> {
-    const config = await this.getLine(KEY_IMPORT_DAG_FILE_PATH);
-
-    return config?.value ?? null;
-  }
-
-  public async setImportDagFilePath(dagFileUrl: string | null): Promise<void> {
-    if (!dagFileUrl) {
-      await this.deleteLine(KEY_IMPORT_DAG_FILE_PATH);
-      return;
-    }
-
-    await this.saveLine(KEY_IMPORT_DAG_FILE_PATH, dagFileUrl.trim());
-  }
-
   public async getIsAppEnabled(): Promise<boolean | null> {
     const config = await this.getLine(KEY_IS_APP_ENABLED);
 

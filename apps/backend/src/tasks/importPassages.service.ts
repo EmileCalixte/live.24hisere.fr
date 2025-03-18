@@ -3,10 +3,12 @@ import { Injectable } from "@nestjs/common";
 import { SchedulerRegistry } from "@nestjs/schedule";
 import { AxiosError } from "axios";
 import { catchError, firstValueFrom } from "rxjs";
+import { PassageImportRule } from "@live24hisere/core/types";
 import { DagFileService } from "../services/dagFile.service";
-import { ConfigService } from "../services/database/entities/config.service";
 import { MiscService } from "../services/database/entities/misc.service";
 import { PassageService } from "../services/database/entities/passage.service";
+import { PassageImportRuleService } from "../services/database/entities/passageImportRule.service";
+import { RaceService } from "../services/database/entities/race.service";
 import { RunnerService } from "../services/database/entities/runner.service";
 import { DagFileLineData } from "../types/Dag";
 import { TaskService } from "./taskService";
@@ -17,13 +19,14 @@ export class ImportPassagesService extends TaskService {
   private static readonly intervalEnvVar = "IMPORT_PASSAGES_TASK_CRON";
 
   constructor(
-    private readonly configService: ConfigService,
-    private readonly miscService: MiscService,
+    protected readonly schedulerRegistry: SchedulerRegistry,
     private readonly dagFileService: DagFileService,
     private readonly httpService: HttpService,
+    private readonly miscService: MiscService,
+    private readonly passageImportRuleService: PassageImportRuleService,
     private readonly passageService: PassageService,
+    private readonly raceService: RaceService,
     private readonly runnerService: RunnerService,
-    protected readonly schedulerRegistry: SchedulerRegistry,
   ) {
     super(schedulerRegistry);
   }
@@ -37,17 +40,42 @@ export class ImportPassagesService extends TaskService {
   }
 
   protected async task(): Promise<void> {
-    const dagFileUrl = await this.configService.getImportDagFilePath();
+    const passageImportRules = await this.passageImportRuleService.getActiveRules();
 
-    if (!dagFileUrl) {
-      this.logger.log("URL to dag file not defined, skipping passages import");
+    const passageImportRuleCount = passageImportRules.length;
+
+    if (passageImportRuleCount < 1) {
+      this.logger.log("No passage import rule defined. Nothing to do.");
       return;
     }
 
-    this.logger.log(`Importing passages from dag file located at ${dagFileUrl}`);
+    this.logger.log(`${passageImportRuleCount} passage import rule${passageImportRuleCount > 1 ? "s" : ""} found`);
+
+    for (const passageImportRule of passageImportRules) {
+      await this.handlePassageImportRule(passageImportRule);
+    }
+
+    await this.miscService.saveLastUpdateTime(new Date());
+
+    this.logger.log("Done");
+  }
+
+  private async handlePassageImportRule(passageImportRule: PassageImportRule): Promise<void> {
+    this.logger.log(`Handling passage import rule for URL ${passageImportRule.url}`);
+
+    const races = await this.raceService.getPassageImportRuleAdminRaces(passageImportRule.id);
+
+    const raceCount = races.length;
+
+    if (raceCount < 1) {
+      this.logger.log(`Rule for URL ${passageImportRule.url} is not linked to any race. Skipping`);
+      return;
+    }
+
+    this.logger.log(`Rule for URL ${passageImportRule.url} is linked to ${raceCount} race${raceCount > 1 ? "s" : ""}`);
 
     const { data } = await firstValueFrom(
-      this.httpService.get<string>(dagFileUrl).pipe(
+      this.httpService.get<string>(passageImportRule.url).pipe(
         catchError((error: AxiosError) => {
           throw new Error(`An error occurred while fetching dag file: ${error.message}`);
         }),
@@ -57,10 +85,6 @@ export class ImportPassagesService extends TaskService {
     this.logger.log(`Successfully downloaded DAG file: ${data.length} bytes`);
 
     // await this.importPassagesFromDagFileContent(data);
-
-    await this.miscService.saveLastUpdateTime(new Date());
-
-    this.logger.log("Done");
   }
 
   private async importPassagesFromDagFileContent(dagFileContent: string): Promise<void> {

@@ -28,6 +28,7 @@ import { EditionService } from "./services/database/entities/edition.service";
 import { MiscService } from "./services/database/entities/misc.service";
 import { ParticipantService } from "./services/database/entities/participant.service";
 import { PassageService } from "./services/database/entities/passage.service";
+import { PassageImportRuleService } from "./services/database/entities/passageImportRule.service";
 import { RaceService } from "./services/database/entities/race.service";
 import { RunnerService } from "./services/database/entities/runner.service";
 import { UserService } from "./services/database/entities/user.service";
@@ -85,6 +86,7 @@ export const dependencies: Dependencies = {
       EditionService,
       MiscService,
       ParticipantService,
+      PassageImportRuleService,
       PassageService,
       RaceService,
       RunnerService,
