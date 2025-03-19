@@ -18,9 +18,9 @@ export interface DagFileLineData {
   detectionType: DagDetectionType;
 
   /**
-   * The ID of the runner
+   * The bib number of the runner
    */
-  runnerId: number;
+  bibNumber: number;
 
   /**
    * The date and time of the passage

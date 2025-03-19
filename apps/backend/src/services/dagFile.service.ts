@@ -17,7 +17,7 @@ export class DagFileService {
     const data: DagFileLineData = {
       detectionId: parseInt(lineItems[0]),
       detectionType: lineItems[5] as DagDetectionType,
-      runnerId: parseInt(lineItems[2]),
+      bibNumber: parseInt(lineItems[2]),
       passageDateTime: new Date(`${dateString}T${timeString}`),
     };
 

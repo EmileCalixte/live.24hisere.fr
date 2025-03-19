@@ -3,15 +3,17 @@ import { Injectable } from "@nestjs/common";
 import { SchedulerRegistry } from "@nestjs/schedule";
 import { AxiosError } from "axios";
 import { catchError, firstValueFrom } from "rxjs";
-import { PassageImportRule } from "@live24hisere/core/types";
+import { AdminRace, PassageImportRule } from "@live24hisere/core/types";
+import { arrayUtils } from "@live24hisere/utils";
 import { DagFileService } from "../services/dagFile.service";
 import { MiscService } from "../services/database/entities/misc.service";
 import { PassageService } from "../services/database/entities/passage.service";
 import { PassageImportRuleService } from "../services/database/entities/passageImportRule.service";
 import { RaceService } from "../services/database/entities/race.service";
 import { RunnerService } from "../services/database/entities/runner.service";
-import { DagFileLineData } from "../types/Dag";
 import { TaskService } from "./taskService";
+
+const IMPORT_PASSAGES_CHUNK_SIZE = 500;
 
 @Injectable()
 export class ImportPassagesService extends TaskService {
@@ -84,50 +86,30 @@ export class ImportPassagesService extends TaskService {
 
     this.logger.log(`Successfully downloaded DAG file: ${data.length} bytes`);
 
-    // await this.importPassagesFromDagFileContent(data);
+    await this.importPassagesFromDagFileContent(data, races);
   }
 
-  private async importPassagesFromDagFileContent(dagFileContent: string): Promise<void> {
+  private async importPassagesFromDagFileContent(dagFileContent: string, races: AdminRace[]): Promise<void> {
     const lines = dagFileContent
       .split(/(\r\n|\n|\r)/)
       .map((line) => line.trim())
       .filter((line) => line.length > 0);
 
-    this.logger.log(`Processing ${lines.length} lines`);
+    this.logger.log(`Processing ${lines.length} lines in chunks of ${IMPORT_PASSAGES_CHUNK_SIZE}`);
 
     const dagData = lines.map((line) => this.dagFileService.getDataFromDagFileLine(line));
+    let totalImported = 0;
 
-    const results = await Promise.all(dagData.map(async (data) => await this.importPassageFromDagLineData(data)));
+    const importTime = new Date();
 
-    const importedPassageCount = results.filter(Boolean).length;
-
-    this.logger.log(`Imported ${importedPassageCount} passages`);
-  }
-
-  private async importPassageFromDagLineData(data: DagFileLineData): Promise<boolean> {
-    const existingPassage = await this.passageService.getPassageByDetectionId(data.detectionId);
-
-    if (existingPassage) {
-      return false;
+    for (const chunk of arrayUtils.chunk(dagData, IMPORT_PASSAGES_CHUNK_SIZE)) {
+      totalImported += await this.passageService.importDagDetections(
+        chunk,
+        races.map((race) => race.id),
+        importTime,
+      );
     }
 
-    const runner = await this.runnerService.getAdminRunnerById(data.runnerId);
-
-    if (!runner) {
-      this.logger.verbose(`Runner with ID ${data.runnerId} not found, skipping detection with ID ${data.detectionId}`);
-      return false;
-    }
-
-    this.logger.verbose(`Importing passage with detection ID ${data.detectionId}`);
-
-    // await this.passageService.createPassage({
-    //   detectionId: data.detectionId,
-    //   importTime: new Date().toISOString(),
-    //   runnerId: runner.id,
-    //   time: data.passageDateTime.toString(),
-    //   isHidden: false,
-    // });
-
-    return true;
+    this.logger.log(`Imported ${totalImported} passages`);
   }
 }

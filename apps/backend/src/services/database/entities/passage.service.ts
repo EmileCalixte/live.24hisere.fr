@@ -1,7 +1,9 @@
 import { Injectable } from "@nestjs/common";
-import { and, asc, eq, getTableColumns } from "drizzle-orm";
+import { and, asc, eq, getTableColumns, sql } from "drizzle-orm";
 import { AdminPassage, AdminPassageWithRunnerIdAndRaceId, PublicPassage } from "@live24hisere/core/types";
+import { dateUtils } from "@live24hisere/utils";
 import { TABLE_PARTICIPANT, TABLE_PASSAGE } from "../../../../drizzle/schema";
+import { DagFileLineData } from "../../../types/Dag";
 import { DrizzleTableColumns } from "../../../types/utils/drizzle";
 import { EntityService } from "../entity.service";
 
@@ -133,6 +135,53 @@ export class PassageService extends EntityService {
     const [resultSetHeader] = await this.db.delete(TABLE_PASSAGE).where(eq(TABLE_PASSAGE.id, passageId));
 
     return !!resultSetHeader.affectedRows;
+  }
+
+  /**
+   * @returns The number of imported passages
+   */
+  async importDagDetections(dagDetections: DagFileLineData[], raceIds: number[], importTime: Date): Promise<number> {
+    if (dagDetections.length < 1) {
+      return 0;
+    }
+
+    const sqlImportTime = dateUtils.formatDateForSql(importTime);
+
+    const statement = sql`
+      INSERT INTO passage (detection_id, import_time, participant_id, time, is_hidden)
+      SELECT DISTINCT
+        d.detection_id AS detection_id,
+        ${sqlImportTime} AS import_time,
+        p.id AS participant_id,
+        d.time AS time,
+        '0' as is_hidden
+      FROM (
+        ${sql.raw(
+          dagDetections
+            .map(
+              (dagDetection) =>
+                `(SELECT
+                ${dagDetection.detectionId} AS detection_id,
+                ${dagDetection.bibNumber} AS bib_number,
+                '${dateUtils.formatDateForSql(dagDetection.passageDateTime)}' AS time
+              )`,
+            )
+            .join(" UNION ALL "),
+        )}
+      ) AS d
+      JOIN participant p ON p.bib_number = d.bib_number
+      WHERE p.race_id IN (${sql.raw(raceIds.join(", "))})
+      AND NOT EXISTS (
+        SELECT 1
+        FROM passage pa
+        WHERE pa.detection_id = d.detection_id
+        AND pa.participant_id = p.id
+      );
+    `;
+
+    const [resultSetHeader] = await this.db.execute(statement);
+
+    return resultSetHeader.affectedRows;
   }
 
   private getPublicPassageColumns(): Pick<DrizzleTableColumns<typeof TABLE_PASSAGE>, "id" | "time"> {
