@@ -1,4 +1,4 @@
-import { customType, mysqlTable, unique } from "drizzle-orm/mysql-core";
+import { customType, mysqlTable, primaryKey, unique } from "drizzle-orm/mysql-core";
 import { ALPHA3_COUNTRY_CODES, GENDERS } from "@live24hisere/core/constants";
 import { dateUtils } from "@live24hisere/utils";
 
@@ -164,13 +164,17 @@ export const TABLE_PASSAGE_IMPORT_RULE = mysqlTable(TABLE_NAME_PASSAGE_IMPORT_RU
   isActive: t.boolean().notNull(),
 }));
 
-export const TABLE_PASSAGE_IMPORT_RULE_RACE = mysqlTable(TABLE_NAME_PASSAGE_IMPORT_RULE_RACE, (t) => ({
-  ruleId: t
-    .int()
-    .references(() => TABLE_PASSAGE_IMPORT_RULE.id)
-    .notNull(),
-  raceId: t
-    .int()
-    .references(() => TABLE_RACE.id)
-    .notNull(),
-}));
+export const TABLE_PASSAGE_IMPORT_RULE_RACE = mysqlTable(
+  TABLE_NAME_PASSAGE_IMPORT_RULE_RACE,
+  (t) => ({
+    ruleId: t
+      .int()
+      .references(() => TABLE_PASSAGE_IMPORT_RULE.id)
+      .notNull(),
+    raceId: t
+      .int()
+      .references(() => TABLE_RACE.id)
+      .notNull(),
+  }),
+  (t) => [primaryKey({ columns: [t.raceId, t.ruleId] })],
+);

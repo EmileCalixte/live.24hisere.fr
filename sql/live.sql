@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : database
--- Généré le : lun. 17 mars 2025 à 20:28
+-- Généré le : mer. 19 mars 2025 à 18:12
 -- Version du serveur : 10.6.14-MariaDB-1:10.6.14+maria~ubu2004
 -- Version de PHP : 8.2.27
 
@@ -22672,9 +22672,9 @@ CREATE TABLE `passage_import_rule_race` (
 
 INSERT INTO `passage_import_rule_race` (`rule_id`, `race_id`) VALUES
 (1, 13),
-(2, 16),
+(2, 14),
 (2, 15),
-(2, 14);
+(2, 16);
 
 -- --------------------------------------------------------
 
@@ -23142,7 +23142,8 @@ INSERT INTO `__drizzle_migrations` (`id`, `hash`, `created_at`) VALUES
 (9, '051f59d95ea0d6695ec26f0c8a8b2418ec20589ba7c76a1db3fa52834a0670a5', 1739001336177),
 (10, '4282d7ed97864c0dfd79fad82746a72244093f9e3bb4a205eababe9b5616c360', 1739773074175),
 (11, '50023a80e7d56902f4c96e824f8174e8829265ce8b2ccad62c1b64c2b21ae2b0', 1740596211735),
-(12, 'e5cf0570c7432683e9356a661dd7e72c717e50b2f2d70bff73b37467b1f597ef', 1742242078530);
+(12, 'e5cf0570c7432683e9356a661dd7e72c717e50b2f2d70bff73b37467b1f597ef', 1742242078530),
+(13, '398ace004ac6098d68c23ccf6d2716f9af5e780858c6785ebb096c851104b5d6', 1742407845667);
 
 --
 -- Index pour les tables déchargées
@@ -23200,6 +23201,7 @@ ALTER TABLE `passage_import_rule`
 -- Index pour la table `passage_import_rule_race`
 --
 ALTER TABLE `passage_import_rule_race`
+  ADD PRIMARY KEY (`race_id`,`rule_id`),
   ADD KEY `passage_import_rule_race_rule_id_passage_import_rule_id_fk` (`rule_id`),
   ADD KEY `passage_import_rule_race_race_id_race_id_fk` (`race_id`);
 
@@ -23280,7 +23282,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT pour la table `__drizzle_migrations`
 --
 ALTER TABLE `__drizzle_migrations`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- Contraintes pour les tables déchargées

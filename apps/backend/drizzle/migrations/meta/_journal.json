@@ -85,6 +85,13 @@
       "when": 1742242078530,
       "tag": "0011_passage-import",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "5",
+      "when": 1742407845667,
+      "tag": "0012_passage-import-rule-race-pk",
+      "breakpoints": true
     }
   ]
 }
