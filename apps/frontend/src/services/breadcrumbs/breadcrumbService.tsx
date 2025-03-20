@@ -28,12 +28,8 @@ export function getFastestLapsBreadcrumbs(): BreadcrumbsElement {
   return getBreadcrumbs([getAdminCrumb(), { label: "Tours les plus rapides" }]);
 }
 
-export function getImportPassagesSettingsBreadcrumbs(): BreadcrumbsElement {
-  return getBreadcrumbs([getAdminCrumb(), { label: "Paramètres d'import des passages" }]);
-}
-
-export function getImportRunnersCsvBreadcrumbs(): BreadcrumbsElement {
-  return getBreadcrumbs([...getRunnersCrumbs(true), { label: "Import via fichier CSV" }]);
+export function getPassageImportRulesBreadcrumbs(): BreadcrumbsElement {
+  return getBreadcrumbs([getAdminCrumb(), { label: "Règles d'import de passages" }]);
 }
 
 export function getRacesBreadcrumbs(): BreadcrumbsElement {

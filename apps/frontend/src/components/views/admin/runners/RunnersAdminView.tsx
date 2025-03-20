@@ -46,7 +46,6 @@ export default function RunnersAdminView(): React.ReactElement {
       title={
         <span className="flex flex-wrap items-center gap-5">
           Coureurs
-          <> </>
           <span className="text-base">
             <Link variant="button" to="/admin/runners/create" icon={<FontAwesomeIcon icon={faPlus} />}>
               Créer

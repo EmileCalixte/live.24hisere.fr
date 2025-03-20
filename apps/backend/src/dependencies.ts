@@ -9,6 +9,7 @@ import { UpdateUserPasswordCommand } from "./commands/updateUserPassword.command
 import { ConfigController } from "./controllers/admin/config.controller";
 import { EditionsController as EditionsControllerAdmin } from "./controllers/admin/editions.controller";
 import { ParticipantsController as ParticipantsControllerAdmin } from "./controllers/admin/participants.controller";
+import { PassageImportRulesController } from "./controllers/admin/passageImportRules.controller";
 import { PassagesController } from "./controllers/admin/passages.controller";
 import { RacesController as RacesControllerAdmin } from "./controllers/admin/races.controller";
 import { RunnersController as RunnersControllerAdmin } from "./controllers/admin/runners.controller";
@@ -72,6 +73,7 @@ export const dependencies: Dependencies = {
       EditionsControllerAdmin,
       ParticipantsControllerAdmin,
       PassagesController,
+      PassageImportRulesController,
       RacesControllerAdmin,
       RunnersControllerAdmin,
       UsersController,

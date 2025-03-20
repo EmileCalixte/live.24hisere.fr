@@ -35,7 +35,7 @@ export const Link = ({
   ...props
 }: LinkProps): React.ReactElement => {
   if (!to) {
-    return <>children</>;
+    return <>{children}</>;
   }
 
   return (
