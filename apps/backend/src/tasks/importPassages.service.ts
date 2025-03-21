@@ -51,7 +51,9 @@ export class ImportPassagesService extends TaskService {
       return;
     }
 
-    this.logger.log(`${passageImportRuleCount} passage import rule${passageImportRuleCount > 1 ? "s" : ""} found`);
+    this.logger.log(
+      `${passageImportRuleCount} active passage import rule${passageImportRuleCount > 1 ? "s" : ""} found`,
+    );
 
     for (const passageImportRule of passageImportRules) {
       await this.handlePassageImportRule(passageImportRule);
@@ -76,17 +78,21 @@ export class ImportPassagesService extends TaskService {
 
     this.logger.log(`Rule for URL ${passageImportRule.url} is linked to ${raceCount} race${raceCount > 1 ? "s" : ""}`);
 
-    const { data } = await firstValueFrom(
-      this.httpService.get<string>(passageImportRule.url).pipe(
-        catchError((error: AxiosError) => {
-          throw new Error(`An error occurred while fetching dag file: ${error.message}`);
-        }),
-      ),
-    );
+    try {
+      const { data } = await firstValueFrom(
+        this.httpService.get<string>(passageImportRule.url).pipe(
+          catchError((error: AxiosError) => {
+            throw new Error(`An error occurred while fetching dag file: ${error.message}`);
+          }),
+        ),
+      );
 
-    this.logger.log(`Successfully downloaded DAG file: ${data.length} bytes`);
+      this.logger.log(`Successfully downloaded DAG file: ${data.length} bytes`);
 
-    await this.importPassagesFromDagFileContent(data, races);
+      await this.importPassagesFromDagFileContent(data, races);
+    } catch (error) {
+      this.logger.error(error);
+    }
   }
 
   private async importPassagesFromDagFileContent(dagFileContent: string, races: AdminRace[]): Promise<void> {
