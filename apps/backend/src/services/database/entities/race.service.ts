@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { and, asc, count, eq, getTableColumns, max } from "drizzle-orm";
+import { and, asc, count, eq, getTableColumns, max, sql } from "drizzle-orm";
 import { AdminRace, AdminRaceWithOrder, AdminRaceWithRunnerCount, RaceWithRunnerCount } from "@live24hisere/core/types";
 import { objectUtils } from "@live24hisere/utils";
 import {
@@ -180,6 +180,28 @@ export class RaceService extends EntityService {
     const result = await this.db.select({ max: max(TABLE_RACE.order) }).from(TABLE_RACE);
 
     return this.getUniqueResult(result)?.max ?? 0;
+  }
+
+  /**
+   * Returns true if all provided IDs correspond to an existing race, false if at least one does not exist
+   */
+  async doAllRacesExist(raceIds: number[]): Promise<boolean> {
+    if (raceIds.length < 1) {
+      return true;
+    }
+
+    const uniqueRaceIds = Array.from(new Set(raceIds));
+
+    const result = await this.db
+      .select({
+        count: count(TABLE_RACE.id),
+      })
+      .from(TABLE_RACE)
+      .where(sql`${TABLE_RACE.id} IN ${uniqueRaceIds}`);
+
+    const { count: raceCount } = this.getUniqueResult(result) ?? { count: 0 };
+
+    return raceCount === uniqueRaceIds.length;
   }
 
   private getPublicRaceColumns(): Omit<DrizzleTableColumns<typeof TABLE_RACE>, "isPublic" | "order"> {

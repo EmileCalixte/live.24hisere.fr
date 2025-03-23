@@ -1,5 +1,5 @@
 import { customType, mysqlTable, primaryKey, unique } from "drizzle-orm/mysql-core";
-import { ALPHA3_COUNTRY_CODES, GENDERS } from "@live24hisere/core/constants";
+import { ALPHA3_COUNTRY_CODES, GENDERS, PASSAGE_IMPORT_RULE_URL_MAX_LENGTH } from "@live24hisere/core/constants";
 import { dateUtils } from "@live24hisere/utils";
 
 const TABLE_NAME_ACCESS_TOKEN = "access_token";
@@ -160,7 +160,7 @@ export const TABLE_ACCESS_TOKEN = mysqlTable(TABLE_NAME_ACCESS_TOKEN, (t) => ({
 
 export const TABLE_PASSAGE_IMPORT_RULE = mysqlTable(TABLE_NAME_PASSAGE_IMPORT_RULE, (t) => ({
   id: t.int().primaryKey().autoincrement(),
-  url: t.varchar({ length: 2000 }).notNull(),
+  url: t.varchar({ length: PASSAGE_IMPORT_RULE_URL_MAX_LENGTH }).notNull(),
   isActive: t.boolean().notNull(),
 }));
 
