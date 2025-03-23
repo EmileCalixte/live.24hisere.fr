@@ -12,12 +12,7 @@ export class PassageImportRuleService extends EntityService {
     const rulesWithRaceIds = await Promise.all(
       rules.map(async (rule) => ({
         ...rule,
-        raceIds: (
-          await this.db
-            .select({ raceId: TABLE_PASSAGE_IMPORT_RULE_RACE.raceId })
-            .from(TABLE_PASSAGE_IMPORT_RULE_RACE)
-            .where(eq(TABLE_PASSAGE_IMPORT_RULE_RACE.ruleId, rule.id))
-        ).map((res) => res.raceId),
+        raceIds: await this.getRuleRaceIds(rule.id),
       })),
     );
 
@@ -26,5 +21,32 @@ export class PassageImportRuleService extends EntityService {
 
   async getActiveRules(): Promise<PassageImportRule[]> {
     return await this.db.select().from(TABLE_PASSAGE_IMPORT_RULE).where(eq(TABLE_PASSAGE_IMPORT_RULE.isActive, true));
+  }
+
+  async getRuleById(ruleId: number): Promise<PassageImportRuleWithRaceIds | null> {
+    const rules = await this.db
+      .select()
+      .from(TABLE_PASSAGE_IMPORT_RULE)
+      .where(eq(TABLE_PASSAGE_IMPORT_RULE.id, ruleId));
+
+    const rule = this.getUniqueResult(rules);
+
+    if (!rule) {
+      return null;
+    }
+
+    return {
+      ...rule,
+      raceIds: await this.getRuleRaceIds(rule.id),
+    };
+  }
+
+  private async getRuleRaceIds(ruleId: number): Promise<number[]> {
+    return (
+      await this.db
+        .select({ raceId: TABLE_PASSAGE_IMPORT_RULE_RACE.raceId })
+        .from(TABLE_PASSAGE_IMPORT_RULE_RACE)
+        .where(eq(TABLE_PASSAGE_IMPORT_RULE_RACE.ruleId, ruleId))
+    ).map((res) => res.raceId);
   }
 }

@@ -28,10 +28,6 @@ export function getFastestLapsBreadcrumbs(): BreadcrumbsElement {
   return getBreadcrumbs([getAdminCrumb(), { label: "Tours les plus rapides" }]);
 }
 
-export function getPassageImportRulesBreadcrumbs(): BreadcrumbsElement {
-  return getBreadcrumbs([getAdminCrumb(), { label: "Règles d'import de passages" }]);
-}
-
 export function getRacesBreadcrumbs(): BreadcrumbsElement {
   return getBreadcrumbs(getRacesCrumbs());
 }
@@ -72,6 +68,18 @@ export function getParticipantBreadcrumbs(
   runner: AdminRunner | undefined,
 ): BreadcrumbsElement {
   return getBreadcrumbs([...getRaceCrumbs(edition, race, true), getRunnerCrumb(runner)]);
+}
+
+export function getPassageImportRulesBreadcrumbs(): BreadcrumbsElement {
+  return getBreadcrumbs(getPassageImportRulesCrumbs());
+}
+
+export function getCreatePassageImportRuleBreadcrumbs(): BreadcrumbsElement {
+  return getBreadcrumbs([...getPassageImportRulesCrumbs(true), { label: "Créer une règle" }]);
+}
+
+export function getEditPassageImportRuleBreadcrumbs(): BreadcrumbsElement {
+  return getBreadcrumbs([...getPassageImportRulesCrumbs(true), { label: "Modifier une règle" }]);
 }
 
 function getAdminCrumb(): CrumbProps {
@@ -150,6 +158,16 @@ function getRunnerCrumb(runner: AdminRunner | undefined): BreadcrumbsItem {
   }
 
   return { label: `${runner.lastname.toUpperCase()} ${runner.firstname}` };
+}
+
+function getPassageImportRulesCrumbs(clickable = false): CrumbProps[] {
+  const passageImportRulesCrumb: CrumbProps = { label: "Règles d'import de passages" };
+
+  if (clickable) {
+    passageImportRulesCrumb.url = "/admin/passage-import-rules";
+  }
+
+  return [getAdminCrumb(), passageImportRulesCrumb];
 }
 
 function getBreadcrumbs(data: BreadcrumbsItem[]): BreadcrumbsElement {

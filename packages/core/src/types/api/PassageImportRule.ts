@@ -8,3 +8,11 @@ export interface GetPassageImportRulesAdminApiRequest extends ApiRequest {
     rules: PassageImportRuleWithRaceIds[];
   };
 }
+
+export interface GetPassageImportRuleAdminApiRequest extends ApiRequest {
+  payload: never;
+
+  response: {
+    rule: PassageImportRuleWithRaceIds;
+  };
+}
