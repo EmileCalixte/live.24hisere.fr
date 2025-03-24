@@ -2,7 +2,9 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
+  HttpCode,
   NotFoundException,
   Param,
   Patch,
@@ -85,6 +87,24 @@ export class PassageImportRulesController {
     return {
       rule: await this.passageImportRuleService.updateRule(rule.id, updateRuleDto),
     };
+  }
+
+  @Delete("/admin/passage-import-rules/:ruleId")
+  @HttpCode(204)
+  async deleteRule(@Param("ruleId") ruleId: string): Promise<void> {
+    const id = Number(ruleId);
+
+    if (isNaN(id)) {
+      throw new BadRequestException("Rule ID must be a number");
+    }
+
+    const rule = await this.passageImportRuleService.getRuleById(id);
+
+    if (!rule) {
+      throw new NotFoundException("Passage import rule not found");
+    }
+
+    await this.passageImportRuleService.deleteRule(id);
   }
 
   private async ensureRaceIdsExist(raceIds: number[]): Promise<void> {

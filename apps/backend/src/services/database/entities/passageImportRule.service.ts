@@ -122,6 +122,23 @@ export class PassageImportRuleService extends EntityService {
     });
   }
 
+  /**
+   * Deletes a passage import rule
+   * @param ruleId The ID of the rule to delete
+   * @returns true if the rule was found and deleted, false otherwise
+   */
+  async deleteRule(ruleId: number): Promise<boolean> {
+    return await this.db.transaction(async (tx) => {
+      await tx.delete(TABLE_PASSAGE_IMPORT_RULE_RACE).where(eq(TABLE_PASSAGE_IMPORT_RULE_RACE.ruleId, ruleId));
+
+      const [resultSetHeader] = await tx
+        .delete(TABLE_PASSAGE_IMPORT_RULE)
+        .where(eq(TABLE_PASSAGE_IMPORT_RULE.id, ruleId));
+
+      return !!resultSetHeader.affectedRows;
+    });
+  }
+
   private async getRuleRaceIds(ruleId: number, tx?: Transaction): Promise<number[]> {
     const db = tx ?? this.db;
 
