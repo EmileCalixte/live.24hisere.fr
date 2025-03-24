@@ -1,10 +1,22 @@
-import { BadRequestException, Body, Controller, Get, NotFoundException, Param, Patch, UseGuards } from "@nestjs/common";
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from "@nestjs/common";
 import {
   ApiResponse,
   GetPassageImportRuleAdminApiRequest,
   GetPassageImportRulesAdminApiRequest,
   PatchPassageImportRuleAdminApiRequest,
+  PostPassageImportRuleAdminApiRequest,
 } from "@live24hisere/core/types";
+import { PassageImportRuleDto } from "../../dtos/passageImportRule/passageImportRule.dto";
 import { AuthGuard } from "../../guards/auth.guard";
 import { PassageImportRuleService } from "../../services/database/entities/passageImportRule.service";
 import { RaceService } from "../../services/database/entities/race.service";
@@ -38,6 +50,13 @@ export class PassageImportRulesController {
     if (!rule) {
       throw new NotFoundException("Passage import rule not found");
     }
+
+    return { rule };
+  }
+
+  @Post("/admin/passage-import-rules")
+  async createRule(@Body() ruleDto: PassageImportRuleDto): Promise<ApiResponse<PostPassageImportRuleAdminApiRequest>> {
+    const rule = await this.passageImportRuleService.createRule(ruleDto);
 
     return { rule };
   }

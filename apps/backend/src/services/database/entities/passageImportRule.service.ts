@@ -52,6 +52,24 @@ export class PassageImportRuleService extends EntityService {
     return this.getUniqueResult(rules);
   }
 
+  async createRule(ruleData: Omit<PassageImportRule, "id">): Promise<PassageImportRuleWithRaceIds> {
+    const result = await this.db.insert(TABLE_PASSAGE_IMPORT_RULE).values(ruleData).$returningId();
+
+    const ruleId = this.getUniqueResult(result)?.id;
+
+    if (ruleId === undefined) {
+      throw new Error("Failed to insert a passage import rule in database (no ID returned)");
+    }
+
+    const newRule = await this.getRuleWithRaceIdsById(ruleId);
+
+    if (!newRule) {
+      throw new Error(`Failed to get created passage import rule data in database (created rule ID: ${ruleId})`);
+    }
+
+    return newRule;
+  }
+
   async updateRule(
     ruleId: number,
     newRuleData: Partial<Omit<PassageImportRuleWithRaceIds, "id">>,
