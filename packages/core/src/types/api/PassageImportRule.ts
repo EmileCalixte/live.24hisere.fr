@@ -32,3 +32,9 @@ export interface PatchPassageImportRuleAdminApiRequest extends ApiRequest {
     rule: PassageImportRuleWithRaceIds;
   };
 }
+
+export interface DeletePassageImportRuleAdminApiRequest extends ApiRequest {
+  payload: never;
+
+  response: never;
+}

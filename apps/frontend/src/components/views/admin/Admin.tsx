@@ -10,6 +10,7 @@ import EditionsAdminView from "./editions/EditionsAdminView";
 import FastestLapsAdminView from "./FastestLapsAdminView";
 import CreateParticipantAdminView from "./participants/CreateParticipantAdminView";
 import ParticipantDetailsAdminView from "./participants/ParticipantDetailsAdminView";
+import CreatePassageImportRuleAdminView from "./passageImportSettings/CreatePassageImportRuleAdminView";
 import PassageImportRuleDetailsAdminView from "./passageImportSettings/PassageImportRuleDetailsAdminView";
 import PassageImportRulesAdminView from "./passageImportSettings/PassageImportRulesAdminView";
 import CreateRaceAdminView from "./races/CreateRaceAdminView";
@@ -46,6 +47,7 @@ export default function Admin(): React.ReactElement {
       <Route path="races/:raceId/runners/:runnerId" element={<ParticipantDetailsAdminView />} />
       <Route path="fastest-laps" element={<FastestLapsAdminView />} />
       <Route path="passage-import-rules" element={<PassageImportRulesAdminView />} />
+      <Route path="passage-import-rules/create" element={<CreatePassageImportRuleAdminView />} />
       <Route path="passage-import-rules/:ruleId" element={<PassageImportRuleDetailsAdminView />} />
       <Route path="disabled-app" element={<DisabledAppAdminView />} />
 

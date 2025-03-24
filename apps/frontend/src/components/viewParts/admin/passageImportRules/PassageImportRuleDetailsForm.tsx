@@ -22,7 +22,7 @@ export default function PassageImportRuleDetailsForm({
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-3">
       <Input
-        label="URL"
+        label="URL du fichier DAG"
         required
         name="url"
         value={url}

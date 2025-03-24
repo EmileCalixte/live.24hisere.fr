@@ -75,13 +75,17 @@ export class PassageImportRuleService extends EntityService {
     newRuleData: Partial<Omit<PassageImportRuleWithRaceIds, "id">>,
   ): Promise<PassageImportRuleWithRaceIds> {
     return await this.db.transaction(async (tx) => {
-      const [resultSetHeader] = await this.db
-        .update(TABLE_PASSAGE_IMPORT_RULE)
-        .set(objectUtils.excludeKeys(newRuleData, ["raceIds"]))
-        .where(eq(TABLE_PASSAGE_IMPORT_RULE.id, ruleId));
+      const ruleDataToSave = objectUtils.excludeKeys(newRuleData, ["raceIds"]);
 
-      if (resultSetHeader.affectedRows === 0) {
-        throw new Error(`Passage import rule with ID ${ruleId} not found in database`);
+      if (Object.keys(ruleDataToSave).length > 0) {
+        const [resultSetHeader] = await this.db
+          .update(TABLE_PASSAGE_IMPORT_RULE)
+          .set(ruleDataToSave)
+          .where(eq(TABLE_PASSAGE_IMPORT_RULE.id, ruleId));
+
+        if (resultSetHeader.affectedRows === 0) {
+          throw new Error(`Passage import rule with ID ${ruleId} not found in database`);
+        }
       }
 
       if (newRuleData.raceIds) {
