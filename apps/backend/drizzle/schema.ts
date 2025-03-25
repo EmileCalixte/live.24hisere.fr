@@ -131,18 +131,6 @@ export const TABLE_PARTICIPANT = mysqlTable(
   (t) => [unique().on(t.raceId, t.runnerId), unique().on(t.raceId, t.bibNumber)],
 );
 
-export const TABLE_PASSAGE = mysqlTable(TABLE_NAME_PASSAGE, (t) => ({
-  id: t.int().primaryKey().autoincrement(),
-  detectionId: t.int(), // Not null if the passage comes from a detection of the timing system
-  importTime: date(DEFAULT_DATE_PARAMS), // same
-  participantId: t
-    .int()
-    .references(() => TABLE_PARTICIPANT.id)
-    .notNull(),
-  time: date(DEFAULT_DATE_PARAMS).notNull(),
-  isHidden: t.boolean().notNull(),
-}));
-
 export const TABLE_USER = mysqlTable(TABLE_NAME_USER, (t) => ({
   id: t.int().primaryKey().autoincrement(),
   username: t.varchar({ length: 32 }).unique().notNull(),
@@ -178,3 +166,16 @@ export const TABLE_PASSAGE_IMPORT_RULE_RACE = mysqlTable(
   }),
   (t) => [primaryKey({ columns: [t.raceId, t.ruleId] })],
 );
+
+export const TABLE_PASSAGE = mysqlTable(TABLE_NAME_PASSAGE, (t) => ({
+  id: t.int().primaryKey().autoincrement(),
+  detectionId: t.int(), // Not null if the passage comes from a detection of the timing system
+  importTime: date(DEFAULT_DATE_PARAMS), // same
+  importRuleId: t.int().references(() => TABLE_PASSAGE_IMPORT_RULE.id),
+  participantId: t
+    .int()
+    .references(() => TABLE_PARTICIPANT.id)
+    .notNull(),
+  time: date(DEFAULT_DATE_PARAMS).notNull(),
+  isHidden: t.boolean().notNull(),
+}));

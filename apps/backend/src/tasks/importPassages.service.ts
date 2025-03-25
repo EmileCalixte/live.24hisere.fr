@@ -10,7 +10,6 @@ import { MiscService } from "../services/database/entities/misc.service";
 import { PassageService } from "../services/database/entities/passage.service";
 import { PassageImportRuleService } from "../services/database/entities/passageImportRule.service";
 import { RaceService } from "../services/database/entities/race.service";
-import { RunnerService } from "../services/database/entities/runner.service";
 import { TaskService } from "./taskService";
 
 const IMPORT_PASSAGES_CHUNK_SIZE = 500;
@@ -28,7 +27,6 @@ export class ImportPassagesService extends TaskService {
     private readonly passageImportRuleService: PassageImportRuleService,
     private readonly passageService: PassageService,
     private readonly raceService: RaceService,
-    private readonly runnerService: RunnerService,
   ) {
     super(schedulerRegistry);
   }
@@ -89,13 +87,17 @@ export class ImportPassagesService extends TaskService {
 
       this.logger.log(`Successfully downloaded DAG file: ${data.length} bytes`);
 
-      await this.importPassagesFromDagFileContent(data, races);
+      await this.importPassagesFromDagFileContent(data, races, passageImportRule);
     } catch (error) {
       this.logger.error(error);
     }
   }
 
-  private async importPassagesFromDagFileContent(dagFileContent: string, races: AdminRace[]): Promise<void> {
+  private async importPassagesFromDagFileContent(
+    dagFileContent: string,
+    races: AdminRace[],
+    passageImportRule: PassageImportRule,
+  ): Promise<void> {
     const lines = dagFileContent
       .split(/(\r\n|\n|\r)/)
       .map((line) => line.trim())
@@ -112,6 +114,7 @@ export class ImportPassagesService extends TaskService {
       totalImported += await this.passageService.importDagDetections(
         chunk,
         races.map((race) => race.id),
+        passageImportRule,
         importTime,
       );
     }

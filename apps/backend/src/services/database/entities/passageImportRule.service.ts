@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { and, eq, sql } from "drizzle-orm";
 import { PassageImportRule, PassageImportRuleWithRaceIds } from "@live24hisere/core/types";
 import { objectUtils } from "@live24hisere/utils";
-import { TABLE_PASSAGE_IMPORT_RULE, TABLE_PASSAGE_IMPORT_RULE_RACE } from "../../../../drizzle/schema";
+import { TABLE_PASSAGE, TABLE_PASSAGE_IMPORT_RULE, TABLE_PASSAGE_IMPORT_RULE_RACE } from "../../../../drizzle/schema";
 import { Transaction } from "../drizzle.service";
 import { EntityService } from "../entity.service";
 
@@ -134,6 +134,8 @@ export class PassageImportRuleService extends EntityService {
   async deleteRule(ruleId: number): Promise<boolean> {
     return await this.db.transaction(async (tx) => {
       await tx.delete(TABLE_PASSAGE_IMPORT_RULE_RACE).where(eq(TABLE_PASSAGE_IMPORT_RULE_RACE.ruleId, ruleId));
+
+      await tx.update(TABLE_PASSAGE).set({ importRuleId: null }).where(eq(TABLE_PASSAGE.importRuleId, ruleId));
 
       const [resultSetHeader] = await tx
         .delete(TABLE_PASSAGE_IMPORT_RULE)

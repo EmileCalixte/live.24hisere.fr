@@ -1,6 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { and, asc, eq, getTableColumns, sql } from "drizzle-orm";
-import { AdminPassage, AdminPassageWithRunnerIdAndRaceId, PublicPassage } from "@live24hisere/core/types";
+import {
+  AdminPassage,
+  AdminPassageWithRunnerIdAndRaceId,
+  PassageImportRule,
+  PublicPassage,
+} from "@live24hisere/core/types";
 import { dateUtils } from "@live24hisere/utils";
 import { TABLE_PARTICIPANT, TABLE_PASSAGE } from "../../../../drizzle/schema";
 import { DagFileLineData } from "../../../types/Dag";
@@ -140,7 +145,12 @@ export class PassageService extends EntityService {
   /**
    * @returns The number of imported passages
    */
-  async importDagDetections(dagDetections: DagFileLineData[], raceIds: number[], importTime: Date): Promise<number> {
+  async importDagDetections(
+    dagDetections: DagFileLineData[],
+    raceIds: number[],
+    passageImportRule: PassageImportRule,
+    importTime: Date,
+  ): Promise<number> {
     if (dagDetections.length < 1) {
       return 0;
     }
@@ -148,10 +158,11 @@ export class PassageService extends EntityService {
     const sqlImportTime = dateUtils.formatDateForSql(importTime);
 
     const statement = sql`
-      INSERT INTO passage (detection_id, import_time, participant_id, time, is_hidden)
+      INSERT INTO passage (detection_id, import_time, import_rule_id, participant_id, time, is_hidden)
       SELECT DISTINCT
         d.detection_id AS detection_id,
         ${sqlImportTime} AS import_time,
+        ${passageImportRule.id} As import_rule_id,
         p.id AS participant_id,
         d.time AS time,
         '0' as is_hidden
@@ -190,8 +201,8 @@ export class PassageService extends EntityService {
     return { id, time };
   }
 
-  private getAdminPassageColumns(): Omit<DrizzleTableColumns<typeof TABLE_PASSAGE>, "participantId"> {
-    const { participantId, ...columns } = getTableColumns(TABLE_PASSAGE);
+  private getAdminPassageColumns(): Omit<DrizzleTableColumns<typeof TABLE_PASSAGE>, "participantId" | "importRuleId"> {
+    const { participantId, importRuleId, ...columns } = getTableColumns(TABLE_PASSAGE);
 
     return columns;
   }
