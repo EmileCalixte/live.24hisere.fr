@@ -39,11 +39,6 @@ export class ConfigController {
     return await this.getDisabledAppData();
   }
 
-  // @Get("/admin/passage-import")
-  // async getPassageImportSettings(): Promise<ApiResponse<GetPassageImportSettingsAdminApiRequest>> {
-  //   return await this.getPassageImportSettingsData();
-  // }
-
   private async getDisabledAppData(): Promise<DisabledAppData> {
     const [isAppEnabled, disabledAppMessage] = await Promise.all([
       this.configService.getIsAppEnabled(),
