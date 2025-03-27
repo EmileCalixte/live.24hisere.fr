@@ -45,7 +45,7 @@ export class ImportPassagesService extends TaskService {
     const passageImportRuleCount = passageImportRules.length;
 
     if (passageImportRuleCount < 1) {
-      this.logger.log("No passage import rule defined. Nothing to do.");
+      this.logger.log("No active passage import rule. Nothing to do.");
       return;
     }
 
