@@ -1,9 +1,11 @@
-import { customType, mysqlTable, unique } from "drizzle-orm/mysql-core";
-import { ALPHA3_COUNTRY_CODES, GENDERS } from "@live24hisere/core/constants";
+import { customType, mysqlTable, primaryKey, unique } from "drizzle-orm/mysql-core";
+import { ALPHA3_COUNTRY_CODES, GENDERS, PASSAGE_IMPORT_RULE_URL_MAX_LENGTH } from "@live24hisere/core/constants";
 import { dateUtils } from "@live24hisere/utils";
 
 const TABLE_NAME_ACCESS_TOKEN = "access_token";
 const TABLE_NAME_CONFIG = "config";
+const TABLE_NAME_PASSAGE_IMPORT_RULE = "passage_import_rule";
+const TABLE_NAME_PASSAGE_IMPORT_RULE_RACE = "passage_import_rule_race";
 const TABLE_NAME_EDITION = "edition";
 const TABLE_NAME_MISC = "misc";
 const TABLE_NAME_PARTICIPANT = "participant";
@@ -129,18 +131,6 @@ export const TABLE_PARTICIPANT = mysqlTable(
   (t) => [unique().on(t.raceId, t.runnerId), unique().on(t.raceId, t.bibNumber)],
 );
 
-export const TABLE_PASSAGE = mysqlTable(TABLE_NAME_PASSAGE, (t) => ({
-  id: t.int().primaryKey().autoincrement(),
-  detectionId: t.int(), // Not null if the passage comes from a detection of the timing system
-  importTime: date(DEFAULT_DATE_PARAMS), // same
-  participantId: t
-    .int()
-    .references(() => TABLE_PARTICIPANT.id)
-    .notNull(),
-  time: date(DEFAULT_DATE_PARAMS).notNull(),
-  isHidden: t.boolean().notNull(),
-}));
-
 export const TABLE_USER = mysqlTable(TABLE_NAME_USER, (t) => ({
   id: t.int().primaryKey().autoincrement(),
   username: t.varchar({ length: 32 }).unique().notNull(),
@@ -154,4 +144,38 @@ export const TABLE_ACCESS_TOKEN = mysqlTable(TABLE_NAME_ACCESS_TOKEN, (t) => ({
     .references(() => TABLE_USER.id)
     .notNull(),
   expirationDate: date(DEFAULT_DATE_PARAMS).notNull(),
+}));
+
+export const TABLE_PASSAGE_IMPORT_RULE = mysqlTable(TABLE_NAME_PASSAGE_IMPORT_RULE, (t) => ({
+  id: t.int().primaryKey().autoincrement(),
+  url: t.varchar({ length: PASSAGE_IMPORT_RULE_URL_MAX_LENGTH }).notNull(),
+  isActive: t.boolean().notNull(),
+}));
+
+export const TABLE_PASSAGE_IMPORT_RULE_RACE = mysqlTable(
+  TABLE_NAME_PASSAGE_IMPORT_RULE_RACE,
+  (t) => ({
+    ruleId: t
+      .int()
+      .references(() => TABLE_PASSAGE_IMPORT_RULE.id)
+      .notNull(),
+    raceId: t
+      .int()
+      .references(() => TABLE_RACE.id)
+      .notNull(),
+  }),
+  (t) => [primaryKey({ columns: [t.raceId, t.ruleId] })],
+);
+
+export const TABLE_PASSAGE = mysqlTable(TABLE_NAME_PASSAGE, (t) => ({
+  id: t.int().primaryKey().autoincrement(),
+  detectionId: t.int(), // Not null if the passage comes from a detection of the timing system
+  importTime: date(DEFAULT_DATE_PARAMS), // same
+  importRuleId: t.int().references(() => TABLE_PASSAGE_IMPORT_RULE.id),
+  participantId: t
+    .int()
+    .references(() => TABLE_PARTICIPANT.id)
+    .notNull(),
+  time: date(DEFAULT_DATE_PARAMS).notNull(),
+  isHidden: t.boolean().notNull(),
 }));

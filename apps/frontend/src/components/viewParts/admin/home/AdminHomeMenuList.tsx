@@ -31,8 +31,8 @@ const menuItems: Array<{
     icon: <FontAwesomeIcon icon={faStopwatch} />,
   },
   {
-    url: "/admin/passage-import-settings",
-    label: "Paramètres d'import des passages",
+    url: "/admin/passage-import-rules",
+    label: "Règles d'import de passages",
     icon: <FontAwesomeIcon icon={faDownload} />,
   },
   {

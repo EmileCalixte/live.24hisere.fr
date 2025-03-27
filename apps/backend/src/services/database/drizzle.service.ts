@@ -1,8 +1,17 @@
 import { Injectable, Logger, OnModuleDestroy, OnModuleInit } from "@nestjs/common";
-import { drizzle, MySql2Database } from "drizzle-orm/mysql2";
+import { ExtractTablesWithRelations } from "drizzle-orm";
+import { drizzle, MySql2Database, MySql2PreparedQueryHKT, MySql2QueryResultHKT } from "drizzle-orm/mysql2";
+import { MySqlTransaction } from "drizzle-orm/mysql-core";
 import mysql from "mysql2/promise";
 import * as schema from "../../../drizzle/schema";
 import { EnvService } from "../env.service";
+
+export type Transaction = MySqlTransaction<
+  MySql2QueryResultHKT,
+  MySql2PreparedQueryHKT,
+  typeof schema,
+  ExtractTablesWithRelations<typeof schema>
+>;
 
 @Injectable()
 export class DrizzleService implements OnModuleInit, OnModuleDestroy {

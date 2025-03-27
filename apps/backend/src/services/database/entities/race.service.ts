@@ -1,8 +1,14 @@
 import { Injectable } from "@nestjs/common";
-import { and, asc, count, eq, getTableColumns, max } from "drizzle-orm";
-import { AdminRaceWithOrder, AdminRaceWithRunnerCount, RaceWithRunnerCount } from "@live24hisere/core/types";
+import { and, asc, count, eq, getTableColumns, max, sql } from "drizzle-orm";
+import { AdminRace, AdminRaceWithOrder, AdminRaceWithRunnerCount, RaceWithRunnerCount } from "@live24hisere/core/types";
 import { objectUtils } from "@live24hisere/utils";
-import { TABLE_EDITION, TABLE_PARTICIPANT, TABLE_RACE, TABLE_RUNNER } from "../../../../drizzle/schema";
+import {
+  TABLE_EDITION,
+  TABLE_PARTICIPANT,
+  TABLE_PASSAGE_IMPORT_RULE_RACE,
+  TABLE_RACE,
+  TABLE_RUNNER,
+} from "../../../../drizzle/schema";
 import { DrizzleTableColumns } from "../../../types/utils/drizzle";
 import { EntityService } from "../entity.service";
 
@@ -32,6 +38,14 @@ export class RaceService extends EntityService {
       .orderBy(asc(TABLE_RACE.order))
       .groupBy(TABLE_RACE.id)
       .where(eq(TABLE_RACE.editionId, editionId));
+  }
+
+  async getPassageImportRuleAdminRaces(ruleId: number): Promise<AdminRace[]> {
+    return await this.db
+      .select({ ...this.getAdminRaceColumns() })
+      .from(TABLE_RACE)
+      .innerJoin(TABLE_PASSAGE_IMPORT_RULE_RACE, eq(TABLE_PASSAGE_IMPORT_RULE_RACE.raceId, TABLE_RACE.id))
+      .where(eq(TABLE_PASSAGE_IMPORT_RULE_RACE.ruleId, ruleId));
   }
 
   async getAdminRaceById(raceId: number): Promise<AdminRaceWithRunnerCount | null> {
@@ -166,6 +180,28 @@ export class RaceService extends EntityService {
     const result = await this.db.select({ max: max(TABLE_RACE.order) }).from(TABLE_RACE);
 
     return this.getUniqueResult(result)?.max ?? 0;
+  }
+
+  /**
+   * Returns true if all provided IDs correspond to an existing race, false if at least one does not exist
+   */
+  async doAllRacesExist(raceIds: number[]): Promise<boolean> {
+    if (raceIds.length < 1) {
+      return true;
+    }
+
+    const uniqueRaceIds = Array.from(new Set(raceIds));
+
+    const result = await this.db
+      .select({
+        count: count(TABLE_RACE.id),
+      })
+      .from(TABLE_RACE)
+      .where(sql`${TABLE_RACE.id} IN ${uniqueRaceIds}`);
+
+    const { count: raceCount } = this.getUniqueResult(result) ?? { count: 0 };
+
+    return raceCount === uniqueRaceIds.length;
   }
 
   private getPublicRaceColumns(): Omit<DrizzleTableColumns<typeof TABLE_RACE>, "isPublic" | "order"> {

@@ -4,6 +4,7 @@ export type * from "./Auth";
 export type * from "./Config";
 export type * from "./Editions";
 export type * from "./Participants";
+export type * from "./PassageImportRule";
 export type * from "./Passages";
 export type * from "./Races";
 export type * from "./Runners";

@@ -26,7 +26,6 @@ export default function RacesAdminView(): React.ReactElement {
       title={
         <span className="flex flex-wrap items-center gap-5">
           Courses
-          <> </>
           <span className="text-base">
             <Link variant="button" to="/admin/races/create" icon={<FontAwesomeIcon icon={faPlus} />}>
               Créer

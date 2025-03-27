@@ -9,6 +9,7 @@ import { UpdateUserPasswordCommand } from "./commands/updateUserPassword.command
 import { ConfigController } from "./controllers/admin/config.controller";
 import { EditionsController as EditionsControllerAdmin } from "./controllers/admin/editions.controller";
 import { ParticipantsController as ParticipantsControllerAdmin } from "./controllers/admin/participants.controller";
+import { PassageImportRulesController } from "./controllers/admin/passageImportRules.controller";
 import { PassagesController } from "./controllers/admin/passages.controller";
 import { RacesController as RacesControllerAdmin } from "./controllers/admin/races.controller";
 import { RunnersController as RunnersControllerAdmin } from "./controllers/admin/runners.controller";
@@ -28,6 +29,7 @@ import { EditionService } from "./services/database/entities/edition.service";
 import { MiscService } from "./services/database/entities/misc.service";
 import { ParticipantService } from "./services/database/entities/participant.service";
 import { PassageService } from "./services/database/entities/passage.service";
+import { PassageImportRuleService } from "./services/database/entities/passageImportRule.service";
 import { RaceService } from "./services/database/entities/race.service";
 import { RunnerService } from "./services/database/entities/runner.service";
 import { UserService } from "./services/database/entities/user.service";
@@ -71,6 +73,7 @@ export const dependencies: Dependencies = {
       EditionsControllerAdmin,
       ParticipantsControllerAdmin,
       PassagesController,
+      PassageImportRulesController,
       RacesControllerAdmin,
       RunnersControllerAdmin,
       UsersController,
@@ -85,6 +88,7 @@ export const dependencies: Dependencies = {
       EditionService,
       MiscService,
       ParticipantService,
+      PassageImportRuleService,
       PassageService,
       RaceService,
       RunnerService,

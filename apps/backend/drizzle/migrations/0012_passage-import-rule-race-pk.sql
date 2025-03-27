@@ -1,0 +1,1 @@
+ALTER TABLE `passage_import_rule_race` ADD PRIMARY KEY(`race_id`,`rule_id`);
