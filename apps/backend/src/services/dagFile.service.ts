@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { fromZonedTime } from "date-fns-tz";
 import { dateUtils } from "@live24hisere/utils";
 import { DagDetectionType, DagFileLineData } from "../types/Dag";
 
@@ -18,7 +19,7 @@ export class DagFileService {
       detectionId: parseInt(lineItems[0]),
       detectionType: lineItems[5] as DagDetectionType,
       bibNumber: parseInt(lineItems[2]),
-      passageDateTime: new Date(`${dateString}T${timeString}`),
+      passageDateTime: fromZonedTime(new Date(`${dateString}T${timeString}`), "Europe/Paris"),
     };
 
     if (!dateUtils.isDateValid(data.passageDateTime)) {
