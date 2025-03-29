@@ -320,7 +320,12 @@ export default function RaceDetailsAdminView(): React.ReactElement {
           )}
 
           <div>
-            <Button color="red" disabled={race.runnerCount > 0} onClick={deleteRace}>
+            <Button
+              color="red"
+              disabled={race.runnerCount > 0}
+              isLoading={deleteRaceMutation.isPending}
+              onClick={deleteRace}
+            >
               Supprimer la course
             </Button>
           </div>

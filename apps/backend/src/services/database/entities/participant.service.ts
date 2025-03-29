@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { and, asc, eq, getTableColumns } from "drizzle-orm";
 import { Participant } from "@live24hisere/core/types";
 import { objectUtils } from "@live24hisere/utils";
-import { TABLE_EDITION, TABLE_PARTICIPANT, TABLE_RACE, TABLE_RUNNER } from "../../../../drizzle/schema";
+import { TABLE_EDITION, TABLE_PARTICIPANT, TABLE_PASSAGE, TABLE_RACE, TABLE_RUNNER } from "../../../../drizzle/schema";
 import { EntityService } from "../entity.service";
 
 @Injectable()
@@ -99,5 +99,15 @@ export class ParticipantService extends EntityService {
     }
 
     return newParticipant;
+  }
+
+  async deleteParticipant(participantId: number): Promise<boolean> {
+    return await this.db.transaction(async (tx) => {
+      await tx.delete(TABLE_PASSAGE).where(eq(TABLE_PASSAGE.participantId, participantId));
+
+      const [resultSetHeader] = await tx.delete(TABLE_PARTICIPANT).where(eq(TABLE_PARTICIPANT.id, participantId));
+
+      return !!resultSetHeader.affectedRows;
+    });
   }
 }
