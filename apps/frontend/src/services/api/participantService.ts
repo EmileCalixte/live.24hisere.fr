@@ -1,5 +1,6 @@
 import type {
   ApiResponse,
+  DeleteParticipantAdminApiRequest,
   GetRaceParticipantAdminApiRequest,
   GetRunnerParticipationsAdminApiRequest,
   GetRunnerParticipationsApiRequest,
@@ -60,5 +61,18 @@ export async function patchAdminRaceRuner(
     accessToken,
     participant,
     { method: "PATCH" },
+  );
+}
+
+export async function deleteAdminParticipant(
+  accessToken: string,
+  raceId: UrlId,
+  runnerId: UrlId,
+): Promise<ApiResponse<DeleteParticipantAdminApiRequest>> {
+  return await performAuthenticatedApiRequest<DeleteParticipantAdminApiRequest>(
+    `/admin/races/${raceId}/runners/${runnerId}`,
+    accessToken,
+    undefined,
+    { method: "DELETE" },
   );
 }

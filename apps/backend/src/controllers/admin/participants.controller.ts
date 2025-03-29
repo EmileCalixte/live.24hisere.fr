@@ -2,7 +2,9 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
+  HttpCode,
   NotFoundException,
   Param,
   Patch,
@@ -103,6 +105,16 @@ export class ParticipantsController {
     const updatedParticipant = await this.participantService.updateParticipant(participant.id, updateParticipantDto);
 
     return { participant: updatedParticipant };
+  }
+
+  @Delete("/admin/races/:raceId/runners/:runnerId")
+  @HttpCode(204)
+  async deleteRaceRunner(@Param("raceId") raceId: string, @Param("runnerId") runnerId: string): Promise<void> {
+    const race = await this.getRace(raceId);
+    const runner = await this.getRunner(runnerId);
+    const participant = await this.getParticipant(race.id, runner.id);
+
+    await this.participantService.deleteParticipant(participant.id);
   }
 
   private async getRunner(runnerId: number | string): Promise<RunnerWithRaceCount<AdminRunner>> {

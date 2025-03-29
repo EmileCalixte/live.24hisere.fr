@@ -39,3 +39,9 @@ export interface PatchParticipantAdminApiRequest extends ApiRequest {
 
   response: PostParticipantAdminApiRequest["response"];
 }
+
+export interface DeleteParticipantAdminApiRequest extends ApiRequest {
+  payload: never;
+
+  response: never;
+}

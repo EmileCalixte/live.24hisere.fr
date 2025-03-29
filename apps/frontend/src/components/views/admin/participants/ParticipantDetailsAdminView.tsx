@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
 import type { AdminProcessedPassage } from "@live24hisere/core/types";
 import { useGetAdminEdition } from "../../../../hooks/api/requests/admin/editions/useGetAdminEdition";
+import { useDeleteAdminRaceRunner } from "../../../../hooks/api/requests/admin/participants/useDeleteAdminRaceRunner";
 import { useGetAdminRaceRunner } from "../../../../hooks/api/requests/admin/participants/useGetAdminRaceRunner";
 import { usePatchAdminRaceRunner } from "../../../../hooks/api/requests/admin/participants/usePatchAdminRaceRunner";
 import { useDeleteAdminPassage } from "../../../../hooks/api/requests/admin/passages/useDeleteAdminPassage";
@@ -45,6 +46,7 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
   const edition = getEditionQuery.data?.edition;
 
   const patchRunnerMutation = usePatchAdminRaceRunner(race?.id, runner?.id);
+  const deleteRunnerMutation = useDeleteAdminRaceRunner(race?.id, runner?.id);
 
   const postPassageMutation = usePostAdminPassage();
   const patchPassageMutation = usePatchAdminPassage();
@@ -194,6 +196,22 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
     });
   };
 
+  function deleteParticipant(): void {
+    if (!race || !runner) {
+      return;
+    }
+
+    if (!window.confirm(`Êtes-vous sûr de vouloir supprimer ce participant et ses passages ?`)) {
+      return;
+    }
+
+    deleteRunnerMutation.mutate(undefined, {
+      onSuccess: () => {
+        void navigate(`/admin/races/${race.id}`);
+      },
+    });
+  }
+
   if (isRaceNotFound) {
     void navigate("/admin");
   }
@@ -268,6 +286,18 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
             saveNewPassage={saveNewPassage}
             deletePassage={deletePassage}
           />
+
+          <Separator className="my-5" />
+
+          <h2>Retirer le coureur de la course</h2>
+
+          {runner.passages.length > 0 && <p>Les {runner.passages.length} du participant seront également supprimés.</p>}
+
+          <div>
+            <Button color="red" isLoading={deleteRunnerMutation.isPending} onClick={deleteParticipant}>
+              Supprimer le participant
+            </Button>
+          </div>
         </Card>
       )}
     </Page>
