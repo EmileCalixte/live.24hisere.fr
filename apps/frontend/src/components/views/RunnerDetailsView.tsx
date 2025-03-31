@@ -219,7 +219,7 @@ export default function RunnerDetailsView(): React.ReactElement {
             </h2>
 
             {selectedRace && (
-              <div className="flex flex-wrap gap-x-3 gap-y-1">
+              <div className="flex flex-wrap items-end gap-x-3 gap-y-1">
                 {runnerHasMultipleParticipations ? (
                   <div className="w-full md:w-1/2 xl:w-1/4">
                     <Select
