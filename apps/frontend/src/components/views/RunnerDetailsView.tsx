@@ -274,7 +274,7 @@ export default function RunnerDetailsView(): React.ReactElement {
                 />
               )}
 
-              {!selectedRace.isBasicRanking && (
+              {!selectedRace.isBasicRanking && selectedRankingRunner.passages.length > 0 && (
                 <RunnerDetailsLaps
                   runner={selectedRankingRunner}
                   race={selectedRace}
