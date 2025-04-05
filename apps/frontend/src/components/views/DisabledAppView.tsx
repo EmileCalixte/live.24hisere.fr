@@ -13,12 +13,7 @@ export default function DisabledAppView(): React.ReactElement {
 
   return (
     <Page id="disabled-app" htmlTitle="Application désactivée">
-      <Card
-        className="mt-3"
-        dangerouslySetInnerHTML={{
-          __html: DOMPurify.sanitize(message),
-        }}
-      >
+      <Card className="mt-3">
         <div
           dangerouslySetInnerHTML={{
             __html: DOMPurify.sanitize(message),
