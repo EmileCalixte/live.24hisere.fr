@@ -40,6 +40,7 @@ import { ImportPassagesService } from "./tasks/importPassages.service";
 import { EditionIdExistsRule } from "./validation/rules/edition/editionIdExists.rule";
 import { RaceIdExistsRule } from "./validation/rules/race/raceIdExists.rule";
 import { RunnerIdExistsRule } from "./validation/rules/runner/runnerIdExists.rule";
+import { ImportWiclaxPassagesCommand } from "./commands/passages/importWiclaxPassages";
 
 type DependencyArray = Type[];
 
@@ -97,6 +98,12 @@ export const dependencies: Dependencies = {
   },
   tasks: [ImportPassagesService],
   validationRules: [EditionIdExistsRule, RaceIdExistsRule, RunnerIdExistsRule],
-  commands: [AnonymizeRunnersCommand, CreateUserCommand, UpdateUserPasswordCommand, MigrateCommand],
+  commands: [
+    AnonymizeRunnersCommand,
+    CreateUserCommand,
+    ImportWiclaxPassagesCommand,
+    UpdateUserPasswordCommand,
+    MigrateCommand,
+  ],
   questionSets: [CreatePasswordQuestionSet, CurrentPasswordQuestionSet, UsernameQuestionSet],
 };

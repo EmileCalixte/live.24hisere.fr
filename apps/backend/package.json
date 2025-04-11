@@ -6,6 +6,7 @@
     "create-user": "node dist/src/cli.js create-user",
     "update-password": "node dist/src/cli.js update-user-password",
     "anonymize-runners": "node dist/src/cli.js anonymize-runners",
+    "import-wiclax": "node dist/src/cli.js import-wiclax-passages",
     "drizzle-kit": "drizzle-kit",
     "createmigration": "drizzle-kit generate --name",
     "migrate": "node dist/src/cli.js migrate",
