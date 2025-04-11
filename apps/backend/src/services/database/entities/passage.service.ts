@@ -195,6 +195,49 @@ export class PassageService extends EntityService {
     return resultSetHeader.affectedRows;
   }
 
+  /**
+   * @returns The number of imported passages
+   */
+  async importDetections(
+    raceId: number,
+    detections: Array<{ bib: number; time: Date }>,
+    importTime: Date,
+  ): Promise<number> {
+    if (detections.length < 1) {
+      return 0;
+    }
+
+    const sqlImportTime = dateUtils.formatDateForSql(importTime);
+
+    const statement = sql`
+      INSERT INTO passage (import_time, participant_id, time, is_hidden)
+      SELECT DISTINCT
+        ${sqlImportTime} AS import_time,
+        p.id AS participant_id,
+        d.time AS time,
+        '0' as is_hidden
+      FROM (
+        ${sql.raw(
+          detections
+            .map(
+              (detection) =>
+                `(SELECT
+                ${detection.bib} AS bib_number,
+                '${dateUtils.formatDateForSql(detection.time)}' AS time
+              )`,
+            )
+            .join(" UNION ALL "),
+        )}
+      ) AS d
+      JOIN participant p ON p.bib_number = d.bib_number
+      WHERE p.race_id = ${raceId}
+    `;
+
+    const [resultSetHeader] = await this.db.execute(statement);
+
+    return resultSetHeader.affectedRows;
+  }
+
   private getPublicPassageColumns(): Pick<DrizzleTableColumns<typeof TABLE_PASSAGE>, "id" | "time"> {
     const { id, time } = getTableColumns(TABLE_PASSAGE);
 
