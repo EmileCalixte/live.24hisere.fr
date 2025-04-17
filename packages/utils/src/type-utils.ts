@@ -7,6 +7,14 @@ export function isNullOrUndefined(value: unknown): value is null | undefined {
 }
 
 /**
+ * Returns true if value is an array
+ * @param value
+ */
+export function isArray(value: unknown): value is unknown[] {
+  return Array.isArray(value);
+}
+
+/**
  * Returns true if a value is not undefined
  * @param value
  */
