@@ -1,4 +1,4 @@
-import { IsBoolean, IsInt, IsNotEmpty, Validate } from "class-validator";
+import { IsBoolean, IsInt, IsNotEmpty, IsString, Validate } from "class-validator";
 import { PostPassageAdminApiRequest } from "@live24hisere/core/types";
 import { RaceIdExistsRule } from "../../validation/rules/race/raceIdExists.rule";
 import { RunnerIdExistsRule } from "../../validation/rules/runner/runnerIdExists.rule";
@@ -24,4 +24,7 @@ export class PassageDto implements PostPassagePayload {
   @IsISO8601UTCDateString()
   @IsNotEmpty()
   time: string;
+
+  @IsString()
+  comment: string | null = null;
 }

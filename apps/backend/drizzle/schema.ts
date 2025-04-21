@@ -178,4 +178,5 @@ export const TABLE_PASSAGE = mysqlTable(TABLE_NAME_PASSAGE, (t) => ({
     .notNull(),
   time: date(DEFAULT_DATE_PARAMS).notNull(),
   isHidden: t.boolean().notNull(),
+  comment: t.text(),
 }));

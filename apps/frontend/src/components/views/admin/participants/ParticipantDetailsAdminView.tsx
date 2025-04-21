@@ -3,6 +3,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
 import type { AdminProcessedPassage } from "@live24hisere/core/types";
+import { stringUtils } from "@live24hisere/utils";
 import { useGetAdminEdition } from "../../../../hooks/api/requests/admin/editions/useGetAdminEdition";
 import { useDeleteAdminRaceRunner } from "../../../../hooks/api/requests/admin/participants/useDeleteAdminRaceRunner";
 import { useGetAdminRaceRunner } from "../../../../hooks/api/requests/admin/participants/useGetAdminRaceRunner";
@@ -101,13 +102,16 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
     );
   }
 
-  function updatePassage(passage: AdminProcessedPassage, time: Date): void {
+  function updatePassage(passage: AdminProcessedPassage, time: Date, comment: string | null): void {
     if (!runner) {
       return;
     }
 
     patchPassageMutation.mutate(
-      { passageId: passage.id, passage: { time: formatDateForApi(time) } },
+      {
+        passageId: passage.id,
+        passage: { time: formatDateForApi(time), comment: stringUtils.nonEmptyOrNull(comment) },
+      },
       {
         onSuccess: () => {
           void getRunnerQuery.refetch();
@@ -116,7 +120,7 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
     );
   }
 
-  function saveNewPassage(time: Date): void {
+  function saveNewPassage(time: Date, comment: string | null): void {
     if (!race || !runner) {
       return;
     }
@@ -127,6 +131,7 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
         runnerId: runner.id,
         isHidden: false,
         time: formatDateForApi(time),
+        comment: stringUtils.nonEmptyOrNull(comment),
       },
       {
         onSuccess: () => {

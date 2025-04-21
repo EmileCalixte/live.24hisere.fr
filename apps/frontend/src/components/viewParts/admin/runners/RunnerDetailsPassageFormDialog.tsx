@@ -4,11 +4,14 @@ import { formatDateAsString } from "../../../../utils/utils";
 import { Dialog, DialogContent, DialogTitle } from "../../../ui/Dialog";
 import { Button } from "../../../ui/forms/Button";
 import DurationInputs from "../../../ui/forms/DurationInputs";
+import { TextArea } from "../../../ui/forms/TextArea";
 
 interface RunnerDetailsPassageFormDialogProps {
   raceTime: number;
   setRaceTime: (raceTime: number) => void;
   time: Date | null;
+  comment: string;
+  setComment: (comment: string) => void;
   title: string;
   onSubmit: (e: React.FormEvent) => Promise<void>;
   submitButtonDisabled: boolean;
@@ -19,6 +22,8 @@ export default function RunnerDetailsPassageFormDialog({
   raceTime,
   setRaceTime,
   time,
+  comment,
+  setComment,
   title,
   onSubmit,
   submitButtonDisabled,
@@ -59,6 +64,15 @@ export default function RunnerDetailsPassageFormDialog({
           <DurationInputs legend="Temps de course" duration={raceTime} setDuration={setRaceTime} />
 
           {time && <p>Date et heure : {formatDateAsString(time)}</p>}
+
+          <TextArea
+            label="Commentaire (optionnel)"
+            resize="none"
+            value={comment}
+            onChange={(e) => {
+              setComment(e.target.value);
+            }}
+          />
 
           <div className="flex justify-between">
             <div>
