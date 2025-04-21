@@ -16,6 +16,14 @@ updates:
       prefix: "chore" # chore
       include: "scope" # deps|deps-dev
     groups:
+      tests:
+        patterns:
+          - "jsdom"
+          - "rollup-plugin-visualizer"
+          - "@nestjs/testing"
+          - "supertest"
+          - "@testing-library/*"
+          - "vitest"
       nestjs: # Group minor/patch updates of nest dependencies
         applies-to: version-updates
         patterns:
@@ -43,5 +51,5 @@ updates:
         patterns:
           - "vitest"
           - "@vitest/coverage-v8"
-          
+
 
