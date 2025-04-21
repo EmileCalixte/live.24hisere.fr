@@ -21,6 +21,7 @@ updates:
           - "jsdom"
           - "rollup-plugin-visualizer"
           - "supertest"
+          - "@types/supertest"
           - "@testing-library/*"
           - "vitest"
       nestjs: # Group minor/patch updates of nest dependencies
