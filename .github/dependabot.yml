@@ -33,6 +33,11 @@ updates:
       drizzle:
         patterns:
           - "drizzle-*"
+      eslint:
+        patterns:
+          - "eslint"
+          - "eslint-*"
+          - "@types/eslint-*"
       fontawesome: # Group all fontawesome dependency updates
         patterns:
           - "@fortawesome/*"
