@@ -58,3 +58,11 @@ export function latinizedEquals(a: string, b: string, caseSensitive = false): bo
 export function joinNonEmpty(strings: Array<string | undefined | null | false>, separator = ", "): string {
   return strings.filter(Boolean).join(separator);
 }
+
+export function nonEmptyOrNull(value: string | null | undefined): string | null {
+  if (value?.trim() === "") {
+    return null;
+  }
+
+  return value ?? null;
+}

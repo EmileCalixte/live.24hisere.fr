@@ -8,6 +8,7 @@ import { formatMsAsDuration } from "../../../../utils/durationUtils";
 import { formatDateAsString } from "../../../../utils/utils";
 import { Button } from "../../../ui/forms/Button";
 import { Table, Td, Th, Tr } from "../../../ui/Table";
+import TruncateText from "../../../ui/text/TruncateText";
 import RunnerDetailsCreatePassageDialog from "../runners/RunnerDetailsCreatePassage";
 import RunnerDetailsEditPassageDialog from "../runners/RunnerDetailsEditPassage";
 
@@ -17,8 +18,8 @@ interface ParticipantDetailsPassagesProps {
   isAddingPassage: boolean;
   setIsAddingPassage: ReactStateSetter<boolean>;
   updatePassageVisiblity: (passage: AdminProcessedPassage, hidden: boolean) => unknown;
-  updatePassage: (passage: AdminProcessedPassage, time: Date) => unknown;
-  saveNewPassage: (time: Date) => unknown;
+  updatePassage: (passage: AdminProcessedPassage, time: Date, comment: string | null) => unknown;
+  saveNewPassage: (time: Date, comment: string | null) => unknown;
   deletePassage: (passage: AdminProcessedPassage) => unknown;
 }
 
@@ -38,23 +39,6 @@ export default function ParticipantDetailsPassages({
   const passageCount = React.useMemo(() => passages.length, [passages]);
 
   const hiddenPassageCount = React.useMemo(() => passages.filter((passage) => passage.isHidden).length, [passages]);
-
-  React.useEffect(() => {
-    const scrollX = window.scrollX;
-    const scrollY = window.scrollY;
-
-    function onScroll(): void {
-      window.scrollTo(scrollX, scrollY);
-    }
-
-    if (editingPassage !== null || isAddingPassage) {
-      window.addEventListener("scroll", onScroll);
-    }
-
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-    };
-  }, [editingPassage, isAddingPassage]);
 
   return (
     <>
@@ -101,6 +85,7 @@ export default function ParticipantDetailsPassages({
                   <Th>Type</Th>
                   <Th>Date et heure</Th>
                   <Th>Temps de course</Th>
+                  <Th>Commentaire</Th>
                   <Th colSpan={3}>Actions</Th>
                 </Tr>
               </thead>
@@ -129,6 +114,7 @@ export default function ParticipantDetailsPassages({
                     <Td className={clsx(passage.isHidden && "line-through")}>
                       {formatMsAsDuration(passage.processed.lapEndRaceTime)}
                     </Td>
+                    <Td>{passage.comment && <TruncateText maxLength={50}>{passage.comment}</TruncateText>}</Td>
                     <Td>
                       {passage.isHidden ? (
                         <Button

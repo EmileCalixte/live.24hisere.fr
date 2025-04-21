@@ -1,12 +1,11 @@
-import type React from "react";
-import { useCallback, useMemo, useState } from "react";
+import React from "react";
 import type { AdminRaceWithRunnerCount } from "@live24hisere/core/types";
 import ToastService from "../../../../services/ToastService";
 import RunnerDetailsPassageFormDialog from "./RunnerDetailsPassageFormDialog";
 
 interface RunnerDetailsCreatePassageProps {
   runnerRace: AdminRaceWithRunnerCount | null;
-  savePassage: (time: Date) => unknown;
+  savePassage: (time: Date, comment: string | null) => unknown;
   onClose: () => void;
 }
 
@@ -15,11 +14,12 @@ export default function RunnerDetailsCreatePassageDialog({
   savePassage,
   onClose,
 }: RunnerDetailsCreatePassageProps): React.ReactElement {
-  const [passageRaceTime, setPassageRaceTime] = useState(0);
+  const [passageRaceTime, setPassageRaceTime] = React.useState(0);
+  const [passageComment, setPassageComment] = React.useState<string | null>(null);
 
-  const [isSaving, setIsSaving] = useState(false);
+  const [isSaving, setIsSaving] = React.useState(false);
 
-  const passageTime = useMemo<Date | null>(() => {
+  const passageTime = React.useMemo<Date | null>(() => {
     if (!runnerRace) {
       return null;
     }
@@ -33,7 +33,7 @@ export default function RunnerDetailsCreatePassageDialog({
     return new Date(raceStartTime.getTime() + passageRaceTime);
   }, [runnerRace, passageRaceTime]);
 
-  const onSubmit = useCallback(
+  const onSubmit = React.useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
 
@@ -46,13 +46,13 @@ export default function RunnerDetailsCreatePassageDialog({
 
       setIsSaving(true);
 
-      await savePassage(passageTime);
+      await savePassage(passageTime, passageComment);
 
       setIsSaving(false);
 
       onClose();
     },
-    [savePassage, passageTime, onClose],
+    [passageTime, savePassage, passageComment, onClose],
   );
 
   return (
@@ -60,6 +60,8 @@ export default function RunnerDetailsCreatePassageDialog({
       raceTime={passageRaceTime}
       setRaceTime={setPassageRaceTime}
       time={passageTime}
+      comment={passageComment ?? ""}
+      setComment={setPassageComment}
       title="Ajouter un passage"
       onSubmit={onSubmit}
       submitButtonDisabled={isSaving}

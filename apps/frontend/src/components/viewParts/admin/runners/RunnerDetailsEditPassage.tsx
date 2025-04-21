@@ -1,13 +1,13 @@
-import type React from "react";
-import { useCallback, useMemo, useState } from "react";
+import React from "react";
 import type { AdminProcessedPassage, AdminRaceWithRunnerCount } from "@live24hisere/core/types";
+import { stringUtils } from "@live24hisere/utils";
 import ToastService from "../../../../services/ToastService";
 import RunnerDetailsPassageFormDialog from "./RunnerDetailsPassageFormDialog";
 
 interface RunnerDetailsEditPassageProps {
   passage: AdminProcessedPassage;
   runnerRace: AdminRaceWithRunnerCount | null;
-  updatePassage: (passage: AdminProcessedPassage, time: Date) => unknown;
+  updatePassage: (passage: AdminProcessedPassage, time: Date, comment: string | null) => unknown;
   onClose: () => void;
 }
 
@@ -17,11 +17,12 @@ export default function RunnerDetailsEditPassageDialog({
   updatePassage,
   onClose,
 }: RunnerDetailsEditPassageProps): React.ReactElement {
-  const [passageRaceTime, setPassageRaceTime] = useState(passage.processed.lapEndRaceTime);
+  const [passageRaceTime, setPassageRaceTime] = React.useState(passage.processed.lapEndRaceTime);
+  const [passageComment, setPassageComment] = React.useState(passage.comment);
 
-  const [isSaving, setIsSaving] = useState(false);
+  const [isSaving, setIsSaving] = React.useState(false);
 
-  const passageTime = useMemo<Date | null>(() => {
+  const passageTime = React.useMemo<Date | null>(() => {
     if (!runnerRace) {
       return null;
     }
@@ -35,12 +36,16 @@ export default function RunnerDetailsEditPassageDialog({
     return new Date(raceStartTime.getTime() + passageRaceTime);
   }, [runnerRace, passageRaceTime]);
 
-  const unsavedChanges = useMemo(
-    () => [passage.processed.lapEndRaceTime === passageRaceTime].includes(false),
-    [passage, passageRaceTime],
+  const unsavedChanges = React.useMemo(
+    () =>
+      [
+        passage.processed.lapEndRaceTime === passageRaceTime,
+        stringUtils.nonEmptyOrNull(passage.comment) === stringUtils.nonEmptyOrNull(passageComment),
+      ].includes(false),
+    [passage.comment, passage.processed.lapEndRaceTime, passageComment, passageRaceTime],
   );
 
-  const onSubmit = useCallback(
+  const onSubmit = React.useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
 
@@ -53,13 +58,13 @@ export default function RunnerDetailsEditPassageDialog({
 
       setIsSaving(true);
 
-      await updatePassage(passage, passageTime);
+      await updatePassage(passage, passageTime, passageComment);
 
       setIsSaving(false);
 
       onClose();
     },
-    [updatePassage, passage, passageTime, onClose],
+    [passageTime, updatePassage, passage, passageComment, onClose],
   );
 
   return (
@@ -67,6 +72,8 @@ export default function RunnerDetailsEditPassageDialog({
       raceTime={passageRaceTime}
       setRaceTime={setPassageRaceTime}
       time={passageTime}
+      comment={passageComment ?? ""}
+      setComment={setPassageComment}
       title={`Modification du passage #${passage.id}`}
       onSubmit={onSubmit}
       submitButtonDisabled={isSaving || !unsavedChanges}
