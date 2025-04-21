@@ -1,0 +1,1 @@
+ALTER TABLE `passage` ADD `comment` text;

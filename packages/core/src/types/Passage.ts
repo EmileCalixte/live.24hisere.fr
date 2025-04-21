@@ -45,6 +45,11 @@ export interface AdminPassage extends PublicPassage {
    * Whether the passage is hidden from public view (if true, the passage is ignored for rankings and statistics)
    */
   isHidden: boolean;
+
+  /**
+   * An additional comment on the passage
+   */
+  comment: string | null;
 }
 
 export type AdminPassageWithRunnerIdAndRaceId<TPassage extends AdminPassage = AdminPassage> =
