@@ -10,7 +10,7 @@ export interface GetAllPassagesOfRaceAdminApiRequest extends ApiRequest {
 }
 
 export interface PostPassageAdminApiRequest extends ApiRequest {
-  payload: Omit<AdminPassageWithRunnerIdAndRaceId, "id" | "detectionId" | "importTime">;
+  payload: Omit<AdminPassageWithRunnerIdAndRaceId, "id" | "origin" | "detectionId" | "importTime">;
 
   response: {
     passage: AdminPassage;
