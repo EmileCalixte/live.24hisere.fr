@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { and, asc, eq, getTableColumns, sql } from "drizzle-orm";
+import { PASSAGE_ORIGIN } from "@live24hisere/core/constants";
 import {
   AdminPassage,
   AdminPassageWithRunnerIdAndRaceId,
@@ -158,11 +159,12 @@ export class PassageService extends EntityService {
     const sqlImportTime = dateUtils.formatDateForSql(importTime);
 
     const statement = sql`
-      INSERT INTO passage (detection_id, import_time, import_rule_id, participant_id, time, is_hidden)
+      INSERT INTO passage (origin, detection_id, import_time, import_rule_id, participant_id, time, is_hidden)
       SELECT DISTINCT
+        ${PASSAGE_ORIGIN.DAG} as origin,
         d.detection_id AS detection_id,
         ${sqlImportTime} AS import_time,
-        ${passageImportRule.id} As import_rule_id,
+        ${passageImportRule.id} AS import_rule_id,
         p.id AS participant_id,
         d.time AS time,
         '0' as is_hidden
@@ -210,8 +212,9 @@ export class PassageService extends EntityService {
     const sqlImportTime = dateUtils.formatDateForSql(importTime);
 
     const statement = sql`
-      INSERT INTO passage (import_time, participant_id, time, is_hidden)
+      INSERT INTO passage (origin, import_time, participant_id, time, is_hidden)
       SELECT DISTINCT
+        ${PASSAGE_ORIGIN.MANUAL} as origin,
         ${sqlImportTime} AS import_time,
         p.id AS participant_id,
         d.time AS time,
