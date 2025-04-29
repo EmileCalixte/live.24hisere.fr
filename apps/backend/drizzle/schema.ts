@@ -1,9 +1,13 @@
 import { customType, mysqlTable, primaryKey, unique } from "drizzle-orm/mysql-core";
 import {
   ALPHA3_COUNTRY_CODES,
+  EDITION_NAME_MAX_LENGTH,
   GENDERS,
   PASSAGE_IMPORT_RULE_URL_MAX_LENGTH,
   PASSAGE_ORIGINS,
+  RACE_NAME_MAX_LENGTH,
+  RUNNER_FIRSTNAME_MAX_LENGTH,
+  RUNNER_LASTNAME_MAX_LENGTH,
 } from "@live24hisere/core/constants";
 import { dateUtils } from "@live24hisere/utils";
 
@@ -81,7 +85,7 @@ export const TABLE_MISC = mysqlTable(TABLE_NAME_MISC, (t) => ({
 
 export const TABLE_EDITION = mysqlTable(TABLE_NAME_EDITION, (t) => ({
   id: t.int().primaryKey().autoincrement(),
-  name: t.varchar({ length: 50 }).notNull().unique(),
+  name: t.varchar({ length: EDITION_NAME_MAX_LENGTH }).notNull().unique(),
   order: t.int().notNull(),
   isPublic: t.boolean().notNull(),
 }));
@@ -94,7 +98,7 @@ export const TABLE_RACE = mysqlTable(
       .int()
       .references(() => TABLE_EDITION.id)
       .notNull(),
-    name: t.varchar({ length: 50 }).notNull(),
+    name: t.varchar({ length: RACE_NAME_MAX_LENGTH }).notNull(),
     startTime: date(DEFAULT_DATE_PARAMS).notNull(),
     duration: t.int({ unsigned: true }).notNull(),
     initialDistance: t.decimal({ precision: 10, scale: 3 }).notNull(),
@@ -109,8 +113,8 @@ export const TABLE_RACE = mysqlTable(
 
 export const TABLE_RUNNER = mysqlTable(TABLE_NAME_RUNNER, (t) => ({
   id: t.int().primaryKey().autoincrement(),
-  firstname: t.varchar({ length: 255 }).notNull(),
-  lastname: t.varchar({ length: 255 }).notNull(),
+  firstname: t.varchar({ length: RUNNER_FIRSTNAME_MAX_LENGTH }).notNull(),
+  lastname: t.varchar({ length: RUNNER_LASTNAME_MAX_LENGTH }).notNull(),
   gender: t.varchar({ length: 1, enum: GENDERS }).notNull(),
   birthYear: t.varchar({ length: 4 }).notNull(),
   countryCode: countryCode(),
