@@ -1,4 +1,5 @@
 export * from "./countries/index.js";
+export * from "./customRunnerCategories/index.js";
 export * from "./editions/index.js";
 export * from "./passageImportRules/index.js";
 export * from "./passages/index.js";
