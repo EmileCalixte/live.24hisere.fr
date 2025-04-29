@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : database
--- Généré le : mer. 23 avr. 2025 à 18:50
+-- Généré le : mar. 29 avr. 2025 à 18:29
 -- Version du serveur : 10.6.14-MariaDB-1:10.6.14+maria~ubu2004
 -- Version de PHP : 8.2.27
 
@@ -94,7 +94,7 @@ CREATE TABLE `misc` (
 --
 
 INSERT INTO `misc` (`key`, `value`) VALUES
-('last_update_time', '2025-04-07T11:12:41.949Z');
+('last_update_time', '2025-04-29T18:29:22.520Z');
 
 -- --------------------------------------------------------
 
@@ -27161,7 +27161,8 @@ CREATE TABLE `passage_import_rule` (
 --
 
 INSERT INTO `passage_import_rule` (`id`, `url`, `is_active`) VALUES
-(1, 'https://daglive.dag-system.com/getdagfile/61141?credential=as2pic&fields=raw', 0);
+(1, 'http://localhost:8081/dag-passages-24h.txt', 1),
+(2, 'http://localhost:8081/dag-passages-3h-6h-12h.txt', 1);
 
 -- --------------------------------------------------------
 
@@ -27179,10 +27180,10 @@ CREATE TABLE `passage_import_rule_race` (
 --
 
 INSERT INTO `passage_import_rule_race` (`rule_id`, `race_id`) VALUES
-(1, 17),
-(1, 18),
-(1, 19),
-(1, 20);
+(1, 13),
+(2, 14),
+(2, 15),
+(2, 16);
 
 -- --------------------------------------------------------
 
@@ -27919,7 +27920,7 @@ ALTER TABLE `passage`
 -- AUTO_INCREMENT pour la table `passage_import_rule`
 --
 ALTER TABLE `passage_import_rule`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT pour la table `race`
