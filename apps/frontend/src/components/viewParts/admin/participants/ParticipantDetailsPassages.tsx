@@ -2,7 +2,8 @@ import React from "react";
 import { faEye, faEyeSlash, faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
-import type { AdminProcessedPassage, AdminRaceWithRunnerCount } from "@live24hisere/core/types";
+import { PASSAGE_ORIGIN } from "@live24hisere/core/constants";
+import type { AdminPassage, AdminProcessedPassage, AdminRaceWithRunnerCount } from "@live24hisere/core/types";
 import type { ReactStateSetter } from "../../../../types/utils/react";
 import { formatMsAsDuration } from "../../../../utils/durationUtils";
 import { formatDateAsString } from "../../../../utils/utils";
@@ -21,6 +22,30 @@ interface ParticipantDetailsPassagesProps {
   updatePassage: (passage: AdminProcessedPassage, time: Date, comment: string | null) => unknown;
   saveNewPassage: (time: Date, comment: string | null) => unknown;
   deletePassage: (passage: AdminProcessedPassage) => unknown;
+}
+
+function formatPassageOrigin(passage: AdminPassage): string {
+  if (passage.origin === PASSAGE_ORIGIN.CSV) {
+    let text = `CSV`;
+
+    if (passage.importTime !== null) {
+      text = `${text} (${formatDateAsString(new Date(passage.importTime))})`;
+    }
+
+    return text;
+  }
+
+  if (passage.origin === PASSAGE_ORIGIN.DAG) {
+    let text = `DAG (${passage.detectionId})`;
+
+    if (passage.importTime !== null) {
+      text = `${text} (${formatDateAsString(new Date(passage.importTime))})`;
+    }
+
+    return text;
+  }
+
+  return "Manuel";
 }
 
 export default function ParticipantDetailsPassages({
@@ -93,21 +118,7 @@ export default function ParticipantDetailsPassages({
                 {passages.map((passage) => (
                   <Tr key={passage.id} className={clsx(passage.isHidden && "passage-hidden")}>
                     <Td className="text-xs">{passage.id}</Td>
-                    <Td className="text-xs">
-                      {(() => {
-                        if (passage.detectionId !== null) {
-                          let text = `Auto (${passage.detectionId})`;
-
-                          if (passage.importTime !== null) {
-                            text = `${text} (${formatDateAsString(new Date(passage.importTime))})`;
-                          }
-
-                          return text;
-                        }
-
-                        return "Manuel";
-                      })()}
-                    </Td>
+                    <Td className="text-xs">{formatPassageOrigin(passage)}</Td>
                     <Td className={clsx(passage.isHidden && "line-through")}>
                       {formatDateAsString(passage.processed.lapEndTime)}
                     </Td>
