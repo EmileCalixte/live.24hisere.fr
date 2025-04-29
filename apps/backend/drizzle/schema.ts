@@ -1,5 +1,10 @@
 import { customType, mysqlTable, primaryKey, unique } from "drizzle-orm/mysql-core";
-import { ALPHA3_COUNTRY_CODES, GENDERS, PASSAGE_IMPORT_RULE_URL_MAX_LENGTH } from "@live24hisere/core/constants";
+import {
+  ALPHA3_COUNTRY_CODES,
+  GENDERS,
+  PASSAGE_IMPORT_RULE_URL_MAX_LENGTH,
+  PASSAGE_ORIGINS,
+} from "@live24hisere/core/constants";
 import { dateUtils } from "@live24hisere/utils";
 
 const TABLE_NAME_ACCESS_TOKEN = "access_token";
@@ -169,6 +174,7 @@ export const TABLE_PASSAGE_IMPORT_RULE_RACE = mysqlTable(
 
 export const TABLE_PASSAGE = mysqlTable(TABLE_NAME_PASSAGE, (t) => ({
   id: t.int().primaryKey().autoincrement(),
+  origin: t.varchar({ length: 255, enum: PASSAGE_ORIGINS }).notNull(),
   detectionId: t.int(), // Not null if the passage comes from a detection of the timing system
   importTime: date(DEFAULT_DATE_PARAMS), // same
   importRuleId: t.int().references(() => TABLE_PASSAGE_IMPORT_RULE.id),

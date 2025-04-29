@@ -11,6 +11,7 @@ import {
   Post,
   UseGuards,
 } from "@nestjs/common";
+import { PASSAGE_ORIGIN } from "@live24hisere/core/constants";
 import {
   ApiResponse,
   GetAllPassagesOfRaceAdminApiRequest,
@@ -49,6 +50,7 @@ export class PassagesController {
 
     const passage = await this.passageService.createPassage(participant.id, {
       ...objectUtils.excludeKeys(passageDto, ["raceId", "runnerId"]),
+      origin: PASSAGE_ORIGIN.MANUAL,
       detectionId: null,
       importTime: null,
     });

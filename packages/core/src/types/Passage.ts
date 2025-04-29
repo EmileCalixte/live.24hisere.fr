@@ -1,5 +1,7 @@
 import type { DateISOString } from "./utils/dates";
 
+export type PassageOrigin = "DAG" | "CSV" | "MANUAL";
+
 /**
  * An object representing a passage of a runner at the timing point
  */
@@ -31,6 +33,11 @@ export type PassageWithRunnerIdAndRaceId<TPassage extends PublicPassage = Public
  * An object representing a passage of a runner at the timing point with additional admin info
  */
 export interface AdminPassage extends PublicPassage {
+  /**
+   * The origin of the passage
+   */
+  origin: PassageOrigin;
+
   /**
    * Not null if the passage comes from a detection of the timing system
    */
