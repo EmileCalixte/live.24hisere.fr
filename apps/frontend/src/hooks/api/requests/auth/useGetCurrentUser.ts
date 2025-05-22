@@ -22,7 +22,6 @@ export function useGetCurrentUser(accessToken: string | null, forgetAccessToken:
           forgetAccessToken();
         }
 
-        // eslint-disable-next-line @typescript-eslint/only-throw-error
         throw error;
       }
     },

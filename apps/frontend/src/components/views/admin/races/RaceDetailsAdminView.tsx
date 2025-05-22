@@ -110,8 +110,8 @@ export default function RaceDetailsAdminView(): React.ReactElement {
     return [
       raceEditionId === race.editionId,
       raceName === race.name,
-      initialDistance.toString() === race.initialDistance.toString(),
-      lapDistance.toString() === race.lapDistance.toString(),
+      initialDistance.toString() === race.initialDistance,
+      lapDistance.toString() === race.lapDistance,
       startTime.getTime() === new Date(race.startTime).getTime(),
       duration === race.duration * 1000,
       isPublic === race.isPublic,
