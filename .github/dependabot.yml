@@ -24,6 +24,7 @@ updates:
           - "@types/supertest"
           - "@testing-library/*"
           - "vitest"
+          - "@vitest/coverage-v8"
       nestjs: # Group minor/patch updates of nest dependencies
         applies-to: version-updates
         patterns:
@@ -52,9 +53,5 @@ updates:
         patterns:
           - "tailwindcss"
           - "@tailwindcss/vite"
-      vitest:
-        patterns:
-          - "vitest"
-          - "@vitest/coverage-v8"
 
 
