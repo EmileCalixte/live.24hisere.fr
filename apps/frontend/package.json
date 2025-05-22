@@ -37,7 +37,7 @@
     "vite": "^6.3.5",
     "vite-plugin-svgr": "^4.3.0",
     "vite-tsconfig-paths": "^5.1.4",
-    "web-vitals": "^4.2.4",
+    "web-vitals": "^5.0.1",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
