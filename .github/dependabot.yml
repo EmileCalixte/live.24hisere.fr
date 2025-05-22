@@ -18,6 +18,7 @@ updates:
     groups:
       tests:
         patterns:
+          - "jest-extended"
           - "jsdom"
           - "rollup-plugin-visualizer"
           - "supertest"
