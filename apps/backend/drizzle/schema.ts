@@ -1,6 +1,8 @@
 import { customType, mysqlTable, primaryKey, unique } from "drizzle-orm/mysql-core";
 import {
   ALPHA3_COUNTRY_CODES,
+  CUSTOM_RUNNER_CATEGORY_CODE_MAX_LENGTH,
+  CUSTOM_RUNNER_CATEGORY_NAME_MAX_LENGTH,
   EDITION_NAME_MAX_LENGTH,
   GENDERS,
   PASSAGE_IMPORT_RULE_URL_MAX_LENGTH,
@@ -13,6 +15,7 @@ import { dateUtils } from "@live24hisere/utils";
 
 const TABLE_NAME_ACCESS_TOKEN = "access_token";
 const TABLE_NAME_CONFIG = "config";
+const TABLE_NAME_CUSTOM_RUNNER_CATEGORY = "custom_runner_category";
 const TABLE_NAME_PASSAGE_IMPORT_RULE = "passage_import_rule";
 const TABLE_NAME_PASSAGE_IMPORT_RULE_RACE = "passage_import_rule_race";
 const TABLE_NAME_EDITION = "edition";
@@ -121,6 +124,12 @@ export const TABLE_RUNNER = mysqlTable(TABLE_NAME_RUNNER, (t) => ({
   isPublic: t.boolean().notNull(),
 }));
 
+export const TABLE_CUSTOM_RUNNER_CATEGORY = mysqlTable(TABLE_NAME_CUSTOM_RUNNER_CATEGORY, (t) => ({
+  id: t.int().primaryKey().autoincrement(),
+  code: t.varchar({ length: CUSTOM_RUNNER_CATEGORY_CODE_MAX_LENGTH }).notNull().unique(),
+  name: t.varchar({ length: CUSTOM_RUNNER_CATEGORY_NAME_MAX_LENGTH }).notNull(),
+}));
+
 export const TABLE_PARTICIPANT = mysqlTable(
   TABLE_NAME_PARTICIPANT,
   (t) => ({
@@ -134,6 +143,7 @@ export const TABLE_PARTICIPANT = mysqlTable(
       .references(() => TABLE_RUNNER.id)
       .notNull(),
     bibNumber: t.int().notNull(),
+    customCategoryId: t.int().references(() => TABLE_CUSTOM_RUNNER_CATEGORY.id),
     stopped: t.boolean().notNull(),
     finalDistance: t.decimal({ precision: 10, scale: 3 }).notNull(),
   }),
