@@ -67,7 +67,7 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
     return [
       participantBibNumber === runner.bibNumber,
       participantIsStopped === runner.stopped,
-      participantFinalDistance.toString() === runner.finalDistance.toString(),
+      participantFinalDistance.toString() === runner.finalDistance,
     ].includes(false);
   }, [runner, participantBibNumber, participantIsStopped, participantFinalDistance]);
 

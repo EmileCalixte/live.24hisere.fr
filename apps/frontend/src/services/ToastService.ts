@@ -14,9 +14,7 @@ class ToastService {
   }
 
   private static getInstance(): ToastService {
-    if (ToastService.instance === null) {
-      ToastService.instance = new ToastService();
-    }
+    ToastService.instance ??= new ToastService();
 
     return ToastService.instance;
   }

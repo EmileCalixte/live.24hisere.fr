@@ -250,7 +250,7 @@ export function spaceshipRunners(
   isRaceFinished: boolean,
 ): ReturnType<typeof compareUtils.spaceship> {
   if (isBasicRanking) {
-    return compareUtils.spaceship(Number(runner2.totalDistance), Number(runner1.totalDistance));
+    return compareUtils.spaceship(runner2.totalDistance, runner1.totalDistance);
   }
 
   if (isRaceFinished) {
@@ -264,7 +264,7 @@ export function spaceshipRunners(
       return compareUtils.spaceship(runner1.lastPassageTime?.raceTime, runner2.lastPassageTime?.raceTime);
     }
 
-    return compareUtils.spaceship(Number(runner2.totalDistance), Number(runner1.totalDistance));
+    return compareUtils.spaceship(runner2.totalDistance, runner1.totalDistance);
   }
 
   const runner1PassageCount = runner1.passages.length;
