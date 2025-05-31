@@ -1,10 +1,9 @@
 import React from "react";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useGetAdminPassageImportRules } from "../../../../hooks/api/requests/admin/passageImportRules/useGetAdminPassageImportRules";
 import { useGetAdminRaces } from "../../../../hooks/api/requests/admin/races/useGetAdminRaces";
 import { getPassageImportRulesBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import { getRaceDictFromRaces } from "../../../../utils/raceUtils";
+import ComplexPageTitle from "../../../ComplexPageTitle";
 import { Card } from "../../../ui/Card";
 import CircularLoader from "../../../ui/CircularLoader";
 import { Link } from "../../../ui/Link";
@@ -31,14 +30,9 @@ export default function PassageImportRulesAdminView(): React.ReactElement {
       id="admin-passage-import-rules"
       htmlTitle="Règles d'import de passages"
       title={
-        <span className="flex flex-wrap items-center gap-5">
+        <ComplexPageTitle createButtonUrl="/admin/passage-import-rules/create">
           Règles d'import de passages
-          <span className="text-base">
-            <Link variant="button" to="/admin/passage-import-rules/create" icon={<FontAwesomeIcon icon={faPlus} />}>
-              Créer
-            </Link>
-          </span>
-        </span>
+        </ComplexPageTitle>
       }
       breadCrumbs={getPassageImportRulesBreadcrumbs()}
     >

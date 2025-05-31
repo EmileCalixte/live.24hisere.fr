@@ -1,14 +1,12 @@
 import React from "react";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { AdminEditionWithRaceAndRunnerCount } from "@live24hisere/core/types";
 import { useGetAdminEditions } from "../../../../hooks/api/requests/admin/editions/useGetAdminEditions";
 import { usePutAdminEditionOrder } from "../../../../hooks/api/requests/admin/editions/usePutAdminEditionOrder";
 import { getEditionsBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
+import ComplexPageTitle from "../../../ComplexPageTitle";
 import SortListButtons from "../../../ui/buttons/SortListButtons";
 import { Card } from "../../../ui/Card";
 import CircularLoader from "../../../ui/CircularLoader";
-import { Link } from "../../../ui/Link";
 import SortList from "../../../ui/lists/SortList";
 import Page from "../../../ui/Page";
 import EditionListItem from "../../../viewParts/admin/editions/EditionListItem";
@@ -52,16 +50,7 @@ export default function EditionsAdminView(): React.ReactElement {
     <Page
       id="admin-editions"
       htmlTitle="Éditions"
-      title={
-        <span className="flex flex-wrap items-center gap-5">
-          Éditions
-          <span className="text-base">
-            <Link to="/admin/editions/create" variant="button" icon={<FontAwesomeIcon icon={faPlus} />}>
-              Créer
-            </Link>
-          </span>
-        </span>
-      }
+      title={<ComplexPageTitle createButtonUrl="/admin/editions/create">Éditions</ComplexPageTitle>}
       breadCrumbs={getEditionsBreadcrumbs()}
     >
       {getEditionsQuery.isLoading && <CircularLoader />}
