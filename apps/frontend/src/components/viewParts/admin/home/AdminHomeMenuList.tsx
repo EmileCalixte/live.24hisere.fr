@@ -1,6 +1,13 @@
 import type React from "react";
 import { faCalendar } from "@fortawesome/free-regular-svg-icons";
-import { faDownload, faFlagCheckered, faHand, faPersonRunning, faStopwatch } from "@fortawesome/free-solid-svg-icons";
+import {
+  faDownload,
+  faFlagCheckered,
+  faHand,
+  faPersonRunning,
+  faStopwatch,
+  faTableList,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { MenuList } from "../../../ui/lists/MenuList/MenuList";
 import MenuListItem from "../../../ui/lists/MenuList/MenuListItem";
@@ -24,6 +31,11 @@ const menuItems: Array<{
     url: "/admin/runners",
     label: "Gestion des coureurs",
     icon: <FontAwesomeIcon icon={faPersonRunning} />,
+  },
+  {
+    url: "/admin/custom-runner-categories",
+    label: "Catégories personnalisées",
+    icon: <FontAwesomeIcon icon={faTableList} />,
   },
   {
     url: "/admin/fastest-laps",
