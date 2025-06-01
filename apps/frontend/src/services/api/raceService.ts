@@ -83,8 +83,6 @@ export async function putAdminRaceOrder(
     `/admin/editions/${editionId}/races-order`,
     accessToken,
     raceOrder,
-    {
-      method: "PUT",
-    },
+    { method: "PUT" },
   );
 }
