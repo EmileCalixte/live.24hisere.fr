@@ -25,6 +25,10 @@ export class CustomRunnerCategoryService extends EntityService {
     return this.getUniqueResult(categories);
   }
 
+  async getCategories(): Promise<CustomRunnerCategory[]> {
+    return await this.db.select().from(TABLE_CUSTOM_RUNNER_CATEGORY);
+  }
+
   async createCategory(categoryData: Omit<CustomRunnerCategory, "id">): Promise<CustomRunnerCategory> {
     const result = await this.db.insert(TABLE_CUSTOM_RUNNER_CATEGORY).values(categoryData).$returningId();
 
