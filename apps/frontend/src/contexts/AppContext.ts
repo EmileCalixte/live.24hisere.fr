@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import React from "react";
-import type { PublicUser } from "@live24hisere/core/types";
+import type { CustomRunnerCategory, PublicUser } from "@live24hisere/core/types";
 import { Theme } from "../constants/theme";
 import type { ReactStateSetter } from "../types/utils/react";
 
@@ -31,6 +31,8 @@ export interface AppContext {
      * The ID of the edition to be auto-selected if no edition is selected
      */
     currentEditionId: number | null;
+
+    customRunnerCategories: CustomRunnerCategory[];
 
     /**
      * If the app is disabled, the message to be displayed
@@ -81,6 +83,7 @@ export const appContext = React.createContext<AppContext>({
     isAppEnabled: false,
     setIsAppEnabled: () => {},
     currentEditionId: null,
+    customRunnerCategories: [],
     disabledAppMessage: null,
   },
   headerFetchLoader: {

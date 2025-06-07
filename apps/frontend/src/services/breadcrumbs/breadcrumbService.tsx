@@ -70,6 +70,10 @@ export function getParticipantBreadcrumbs(
   return getBreadcrumbs([...getRaceCrumbs(edition, race, true), getRunnerCrumb(runner)]);
 }
 
+export function getCustomRunnerCategoriesBreadcrumbs(): BreadcrumbsElement {
+  return getBreadcrumbs(getCustomRunnerCategoriesCrumbs());
+}
+
 export function getPassageImportRulesBreadcrumbs(): BreadcrumbsElement {
   return getBreadcrumbs(getPassageImportRulesCrumbs());
 }
@@ -158,6 +162,15 @@ function getRunnerCrumb(runner: AdminRunner | undefined): BreadcrumbsItem {
   }
 
   return { label: `${runner.lastname.toUpperCase()} ${runner.firstname}` };
+}
+
+function getCustomRunnerCategoriesCrumbs(clickable = false): CrumbProps[] {
+  const customRunnerCategoriesCrumb: CrumbProps = { label: "Catégories personnalisées" };
+
+  if (clickable) {
+    customRunnerCategoriesCrumb.url = "/admin/custom-runner-categories";
+  }
+  return [getAdminCrumb(), customRunnerCategoriesCrumb];
 }
 
 function getPassageImportRulesCrumbs(clickable = false): CrumbProps[] {
