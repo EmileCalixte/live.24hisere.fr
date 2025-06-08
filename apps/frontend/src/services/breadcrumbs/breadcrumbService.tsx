@@ -1,4 +1,4 @@
-import type { AdminRunner, PublicEdition, PublicRace } from "@live24hisere/core/types";
+import type { AdminRunner, CustomRunnerCategory, PublicEdition, PublicRace } from "@live24hisere/core/types";
 import Breadcrumbs from "../../components/ui/breadcrumbs/Breadcrumbs";
 import Crumb, { type CrumbProps } from "../../components/ui/breadcrumbs/Crumb";
 import CircularLoader from "../../components/ui/CircularLoader";
@@ -72,6 +72,16 @@ export function getParticipantBreadcrumbs(
 
 export function getCustomRunnerCategoriesBreadcrumbs(): BreadcrumbsElement {
   return getBreadcrumbs(getCustomRunnerCategoriesCrumbs());
+}
+
+export function getCustomRunnerCategoryCreateBreadcrumbs(): BreadcrumbsElement {
+  return getBreadcrumbs([...getCustomRunnerCategoriesCrumbs(true), { label: "Créer une catégorie personnalisée" }]);
+}
+
+export function getCustomRunnerCategoryDetailsBreadcrumbs(
+  category: CustomRunnerCategory | undefined,
+): BreadcrumbsElement {
+  return getBreadcrumbs(getCustomRunnerCategoryCrumbs(category));
 }
 
 export function getPassageImportRulesBreadcrumbs(): BreadcrumbsElement {
@@ -171,6 +181,23 @@ function getCustomRunnerCategoriesCrumbs(clickable = false): CrumbProps[] {
     customRunnerCategoriesCrumb.url = "/admin/custom-runner-categories";
   }
   return [getAdminCrumb(), customRunnerCategoriesCrumb];
+}
+
+function getCustomRunnerCategoryCrumbs(
+  category: CustomRunnerCategory | undefined,
+  clickable = false,
+): BreadcrumbsItem[] {
+  let raceCrumb: BreadcrumbsItem = "LOADER";
+
+  if (category) {
+    raceCrumb = { label: category.name };
+
+    if (clickable) {
+      raceCrumb.url = `/admin/custom-runner-categories/${category.id}`;
+    }
+  }
+
+  return [...getCustomRunnerCategoriesCrumbs(true), raceCrumb];
 }
 
 function getPassageImportRulesCrumbs(clickable = false): CrumbProps[] {

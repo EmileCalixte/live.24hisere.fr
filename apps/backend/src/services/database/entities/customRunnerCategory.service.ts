@@ -1,16 +1,20 @@
 import { Injectable } from "@nestjs/common";
-import { eq } from "drizzle-orm";
-import { CustomRunnerCategory } from "@live24hisere/core/types";
+import { asc, count, eq, getTableColumns } from "drizzle-orm";
+import { CustomRunnerCategory, CustomRunnerCategoryWithRunnerCount } from "@live24hisere/core/types";
 import { objectUtils } from "@live24hisere/utils";
-import { TABLE_CUSTOM_RUNNER_CATEGORY } from "../../../../drizzle/schema";
+import { TABLE_CUSTOM_RUNNER_CATEGORY, TABLE_PARTICIPANT } from "../../../../drizzle/schema";
 import { EntityService } from "../entity.service";
 
 @Injectable()
 export class CustomRunnerCategoryService extends EntityService {
-  async getCategoryById(categoryId: number): Promise<CustomRunnerCategory | null> {
+  async getCategoryById(categoryId: number): Promise<CustomRunnerCategoryWithRunnerCount | null> {
     const categories = await this.db
-      .select()
+      .select({
+        ...getTableColumns(TABLE_CUSTOM_RUNNER_CATEGORY),
+        runnerCount: count(TABLE_PARTICIPANT.id),
+      })
       .from(TABLE_CUSTOM_RUNNER_CATEGORY)
+      .leftJoin(TABLE_PARTICIPANT, eq(TABLE_PARTICIPANT.customCategoryId, TABLE_CUSTOM_RUNNER_CATEGORY.id))
       .where(eq(TABLE_CUSTOM_RUNNER_CATEGORY.id, categoryId));
 
     return this.getUniqueResult(categories);
@@ -27,6 +31,18 @@ export class CustomRunnerCategoryService extends EntityService {
 
   async getCategories(): Promise<CustomRunnerCategory[]> {
     return await this.db.select().from(TABLE_CUSTOM_RUNNER_CATEGORY);
+  }
+
+  async getCategoriesWithRunnerCount(): Promise<CustomRunnerCategoryWithRunnerCount[]> {
+    return await this.db
+      .select({
+        ...getTableColumns(TABLE_CUSTOM_RUNNER_CATEGORY),
+        runnerCount: count(TABLE_PARTICIPANT.id),
+      })
+      .from(TABLE_CUSTOM_RUNNER_CATEGORY)
+      .leftJoin(TABLE_PARTICIPANT, eq(TABLE_PARTICIPANT.customCategoryId, TABLE_CUSTOM_RUNNER_CATEGORY.id))
+      .orderBy(asc(TABLE_CUSTOM_RUNNER_CATEGORY.code))
+      .groupBy(TABLE_CUSTOM_RUNNER_CATEGORY.id);
   }
 
   async createCategory(categoryData: Omit<CustomRunnerCategory, "id">): Promise<CustomRunnerCategory> {
@@ -57,7 +73,7 @@ export class CustomRunnerCategoryService extends EntityService {
       const [resultSetHeader] = await this.db
         .update(TABLE_CUSTOM_RUNNER_CATEGORY)
         .set(newCategoryData)
-        .where(eq(TABLE_CUSTOM_RUNNER_CATEGORY, categoryId));
+        .where(eq(TABLE_CUSTOM_RUNNER_CATEGORY.id, categoryId));
 
       if (resultSetHeader.affectedRows === 0) {
         throw new Error(`Custom runner category ID ${categoryId} not found in database`);
@@ -73,5 +89,18 @@ export class CustomRunnerCategoryService extends EntityService {
     }
 
     return newCategory;
+  }
+
+  /**
+   * Deletes a custom runner category
+   * @param categoryId The ID of the category to delete
+   * @returns true if the category was found and deleted, false otherwise
+   */
+  async deleteCategory(categoryId: number): Promise<boolean> {
+    const [resultSetHeader] = await this.db
+      .delete(TABLE_CUSTOM_RUNNER_CATEGORY)
+      .where(eq(TABLE_CUSTOM_RUNNER_CATEGORY.id, categoryId));
+
+    return !!resultSetHeader.affectedRows;
   }
 }

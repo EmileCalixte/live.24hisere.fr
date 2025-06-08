@@ -3,7 +3,9 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { appContext } from "../../../contexts/AppContext";
 import CircularLoader from "../../ui/CircularLoader";
 import AdminHomeView from "./AdminHomeView";
+import CreateCustomRunerCategoryAdminView from "./customRunnerCategories/CreateCustomRunnerCategoryAdminView";
 import CustomRunnerCategoriesAdminView from "./customRunnerCategories/CustomRunnerCategoriesAdminView";
+import CustomRunnerCategoryDetailsAdminView from "./customRunnerCategories/CustomRunnerCategoryDetailsAdminView";
 import DisabledAppAdminView from "./DisabledAppAdminView";
 import CreateEditionAdminView from "./editions/CreateEditionAdminView";
 import EditionDetailsAdminView from "./editions/EditionDetailsAdminView";
@@ -47,6 +49,8 @@ export default function Admin(): React.ReactElement {
       <Route path="races/:raceId/add-runner" element={<CreateParticipantAdminView />} />
       <Route path="races/:raceId/runners/:runnerId" element={<ParticipantDetailsAdminView />} />
       <Route path="custom-runner-categories" element={<CustomRunnerCategoriesAdminView />} />
+      <Route path="custom-runner-categories/create" element={<CreateCustomRunerCategoryAdminView />} />
+      <Route path="custom-runner-categories/:categoryId" element={<CustomRunnerCategoryDetailsAdminView />} />
       <Route path="fastest-laps" element={<FastestLapsAdminView />} />
       <Route path="passage-import-rules" element={<PassageImportRulesAdminView />} />
       <Route path="passage-import-rules/create" element={<CreatePassageImportRuleAdminView />} />

@@ -1,11 +1,15 @@
-import type { CustomRunnerCategory } from "../CustomRunnerCategory";
+import type {
+  CustomRunnerCategory,
+  CustomRunnerCategoryWithRunnerCount,
+  CustomRunnerCategoryWithRunners,
+} from "../CustomRunnerCategory";
 import type { ApiRequest } from "./ApiRequest";
 
 export interface GetCustomRunnerCategoriesAdminApiRequest extends ApiRequest {
   payload: never;
 
   response: {
-    customRunnerCategories: CustomRunnerCategory[];
+    customRunnerCategories: CustomRunnerCategoryWithRunnerCount[];
   };
 }
 
@@ -13,7 +17,7 @@ export interface GetCustomRunnerCategoryAdminApiRequest extends ApiRequest {
   payload: never;
 
   response: {
-    customRunnerCategory: CustomRunnerCategory;
+    customRunnerCategory: CustomRunnerCategoryWithRunners;
   };
 }
 

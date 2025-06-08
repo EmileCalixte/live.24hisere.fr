@@ -1,3 +1,5 @@
+import type { RaceRunner } from "./Runner";
+
 export interface CustomRunnerCategory {
   /**
    * The category ID
@@ -13,4 +15,18 @@ export interface CustomRunnerCategory {
    * The displayed name of the category
    */
   name: string;
+}
+
+export interface CustomRunnerCategoryWithRunnerCount extends CustomRunnerCategory {
+  /**
+   * The number of runners to whom this category is assigned
+   */
+  runnerCount: number;
+}
+
+export interface CustomRunnerCategoryWithRunners extends CustomRunnerCategory {
+  /**
+   * The list of the runners to whom this category is assigned
+   */
+  runners: RaceRunner[];
 }
