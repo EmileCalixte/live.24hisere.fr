@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
 import type { AdminProcessedPassage } from "@live24hisere/core/types";
 import { stringUtils } from "@live24hisere/utils";
+import { useGetAdminCustomRunnerCategories } from "../../../../hooks/api/requests/admin/customRunnerCategories/useGetAdminCustomRunnerCategories";
 import { useGetAdminEdition } from "../../../../hooks/api/requests/admin/editions/useGetAdminEdition";
 import { useDeleteAdminRaceRunner } from "../../../../hooks/api/requests/admin/participants/useDeleteAdminRaceRunner";
 import { useGetAdminRaceRunner } from "../../../../hooks/api/requests/admin/participants/useGetAdminRaceRunner";
@@ -32,6 +33,9 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
 
   const { raceId: urlRaceId, runnerId: urlRunnerId } = useRequiredParams(["raceId", "runnerId"]);
 
+  const getCustomCategoriesQuery = useGetAdminCustomRunnerCategories();
+  const customCategories = getCustomCategoriesQuery.data?.customRunnerCategories;
+
   const getRaceQuery = useGetAdminRace(urlRaceId);
   const race = getRaceQuery.data?.race;
   const isRaceNotFound = is404Error(getRaceQuery.error);
@@ -54,6 +58,7 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
   const deletePassageMutation = useDeleteAdminPassage();
 
   const [participantBibNumber, setParticipantBibNumber] = React.useState(0);
+  const [participantCustomCategoryId, setParticipantCustomCategoryId] = React.useState<number | null>(null);
   const [participantIsStopped, setParticipantIsStopped] = React.useState(false);
   const [participantFinalDistance, setParticipantFinalDistance] = React.useState<number | string>(0);
 
@@ -66,10 +71,11 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
 
     return [
       participantBibNumber === runner.bibNumber,
+      participantCustomCategoryId === runner.customCategoryId,
       participantIsStopped === runner.stopped,
       participantFinalDistance.toString() === runner.finalDistance,
     ].includes(false);
-  }, [runner, participantBibNumber, participantIsStopped, participantFinalDistance]);
+  }, [runner, participantBibNumber, participantCustomCategoryId, participantIsStopped, participantFinalDistance]);
 
   const processedPassages = React.useMemo(() => {
     if (!race || !runner) {
@@ -177,6 +183,7 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
     }
 
     setParticipantBibNumber(runner.bibNumber);
+    setParticipantCustomCategoryId(runner.customCategoryId);
     setParticipantIsStopped(runner.stopped);
     setParticipantFinalDistance(runner.finalDistance);
   }, [runner]);
@@ -190,6 +197,7 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
 
     const body = {
       bibNumber: participantBibNumber,
+      customCategoryId: participantCustomCategoryId,
       stopped: participantIsStopped,
       finalDistance: participantFinalDistance.toString(),
     };
@@ -256,6 +264,9 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
               bibNumber={participantBibNumber}
               setBibNumber={setParticipantBibNumber}
               isBibNumberAvailable={isBibNumberAvailable}
+              customCategories={customCategories ?? []}
+              customCategoryId={participantCustomCategoryId}
+              setCustomCategoryId={setParticipantCustomCategoryId}
               isStopped={participantIsStopped}
               setIsStopped={setParticipantIsStopped}
               finalDistance={participantFinalDistance}

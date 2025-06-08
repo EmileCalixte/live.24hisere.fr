@@ -1,3 +1,4 @@
+import type { CustomRunnerCategory } from "../CustomRunnerCategory";
 import type { DateISOString } from "../utils";
 import type { ApiRequest } from "./ApiRequest";
 
@@ -24,6 +25,11 @@ export interface GetAppDataApiRequest extends ApiRequest {
      * The ID of the edition to be auto-selected
      */
     currentEditionId: number | null;
+
+    /**
+     * The list of existing custom categories of runners
+     */
+    customRunnerCategories: CustomRunnerCategory[];
 
     /**
      * Date and time the runners' data was exported from the timing system

@@ -3,6 +3,7 @@ export type * from "./utils/index";
 
 export type * from "./AccessToken";
 export type * from "./Config";
+export type * from "./CustomRunnerCategory";
 export type * from "./Edition";
 export type * from "./Gender";
 export type * from "./Participant";

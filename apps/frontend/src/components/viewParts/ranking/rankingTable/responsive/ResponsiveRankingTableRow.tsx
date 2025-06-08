@@ -1,8 +1,8 @@
 import React from "react";
-import { type CategoryCode, getCategory } from "@emilecalixte/ffa-categories";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { GenderWithMixed, PublicRace } from "@live24hisere/core/types";
+import { useGetRunnerCategory } from "../../../../../hooks/useGetRunnerCategory";
 import type { RankingRunner } from "../../../../../types/Ranking";
 import { getCountryAlpha2CodeFromAlpha3Code } from "../../../../../utils/countryUtils";
 import { formatMsAsDuration } from "../../../../../utils/durationUtils";
@@ -17,7 +17,7 @@ import { Td, Tr } from "../../../../ui/Table";
 interface ResponsiveRankingTableRowProps {
   race: PublicRace;
   runner: RankingRunner;
-  tableCategoryCode: CategoryCode | null;
+  tableCategoryCode: string | null;
   tableGender: GenderWithMixed;
   showLastPassageTime: boolean;
   formatGapMode: FormatGapMode;
@@ -33,7 +33,9 @@ export default function ResponsiveRankingTableRow({
   formatGapMode,
   showRunnerStoppedBadges,
 }: ResponsiveRankingTableRowProps): React.ReactElement {
-  const runnerCategoryCode = getCategory(Number(runner.birthYear), { date: new Date(race.startTime) }).code;
+  const getCategory = useGetRunnerCategory();
+
+  const runnerCategoryCode = getCategory(runner, new Date(race.startTime)).code;
 
   const rowRanking = React.useMemo(() => {
     if (tableCategoryCode === null) {

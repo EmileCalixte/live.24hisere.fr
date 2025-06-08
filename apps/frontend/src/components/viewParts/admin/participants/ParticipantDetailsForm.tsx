@@ -1,9 +1,11 @@
-import type React from "react";
+import React from "react";
+import type { CustomRunnerCategory } from "@live24hisere/core/types";
 import type { SelectOption } from "../../../../types/Forms";
 import { Button } from "../../../ui/forms/Button";
 import { Checkbox } from "../../../ui/forms/Checkbox";
 import { Input } from "../../../ui/forms/Input";
 import Select from "../../../ui/forms/Select";
+import { Link } from "../../../ui/Link";
 
 interface ParticipantDetailsFormProps {
   isBasicRanking: boolean;
@@ -14,6 +16,9 @@ interface ParticipantDetailsFormProps {
   bibNumber: number | undefined;
   setBibNumber: (bibNumber: number) => void;
   isBibNumberAvailable: boolean;
+  customCategories: CustomRunnerCategory[];
+  customCategoryId: number | null;
+  setCustomCategoryId: (id: number | null) => void;
   isStopped: boolean;
   setIsStopped: (stopped: boolean) => void;
   finalDistance: number | string;
@@ -30,12 +35,24 @@ export default function ParticipantDetailsForm({
   bibNumber,
   setBibNumber,
   isBibNumberAvailable,
+  customCategories,
+  customCategoryId,
+  setCustomCategoryId,
   isStopped,
   setIsStopped,
   finalDistance,
   setFinalDistance,
   submitButtonDisabled,
 }: ParticipantDetailsFormProps): React.ReactElement {
+  const customCategoryOptions = React.useMemo<Array<SelectOption<number | "_">>>(() => {
+    const options: Array<SelectOption<number>> = customCategories.map((category) => ({
+      label: `${category.code} – ${category.name}`,
+      value: category.id,
+    }));
+
+    return [{ label: "Aucune", value: "_" }, ...options];
+  }, [customCategories]);
+
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-3">
       {onRunnerChange && (
@@ -62,6 +79,29 @@ export default function ParticipantDetailsForm({
           setBibNumber(parseInt(e.target.value));
         }}
       />
+
+      <div className="flex flex-col gap-1">
+        <Select
+          label="Catégorie personnalisée"
+          options={customCategoryOptions}
+          value={customCategoryId ?? "_"}
+          onChange={(e) => {
+            const value = e.target.value;
+
+            if (value === "_") {
+              setCustomCategoryId(null);
+            } else {
+              setCustomCategoryId(Number(value));
+            }
+          }}
+        />
+
+        {customCategoryId !== null && (
+          <p className="text-right">
+            <Link to={`/admin/custom-runner-categories/${customCategoryId}`}>Voir la catégorie</Link>
+          </p>
+        )}
+      </div>
 
       <Checkbox
         label="Arrêté"

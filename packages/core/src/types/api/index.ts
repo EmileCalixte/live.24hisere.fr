@@ -2,6 +2,7 @@ export type * from "./ApiRequest";
 export type * from "./AppData";
 export type * from "./Auth";
 export type * from "./Config";
+export type * from "./CustomRunnerCategory";
 export type * from "./Editions";
 export type * from "./Participants";
 export type * from "./PassageImportRule";

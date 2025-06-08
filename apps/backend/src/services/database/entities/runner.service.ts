@@ -7,7 +7,14 @@ import {
   RaceRunnerWithPassages,
   RunnerWithRaceCount,
 } from "@live24hisere/core/types";
-import { TABLE_EDITION, TABLE_PARTICIPANT, TABLE_PASSAGE, TABLE_RACE, TABLE_RUNNER } from "../../../../drizzle/schema";
+import {
+  TABLE_CUSTOM_RUNNER_CATEGORY,
+  TABLE_EDITION,
+  TABLE_PARTICIPANT,
+  TABLE_PASSAGE,
+  TABLE_RACE,
+  TABLE_RUNNER,
+} from "../../../../drizzle/schema";
 import { DrizzleTableColumns } from "../../../types/utils/drizzle";
 import { DrizzleService } from "../drizzle.service";
 import { EntityService } from "../entity.service";
@@ -58,24 +65,6 @@ export class RunnerService extends EntityService {
       .leftJoin(TABLE_PARTICIPANT, eq(TABLE_PARTICIPANT.runnerId, TABLE_RUNNER.id))
       .groupBy(TABLE_RUNNER.id);
   }
-
-  // async getAdminRunnerById(runnerId: number): Promise<RaceRunnerWithPassages<RaceRunner, AdminPassage> | null> {
-  //   const [runners, passages] = await Promise.all([
-  //     this.db.select().from(TABLE_RUNNER).where(eq(TABLE_RUNNER.id, runnerId)),
-  //     this.passageService.getAdminPassagesByRunnerId(runnerId),
-  //   ]);
-
-  //   const runner = this.getUniqueResult(runners);
-
-  //   if (!runner) {
-  //     return null;
-  //   }
-
-  //   return {
-  //     ...runner,
-  //     passages,
-  //   };
-  // }
 
   async getPublicRunners(): Promise<RunnerWithRaceCount[]> {
     return await this.db
@@ -150,6 +139,19 @@ export class RunnerService extends EntityService {
       .where(eq(TABLE_RACE.id, raceId));
   }
 
+  async getAdminRaceRunnersByCustomCategoryId(categoryId: number): Promise<Array<RaceRunner<AdminRunner>>> {
+    return await this.db
+      .select({
+        ...getTableColumns(TABLE_RUNNER),
+        ...this.getPublicParticipantColumns(),
+      })
+      .from(TABLE_PARTICIPANT)
+      .innerJoin(TABLE_RUNNER, eq(TABLE_PARTICIPANT.runnerId, TABLE_RUNNER.id))
+      .innerJoin(TABLE_RACE, eq(TABLE_PARTICIPANT.raceId, TABLE_RACE.id))
+      .innerJoin(TABLE_CUSTOM_RUNNER_CATEGORY, eq(TABLE_CUSTOM_RUNNER_CATEGORY.id, TABLE_PARTICIPANT.customCategoryId))
+      .where(eq(TABLE_CUSTOM_RUNNER_CATEGORY.id, categoryId));
+  }
+
   async getAdminRaceRunner(raceId: number, runnerId: number): Promise<AdminRaceRunnerWithPassages | null> {
     const [runners, passages] = await Promise.all([
       this.db
@@ -176,35 +178,6 @@ export class RunnerService extends EntityService {
     };
   }
 
-  private async getRaceRunner(raceId: number, runnerId: number, publicOnly: boolean): Promise<RaceRunner | null> {
-    const where = [eq(TABLE_RACE.id, raceId), eq(TABLE_RUNNER.id, runnerId)];
-
-    if (publicOnly) {
-      where.push(eq(TABLE_RUNNER.isPublic, true), eq(TABLE_RACE.isPublic, true), eq(TABLE_EDITION.isPublic, true));
-    }
-
-    const runners = await this.db
-      .select({
-        ...this.getPublicRunnerColumns(),
-        ...this.getPublicParticipantColumns(),
-      })
-      .from(TABLE_PARTICIPANT)
-      .innerJoin(TABLE_RUNNER, eq(TABLE_PARTICIPANT.runnerId, TABLE_RUNNER.id))
-      .innerJoin(TABLE_RACE, eq(TABLE_PARTICIPANT.raceId, TABLE_RACE.id))
-      .innerJoin(TABLE_EDITION, eq(TABLE_RACE.editionId, TABLE_EDITION.id))
-      .where(and(...where));
-
-    return this.getUniqueResult(runners);
-  }
-
-  // async getPublicRaceRunner(raceId: number, runnerId: number): Promise<RaceRunner | null> {
-  //   const runner = this.getRaceRunner(raceId, runnerId, true);
-  // }
-
-  // async addRunnerToRace(participantData: Omit<Participant, "id">): Promise<RaceRunner> {
-  //   await this.db.insert(TABLE_PARTICIPANT).values(participantData);
-  // }
-
   async createRunner(runnerData: Omit<AdminRunner, "id">): Promise<RunnerWithRaceCount<AdminRunner>> {
     const result = await this.db.insert(TABLE_RUNNER).values(runnerData).$returningId();
 
@@ -222,17 +195,6 @@ export class RunnerService extends EntityService {
 
     return newRunner;
   }
-
-  /**
-   * Batch insert runners
-   * @param data The runners
-   * @returns The number of created rows
-   */
-  // async createRunners(data: RaceRunner[]): Promise<number> {
-  //   const [resultSetHeader] = await this.db.insert(TABLE_RUNNER).values(data);
-
-  //   return resultSetHeader.affectedRows;
-  // }
 
   async updateRunner(
     runnerId: number,

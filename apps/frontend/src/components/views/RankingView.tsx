@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  ALL_CATEGORY_CODES,
-  type CategoryCode,
-  type CategoryList,
-  getCategory,
-  getCategoryList,
-  isCategoryCode,
-} from "@emilecalixte/ffa-categories";
+import { ALL_CATEGORY_CODES, getCategoryList } from "@emilecalixte/ffa-categories";
 import { parseAsInteger, useQueryState } from "nuqs";
 import type { EditionWithRaceCount, GenderWithMixed, RaceWithRunnerCount } from "@live24hisere/core/types";
 import { objectUtils } from "@live24hisere/utils";
@@ -19,10 +12,10 @@ import { useGetPublicRaceRunners } from "../../hooks/api/requests/public/runners
 import { useRankingTimeQueryString } from "../../hooks/queryString/useRankingTimeQueryString";
 import { useProcessedRunners } from "../../hooks/runners/useProcessedRunners";
 import { useEditionSelectOptions } from "../../hooks/useEditionSelectOptions";
+import { useGetRunnerCategory } from "../../hooks/useGetRunnerCategory";
 import { useRaceSelectOptions } from "../../hooks/useRaceSelectOptions";
 import { useRanking } from "../../hooks/useRanking";
 import { useWindowDimensions } from "../../hooks/useWindowDimensions";
-import { parseAsCategory } from "../../queryStringParsers/parseAsCategory";
 import { parseAsGender } from "../../queryStringParsers/parseAsGender";
 import { isRaceFinished } from "../../utils/raceUtils";
 import { FormatGapMode } from "../../utils/runnerUtils";
@@ -39,13 +32,15 @@ const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
 export default function RankingView(): React.ReactElement {
   const [selectedEditionId, setSelectedEditionId] = useQueryState(SearchParam.EDITION, parseAsInteger);
   const [selectedRaceId, setSelectedRaceId] = useQueryState(SearchParam.RACE, parseAsInteger);
-  const [selectedCategoryCode, setSelectedCategory] = useQueryState(SearchParam.CATEGORY, parseAsCategory);
+  const [selectedCategoryCode, setSelectedCategory] = useQueryState(SearchParam.CATEGORY);
   const [selectedGender, setSelectedGender] = useQueryState(SearchParam.GENDER, parseAsGender);
+
+  const getCategory = useGetRunnerCategory();
 
   const getRaceRunnersQuery = useGetPublicRaceRunners(selectedRaceId ?? undefined);
   const runners = getRaceRunnersQuery.data?.runners;
 
-  const { serverTimeOffset } = React.useContext(appContext).appData;
+  const { serverTimeOffset, customRunnerCategories } = React.useContext(appContext).appData;
 
   const { width: windowWidth } = useWindowDimensions();
 
@@ -70,8 +65,14 @@ export default function RankingView(): React.ReactElement {
       return {};
     }
 
-    return getCategoryList(new Date(selectedRace.startTime));
-  }, [selectedRace]);
+    const allCategories: Record<string, string> = getCategoryList(new Date(selectedRace.startTime));
+
+    for (const customCategory of customRunnerCategories) {
+      allCategories[customCategory.code] = customCategory.name;
+    }
+
+    return allCategories;
+  }, [customRunnerCategories, selectedRace]);
 
   const {
     selectedTimeMode,
@@ -103,11 +104,6 @@ export default function RankingView(): React.ReactElement {
     if (value === "scratch") {
       void setSelectedCategory(null);
       return;
-    }
-
-    if (!isCategoryCode(value)) {
-      void setSelectedCategory(null);
-      throw new Error(`${value} is not a valid category code`);
     }
 
     void setSelectedCategory(value);
@@ -142,27 +138,29 @@ export default function RankingView(): React.ReactElement {
     setRankingTimeMemory(timeToSave);
   };
 
-  const categories = React.useMemo<CategoryList | null>(() => {
+  const categories = React.useMemo<Record<string, string> | null>(() => {
     if (!ranking || !selectedRace) {
       return null;
     }
 
-    const categoriesInRanking = new Set<CategoryCode>();
+    const categoriesInRanking = new Set<string>();
 
     for (const runner of ranking) {
-      categoriesInRanking.add(getCategory(Number(runner.birthYear), { date: new Date(selectedRace.startTime) }).code);
+      categoriesInRanking.add(getCategory(runner, new Date(selectedRace.startTime)).code);
     }
 
-    const categoriesToRemove: CategoryCode[] = [];
+    const categoriesToRemove = [];
 
-    for (const categoryCode of ALL_CATEGORY_CODES) {
+    const allCategoryCodes = [...ALL_CATEGORY_CODES, ...customRunnerCategories.map((c) => c.code)];
+
+    for (const categoryCode of allCategoryCodes) {
       if (!categoriesInRanking.has(categoryCode)) {
         categoriesToRemove.push(categoryCode);
       }
     }
 
     return objectUtils.excludeKeys(allCategories, categoriesToRemove);
-  }, [allCategories, ranking, selectedRace]);
+  }, [allCategories, customRunnerCategories, getCategory, ranking, selectedRace]);
 
   // Clear category param if a category is selected but no runner is in it in the ranking
   React.useEffect(() => {

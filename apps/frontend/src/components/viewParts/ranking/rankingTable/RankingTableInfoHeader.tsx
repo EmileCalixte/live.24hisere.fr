@@ -1,5 +1,4 @@
 import React from "react";
-import type { CategoryCode } from "@emilecalixte/ffa-categories";
 import { GENDER } from "@live24hisere/core/constants";
 import type { GenderWithMixed, PublicRace } from "@live24hisere/core/types";
 import { appContext } from "../../../../contexts/AppContext";
@@ -10,7 +9,7 @@ import RaceTimer from "../../RaceTimer";
 
 interface RankingTableInfoHeaderProps {
   race: PublicRace;
-  tableCategoryCode: CategoryCode | null;
+  tableCategoryCode: string | null;
   tableGender: GenderWithMixed;
   tableRaceDuration: number | null;
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import { Helmet } from "react-helmet";
 import { Navigate, Route, Routes, useMatch, useNavigate } from "react-router-dom";
-import type { PublicUser } from "@live24hisere/core/types";
+import type { CustomRunnerCategory, PublicUser } from "@live24hisere/core/types";
 import { APP_BASE_TITLE } from "../constants/app";
 import { appContext, type AppContext } from "../contexts/AppContext";
 import { useGetCurrentUser } from "../hooks/api/requests/auth/useGetCurrentUser";
@@ -35,6 +35,7 @@ export default function App(): React.ReactElement {
   const [isAppEnabled, setIsAppEnabled] = React.useState(false);
   const [disabledAppMessage, setDisabledAppMessage] = React.useState<string | null>(null);
   const [currentEditionId, setCurrentEditionId] = React.useState<number | null>(null);
+  const [customRunnerCategories, setCustomRunnerCategories] = React.useState<CustomRunnerCategory[]>([]);
   const [accessToken, setAccessToken] = React.useState<string | null>(localStorage.getItem("accessToken"));
   const [user, setUser] = React.useState<PublicUser | null | undefined>(undefined); // If null, user is not logged in. If undefined, user info was not fetched yet
 
@@ -96,6 +97,8 @@ export default function App(): React.ReactElement {
 
     setCurrentEditionId(appData.currentEditionId);
 
+    setCustomRunnerCategories(appData.customRunnerCategories);
+
     setLastUpdateTime(new Date(appData.lastUpdateTime ?? 0));
 
     const serverTime = new Date(appData.currentTime);
@@ -142,6 +145,7 @@ export default function App(): React.ReactElement {
       isAppEnabled,
       setIsAppEnabled,
       currentEditionId,
+      customRunnerCategories,
       disabledAppMessage,
     },
     headerFetchLoader: {

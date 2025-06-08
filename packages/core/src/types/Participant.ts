@@ -17,6 +17,11 @@ export interface Participant {
   bibNumber: number;
 
   /**
+   * The ID of the custom category to which the runner belongs
+   */
+  customCategoryId: number | null;
+
+  /**
    * Whether the runner has stopped competing or not
    */
   stopped: boolean;

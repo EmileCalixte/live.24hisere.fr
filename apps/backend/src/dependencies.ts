@@ -8,6 +8,7 @@ import { CurrentPasswordQuestionSet } from "./commands/questionSets/currentPassw
 import { UsernameQuestionSet } from "./commands/questionSets/username.questionSet";
 import { UpdateUserPasswordCommand } from "./commands/updateUserPassword.command";
 import { ConfigController } from "./controllers/admin/config.controller";
+import { CustomRunnerCategoriesController } from "./controllers/admin/customRunnerCategories.controller";
 import { EditionsController as EditionsControllerAdmin } from "./controllers/admin/editions.controller";
 import { ParticipantsController as ParticipantsControllerAdmin } from "./controllers/admin/participants.controller";
 import { PassageImportRulesController } from "./controllers/admin/passageImportRules.controller";
@@ -26,6 +27,7 @@ import { DagFileService } from "./services/dagFile.service";
 import { DrizzleService } from "./services/database/drizzle.service";
 import { AccessTokenService } from "./services/database/entities/accessToken.service";
 import { ConfigService } from "./services/database/entities/config.service";
+import { CustomRunnerCategoryService } from "./services/database/entities/customRunnerCategory.service";
 import { EditionService } from "./services/database/entities/edition.service";
 import { MiscService } from "./services/database/entities/misc.service";
 import { ParticipantService } from "./services/database/entities/participant.service";
@@ -38,6 +40,7 @@ import { EnvService } from "./services/env.service";
 import { PasswordService } from "./services/password.service";
 import { RandomService } from "./services/random.service";
 import { ImportPassagesService } from "./tasks/importPassages.service";
+import { CustomRunnerCategoryIdExistsRule } from "./validation/rules/customRunnerCategory/customRunnerCategoryIdExists.rule";
 import { EditionIdExistsRule } from "./validation/rules/edition/editionIdExists.rule";
 import { RaceIdExistsRule } from "./validation/rules/race/raceIdExists.rule";
 import { RunnerIdExistsRule } from "./validation/rules/runner/runnerIdExists.rule";
@@ -71,6 +74,7 @@ export const dependencies: Dependencies = {
     ],
     admin: [
       ConfigController,
+      CustomRunnerCategoriesController,
       EditionsControllerAdmin,
       ParticipantsControllerAdmin,
       PassagesController,
@@ -86,6 +90,7 @@ export const dependencies: Dependencies = {
       DrizzleService,
       AccessTokenService,
       ConfigService,
+      CustomRunnerCategoryService,
       EditionService,
       MiscService,
       ParticipantService,
@@ -97,7 +102,7 @@ export const dependencies: Dependencies = {
     ],
   },
   tasks: [ImportPassagesService],
-  validationRules: [EditionIdExistsRule, RaceIdExistsRule, RunnerIdExistsRule],
+  validationRules: [CustomRunnerCategoryIdExistsRule, EditionIdExistsRule, RaceIdExistsRule, RunnerIdExistsRule],
   commands: [
     AnonymizeRunnersCommand,
     CreateUserCommand,

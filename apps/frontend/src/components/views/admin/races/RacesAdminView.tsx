@@ -1,11 +1,10 @@
 import type React from "react";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useGetAdminEditions } from "../../../../hooks/api/requests/admin/editions/useGetAdminEditions";
 import { useGetAdminRaces } from "../../../../hooks/api/requests/admin/races/useGetAdminRaces";
 import { getRacesBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import { formatMsAsDuration } from "../../../../utils/durationUtils";
 import { formatDateAsString } from "../../../../utils/utils";
+import ComplexPageTitle from "../../../ComplexPageTitle";
 import { Card } from "../../../ui/Card";
 import CircularLoader from "../../../ui/CircularLoader";
 import { Link } from "../../../ui/Link";
@@ -23,16 +22,7 @@ export default function RacesAdminView(): React.ReactElement {
     <Page
       id="admin-races"
       htmlTitle="Courses"
-      title={
-        <span className="flex flex-wrap items-center gap-5">
-          Courses
-          <span className="text-base">
-            <Link variant="button" to="/admin/races/create" icon={<FontAwesomeIcon icon={faPlus} />}>
-              Créer
-            </Link>
-          </span>
-        </span>
-      }
+      title={<ComplexPageTitle createButtonUrl="/admin/races/create">Courses</ComplexPageTitle>}
       breadCrumbs={getRacesBreadcrumbs()}
     >
       {getRacesQuery.isLoading && <CircularLoader />}

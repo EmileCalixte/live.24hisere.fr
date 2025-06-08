@@ -1,14 +1,12 @@
 import React from "react";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { stringUtils } from "@live24hisere/utils";
 import { useGetAdminRunners } from "../../../../hooks/api/requests/admin/runners/useGetAdminRunners";
 import { useNameSortedRunners } from "../../../../hooks/runners/useNameSortedRunners";
 import { getRunnersBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
+import ComplexPageTitle from "../../../ComplexPageTitle";
 import { Card } from "../../../ui/Card";
 import CircularLoader from "../../../ui/CircularLoader";
 import { Input } from "../../../ui/forms/Input";
-import { Link } from "../../../ui/Link";
 import Page from "../../../ui/Page";
 import RunnersTable from "../../../viewParts/admin/runners/RunnersTable";
 
@@ -43,16 +41,7 @@ export default function RunnersAdminView(): React.ReactElement {
     <Page
       id="admin-runners"
       htmlTitle="Coureurs"
-      title={
-        <span className="flex flex-wrap items-center gap-5">
-          Coureurs
-          <span className="text-base">
-            <Link variant="button" to="/admin/runners/create" icon={<FontAwesomeIcon icon={faPlus} />}>
-              Créer
-            </Link>
-          </span>
-        </span>
-      }
+      title={<ComplexPageTitle createButtonUrl="/admin/runners/create">Coureurs</ComplexPageTitle>}
       breadCrumbs={getRunnersBreadcrumbs()}
     >
       {!displayedRunners ? (
