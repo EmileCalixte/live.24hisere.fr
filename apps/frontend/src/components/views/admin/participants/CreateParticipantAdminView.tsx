@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import type { AdminRunner } from "@live24hisere/core/types";
 import { appContext } from "../../../../contexts/AppContext";
+import { useGetAdminCustomRunnerCategories } from "../../../../hooks/api/requests/admin/customRunnerCategories/useGetAdminCustomRunnerCategories";
 import { useGetAdminEdition } from "../../../../hooks/api/requests/admin/editions/useGetAdminEdition";
 import { usePostAdminRaceRunner } from "../../../../hooks/api/requests/admin/participants/usePostAdminRaceRunner";
 import { useGetAdminRace } from "../../../../hooks/api/requests/admin/races/useGetAdminRace";
@@ -25,6 +26,9 @@ export default function CreateParticipantAdminView(): React.ReactElement {
 
   const { raceId: urlRaceId } = useRequiredParams(["raceId"]);
 
+  const getCustomCategoriesQuery = useGetAdminCustomRunnerCategories();
+  const customCategories = getCustomCategoriesQuery.data?.customRunnerCategories;
+
   const getRaceQuery = useGetAdminRace(urlRaceId);
   const race = getRaceQuery.data?.race;
   const isRaceNotFound = is404Error(getRaceQuery.error);
@@ -41,6 +45,7 @@ export default function CreateParticipantAdminView(): React.ReactElement {
   const edition = getEditionQuery.data?.edition;
 
   const [runnerId, setRunnerId] = React.useState<number | undefined>(undefined);
+  const [customCategoryId, setCustomCategoryId] = React.useState<number | null>(null);
   const [bibNumber, setBibNumber] = React.useState<number | undefined>(undefined);
   const [isStopped, setIsStopped] = React.useState(false);
   const [finalDistance, setFinalDistance] = React.useState<number | string>(0);
@@ -82,6 +87,7 @@ export default function CreateParticipantAdminView(): React.ReactElement {
   const clearForm = React.useCallback(() => {
     setRunnerId(undefined);
     setBibNumber((bibNumber) => (typeof bibNumber === "number" ? bibNumber + 1 : undefined));
+    setCustomCategoryId(null);
     setIsStopped(false);
   }, []);
 
@@ -95,6 +101,7 @@ export default function CreateParticipantAdminView(): React.ReactElement {
     const body = {
       runnerId,
       bibNumber,
+      customCategoryId,
       stopped: isStopped,
       finalDistance: finalDistance.toString(),
     };
@@ -147,6 +154,9 @@ export default function CreateParticipantAdminView(): React.ReactElement {
               bibNumber={bibNumber}
               setBibNumber={setBibNumber}
               isBibNumberAvailable={isBibNumberAvailable}
+              customCategories={customCategories ?? []}
+              customCategoryId={customCategoryId}
+              setCustomCategoryId={setCustomCategoryId}
               isStopped={isStopped}
               setIsStopped={setIsStopped}
               finalDistance={finalDistance}

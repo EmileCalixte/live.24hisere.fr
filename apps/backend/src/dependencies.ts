@@ -40,6 +40,7 @@ import { EnvService } from "./services/env.service";
 import { PasswordService } from "./services/password.service";
 import { RandomService } from "./services/random.service";
 import { ImportPassagesService } from "./tasks/importPassages.service";
+import { CustomRunnerCategoryIdExistsRule } from "./validation/rules/customRunnerCategory/customRunnerCategoryIdExists.rule";
 import { EditionIdExistsRule } from "./validation/rules/edition/editionIdExists.rule";
 import { RaceIdExistsRule } from "./validation/rules/race/raceIdExists.rule";
 import { RunnerIdExistsRule } from "./validation/rules/runner/runnerIdExists.rule";
@@ -101,7 +102,7 @@ export const dependencies: Dependencies = {
     ],
   },
   tasks: [ImportPassagesService],
-  validationRules: [EditionIdExistsRule, RaceIdExistsRule, RunnerIdExistsRule],
+  validationRules: [CustomRunnerCategoryIdExistsRule, EditionIdExistsRule, RaceIdExistsRule, RunnerIdExistsRule],
   commands: [
     AnonymizeRunnersCommand,
     CreateUserCommand,
