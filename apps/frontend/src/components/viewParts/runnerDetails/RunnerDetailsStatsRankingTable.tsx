@@ -1,9 +1,9 @@
 import React from "react";
-import { getCategory } from "@emilecalixte/ffa-categories";
 import { GENDER } from "@live24hisere/core/constants";
 import type { PublicRace } from "@live24hisere/core/types";
 import { NO_VALUE_PLACEHOLDER } from "../../../constants/misc";
 import { appContext } from "../../../contexts/AppContext";
+import { useGetRunnerCategory } from "../../../hooks/useGetRunnerCategory";
 import type { Ranking, RankingRunner, RankingRunnerGap } from "../../../types/Ranking";
 import { isRaceFinished } from "../../../utils/raceUtils";
 import { formatGap, FormatGapMode } from "../../../utils/runnerUtils";
@@ -26,7 +26,9 @@ export default function RunnerDetailsStatsRankingTable({
 }: RunnerDetailsStatsGapsTableProps): React.ReactElement {
   const { serverTimeOffset } = React.useContext(appContext).appData;
 
-  const categoryCode = getCategory(Number(runner.birthYear), { date: new Date(race.startTime) }).code;
+  const getCategory = useGetRunnerCategory();
+
+  const categoryCode = getCategory(runner, new Date(race.startTime)).code;
   const genderString = runner.gender === GENDER.F ? "Féminin" : "Masculin";
 
   const scratchMixedRunnerCount = ranking.length;
@@ -38,11 +40,9 @@ export default function RunnerDetailsStatsRankingTable({
 
   const categoryMixedRunnerCount = React.useMemo(
     () =>
-      ranking.filter(
-        (rankingRunner) =>
-          getCategory(Number(rankingRunner.birthYear), { date: new Date(race.startTime) }).code === categoryCode,
-      ).length,
-    [ranking, race.startTime, categoryCode],
+      ranking.filter((rankingRunner) => getCategory(rankingRunner, new Date(race.startTime)).code === categoryCode)
+        .length,
+    [ranking, getCategory, race.startTime, categoryCode],
   );
 
   const categoryGenderRunnerCount = React.useMemo(
@@ -50,9 +50,9 @@ export default function RunnerDetailsStatsRankingTable({
       ranking.filter(
         (rankingRunner) =>
           rankingRunner.gender === runner.gender
-          && getCategory(Number(rankingRunner.birthYear), { date: new Date(race.startTime) }).code === categoryCode,
+          && getCategory(rankingRunner, new Date(race.startTime)).code === categoryCode,
       ).length,
-    [categoryCode, race.startTime, ranking, runner.gender],
+    [categoryCode, getCategory, race.startTime, ranking, runner.gender],
   );
 
   const showGaps = !race.isBasicRanking;

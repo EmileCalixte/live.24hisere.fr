@@ -1,6 +1,6 @@
 import type React from "react";
-import { getCategory } from "@emilecalixte/ffa-categories";
 import type { AdminRace, AdminRunner, RaceRunner } from "@live24hisere/core/types";
+import { useGetRunnerCategory } from "../../../../hooks/useGetRunnerCategory";
 import { getCountryAlpha2CodeFromAlpha3Code } from "../../../../utils/countryUtils";
 import { Flag } from "../../../ui/countries/Flag";
 import { Link } from "../../../ui/Link";
@@ -18,6 +18,8 @@ export default function RaceRunnersTable({
   runners,
   isEditingFinalDistances,
 }: RaceRunnersTableProps): React.ReactElement {
+  const getCategory = useGetRunnerCategory();
+
   return (
     <Table>
       <thead>
@@ -33,7 +35,7 @@ export default function RaceRunnersTable({
       </thead>
       <tbody>
         {runners.map((runner) => {
-          const category = getCategory(Number(runner.birthYear), { date: new Date(race.startTime) });
+          const category = getCategory(runner, new Date(race.startTime));
           const alpha2CountryCode = getCountryAlpha2CodeFromAlpha3Code(runner.countryCode);
 
           return (

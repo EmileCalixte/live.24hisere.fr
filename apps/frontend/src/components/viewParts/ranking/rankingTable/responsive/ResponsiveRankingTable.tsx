@@ -1,6 +1,6 @@
 import React from "react";
-import { type CategoryCode, getCategory } from "@emilecalixte/ffa-categories";
 import type { GenderWithMixed, PublicRace } from "@live24hisere/core/types";
+import { useGetRunnerCategory } from "../../../../../hooks/useGetRunnerCategory";
 import type { Ranking, RankingRunner } from "../../../../../types/Ranking";
 import type { FormatGapMode } from "../../../../../utils/runnerUtils";
 import { Table, Tr } from "../../../../ui/Table";
@@ -10,7 +10,7 @@ import ResponsiveRankingTableRow from "./ResponsiveRankingTableRow";
 interface ResponsiveRankingTableProps {
   race: PublicRace;
   ranking: Ranking;
-  tableCategoryCode: CategoryCode | null;
+  tableCategoryCode: string | null;
   tableGender: GenderWithMixed;
   tableRaceDuration: number | null;
   showLastPassageTime: boolean;
@@ -28,9 +28,11 @@ export default function ResponsiveRankingTable({
   formatGapMode,
   showRunnerStoppedBadges,
 }: ResponsiveRankingTableProps): React.ReactElement {
+  const getCategory = useGetRunnerCategory();
+
   const getRankingTableRow = React.useCallback(
     (rankingRunner: RankingRunner) => {
-      const runnerCategoryCode = getCategory(Number(rankingRunner.birthYear), { date: new Date(race.startTime) }).code;
+      const runnerCategoryCode = getCategory(rankingRunner, new Date(race.startTime)).code;
 
       if (tableCategoryCode !== null) {
         if (tableCategoryCode !== runnerCategoryCode) {
@@ -57,7 +59,7 @@ export default function ResponsiveRankingTable({
         />
       );
     },
-    [formatGapMode, race, showLastPassageTime, showRunnerStoppedBadges, tableCategoryCode, tableGender],
+    [formatGapMode, getCategory, race, showLastPassageTime, showRunnerStoppedBadges, tableCategoryCode, tableGender],
   );
 
   return (

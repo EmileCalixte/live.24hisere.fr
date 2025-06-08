@@ -1,5 +1,4 @@
 import type React from "react";
-import type { CategoryCode } from "@emilecalixte/ffa-categories";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { twMerge } from "tailwind-merge";
@@ -20,7 +19,7 @@ import RankingTableRowNCells from "./RankingTableRowNCells";
 interface RankingTableRowProps {
   race: PublicRace;
   runner: RankingRunner;
-  tableCategoryCode: CategoryCode | null;
+  tableCategoryCode: string | null;
   tableGender: GenderWithMixed;
   showLastPassageTime: boolean;
   formatGapMode: FormatGapMode;

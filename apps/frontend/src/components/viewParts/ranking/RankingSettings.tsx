@@ -1,5 +1,4 @@
 import React from "react";
-import type { CategoryCode, CategoryList } from "@emilecalixte/ffa-categories";
 import type { GenderWithMixed } from "@live24hisere/core/types";
 import { CATEGORY_SCRATCH } from "../../../constants/category";
 import {
@@ -16,12 +15,12 @@ import Select from "../../ui/forms/Select";
 import RankingSettingsTime from "./RankingSettingsTime";
 
 interface RankingSettingsProps {
-  categories: CategoryList | null;
+  categories: Record<string, string> | null;
   onCategorySelect: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onGenderSelect: (gender: GenderWithMixed) => void;
   setTimeMode: (timeMode: RankingTimeMode) => void;
   onRankingTimeSave: (time: number) => void;
-  selectedCategoryCode: CategoryCode | null;
+  selectedCategoryCode: string | null;
   selectedGender: GenderWithMixed;
   showTimeModeSelect: boolean;
   selectedTimeMode: RankingTimeMode;
@@ -44,7 +43,7 @@ export default function RankingSettings({
   maxRankingTime,
   isRaceFinished,
 }: RankingSettingsProps): React.ReactElement {
-  const categoriesOptions = React.useMemo<Array<SelectOption<CategoryCode | "scratch">>>(
+  const categoriesOptions = React.useMemo<Array<SelectOption<string>>>(
     () => [CATEGORY_SCRATCH_SELECT_OPTION, ...getCategoriesSelectOptions(categories)],
     [categories],
   );

@@ -93,7 +93,9 @@ export class RankingCalculator<TRunner extends MinimalRankingRunnerInput> {
     const ranking: Ranking<TRunner> = [];
 
     for (const runner of this.runners) {
-      const runnerCategoryCode = getCategory(Number(runner.birthYear), { date: new Date(this.race.startTime) }).code;
+      const runnerCategoryCode = runner.customCategoryId
+        ? `CUSTOM_${runner.customCategoryId}`
+        : getCategory(Number(runner.birthYear), { date: new Date(this.race.startTime) }).code;
 
       const rankings: RankingRunnerRanks = {
         actual: {

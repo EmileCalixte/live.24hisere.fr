@@ -1,13 +1,13 @@
 import type React from "react";
-import { type CategoryCode, getCategory } from "@emilecalixte/ffa-categories";
 import type { GenderWithMixed, PublicRace } from "@live24hisere/core/types";
+import { useGetRunnerCategory } from "../../../../hooks/useGetRunnerCategory";
 import type { RankingRunner } from "../../../../types/Ranking";
 import { Td } from "../../../ui/Table";
 
 interface RankingTableRowNCellsProps {
   race: PublicRace;
   runner: RankingRunner;
-  tableCategoryCode: CategoryCode | null;
+  tableCategoryCode: string | null;
   tableGender: GenderWithMixed;
 }
 
@@ -17,7 +17,9 @@ export default function RankingTableRowNCells({
   tableCategoryCode,
   tableGender,
 }: RankingTableRowNCellsProps): React.ReactElement {
-  const runnerCategoryCode = getCategory(Number(runner.birthYear), { date: new Date(race.startTime) }).code;
+  const getCategory = useGetRunnerCategory();
+
+  const runnerCategoryCode = getCategory(runner, new Date(race.startTime)).code;
 
   if (tableCategoryCode === null) {
     if (tableGender === "mixed") {
