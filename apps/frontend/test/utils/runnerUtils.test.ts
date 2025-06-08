@@ -138,6 +138,7 @@ describe("Spaceship runners", () => {
     countryCode: "FRA",
     raceId: 0,
     bibNumber: 123,
+    customCategoryId: null,
     stopped: false,
     finalDistance: "0",
     passages: [],
