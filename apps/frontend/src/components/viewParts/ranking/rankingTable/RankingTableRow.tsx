@@ -12,6 +12,7 @@ import { formatGap, type FormatGapMode } from "../../../../utils/runnerUtils";
 import { formatFloatNumber } from "../../../../utils/utils";
 import RunnerStoppedBadge from "../../../ui/badges/RunnerStoppedBadge";
 import { Flag } from "../../../ui/countries/Flag";
+import GenderIcon from "../../../ui/genders/GenderIcon";
 import { Link } from "../../../ui/Link";
 import { TABLE_CELL_PADDING_CLASSNAME, Td, Tr } from "../../../ui/Table";
 import RankingTableRowNCells from "./RankingTableRowNCells";
@@ -53,14 +54,19 @@ export default function RankingTableRow({
           to={`/runner-details/${runner.id}?race=${race.id}`}
           className={twMerge(
             TABLE_CELL_PADDING_CLASSNAME,
-            "flex items-center gap-2 text-neutral-800 no-underline dark:text-neutral-200",
+            "flex items-center gap-1.5 text-neutral-800 no-underline dark:text-neutral-200",
           )}
         >
           {alpha2CountryCode && <Flag countryCode={alpha2CountryCode} />}
+
+          <GenderIcon gender={runner.gender} />
+
           <strong>
             {runner.lastname.toUpperCase()} {runner.firstname}
           </strong>
+
           {runner.stopped && showRunnerStoppedBadges && <RunnerStoppedBadge />}
+
           <span className="flex-grow-1" />
           <span className="text-sm text-neutral-500 print:hidden">
             <FontAwesomeIcon icon={faChevronRight} />

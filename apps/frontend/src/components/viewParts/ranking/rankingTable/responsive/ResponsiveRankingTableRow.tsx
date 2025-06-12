@@ -11,6 +11,7 @@ import { formatGap, type FormatGapMode } from "../../../../../utils/runnerUtils"
 import { formatFloatNumber } from "../../../../../utils/utils";
 import RunnerStoppedBadge from "../../../../ui/badges/RunnerStoppedBadge";
 import { Flag } from "../../../../ui/countries/Flag";
+import GenderIcon from "../../../../ui/genders/GenderIcon";
 import { Link } from "../../../../ui/Link";
 import { Td, Tr } from "../../../../ui/Table";
 
@@ -115,8 +116,11 @@ export default function ResponsiveRankingTableRow({
         <strong>{rowRanking}</strong>
       </Td>
       <Td className="w-full">
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-1.5">
           {alpha2CountryCode && <Flag countryCode={alpha2CountryCode} />}
+
+          <GenderIcon gender={runner.gender} />
+
           <strong>
             {runner.lastname.toUpperCase()} {runner.firstname}
           </strong>
