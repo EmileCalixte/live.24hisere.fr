@@ -130,6 +130,8 @@ export default function RunnerDetailsView(): React.ReactElement {
       return;
     }
 
+    void umami.track("JS Download XLSX", { runnerId: selectedRankingRunner.id, raceId: selectedRace.id });
+
     const filename =
       `${selectedRankingRunner.firstname} ${selectedRankingRunner.lastname} - ${selectedRace.name} - ${selectedRaceEdition.name}`.trim();
 

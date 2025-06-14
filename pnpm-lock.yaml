@@ -234,6 +234,9 @@ importers:
       '@types/react-helmet':
         specifier: ^6.1.11
         version: 6.1.11
+      '@types/umami':
+        specifier: ^2.10.0
+        version: 2.10.0
       '@vitejs/plugin-react-swc':
         specifier: ^3.10.2
         version: 3.10.2(vite@6.3.5(@types/node@22.10.2)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.39.0)(yaml@2.8.0))
@@ -2836,6 +2839,9 @@ packages:
 
   '@types/trusted-types@2.0.7':
     resolution: {integrity: sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==}
+
+  '@types/umami@2.10.0':
+    resolution: {integrity: sha512-iWcs1KkcO3ooIi2rR9M5drmpQzlsT+sFiyWElIGmVwjdGlp+vQmy/VYIChYnF5ETqx7KrL80JfSkroS6dm37Hg==}
 
   '@types/validator@13.15.0':
     resolution: {integrity: sha512-nh7nrWhLr6CBq9ldtw0wx+z9wKnnv/uTVLA9g/3/TcOYxbpOSZE+MhKPmWqU+K0NvThjhv12uD8MuqijB0WzEA==}
@@ -9462,6 +9468,8 @@ snapshots:
 
   '@types/trusted-types@2.0.7':
     optional: true
+
+  '@types/umami@2.10.0': {}
 
   '@types/validator@13.15.0': {}
 
