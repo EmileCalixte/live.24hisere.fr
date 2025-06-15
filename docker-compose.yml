@@ -1,9 +1,9 @@
 services:
   database:
-    image: mariadb:10.6.14
+    image: mariadb:10.11.6
     restart: always
     volumes:
-      - ./sql/:/docker-entrypoint-initdb.d/
+      - ./sql/app:/docker-entrypoint-initdb.d/
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: admin
@@ -11,14 +11,12 @@ services:
       MYSQL_DATABASE: live
     ports:
       - "3306:3306"
-
-  static:
-    image: halverneus/static-file-server
-    restart: always
-    volumes:
-      - ./static:/web
-    ports:
-      - "8081:8080"
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   phpmyadmin:
     image: phpmyadmin
@@ -28,6 +26,64 @@ services:
       PMA_USER: admin
       PMA_PASSWORD: admin
     depends_on:
-      - database
+      database:
+        condition: service_healthy
     ports:
       - "8080:80"
+
+  static:
+    image: halverneus/static-file-server
+    restart: always
+    volumes:
+      - ./static:/web
+    ports:
+      - "8081:8080"
+
+  umami:
+    image: docker.umami.is/umami-software/umami:mysql-latest
+    ports:
+      - "9000:3000"
+    environment:
+      DATABASE_URL: mysql://umami:umami@umami-db:3306/umami
+      DATABASE_TYPE: mysql
+      APP_SECRET: replace-me-with-a-random-string
+    depends_on:
+      umami-db:
+        condition: service_healthy
+    init: true
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl http://localhost:3000/api/heartbeat"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  umami-db:
+    image: mariadb:10.11.6
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: umami
+      MYSQL_PASSWORD: umami
+      MYSQL_DATABASE: umami
+    volumes:
+      - ./sql/umami:/docker-entrypoint-initdb.d/
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  umami-phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: umami-db
+      PMA_USER: umami
+      PMA_PASSWORD: umami
+    depends_on:
+      umami-db:
+        condition: service_healthy
+    ports:
+      - "9090:80"

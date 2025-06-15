@@ -37,6 +37,8 @@ Si besoin, créez un fichier `apps/frontend/.env.development.local` à partir du
 - API : [http://localhost:8000](http://localhost:8000)
 - Fichiers statiques : [http://localhost:8081](http://localhost:8081)
 - PHPMyAdmin : [http://localhost:8080](http://localhost:8080)
+- Umami : [http://localhost:9000](http://localhost:9000) (utilisateur `admin` - mot de passe : `umami`)
+- PHPMyAdmin (Umami) : [http://localhost:9090](http://localhost:9090)
 
 ### Base de données
 
@@ -47,7 +49,7 @@ Identifiants du serveur MariaDB du container docker `database` :
 - Mot de passe : `admin`
 - Nom de la base de données : `live`
 
-Un jeu de données est chargé automatiquement lors du lancement du docker-compose à partir du/des fichiers SQL contenus dans le répertoire `/sql`.
+Un jeu de données est chargé automatiquement lors du lancement du docker-compose à partir du/des fichiers SQL contenus dans le répertoire `/sql/app`.
 
 La commande suivante permet de créer une migration à partir de la structure de données définie dans `apps/backend/drizzle/schema.ts` :
 
