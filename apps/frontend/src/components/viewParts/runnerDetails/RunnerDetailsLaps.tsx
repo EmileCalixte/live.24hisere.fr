@@ -163,18 +163,7 @@ export default function RunnerDetailsLaps({
       <h3>Détails des tours</h3>
 
       <p>
-        <Button
-          variant="link"
-          onClick={exportRunnerToXlsx}
-          icon={
-            <FontAwesomeIcon
-              icon={faFileExcel}
-              data-umami-event="Download runner details XLSX"
-              data-umami-event-runner-id={runner.id}
-              data-umami-event-race-id={race.id}
-            />
-          }
-        >
+        <Button variant="link" onClick={exportRunnerToXlsx} icon={<FontAwesomeIcon icon={faFileExcel} />}>
           Télécharger au format Excel
         </Button>
       </p>
