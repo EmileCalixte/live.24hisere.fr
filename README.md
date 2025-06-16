@@ -113,7 +113,7 @@ pnpm test
    1. `NODE_ENV=production`
    2. L'URL de l'application frontend dans la variable `FRONTEND_URL` (exemple : `FRONTEND_URL="https://live.24hisere.fr"`)
    3. Les identifiants de connexion à la base de données dans les variables `DB_NAME`, `DB_USERNAME` et `DB_PASSWORD`
-6. Créer un fichier `.env.local` dans le dossier `apps/backend` et y renseigner les variables `VITE_UMAMI_URL` et `VITE_UMAMI_WEBSITE_ID`
+6. Créer un fichier `.env.local` dans le dossier `apps/frontend` et y renseigner les variables `VITE_UMAMI_URL` et `VITE_UMAMI_WEBSITE_ID`
 7. Générer les builds de production
    ```bash
    pnpm build
