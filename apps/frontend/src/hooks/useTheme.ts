@@ -1,6 +1,8 @@
 import React from "react";
+import { TrackedEvent } from "../constants/eventTracking/customEventNames";
 import { Theme } from "../constants/theme";
 import type { ReactStateSetter } from "../types/utils/react";
+import { trackEvent } from "../utils/eventTracking/eventTrackingUtils";
 
 interface UseTheme {
   theme: Theme;
@@ -34,7 +36,13 @@ export function useTheme(): UseTheme {
     const matchDark = windowMatchDarkRef.current;
 
     function onChange(e: MediaQueryListEvent): void {
-      e.matches ? setTheme(Theme.DARK) : setTheme(Theme.LIGHT);
+      if (e.matches && theme === Theme.LIGHT) {
+        trackEvent(TrackedEvent.AUTO_SWITCH_DARK_THEME);
+        setTheme(Theme.DARK);
+      } else if (!e.matches && theme === Theme.DARK) {
+        trackEvent(TrackedEvent.AUTO_SWITCH_LIGHT_THEME);
+        setTheme(Theme.LIGHT);
+      }
     }
 
     matchDark.addEventListener("change", onChange);
@@ -42,7 +50,7 @@ export function useTheme(): UseTheme {
     return () => {
       matchDark.removeEventListener("change", onChange);
     };
-  }, []);
+  }, [theme]);
 
   return { theme, setTheme };
 }

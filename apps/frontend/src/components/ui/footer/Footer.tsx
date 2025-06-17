@@ -1,6 +1,8 @@
 import type React from "react";
 import { useContext } from "react";
+import { TrackedEvent } from "../../../constants/eventTracking/customEventNames";
 import { appContext } from "../../../contexts/AppContext";
+import { trackEvent } from "../../../utils/eventTracking/eventTrackingUtils";
 import { formatDateAsString } from "../../../utils/utils";
 import { Link } from "../Link";
 
@@ -34,12 +36,22 @@ export default function Footer(): React.ReactElement {
             to="https://github.com/EmileCalixte/live.24hisere.fr"
             className="text-inherit dark:text-inherit"
             target="_blank"
+            onClick={() => {
+              trackEvent(TrackedEvent.FOOTER_NAVIGATE_TO_SOURCE_CODE);
+            }}
           >
             Code source
           </Link>
         </li>
         <li>
-          <Link to="https://www.24hisere.fr" className="text-inherit dark:text-inherit" target="_blank">
+          <Link
+            to="https://www.24hisere.fr"
+            className="text-inherit dark:text-inherit"
+            target="_blank"
+            onClick={() => {
+              trackEvent(TrackedEvent.FOOTER_NAVIGATE_TO_MAIN_WEBSITE);
+            }}
+          >
             Les 24 Heures de l'Isère
           </Link>
         </li>

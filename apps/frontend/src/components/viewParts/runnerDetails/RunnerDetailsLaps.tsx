@@ -2,6 +2,7 @@ import React from "react";
 import { faFileExcel, faSortDown, faSortUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { PublicRace, RaceRunnerWithProcessedPassages } from "@live24hisere/core/types";
+import { TrackedEvent } from "../../../constants/eventTracking/customEventNames";
 import { RUNNER_DETAILS_LAPS_SORT_COLUMNS, SortColumn, SortDirection } from "../../../constants/sort";
 import { appContext } from "../../../contexts/AppContext";
 import { useSortQueryString } from "../../../hooks/queryString/useSortQueryString";
@@ -9,6 +10,7 @@ import { useRaceTime } from "../../../hooks/useRaceTime";
 import { useWindowDimensions } from "../../../hooks/useWindowDimensions";
 import type { MinimalRankingRunnerInput, RankingRunner } from "../../../types/Ranking";
 import { formatMsAsDuration, formatMsDurationHms } from "../../../utils/durationUtils";
+import { trackEvent } from "../../../utils/eventTracking/eventTrackingUtils";
 import { isRaceFinished, isRaceStarted } from "../../../utils/raceUtils";
 import { getOppositeSortDirection } from "../../../utils/sortUtils";
 import { Card } from "../../ui/Card";
@@ -127,27 +129,51 @@ export default function RunnerDetailsLaps({
       e.preventDefault();
 
       if (clickedSortColumn !== sortColumn) {
+        const newSortDirection = SortDirection.ASC;
+
+        trackEvent(TrackedEvent.CHANGE_RUNNER_LAPS_TABLE_SORT, {
+          newSortColumn: clickedSortColumn,
+          newSortDirection,
+        });
+
         void setSortColumn(clickedSortColumn);
-        void setSortDirection(SortDirection.ASC);
+        void setSortDirection(newSortDirection);
 
         return;
       }
 
-      void setSortDirection(getOppositeSortDirection(sortDirection));
+      const newSortDirection = getOppositeSortDirection(sortDirection);
+
+      trackEvent(TrackedEvent.CHANGE_RUNNER_LAPS_TABLE_SORT, {
+        newSortColumn: sortColumn,
+        newSortDirection,
+      });
+
+      void setSortDirection(newSortDirection);
     },
     [setSortColumn, setSortDirection, sortColumn, sortDirection],
   );
 
   const onResponsiveSortButtonClick = React.useCallback(() => {
     if (sortColumn === SortColumn.RACE_TIME) {
-      void setSortColumn(SortColumn.LAP_SPEED);
-      void setSortDirection(SortDirection.DESC);
+      const newSortColumn = SortColumn.LAP_SPEED;
+      const newSortDirection = SortDirection.DESC;
+
+      trackEvent(TrackedEvent.CHANGE_RUNNER_LAPS_TABLE_SORT, { newSortColumn, newSortDirection });
+
+      void setSortColumn(newSortColumn);
+      void setSortDirection(newSortDirection);
 
       return;
     }
 
-    void setSortColumn(SortColumn.RACE_TIME);
-    void setSortDirection(SortDirection.ASC);
+    const newSortColumn = SortColumn.RACE_TIME;
+    const newSortDirection = SortDirection.ASC;
+
+    trackEvent(TrackedEvent.CHANGE_RUNNER_LAPS_TABLE_SORT, { newSortColumn, newSortDirection });
+
+    void setSortColumn(newSortColumn);
+    void setSortDirection(newSortDirection);
   }, [setSortColumn, setSortDirection, sortColumn]);
 
   const showCurrentLap =

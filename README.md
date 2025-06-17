@@ -37,6 +37,8 @@ Si besoin, créez un fichier `apps/frontend/.env.development.local` à partir du
 - API : [http://localhost:8000](http://localhost:8000)
 - Fichiers statiques : [http://localhost:8081](http://localhost:8081)
 - PHPMyAdmin : [http://localhost:8080](http://localhost:8080)
+- Umami : [http://localhost:9000](http://localhost:9000) (utilisateur `admin` - mot de passe : `umami`)
+- PHPMyAdmin (Umami) : [http://localhost:9090](http://localhost:9090)
 
 ### Base de données
 
@@ -47,7 +49,7 @@ Identifiants du serveur MariaDB du container docker `database` :
 - Mot de passe : `admin`
 - Nom de la base de données : `live`
 
-Un jeu de données est chargé automatiquement lors du lancement du docker-compose à partir du/des fichiers SQL contenus dans le répertoire `/sql`.
+Un jeu de données est chargé automatiquement lors du lancement du docker-compose à partir du/des fichiers SQL contenus dans le répertoire `/sql/app`.
 
 La commande suivante permet de créer une migration à partir de la structure de données définie dans `apps/backend/drizzle/schema.ts` :
 
@@ -111,16 +113,17 @@ pnpm test
    1. `NODE_ENV=production`
    2. L'URL de l'application frontend dans la variable `FRONTEND_URL` (exemple : `FRONTEND_URL="https://live.24hisere.fr"`)
    3. Les identifiants de connexion à la base de données dans les variables `DB_NAME`, `DB_USERNAME` et `DB_PASSWORD`
-6. Générer les builds de production
+6. Créer un fichier `.env.local` dans le dossier `apps/frontend` et y renseigner les variables `VITE_UMAMI_URL` et `VITE_UMAMI_WEBSITE_ID`
+7. Générer les builds de production
    ```bash
    pnpm build
    ```
-7. Exécuter les migrations pour créer les tables dans la base de données
+8. Exécuter les migrations pour créer les tables dans la base de données
    ```bash
    pnpm backend migrate
    ```
    L'utilisateur doit avoir les permissions `CREATE`, `ALTER`, `DROP` et `INDEX`.
-8. Lancer l'application
+9. Lancer l'application
    ```bash
    cd apps/backend
    pm2 start /dist/src/main.js --name live.24hisere.fr-api

@@ -68,6 +68,13 @@ export default function AboutView(): React.ReactElement {
         </p>
 
         <p>
+          Ce site utilise un outil d'analyse de trafic permettant de mesurer la fréquentation et l'utilisation des
+          fonctionnalités, sans collecte de données personnelles ni identification des utilisateurs. Les données
+          recueillies sont strictement utilisées à des fins statistiques internes et ne sont ni revendues ni exploitées
+          à d'autres fins.
+        </p>
+
+        <p>
           <Link to="https://github.com/EmileCalixte/live.24hisere.fr" target="_blank">
             Code source
           </Link>

@@ -3,12 +3,14 @@ import React from "react";
 import { parseAsBoolean, useQueryState } from "nuqs";
 import ReactDOMServer from "react-dom/server";
 import type { PublicRace, RaceRunnerWithProcessedPassages, RunnerWithProcessedHours } from "@live24hisere/core/types";
+import { TrackedEvent } from "../../../../constants/eventTracking/customEventNames";
 import { SearchParam } from "../../../../constants/searchParams";
 import { Theme } from "../../../../constants/theme";
 import { appContext } from "../../../../contexts/AppContext";
 import { useWindowDimensions } from "../../../../hooks/useWindowDimensions";
 import CanvasjsReact from "../../../../lib/canvasjs/canvasjs.react";
 import { formatMsAsDuration } from "../../../../utils/durationUtils";
+import { trackEvent } from "../../../../utils/eventTracking/eventTrackingUtils";
 import { Card } from "../../../ui/Card";
 import { Checkbox } from "../../../ui/forms/Checkbox";
 
@@ -385,7 +387,9 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
               label="Vitesse à chaque tour"
               checked={showEachLapSpeed}
               onChange={() => {
-                void setShowEachLapSpeed(!showEachLapSpeed);
+                const newValue = !showEachLapSpeed;
+                trackEvent(TrackedEvent.TOGGLE_RUNNER_SPEED_CHART_LAP_SPEED, { newValue });
+                void setShowEachLapSpeed(newValue);
               }}
             />
 
@@ -393,7 +397,9 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
               label="Vitesse moyenne à chaque heure"
               checked={showEachHourSpeed}
               onChange={() => {
-                void setShowEachHourSpeed(!showEachHourSpeed);
+                const newValue = !showEachHourSpeed;
+                trackEvent(TrackedEvent.TOGGLE_RUNNER_SPEED_CHART_HOUR_SPEED, { newValue });
+                void setShowEachHourSpeed(newValue);
               }}
             />
 
@@ -401,7 +407,9 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
               label="Vitesse moyenne générale"
               checked={showAverageSpeed}
               onChange={() => {
-                void setShowAverageSpeed(!showAverageSpeed);
+                const newValue = !showAverageSpeed;
+                trackEvent(TrackedEvent.TOGGLE_RUNNER_SPEED_CHART_AVG_SPEED, { newValue });
+                void setShowAverageSpeed(newValue);
               }}
             />
 
@@ -409,7 +417,9 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
               label="Évolution de la vitesse moyenne"
               checked={showAverageSpeedEvolution}
               onChange={() => {
-                void setShowAverageSpeedEvolution(!showAverageSpeedEvolution);
+                const newValue = !showAverageSpeedEvolution;
+                trackEvent(TrackedEvent.TOGGLE_RUNNER_SPEED_CHART_AVG_SPEED_EVOLUTION, { newValue });
+                void setShowAverageSpeedEvolution(newValue);
               }}
             />
           </fieldset>
