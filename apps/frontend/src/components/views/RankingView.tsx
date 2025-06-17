@@ -3,14 +3,7 @@ import { ALL_CATEGORY_CODES, getCategoryList } from "@emilecalixte/ffa-categorie
 import { parseAsInteger, useQueryState } from "nuqs";
 import type { EditionWithRaceCount, GenderWithMixed, RaceWithRunnerCount } from "@live24hisere/core/types";
 import { objectUtils } from "@live24hisere/utils";
-import {
-  EVENT_CHANGE_EDITION,
-  EVENT_CHANGE_RACE,
-  EVENT_CHANGE_RANKING_CATEGORY,
-  EVENT_CHANGE_RANKING_GENDER,
-  EVENT_CHANGE_RANKING_TIME,
-  EVENT_CHANGE_RANKING_TIME_MODE,
-} from "../../constants/eventTracking/customEventNames";
+import { TrackedEvent } from "../../constants/eventTracking/customEventNames";
 import { RankingTimeMode } from "../../constants/rankingTimeMode";
 import { SearchParam } from "../../constants/searchParams";
 import { appContext } from "../../contexts/AppContext";
@@ -102,7 +95,7 @@ export default function RankingView(): React.ReactElement {
   const onEditionSelect: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
     const editionId = parseInt(e.target.value);
 
-    trackEvent(EVENT_CHANGE_EDITION, { editionId });
+    trackEvent(TrackedEvent.CHANGE_EDITION, { editionId });
 
     void setSelectedEditionId(editionId);
   };
@@ -110,7 +103,7 @@ export default function RankingView(): React.ReactElement {
   const onRaceSelect: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
     const raceId = parseInt(e.target.value);
 
-    trackEvent(EVENT_CHANGE_RACE, { raceId });
+    trackEvent(TrackedEvent.CHANGE_RACE, { raceId });
 
     void setSelectedRaceId(raceId);
   };
@@ -118,7 +111,7 @@ export default function RankingView(): React.ReactElement {
   const onCategorySelect = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     const value = e.target.value;
 
-    trackEvent(EVENT_CHANGE_RANKING_CATEGORY, { category: value });
+    trackEvent(TrackedEvent.CHANGE_RANKING_CATEGORY, { category: value });
 
     if (value === "scratch") {
       void setSelectedCategory(null);
@@ -129,7 +122,7 @@ export default function RankingView(): React.ReactElement {
   };
 
   const onGenderSelect = (gender: GenderWithMixed): void => {
-    trackEvent(EVENT_CHANGE_RANKING_GENDER, { gender });
+    trackEvent(TrackedEvent.CHANGE_RANKING_GENDER, { gender });
 
     if (gender === "mixed") {
       void setSelectedGender(null);
@@ -140,7 +133,7 @@ export default function RankingView(): React.ReactElement {
   };
 
   const onTimeModeSelect = (timeMode: RankingTimeMode): void => {
-    trackEvent(EVENT_CHANGE_RANKING_TIME_MODE, { timeMode });
+    trackEvent(TrackedEvent.CHANGE_RANKING_TIME_MODE, { timeMode });
 
     if (timeMode === RankingTimeMode.NOW) {
       void setSelectedTimeMode(null);
@@ -155,7 +148,7 @@ export default function RankingView(): React.ReactElement {
    * @param time The new ranking time from race start in ms
    */
   const onRankingTimeSave = (time: number): void => {
-    trackEvent(EVENT_CHANGE_RANKING_TIME, { time });
+    trackEvent(TrackedEvent.CHANGE_RANKING_TIME, { time });
 
     const timeToSave = Math.floor(time / 1000);
 

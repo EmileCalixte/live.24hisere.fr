@@ -2,7 +2,7 @@ import React from "react";
 import { faFileExcel, faSortDown, faSortUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { PublicRace, RaceRunnerWithProcessedPassages } from "@live24hisere/core/types";
-import { EVENT_CHANGE_RUNNER_LAPS_TABLE_SORT } from "../../../constants/eventTracking/customEventNames";
+import { TrackedEvent } from "../../../constants/eventTracking/customEventNames";
 import { RUNNER_DETAILS_LAPS_SORT_COLUMNS, SortColumn, SortDirection } from "../../../constants/sort";
 import { appContext } from "../../../contexts/AppContext";
 import { useSortQueryString } from "../../../hooks/queryString/useSortQueryString";
@@ -131,7 +131,7 @@ export default function RunnerDetailsLaps({
       if (clickedSortColumn !== sortColumn) {
         const newSortDirection = SortDirection.ASC;
 
-        trackEvent(EVENT_CHANGE_RUNNER_LAPS_TABLE_SORT, {
+        trackEvent(TrackedEvent.CHANGE_RUNNER_LAPS_TABLE_SORT, {
           newSortColumn: clickedSortColumn,
           newSortDirection,
         });
@@ -144,7 +144,7 @@ export default function RunnerDetailsLaps({
 
       const newSortDirection = getOppositeSortDirection(sortDirection);
 
-      trackEvent(EVENT_CHANGE_RUNNER_LAPS_TABLE_SORT, {
+      trackEvent(TrackedEvent.CHANGE_RUNNER_LAPS_TABLE_SORT, {
         newSortColumn: sortColumn,
         newSortDirection,
       });
@@ -159,7 +159,7 @@ export default function RunnerDetailsLaps({
       const newSortColumn = SortColumn.LAP_SPEED;
       const newSortDirection = SortDirection.DESC;
 
-      trackEvent(EVENT_CHANGE_RUNNER_LAPS_TABLE_SORT, { newSortColumn, newSortDirection });
+      trackEvent(TrackedEvent.CHANGE_RUNNER_LAPS_TABLE_SORT, { newSortColumn, newSortDirection });
 
       void setSortColumn(newSortColumn);
       void setSortDirection(newSortDirection);
@@ -170,7 +170,7 @@ export default function RunnerDetailsLaps({
     const newSortColumn = SortColumn.RACE_TIME;
     const newSortDirection = SortDirection.ASC;
 
-    trackEvent(EVENT_CHANGE_RUNNER_LAPS_TABLE_SORT, { newSortColumn, newSortDirection });
+    trackEvent(TrackedEvent.CHANGE_RUNNER_LAPS_TABLE_SORT, { newSortColumn, newSortDirection });
 
     void setSortColumn(newSortColumn);
     void setSortDirection(newSortDirection);

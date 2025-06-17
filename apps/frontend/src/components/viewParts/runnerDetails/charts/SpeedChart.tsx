@@ -3,12 +3,7 @@ import React from "react";
 import { parseAsBoolean, useQueryState } from "nuqs";
 import ReactDOMServer from "react-dom/server";
 import type { PublicRace, RaceRunnerWithProcessedPassages, RunnerWithProcessedHours } from "@live24hisere/core/types";
-import {
-  EVENT_TOGGLE_RUNNER_SPEED_CHART_AVG_SPEED,
-  EVENT_TOGGLE_RUNNER_SPEED_CHART_AVG_SPEED_EVOLUTION,
-  EVENT_TOGGLE_RUNNER_SPEED_CHART_HOUR_SPEED,
-  EVENT_TOGGLE_RUNNER_SPEED_CHART_LAP_SPEED,
-} from "../../../../constants/eventTracking/customEventNames";
+import { TrackedEvent } from "../../../../constants/eventTracking/customEventNames";
 import { SearchParam } from "../../../../constants/searchParams";
 import { Theme } from "../../../../constants/theme";
 import { appContext } from "../../../../contexts/AppContext";
@@ -393,7 +388,7 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
               checked={showEachLapSpeed}
               onChange={() => {
                 const newValue = !showEachLapSpeed;
-                trackEvent(EVENT_TOGGLE_RUNNER_SPEED_CHART_LAP_SPEED, { newValue });
+                trackEvent(TrackedEvent.TOGGLE_RUNNER_SPEED_CHART_LAP_SPEED, { newValue });
                 void setShowEachLapSpeed(newValue);
               }}
             />
@@ -403,7 +398,7 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
               checked={showEachHourSpeed}
               onChange={() => {
                 const newValue = !showEachHourSpeed;
-                trackEvent(EVENT_TOGGLE_RUNNER_SPEED_CHART_HOUR_SPEED, { newValue });
+                trackEvent(TrackedEvent.TOGGLE_RUNNER_SPEED_CHART_HOUR_SPEED, { newValue });
                 void setShowEachHourSpeed(newValue);
               }}
             />
@@ -413,7 +408,7 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
               checked={showAverageSpeed}
               onChange={() => {
                 const newValue = !showAverageSpeed;
-                trackEvent(EVENT_TOGGLE_RUNNER_SPEED_CHART_AVG_SPEED, { newValue });
+                trackEvent(TrackedEvent.TOGGLE_RUNNER_SPEED_CHART_AVG_SPEED, { newValue });
                 void setShowAverageSpeed(newValue);
               }}
             />
@@ -423,7 +418,7 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
               checked={showAverageSpeedEvolution}
               onChange={() => {
                 const newValue = !showAverageSpeedEvolution;
-                trackEvent(EVENT_TOGGLE_RUNNER_SPEED_CHART_AVG_SPEED_EVOLUTION, { newValue });
+                trackEvent(TrackedEvent.TOGGLE_RUNNER_SPEED_CHART_AVG_SPEED_EVOLUTION, { newValue });
                 void setShowAverageSpeedEvolution(newValue);
               }}
             />

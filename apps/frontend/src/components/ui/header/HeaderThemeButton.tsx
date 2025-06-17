@@ -2,10 +2,7 @@ import React from "react";
 import { faMoon } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { MdSunny } from "react-icons/md";
-import {
-  EVENT_MANUAL_SWITCH_DARK_THEME,
-  EVENT_MANUAL_SWITCH_LIGHT_THEME,
-} from "../../../constants/eventTracking/customEventNames";
+import { TrackedEvent } from "../../../constants/eventTracking/customEventNames";
 import { Theme } from "../../../constants/theme";
 import { appContext } from "../../../contexts/AppContext";
 import { trackEvent } from "../../../utils/eventTracking/eventTrackingUtils";
@@ -17,9 +14,9 @@ export function HeaderThemeButton(): React.ReactElement {
 
   const onClick: React.MouseEventHandler<HTMLButtonElement> = () => {
     if (theme === Theme.DARK) {
-      trackEvent(EVENT_MANUAL_SWITCH_LIGHT_THEME);
+      trackEvent(TrackedEvent.MANUAL_SWITCH_LIGHT_THEME);
     } else {
-      trackEvent(EVENT_MANUAL_SWITCH_DARK_THEME);
+      trackEvent(TrackedEvent.MANUAL_SWITCH_DARK_THEME);
     }
 
     setTheme((current) => (current === Theme.DARK ? Theme.LIGHT : Theme.DARK));

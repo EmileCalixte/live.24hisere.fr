@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQueryState } from "nuqs";
 import { useNavigate, useParams } from "react-router-dom";
 import { stringUtils } from "@live24hisere/utils";
-import { EVENT_DOWNLOAD_RUNNER_LAPS_XLSX } from "../../constants/eventTracking/customEventNames";
+import { TrackedEvent } from "../../constants/eventTracking/customEventNames";
 import { SearchParam } from "../../constants/searchParams";
 import { appContext } from "../../contexts/AppContext";
 import { useGetPublicEditions } from "../../hooks/api/requests/public/editions/useGetPublicEditions";
@@ -132,7 +132,10 @@ export default function RunnerDetailsView(): React.ReactElement {
       return;
     }
 
-    trackEvent(EVENT_DOWNLOAD_RUNNER_LAPS_XLSX, { runnerId: selectedRankingRunner.id, raceId: selectedRace.id });
+    trackEvent(TrackedEvent.DOWNLOAD_RUNNER_LAPS_XLSX, {
+      runnerId: selectedRankingRunner.id,
+      raceId: selectedRace.id,
+    });
 
     const filename =
       `${selectedRankingRunner.firstname} ${selectedRankingRunner.lastname} - ${selectedRace.name} - ${selectedRaceEdition.name}`.trim();
