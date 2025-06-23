@@ -48,7 +48,7 @@
     "@testing-library/user-event": "^14.6.1",
     "jsdom": "^26.1.0",
     "rollup-plugin-visualizer": "^6.0.3",
-    "vitest": "^3.2.3"
+    "vitest": "^3.2.4"
   },
   "scripts": {
     "dev": "vite",
