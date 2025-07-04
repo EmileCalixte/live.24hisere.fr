@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import * as crypto from "crypto";
+import * as crypto from "node:crypto";
 
 export const DIGITS = "0123456789";
 export const HEXADECIMAL = "0123456789abcdef";
