@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { fromZonedTime } from "date-fns-tz";
-import fs from "fs";
 import { Command, CommandRunner, Option } from "nest-commander";
+import fs from "node:fs";
+import path from "node:path";
 import Papa from "papaparse";
-import path from "path";
 import { AdminRace } from "@live24hisere/core/types";
 import { typeUtils } from "@live24hisere/utils";
 import { RaceService } from "../../services/database/entities/race.service";

@@ -1,7 +1,7 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { migrate } from "drizzle-orm/mysql2/migrator";
 import { Command, CommandRunner } from "nest-commander";
-import path from "path";
+import path from "node:path";
 import { DrizzleService } from "../../services/database/drizzle.service";
 
 @Injectable()
