@@ -56,7 +56,7 @@ root.render(
   <NuqsAdapter>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <TooltipProvider delayDuration={0}>
+        <TooltipProvider delay={0}>
           <App />
         </TooltipProvider>
       </BrowserRouter>
