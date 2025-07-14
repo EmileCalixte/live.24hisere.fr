@@ -27,7 +27,7 @@
   "dependencies": {
     "@live24hisere/core": "workspace:^",
     "@live24hisere/utils": "workspace:^",
-    "@nestjs/axios": "^4.0.0",
+    "@nestjs/axios": "^4.0.1",
     "@nestjs/common": "^11.1.3",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.1.3",
