@@ -3,7 +3,7 @@ import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { PublicUser } from "@live24hisere/core/types";
 import { appContext } from "../../../contexts/AppContext";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../DropdownMenu";
+import { DropdownMenu, DropdownMenuItem, DropdownMenuPopup, DropdownMenuTrigger } from "../DropdownMenu";
 
 interface AdminHeaderUserDropdownProps {
   user: PublicUser;
@@ -16,17 +16,18 @@ export default function AdminHeaderUserDropdown({ user }: AdminHeaderUserDropdow
 
   return (
     <DropdownMenu onOpenChange={setIsOpened}>
-      <DropdownMenuTrigger asChild>
-        <button className="hover:cursor-pointer">
-          {user.username}
-          <> </>
-          <FontAwesomeIcon icon={isOpened ? faAngleUp : faAngleDown} />
-        </button>
-      </DropdownMenuTrigger>
+      <DropdownMenuTrigger
+        render={
+          <button className="inline-flex items-center gap-1 hover:cursor-pointer">
+            {user.username}
+            <FontAwesomeIcon icon={isOpened ? faAngleUp : faAngleDown} />
+          </button>
+        }
+      />
 
-      <DropdownMenuContent className="mr-2">
+      <DropdownMenuPopup className="mr-2">
         <DropdownMenuItem onClick={logout}>Déconnexion</DropdownMenuItem>
-      </DropdownMenuContent>
+      </DropdownMenuPopup>
     </DropdownMenu>
   );
 }

@@ -1,7 +1,7 @@
 import type React from "react";
 import { useEffect, useRef } from "react";
 import { formatDateAsString } from "../../../../utils/utils";
-import { Dialog, DialogContent, DialogTitle } from "../../../ui/Dialog";
+import { Dialog, DialogPopup, DialogTitle } from "../../../ui/Dialog";
 import { Button } from "../../../ui/forms/Button";
 import DurationInputs from "../../../ui/forms/DurationInputs";
 import { TextArea } from "../../../ui/forms/TextArea";
@@ -41,7 +41,7 @@ export default function RunnerDetailsPassageFormDialog({
 
   return (
     <Dialog
-      // We dont want Radix to handle open/close state for this dialog.
+      // We dont want Base UI to handle open/close state for this dialog.
       // If this component is mounted, the dialog should always be shown.
       open
       onOpenChange={(open) => {
@@ -50,10 +50,8 @@ export default function RunnerDetailsPassageFormDialog({
         }
       }}
     >
-      <DialogContent className="flex flex-col gap-3">
-        <DialogTitle asChild>
-          <h3 className="mt-0">{title}</h3>
-        </DialogTitle>
+      <DialogPopup className="flex flex-col gap-3">
+        <DialogTitle render={<h3 className="mt-0">{title}</h3>} />
 
         <form
           onSubmit={(e) => {
@@ -94,7 +92,7 @@ export default function RunnerDetailsPassageFormDialog({
             </div>
           </div>
         </form>
-      </DialogContent>
+      </DialogPopup>
     </Dialog>
   );
 }
