@@ -51,7 +51,7 @@ export default function RunnerDetailsPassageFormDialog({
       }}
     >
       <DialogPopup className="flex flex-col gap-3">
-        <DialogTitle render={<h3 className="mt-0">{title}</h3>} />
+        <DialogTitle className="mt-0">{title}</DialogTitle>
 
         <form
           onSubmit={(e) => {

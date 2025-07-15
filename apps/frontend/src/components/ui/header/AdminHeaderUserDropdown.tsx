@@ -16,14 +16,10 @@ export default function AdminHeaderUserDropdown({ user }: AdminHeaderUserDropdow
 
   return (
     <DropdownMenu onOpenChange={setIsOpened}>
-      <DropdownMenuTrigger
-        render={
-          <button className="inline-flex items-center gap-1 hover:cursor-pointer">
-            {user.username}
-            <FontAwesomeIcon icon={isOpened ? faAngleUp : faAngleDown} />
-          </button>
-        }
-      />
+      <DropdownMenuTrigger className="inline-flex items-center gap-1 hover:cursor-pointer">
+        {user.username}
+        <FontAwesomeIcon icon={isOpened ? faAngleUp : faAngleDown} />
+      </DropdownMenuTrigger>
 
       <DropdownMenuPopup className="mr-2">
         <DropdownMenuItem onClick={logout}>Déconnexion</DropdownMenuItem>
