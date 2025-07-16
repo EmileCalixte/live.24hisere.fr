@@ -8,8 +8,8 @@ export default function Navbar(): React.ReactElement {
   const { user } = useContext(appContext).user;
 
   const links = [
-    { to: "/ranking", label: "Classements" },
-    { to: "/runner-details", label: "Détails coureur" },
+    { to: "/races", label: "Courses" },
+    { to: "/runner-details", label: "Coureurs" },
     ...(user ? [{ to: "/admin", label: "Admin" }] : []),
   ];
 
