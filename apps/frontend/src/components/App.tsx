@@ -182,60 +182,20 @@ export default function App(): React.ReactElement {
             ) : showDisabledAppMessage ? (
               <DisabledAppView />
             ) : (
-              <Routes>
-                <Route path="/login" element={<LoginView />} />
-                <Route
-                  path="/admin/*"
-                  element={
-                    <React.Suspense fallback={<CircularLoader />}>
-                      <Admin />
-                    </React.Suspense>
-                  }
-                />
-                <Route
-                  path="/about"
-                  element={
-                    <React.Suspense fallback={<CircularLoader />}>
-                      <About />
-                    </React.Suspense>
-                  }
-                />
-                <Route
-                  path="/ranking"
-                  element={
-                    <React.Suspense fallback={<CircularLoader />}>
-                      <RankingView />
-                    </React.Suspense>
-                  }
-                />
-                <Route
-                  path="/runner-details"
-                  element={
-                    <React.Suspense fallback={<CircularLoader />}>
-                      <RunnerDetailsView />
-                    </React.Suspense>
-                  }
-                />
-                <Route
-                  path="/runner-details/search"
-                  element={
-                    <React.Suspense fallback={<CircularLoader />}>
-                      <SearchRunnerView />
-                    </React.Suspense>
-                  }
-                />
-                <Route
-                  path="/runner-details/:runnerId"
-                  element={
-                    <React.Suspense fallback={<CircularLoader />}>
-                      <RunnerDetailsView />
-                    </React.Suspense>
-                  }
-                />
+              <React.Suspense fallback={<CircularLoader />}>
+                <Routes>
+                  <Route path="/login" element={<LoginView />} />
+                  <Route path="/admin/*" element={<Admin />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/ranking" element={<RankingView />} />
+                  <Route path="/runner-details" element={<RunnerDetailsView />} />
+                  <Route path="/runner-details/search" element={<SearchRunnerView />} />
+                  <Route path="/runner-details/:runnerId" element={<RunnerDetailsView />} />
 
-                {/* Redirect any unresolved route to /ranking */}
-                <Route path="*" element={<Navigate to="/ranking" replace />} />
-              </Routes>
+                  {/* Redirect any unresolved route to /ranking */}
+                  <Route path="*" element={<Navigate to="/ranking" replace />} />
+                </Routes>
+              </React.Suspense>
             )}
           </main>
         </div>
