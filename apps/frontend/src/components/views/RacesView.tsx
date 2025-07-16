@@ -1,8 +1,8 @@
 import React from "react";
 import { ALL_CATEGORY_CODES, getCategoryList } from "@emilecalixte/ffa-categories";
-import { parseAsInteger, useQueryState } from "nuqs";
+import { parseAsInteger, parseAsStringLiteral, useQueryState } from "nuqs";
 import type { EditionWithRaceCount, GenderWithMixed, RaceWithRunnerCount } from "@live24hisere/core/types";
-import { objectUtils } from "@live24hisere/utils";
+import { arrayUtils, objectUtils } from "@live24hisere/utils";
 import { TrackedEvent } from "../../constants/eventTracking/customEventNames";
 import { RankingTimeMode } from "../../constants/rankingTimeMode";
 import { SearchParam } from "../../constants/searchParams";
@@ -25,15 +25,23 @@ import { Card } from "../ui/Card";
 import CircularLoader from "../ui/CircularLoader";
 import Select from "../ui/forms/Select";
 import Page from "../ui/Page";
+import { Tab, TabContent, TabList, Tabs } from "../ui/Tabs";
 import RankingSettings from "../viewParts/ranking/RankingSettings";
 import RankingTable from "../viewParts/ranking/rankingTable/RankingTable";
 import ResponsiveRankingTable from "../viewParts/ranking/rankingTable/responsive/ResponsiveRankingTable";
 
 const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
 
-export default function RankingView(): React.ReactElement {
+const TAB_RANKING = "ranking";
+const TAB_STATS = "stats";
+
+const TABS = [TAB_RANKING, TAB_STATS] as const;
+
+export default function RacesView(): React.ReactElement {
   const [selectedEditionId, setSelectedEditionId] = useQueryState(SearchParam.EDITION, parseAsInteger);
   const [selectedRaceId, setSelectedRaceId] = useQueryState(SearchParam.RACE, parseAsInteger);
+  const [selectedTab, setSelectedTab] = useQueryState(SearchParam.TAB, parseAsStringLiteral(TABS));
+
   const [selectedCategoryCode, setSelectedCategory] = useQueryState(SearchParam.CATEGORY);
   const [selectedGender, setSelectedGender] = useQueryState(SearchParam.GENDER, parseAsGender);
 
@@ -180,6 +188,13 @@ export default function RankingView(): React.ReactElement {
     return objectUtils.excludeKeys(allCategories, categoriesToRemove);
   }, [allCategories, customRunnerCategories, getCategory, ranking, selectedRace]);
 
+  // Set default tab (we don't use nuqs `withDefault` because we always want the tab to be displayed in params)
+  React.useEffect(() => {
+    if (!arrayUtils.inArray(selectedTab, TABS)) {
+      void setSelectedTab(TAB_RANKING);
+    }
+  }, [selectedTab, setSelectedTab]);
+
   // Clear category param if a category is selected but no runner is in it in the ranking
   React.useEffect(() => {
     if (categories && selectedCategoryCode && !(selectedCategoryCode in categories)) {
@@ -224,7 +239,7 @@ export default function RankingView(): React.ReactElement {
   }, [isRaceNotFinished, selectedRace?.isImmediateStop, selectedTimeMode]);
 
   return (
-    <Page id="ranking" htmlTitle="Classements" title="Classements" contentClassName="flex flex-col gap-3">
+    <Page id="ranking" htmlTitle="Classements" contentClassName="flex flex-col gap-3">
       {editions && editions.length < 1 && <p>Aucune donnée disponible.</p>}
 
       <Card className="grid-rows-auto grid grid-cols-6 gap-3 print:hidden">
@@ -252,6 +267,20 @@ export default function RankingView(): React.ReactElement {
 
       {selectedRace && (
         <>
+          <Tabs
+            value={selectedTab}
+            onValueChange={(newValue: (typeof TABS)[number]) => {
+              void setSelectedTab(newValue);
+            }}
+          >
+            <TabList>
+              <Tab value={TAB_RANKING}>Classement</Tab>
+              <Tab value={TAB_STATS}>Statistiques</Tab>
+            </TabList>
+            <TabContent value={TAB_RANKING}>Onglet classement</TabContent>
+            <TabContent value={TAB_STATS}>Onglet statistiques</TabContent>
+          </Tabs>
+
           <div className="flex flex-wrap gap-x-10 gap-y-3 print:hidden">
             <RankingSettings
               categories={categories}
