@@ -56,7 +56,7 @@ export default function RunnerDetailsStats({ runner, race, ranking }: RunnerDeta
           <RunnerDetailsStatsRankingTable race={race} runner={runner} ranking={ranking} />
 
           <p className="mb-0 mt-1">
-            <Link to={`/ranking?edition=${race.editionId}&race=${race.id}`}>
+            <Link to={`/races?edition=${race.editionId}&race=${race.id}&tab=ranking`}>
               Cliquez ici pour voir le classement complet
             </Link>
           </p>

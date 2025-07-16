@@ -18,7 +18,7 @@ import LoginView from "./views/LoginView";
 
 const Admin = React.lazy(async () => await import("./views/admin/Admin"));
 const About = React.lazy(async () => await import("./views/AboutView"));
-const RankingView = React.lazy(async () => await import("./views/RankingView"));
+const RacesView = React.lazy(async () => await import("./views/RacesView"));
 const RunnerDetailsView = React.lazy(async () => await import("./views/RunnerDetailsView"));
 const SearchRunnerView = React.lazy(async () => await import("./views/SearchRunnerView"));
 
@@ -187,13 +187,13 @@ export default function App(): React.ReactElement {
                   <Route path="/login" element={<LoginView />} />
                   <Route path="/admin/*" element={<Admin />} />
                   <Route path="/about" element={<About />} />
-                  <Route path="/ranking" element={<RankingView />} />
+                  <Route path="/races" element={<RacesView />} />
                   <Route path="/runner-details" element={<RunnerDetailsView />} />
                   <Route path="/runner-details/search" element={<SearchRunnerView />} />
                   <Route path="/runner-details/:runnerId" element={<RunnerDetailsView />} />
 
-                  {/* Redirect any unresolved route to /ranking */}
-                  <Route path="*" element={<Navigate to="/ranking" replace />} />
+                  {/* Redirect any unresolved route to /races */}
+                  <Route path="*" element={<Navigate to="/races" replace />} />
                 </Routes>
               </React.Suspense>
             )}
