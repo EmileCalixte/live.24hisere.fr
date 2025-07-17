@@ -10,6 +10,8 @@ export const TrackedEvent = {
   CHANGE_EDITION: "Change edition",
   CHANGE_RACE: "Change race",
 
+  RACES_VIEW_CHANGE_TAB: "Change tab in races view",
+
   CHANGE_RANKING_CATEGORY: "Change ranking category",
   CHANGE_RANKING_GENDER: "Change ranking gender",
   CHANGE_RANKING_TIME_MODE: "Change ranking time mode",

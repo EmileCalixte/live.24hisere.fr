@@ -37,6 +37,8 @@ const TAB_STATS = "stats";
 
 const TABS = [TAB_RANKING, TAB_STATS] as const;
 
+type Tab = (typeof TABS)[number];
+
 export default function RacesView(): React.ReactElement {
   const [selectedEditionId, setSelectedEditionId] = useQueryState(SearchParam.EDITION, parseAsInteger);
   const [selectedRaceId, setSelectedRaceId] = useQueryState(SearchParam.RACE, parseAsInteger);
@@ -115,6 +117,12 @@ export default function RacesView(): React.ReactElement {
 
     void setSelectedRaceId(raceId);
   };
+
+  function onTabSelect(tab: Tab): void {
+    trackEvent(TrackedEvent.RACES_VIEW_CHANGE_TAB, { tab });
+
+    void setSelectedTab(tab);
+  }
 
   const onCategorySelect = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     const value = e.target.value;
@@ -238,8 +246,16 @@ export default function RacesView(): React.ReactElement {
     return FormatGapMode.LAPS_OR_DISTANCE;
   }, [isRaceNotFinished, selectedRace?.isImmediateStop, selectedTimeMode]);
 
+  const htmlTitle = (function (): string {
+    if (!selectedRace || !selectedEdition) {
+      return "Courses";
+    }
+
+    return `${selectedRace.name} (${selectedEdition.name})`;
+  })();
+
   return (
-    <Page id="ranking" htmlTitle="Classements" contentClassName="flex flex-col gap-3">
+    <Page id="ranking" htmlTitle={htmlTitle} contentClassName="flex flex-col gap-3">
       {editions && editions.length < 1 && <p>Aucune donnée disponible.</p>}
 
       <Card className="grid-rows-auto grid grid-cols-6 gap-3 print:hidden">
@@ -269,8 +285,8 @@ export default function RacesView(): React.ReactElement {
         <>
           <Tabs
             value={selectedTab}
-            onValueChange={(newValue: (typeof TABS)[number]) => {
-              void setSelectedTab(newValue);
+            onValueChange={(newValue: Tab) => {
+              onTabSelect(newValue);
             }}
           >
             <TabList>
