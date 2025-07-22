@@ -1,36 +1,21 @@
 import React from "react";
-import { ALL_CATEGORY_CODES, getCategoryList } from "@emilecalixte/ffa-categories";
 import { parseAsInteger, parseAsStringLiteral, useQueryState } from "nuqs";
-import type { EditionWithRaceCount, GenderWithMixed, RaceWithRunnerCount } from "@live24hisere/core/types";
-import { arrayUtils, objectUtils } from "@live24hisere/utils";
+import type { EditionWithRaceCount, RaceWithRunnerCount } from "@live24hisere/core/types";
+import { arrayUtils } from "@live24hisere/utils";
 import { TrackedEvent } from "../../constants/eventTracking/customEventNames";
-import { RankingTimeMode } from "../../constants/rankingTimeMode";
 import { SearchParam } from "../../constants/searchParams";
-import { appContext } from "../../contexts/AppContext";
+import { racesViewContext, type RacesViewContext } from "../../contexts/RacesViewContext";
 import { useGetPublicEditions } from "../../hooks/api/requests/public/editions/useGetPublicEditions";
 import { useGetPublicEditionRaces } from "../../hooks/api/requests/public/races/useGetPublicEditionRaces";
-import { useGetPublicRaceRunners } from "../../hooks/api/requests/public/runners/useGetPublicRaceRunners";
-import { useRankingTimeQueryString } from "../../hooks/queryString/useRankingTimeQueryString";
-import { useProcessedRunners } from "../../hooks/runners/useProcessedRunners";
 import { useEditionSelectOptions } from "../../hooks/useEditionSelectOptions";
-import { useGetRunnerCategory } from "../../hooks/useGetRunnerCategory";
 import { useRaceSelectOptions } from "../../hooks/useRaceSelectOptions";
-import { useRanking } from "../../hooks/useRanking";
-import { useWindowDimensions } from "../../hooks/useWindowDimensions";
-import { parseAsGender } from "../../queryStringParsers/parseAsGender";
 import { trackEvent } from "../../utils/eventTracking/eventTrackingUtils";
-import { isRaceFinished } from "../../utils/raceUtils";
-import { FormatGapMode } from "../../utils/runnerUtils";
 import { Card } from "../ui/Card";
-import CircularLoader from "../ui/CircularLoader";
 import Select from "../ui/forms/Select";
 import Page from "../ui/Page";
 import { Tab, TabContent, TabList, Tabs } from "../ui/Tabs";
-import RankingSettings from "../viewParts/ranking/RankingSettings";
-import RankingTable from "../viewParts/ranking/rankingTable/RankingTable";
-import ResponsiveRankingTable from "../viewParts/ranking/rankingTable/responsive/ResponsiveRankingTable";
-
-const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
+import { RankingTabContent } from "../viewParts/races/ranking/RankingTabContent";
+import { StatsTabContent } from "../viewParts/races/stats/StatsTabContent";
 
 const TAB_RANKING = "ranking";
 const TAB_STATS = "stats";
@@ -43,18 +28,6 @@ export default function RacesView(): React.ReactElement {
   const [selectedEditionId, setSelectedEditionId] = useQueryState(SearchParam.EDITION, parseAsInteger);
   const [selectedRaceId, setSelectedRaceId] = useQueryState(SearchParam.RACE, parseAsInteger);
   const [selectedTab, setSelectedTab] = useQueryState(SearchParam.TAB, parseAsStringLiteral(TABS));
-
-  const [selectedCategoryCode, setSelectedCategory] = useQueryState(SearchParam.CATEGORY);
-  const [selectedGender, setSelectedGender] = useQueryState(SearchParam.GENDER, parseAsGender);
-
-  const getCategory = useGetRunnerCategory();
-
-  const getRaceRunnersQuery = useGetPublicRaceRunners(selectedRaceId ?? undefined);
-  const runners = getRaceRunnersQuery.data?.runners;
-
-  const { serverTimeOffset, customRunnerCategories } = React.useContext(appContext).appData;
-
-  const { width: windowWidth } = useWindowDimensions();
 
   const getEditionsQuery = useGetPublicEditions();
   const editions = getEditionsQuery.data?.editions;
@@ -72,35 +45,8 @@ export default function RacesView(): React.ReactElement {
     [races, selectedRaceId],
   );
 
-  const allCategories = React.useMemo(() => {
-    if (!selectedRace) {
-      return {};
-    }
-
-    const allCategories: Record<string, string> = getCategoryList(new Date(selectedRace.startTime));
-
-    for (const customCategory of customRunnerCategories) {
-      allCategories[customCategory.code] = customCategory.name;
-    }
-
-    return allCategories;
-  }, [customRunnerCategories, selectedRace]);
-
-  const {
-    selectedTimeMode,
-    setSelectedTimeMode,
-    selectedRankingTime,
-    rankingDate,
-    setRankingTime,
-    setRankingTimeMemory,
-  } = useRankingTimeQueryString(selectedRace);
-
   const editionOptions = useEditionSelectOptions(editions);
   const raceOptions = useRaceSelectOptions(races);
-
-  const processedRunners = useProcessedRunners(runners, selectedRace, !rankingDate);
-
-  const ranking = useRanking(selectedRace ?? undefined, processedRunners, rankingDate);
 
   const onEditionSelect: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
     const editionId = parseInt(e.target.value);
@@ -124,91 +70,12 @@ export default function RacesView(): React.ReactElement {
     void setSelectedTab(tab);
   }
 
-  const onCategorySelect = (e: React.ChangeEvent<HTMLSelectElement>): void => {
-    const value = e.target.value;
-
-    trackEvent(TrackedEvent.CHANGE_RANKING_CATEGORY, { category: value });
-
-    if (value === "scratch") {
-      void setSelectedCategory(null);
-      return;
-    }
-
-    void setSelectedCategory(value);
-  };
-
-  const onGenderSelect = (gender: GenderWithMixed): void => {
-    trackEvent(TrackedEvent.CHANGE_RANKING_GENDER, { gender });
-
-    if (gender === "mixed") {
-      void setSelectedGender(null);
-      return;
-    }
-
-    void setSelectedGender(gender);
-  };
-
-  const onTimeModeSelect = (timeMode: RankingTimeMode): void => {
-    trackEvent(TrackedEvent.CHANGE_RANKING_TIME_MODE, { timeMode });
-
-    if (timeMode === RankingTimeMode.NOW) {
-      void setSelectedTimeMode(null);
-      void setRankingTime(null);
-      return;
-    }
-
-    void setSelectedTimeMode(timeMode);
-  };
-
-  /**
-   * @param time The new ranking time from race start in ms
-   */
-  const onRankingTimeSave = (time: number): void => {
-    trackEvent(TrackedEvent.CHANGE_RANKING_TIME, { time });
-
-    const timeToSave = Math.floor(time / 1000);
-
-    void setRankingTime(timeToSave);
-    setRankingTimeMemory(timeToSave);
-  };
-
-  const categories = React.useMemo<Record<string, string> | null>(() => {
-    if (!ranking || !selectedRace) {
-      return null;
-    }
-
-    const categoriesInRanking = new Set<string>();
-
-    for (const runner of ranking) {
-      categoriesInRanking.add(getCategory(runner, new Date(selectedRace.startTime)).code);
-    }
-
-    const categoriesToRemove = [];
-
-    const allCategoryCodes = [...ALL_CATEGORY_CODES, ...customRunnerCategories.map((c) => c.code)];
-
-    for (const categoryCode of allCategoryCodes) {
-      if (!categoriesInRanking.has(categoryCode)) {
-        categoriesToRemove.push(categoryCode);
-      }
-    }
-
-    return objectUtils.excludeKeys(allCategories, categoriesToRemove);
-  }, [allCategories, customRunnerCategories, getCategory, ranking, selectedRace]);
-
   // Set default tab (we don't use nuqs `withDefault` because we always want the tab to be displayed in params)
   React.useEffect(() => {
     if (!arrayUtils.inArray(selectedTab, TABS)) {
       void setSelectedTab(TAB_RANKING);
     }
   }, [selectedTab, setSelectedTab]);
-
-  // Clear category param if a category is selected but no runner is in it in the ranking
-  React.useEffect(() => {
-    if (categories && selectedCategoryCode && !(selectedCategoryCode in categories)) {
-      void setSelectedCategory(null);
-    }
-  }, [categories, selectedCategoryCode, setSelectedCategory]);
 
   // Auto-select the first edition
   React.useEffect(() => {
@@ -224,28 +91,6 @@ export default function RacesView(): React.ReactElement {
     }
   }, [races, selectedRace, setSelectedRaceId]);
 
-  const isRaceNotFinished = !!selectedRace && !isRaceFinished(selectedRace, serverTimeOffset);
-
-  const showLastPassageTime = React.useMemo(() => {
-    if (selectedRace?.isBasicRanking) {
-      return false;
-    }
-
-    if (isRaceNotFinished) {
-      return true;
-    }
-
-    return !selectedRace?.isImmediateStop || selectedTimeMode === RankingTimeMode.AT;
-  }, [isRaceNotFinished, selectedRace?.isBasicRanking, selectedRace?.isImmediateStop, selectedTimeMode]);
-
-  const formatGapMode = React.useMemo<FormatGapMode>(() => {
-    if (isRaceNotFinished || selectedTimeMode === RankingTimeMode.AT || !selectedRace?.isImmediateStop) {
-      return FormatGapMode.LAPS_OR_TIME;
-    }
-
-    return FormatGapMode.LAPS_OR_DISTANCE;
-  }, [isRaceNotFinished, selectedRace?.isImmediateStop, selectedTimeMode]);
-
   const htmlTitle = (function (): string {
     if (!selectedRace || !selectedEdition) {
       return "Courses";
@@ -253,6 +98,8 @@ export default function RacesView(): React.ReactElement {
 
     return `${selectedRace.name} (${selectedEdition.name})`;
   })();
+
+  const racesViewContextValues: RacesViewContext = { selectedEdition, selectedRace };
 
   return (
     <Page id="ranking" htmlTitle={htmlTitle} contentClassName="flex flex-col gap-3">
@@ -282,70 +129,30 @@ export default function RacesView(): React.ReactElement {
       </Card>
 
       {selectedRace && (
-        <>
+        <racesViewContext.Provider value={racesViewContextValues}>
           <Tabs
             value={selectedTab}
             onValueChange={(newValue: Tab) => {
               onTabSelect(newValue);
             }}
+            className="flex flex-col gap-3"
           >
-            <TabList>
-              <Tab value={TAB_RANKING}>Classement</Tab>
-              <Tab value={TAB_STATS}>Statistiques</Tab>
-            </TabList>
-            <TabContent value={TAB_RANKING}>Onglet classement</TabContent>
-            <TabContent value={TAB_STATS}>Onglet statistiques</TabContent>
+            <div>
+              <TabList>
+                <Tab value={TAB_RANKING}>Classement</Tab>
+                <Tab value={TAB_STATS}>Statistiques</Tab>
+              </TabList>
+            </div>
+
+            <TabContent value={TAB_RANKING}>
+              <RankingTabContent />
+            </TabContent>
+
+            <TabContent value={TAB_STATS}>
+              <StatsTabContent />
+            </TabContent>
           </Tabs>
-
-          <div className="flex flex-wrap gap-x-10 gap-y-3 print:hidden">
-            <RankingSettings
-              categories={categories}
-              onCategorySelect={onCategorySelect}
-              onGenderSelect={onGenderSelect}
-              setTimeMode={onTimeModeSelect}
-              onRankingTimeSave={onRankingTimeSave}
-              selectedCategoryCode={selectedCategoryCode}
-              selectedGender={selectedGender ?? "mixed"}
-              showTimeModeSelect={!selectedRace.isBasicRanking}
-              selectedTimeMode={selectedTimeMode}
-              currentRankingTime={selectedRankingTime ?? selectedRace.duration * 1000}
-              maxRankingTime={selectedRace.duration * 1000}
-              isRaceFinished={isRaceFinished(selectedRace, serverTimeOffset)}
-            />
-          </div>
-
-          {!ranking && <CircularLoader />}
-
-          {ranking && (
-            <>
-              {windowWidth > RESPONSIVE_TABLE_MAX_WINDOW_WIDTH && (
-                <RankingTable
-                  race={selectedRace}
-                  ranking={ranking}
-                  tableCategoryCode={selectedCategoryCode}
-                  tableGender={selectedGender ?? "mixed"}
-                  tableRaceDuration={selectedTimeMode === RankingTimeMode.AT ? selectedRankingTime : null}
-                  showLastPassageTime={showLastPassageTime}
-                  formatGapMode={formatGapMode}
-                  showRunnerStoppedBadges={isRaceNotFinished}
-                />
-              )}
-
-              {windowWidth <= RESPONSIVE_TABLE_MAX_WINDOW_WIDTH && (
-                <ResponsiveRankingTable
-                  race={selectedRace}
-                  ranking={ranking}
-                  tableCategoryCode={selectedCategoryCode}
-                  tableGender={selectedGender ?? "mixed"}
-                  tableRaceDuration={selectedTimeMode === RankingTimeMode.AT ? selectedRankingTime : null}
-                  showLastPassageTime={showLastPassageTime}
-                  formatGapMode={formatGapMode}
-                  showRunnerStoppedBadges={isRaceNotFinished}
-                />
-              )}
-            </>
-          )}
-        </>
+        </racesViewContext.Provider>
       )}
     </Page>
   );
