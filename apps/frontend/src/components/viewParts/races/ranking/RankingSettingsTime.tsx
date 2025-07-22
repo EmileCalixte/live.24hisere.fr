@@ -1,7 +1,7 @@
 import type React from "react";
 import { useEffect, useState } from "react";
-import { Button } from "../../ui/forms/Button";
-import DurationInputs from "../../ui/forms/DurationInputs";
+import { Button } from "../../../ui/forms/Button";
+import DurationInputs from "../../../ui/forms/DurationInputs";
 
 interface RankingSettingsTimeProps {
   isVisible: boolean;
