@@ -185,6 +185,7 @@ export default function RunnerDetailsView(): React.ReactElement {
   return (
     <Page
       id="runner-details"
+      title="Détails coureur"
       htmlTitle={
         selectedRunner === undefined
           ? "Détails coureur"
@@ -192,8 +193,6 @@ export default function RunnerDetailsView(): React.ReactElement {
       }
       contentClassName="flex flex-col gap-4"
     >
-      <h1>Détails coureur</h1>
-
       <div className="flex w-full flex-col gap-1 md:w-1/2 xl:w-1/4 print:hidden">
         <RunnerSelector runners={runners} onSelectRunner={onSelectRunner} selectedRunnerId={runnerId} />
 

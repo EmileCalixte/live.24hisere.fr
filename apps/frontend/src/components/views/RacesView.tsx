@@ -109,7 +109,7 @@ export default function RacesView(): React.ReactElement {
   const racesViewContextValues: RacesViewContext = { selectedEdition, selectedRace };
 
   return (
-    <Page id="ranking" htmlTitle={htmlTitle} contentClassName="flex flex-col gap-3">
+    <Page id="ranking" title="Courses" titleSrOnly htmlTitle={htmlTitle} contentClassName="flex flex-col gap-3">
       {editions && editions.length < 1 && <p>Aucune donnée disponible.</p>}
 
       <Card className="grid-rows-auto grid grid-cols-6 gap-3 print:hidden">
