@@ -11,6 +11,7 @@ import { useEditionSelectOptions } from "../../hooks/useEditionSelectOptions";
 import { useRaceSelectOptions } from "../../hooks/useRaceSelectOptions";
 import { trackEvent } from "../../utils/eventTracking/eventTrackingUtils";
 import { Card } from "../ui/Card";
+import CircularLoader from "../ui/CircularLoader";
 import Select from "../ui/forms/Select";
 import Page from "../ui/Page";
 import { Tab, TabContent, TabList, Tabs } from "../ui/Tabs";
@@ -28,6 +29,7 @@ export default function RacesView(): React.ReactElement {
   const [selectedEditionId, setSelectedEditionId] = useQueryState(SearchParam.EDITION, parseAsInteger);
   const [selectedRaceId, setSelectedRaceId] = useQueryState(SearchParam.RACE, parseAsInteger);
   const [selectedTab, setSelectedTab] = useQueryState(SearchParam.TAB, parseAsStringLiteral(TABS));
+  const [isTabContentLoading, setIsTabContentLoading] = React.useState(false);
 
   const getEditionsQuery = useGetPublicEditions();
   const editions = getEditionsQuery.data?.editions;
@@ -67,7 +69,12 @@ export default function RacesView(): React.ReactElement {
   function onTabSelect(tab: Tab): void {
     trackEvent(TrackedEvent.RACES_VIEW_CHANGE_TAB, { tab });
 
+    setIsTabContentLoading(true);
     void setSelectedTab(tab);
+
+    React.startTransition(() => {
+      setIsTabContentLoading(false);
+    });
   }
 
   // Set default tab (we don't use nuqs `withDefault` because we always want the tab to be displayed in params)
@@ -144,13 +151,19 @@ export default function RacesView(): React.ReactElement {
               </TabList>
             </div>
 
-            <TabContent value={TAB_RANKING}>
-              <RankingTabContent />
-            </TabContent>
+            {isTabContentLoading && <CircularLoader />}
 
-            <TabContent value={TAB_STATS}>
-              <StatsTabContent />
-            </TabContent>
+            {!isTabContentLoading && (
+              <>
+                <TabContent value={TAB_RANKING}>
+                  <RankingTabContent />
+                </TabContent>
+
+                <TabContent value={TAB_STATS}>
+                  <StatsTabContent />
+                </TabContent>
+              </>
+            )}
           </Tabs>
         </racesViewContext.Provider>
       )}
