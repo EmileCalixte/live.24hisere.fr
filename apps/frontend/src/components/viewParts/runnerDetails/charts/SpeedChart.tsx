@@ -5,8 +5,7 @@ import ReactDOMServer from "react-dom/server";
 import type { PublicRace, RaceRunnerWithProcessedPassages, RunnerWithProcessedHours } from "@live24hisere/core/types";
 import { TrackedEvent } from "../../../../constants/eventTracking/customEventNames";
 import { SearchParam } from "../../../../constants/searchParams";
-import { Theme } from "../../../../constants/theme";
-import { appContext } from "../../../../contexts/AppContext";
+import { useChartTheme } from "../../../../hooks/useChartTheme";
 import { useWindowDimensions } from "../../../../hooks/useWindowDimensions";
 import CanvasjsReact from "../../../../lib/canvasjs/canvasjs.react";
 import { formatMsAsDuration } from "../../../../utils/durationUtils";
@@ -54,7 +53,7 @@ interface SpeedChartProps {
 }
 
 export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartProps): React.ReactElement {
-  const { theme } = React.useContext(appContext).theme;
+  const chartTheme = useChartTheme();
 
   const { width: windowWidth } = useWindowDimensions();
 
@@ -209,7 +208,7 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
   const options = React.useMemo(() => {
     const options = {
       backgroundColor: "transparent",
-      theme: theme === Theme.DARK ? "dark2" : "light2",
+      theme: chartTheme,
       animationEnabled: false,
       // animationDuration: 200,
       toolTip: {
@@ -358,7 +357,7 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
 
     return options;
   }, [
-    theme,
+    chartTheme,
     getTooltipContent,
     race.duration,
     race.startTime,

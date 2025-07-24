@@ -1,4 +1,4 @@
-import type { Entries } from "@live24hisere/core/types";
+import type { Entries, FromEntries } from "@live24hisere/core/types";
 
 /**
  * Returns a copy of an object without the specified keys
@@ -52,6 +52,10 @@ export function assignDefined<T extends object>(target: T, ...sources: Array<Par
  */
 export function entries<T extends object>(object: T): Entries<T> {
   return Object.entries(object) as Entries<T>;
+}
+
+export function fromEntries<T extends ReadonlyArray<readonly [PropertyKey, unknown]>>(array: T): FromEntries<T> {
+  return Object.fromEntries(array) as FromEntries<T>;
 }
 
 /**
