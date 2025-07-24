@@ -7,6 +7,7 @@ import { SearchParam } from "../../constants/searchParams";
 import { racesViewContext, type RacesViewContext } from "../../contexts/RacesViewContext";
 import { useGetPublicEditions } from "../../hooks/api/requests/public/editions/useGetPublicEditions";
 import { useGetPublicEditionRaces } from "../../hooks/api/requests/public/races/useGetPublicEditionRaces";
+import { useGetPublicRaceRunners } from "../../hooks/api/requests/public/runners/useGetPublicRaceRunners";
 import { useEditionSelectOptions } from "../../hooks/useEditionSelectOptions";
 import { useRaceSelectOptions } from "../../hooks/useRaceSelectOptions";
 import { trackEvent } from "../../utils/eventTracking/eventTrackingUtils";
@@ -46,6 +47,9 @@ export default function RacesView(): React.ReactElement {
     () => races?.find((race) => race.id === selectedRaceId) ?? null,
     [races, selectedRaceId],
   );
+
+  const getRaceRunnersQuery = useGetPublicRaceRunners(selectedRace?.id);
+  const selectedRaceRunners = getRaceRunnersQuery.data?.runners ?? null;
 
   const editionOptions = useEditionSelectOptions(editions);
   const raceOptions = useRaceSelectOptions(races);
@@ -106,7 +110,7 @@ export default function RacesView(): React.ReactElement {
     return `${selectedRace.name} (${selectedEdition.name})`;
   })();
 
-  const racesViewContextValues: RacesViewContext = { selectedEdition, selectedRace };
+  const racesViewContextValues: RacesViewContext = { selectedEdition, selectedRace, selectedRaceRunners };
 
   return (
     <Page id="ranking" title="Courses" titleSrOnly htmlTitle={htmlTitle} contentClassName="flex flex-col gap-3">

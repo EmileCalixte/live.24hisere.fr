@@ -8,7 +8,6 @@ import { RankingTimeMode } from "../../../../constants/rankingTimeMode";
 import { SearchParam } from "../../../../constants/searchParams";
 import { appContext } from "../../../../contexts/AppContext";
 import { racesViewContext } from "../../../../contexts/RacesViewContext";
-import { useGetPublicRaceRunners } from "../../../../hooks/api/requests/public/runners/useGetPublicRaceRunners";
 import { useRankingTimeQueryString } from "../../../../hooks/queryString/useRankingTimeQueryString";
 import { useProcessedRunners } from "../../../../hooks/runners/useProcessedRunners";
 import { useGetRunnerCategory } from "../../../../hooks/useGetRunnerCategory";
@@ -27,16 +26,13 @@ import ResponsiveRankingTable from "./responsive/ResponsiveRankingTable";
 const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
 
 export function RankingTabContent(): React.ReactElement {
-  const { selectedRace } = React.useContext(racesViewContext);
+  const { selectedRace, selectedRaceRunners } = React.useContext(racesViewContext);
   const { serverTimeOffset, customRunnerCategories } = React.useContext(appContext).appData;
 
   const [selectedCategoryCode, setSelectedCategory] = useQueryState(SearchParam.CATEGORY);
   const [selectedGender, setSelectedGender] = useQueryState(SearchParam.GENDER, parseAsGender);
 
   const getCategory = useGetRunnerCategory();
-
-  const getRaceRunnersQuery = useGetPublicRaceRunners(selectedRace?.id);
-  const runners = getRaceRunnersQuery.data?.runners;
 
   const { width: windowWidth } = useWindowDimensions();
 
@@ -63,7 +59,7 @@ export function RankingTabContent(): React.ReactElement {
     setRankingTimeMemory,
   } = useRankingTimeQueryString(selectedRace);
 
-  const processedRunners = useProcessedRunners(runners, selectedRace, !rankingDate);
+  const processedRunners = useProcessedRunners(selectedRaceRunners, selectedRace, !rankingDate);
 
   const ranking = useRanking(selectedRace ?? undefined, processedRunners, rankingDate);
 

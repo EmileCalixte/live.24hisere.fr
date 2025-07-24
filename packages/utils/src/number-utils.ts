@@ -21,3 +21,7 @@ export function range(min: number, max: number, step = 1): number[] {
 
   return range;
 }
+
+export function formatPercentage(ratio: number, decimals = 0): string {
+  return `${(ratio * 100).toFixed(decimals)} %`;
+}
