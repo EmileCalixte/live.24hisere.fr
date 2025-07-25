@@ -31,13 +31,13 @@ export function GenderDistributionChart({ maleCount, femaleCount }: GenderDistri
             {
               y: maleCount,
               legendText: "Hommes",
-              indexLabel: `${maleCount} hommes (${numberUtils.formatPercentage(maleRatio)})`,
+              indexLabel: `${maleCount} homme${maleCount > 1 ? "s" : ""} (${numberUtils.formatPercentage(maleRatio)})`,
               color: "#5a79d6",
             },
             {
               y: femaleCount,
               legendText: "Femmes",
-              indexLabel: `${femaleCount} femmes (${numberUtils.formatPercentage(femaleRatio)})`,
+              indexLabel: `${femaleCount} femme${femaleCount > 1 ? "s" : ""} (${numberUtils.formatPercentage(femaleRatio)})`,
               color: "#d65a5a",
             },
           ],
