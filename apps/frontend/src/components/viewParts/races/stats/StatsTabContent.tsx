@@ -1,29 +1,37 @@
 import React from "react";
 import { getCategoryList, isCategoryCode } from "@emilecalixte/ffa-categories";
+import { useQueryState } from "nuqs";
 import { GENDER } from "@live24hisere/core/constants";
+import type { GenderWithMixed } from "@live24hisere/core/types";
 import { objectUtils } from "@live24hisere/utils";
+import { SearchParam } from "../../../../constants/searchParams";
 import { racesViewContext } from "../../../../contexts/RacesViewContext";
 import { useProcessedRunners } from "../../../../hooks/runners/useProcessedRunners";
 import { useGetRunnerCategory } from "../../../../hooks/useGetRunnerCategory";
+import { parseAsGender } from "../../../../queryStringParsers/parseAsGender";
+import { getCountryName } from "../../../../utils/countryUtils";
 import { isRaceFinished } from "../../../../utils/raceUtils";
 import { Card } from "../../../ui/Card";
 import CircularLoader from "../../../ui/CircularLoader";
+import { Tab, TabList, Tabs } from "../../../ui/Tabs";
 import { type CategoryDistribution, CategoryDistributionChart } from "./charts/CategoryDistributionChart";
-import { GenderDistributionChart } from "./charts/GenderDistributionChart";
+import { type CountryDistribution, CountryDistributionChart } from "./charts/CountryDistributionChart";
 import { StartingRunnersDistributionChart } from "./charts/StartingRunnersDistributionChart";
 
 export function StatsTabContent(): React.ReactElement {
   const { selectedRace, selectedEdition, selectedRaceRunners } = React.useContext(racesViewContext);
 
-  const getCategory = useGetRunnerCategory();
+  const [selectedGender, setSelectedGender] = useQueryState(SearchParam.GENDER, parseAsGender);
 
-  const runnerCount = selectedRaceRunners?.length ?? 0;
+  const getCategory = useGetRunnerCategory();
 
   const processedRunners = useProcessedRunners(
     selectedRaceRunners,
     selectedRace,
     !!selectedRace && isRaceFinished(selectedRace),
   );
+
+  const runnerCount = processedRunners?.length ?? 0;
 
   const maleCount = React.useMemo(
     () => processedRunners?.reduce((count, runner) => (runner.gender === GENDER.M ? count + 1 : count), 0) ?? 0,
@@ -35,34 +43,56 @@ export function StatsTabContent(): React.ReactElement {
     [processedRunners],
   );
 
+  const filteredRunners = React.useMemo(() => {
+    if (!selectedGender) {
+      return processedRunners;
+    }
+
+    return processedRunners?.filter((runner) => runner.gender === selectedGender);
+  }, [processedRunners, selectedGender]);
+
+  const filteredRunnerCount = filteredRunners?.length ?? 0;
+
   const raceStartDate = React.useMemo(() => new Date(selectedRace?.startTime ?? 0), [selectedRace?.startTime]);
 
   const categories = React.useMemo(() => getCategoryList(raceStartDate), [raceStartDate]);
 
-  const categoriesCount = React.useMemo(() => {
-    const categoriesCount: CategoryDistribution = objectUtils.fromEntries(
+  const countsByCategory = React.useMemo(() => {
+    const countsByCategory: CategoryDistribution = objectUtils.fromEntries(
       [...objectUtils.keys(categories), "custom"].map((categoryCode) => [categoryCode, 0]),
     );
 
-    for (const runner of processedRunners ?? []) {
+    for (const runner of filteredRunners ?? []) {
       const categoryCode = getCategory(runner, raceStartDate).code;
 
       const index = isCategoryCode(categoryCode) ? categoryCode : "custom";
 
-      categoriesCount[index] = (categoriesCount[index] ?? 0) + 1;
+      countsByCategory[index] = (countsByCategory[index] ?? 0) + 1;
     }
 
-    return objectUtils.fromEntries(objectUtils.entries(categoriesCount).filter(([, count]) => count > 0));
-  }, [categories, getCategory, processedRunners, raceStartDate]);
+    return objectUtils.fromEntries(objectUtils.entries(countsByCategory).filter(([, count]) => count > 0));
+  }, [categories, getCategory, filteredRunners, raceStartDate]);
+
+  const countsByCountry = React.useMemo(() => {
+    const countsByCountry: CountryDistribution = {};
+
+    for (const runner of filteredRunners ?? []) {
+      const countryCode = runner.countryCode && getCountryName(runner.countryCode) ? runner.countryCode : "other";
+
+      countsByCountry[countryCode] = (countsByCountry[countryCode] ?? 0) + 1;
+    }
+
+    return countsByCountry;
+  }, [filteredRunners]);
 
   const startingCount = React.useMemo(
-    () => processedRunners?.reduce((count, runner) => (runner.totalDistance > 0 ? count + 1 : count), 0) ?? 0,
-    [processedRunners],
+    () => filteredRunners?.reduce((count, runner) => (runner.totalDistance > 0 ? count + 1 : count), 0) ?? 0,
+    [filteredRunners],
   );
 
-  const nonStartingCount = runnerCount - startingCount;
+  const nonStartingCount = filteredRunnerCount - startingCount;
 
-  if (!selectedRace || !selectedEdition || !processedRunners) {
+  if (!selectedRace || !selectedEdition || !filteredRunners) {
     return <CircularLoader />;
   }
 
@@ -73,15 +103,29 @@ export function StatsTabContent(): React.ReactElement {
       <section className="flex flex-col gap-3">
         <h3>Coureurs</h3>
 
+        <Tabs
+          value={selectedGender ?? "mixed"}
+          onValueChange={(newValue: GenderWithMixed) => {
+            void setSelectedGender(newValue === "mixed" ? null : newValue);
+          }}
+          className="text-base font-normal"
+        >
+          <TabList>
+            <Tab value={"mixed"}>Tous ({runnerCount})</Tab>
+            <Tab value={GENDER.M}>Hommes ({maleCount})</Tab>
+            <Tab value={GENDER.F}>Femmes ({femaleCount})</Tab>
+          </TabList>
+        </Tabs>
+
         <div className="grid-rows-auto grid grid-cols-6 gap-5">
           <div className="col-span-6 text-center lg:col-span-3 2xl:col-span-2">
-            <h4>Répartition hommes/femmes</h4>
-            <GenderDistributionChart maleCount={maleCount} femaleCount={femaleCount} />
+            <h4>Catégories d'âge</h4>
+            <CategoryDistributionChart countsByCategory={countsByCategory} categories={categories} />
           </div>
 
           <div className="col-span-6 text-center lg:col-span-3 2xl:col-span-2">
-            <h4>Répartition des catégories d'âge</h4>
-            <CategoryDistributionChart categoriesCount={categoriesCount} categories={categories} />
+            <h4>Pays</h4>
+            <CountryDistributionChart countsByCountry={countsByCountry} />
           </div>
 
           <div className="col-span-6 text-center lg:col-span-3 2xl:col-span-2">

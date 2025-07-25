@@ -31,17 +31,17 @@ const CATEGORY_COLORS: Record<string, string> = {
 export type CategoryDistribution = Partial<Record<CategoryCode | "custom", number>>;
 
 interface CategoryDistributionChartProps {
-  categoriesCount: CategoryDistribution;
+  countsByCategory: CategoryDistribution;
   categories: Record<string, string>;
 }
 
 export function CategoryDistributionChart({
-  categoriesCount,
+  countsByCategory,
   categories,
 }: CategoryDistributionChartProps): React.ReactElement {
   const chartTheme = useChartTheme();
 
-  const totalCount = Object.values(categoriesCount).reduce((totalCount, count) => totalCount + count);
+  const totalCount = Object.values(countsByCategory).reduce((totalCount, count) => totalCount + count);
 
   const options = React.useMemo(
     () => ({
@@ -51,15 +51,18 @@ export function CategoryDistributionChart({
         {
           //   type: "pie",
           type: "doughnut",
+          explodeOnClick: false,
           showInLegend: true,
-          dataPoints: objectUtils.entries(categoriesCount).map(([categoryCode, count]) => {
+          indexLabelPlacement: "inside",
+          indexLabelFontColor: "white",
+          dataPoints: objectUtils.entries(countsByCategory).map(([categoryCode, count]) => {
             const displayedCategoryCode = categoryCode === "custom" ? "Autres" : categoryCode;
             const categoryName = categories[categoryCode] ?? displayedCategoryCode;
 
             return {
               y: count,
               legendText: categoryName,
-              indexLabel: displayedCategoryCode,
+              indexLabel: `${count} ${displayedCategoryCode}`,
               toolTipContent: `${count} ${categoryName} (${numberUtils.formatPercentage(count / totalCount)})`,
               color: CATEGORY_COLORS[categoryCode],
             };
@@ -67,7 +70,7 @@ export function CategoryDistributionChart({
         },
       ],
     }),
-    [categories, categoriesCount, chartTheme, totalCount],
+    [categories, countsByCategory, chartTheme, totalCount],
   );
 
   return <CanvasJSChart options={options} />;
