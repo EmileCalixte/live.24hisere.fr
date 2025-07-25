@@ -10,11 +10,14 @@ import { Card } from "../../../ui/Card";
 import CircularLoader from "../../../ui/CircularLoader";
 import { type CategoryDistribution, CategoryDistributionChart } from "./charts/CategoryDistributionChart";
 import { GenderDistributionChart } from "./charts/GenderDistributionChart";
+import { StartingRunnersDistributionChart } from "./charts/StartingRunnersDistributionChart";
 
 export function StatsTabContent(): React.ReactElement {
   const { selectedRace, selectedEdition, selectedRaceRunners } = React.useContext(racesViewContext);
 
   const getCategory = useGetRunnerCategory();
+
+  const runnerCount = selectedRaceRunners?.length ?? 0;
 
   const processedRunners = useProcessedRunners(
     selectedRaceRunners,
@@ -52,6 +55,13 @@ export function StatsTabContent(): React.ReactElement {
     return objectUtils.fromEntries(objectUtils.entries(categoriesCount).filter(([, count]) => count > 0));
   }, [categories, getCategory, processedRunners, raceStartDate]);
 
+  const startingCount = React.useMemo(
+    () => processedRunners?.reduce((count, runner) => (runner.totalDistance > 0 ? count + 1 : count), 0) ?? 0,
+    [processedRunners],
+  );
+
+  const nonStartingCount = runnerCount - startingCount;
+
   if (!selectedRace || !selectedEdition || !processedRunners) {
     return <CircularLoader />;
   }
@@ -63,15 +73,20 @@ export function StatsTabContent(): React.ReactElement {
       <section className="flex flex-col gap-3">
         <h3>Coureurs</h3>
 
-        <div className="grid-rows-auto grid grid-cols-4 gap-3">
-          <div className="col-span-4 lg:col-span-2 2xl:col-span-1">
+        <div className="grid-rows-auto grid grid-cols-6 gap-5">
+          <div className="col-span-6 text-center lg:col-span-3 2xl:col-span-2">
             <h4>Répartition hommes/femmes</h4>
             <GenderDistributionChart maleCount={maleCount} femaleCount={femaleCount} />
           </div>
 
-          <div className="col-span-4 lg:col-span-2 2xl:col-span-1">
+          <div className="col-span-6 text-center lg:col-span-3 2xl:col-span-2">
             <h4>Répartition des catégories d'âge</h4>
             <CategoryDistributionChart categoriesCount={categoriesCount} categories={categories} />
+          </div>
+
+          <div className="col-span-6 text-center lg:col-span-3 2xl:col-span-2">
+            <h4>Partants / non-partants</h4>
+            <StartingRunnersDistributionChart startingCount={startingCount} nonStartingCount={nonStartingCount} />
           </div>
         </div>
       </section>
