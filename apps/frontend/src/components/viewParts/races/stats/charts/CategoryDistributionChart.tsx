@@ -61,7 +61,7 @@ export function CategoryDistributionChart({
 
             return {
               y: count,
-              legendText: categoryName,
+              legendText: `${categoryName} (${count})`,
               indexLabel: `${count} ${displayedCategoryCode}`,
               toolTipContent: `${count} ${categoryName} (${numberUtils.formatPercentage(count / totalCount)})`,
               color: CATEGORY_COLORS[categoryCode],
