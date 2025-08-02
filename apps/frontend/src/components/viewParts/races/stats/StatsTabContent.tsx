@@ -17,6 +17,7 @@ import CircularLoader from "../../../ui/CircularLoader";
 import { Tab, TabList, Tabs } from "../../../ui/Tabs";
 import { type CategoryDistribution, CategoryDistributionChart } from "./charts/CategoryDistributionChart";
 import { type CountryDistribution, CountryDistributionChart } from "./charts/CountryDistributionChart";
+import { type CategoryGenderDistribution, GenderCountPerCategoryChart } from "./charts/GenderCountPerCategoryChart";
 import { PassageCountPerTimeSlotChart } from "./charts/PassageCountPerTimeSlotChart";
 import { StartingRunnersDistributionChart } from "./charts/StartingRunnersDistributionChart";
 
@@ -89,6 +90,30 @@ export function StatsTabContent(): React.ReactElement {
     );
   }, [filteredRunners]);
 
+  const genderCountsByCategory = React.useMemo(() => {
+    const countsByCategory: CategoryGenderDistribution = objectUtils.fromEntries(
+      [...objectUtils.keys(categories), "custom"].map((categoryCode) => [
+        categoryCode,
+        { [GENDER.M]: 0, [GENDER.F]: 0 },
+      ]),
+    );
+
+    for (const runner of processedRunners ?? []) {
+      const categoryCode = getCategory(runner, raceStartDate).code;
+      const gender = runner.gender;
+
+      const index = isCategoryCode(categoryCode) ? categoryCode : "custom";
+
+      const categoryCounts = countsByCategory[index] ?? { [GENDER.M]: 0, [GENDER.F]: 0 };
+      categoryCounts[gender]++;
+      countsByCategory[index] = categoryCounts;
+    }
+
+    return objectUtils.fromEntries(
+      objectUtils.entries(countsByCategory).filter(([, counts]) => counts[GENDER.M] > 0 || counts[GENDER.F] > 0),
+    );
+  }, [categories, getCategory, processedRunners, raceStartDate]);
+
   const startingCount = React.useMemo(
     () => filteredRunners?.reduce((count, runner) => (runner.totalDistance > 0 ? count + 1 : count), 0) ?? 0,
     [filteredRunners],
@@ -157,6 +182,11 @@ export function StatsTabContent(): React.ReactElement {
                 <StartingRunnersDistributionChart startingCount={startingCount} nonStartingCount={nonStartingCount} />
               </div>
             )}
+
+            <div className="col-span-6 text-center">
+              <h4>Hommes/femmes par catégorie</h4>
+              <GenderCountPerCategoryChart genderCountsByCategory={genderCountsByCategory} categories={categories} />
+            </div>
           </div>
         </section>
 
