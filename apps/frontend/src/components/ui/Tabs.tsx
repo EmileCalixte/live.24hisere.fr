@@ -10,14 +10,21 @@ export const TabList = React.forwardRef<
 >(({ children, className, ...props }, ref) => (
   <Primitive.List
     className={twMerge(
-      "px-1.25 relative inline-flex gap-1 rounded-md border border-neutral-300 bg-white py-1 dark:border-neutral-700 dark:bg-neutral-800",
+      "px-1.25 relative inline-flex flex-wrap gap-1 rounded-md border border-neutral-300 bg-white py-1 dark:border-neutral-700 dark:bg-neutral-800",
       className,
     )}
     {...props}
     ref={ref}
   >
     {children}
-    <Primitive.Indicator className="bg-app-green-700/15 dark:bg-app-green-400/15 absolute left-0 top-1/2 h-7 w-[var(--active-tab-width)] -translate-y-1/2 translate-x-[var(--active-tab-left)] rounded-sm transition-all duration-150 ease-out" />
+    <Primitive.Indicator
+      className={twMerge(
+        "bg-app-green-700/15 dark:bg-app-green-400/15 rounded-sm",
+        "absolute left-0 top-[1px] h-[var(--active-tab-height)] w-[var(--active-tab-width)]",
+        "translate-x-[var(--active-tab-left)] translate-y-[var(--active-tab-top)]",
+        "transition-all duration-150 ease-out",
+      )}
+    />
   </Primitive.List>
 ));
 TabList.displayName = "TabList";
