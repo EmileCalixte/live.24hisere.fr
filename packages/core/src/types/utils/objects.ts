@@ -45,3 +45,10 @@ export type Entries<TObject extends object> = Array<
     undefined
   >
 >;
+
+/**
+ * Returns the type of the entries returned by Object.fromEntries with an array of type TArray
+ */
+export type FromEntries<TArray extends ReadonlyArray<readonly [PropertyKey, unknown]>> = {
+  [K in TArray[number] as K[0]]: K[1];
+};

@@ -55,7 +55,10 @@ export function getTimeStringFromDate(date: Date, separator = ":"): string {
 }
 
 export function formatFloatNumber(number: number, decimalsCount: number): string {
-  return number.toFixed(decimalsCount);
+  return new Intl.NumberFormat(navigator.language, {
+    minimumFractionDigits: decimalsCount,
+    maximumFractionDigits: decimalsCount,
+  }).format(number);
 }
 
 /**
