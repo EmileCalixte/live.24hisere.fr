@@ -129,6 +129,15 @@ export function StatsTabContent(): React.ReactElement {
     [processedRunners],
   );
 
+  const globalAverageSpeed = React.useMemo(() => {
+    const sum =
+      processedRunners
+        ?.filter((runner) => runner.totalAverageSpeed !== null)
+        .reduce((total, runner) => (runner.totalAverageSpeed ?? 0) + total, 0) ?? 0;
+
+    return sum / (processedRunners?.length ?? 1);
+  }, [processedRunners]);
+
   /**
    * Total distance of all runners, in meters
    */
@@ -147,7 +156,7 @@ export function StatsTabContent(): React.ReactElement {
     <Card className="flex flex-col gap-3">
       <h2>Statistiques de la course {selectedRace.name}</h2>
 
-      <div className="flex flex-col gap-10">
+      <div className="flex flex-col gap-5">
         <section className="flex flex-col gap-3">
           <h3>Coureurs</h3>
 
@@ -193,6 +202,8 @@ export function StatsTabContent(): React.ReactElement {
         {!selectedRace.isBasicRanking && (
           <section className="flex flex-col gap-3">
             <h3>Tours</h3>
+
+            <p>Vitesse moyenne globale : {formatFloatNumber(globalAverageSpeed, 2)} km/h</p>
 
             <p>Distance cumulée de tous les coureurs : {formatFloatNumber(cumulatedDistance / 1000, 2)} km</p>
 
