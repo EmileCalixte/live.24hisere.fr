@@ -60,12 +60,12 @@ class CanvasJSChart extends React.Component {
 	}
 }
 
-var CanvasjsReact = {
+var CanvasJSReact = {
 	CanvasJSChart: CanvasJSChart,
 	CanvasJS: CanvasJS
 };
 
-export default CanvasjsReact;
+export default CanvasJSReact;
 /*tslint:enable*/
 /*eslint-enable*/
 /*jshint ignore:end*/
