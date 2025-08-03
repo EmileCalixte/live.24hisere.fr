@@ -105,8 +105,8 @@ importers:
         specifier: ^3.2.0
         version: 3.2.0(date-fns@4.1.0)
       drizzle-orm:
-        specifier: ^0.44.2
-        version: 0.44.2(gel@2.0.0)(mysql2@3.14.2)
+        specifier: ^0.44.3
+        version: 0.44.3(gel@2.0.0)(mysql2@3.14.2)
       mysql2:
         specifier: ^3.14.2
         version: 3.14.2
@@ -3409,8 +3409,8 @@ packages:
     resolution: {integrity: sha512-tCPWVZWZqWVx2XUsVpJRnH9Mx0ClVOf5YUHerZ5so1OKSlqww4zy1R5ksEdGRcO3tM3zj0PYN6V48TbQCL1RfA==}
     hasBin: true
 
-  drizzle-orm@0.44.2:
-    resolution: {integrity: sha512-zGAqBzWWkVSFjZpwPOrmCrgO++1kZ5H/rZ4qTGeGOe18iXGVJWf3WPfHOVwFIbmi8kHjfJstC6rJomzGx8g/dQ==}
+  drizzle-orm@0.44.3:
+    resolution: {integrity: sha512-8nIiYQxOpgUicEL04YFojJmvC4DNO4KoyXsEIqN44+g6gNBr6hmVpWk3uyAt4CaTiRGDwoU+alfqNNeonLAFOQ==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@cloudflare/workers-types': '>=4'
@@ -9607,7 +9607,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.44.2(gel@2.0.0)(mysql2@3.14.2):
+  drizzle-orm@0.44.3(gel@2.0.0)(mysql2@3.14.2):
     optionalDependencies:
       gel: 2.0.0
       mysql2: 3.14.2
