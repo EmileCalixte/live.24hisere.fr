@@ -3,6 +3,7 @@ import type { CategoryCode } from "@emilecalixte/ffa-categories";
 import ReactDOMServer from "react-dom/server";
 import { GENDER } from "@live24hisere/core/constants";
 import { objectUtils } from "@live24hisere/utils";
+import { GENDER_COLORS } from "../../../../../constants/chart";
 import { Theme } from "../../../../../constants/theme";
 import { appContext } from "../../../../../contexts/AppContext";
 import { useChartTheme } from "../../../../../hooks/useChartTheme";
@@ -86,7 +87,7 @@ export function GenderCountPerCategoryChart({
           type: "stackedColumn",
           showInLegend: true,
           name: "Hommes",
-          color: "#5a79d6",
+          color: GENDER_COLORS[GENDER.M],
           dataPoints: objectUtils.entries(genderCountsByCategory).map(([categoryCode, counts]) => ({
             y: counts[GENDER.M],
             label: getDisplayedCategoryCodeAndName(categoryCode).code,
@@ -97,7 +98,7 @@ export function GenderCountPerCategoryChart({
           type: "stackedColumn",
           showInLegend: true,
           name: "Femmes",
-          color: "#d65a5a",
+          color: GENDER_COLORS[GENDER.F],
           indexLabel: "#total",
           indexLabelPlacement: "top",
           indexLabelFontColor: theme === Theme.DARK ? "#eee" : "#222",
