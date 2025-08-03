@@ -15,6 +15,7 @@ import { formatFloatNumber } from "../../../../utils/utils";
 import { Card } from "../../../ui/Card";
 import CircularLoader from "../../../ui/CircularLoader";
 import { Tab, TabList, Tabs } from "../../../ui/Tabs";
+import { AverageSpeedPerTimeSlotChart } from "./charts/AverageSpeedPerTimeSlotChart";
 import { type CategoryDistribution, CategoryDistributionChart } from "./charts/CategoryDistributionChart";
 import { type CountryDistribution, CountryDistributionChart } from "./charts/CountryDistributionChart";
 import { type CategoryGenderDistribution, GenderCountPerCategoryChart } from "./charts/GenderCountPerCategoryChart";
@@ -148,7 +149,7 @@ export function StatsTabContent(): React.ReactElement {
 
   const nonStartingCount = filteredRunnerCount - startingCount;
 
-  if (!selectedRace || !selectedEdition || !filteredRunners) {
+  if (!selectedRace || !selectedEdition || !processedRunners || !filteredRunners) {
     return <CircularLoader />;
   }
 
@@ -201,15 +202,20 @@ export function StatsTabContent(): React.ReactElement {
 
         {!selectedRace.isBasicRanking && (
           <section className="flex flex-col gap-3">
-            <h3>Tours</h3>
+            <h3>Course</h3>
 
             <p>Vitesse moyenne globale : {formatFloatNumber(globalAverageSpeed, 2)} km/h</p>
 
             <p>Distance cumulée de tous les coureurs : {formatFloatNumber(cumulatedDistance / 1000, 2)} km</p>
 
-            <div className="col-span-6 text-center">
-              <h4>Passages par heure</h4>
+            <div className="text-center">
+              <h4>Tours cumulés à chaque heure</h4>
               <PassageCountPerTimeSlotChart race={selectedRace} passages={allPassages} timeSlotDuration={3600000} />
+            </div>
+
+            <div className="text-center">
+              <h4>Vitesse moyenne des coureurs au cours du temps</h4>
+              <AverageSpeedPerTimeSlotChart race={selectedRace} runners={processedRunners} timeSlotDuration={600000} />
             </div>
           </section>
         )}

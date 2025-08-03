@@ -116,8 +116,8 @@ export function PassageCountPerTimeSlotChart({
       },
       axisY: {
         labelFormatter: (e: { value: number }) => formatFloatNumber(e.value, 0),
-        suffix: windowWidth >= 768 ? " passages" : "",
-        margin: windowWidth >= 768 ? 0 : 25,
+        suffix: windowWidth >= 768 ? " tours" : "",
+        margin: windowWidth >= 768 ? 0 : 20,
         minimum: 0,
       },
       data: [
