@@ -1,6 +1,6 @@
 import React from "react";
 import { getCategoryList, isCategoryCode } from "@emilecalixte/ffa-categories";
-import { useQueryState } from "nuqs";
+import { parseAsStringLiteral, useQueryState } from "nuqs";
 import { GENDER } from "@live24hisere/core/constants";
 import type { GenderWithMixed, ProcessedPassage } from "@live24hisere/core/types";
 import { compareUtils, objectUtils } from "@live24hisere/utils";
@@ -26,6 +26,11 @@ export function StatsTabContent(): React.ReactElement {
   const { selectedRace, selectedEdition, selectedRaceRunners } = React.useContext(racesViewContext);
 
   const [selectedGender, setSelectedGender] = useQueryState(SearchParam.GENDER, parseAsGender);
+
+  const [selectedAvgSpeedChartMode, setSelectedAvgSpeedChartMode] = useQueryState(
+    SearchParam.AVG_SPEED_CHART,
+    parseAsStringLiteral(["mixed", "category", "gender"]).withDefault("mixed"),
+  );
 
   const getCategory = useGetRunnerCategory();
 
@@ -169,7 +174,7 @@ export function StatsTabContent(): React.ReactElement {
             className="text-base font-normal"
           >
             <TabList>
-              <Tab value={"mixed"}>Tous ({runnerCount})</Tab>
+              <Tab value="mixed">Tous ({runnerCount})</Tab>
               <Tab value={GENDER.M}>Hommes ({maleCount})</Tab>
               <Tab value={GENDER.F}>Femmes ({femaleCount})</Tab>
             </TabList>
@@ -213,9 +218,29 @@ export function StatsTabContent(): React.ReactElement {
               <PassageCountPerTimeSlotChart race={selectedRace} passages={allPassages} timeSlotDuration={3600000} />
             </div>
 
-            <div className="text-center">
+            <div className="flex flex-col gap-3 text-center">
               <h4>Vitesse moyenne des coureurs au cours du temps</h4>
-              <AverageSpeedPerTimeSlotChart race={selectedRace} runners={processedRunners} timeSlotDuration={600000} />
+
+              <Tabs
+                value={selectedAvgSpeedChartMode}
+                onValueChange={(newValue: typeof selectedAvgSpeedChartMode) => {
+                  void setSelectedAvgSpeedChartMode(newValue);
+                }}
+                className="text-base font-normal"
+              >
+                <TabList>
+                  <Tab value="mixed">Tous</Tab>
+                  <Tab value="category">Par catégorie</Tab>
+                  <Tab value="gender">Par sexe</Tab>
+                </TabList>
+              </Tabs>
+
+              <AverageSpeedPerTimeSlotChart
+                race={selectedRace}
+                runners={processedRunners}
+                timeSlotDuration={600000}
+                mode={selectedAvgSpeedChartMode}
+              />
             </div>
           </section>
         )}

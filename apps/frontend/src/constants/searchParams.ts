@@ -1,4 +1,5 @@
 export const enum SearchParam {
+  AVG_SPEED_CHART = "avgSpeedChart",
   CATEGORY = "category",
   EDITION = "edition",
   GENDER = "gender",
