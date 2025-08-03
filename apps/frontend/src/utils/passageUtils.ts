@@ -1,4 +1,3 @@
-import { ONE_HOUR_IN_MILLISECONDS } from "@live24hisere/core/constants";
 import type {
   Participant,
   ProcessedPassage,
@@ -6,7 +5,7 @@ import type {
   PublicRace,
   RaceRunner,
   RunnerProcessedData,
-  RunnerProcessedHour,
+  RunnerProcessedTimeSlot,
 } from "@live24hisere/core/types";
 import { compareUtils, dateUtils } from "@live24hisere/utils";
 import { getPaceFromSpeed, getSpeed } from "./mathUtils";
@@ -144,45 +143,54 @@ export function getProcessedPassagesFromPassages<TPassage extends PublicPassage>
 }
 
 /**
- * Returns processed hours calculated from a list of passages
+ * Returns processed time slots calculated from a list of passages
  * @param race
  * @param passages the list of passages sorted in ascending time order
+ * @param timeSlotDuration the duration of time slots, in milliseconds
  */
-export function getProcessedHoursFromPassages(race: PublicRace, passages: ProcessedPassage[]): RunnerProcessedHour[] {
-  const hours: RunnerProcessedHour[] = [];
+export function getProcessedTimeSlotsFromPassages(
+  race: PublicRace,
+  passages: ProcessedPassage[],
+  timeSlotDuration: number,
+): RunnerProcessedTimeSlot[] {
+  const timeSlots: RunnerProcessedTimeSlot[] = [];
 
   const raceStartTime = new Date(race.startTime);
-  const raceDurationMs = race.duration * 1000 - 1; // - 1 to not create an hour of 1 ms
+  const raceDurationMs = race.duration * 1000;
 
-  for (let hourStartRaceTime = 0; hourStartRaceTime <= raceDurationMs; hourStartRaceTime += ONE_HOUR_IN_MILLISECONDS) {
-    const hourEndRaceTime = Math.min(hourStartRaceTime + ONE_HOUR_IN_MILLISECONDS - 1, raceDurationMs);
-    const hourStartTime = new Date(raceStartTime.getTime() + hourStartRaceTime);
-    const hourEndTime = new Date(raceStartTime.getTime() + hourEndRaceTime);
+  for (
+    let timeSlotStartRaceTime = 0;
+    timeSlotStartRaceTime < raceDurationMs;
+    timeSlotStartRaceTime += timeSlotDuration
+  ) {
+    const timeSlotEndRaceTime = Math.min(timeSlotStartRaceTime + timeSlotDuration - 1, raceDurationMs - 1);
+    const timeSlotStartTime = new Date(raceStartTime.getTime() + timeSlotStartRaceTime);
+    const timeSlotEndTime = new Date(raceStartTime.getTime() + timeSlotEndRaceTime);
 
-    const passagesInHour = getRunnerLapsInInterval(passages, hourStartTime, hourEndTime);
+    const passagesInTimeSlot = getRunnerLapsInInterval(passages, timeSlotStartTime, timeSlotEndTime);
 
     let averageSpeed = null;
     let averagePace = null;
 
-    if (passagesInHour.length > 0) {
-      averageSpeed = getAverageSpeedInInterval(passagesInHour, hourStartTime, hourEndTime);
+    if (passagesInTimeSlot.length > 0) {
+      averageSpeed = getAverageSpeedInInterval(passagesInTimeSlot, timeSlotStartTime, timeSlotEndTime);
       averagePace = getPaceFromSpeed(averageSpeed);
     }
 
-    const hour: RunnerProcessedHour = {
-      startTime: hourStartTime,
-      startRaceTime: hourStartRaceTime,
-      endTime: hourEndTime,
-      endRaceTime: hourEndRaceTime,
-      passages: passagesInHour,
+    const timeSlot: RunnerProcessedTimeSlot = {
+      startTime: timeSlotStartTime,
+      startRaceTime: timeSlotStartRaceTime,
+      endTime: timeSlotEndTime,
+      endRaceTime: timeSlotEndRaceTime,
+      passages: passagesInTimeSlot,
       averageSpeed,
       averagePace,
     };
 
-    hours.push(hour);
+    timeSlots.push(timeSlot);
   }
 
-  return hours;
+  return timeSlots;
 }
 
 export function getFastestLapPassage<TPassage extends ProcessedPassage = ProcessedPassage>(
@@ -237,14 +245,14 @@ export function getSlowestLapPassage<TPassage extends ProcessedPassage = Process
  * @param intervalEnd
  * @return Passages that are entirely or partially in the interval
  */
-export function getRunnerLapsInInterval<TPassage extends ProcessedPassage = ProcessedPassage>(
+function getRunnerLapsInInterval<TPassage extends ProcessedPassage = ProcessedPassage>(
   passages: TPassage[],
   intervalStart: Date,
   intervalEnd: Date,
 ): TPassage[] {
   return passages.filter((passage) => {
     // lap END time is BEFORE interval
-    if (passage.processed.lapEndTime.getTime() < intervalStart.getTime()) {
+    if (passage.processed.lapEndTime.getTime() <= intervalStart.getTime()) {
       return false;
     }
 
@@ -257,17 +265,13 @@ export function getRunnerLapsInInterval<TPassage extends ProcessedPassage = Proc
   });
 }
 
-export function getAverageSpeedInInterval(
-  passages: ProcessedPassage[],
-  intervalStart: Date,
-  intervalEnd: Date,
-): number {
+function getAverageSpeedInInterval(passages: ProcessedPassage[], intervalStart: Date, intervalEnd: Date): number {
   let speedSum = 0;
   let durationSum = 0;
 
   for (const passage of passages) {
     const lapStartsInInterval = passage.processed.lapStartTime.getTime() >= intervalStart.getTime();
-    const lapEndsInInterval = passage.processed.lapEndTime.getTime() <= intervalEnd.getTime();
+    const lapEndsInInterval = passage.processed.lapEndTime.getTime() - 1 <= intervalEnd.getTime();
 
     let lapDurationOutsideInterval = 0; // in ms
 
@@ -278,7 +282,7 @@ export function getAverageSpeedInInterval(
 
     if (!lapEndsInInterval) {
       // If lap ends after interval
-      lapDurationOutsideInterval += passage.processed.lapEndTime.getTime() - intervalEnd.getTime();
+      lapDurationOutsideInterval += passage.processed.lapEndTime.getTime() - 1 - intervalEnd.getTime();
     }
 
     const lapDurationInInterval = passage.processed.lapDuration - lapDurationOutsideInterval;
