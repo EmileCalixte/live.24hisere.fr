@@ -1,10 +1,15 @@
 import { describe, expect, it } from "vitest";
-import type { ProcessedPassage } from "@live24hisere/core/types";
-import { getFastestLapPassage, getSlowestLapPassage } from "../../src/utils/passageUtils";
+import type { ProcessedPassage, PublicPassage, PublicRace } from "@live24hisere/core/types";
+import {
+  getFastestLapPassage,
+  getProcessedPassagesFromPassages,
+  getProcessedTimeSlotsFromPassages,
+  getSlowestLapPassage,
+} from "../../src/utils/passageUtils";
+
+const emptyPassageArray: ProcessedPassage[] = [];
 
 describe("Get fastest and slowest lap passages", () => {
-  const emptyPassageArray: ProcessedPassage[] = [];
-
   const onlyOnePassageWithoutLapNumberArray: [ProcessedPassage] = [
     {
       id: 125,
@@ -165,5 +170,114 @@ describe("Get fastest and slowest lap passages", () => {
     it("should return the slowest lap passage if passage array contains multiple passages with a lap number", () => {
       expect(getSlowestLapPassage(fourPassagesWithLapNumberArray)).toEqual(slowestLapPassage);
     });
+  });
+});
+
+describe("Get processed time slots from passages", () => {
+  const race: PublicRace = {
+    id: 123,
+    editionId: 456,
+    name: "Test race",
+    initialDistance: "500",
+    lapDistance: "1000",
+    startTime: "2024-04-06T07:00:00.000Z",
+    duration: 86400,
+    isImmediateStop: true,
+    isBasicRanking: false,
+  };
+
+  it("Should return one slot if time slot duration is equal to race duration", () => {
+    const timeSlots = getProcessedTimeSlotsFromPassages(race, [], race.duration * 1000);
+
+    expect(timeSlots.length).toEqual(1);
+    expect(timeSlots[0].startRaceTime).toEqual(0);
+    expect(timeSlots[0].endRaceTime).toEqual(race.duration * 1000 - 1);
+  });
+
+  it("Should return one slot if time slot duration is greater than race duration", () => {
+    const timeSlots = getProcessedTimeSlotsFromPassages(race, [], race.duration * 1000 * 1.5);
+
+    expect(timeSlots.length).toEqual(1);
+    expect(timeSlots[0].startRaceTime).toEqual(0);
+    expect(timeSlots[0].endRaceTime).toEqual(race.duration * 1000 - 1);
+  });
+
+  const passages: PublicPassage[] = [
+    {
+      // Lap from 07:00:00 to 07:05:00
+      id: 111,
+      time: "2024-04-06T07:05:00.000Z",
+    },
+    {
+      // Lap from 07:05:00 to 07:10:00
+      id: 222,
+      time: "2024-04-06T07:10:00.000Z",
+    },
+    {
+      // Lap from 07:10:00 to 07:15:00
+      id: 333,
+      time: "2024-04-06T07:15:00.000Z",
+    },
+    {
+      // Lap from 07:15:00 to 07:25:00
+      id: 444,
+      time: "2024-04-06T07:25:00.000Z",
+    },
+    {
+      // Lap from 07:25:00 to 07:45:00
+      id: 555,
+      time: "2024-04-06T07:45:00.000Z",
+    },
+    {
+      // Lap from 07:45:00 to 08:00:00
+      id: 666,
+      time: "2024-04-06T08:00:00.000Z",
+    },
+    {
+      // Lap from 08:00:00 to 08:03:00
+      id: 777,
+      time: "2024-04-06T08:03:00.000Z",
+    },
+    {
+      // Lap from 08:03:00 to 08:06:00
+      id: 888,
+      time: "2024-04-06T08:06:00.000Z",
+    },
+    {
+      // Lap from 08:06:00 to 08:10:00
+      id: 999,
+      time: "2024-04-06T08:10:00.000Z",
+    },
+  ];
+
+  const processedPassages = getProcessedPassagesFromPassages(race, passages);
+
+  const timeSlots = getProcessedTimeSlotsFromPassages(race, processedPassages, 60 * 10 * 1000);
+
+  it("Time slots should only contain passages whose lap is partially or entirely within the time slot", () => {
+    expect(timeSlots[0].passages.map((p) => p.id)).toEqual([111, 222]);
+    expect(timeSlots[1].passages.map((p) => p.id)).toEqual([333, 444]);
+    expect(timeSlots[2].passages.map((p) => p.id)).toEqual([444, 555]);
+    expect(timeSlots[3].passages.map((p) => p.id)).toEqual([555]);
+    expect(timeSlots[4].passages.map((p) => p.id)).toEqual([555, 666]);
+    expect(timeSlots[5].passages.map((p) => p.id)).toEqual([666]);
+    expect(timeSlots[6].passages.map((p) => p.id)).toEqual([777, 888, 999]);
+    expect(timeSlots[7].passages).toEqual([]);
+    expect(timeSlots[8].passages).toEqual([]);
+  });
+
+  it("Average speed for the time slot should be based on the average speeds of the passages weighted by their percentage of occupancy in the time slot", () => {
+    expect(timeSlots[0].averageSpeed).toBe(9);
+    expect(timeSlots[1].averageSpeed).toBe(9);
+    expect(timeSlots[2].averageSpeed).toBe(4.5);
+    expect(timeSlots[3].averageSpeed).toBe(3);
+    expect(timeSlots[4].averageSpeed).toBe(3.5);
+    expect(timeSlots[5].averageSpeed).toBe(4);
+    expect(timeSlots[6].averageSpeed).toBe(18);
+  });
+
+  it("Average speed for the time slot should be null if time slot contains no passages", () => {
+    expect(timeSlots[7].averageSpeed).toBe(null);
+    expect(timeSlots[7].averagePace).toBe(null);
   });
 });

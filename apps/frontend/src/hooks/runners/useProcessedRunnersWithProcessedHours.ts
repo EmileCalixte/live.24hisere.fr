@@ -1,4 +1,5 @@
 import React from "react";
+import { ONE_HOUR_IN_MILLISECONDS } from "@live24hisere/core/constants";
 import type {
   PublicRace,
   RaceRunnerWithPassages,
@@ -6,7 +7,7 @@ import type {
   RaceRunnerWithProcessedPassages,
   RunnerWithProcessedHours,
 } from "@live24hisere/core/types";
-import { getProcessedHoursFromPassages } from "../../utils/passageUtils";
+import { getProcessedTimeSlotsFromPassages } from "../../utils/passageUtils";
 import { useProcessedRunners } from "./useProcessedRunners";
 
 /**
@@ -29,7 +30,7 @@ export function useProcessedRunnersWithProcessedHours<TRunner extends RaceRunner
     () =>
       processedRunners?.map((runner) => ({
         ...runner,
-        hours: race ? getProcessedHoursFromPassages(race, runner.passages) : [],
+        hours: race ? getProcessedTimeSlotsFromPassages(race, runner.passages, ONE_HOUR_IN_MILLISECONDS) : [],
       })),
     [processedRunners, race],
   );
