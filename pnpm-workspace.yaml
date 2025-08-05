@@ -3,5 +3,8 @@ packages:
   - ./packages/*
 
 onlyBuiltDependencies:
+  - '@nestjs/core'
   - '@swc/core'
   - '@tailwindcss/oxide'
+  - argon2
+  - esbuild
