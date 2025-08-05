@@ -155,39 +155,39 @@ export type RaceRunnerWithProcessedData<TRunner extends RaceRunner = RaceRunner>
 /**
  * An object containing the information of a runner's race hour
  */
-export interface RunnerProcessedHour {
+export interface RunnerProcessedTimeSlot {
   /**
-   * The start time of the hour
+   * The start time of the time slot
    */
   startTime: Date;
 
   /**
-   * The race time at the start of the hour, in milliseconds
+   * The race time at the start of the time slot, in milliseconds
    */
   startRaceTime: number;
 
   /**
-   * The end time of the hour
+   * The end time of the time slot
    */
   endTime: Date;
 
   /**
-   * The race time at the end of the hour, in milliseconds
+   * The race time at the end of the time slot, in milliseconds
    */
   endRaceTime: number;
 
   /**
-   * The average speed of the runner during the hour, in km/h
+   * The average speed of the runner during the time slot, in km/h
    */
   averageSpeed: number | null;
 
   /**
-   * The average pace of the runner during the hour, in ms/km
+   * The average pace of the runner during the time slot, in ms/km
    */
   averagePace: number | null;
 
   /**
-   * The passages included in the hour
+   * The passages included in the time slot
    */
   passages: ProcessedPassage[];
 }
@@ -199,5 +199,5 @@ export type RunnerWithProcessedHours<TRunner extends RaceRunner = RaceRunner> = 
   /**
    * The race hours of the runner
    */
-  hours: RunnerProcessedHour[];
+  hours: RunnerProcessedTimeSlot[];
 };

@@ -1,14 +1,18 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access  */
+/* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access  */
 import React from "react";
 import { parseAsBoolean, useQueryState } from "nuqs";
 import ReactDOMServer from "react-dom/server";
 import type { PublicRace, RaceRunnerWithProcessedPassages, RunnerWithProcessedHours } from "@live24hisere/core/types";
 import { TrackedEvent } from "../../../../constants/eventTracking/customEventNames";
 import { SearchParam } from "../../../../constants/searchParams";
-import { Theme } from "../../../../constants/theme";
-import { appContext } from "../../../../contexts/AppContext";
+import { useChartTheme } from "../../../../hooks/useChartTheme";
 import { useWindowDimensions } from "../../../../hooks/useWindowDimensions";
 import CanvasjsReact from "../../../../lib/canvasjs/canvasjs.react";
+import {
+  getAntifreezeDataForDateXAxisChart,
+  getXAxisDateInterval,
+  getXAxisDateLabelValue,
+} from "../../../../utils/chartUtils";
 import { formatMsAsDuration } from "../../../../utils/durationUtils";
 import { trackEvent } from "../../../../utils/eventTracking/eventTrackingUtils";
 import { Card } from "../../../ui/Card";
@@ -19,34 +23,6 @@ const CanvasJSChart = CanvasjsReact.CanvasJSChart;
 const DEFAULT_MIN_SPEED = 0;
 const DEFAULT_MAX_SPEED = 10;
 
-function getBaseXAxisInterval(raceDuration: number): number {
-  if (raceDuration <= 14400) {
-    // up to 4h
-    return Math.ceil(raceDuration / 60 / 24 / 10) * 10;
-  }
-
-  if (raceDuration <= 21600) {
-    // up to 6h
-    return Math.ceil(raceDuration / 60 / 24 / 15) * 15;
-  }
-
-  if (raceDuration <= 28800) {
-    // up to 8h
-    return Math.ceil(raceDuration / 60 / 24 / 20) * 20;
-  }
-
-  if (raceDuration <= 43200) {
-    // up to 12h
-    return Math.ceil(raceDuration / 60 / 24 / 30) * 30;
-  }
-
-  return Math.ceil(raceDuration / 60 / 24 / 60) * 60;
-}
-
-function getXAxisLabelValue(e: any): string {
-  return formatMsAsDuration(e.value.getTime());
-}
-
 interface SpeedChartProps {
   runner: RaceRunnerWithProcessedPassages & RunnerWithProcessedHours;
   race: PublicRace;
@@ -54,7 +30,7 @@ interface SpeedChartProps {
 }
 
 export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartProps): React.ReactElement {
-  const { theme } = React.useContext(appContext).theme;
+  const chartTheme = useChartTheme();
 
   const { width: windowWidth } = useWindowDimensions();
 
@@ -77,20 +53,6 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
     SearchParam.SHOW_AVG_SPEED_EVOLUTION,
     parseAsBoolean.withDefault(true),
   );
-
-  const getXAxisInterval = React.useCallback((): number => {
-    const baseInterval = getBaseXAxisInterval(race.duration);
-
-    if (windowWidth < 768) {
-      return baseInterval * 4;
-    }
-
-    if (windowWidth < 1024) {
-      return baseInterval * 2;
-    }
-
-    return baseInterval;
-  }, [race.duration, windowWidth]);
 
   const getTooltipContent = React.useCallback(
     (e: any) => {
@@ -209,7 +171,7 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
   const options = React.useMemo(() => {
     const options = {
       backgroundColor: "transparent",
-      theme: theme === Theme.DARK ? "dark2" : "light2",
+      theme: chartTheme,
       animationEnabled: false,
       // animationDuration: 200,
       toolTip: {
@@ -221,11 +183,11 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
           enabled: true,
           labelFormatter: () => null,
         },
-        labelFormatter: getXAxisLabelValue,
+        labelFormatter: getXAxisDateLabelValue,
         minimum: 0,
         maximum: race.duration * 1000,
         intervalType: "minute",
-        interval: getXAxisInterval(),
+        interval: getXAxisDateInterval(race.duration, windowWidth),
         labelAngle: -25,
       },
       axisY: {
@@ -274,19 +236,7 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
           legendMarkerType: "square",
           dataPoints: [],
         },
-        {
-          // Necessary to avoid an infinite loop of CanvasJS
-          type: "line",
-          markerType: null,
-          showInLegend: false,
-          name: "Antifreeze",
-          dataPoints: [
-            {
-              x: new Date(race.startTime),
-              y: 0,
-            },
-          ],
-        },
+        getAntifreezeDataForDateXAxisChart(new Date(race.startTime)),
       ],
     };
 
@@ -358,11 +308,11 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
 
     return options;
   }, [
-    theme,
+    chartTheme,
     getTooltipContent,
     race.duration,
     race.startTime,
-    getXAxisInterval,
+    windowWidth,
     minSpeed,
     maxSpeed,
     showEachLapSpeed,
