@@ -36,7 +36,7 @@
     "@nestjs/schedule": "^6.0.0",
     "@nestjs/swagger": "^11.2.0",
     "@types/papaparse": "^5.3.15",
-    "argon2": "^0.43.1",
+    "argon2": "^0.44.0",
     "axios": "^1.10.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
