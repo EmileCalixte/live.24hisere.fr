@@ -92,12 +92,12 @@ export interface PassageProcessedData {
   lapStartRaceTime: number;
 
   /**
-   * The end time of the lap
+   * The end time of the lap (excluded)
    */
   lapEndTime: Date;
 
   /**
-   * The race time at the end of the lap, in milliseconds
+   * The race time at the end of the lap, in milliseconds (excluded)
    */
   lapEndRaceTime: number;
 
