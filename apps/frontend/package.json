@@ -15,7 +15,7 @@
     "@live24hisere/utils": "workspace:^",
     "@tailwindcss/vite": "^4.1.11",
     "@tanstack/react-query": "^5.85.0",
-    "@types/node": "22.17.0",
+    "@types/node": "22.17.1",
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",
     "@types/react-helmet": "^6.1.11",
