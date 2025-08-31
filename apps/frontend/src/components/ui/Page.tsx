@@ -7,7 +7,8 @@ interface PageProps {
   children: React.ReactNode[] | React.ReactNode;
   id: string;
   htmlTitle: string;
-  title?: React.ReactNode;
+  title: React.ReactNode;
+  titleSrOnly?: true;
   aboveTitle?: React.ReactNode;
   breadCrumbs?: React.ReactNode;
   className?: string;
@@ -19,6 +20,7 @@ export default function Page({
   id,
   htmlTitle,
   title,
+  titleSrOnly,
   aboveTitle,
   breadCrumbs,
   className,
@@ -38,7 +40,11 @@ export default function Page({
 
       {breadCrumbs}
 
-      {title && <h1 id="page-title">{title}</h1>}
+      {title && (
+        <h1 id="page-title" className={clsx(titleSrOnly && "sr-only")}>
+          {title}
+        </h1>
+      )}
 
       <div id="page-content" className={contentClassName}>
         {children}

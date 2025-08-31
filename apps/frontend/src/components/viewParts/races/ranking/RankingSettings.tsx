@@ -1,17 +1,17 @@
 import React from "react";
 import type { GenderWithMixed } from "@live24hisere/core/types";
-import { CATEGORY_SCRATCH } from "../../../constants/category";
+import { CATEGORY_SCRATCH } from "../../../../constants/category";
 import {
   CATEGORY_SCRATCH_SELECT_OPTION,
   GENDER_WITH_MIXED_OPTIONS,
   RANKING_TIME_MODE_OPTIONS,
   RANKING_TIME_MODE_RACE_FINISHED_OPTIONS,
-} from "../../../constants/forms";
-import { RankingTimeMode } from "../../../constants/rankingTimeMode";
-import type { SelectOption } from "../../../types/Forms";
-import { getCategoriesSelectOptions } from "../../../utils/categoryUtils";
-import RadioGroup from "../../ui/forms/RadioGroup";
-import Select from "../../ui/forms/Select";
+} from "../../../../constants/forms";
+import { RankingTimeMode } from "../../../../constants/rankingTimeMode";
+import type { SelectOption } from "../../../../types/Forms";
+import { getCategoriesSelectOptions } from "../../../../utils/categoryUtils";
+import RadioGroup from "../../../ui/forms/RadioGroup";
+import Select from "../../../ui/forms/Select";
 import RankingSettingsTime from "./RankingSettingsTime";
 
 interface RankingSettingsProps {
