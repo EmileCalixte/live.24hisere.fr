@@ -6,6 +6,7 @@
       "cache": false
     },
     "test": {
+      "dependsOn": ["^build"], // Build internal dependencies (core, utils) before running tests
       "cache": false
     },
     "build": {
