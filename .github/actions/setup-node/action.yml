@@ -1,0 +1,46 @@
+name: 'Setup Node.js Environment'
+description: 'Setup Node.js, pnpm and install dependencies'
+inputs:
+  install-zip:
+    description: 'Install zip and unzip utilities'
+    required: false
+    default: 'false'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Update apt
+      run: apt-get update
+      shell: bash
+
+    - name: Install basic tools
+      run: apt-get install -y curl git
+      shell: bash
+
+    - name: Install zip utilities
+      if: inputs.install-zip == 'true'
+      run: apt-get install -y zip unzip
+      shell: bash
+
+    - name: Install Node.js 22
+      run: |
+        curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+        apt-get install -y nodejs
+      shell: bash
+
+    # Ensure we have the new signing keys that match the npm registry changes (corepack >= 0.31.0)
+    # See https://vercel.com/guides/corepack-errors-github-actions
+    - name: Use latest Corepack
+      run: |
+        echo "Before: corepack version: $(corepack --version || echo 'not installed')"
+        npm install -g corepack@latest
+        echo "After : corepack version: $(corepack --version)"
+      shell: bash
+
+    - name: Enable corepack to use pnpm
+      run: corepack enable
+      shell: bash
+
+    - name: Install JS dependencies
+      run: pnpm install --frozen-lockfile
+      shell: bash
