@@ -106,10 +106,10 @@ importers:
         version: 3.2.0(date-fns@4.1.0)
       drizzle-orm:
         specifier: ^0.44.5
-        version: 0.44.5(gel@2.0.0)(mysql2@3.15.0)
+        version: 0.44.5(gel@2.0.0)(mysql2@3.15.1)
       mysql2:
-        specifier: ^3.15.0
-        version: 3.15.0
+        specifier: ^3.15.1
+        version: 3.15.1
       nest-commander:
         specifier: ^3.20.0
         version: 3.20.0(@nestjs/common@11.1.6(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.6)(@types/inquirer@8.2.10)(@types/node@22.18.6)(typescript@5.8.3)
@@ -4846,10 +4846,6 @@ packages:
   lru-cache@10.4.3:
     resolution: {integrity: sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==}
 
-  lru-cache@11.2.1:
-    resolution: {integrity: sha512-r8LA6i4LP4EeWOhqBaZZjDWwehd1xUJPCJd9Sv300H0ZmcUER4+JPh7bqqZeqs1o5pgtgvXm+d9UGrB5zZGDiQ==}
-    engines: {node: 20 || >=22}
-
   lru-cache@11.2.2:
     resolution: {integrity: sha512-F9ODfyqML2coTIsQpSkRHnLSZMtkU8Q+mSfcaIyKwy58u+8k5nvAYeiNhsyMARvzNcXJ9QfWVrcPsC9e9rAxtg==}
     engines: {node: 20 || >=22}
@@ -5011,8 +5007,8 @@ packages:
     resolution: {integrity: sha512-WWdIxpyjEn+FhQJQQv9aQAYlHoNVdzIzUySNV1gHUPDSdZJ3yZn7pAAbQcV7B56Mvu881q9FZV+0Vx2xC44VWA==}
     engines: {node: ^18.17.0 || >=20.5.0}
 
-  mysql2@3.15.0:
-    resolution: {integrity: sha512-tT6pomf5Z/I7Jzxu8sScgrYBMK9bUFWd7Kbo6Fs1L0M13OOIJ/ZobGKS3Z7tQ8Re4lj+LnLXIQVZZxa3fhYKzA==}
+  mysql2@3.15.1:
+    resolution: {integrity: sha512-WZMIRZstT2MFfouEaDz/AGFnGi1A2GwaDe7XvKTdRJEYiAHbOrh4S3d8KFmQeh11U85G+BFjIvS1Di5alusZsw==}
     engines: {node: '>= 8.0'}
 
   mz@2.7.0:
@@ -9754,10 +9750,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.44.5(gel@2.0.0)(mysql2@3.15.0):
+  drizzle-orm@0.44.5(gel@2.0.0)(mysql2@3.15.1):
     optionalDependencies:
       gel: 2.0.0
-      mysql2: 3.15.0
+      mysql2: 3.15.1
 
   dunder-proto@1.0.1:
     dependencies:
@@ -11586,8 +11582,6 @@ snapshots:
 
   lru-cache@10.4.3: {}
 
-  lru-cache@11.2.1: {}
-
   lru-cache@11.2.2: {}
 
   lru-cache@5.1.1:
@@ -11721,7 +11715,7 @@ snapshots:
 
   mute-stream@2.0.0: {}
 
-  mysql2@3.15.0:
+  mysql2@3.15.1:
     dependencies:
       aws-ssl-profiles: 1.1.2
       denque: 2.1.0
@@ -11952,7 +11946,7 @@ snapshots:
 
   path-scurry@2.0.0:
     dependencies:
-      lru-cache: 11.2.1
+      lru-cache: 11.2.2
       minipass: 7.1.2
 
   path-to-regexp@8.2.0: {}
