@@ -84,7 +84,6 @@ export function useRankingTimeQueryString(race: PublicRace | null): UseRankingTi
       }
     }
     // We want to run this effect only when race changes
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [race]);
 
   React.useEffect(() => {

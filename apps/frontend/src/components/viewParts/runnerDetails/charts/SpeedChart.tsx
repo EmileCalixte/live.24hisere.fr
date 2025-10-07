@@ -243,7 +243,7 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
     const lapSpeedDataPoints = [];
     const averageSpeedEvolutionDataPoints = [];
 
-    for (let i = 0; i < runner.passages.length; ++i) {
+    for (let i = 0; i < runner.passages.length; i += 1) {
       const passage = runner.passages[i];
 
       // Ensure that the max value of the speed axis is always higher than the runner max speed

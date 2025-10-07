@@ -39,6 +39,7 @@ export function Input({
   const [internalValue, setInternalValue] = React.useState<string>(valueToString(value));
 
   if (type === "number" && props.pattern === undefined) {
+    // eslint-disable-next-line no-param-reassign
     props.pattern = "[0-9]*";
   }
 

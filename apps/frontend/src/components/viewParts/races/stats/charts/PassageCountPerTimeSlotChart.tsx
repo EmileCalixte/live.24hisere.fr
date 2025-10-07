@@ -75,7 +75,7 @@ export function PassageCountPerTimeSlotChart({
       const timeSlot = timeSlots.get(timeSlotStartRaceTime);
 
       if (timeSlot) {
-        timeSlot.passageCount++;
+        timeSlot.passageCount += 1;
       }
     }
 

@@ -12,11 +12,13 @@ import {
 import { verbose } from "../../utils/utils";
 
 function getBackendFullUrl(shortUrl: string): string {
+  let url = shortUrl;
+
   if (!shortUrl.startsWith("/")) {
-    shortUrl = "/" + shortUrl;
+    url = "/" + url;
   }
 
-  return config.apiUrl + shortUrl;
+  return config.apiUrl + url;
 }
 
 function addDefaultHeaders(init: Omit<RequestInit, "headers"> & { headers: Headers }): void {
@@ -32,8 +34,10 @@ export async function performApiRequest<T extends ApiRequest>(
   body?: ApiPayload<T>,
   init: Omit<RequestInit, "body"> = {},
 ): Promise<ApiResponse<T>> {
+  let normalizedUrl = url;
+
   if (!url.startsWith(config.apiUrl)) {
-    url = getBackendFullUrl(url);
+    normalizedUrl = getBackendFullUrl(url);
   }
 
   const fetchInit = {
@@ -46,22 +50,22 @@ export async function performApiRequest<T extends ApiRequest>(
 
   const method = init.method?.toUpperCase() ?? "GET";
 
-  verbose(`Performing request ${init.method?.toUpperCase() ?? "GET"} ${url}`);
+  verbose(`Performing request ${init.method?.toUpperCase() ?? "GET"} ${normalizedUrl}`);
   window.dispatchEvent(new CustomEvent(EVENT_API_REQUEST_STARTED));
 
   try {
     const response = (await Promise.race([
       new Promise((resolve, reject) => {
-        fetch(url, fetchInit).then(resolve).catch(reject);
+        fetch(normalizedUrl, fetchInit).then(resolve).catch(reject);
       }),
       new Promise((resolve, reject) => {
         setTimeout(() => {
-          reject(new ApiTimeoutError(`Request ${method} ${url} timed out after ${REQUEST_TIMEOUT} ms`));
+          reject(new ApiTimeoutError(`Request ${method} ${normalizedUrl} timed out after ${REQUEST_TIMEOUT} ms`));
         }, REQUEST_TIMEOUT);
       }),
     ])) as Response;
 
-    verbose(`${method} ${url} response code:`, response.status);
+    verbose(`${method} ${normalizedUrl} response code:`, response.status);
 
     const responseJson = await getResponseJson<T["response"]>(response);
 
@@ -69,7 +73,7 @@ export async function performApiRequest<T extends ApiRequest>(
       throw new ApiError(
         response.status,
         responseJson,
-        `Request ${init.method ?? "GET"} ${url} resulted in an HTTP ${response.status} status code`,
+        `Request ${init.method ?? "GET"} ${normalizedUrl} resulted in an HTTP ${response.status} status code`,
       );
     }
 
@@ -85,11 +89,13 @@ export async function performAuthenticatedApiRequest<T extends ApiRequest>(
   body?: ApiPayload<T>,
   init: Omit<RequestInit, "body"> = {},
 ): Promise<ApiResponse<T>> {
-  if (!(init.headers instanceof Headers)) {
-    init.headers = new Headers(init.headers);
+  const requestInit = structuredClone(init);
+
+  if (!(requestInit.headers instanceof Headers)) {
+    requestInit.headers = new Headers(init.headers);
   }
 
-  init.headers.append("Authorization", accessToken);
+  requestInit.headers.append("Authorization", accessToken);
 
   return await performApiRequest(url, body, init);
 }

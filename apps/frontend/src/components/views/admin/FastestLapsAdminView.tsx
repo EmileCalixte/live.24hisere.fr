@@ -179,7 +179,7 @@ export default function FastestLapsAdminView(): React.ReactElement {
     for (
       let i = ITEMS_PER_PAGE * (page - 1);
       i < Math.min(ITEMS_PER_PAGE * (page - 1) + ITEMS_PER_PAGE, passagesToDisplay.length);
-      ++i
+      i += 1
     ) {
       passages.push(passagesToDisplay[i]);
     }

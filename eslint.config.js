@@ -78,11 +78,13 @@ export default [
         },
       ],
 
+      // Custom overrides
       complexity: "off",
       "eslint-comments/require-description": "off",
       "guard-for-in": "off", // TODO enable ?
       "max-lines": "off",
       "no-alert": "off",
+      "no-negated-condition": "off",
       "no-octal-escape": "off", // Only octal escape works with tailwind
       "promise/avoid-new": "off",
       "react/no-unescaped-entities": "off",

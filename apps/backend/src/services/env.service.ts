@@ -54,6 +54,7 @@ export class EnvService implements OnModuleInit {
     this.environmentVariables = {
       ...REQUIRED_ENVIRONMENT_VARIABLES.reduce<RequiredEnvironmentVariables>(
         (acc, variableName) => {
+          // eslint-disable-next-line no-param-reassign
           acc[variableName] = this.initRequiredValue(variableName);
           return acc;
         },
@@ -64,6 +65,7 @@ export class EnvService implements OnModuleInit {
       ...Object.entries(OPTIONAL_ENVIRONMENT_VARIABLES).reduce<OptionalEnvironmentVariables>(
         (acc, [variableName, defaultValue]) => {
           // @ts-ignore Object.entries does not infer key and value types
+          // eslint-disable-next-line no-param-reassign
           acc[variableName] = this.initOptionalValue(variableName, defaultValue);
           return acc;
         },

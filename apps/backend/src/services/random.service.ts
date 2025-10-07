@@ -13,7 +13,7 @@ export class RandomService {
   getRandomString(length: number, availableCharacters: string = ALL_CASE_AND_DIGITS): string {
     const randomStringCharacters: string[] = [];
 
-    for (let i = 0; i < length; ++i) {
+    for (let i = 0; i < length; i += 1) {
       randomStringCharacters.push(availableCharacters[this.getRandomInt(0, availableCharacters.length)]);
     }
 
