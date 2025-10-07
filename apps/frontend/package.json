@@ -33,7 +33,7 @@
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.14",
     "toastr2": "^3.0.0-alpha.18",
-    "vite": "^7.1.2",
+    "vite": "^7.1.9",
     "vite-plugin-svgr": "^4.5.0",
     "vite-tsconfig-paths": "^5.1.4",
     "web-vitals": "^5.1.0",
@@ -45,7 +45,7 @@
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
     "jsdom": "^27.0.0",
-    "rollup-plugin-visualizer": "^6.0.4",
+    "vite-bundle-analyzer": "^1.2.3",
     "vitest": "^3.2.4"
   },
   "scripts": {
