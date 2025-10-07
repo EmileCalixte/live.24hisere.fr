@@ -1,7 +1,7 @@
-import { createParser, type ParserBuilder } from "nuqs";
+import { createParser, type SingleParserBuilder } from "nuqs";
 import { arrayUtils } from "@live24hisere/utils";
 
-export function parseAsEnum<T extends readonly string[]>(availableValues: T): ParserBuilder<T[number]> {
+export function parseAsEnum<T extends readonly string[]>(availableValues: T): SingleParserBuilder<T[number]> {
   return createParser({
     parse(value) {
       if (arrayUtils.inArray(value, availableValues)) {
