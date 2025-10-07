@@ -247,8 +247,8 @@ importers:
         specifier: ^7.14.0
         version: 7.14.0
       nuqs:
-        specifier: ^2.6.0
-        version: 2.6.0(react-router-dom@7.9.3(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-router@7.9.3(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0)
+        specifier: ^2.7.1
+        version: 2.7.1(react-router-dom@7.9.3(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-router@7.9.3(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0)
       react:
         specifier: ^19.2.0
         version: 19.2.0
@@ -4942,8 +4942,8 @@ packages:
     resolution: {integrity: sha512-S48WzZW777zhNIrn7gxOlISNAqi9ZC/uQFnRdbeIHhZhCA6UqpkOT8T1G7BvfdgP4Er8gF4sUbaS0i7QvIfCWw==}
     engines: {node: '>=8'}
 
-  nuqs@2.6.0:
-    resolution: {integrity: sha512-EvIKBvfJeyL8n6lxfebxoAbkHJutNsxmy1oo4noFUYNUESbnecxWxgnxXoa0/4fYiFwdEuyMQx1Z9rV0h4bnkg==}
+  nuqs@2.7.1:
+    resolution: {integrity: sha512-3WDgrOZWat0QyOheyljTlXK4TGFh1JKSLvXMgusMDcTyMJXe1xL8+q3zuQ6ke1vyeGnpJwztlZl2aDkMW2eIUg==}
     peerDependencies:
       '@remix-run/react': '>=2'
       '@tanstack/react-router': ^1
@@ -11437,7 +11437,7 @@ snapshots:
       path-key: 3.1.1
     optional: true
 
-  nuqs@2.6.0(react-router-dom@7.9.3(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-router@7.9.3(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0):
+  nuqs@2.7.1(react-router-dom@7.9.3(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-router@7.9.3(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0):
     dependencies:
       '@standard-schema/spec': 1.0.0
       react: 19.2.0
