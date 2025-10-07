@@ -57,41 +57,39 @@ export default function RankingTableRowNCells({
         </>
       );
     }
-  } else {
-    if (tableGender === "mixed") {
-      return (
-        <>
-          <Td>
-            <strong>
-              {runner.ranks.displayed.categoryMixed} {runnerCategoryCode}
-            </strong>
-          </Td>
-          <Td>{runner.ranks.displayed.scratchMixed}</Td>
-          <Td>
-            {runner.ranks.displayed.scratchGender} {runner.gender.toUpperCase()}
-          </Td>
-          <Td>
-            {runner.ranks.displayed.categoryGender} {runnerCategoryCode}-{runner.gender.toUpperCase()}
-          </Td>
-        </>
-      );
-    } else {
-      return (
-        <>
-          <Td>
-            <strong>
-              {runner.ranks.displayed.categoryGender} {runnerCategoryCode}-{runner.gender.toUpperCase()}
-            </strong>
-          </Td>
-          <Td>{runner.ranks.displayed.scratchMixed}</Td>
-          <Td>
-            {runner.ranks.displayed.scratchGender} {runner.gender.toUpperCase()}
-          </Td>
-          <Td>
+  } else if (tableGender === "mixed") {
+    return (
+      <>
+        <Td>
+          <strong>
             {runner.ranks.displayed.categoryMixed} {runnerCategoryCode}
-          </Td>
-        </>
-      );
-    }
+          </strong>
+        </Td>
+        <Td>{runner.ranks.displayed.scratchMixed}</Td>
+        <Td>
+          {runner.ranks.displayed.scratchGender} {runner.gender.toUpperCase()}
+        </Td>
+        <Td>
+          {runner.ranks.displayed.categoryGender} {runnerCategoryCode}-{runner.gender.toUpperCase()}
+        </Td>
+      </>
+    );
+  } else {
+    return (
+      <>
+        <Td>
+          <strong>
+            {runner.ranks.displayed.categoryGender} {runnerCategoryCode}-{runner.gender.toUpperCase()}
+          </strong>
+        </Td>
+        <Td>{runner.ranks.displayed.scratchMixed}</Td>
+        <Td>
+          {runner.ranks.displayed.scratchGender} {runner.gender.toUpperCase()}
+        </Td>
+        <Td>
+          {runner.ranks.displayed.categoryMixed} {runnerCategoryCode}
+        </Td>
+      </>
+    );
   }
 }

@@ -150,7 +150,7 @@ export class EditionsController {
       }
 
       updates.push(this.editionService.updateEdition(editionId, { order }));
-      ++order;
+      order += 1;
 
       touchedEditionIds.add(editionId);
     }

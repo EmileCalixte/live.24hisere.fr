@@ -12,6 +12,7 @@ export function useRequiredParams<TKey extends string>(keys: readonly TKey[]): R
 
   return keys.reduce(
     (acc, key) => {
+      // eslint-disable-next-line no-param-reassign
       acc[key] = params[key] as string;
       return acc;
     },

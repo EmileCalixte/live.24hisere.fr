@@ -114,10 +114,15 @@ export class RankingCalculator<TRunner extends MinimalRankingRunnerInput> {
 
       this.ensureCategoryCodeIsInCurrentRanks(runnerCategoryCode);
 
-      rankings.actual.scratchMixed = ++this.currentRanksByCategory.scratch.mixed.rank;
-      rankings.actual.scratchGender = ++this.currentRanksByCategory.scratch[runner.gender].rank;
-      rankings.actual.categoryMixed = ++this.currentRanksByCategory[runnerCategoryCode].mixed.rank;
-      rankings.actual.categoryGender = ++this.currentRanksByCategory[runnerCategoryCode][runner.gender].rank;
+      this.currentRanksByCategory.scratch.mixed.rank += 1;
+      this.currentRanksByCategory.scratch[runner.gender].rank += 1;
+      this.currentRanksByCategory[runnerCategoryCode].mixed.rank += 1;
+      this.currentRanksByCategory[runnerCategoryCode][runner.gender].rank += 1;
+
+      rankings.actual.scratchMixed = this.currentRanksByCategory.scratch.mixed.rank;
+      rankings.actual.scratchGender = this.currentRanksByCategory.scratch[runner.gender].rank;
+      rankings.actual.categoryMixed = this.currentRanksByCategory[runnerCategoryCode].mixed.rank;
+      rankings.actual.categoryGender = this.currentRanksByCategory[runnerCategoryCode][runner.gender].rank;
 
       const scratchMixedFirstRunner = this.getFirstRunner("scratch", "mixed");
       const scratchGenderFirstRunner = this.getFirstRunner("scratch", runner.gender);

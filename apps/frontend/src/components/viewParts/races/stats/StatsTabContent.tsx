@@ -111,7 +111,7 @@ export function StatsTabContent(): React.ReactElement {
       const index = isCategoryCode(categoryCode) ? categoryCode : "custom";
 
       const categoryCounts = countsByCategory[index] ?? { [GENDER.M]: 0, [GENDER.F]: 0 };
-      categoryCounts[gender]++;
+      categoryCounts[gender] += 1;
       countsByCategory[index] = categoryCounts;
     }
 

@@ -26,10 +26,6 @@ export default function Page({
   className,
   contentClassName,
 }: PageProps): React.ReactElement {
-  if (Array.isArray(children)) {
-    children = [children];
-  }
-
   return (
     <div id={`page-${id}`} className={clsx("mx-3 flex flex-col gap-3 md:mx-5", className)}>
       <Helmet>

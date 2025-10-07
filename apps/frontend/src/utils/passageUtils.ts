@@ -82,7 +82,7 @@ export function getProcessedPassagesFromPassages<TPassage extends PublicPassage>
 
   let totalDistance = 0;
 
-  for (let i = 0; i < passages.length; ++i) {
+  for (let i = 0; i < passages.length; i += 1) {
     const isFirstPassage = i === 0;
 
     const passage = passages[i];

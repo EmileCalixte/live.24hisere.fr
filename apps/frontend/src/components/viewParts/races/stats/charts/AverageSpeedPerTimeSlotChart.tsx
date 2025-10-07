@@ -80,7 +80,7 @@ export function AverageSpeedPerTimeSlotChart({
 
       const timeSlots: TimeSlot[] = [];
 
-      for (let i = 0; i < timeSlotCount; ++i) {
+      for (let i = 0; i < timeSlotCount; i += 1) {
         const timeSlotStartRaceTime = i * timeSlotDuration;
         const timeSlotEndRaceTime = timeSlotStartRaceTime + timeSlotDuration;
 

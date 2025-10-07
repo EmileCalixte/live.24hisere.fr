@@ -172,7 +172,7 @@ export class RacesController {
       }
 
       updates.push(this.raceService.updateRace(raceId, { order }));
-      ++order;
+      order += 1;
 
       touchedRaceIds.add(raceId);
     }
