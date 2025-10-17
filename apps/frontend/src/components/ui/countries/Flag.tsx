@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/static-components */
 import React from "react";
 import { getCountryName } from "../../../utils/countryUtils";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../Tooltip";
