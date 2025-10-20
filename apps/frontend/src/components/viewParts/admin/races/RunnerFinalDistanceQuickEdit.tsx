@@ -18,10 +18,9 @@ export default function RunnerFinalDistanceQuickEdit({
 
   const [distance, setDistance] = React.useState(runner.finalDistance);
   const distanceBeforeEdit = React.useRef(runner.finalDistance);
-  const hasDistanceBeenEdited = distance !== distanceBeforeEdit.current;
 
   function save(): void {
-    if (!hasDistanceBeenEdited) {
+    if (distance !== distanceBeforeEdit.current) {
       return;
     }
 

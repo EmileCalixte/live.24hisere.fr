@@ -9,14 +9,14 @@ interface UseTheme {
   setTheme: ReactStateSetter<Theme>;
 }
 
-export function useTheme(): UseTheme {
-  const windowMatchDarkRef = React.useRef(window.matchMedia("(prefers-color-scheme: dark)"));
+const windowMatchDark = window.matchMedia("(prefers-color-scheme: dark)");
 
+export function useTheme(): UseTheme {
   const bodyRef = React.useRef(document.querySelector("body"));
 
   const localStorageTheme = localStorage.getItem("preferredTheme");
 
-  const prefersDarkScheme = localStorageTheme ? localStorageTheme === Theme.DARK : windowMatchDarkRef.current.matches;
+  const prefersDarkScheme = localStorageTheme ? localStorageTheme === Theme.DARK : windowMatchDark.matches;
 
   const [theme, setTheme] = React.useState(prefersDarkScheme ? Theme.DARK : Theme.LIGHT);
 
@@ -33,8 +33,6 @@ export function useTheme(): UseTheme {
 
   // Auto-switch theme when system color scheme changes
   React.useEffect(() => {
-    const matchDark = windowMatchDarkRef.current;
-
     function onChange(e: MediaQueryListEvent): void {
       if (e.matches && theme === Theme.LIGHT) {
         trackEvent(TrackedEvent.AUTO_SWITCH_DARK_THEME);
@@ -45,10 +43,10 @@ export function useTheme(): UseTheme {
       }
     }
 
-    matchDark.addEventListener("change", onChange);
+    windowMatchDark.addEventListener("change", onChange);
 
     return () => {
-      matchDark.removeEventListener("change", onChange);
+      windowMatchDark.removeEventListener("change", onChange);
     };
   }, [theme]);
 

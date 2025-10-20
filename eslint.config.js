@@ -87,6 +87,7 @@ export default [
       "no-negated-condition": "off",
       "no-octal-escape": "off", // Only octal escape works with tailwind
       "promise/avoid-new": "off",
+      radix: "off",
       "react/no-unescaped-entities": "off",
       "@typescript-eslint/ban-ts-comment": "off",
       "@typescript-eslint/class-methods-use-this": "off",
@@ -97,8 +98,9 @@ export default [
       "@typescript-eslint/no-unsafe-enum-comparison": "off",
       "@typescript-eslint/no-unsafe-return": "off",
       "@typescript-eslint/no-unsafe-type-assertion": "off",
-      "@typescript-eslint/strict-boolean-expressions": "off",
       "@typescript-eslint/prefer-destructuring": "off",
+      "@typescript-eslint/prefer-optional-chain": "off",
+      "@typescript-eslint/strict-boolean-expressions": "off",
     },
   },
 ];
