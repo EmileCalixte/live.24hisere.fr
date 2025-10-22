@@ -24,7 +24,7 @@
     "clsx": "^2.1.1",
     "dompurify": "^3.2.7",
     "i18n-iso-countries": "^7.14.0",
-    "nuqs": "^2.7.1",
+    "nuqs": "^2.7.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-helmet": "^6.1.0",
