@@ -1,6 +1,6 @@
 services:
   database:
-    image: mariadb:10.11.6
+    image: mariadb:11.8.3
     restart: always
     volumes:
       - ./sql/app:/docker-entrypoint-initdb.d/
@@ -59,7 +59,7 @@ services:
       retries: 5
 
   umami-db:
-    image: mariadb:10.11.6
+    image: mariadb:11.8.3
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root

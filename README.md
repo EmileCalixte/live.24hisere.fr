@@ -99,7 +99,7 @@ pnpm test
 ## Installation en production
 
 1. Cloner le dépôt GitHub dans le dossier souhaité sur le serveur
-2. S'assurer que la version de node installée est correcte (`cat .nvmrc` - `node -v`). S'assurer également que MariaDB est au moins en version 10.6
+2. S'assurer que la version de node installée est correcte (`cat .nvmrc` - `node -v`). S'assurer également que MariaDB est au moins en version 11.8
 3. Installer les dépendances du projet
    ```bash
    pnpm install
