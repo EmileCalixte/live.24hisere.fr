@@ -20,7 +20,7 @@
     "@types/react-dom": "^19.2.2",
     "@types/react-helmet": "^6.1.11",
     "@types/umami": "^2.10.1",
-    "@vitejs/plugin-react-swc": "^4.2.0",
+    "@vitejs/plugin-react-swc": "^4.2.1",
     "clsx": "^2.1.1",
     "dompurify": "^3.3.0",
     "i18n-iso-countries": "^7.14.0",
