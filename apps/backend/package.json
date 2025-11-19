@@ -59,9 +59,9 @@
     "@types/express": "^5.0.4",
     "@types/node": "22.18.12",
     "@types/supertest": "^6.0.3",
-    "@vitest/coverage-v8": "^4.0.4",
+    "@vitest/coverage-v8": "^4.0.10",
     "drizzle-kit": "^0.31.6",
-    "jest-extended": "^6.0.0",
+    "jest-extended": "^7.0.0",
     "prettier": "^3.6.2",
     "source-map-support": "^0.5.20",
     "supertest": "^7.1.4",
@@ -70,6 +70,6 @@
     "tsconfig-paths": "4.2.0",
     "typescript": "^5.9.3",
     "unplugin-swc": "^1.5.8",
-    "vitest": "^4.0.4"
+    "vitest": "^4.0.10"
   }
 }
