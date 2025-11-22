@@ -31,7 +31,7 @@
     "*.{css,json}": "prettier --write"
   },
   "devDependencies": {
-    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
+    "@trivago/prettier-plugin-sort-imports": "^6.0.0",
     "@types/eslint-config-prettier": "^6.11.3",
     "eslint": "^9.39.1",
     "eslint-config-love": "133.0.0",

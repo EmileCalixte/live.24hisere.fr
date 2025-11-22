@@ -23,7 +23,7 @@ export default function Navbar(): React.ReactElement {
               className={clsx(
                 "relative mx-0 flex h-full items-center px-[5px] text-sm font-bold !text-neutral-950 !no-underline transition-[color] md:mx-[10px] md:text-base dark:!text-neutral-200",
                 "[&.active]:!text-app-green-600",
-                "after:border-app-green-600 after:absolute after:bottom-0 after:left-0 after:right-0 after:border-b-[3px] [&.active]:after:content-[''] [&:not(.active)]:after:border-transparent",
+                "after:absolute after:right-0 after:bottom-0 after:left-0 after:border-b-[3px] after:border-app-green-600 [&.active]:after:content-[''] [&:not(.active)]:after:border-transparent",
               )}
             >
               {link.label}

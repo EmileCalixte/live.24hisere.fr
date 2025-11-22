@@ -59,7 +59,7 @@ export default function MenuListItem({
       <span>{label}</span>
 
       {secondaryElements && secondaryElements.length > 0 && (
-        <span className="grow-1 flex items-end justify-end gap-3 text-sm">
+        <span className="flex grow-1 items-end justify-end gap-3 text-sm">
           {secondaryElements.map((iconGroup, iconGroupIndex) => (
             <span key={iconGroupIndex}>
               {iconGroup.map((icon, iconIndex) => (

@@ -17,7 +17,7 @@ export const DialogPopup = React.forwardRef<
 
     <Primitive.Popup
       className={twMerge(
-        "fixed left-1/2 top-1/2 max-h-[85vh] w-[90vw] max-w-[640px] -translate-x-1/2 -translate-y-1/2",
+        "fixed top-1/2 left-1/2 max-h-[85vh] w-[90vw] max-w-[640px] -translate-x-1/2 -translate-y-1/2",
         "p-4",
         "bg-white shadow-lg dark:bg-neutral-700",
         className,
@@ -27,7 +27,7 @@ export const DialogPopup = React.forwardRef<
     >
       {children}
 
-      <Primitive.Close aria-label="Fermer" className="absolute right-3.5 top-3 cursor-pointer">
+      <Primitive.Close aria-label="Fermer" className="absolute top-3 right-3.5 cursor-pointer">
         <FontAwesomeIcon icon={faXmark} />
       </Primitive.Close>
     </Primitive.Popup>

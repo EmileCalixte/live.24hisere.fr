@@ -55,7 +55,7 @@ export default function RunnerDetailsStats({ runner, race, ranking }: RunnerDeta
         <div className="col-span-6 lg:col-span-4 xl:col-span-3">
           <RunnerDetailsStatsRankingTable race={race} runner={runner} ranking={ranking} />
 
-          <p className="mb-0 mt-1">
+          <p className="mt-1 mb-0">
             <Link to={`/races?edition=${race.editionId}&race=${race.id}&tab=ranking`}>
               Cliquez ici pour voir le classement complet
             </Link>
