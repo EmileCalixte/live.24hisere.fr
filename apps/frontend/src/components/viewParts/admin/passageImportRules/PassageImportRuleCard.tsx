@@ -11,7 +11,7 @@ interface PassageImportRuleCardProps {
 export function PassageImportRuleCard({ rule, races }: PassageImportRuleCardProps): React.ReactElement {
   return (
     <Card className="flex flex-col gap-2 p-3 transition-shadow hover:shadow-md dark:transition-colors dark:hover:bg-neutral-700">
-      <pre className="text-wrap text-xs">{rule.url}</pre>
+      <pre className="text-xs text-wrap">{rule.url}</pre>
 
       <Separator />
 
