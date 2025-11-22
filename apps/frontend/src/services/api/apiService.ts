@@ -97,5 +97,5 @@ export async function performAuthenticatedApiRequest<T extends ApiRequest>(
 
   requestInit.headers.append("Authorization", accessToken);
 
-  return await performApiRequest(url, body, init);
+  return await performApiRequest(url, body, requestInit);
 }
