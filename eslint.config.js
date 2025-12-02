@@ -84,6 +84,7 @@ export default [
       "guard-for-in": "off", // TODO enable ?
       "max-lines": "off",
       "no-alert": "off",
+      "no-await-in-loop": "off",
       "no-negated-condition": "off",
       "no-octal-escape": "off", // Only octal escape works with tailwind
       "promise/avoid-new": "off",
