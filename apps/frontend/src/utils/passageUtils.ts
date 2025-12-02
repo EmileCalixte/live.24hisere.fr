@@ -88,13 +88,12 @@ export function getProcessedPassagesFromPassages<TPassage extends PublicPassage>
     const passage = passages[i];
     const previousPassage = isFirstPassage ? null : passages[i - 1];
 
-    let lapNumber: number | null = null;
-
-    if (raceInitialDistance <= 0) {
-      lapNumber = i + 1;
-    } else {
-      lapNumber = isFirstPassage ? null : i; // The first passage is an incomplete lap, so it's not counted
-    }
+    const lapNumber =
+      raceInitialDistance <= 0
+        ? i + 1 // If there is no initial distance before first lap, the first passage is considered as the first lap
+        : isFirstPassage
+          ? null // The first passage is an incomplete lap, so it's not counted
+          : i;
 
     const lapDistance = lapNumber === null ? raceInitialDistance : raceLapDistance;
     const lapStartTime = previousPassage ? new Date(previousPassage.time) : new Date(race.startTime);
