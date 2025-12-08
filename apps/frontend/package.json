@@ -46,7 +46,7 @@
     "@testing-library/user-event": "^14.6.1",
     "jsdom": "^27.2.0",
     "vite-bundle-analyzer": "^1.2.3",
-    "vitest": "^4.0.13"
+    "vitest": "^4.0.15"
   },
   "scripts": {
     "dev": "vite",
