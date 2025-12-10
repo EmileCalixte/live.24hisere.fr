@@ -8,7 +8,7 @@ on:
       - ready_for_review # When a PR changes from draft to ready for review
       - synchronize # When new commits are added to the PR
   push:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   build:
@@ -53,70 +53,6 @@ jobs:
 
       - name: Run tests on all packages
         run: pnpm test
-
-  archive:
-    if: github.event.pull_request.draft == false
-    needs: [build, test]
-    runs-on: ubuntu-24.04
-    container: ubuntu:24.04
-
-    steps:
-      - name: Install zip
-        run: apt-get update && apt-get install -y zip
-
-      - name: Check out repository code
-        uses: actions/checkout@v4
-
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: build-artifacts
-
-      - name: Clean files
-        run: |
-          rm -rf .git
-          rm -rf .github
-          rm -rf node_modules
-          rm -rf static
-          rm -rf sql
-          rm -rf apps/docker
-          rm -rf apps/frontend/node_modules
-          rm -rf apps/frontend/public
-          rm -rf apps/frontend/src
-          rm -rf apps/frontend/test
-          rm -f apps/frontend/.env
-          rm -f apps/frontend/.env.development
-          rm -f apps/frontend/.eslintrc.js
-          rm -f apps/frontend/.gitignore
-          rm -f apps/frontend/index.html
-          rm -f apps/frontend/package.json
-          rm -f apps/frontend/tsconfig.json
-          rm -f apps/frontend/vite.config.ts
-          rm -f apps/frontend/vite-env.d.ts
-          rm -rf apps/backend/dist
-          rm -rf apps/backend/node_modules
-          rm -rf apps/backend/test
-          rm -f apps/backend/.eslintrc.js
-          rm -f apps/backend/.gitignore
-          rm -f apps/backend/.prettierrc
-          rm -rf packages/*/node_modules
-          rm -rf packages/*/dist
-          rm -f .gitattributes
-          rm -f .gitignore
-          rm -f docker-compose.yml
-          rm -f prettier.config.js
-          rm -f README.md
-          rm -f turbo.json
-
-      - name: Create archive
-        run: zip -r live.24hisere.fr.zip .
-
-      - name: Create artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: live.24hisere.fr-artifact
-          path: live.24hisere.fr.zip
-          retention-days: 7
 
   lint:
     if: github.event.pull_request.draft == false
