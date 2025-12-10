@@ -99,16 +99,39 @@ jobs:
           retention-days: 7
 
 
-#  test:
-#    runs-on: ubuntu-20.04
-#    container: php:8.2-cli-alpine3.16
-#    needs: build
-#
-#    steps:
-#      - name: Download build
-#        uses: actions/download-artifact@v3
-#        with:
-#          name: live.24hisere.fr-artifact
-#
-#      - name: Unzip archive
-#        run: unzip live.24hisere.fr.zip
+  format:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-24.04
+    container: ubuntu:24.04
+
+    steps:
+      - name: Update apt
+        run: apt-get update
+
+      - name: Install misc tools
+        run: apt-get install -y curl git zip unzip
+
+      - name: Install Node.js 22
+        run: |
+          curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+          apt-get install -y nodejs
+
+      # Ensure we have the new signing keys that match the npm registry changes (corepack >= 0.31.0)
+      # See https://vercel.com/guides/corepack-errors-github-actions
+      - name: Use latest Corepack
+        run: |
+          echo "Before: corepack version: $(corepack --version || echo 'not installed')"
+          npm install -g corepack@latest
+          echo "After : corepack version: $(corepack --version)"
+
+      - name: Enable corepack to use pnpm
+        run: corepack enable
+
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Install JS dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check formatting
+        run: pnpm format-check
