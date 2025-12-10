@@ -54,6 +54,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build-artifacts
+          path: .
 
       - name: Run tests on all packages
         run: pnpm test
