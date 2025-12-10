@@ -2,8 +2,9 @@ import type React from "react";
 import { COMMON_INPUT_CLASSNAME } from "../../../constants/ui/input";
 import type { SelectOption } from "../../../types/Forms";
 
-export interface SelectProps<TValue extends SelectOption["value"]>
-  extends React.SelectHTMLAttributes<HTMLSelectElement> {
+export interface SelectProps<
+  TValue extends SelectOption["value"],
+> extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label: string;
   options: Array<SelectOption<TValue>>;
   isLoading?: boolean;
