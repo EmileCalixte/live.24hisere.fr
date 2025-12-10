@@ -23,9 +23,6 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
 
-      - name: Run ESLint
-        run: pnpm lint
-
       - name: Build apps
         run: pnpm build
 
@@ -76,6 +73,20 @@ jobs:
           path: live.24hisere.fr.zip
           retention-days: 7
 
+  lint:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-24.04
+    container: ubuntu:24.04
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Run ESLint
+        run: pnpm lint
 
   format:
     if: github.event.pull_request.draft == false
