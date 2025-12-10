@@ -1,7 +1,7 @@
 import type React from "react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../Tooltip";
 
-type RunnerStoppedTooltipProps = Pick<React.ComponentProps<typeof Tooltip>, "children">;
+type RunnerStoppedTooltipProps = Pick<React.ComponentProps<typeof TooltipTrigger>, "children">;
 
 export default function RunnerStoppedTooltip({ children }: RunnerStoppedTooltipProps): React.ReactElement {
   return (
