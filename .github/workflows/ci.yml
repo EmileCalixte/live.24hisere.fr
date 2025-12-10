@@ -1,4 +1,4 @@
-name: CI/CD
+name: CI
 
 on:
   pull_request:
@@ -32,12 +32,13 @@ jobs:
           name: build-artifacts
           path: |
             apps/frontend/dist
-            apps/backend/src
-            packages
+            apps/backend/dist
+            packages/*/dist
           retention-days: 1
 
   test:
     if: github.event.pull_request.draft == false
+    needs: [build]
     runs-on: ubuntu-24.04
     container: ubuntu:24.04
 
@@ -48,8 +49,10 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
 
-      - name: Build packages
-        run: pnpm utils build && pnpm core build
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
 
       - name: Run tests on all packages
         run: pnpm test
