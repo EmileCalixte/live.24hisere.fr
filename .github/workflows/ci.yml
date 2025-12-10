@@ -35,6 +35,7 @@ jobs:
             apps/backend/dist
             packages/*/dist
           retention-days: 1
+          if-no-files-found: error
 
   test:
     if: github.event.pull_request.draft == false
