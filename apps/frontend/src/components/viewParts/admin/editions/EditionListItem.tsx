@@ -4,8 +4,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { AdminEditionWithRaceAndRunnerCount } from "@live24hisere/core/types";
 import MenuListItem from "../../../ui/lists/MenuList/MenuListItem";
 
-interface EditionListItemProps
-  extends Pick<React.ComponentProps<typeof MenuListItem>, "isSorting" | "isDragged" | "isDraggedOver"> {
+interface EditionListItemProps extends Pick<
+  React.ComponentProps<typeof MenuListItem>,
+  "isSorting" | "isDragged" | "isDraggedOver"
+> {
   edition: AdminEditionWithRaceAndRunnerCount;
 }
 

@@ -1,0 +1,36 @@
+name: Setup
+description: Install Node.js 22, corepack, and pnpm dependencies
+
+runs:
+  using: composite
+  steps:
+    - name: Update apt
+      shell: bash
+      run: apt-get update
+
+    - name: Install misc tools
+      shell: bash
+      run: apt-get install -y curl git zip unzip
+
+    - name: Install Node.js 22
+      shell: bash
+      run: |
+        curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+        apt-get install -y nodejs
+
+    # Ensure we have the new signing keys that match the npm registry changes (corepack >= 0.31.0)
+    # See https://vercel.com/guides/corepack-errors-github-actions
+    - name: Use latest Corepack
+      shell: bash
+      run: |
+        echo "Before: corepack version: $(corepack --version || echo 'not installed')"
+        npm install -g corepack@latest
+        echo "After : corepack version: $(corepack --version)"
+
+    - name: Enable corepack to use pnpm
+      shell: bash
+      run: corepack enable
+
+    - name: Install JS dependencies
+      shell: bash
+      run: pnpm install --frozen-lockfile

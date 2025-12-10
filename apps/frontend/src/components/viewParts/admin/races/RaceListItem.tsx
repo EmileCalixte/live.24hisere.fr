@@ -5,8 +5,10 @@ import type { AdminRaceWithRunnerCount } from "@live24hisere/core/types";
 import MenuListItem from "../../../ui/lists/MenuList/MenuListItem";
 import RaceTimer from "../../RaceTimer";
 
-interface RaceListItemProps
-  extends Pick<React.ComponentProps<typeof MenuListItem>, "isSorting" | "isDragged" | "isDraggedOver"> {
+interface RaceListItemProps extends Pick<
+  React.ComponentProps<typeof MenuListItem>,
+  "isSorting" | "isDragged" | "isDraggedOver"
+> {
   race: AdminRaceWithRunnerCount;
 }
 
