@@ -10,7 +10,7 @@ runs:
 
     - name: Install misc tools
       shell: bash
-      run: apt-get install -y curl git zip unzip
+      run: apt-get install -y curl git
 
     - name: Install Node.js 22
       shell: bash

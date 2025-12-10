@@ -26,8 +26,51 @@ jobs:
       - name: Build apps
         run: pnpm build
 
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: |
+            apps/frontend/dist
+            apps/backend/src
+            packages
+          retention-days: 1
+
+  test:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-24.04
+    container: ubuntu:24.04
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Build packages
+        run: pnpm utils build && pnpm core build
+
       - name: Run tests on all packages
         run: pnpm test
+
+  archive:
+    if: github.event.pull_request.draft == false
+    needs: [build, test]
+    runs-on: ubuntu-24.04
+    container: ubuntu:24.04
+
+    steps:
+      - name: Install zip
+        run: apt-get update && apt-get install -y zip
+
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
 
       - name: Clean files
         run: |
