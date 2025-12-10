@@ -22,7 +22,7 @@
     "@types/umami": "^2.10.1",
     "@vitejs/plugin-react-swc": "^4.2.2",
     "clsx": "^2.1.1",
-    "dompurify": "^3.3.0",
+    "dompurify": "^3.3.1",
     "i18n-iso-countries": "^7.14.0",
     "nuqs": "^2.8.5",
     "react": "^19.2.1",
