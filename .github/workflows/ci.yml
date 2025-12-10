@@ -1,0 +1,90 @@
+name: CI
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - ready_for_review # When a PR changes from draft to ready for review
+      - synchronize # When new commits are added to the PR
+  push:
+    branches: [master]
+
+jobs:
+  build:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-24.04
+    container: ubuntu:24.04
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Build apps
+        run: pnpm build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: |
+            apps/frontend/dist
+            apps/backend/dist
+            packages/*/dist
+          retention-days: 1
+          if-no-files-found: error
+
+  test:
+    if: github.event.pull_request.draft == false
+    needs: [build]
+    runs-on: ubuntu-24.04
+    container: ubuntu:24.04
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+          path: .
+
+      - name: Run tests on all packages
+        run: pnpm test
+
+  lint:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-24.04
+    container: ubuntu:24.04
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Run ESLint
+        run: pnpm lint
+
+  format:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-24.04
+    container: ubuntu:24.04
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Check formatting
+        run: pnpm format-check
