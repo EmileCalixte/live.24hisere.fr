@@ -30,9 +30,15 @@ updates:
         applies-to: version-updates
         patterns:
           - "@nestjs/*"
+        exclude-patterns:
+          - "@nestjs/schedule"
         update-types:
           - "minor"
           - "patch"
+      nestjs_schedule_cron:
+        patterns:
+          - "@nestjs/schedule"
+          - "cron"
       drizzle:
         patterns:
           - "drizzle-*"
@@ -54,5 +60,3 @@ updates:
         patterns:
           - "tailwindcss"
           - "@tailwindcss/vite"
-
-
