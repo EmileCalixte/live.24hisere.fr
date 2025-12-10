@@ -99,6 +99,8 @@ jobs:
           rm -f apps/backend/.eslintrc.js
           rm -f apps/backend/.gitignore
           rm -f apps/backend/.prettierrc
+          rm -rf packages/*/node_modules
+          rm -rf packages/*/dist
           rm -f .gitattributes
           rm -f .gitignore
           rm -f docker-compose.yml
