@@ -1,11 +1,14 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import React from "react";
 import type { CategoryCode } from "@emilecalixte/ffa-categories";
+import { ArcElement, Chart, type ChartData, type ChartOptions, DoughnutController, Legend, Tooltip } from "chart.js";
+import ChartDataLabels from "chartjs-plugin-datalabels";
+import { Doughnut } from "react-chartjs-2";
 import { numberUtils, objectUtils } from "@live24hisere/utils";
 import { CATEGORY_COLORS } from "../../../../../constants/chart";
-import { useChartTheme } from "../../../../../hooks/useChartTheme";
-import CanvasjsReact from "../../../../../lib/canvasjs/canvasjs.react";
+import { useChartLegendColor } from "../../../../../hooks/useChartLegendColor";
 
-const CanvasJSChart = CanvasjsReact.CanvasJSChart;
+Chart.register(ArcElement, DoughnutController, Legend, Tooltip, ChartDataLabels);
 
 export type CategoryDistribution = Partial<Record<CategoryCode | "custom", number>>;
 
@@ -18,39 +21,71 @@ export function CategoryDistributionChart({
   countsByCategory,
   categories,
 }: CategoryDistributionChartProps): React.ReactElement {
-  const chartTheme = useChartTheme();
+  const legendColor = useChartLegendColor();
 
   const totalCount = Object.values(countsByCategory).reduce((totalCount, count) => totalCount + count);
 
-  const options = React.useMemo(
-    () => ({
-      backgroundColor: "transparent",
-      theme: chartTheme,
-      data: [
-        {
-          //   type: "pie",
-          type: "doughnut",
-          explodeOnClick: false,
-          showInLegend: true,
-          indexLabelPlacement: "inside",
-          indexLabelFontColor: "white",
-          dataPoints: objectUtils.entries(countsByCategory).map(([categoryCode, count]) => {
-            const displayedCategoryCode = categoryCode === "custom" ? "Autres" : categoryCode;
-            const categoryName = categories[categoryCode] ?? displayedCategoryCode;
+  const getCategoryDisplayNameFromCode = React.useCallback(
+    (categoryCode: string) => {
+      const displayedCategoryCode = categoryCode === "custom" ? "Autres" : categoryCode;
+      return categories[categoryCode] ?? displayedCategoryCode;
+    },
+    [categories],
+  );
 
-            return {
-              y: count,
-              legendText: `${categoryName} (${count})`,
-              indexLabel: `${count} ${displayedCategoryCode}`,
-              toolTipContent: `${count} ${categoryName} (${numberUtils.formatPercentage(count / totalCount)})`,
-              color: CATEGORY_COLORS[categoryCode],
-            };
-          }),
+  const data = React.useMemo<ChartData<"doughnut">>(
+    () => ({
+      labels: objectUtils
+        .entries(countsByCategory)
+        .map(([categoryCode, count]) => `${getCategoryDisplayNameFromCode(categoryCode)} (${count})`),
+      datasets: [
+        {
+          data: Object.values(countsByCategory),
+          backgroundColor: objectUtils.keys(countsByCategory).map((categoryCode) => CATEGORY_COLORS[categoryCode]),
         },
       ],
     }),
-    [categories, countsByCategory, chartTheme, totalCount],
+    [countsByCategory, getCategoryDisplayNameFromCode],
   );
 
-  return <CanvasJSChart options={options} />;
+  const options = React.useMemo<ChartOptions<"doughnut">>(
+    () => ({
+      responsive: true,
+      radius: "90%",
+      cutout: "70%",
+      plugins: {
+        legend: {
+          position: "bottom",
+          onClick: () => {},
+          labels: {
+            color: legendColor,
+          },
+        },
+        datalabels: {
+          color: "#fff",
+          font: {
+            size: 12,
+          },
+          formatter: (value, context) => `${value} ${objectUtils.keys(countsByCategory)[context.dataIndex]}`,
+        },
+        tooltip: {
+          enabled: true,
+          callbacks: {
+            title: () => [],
+            label: (context) => {
+              const count = Number(context.raw);
+              const categoryName = getCategoryDisplayNameFromCode(
+                objectUtils.keys(countsByCategory)[context.dataIndex],
+              );
+
+              return `${count} ${categoryName} (${numberUtils.formatPercentage(count / totalCount)})`;
+            },
+          },
+        },
+      },
+    }),
+    [countsByCategory, getCategoryDisplayNameFromCode, totalCount, legendColor],
+  );
+
+  return <Doughnut data={data} options={options} />;
 }
