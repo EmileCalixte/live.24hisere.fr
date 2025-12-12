@@ -1,10 +1,22 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import React from "react";
+import {
+  ArcElement,
+  Chart,
+  type ChartData,
+  type ChartOptions,
+  Colors,
+  DoughnutController,
+  Legend,
+  Tooltip,
+} from "chart.js";
+import ChartDataLabels from "chartjs-plugin-datalabels";
+import { Doughnut } from "react-chartjs-2";
 import { numberUtils, objectUtils } from "@live24hisere/utils";
-import { useChartTheme } from "../../../../../hooks/useChartTheme";
-import CanvasjsReact from "../../../../../lib/canvasjs/canvasjs.react";
+import { useChartLegendColor } from "../../../../../hooks/useChartLegendColor";
 import { getCountryName } from "../../../../../utils/countryUtils";
 
-const CanvasJSChart = CanvasjsReact.CanvasJSChart;
+Chart.register(ArcElement, DoughnutController, Legend, Tooltip, Colors, ChartDataLabels);
 
 /**
  * Country code as key, count as value
@@ -16,37 +28,57 @@ interface CountryDistributionChartProps {
 }
 
 export function CountryDistributionChart({ countsByCountry }: CountryDistributionChartProps): React.ReactElement {
-  const chartTheme = useChartTheme();
+  const legendColor = useChartLegendColor();
 
   const totalCount = Object.values(countsByCountry).reduce((totalCount, count) => totalCount + count);
 
-  const options = React.useMemo(
+  const data = React.useMemo<ChartData<"doughnut">>(
     () => ({
-      backgroundColor: "transparent",
-      theme: chartTheme,
-      data: [
+      labels: objectUtils
+        .entries(countsByCountry)
+        .map(([countryCode, count]) => `${getCountryName(countryCode) ?? "Autres"} (${count})`),
+      datasets: [
         {
-          // type: "pie",
-          type: "doughnut",
-          explodeOnClick: false,
-          showInLegend: true,
-          indexLabelPlacement: "inside",
-          indexLabelFontColor: "white",
-          dataPoints: objectUtils.entries(countsByCountry).map(([countryCode, count]) => {
-            const countryName = getCountryName(countryCode) ?? "Autres";
-
-            return {
-              y: count,
-              indexLabel: count.toString(),
-              legendText: `${countryName} (${count})`,
-              toolTipContent: `${countryName} : ${count} (${numberUtils.formatPercentage(count / totalCount)})`,
-            };
-          }),
+          data: objectUtils.entries(countsByCountry).map(([countryCode, count]) => count),
         },
       ],
     }),
-    [countsByCountry, chartTheme, totalCount],
+    [countsByCountry],
   );
 
-  return <CanvasJSChart options={options} />;
+  const options = React.useMemo<ChartOptions<"doughnut">>(
+    () => ({
+      responsive: true,
+      radius: "90%",
+      cutout: "70%",
+      plugins: {
+        legend: {
+          position: "bottom",
+          onClick: () => {},
+          labels: {
+            color: legendColor,
+          },
+        },
+        datalabels: {
+          color: "#fff",
+          font: {
+            size: 12,
+          },
+        },
+        tooltip: {
+          enabled: true,
+          callbacks: {
+            label: (context) => {
+              const count = Number(context.raw);
+
+              return `${count} (${numberUtils.formatPercentage(count / totalCount)})`;
+            },
+          },
+        },
+      },
+    }),
+    [legendColor, totalCount],
+  );
+
+  return <Doughnut data={data} options={options} />;
 }
