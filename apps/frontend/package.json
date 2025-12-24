@@ -35,7 +35,7 @@
     "toastr2": "^3.0.0-alpha.18",
     "vite": "^7.3.0",
     "vite-plugin-svgr": "^4.5.0",
-    "vite-tsconfig-paths": "^5.1.4",
+    "vite-tsconfig-paths": "^6.0.3",
     "web-vitals": "^5.1.0",
     "xlsx": "^0.18.5"
   },
