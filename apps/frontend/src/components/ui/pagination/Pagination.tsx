@@ -19,12 +19,7 @@ const buttonClassName = twMerge(
 
 const activeButtonClassName = "z-1 bg-app-green-500 dark:bg-app-green-700 text-white";
 
-export default function Pagination({
-  minPage = 1,
-  maxPage,
-  currentPage,
-  setPage,
-}: PaginationProps): React.ReactElement {
+export default function Pagination({ minPage, maxPage, currentPage, setPage }: PaginationProps): React.ReactElement {
   return (
     <div className="pagination flex">
       <button

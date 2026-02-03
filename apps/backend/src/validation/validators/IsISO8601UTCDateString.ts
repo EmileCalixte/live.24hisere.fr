@@ -19,7 +19,7 @@ export function isISO8601UTCDateString(value: unknown): boolean {
     return true;
   }
 
-  return date.toISOString().split(".")[0] + "Z" === value;
+  return `${date.toISOString().split(".")[0]}Z` === value;
 }
 
 /**
@@ -33,7 +33,7 @@ export function IsISO8601UTCDateString(validationOptions?: ValidationOptions): P
       validator: {
         validate: (value): boolean => isISO8601UTCDateString(value),
         defaultMessage: buildMessage(
-          (eachPrefix) => eachPrefix + "$property must be a valid ISO 8601 UTC date string",
+          (eachPrefix) => `${eachPrefix}$property must be a valid ISO 8601 UTC date string`,
           validationOptions,
         ),
       },

@@ -7,5 +7,5 @@ export function generateXlsxFromData(data: object[], filename = "Data"): void {
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, workSheet, "Data");
 
-  XLSX.writeFile(wb, filename + ".xlsx");
+  XLSX.writeFile(wb, `${filename}.xlsx`);
 }

@@ -11,7 +11,7 @@ export function IsISO31661Alpha3Code(validationOptions?: ValidationOptions): Pro
       validator: {
         validate: (value): boolean => arrayUtils.inArray(value, ALPHA3_COUNTRY_CODES),
         defaultMessage: buildMessage(
-          (eachPrefix) => eachPrefix + "$property must be a valid ISO 3166-1 Alpha 3 country code",
+          (eachPrefix) => `${eachPrefix}$property must be a valid ISO 3166-1 Alpha 3 country code`,
           validationOptions,
         ),
       },

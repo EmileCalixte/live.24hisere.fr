@@ -24,7 +24,7 @@ export function FloatStringMin(minValue: number, validationOptions?: ValidationO
       validator: {
         validate: (value): boolean => floatStringMin(value, minValue),
         defaultMessage: buildMessage(
-          (eachPrefix) => eachPrefix + "$property must not be less than $constraint1",
+          (eachPrefix) => `${eachPrefix}$property must not be less than $constraint1`,
           validationOptions,
         ),
       },

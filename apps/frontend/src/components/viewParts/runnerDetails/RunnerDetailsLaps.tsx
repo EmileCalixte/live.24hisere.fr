@@ -189,7 +189,13 @@ export default function RunnerDetailsLaps({
       <h3>Détails des tours</h3>
 
       <p>
-        <Button variant="link" onClick={exportRunnerToXlsx} icon={<FontAwesomeIcon icon={faFileExcel} />}>
+        <Button
+          variant="link"
+          onClick={() => {
+            exportRunnerToXlsx();
+          }}
+          icon={<FontAwesomeIcon icon={faFileExcel} />}
+        >
           Télécharger au format Excel
         </Button>
       </p>

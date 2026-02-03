@@ -123,13 +123,13 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
             </div>
             <div>
               Vitesse moyenne :{" "}
-              <strong>{hour.averageSpeed !== null ? hour.averageSpeed.toFixed(2) + " km/h" : "–"}</strong>
+              <strong>{hour.averageSpeed !== null ? `${hour.averageSpeed.toFixed(2)} km/h` : "–"}</strong>
             </div>
             <div>
               Allure :{" "}
               <strong>
                 {hour.averagePace !== null
-                  ? formatMsAsDuration(hour.averagePace, { forceDisplayHours: false }) + "/km"
+                  ? `${formatMsAsDuration(hour.averagePace, { forceDisplayHours: false })}/km`
                   : "–"}
               </strong>
             </div>

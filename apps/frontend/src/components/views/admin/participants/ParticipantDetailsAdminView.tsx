@@ -169,7 +169,9 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
   const raceUnavailableBibNumbers = React.useMemo(() => {
     const bibNumbers = new Set<number>();
 
-    raceRunners?.forEach((runner) => bibNumbers.add(runner.bibNumber));
+    raceRunners?.forEach((runner) => {
+      bibNumbers.add(runner.bibNumber);
+    });
 
     return bibNumbers;
   }, [raceRunners]);

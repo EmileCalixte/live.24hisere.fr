@@ -55,7 +55,9 @@ export default function CreateParticipantAdminView(): React.ReactElement {
   const alreadyParticipatingRunnerIds = React.useMemo(() => {
     const ids = new Set<number>();
 
-    raceRunners?.forEach((runner) => ids.add(runner.id));
+    raceRunners?.forEach((runner) => {
+      ids.add(runner.id);
+    });
 
     return ids;
   }, [raceRunners]);
@@ -63,7 +65,9 @@ export default function CreateParticipantAdminView(): React.ReactElement {
   const raceUnavailableBibNumbers = React.useMemo(() => {
     const bibNumbers = new Set<number>();
 
-    raceRunners?.forEach((runner) => bibNumbers.add(runner.bibNumber));
+    raceRunners?.forEach((runner) => {
+      bibNumbers.add(runner.bibNumber);
+    });
 
     return bibNumbers;
   }, [raceRunners]);

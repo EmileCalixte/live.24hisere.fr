@@ -84,14 +84,14 @@ export function prefixNumber(number: number, minDigits = 2): string | typeof NaN
   const stringNumberDecimalPart = splittedStringNumber.length > 1 ? splittedStringNumber[1] : null;
 
   while (stringNumberIntPart.length < minDigits) {
-    stringNumberIntPart = "0" + stringNumberIntPart;
+    stringNumberIntPart = `0${stringNumberIntPart}`;
   }
 
   let formattedString = numberIsNegative ? "-" : "";
   formattedString += stringNumberIntPart;
 
   if (stringNumberDecimalPart !== null) {
-    formattedString += "." + stringNumberDecimalPart;
+    formattedString += `.${stringNumberDecimalPart}`;
   }
 
   return formattedString;
