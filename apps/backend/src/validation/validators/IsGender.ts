@@ -25,7 +25,7 @@ export function IsGender(validationOptions?: ValidationOptions): PropertyDecorat
       validator: {
         validate: isGender,
         defaultMessage: buildMessage(
-          (eachPrefix) => eachPrefix + `$property must be one of: ${getValidGendersAsString()}`,
+          (eachPrefix) => `${eachPrefix}$property must be one of: ${getValidGendersAsString()}`,
           validationOptions,
         ),
       },

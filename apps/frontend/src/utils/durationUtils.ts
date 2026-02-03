@@ -18,7 +18,7 @@ export function formatMsAsDuration(ms: number, options: Partial<typeof formatMsA
   const opt = objectUtils.assignDefined(formatMsAsDurationDefaultOptions, options);
 
   if (ms < 0) {
-    return "−" + formatMsAsDuration((ms - 1000) * -1, opt);
+    return `−${formatMsAsDuration((ms - 1000) * -1, opt)}`;
   }
 
   const seconds = Math.floor((ms / 1000) % 60);

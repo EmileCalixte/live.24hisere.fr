@@ -61,7 +61,7 @@ export class RankingCalculator<TRunner extends MinimalRankingRunnerInput> {
   constructor(
     private readonly race: PublicRace,
     private readonly runners: TRunner[],
-    private readonly serverTimeOffset: number,
+    serverTimeOffset: number,
     rankingDate?: Date,
   ) {
     this.runners = this.runners.filter((runner) => runner.raceId === this.race.id);

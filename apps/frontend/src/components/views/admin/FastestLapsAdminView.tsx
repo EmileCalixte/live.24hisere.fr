@@ -52,9 +52,9 @@ export default function FastestLapsAdminView(): React.ReactElement {
 
     const sortedPassages: RunnerSortedPassages = {};
 
-    passages.forEach((passage) => {
+    for (const passage of passages) {
       if (passage.isHidden) {
-        return sortedPassages;
+        continue;
       }
 
       if (!(passage.runnerId in sortedPassages)) {
@@ -62,9 +62,7 @@ export default function FastestLapsAdminView(): React.ReactElement {
       }
 
       sortedPassages[passage.runnerId].push(passage);
-
-      return sortedPassages;
-    }, sortedPassages);
+    }
 
     return sortedPassages;
   }, [passages]);

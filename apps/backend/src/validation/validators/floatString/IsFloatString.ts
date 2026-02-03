@@ -32,7 +32,7 @@ export function IsFloatString(validationOptions?: ValidationOptions): PropertyDe
       validator: {
         validate: (value): boolean => isFloatString(value),
         defaultMessage: buildMessage(
-          (eachPrefix) => eachPrefix + "$property must be a string representing a valid decimal number",
+          (eachPrefix) => `${eachPrefix}$property must be a string representing a valid decimal number`,
         ),
       },
     },

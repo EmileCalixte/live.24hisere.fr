@@ -15,7 +15,7 @@ function getBackendFullUrl(shortUrl: string): string {
   let url = shortUrl;
 
   if (!shortUrl.startsWith("/")) {
-    url = "/" + url;
+    url = `/${url}`;
   }
 
   return config.apiUrl + url;
