@@ -11,6 +11,7 @@ import { useGetAdminRunners } from "../../../../hooks/api/requests/admin/runners
 import { useRequiredParams } from "../../../../hooks/useRequiredParams";
 import { getCreateParticipantBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import type { SelectOption } from "../../../../types/Forms";
+import type { FormSubmitEventHandler } from "../../../../types/utils/react";
 import { is404Error } from "../../../../utils/apiUtils";
 import { spaceshipRunnersByName } from "../../../../utils/runnerUtils";
 import { Card } from "../../../ui/Card";
@@ -95,7 +96,7 @@ export default function CreateParticipantAdminView(): React.ReactElement {
     setIsStopped(false);
   }, []);
 
-  const onSubmit: React.FormEventHandler = (e) => {
+  const onSubmit: FormSubmitEventHandler = (e) => {
     e.preventDefault();
 
     if (!accessToken || !race || runnerId === undefined || bibNumber === undefined) {

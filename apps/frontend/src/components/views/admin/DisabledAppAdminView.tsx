@@ -4,6 +4,7 @@ import { appContext } from "../../../contexts/AppContext";
 import { useGetDisabledAppData } from "../../../hooks/api/requests/admin/config/useGetDisabledAppData";
 import { usePatchDisabledAppData } from "../../../hooks/api/requests/admin/config/usePatchDisabledAppData";
 import { getDisabledAppBreadcrumbs } from "../../../services/breadcrumbs/breadcrumbService";
+import type { FormSubmitEventHandler } from "../../../types/utils/react";
 import { Card } from "../../ui/Card";
 import { Button } from "../../ui/forms/Button";
 import { Checkbox } from "../../ui/forms/Checkbox";
@@ -35,7 +36,7 @@ export default function DisabledAppAdminView(): React.ReactElement {
     ].includes(false);
   }, [disabledAppData, disabledAppMessage, isAppEnabled]);
 
-  const onSubmit: React.FormEventHandler = (e) => {
+  const onSubmit: FormSubmitEventHandler = (e) => {
     e.preventDefault();
 
     const body = {

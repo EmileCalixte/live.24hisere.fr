@@ -1,6 +1,7 @@
 import React from "react";
 import type { CustomRunnerCategory } from "@live24hisere/core/types";
 import type { SelectOption } from "../../../../types/Forms";
+import type { FormSubmitEventHandler } from "../../../../types/utils/react";
 import { Button } from "../../../ui/forms/Button";
 import { Checkbox } from "../../../ui/forms/Checkbox";
 import { Input } from "../../../ui/forms/Input";
@@ -9,7 +10,7 @@ import { Link } from "../../../ui/Link";
 
 interface ParticipantDetailsFormProps {
   isBasicRanking: boolean;
-  onSubmit: (e: React.FormEvent) => void;
+  onSubmit: FormSubmitEventHandler;
   runnerOptions?: SelectOption[] | false;
   runnerId?: number | undefined;
   onRunnerChange?: React.ChangeEventHandler<HTMLSelectElement>;

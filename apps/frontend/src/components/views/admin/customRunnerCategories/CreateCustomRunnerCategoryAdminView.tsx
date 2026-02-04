@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useGetAdminCustomRunnerCategories } from "../../../../hooks/api/requests/admin/customRunnerCategories/useGetAdminCustomRunnerCategories";
 import { usePostAdminCustomRunnerCategory } from "../../../../hooks/api/requests/admin/customRunnerCategories/usePostAdminCustomRunnerCategory";
 import { getCustomRunnerCategoryCreateBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
+import type { FormSubmitEventHandler } from "../../../../types/utils/react";
 import { Card } from "../../../ui/Card";
 import Page from "../../../ui/Page";
 import CustomRunnerCategoryDetailsForm from "../../../viewParts/admin/customRunnerCategories/CustomRunnerCategoryDetailsForm";
@@ -18,7 +19,7 @@ export default function CreateCustomRunerCategoryAdminView(): React.ReactElement
   const [categoryCode, setCategoryCode] = React.useState("");
   const [categoryName, setCategoryName] = React.useState("");
 
-  const onSubmit: React.FormEventHandler = (e) => {
+  const onSubmit: FormSubmitEventHandler = (e) => {
     e.preventDefault();
 
     const body = {

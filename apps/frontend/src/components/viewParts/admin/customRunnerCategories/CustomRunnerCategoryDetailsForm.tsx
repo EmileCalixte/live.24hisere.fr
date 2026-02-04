@@ -2,11 +2,12 @@ import {
   CUSTOM_RUNNER_CATEGORY_CODE_MAX_LENGTH,
   CUSTOM_RUNNER_CATEGORY_NAME_MAX_LENGTH,
 } from "@live24hisere/core/constants";
+import type { FormSubmitEventHandler } from "../../../../types/utils/react";
 import { Button } from "../../../ui/forms/Button";
 import { Input } from "../../../ui/forms/Input";
 
 interface CustomRunnerCategoryDetailsFormProps {
-  onSubmit: (e: React.FormEvent) => void;
+  onSubmit: FormSubmitEventHandler;
   code: string;
   setCode: (code: string) => void;
   codeAlreadyExists: boolean;

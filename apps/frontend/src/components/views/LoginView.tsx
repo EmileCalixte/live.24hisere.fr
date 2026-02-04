@@ -2,6 +2,7 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 import { appContext } from "../../contexts/AppContext";
 import { useLogin } from "../../hooks/api/requests/auth/useLogin";
+import type { FormSubmitEventHandler } from "../../types/utils/react";
 import { Card } from "../ui/Card";
 import { Button } from "../ui/forms/Button";
 import { Input } from "../ui/forms/Input";
@@ -16,7 +17,7 @@ export default function LoginView(): React.ReactElement {
   const [password, setPassword] = React.useState("");
   const [loggedIn, setLoggedIn] = React.useState(accessToken !== null);
 
-  const onSubmit: React.FormEventHandler = (e) => {
+  const onSubmit: FormSubmitEventHandler = (e) => {
     e.preventDefault();
 
     loginMutation.mutate(

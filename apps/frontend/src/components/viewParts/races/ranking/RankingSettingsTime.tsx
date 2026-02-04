@@ -1,5 +1,6 @@
 import type React from "react";
 import { useEffect, useState } from "react";
+import type { FormSubmitEventHandler } from "../../../../types/utils/react";
 import { Button } from "../../../ui/forms/Button";
 import DurationInputs from "../../../ui/forms/DurationInputs";
 
@@ -19,7 +20,7 @@ export default function RankingSettingsTime({
   // The current value from the inputs in ms, saved or not
   const [time, setTime] = useState(currentRankingTime);
 
-  const onSubmit = (e: React.FormEvent): void => {
+  const onSubmit: FormSubmitEventHandler = (e): void => {
     e.preventDefault();
     setTime(time);
     onRankingTimeSave(time);

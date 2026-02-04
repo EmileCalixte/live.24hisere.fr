@@ -1,6 +1,7 @@
 import type React from "react";
 import { useMemo } from "react";
 import type { SelectOption } from "../../../../types/Forms";
+import type { FormSubmitEventHandler } from "../../../../types/utils/react";
 import { getDateStringFromDate, getTimeStringFromDate } from "../../../../utils/utils";
 import { Button } from "../../../ui/forms/Button";
 import { Checkbox } from "../../../ui/forms/Checkbox";
@@ -10,7 +11,7 @@ import Select from "../../../ui/forms/Select";
 import InfoIconTooltip from "../../../ui/InfoIconTooltip";
 
 interface RaceDetailsFormProps {
-  onSubmit: (e: React.FormEvent) => void;
+  onSubmit: FormSubmitEventHandler;
   editionOptions: Array<SelectOption<number>>;
   editionId: number;
   setEditionId: (editionId: number) => void;

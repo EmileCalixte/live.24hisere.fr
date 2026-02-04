@@ -12,6 +12,7 @@ import { useGetAdminRunner } from "../../../../hooks/api/requests/admin/runners/
 import { usePatchAdminRunner } from "../../../../hooks/api/requests/admin/runners/usePatchAdminRunner";
 import { useRequiredParams } from "../../../../hooks/useRequiredParams";
 import { getRunnerDetailsBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
+import type { FormSubmitEventHandler } from "../../../../types/utils/react";
 import { is404Error } from "../../../../utils/apiUtils";
 import { Card } from "../../../ui/Card";
 import CircularLoader from "../../../ui/CircularLoader";
@@ -79,7 +80,7 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
     setRunnerIsPublic(runner.isPublic);
   }, [runner]);
 
-  const onSubmit: React.FormEventHandler = (e) => {
+  const onSubmit: FormSubmitEventHandler = (e) => {
     e.preventDefault();
 
     if (!runner || !accessToken) {

@@ -12,6 +12,7 @@ import { useRaceSelectOptions } from "../../../../hooks/useRaceSelectOptions";
 import { useRequiredParams } from "../../../../hooks/useRequiredParams";
 import { getEditPassageImportRuleBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import ToastService from "../../../../services/ToastService";
+import type { FormSubmitEventHandler } from "../../../../types/utils/react";
 import { is404Error } from "../../../../utils/apiUtils";
 import { Card } from "../../../ui/Card";
 import CircularLoader from "../../../ui/CircularLoader";
@@ -75,7 +76,7 @@ export default function PassageImportRuleDetailsAdminView(): React.ReactElement 
     setIsActive(rule.isActive);
   }, [rule]);
 
-  const onSubmit: React.FormEventHandler = (e) => {
+  const onSubmit: FormSubmitEventHandler = (e) => {
     e.preventDefault();
 
     const body = { url, isActive };
@@ -87,7 +88,7 @@ export default function PassageImportRuleDetailsAdminView(): React.ReactElement 
     });
   };
 
-  const onRaceAddFormSubmit: React.FormEventHandler = (e) => {
+  const onRaceAddFormSubmit: FormSubmitEventHandler = (e) => {
     e.preventDefault();
 
     if (!rule || raceIdToAdd === undefined) {

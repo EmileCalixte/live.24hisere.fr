@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { usePostAdminPassageImportRule } from "../../../../hooks/api/requests/admin/passageImportRules/usePostAdminPassageImportRule";
 import { getCreatePassageImportRuleBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
+import type { FormSubmitEventHandler } from "../../../../types/utils/react";
 import { Card } from "../../../ui/Card";
 import Page from "../../../ui/Page";
 import PassageImportRuleDetailsForm from "../../../viewParts/admin/passageImportRules/PassageImportRuleDetailsForm";
@@ -14,7 +15,7 @@ export default function CreatePassageImportRuleAdminView(): React.ReactElement {
   const [url, setUrl] = React.useState("");
   const [isActive, setIsActive] = React.useState(false);
 
-  const onSubmit: React.FormEventHandler = (e) => {
+  const onSubmit: FormSubmitEventHandler = (e) => {
     e.preventDefault();
 
     const body = { url, isActive };

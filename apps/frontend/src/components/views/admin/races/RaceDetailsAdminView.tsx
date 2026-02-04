@@ -11,6 +11,7 @@ import { usePatchAdminRace } from "../../../../hooks/api/requests/admin/races/us
 import { useGetAdminRaceRunners } from "../../../../hooks/api/requests/admin/runners/useGetAdminRaceRunners";
 import { getRaceDetailsBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import type { SelectOption } from "../../../../types/Forms";
+import type { FormSubmitEventHandler } from "../../../../types/utils/react";
 import { is404Error } from "../../../../utils/apiUtils";
 import { formatDateForApi } from "../../../../utils/utils";
 import { Card } from "../../../ui/Card";
@@ -147,7 +148,7 @@ export default function RaceDetailsAdminView(): React.ReactElement {
     setIsBasicRanking(race.isBasicRanking);
   }, [race]);
 
-  const onSubmit: React.FormEventHandler = (e) => {
+  const onSubmit: FormSubmitEventHandler = (e) => {
     e.preventDefault();
 
     const body = {

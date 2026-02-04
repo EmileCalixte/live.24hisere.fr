@@ -6,6 +6,7 @@ import type { RunnerWithRaceCount } from "@live24hisere/core/types";
 import { latinizedIncludes } from "../../../../../packages/utils/src/string-utils";
 import { SearchParam } from "../../constants/searchParams";
 import { useGetPublicRunners } from "../../hooks/api/requests/public/runners/useGetPublicRunners";
+import type { FormSubmitEventHandler } from "../../types/utils/react";
 import { spaceshipRunnersByName } from "../../utils/runnerUtils";
 import CircularLoader from "../ui/CircularLoader";
 import { Button } from "../ui/forms/Button";
@@ -22,7 +23,7 @@ export default function SearchRunnerView(): React.ReactElement {
   const [search, setSearch] = React.useState(querySearch ?? "");
   const [matchingRunners, setMatchingRunners] = React.useState<RunnerWithRaceCount[] | undefined>(undefined);
 
-  const onSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
+  const onSubmit: FormSubmitEventHandler = (e) => {
     e.preventDefault();
 
     void setQuerySearch(search.trim());

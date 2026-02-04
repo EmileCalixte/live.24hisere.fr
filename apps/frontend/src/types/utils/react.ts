@@ -17,3 +17,5 @@ export type PolymorphicProps<TElement extends React.ElementType> = React.PropsWi
     as?: TElement;
   }
 >;
+
+export type FormSubmitEventHandler<TElement extends Element = HTMLFormElement> = React.SubmitEventHandler<TElement>;

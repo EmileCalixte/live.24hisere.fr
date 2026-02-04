@@ -1,5 +1,6 @@
 import type React from "react";
 import { useEffect, useRef } from "react";
+import type { FormSubmitEventHandler } from "../../../../types/utils/react";
 import { formatDateAsString } from "../../../../utils/utils";
 import { Dialog, DialogPopup, DialogTitle } from "../../../ui/Dialog";
 import { Button } from "../../../ui/forms/Button";
@@ -13,7 +14,7 @@ interface RunnerDetailsPassageFormDialogProps {
   comment: string;
   setComment: (comment: string) => void;
   title: string;
-  onSubmit: (e: React.FormEvent) => Promise<void>;
+  onSubmit: FormSubmitEventHandler;
   submitButtonDisabled: boolean;
   onClose: () => void;
 }
@@ -55,7 +56,7 @@ export default function RunnerDetailsPassageFormDialog({
 
         <form
           onSubmit={(e) => {
-            void onSubmit(e);
+            onSubmit(e);
           }}
           className="flex flex-col gap-3"
         >
