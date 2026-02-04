@@ -1,6 +1,7 @@
 import React from "react";
 import type { AdminRaceWithRunnerCount } from "@live24hisere/core/types";
 import ToastService from "../../../../services/ToastService";
+import type { FormSubmitEventHandler } from "../../../../types/utils/react";
 import RunnerDetailsPassageFormDialog from "./RunnerDetailsPassageFormDialog";
 
 interface RunnerDetailsCreatePassageProps {
@@ -33,24 +34,26 @@ export default function RunnerDetailsCreatePassageDialog({
     return new Date(raceStartTime.getTime() + passageRaceTime);
   }, [runnerRace, passageRaceTime]);
 
-  const onSubmit = React.useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
+  const onSubmit = React.useCallback<FormSubmitEventHandler>(
+    (e) => {
+      void (async () => {
+        e.preventDefault();
 
-      if (!passageTime) {
-        ToastService.getToastr().error(
-          "Erreur : date et heure de départ de la course inconnues, impossible de calculer la date et l'heure du passage",
-        );
-        return;
-      }
+        if (!passageTime) {
+          ToastService.getToastr().error(
+            "Erreur : date et heure de départ de la course inconnues, impossible de calculer la date et l'heure du passage",
+          );
+          return;
+        }
 
-      setIsSaving(true);
+        setIsSaving(true);
 
-      await savePassage(passageTime, passageComment);
+        await savePassage(passageTime, passageComment);
 
-      setIsSaving(false);
+        setIsSaving(false);
 
-      onClose();
+        onClose();
+      })();
     },
     [passageTime, savePassage, passageComment, onClose],
   );

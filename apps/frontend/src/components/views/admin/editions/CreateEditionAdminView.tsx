@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { usePostAdminEdition } from "../../../../hooks/api/requests/admin/editions/usePostAdminEdition";
 import { getEditionCreateBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
+import type { FormSubmitEventHandler } from "../../../../types/utils/react";
 import { Card } from "../../../ui/Card";
 import Page from "../../../ui/Page";
 import EditionDetailsForm from "../../../viewParts/admin/editions/EditionDetailsForm";
@@ -14,7 +15,7 @@ export default function CreateEditionAdminView(): React.ReactElement {
   const [editionName, setEditionName] = React.useState("");
   const [isPublic, setIsPublic] = React.useState(false);
 
-  const onSubmit: React.FormEventHandler = (e) => {
+  const onSubmit: FormSubmitEventHandler = (e) => {
     e.preventDefault();
 
     const body = {

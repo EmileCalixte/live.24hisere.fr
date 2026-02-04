@@ -1,9 +1,10 @@
+import type { FormSubmitEventHandler } from "../../../../types/utils/react";
 import { Button } from "../../../ui/forms/Button";
 import { Checkbox } from "../../../ui/forms/Checkbox";
 import { Input } from "../../../ui/forms/Input";
 
 interface PassageImportRuleDetailsFormProps {
-  onSubmit: (e: React.FormEvent) => void;
+  onSubmit: FormSubmitEventHandler;
   url: string;
   setUrl: (url: string) => void;
   isActive: boolean;

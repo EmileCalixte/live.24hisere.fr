@@ -16,6 +16,7 @@ import { useGetAdminRace } from "../../../../hooks/api/requests/admin/races/useG
 import { useGetAdminRaceRunners } from "../../../../hooks/api/requests/admin/runners/useGetAdminRaceRunners";
 import { useRequiredParams } from "../../../../hooks/useRequiredParams";
 import { getParticipantBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
+import type { FormSubmitEventHandler } from "../../../../types/utils/react";
 import { is404Error } from "../../../../utils/apiUtils";
 import { getProcessedPassagesFromPassages } from "../../../../utils/passageUtils";
 import { formatDateAsString, formatDateForApi } from "../../../../utils/utils";
@@ -190,7 +191,7 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
     setParticipantFinalDistance(runner.finalDistance);
   }, [runner]);
 
-  const onSubmit: React.FormEventHandler = (e) => {
+  const onSubmit: FormSubmitEventHandler = (e) => {
     e.preventDefault();
 
     if (!race || !runner) {

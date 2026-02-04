@@ -5,6 +5,7 @@ import type { Gender } from "@live24hisere/core/types";
 import { COUNTRY_NULL_OPTION_VALUE } from "../../../../constants/forms";
 import { usePostAdminRunner } from "../../../../hooks/api/requests/admin/runners/usePostAdminRunner";
 import { getRunnerCreateBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
+import type { FormSubmitEventHandler } from "../../../../types/utils/react";
 import { Card } from "../../../ui/Card";
 import Page from "../../../ui/Page";
 import RunnerDetailsForm from "../../../viewParts/admin/runners/RunnerDetailsForm";
@@ -21,7 +22,7 @@ export default function CreateRunnerAdminView(): React.ReactElement {
   const [countryCode, setCountryCode] = React.useState(COUNTRY_CODE_FRANCE);
   const [isPublic, setIsPublic] = React.useState(true);
 
-  const onSubmit: React.FormEventHandler = (e) => {
+  const onSubmit: FormSubmitEventHandler = (e) => {
     e.preventDefault();
 
     const body = {

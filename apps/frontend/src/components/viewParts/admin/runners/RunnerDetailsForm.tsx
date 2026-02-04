@@ -1,6 +1,7 @@
 import React from "react";
 import type { Gender } from "@live24hisere/core/types";
 import { COUNTRY_NULL_OPTION_VALUE, COUNTRY_OPTIONS_WITH_NULL, GENDER_OPTIONS } from "../../../../constants/forms";
+import type { FormSubmitEventHandler } from "../../../../types/utils/react";
 import { sortCountryOptions } from "../../../../utils/countryUtils";
 import { Button } from "../../../ui/forms/Button";
 import { Checkbox } from "../../../ui/forms/Checkbox";
@@ -9,7 +10,7 @@ import RadioGroup from "../../../ui/forms/RadioGroup";
 import Select from "../../../ui/forms/Select";
 
 interface RunnerDetailsFormProps {
-  onSubmit: (e: React.FormEvent) => void;
+  onSubmit: FormSubmitEventHandler;
   firstname: string;
   setFirstname: (firstname: string) => void;
   lastname: string;

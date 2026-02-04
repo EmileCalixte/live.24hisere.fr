@@ -1,11 +1,12 @@
 import type React from "react";
 import { EDITION_NAME_MAX_LENGTH } from "@live24hisere/core/constants";
+import type { FormSubmitEventHandler } from "../../../../types/utils/react";
 import { Button } from "../../../ui/forms/Button";
 import { Checkbox } from "../../../ui/forms/Checkbox";
 import { Input } from "../../../ui/forms/Input";
 
 interface EditionDetailsFormProps {
-  onSubmit: (e: React.FormEvent) => void;
+  onSubmit: FormSubmitEventHandler;
   name: string;
   setName: (name: string) => void;
   isPublic: boolean;

@@ -8,6 +8,7 @@ import { useGetAdminEditions } from "../../../../hooks/api/requests/admin/editio
 import { useGetAdminRaces } from "../../../../hooks/api/requests/admin/races/useGetAdminRaces";
 import { useRequiredParams } from "../../../../hooks/useRequiredParams";
 import { getCustomRunnerCategoryDetailsBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
+import type { FormSubmitEventHandler } from "../../../../types/utils/react";
 import { is404Error } from "../../../../utils/apiUtils";
 import { Card } from "../../../ui/Card";
 import CircularLoader from "../../../ui/CircularLoader";
@@ -59,7 +60,7 @@ export default function CustomRunnerCategoryDetailsAdminView(): React.ReactEleme
     setCategoryName(category.name);
   }, [category]);
 
-  const onSubmit: React.FormEventHandler = (e) => {
+  const onSubmit: FormSubmitEventHandler = (e) => {
     e.preventDefault();
 
     const body = {

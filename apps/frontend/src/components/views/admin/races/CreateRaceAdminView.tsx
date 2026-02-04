@@ -6,6 +6,7 @@ import { usePostAdminRace } from "../../../../hooks/api/requests/admin/races/use
 import { useRaceSelectOptions } from "../../../../hooks/useRaceSelectOptions";
 import { getRaceCreateBreadcrumbs } from "../../../../services/breadcrumbs/breadcrumbService";
 import type { SelectOption } from "../../../../types/Forms";
+import type { FormSubmitEventHandler } from "../../../../types/utils/react";
 import { formatDateForApi } from "../../../../utils/utils";
 import { Card } from "../../../ui/Card";
 import Select from "../../../ui/forms/Select";
@@ -83,7 +84,7 @@ export default function CreateRaceAdminView(): React.ReactElement {
     }
   }, [editionOptions]);
 
-  const onSubmit: React.FormEventHandler = (e) => {
+  const onSubmit: FormSubmitEventHandler = (e) => {
     e.preventDefault();
 
     const body = {
