@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import React from "react";
+import { ArcElement, Chart, type ChartData, type ChartOptions, DoughnutController, Legend, Tooltip } from "chart.js";
+import ChartDataLabels from "chartjs-plugin-datalabels";
+import { Doughnut } from "react-chartjs-2";
 import { numberUtils } from "@live24hisere/utils";
-import { useChartTheme } from "../../../../../hooks/useChartTheme";
-import CanvasjsReact from "../../../../../lib/canvasjs/canvasjs.react";
+import { useChartLegendColor } from "../../../../../hooks/useChartLegendColor";
 
-const CanvasJSChart = CanvasjsReact.CanvasJSChart;
+Chart.register(ArcElement, DoughnutController, Legend, Tooltip, ChartDataLabels);
 
 interface StartingRunnersDistributionPieChart {
   startingCount: number;
@@ -14,46 +17,63 @@ export function StartingRunnersDistributionChart({
   startingCount,
   nonStartingCount,
 }: StartingRunnersDistributionPieChart): React.ReactElement {
-  const chartTheme = useChartTheme();
+  const legendColor = useChartLegendColor();
 
   const totalCount = startingCount + nonStartingCount;
   const startingRatio = startingCount / totalCount;
   const nonStartingRatio = nonStartingCount / totalCount;
 
-  const options = React.useMemo(
+  const data = React.useMemo<ChartData<"doughnut">>(
     () => ({
-      backgroundColor: "transparent",
-      theme: chartTheme,
-      data: [
+      labels: [`Partants (${startingCount})`, `Non-partants (${nonStartingCount})`],
+      datasets: [
         {
-          // type: "pie",
-          type: "doughnut",
-          explodeOnClick: false,
-          showInLegend: true,
-          indexLabelPlacement: "inside",
-          dataPoints: [
-            {
-              y: startingCount,
-              legendText: `Partants (${startingCount})`,
-              indexLabel: startingCount.toString(),
-              indexLabelFontColor: "white",
-              toolTipContent: `${startingCount} partant${startingCount > 1 ? "s" : ""} (${numberUtils.formatPercentage(startingRatio)})`,
-              color: "#22aa22",
-            },
-            {
-              y: nonStartingCount,
-              legendText: `Non-partants (${nonStartingCount})`,
-              indexLabel: nonStartingCount.toString(),
-              indexLabelFontColor: "#333",
-              toolTipContent: `${nonStartingCount} non-partant${nonStartingCount > 1 ? "s" : ""} (${numberUtils.formatPercentage(nonStartingRatio)})`,
-              color: "#aaddaa",
-            },
-          ],
+          data: [startingCount, nonStartingCount],
+          backgroundColor: ["#22aa22", "#aaddaa"],
         },
       ],
     }),
-    [chartTheme, nonStartingCount, nonStartingRatio, startingCount, startingRatio],
+    [startingCount, nonStartingCount],
   );
 
-  return <CanvasJSChart options={options} />;
+  const options = React.useMemo<ChartOptions<"doughnut">>(
+    () => ({
+      responsive: true,
+      radius: "90%",
+      cutout: "70%",
+      plugins: {
+        legend: {
+          position: "bottom",
+          onClick: () => {},
+          labels: {
+            color: legendColor,
+          },
+        },
+        datalabels: {
+          color: ["#fff", "#333"],
+          font: {
+            size: 12,
+          },
+        },
+        tooltip: {
+          enabled: true,
+          callbacks: {
+            title: () => [],
+            label: (context) => {
+              const count = Number(context.raw);
+
+              if (context.dataIndex === 0) {
+                return `${count} partant${count > 1 ? "s" : ""} (${numberUtils.formatPercentage(startingRatio)})`;
+              }
+
+              return `${count} non-partant${count > 1 ? "s" : ""} (${numberUtils.formatPercentage(nonStartingRatio)})`;
+            },
+          },
+        },
+      },
+    }),
+    [legendColor, startingRatio, nonStartingRatio],
+  );
+
+  return <Doughnut data={data} options={options} />;
 }

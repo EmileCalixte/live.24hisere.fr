@@ -68,16 +68,18 @@ export function CountryDistributionChart({ countsByCountry }: CountryDistributio
         tooltip: {
           enabled: true,
           callbacks: {
+            title: () => [],
             label: (context) => {
               const count = Number(context.raw);
+              const countryName = getCountryName(objectUtils.keys(countsByCountry)[context.dataIndex]);
 
-              return `${count} (${numberUtils.formatPercentage(count / totalCount)})`;
+              return `${countryName} : ${count} (${numberUtils.formatPercentage(count / totalCount)})`;
             },
           },
         },
       },
     }),
-    [legendColor, totalCount],
+    [countsByCountry, legendColor, totalCount],
   );
 
   return <Doughnut data={data} options={options} />;
