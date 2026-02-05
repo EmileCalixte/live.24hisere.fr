@@ -6,7 +6,8 @@ import ChartDataLabels from "chartjs-plugin-datalabels";
 import { Doughnut } from "react-chartjs-2";
 import { numberUtils, objectUtils } from "@live24hisere/utils";
 import { CATEGORY_COLORS } from "../../../../../constants/chart";
-import { useChartLegendColor } from "../../../../../hooks/useChartLegendColor";
+import { useChartLegendColor } from "../../../../../hooks/charts/useChartLegendColor";
+import { useGetCategoryDisplayNameFromCode } from "../../../../../hooks/charts/useGetCategoryDisplayNameFromCode";
 
 Chart.register(ArcElement, DoughnutController, Legend, Tooltip, ChartDataLabels);
 
@@ -25,13 +26,7 @@ export function CategoryDistributionChart({
 
   const totalCount = Object.values(countsByCategory).reduce((totalCount, count) => totalCount + count);
 
-  const getCategoryDisplayNameFromCode = React.useCallback(
-    (categoryCode: string) => {
-      const displayedCategoryCode = categoryCode === "custom" ? "Autres" : categoryCode;
-      return categories[categoryCode] ?? displayedCategoryCode;
-    },
-    [categories],
-  );
+  const getCategoryDisplayNameFromCode = useGetCategoryDisplayNameFromCode(categories);
 
   const data = React.useMemo<ChartData<"doughnut">>(
     () => ({

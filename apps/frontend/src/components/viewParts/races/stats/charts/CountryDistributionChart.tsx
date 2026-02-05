@@ -13,7 +13,7 @@ import {
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import { Doughnut } from "react-chartjs-2";
 import { numberUtils, objectUtils } from "@live24hisere/utils";
-import { useChartLegendColor } from "../../../../../hooks/useChartLegendColor";
+import { useChartLegendColor } from "../../../../../hooks/charts/useChartLegendColor";
 import { getCountryName } from "../../../../../utils/countryUtils";
 
 Chart.register(ArcElement, DoughnutController, Legend, Tooltip, Colors, ChartDataLabels);

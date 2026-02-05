@@ -4,7 +4,7 @@ import { ArcElement, Chart, type ChartData, type ChartOptions, DoughnutControlle
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import { Doughnut } from "react-chartjs-2";
 import { numberUtils } from "@live24hisere/utils";
-import { useChartLegendColor } from "../../../../../hooks/useChartLegendColor";
+import { useChartLegendColor } from "../../../../../hooks/charts/useChartLegendColor";
 
 Chart.register(ArcElement, DoughnutController, Legend, Tooltip, ChartDataLabels);
 

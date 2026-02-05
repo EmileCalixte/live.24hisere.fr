@@ -1,6 +1,6 @@
 import React from "react";
-import { Theme } from "../constants/theme";
-import { appContext } from "../contexts/AppContext";
+import { Theme } from "../../constants/theme";
+import { appContext } from "../../contexts/AppContext";
 
 /**
  * Returns text color for ChartJS legend labels regarding app theme
