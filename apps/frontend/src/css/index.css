@@ -19,14 +19,6 @@
   --default-transition-timing-function: ease-out;
 }
 
-/*
-Sorry, but this clickable mention is a bad thing for the user experience.
-I love you CanvasJS and you're credited in the 'About' page!
-*/
-a.canvasjs-chart-credit {
-  display: none;
-}
-
 h1,
 h2,
 h3,

@@ -1,24 +1,5 @@
 import { formatMsAsDuration } from "./durationUtils";
 
-/**
- * Necessary to avoid an infinite loop of CanvasJS
- */
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function getAntifreezeDataForDateXAxisChart(date: Date) {
-  return {
-    type: "line",
-    markerType: null,
-    showInLegend: false,
-    name: "Antifreeze",
-    dataPoints: [
-      {
-        x: date,
-        y: 0,
-      },
-    ],
-  };
-}
-
 export function getXAxisDateLabelValue(e: { value: Date }): string {
   return formatMsAsDuration(e.value.getTime());
 }
