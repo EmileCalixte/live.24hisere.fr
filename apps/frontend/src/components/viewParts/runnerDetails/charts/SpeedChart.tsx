@@ -207,7 +207,7 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
         },
         y: {
           min: Math.floor(minSpeed),
-          max: Math.ceil(maxSpeed),
+          suggestedMax: Math.ceil(maxSpeed),
           ticks: {
             color: legendColor,
             callback: (value) => `${value} km/h`,
