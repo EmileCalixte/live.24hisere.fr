@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import React from "react";
 import {
   CategoryScale,
@@ -221,6 +220,7 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
         legend: {
           display: true,
           position: "bottom",
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
           onClick: () => {},
           labels: {
             color: legendColor,

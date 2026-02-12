@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import React from "react";
 import { ArcElement, Chart, type ChartData, type ChartOptions, DoughnutController, Legend, Tooltip } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
@@ -44,6 +43,7 @@ export function StartingRunnersDistributionChart({
       plugins: {
         legend: {
           position: "bottom",
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
           onClick: () => {},
           labels: {
             color: legendColor,

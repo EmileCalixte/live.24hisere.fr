@@ -74,9 +74,12 @@ export function PassageCountPerTimeSlotChart({
     for (const passage of sortedPassages) {
       const passageRaceTime = passage.processed.lapEndRaceTime;
 
+      // Exclude passages that have taken place after the end of the race
+      // to prevent the chart from displaying an extra column
       if (passageRaceTime > raceDurationMs) {
         continue;
       }
+
       const timeSlotStartRaceTime = passageRaceTime - (passageRaceTime % timeSlotDuration);
 
       if (!timeSlots.has(timeSlotStartRaceTime)) {

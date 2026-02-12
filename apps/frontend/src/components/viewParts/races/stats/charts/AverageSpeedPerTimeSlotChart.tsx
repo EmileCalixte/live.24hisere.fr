@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import React from "react";
 import { type CategoryCode, getCategoryList, isCategoryCode } from "@emilecalixte/ffa-categories";
 import {
@@ -248,6 +247,7 @@ export function AverageSpeedPerTimeSlotChart({
         legend: {
           display: mode !== "mixed",
           position: "bottom",
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
           onClick: () => {},
           labels: {
             color: legendColor,

@@ -1,9 +1,3 @@
-import { formatMsAsDuration } from "./durationUtils";
-
-export function getXAxisDateLabelValue(e: { value: Date }): string {
-  return formatMsAsDuration(e.value.getTime());
-}
-
 /**
  * @param raceDuration The race duration, in seconds
  */

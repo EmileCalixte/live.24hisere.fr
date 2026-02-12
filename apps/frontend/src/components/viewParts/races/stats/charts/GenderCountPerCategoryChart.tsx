@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import React from "react";
 import type { CategoryCode } from "@emilecalixte/ffa-categories";
 import {
@@ -106,6 +105,7 @@ export function GenderCountPerCategoryChart({
       plugins: {
         legend: {
           position: "bottom",
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
           onClick: () => {},
           labels: {
             color: legendColor,

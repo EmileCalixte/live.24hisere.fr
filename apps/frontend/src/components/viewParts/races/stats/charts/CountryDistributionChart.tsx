@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import React from "react";
 import {
   ArcElement,
@@ -54,6 +53,7 @@ export function CountryDistributionChart({ countsByCountry }: CountryDistributio
       plugins: {
         legend: {
           position: "bottom",
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
           onClick: () => {},
           labels: {
             color: legendColor,

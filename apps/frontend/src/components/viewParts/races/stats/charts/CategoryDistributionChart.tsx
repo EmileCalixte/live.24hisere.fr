@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import React from "react";
 import type { CategoryCode } from "@emilecalixte/ffa-categories";
 import { ArcElement, Chart, type ChartData, type ChartOptions, DoughnutController, Legend, Tooltip } from "chart.js";
@@ -51,6 +50,7 @@ export function CategoryDistributionChart({
       plugins: {
         legend: {
           position: "bottom",
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
           onClick: () => {},
           labels: {
             color: legendColor,
