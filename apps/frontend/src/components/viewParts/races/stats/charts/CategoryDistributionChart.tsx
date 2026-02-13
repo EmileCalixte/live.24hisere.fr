@@ -35,7 +35,9 @@ export function CategoryDistributionChart({
       datasets: [
         {
           data: Object.values(countsByCategory),
-          backgroundColor: objectUtils.keys(countsByCategory).map((categoryCode) => CATEGORY_COLORS[categoryCode]),
+          backgroundColor: objectUtils
+            .keys(countsByCategory)
+            .map((categoryCode) => CATEGORY_COLORS[categoryCode] ?? "#ccc"),
         },
       ],
     }),

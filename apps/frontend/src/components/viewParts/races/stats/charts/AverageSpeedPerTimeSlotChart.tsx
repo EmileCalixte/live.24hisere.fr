@@ -175,8 +175,8 @@ export function AverageSpeedPerTimeSlotChart({
         datasets: objectUtils.entries(categoryTimeSlots).map(([categoryCode, timeSlots]) => ({
           label: getDisplayedCategoryName(categoryCode),
           data: getTimeSlotsPoints(timeSlots),
-          borderColor: CATEGORY_COLORS[categoryCode],
-          backgroundColor: CATEGORY_COLORS[categoryCode],
+          borderColor: CATEGORY_COLORS[categoryCode] ?? "#ccc",
+          backgroundColor: CATEGORY_COLORS[categoryCode] ?? "#ccc",
           pointRadius: 0,
           tension: 0,
         })),
