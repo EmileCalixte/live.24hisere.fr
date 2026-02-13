@@ -133,7 +133,7 @@ export function PassageCountPerTimeSlotChart({
         },
         y: {
           min: 0,
-          suggestedMax: Math.ceil(Math.max(...timeSlots.map((ts) => ts.passageCount)) * 1.1),
+          suggestedMax: Math.ceil(Math.max(0, ...timeSlots.map((ts) => ts.passageCount)) * 1.1),
           ticks: {
             color: legendColor,
             callback: (value) => {
