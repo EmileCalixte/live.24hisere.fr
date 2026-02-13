@@ -72,7 +72,7 @@ export function GenderCountPerCategoryChart({
   );
 
   const maxTotal = React.useMemo(
-    () => Math.max(...Object.values(genderCountsByCategory).map((counts) => counts[GENDER.M] + counts[GENDER.F])),
+    () => Math.max(...Object.values(genderCountsByCategory).map((counts) => counts[GENDER.M] + counts[GENDER.F]), 0),
     [genderCountsByCategory],
   );
 
