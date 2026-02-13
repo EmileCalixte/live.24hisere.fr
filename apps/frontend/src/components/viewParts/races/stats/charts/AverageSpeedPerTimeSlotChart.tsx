@@ -281,7 +281,7 @@ export function AverageSpeedPerTimeSlotChart({
               const dataIndex = contexts[0].dataIndex;
               // dataIndex 0 = initial point (slot 0), dataIndex i >= 1 = slot i-1
               const slotIndex = dataIndex === 0 ? 0 : dataIndex - 1;
-              const globalSpeed = globalAvgTimeSlots[slotIndex]?.averageSpeed;
+              const globalSpeed = globalAvgTimeSlots[slotIndex]?.averageSpeed ?? 0;
 
               return `\nMoyenne globale : ${formatFloatNumber(globalSpeed, 2)} km/h`;
             },
