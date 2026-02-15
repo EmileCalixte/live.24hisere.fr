@@ -92,14 +92,6 @@ export default function AboutView(): React.ReactElement {
           .
         </p>
 
-        <p>
-          Les graphiques sont réalisés à l'aide de la bibliothèque{" "}
-          <Link to="https://canvasjs.com/" target="_blank">
-            CanvasJS
-          </Link>
-          .
-        </p>
-
         <p>Cette application fonctionne grâce à des programmes tiers :</p>
 
         <ul>

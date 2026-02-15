@@ -1,24 +1,32 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access  */
 import React from "react";
+import {
+  CategoryScale,
+  Chart,
+  type ChartData,
+  type ChartOptions,
+  Filler,
+  Legend,
+  LinearScale,
+  LineController,
+  LineElement,
+  PointElement,
+  Tooltip,
+} from "chart.js";
 import { parseAsBoolean, useQueryState } from "nuqs";
-import ReactDOMServer from "react-dom/server";
+import { Line } from "react-chartjs-2";
 import type { PublicRace, RaceRunnerWithProcessedPassages, RunnerWithProcessedHours } from "@live24hisere/core/types";
 import { TrackedEvent } from "../../../../constants/eventTracking/customEventNames";
 import { SearchParam } from "../../../../constants/searchParams";
-import { useChartTheme } from "../../../../hooks/useChartTheme";
+import { useChartGridColor } from "../../../../hooks/charts/useChartGridColor";
+import { useChartLegendColor } from "../../../../hooks/charts/useChartLegendColor";
 import { useWindowDimensions } from "../../../../hooks/useWindowDimensions";
-import CanvasjsReact from "../../../../lib/canvasjs/canvasjs.react";
-import {
-  getAntifreezeDataForDateXAxisChart,
-  getXAxisDateInterval,
-  getXAxisDateLabelValue,
-} from "../../../../utils/chartUtils";
+import { getXAxisDateInterval } from "../../../../utils/chartUtils";
 import { formatMsAsDuration } from "../../../../utils/durationUtils";
 import { trackEvent } from "../../../../utils/eventTracking/eventTrackingUtils";
 import { Card } from "../../../ui/Card";
 import { Checkbox } from "../../../ui/forms/Checkbox";
 
-const CanvasJSChart = CanvasjsReact.CanvasJSChart;
+Chart.register(CategoryScale, Filler, Legend, LinearScale, LineController, LineElement, PointElement, Tooltip);
 
 const DEFAULT_MIN_SPEED = 0;
 const DEFAULT_MAX_SPEED = 10;
@@ -30,7 +38,8 @@ interface SpeedChartProps {
 }
 
 export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartProps): React.ReactElement {
-  const chartTheme = useChartTheme();
+  const legendColor = useChartLegendColor();
+  const gridColor = useChartGridColor();
 
   const { width: windowWidth } = useWindowDimensions();
 
@@ -54,102 +63,6 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
     parseAsBoolean.withDefault(true),
   );
 
-  const getTooltipContent = React.useCallback(
-    (e: any) => {
-      // const dataPoint = e.entries[0].dataPoint;
-      const dataSeriesIndex = e.entries[0].dataSeries.index;
-
-      if (dataSeriesIndex === 0 || dataSeriesIndex === 3) {
-        const passageIndex = Math.min(e.entries[0].index, runner.passages.length - 1);
-
-        const passage = runner.passages[passageIndex];
-
-        return ReactDOMServer.renderToString(
-          <div>
-            {passage.processed.lapNumber !== null && (
-              <div style={{ marginBottom: "0.75em" }}>Tour {passage.processed.lapNumber}</div>
-            )}
-
-            <div>
-              De <strong>{formatMsAsDuration(passage.processed.lapStartRaceTime)}</strong> à{" "}
-              <strong>{formatMsAsDuration(passage.processed.lapEndRaceTime)}</strong> :
-            </div>
-
-            <div>
-              Durée : <strong>{formatMsAsDuration(passage.processed.lapDuration, { forceDisplayHours: false })}</strong>
-            </div>
-
-            <div>
-              Vitesse : <strong>{passage.processed.lapSpeed.toFixed(2)} km/h</strong>
-            </div>
-
-            <div>
-              Allure :{" "}
-              <strong>
-                {formatMsAsDuration(passage.processed.lapPace, { forceDisplayHours: false })}
-                /km
-              </strong>
-            </div>
-
-            <div style={{ marginTop: "0.75em" }}>
-              De <strong>{formatMsAsDuration(0)}</strong> à{" "}
-              <strong>{formatMsAsDuration(passage.processed.lapEndRaceTime)}</strong> :
-            </div>
-
-            <div>
-              Vitesse moyenne : <strong>{passage.processed.averageSpeedSinceRaceStart.toFixed(2)} km/h</strong>
-            </div>
-
-            <div>
-              Allure moyenne :{" "}
-              <strong>
-                {formatMsAsDuration(passage.processed.averagePaceSinceRaceStart, { forceDisplayHours: false })}
-                /km
-              </strong>
-            </div>
-          </div>,
-        );
-      }
-
-      if (dataSeriesIndex === 1) {
-        const hourIndex = Math.min(Math.floor(e.entries[0].index / 2), runner.hours.length - 1);
-        const hour = runner.hours[hourIndex];
-
-        return ReactDOMServer.renderToString(
-          <div>
-            <div>
-              De <strong>{formatMsAsDuration(hour.startRaceTime)}</strong> à{" "}
-              <strong>{formatMsAsDuration(hour.endRaceTime)}</strong> :
-            </div>
-            <div>
-              Vitesse moyenne :{" "}
-              <strong>{hour.averageSpeed !== null ? `${hour.averageSpeed.toFixed(2)} km/h` : "–"}</strong>
-            </div>
-            <div>
-              Allure :{" "}
-              <strong>
-                {hour.averagePace !== null
-                  ? `${formatMsAsDuration(hour.averagePace, { forceDisplayHours: false })}/km`
-                  : "–"}
-              </strong>
-            </div>
-          </div>,
-        );
-      }
-
-      if (dataSeriesIndex === 2) {
-        return ReactDOMServer.renderToString(
-          <div>
-            Vitesse moyenne générale : <strong>{averageSpeed.toFixed(2)} km/h</strong>
-          </div>,
-        );
-      }
-
-      return null;
-    },
-    [averageSpeed, runner],
-  );
-
   const minSpeed = React.useMemo(() => {
     const minSpeed = runner.passages.reduce<number | undefined>(
       (min, passage) => (min === undefined || passage.processed.lapSpeed < min ? passage.processed.lapSpeed : min),
@@ -160,169 +73,241 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
   }, [runner]);
 
   const maxSpeed = React.useMemo(() => {
-    const maxSpeed = runner.passages.reduce<number | undefined>(
-      (max, passage) => (max === undefined || passage.processed.lapSpeed > max ? passage.processed.lapSpeed : max),
-      undefined,
-    );
+    let max = DEFAULT_MAX_SPEED;
 
-    return maxSpeed ?? DEFAULT_MAX_SPEED;
+    for (const passage of runner.passages) {
+      if (passage.processed.lapSpeed > max) {
+        max = passage.processed.lapSpeed;
+      }
+    }
+
+    return max;
   }, [runner]);
 
-  const options = React.useMemo(() => {
-    const options = {
-      backgroundColor: "transparent",
-      theme: chartTheme,
-      animationEnabled: false,
-      // animationDuration: 200,
-      toolTip: {
-        enabled: true,
-        contentFormatter: getTooltipContent,
-      },
-      axisX: {
-        crosshair: {
-          enabled: true,
-          labelFormatter: () => null,
-        },
-        labelFormatter: getXAxisDateLabelValue,
-        minimum: 0,
-        maximum: race.duration * 1000,
-        intervalType: "minute",
-        interval: getXAxisDateInterval(race.duration, windowWidth),
-        labelAngle: -25,
-      },
-      axisY: {
-        suffix: " km/h",
-        minimum: Math.floor(minSpeed),
-        maximum: Math.ceil(maxSpeed),
-      },
-      data: [
-        {
-          type: "stepArea",
-          markerType: null,
-          showInLegend: true,
-          name: "Vitesse du tour",
-          visible: showEachLapSpeed,
-          color: "#ed9b3f",
-          dataPoints: [],
-        },
-        {
-          type: "stepArea",
-          markerType: null,
-          showInLegend: true,
-          name: "Vitesse moyenne de l'heure",
-          visible: showEachHourSpeed,
-          color: "#ff4a4f",
-          fillOpacity: 0.4,
-          dataPoints: [],
-        },
-        {
-          type: "line",
-          markerType: null,
-          showInLegend: true,
-          name: "Vitesse moyenne générale",
-          visible: showAverageSpeed,
-          color: "#a2d083",
-          fillOpacity: 0,
-          dataPoints: [],
-        },
-        {
-          type: "line",
-          markerType: null,
-          showInLegend: true,
-          name: "Vitesse moyenne générale au cours du temps",
-          visible: showAverageSpeedEvolution,
-          color: "#9e7eff",
-          fillOpacity: 0,
-          legendMarkerType: "square",
-          dataPoints: [],
-        },
-        getAntifreezeDataForDateXAxisChart(new Date(race.startTime)),
-      ],
-    };
-
-    const lapSpeedDataPoints = [];
-    const averageSpeedEvolutionDataPoints = [];
+  const data = React.useMemo<ChartData<"line">>(() => {
+    const lapSpeedPoints: Array<{ x: number; y: number }> = [];
+    const avgSpeedEvolutionPoints: Array<{ x: number; y: number }> = [];
 
     for (let i = 0; i < runner.passages.length; i += 1) {
       const passage = runner.passages[i];
 
-      // Ensure that the max value of the speed axis is always higher than the runner max speed
-      if (passage.processed.lapSpeed > options.axisY.maximum) {
-        options.axisY.maximum = Math.ceil(passage.processed.lapSpeed);
-      }
-
       if (i === 0) {
-        averageSpeedEvolutionDataPoints.push({
+        avgSpeedEvolutionPoints.push({
           x: passage.processed.lapStartRaceTime,
           y: passage.processed.averageSpeedSinceRaceStart,
         });
       }
 
-      lapSpeedDataPoints.push({
+      lapSpeedPoints.push({
         x: passage.processed.lapStartRaceTime,
         y: passage.processed.lapSpeed,
       });
 
-      averageSpeedEvolutionDataPoints.push({
+      avgSpeedEvolutionPoints.push({
         x: passage.processed.lapEndRaceTime,
         y: passage.processed.averageSpeedSinceRaceStart,
       });
 
       if (i === runner.passages.length - 1) {
-        lapSpeedDataPoints.push({
+        lapSpeedPoints.push({
           x: passage.processed.lapEndRaceTime,
           y: passage.processed.lapSpeed,
         });
       }
     }
 
-    const lapHourSpeedDataPoints = [];
+    const hourSpeedPoints: Array<{ x: number; y: number | null }> = [];
+
+    const lastPassageEndRaceTime = runner.passages.at(-1)?.processed.lapEndRaceTime;
 
     for (const hour of runner.hours) {
-      lapHourSpeedDataPoints.push({
-        x: hour.startRaceTime,
-        y: hour.averageSpeed,
-      });
+      hourSpeedPoints.push({ x: hour.startRaceTime, y: hour.averageSpeed });
 
-      lapHourSpeedDataPoints.push({
-        x: hour.endRaceTime,
-        y: hour.averageSpeed,
-      });
+      let endX = hour.endRaceTime;
+
+      if (
+        lastPassageEndRaceTime !== undefined
+        && lastPassageEndRaceTime > hour.startRaceTime
+        && lastPassageEndRaceTime < hour.endRaceTime
+      ) {
+        endX = lastPassageEndRaceTime;
+      }
+
+      hourSpeedPoints.push({ x: endX, y: hour.averageSpeed });
     }
 
-    options.data[0].dataPoints = lapSpeedDataPoints as any;
-    options.data[1].dataPoints = lapHourSpeedDataPoints as any;
-    options.data[2].dataPoints = [
-      {
-        // @ts-ignore
-        x: options.axisX.minimum,
-        y: averageSpeed,
-      },
-      {
-        // @ts-ignore
-        x: options.axisX.maximum,
-        y: averageSpeed,
-      },
-    ];
-    options.data[3].dataPoints = averageSpeedEvolutionDataPoints as any;
-
-    return options;
+    return {
+      datasets: [
+        {
+          label: "Vitesse du tour",
+          data: lapSpeedPoints,
+          borderColor: "#ed9b3f",
+          backgroundColor: "rgba(237, 155, 63, 0.3)",
+          fill: true,
+          stepped: "before",
+          pointRadius: 0,
+          borderWidth: 1,
+          hidden: !showEachLapSpeed,
+        },
+        {
+          label: "Vitesse moyenne de l'heure",
+          data: hourSpeedPoints,
+          borderColor: "#ff4a4f",
+          backgroundColor: "rgba(255, 74, 79, 0.4)",
+          fill: true,
+          pointRadius: 0,
+          borderWidth: 1,
+          hidden: !showEachHourSpeed,
+        },
+        {
+          label: "Vitesse moyenne générale",
+          data: [
+            { x: 0, y: averageSpeed },
+            { x: race.duration * 1000, y: averageSpeed },
+          ],
+          borderColor: "#a2d083",
+          backgroundColor: "#a2d083",
+          fill: false,
+          pointRadius: 0,
+          borderWidth: 2,
+          hidden: !showAverageSpeed,
+        },
+        {
+          label: "Vitesse moyenne générale au cours du temps",
+          data: avgSpeedEvolutionPoints,
+          borderColor: "#9e7eff",
+          backgroundColor: "#9e7eff",
+          fill: false,
+          pointRadius: 0,
+          borderWidth: 2,
+          hidden: !showAverageSpeedEvolution,
+        },
+      ],
+    };
   }, [
-    chartTheme,
-    getTooltipContent,
+    runner,
+    averageSpeed,
     race.duration,
-    race.startTime,
-    windowWidth,
-    minSpeed,
-    maxSpeed,
     showEachLapSpeed,
     showEachHourSpeed,
     showAverageSpeed,
     showAverageSpeedEvolution,
-    averageSpeed,
-    runner.passages,
-    runner.hours,
   ]);
+
+  const options = React.useMemo<ChartOptions<"line">>(
+    () => ({
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: false,
+      interaction: {
+        mode: "nearest",
+        intersect: false,
+      },
+      scales: {
+        x: {
+          type: "linear",
+          min: 0,
+          max: race.duration * 1000,
+          ticks: {
+            stepSize: Math.max(getXAxisDateInterval(race.duration, windowWidth) * 60 * 1000, 3_600_000),
+            color: legendColor,
+            callback: (value) => formatMsAsDuration(Number(value)),
+          },
+          grid: {
+            color: gridColor,
+          },
+        },
+        y: {
+          suggestedMin: Math.floor(minSpeed),
+          suggestedMax: Math.ceil(maxSpeed),
+          ticks: {
+            color: legendColor,
+            callback: (value) => `${value} km/h`,
+          },
+          grid: {
+            color: gridColor,
+          },
+        },
+      },
+      plugins: {
+        legend: {
+          display: true,
+          position: "bottom",
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+          onClick: () => {},
+          labels: {
+            color: legendColor,
+          },
+        },
+        tooltip: {
+          enabled: true,
+          filter: (_tooltipItem, index) => index === 0, // Prevent from displaying tooltip content twice when two data points have same `x` value
+          callbacks: {
+            title: () => [],
+            label: (context) => {
+              const { datasetIndex, dataIndex } = context;
+
+              if (datasetIndex === 0 || datasetIndex === 3) {
+                const passageIndex = Math.min(dataIndex, runner.passages.length - 1);
+                const passage = runner.passages[passageIndex];
+                const lines: string[] = [];
+
+                if (passage.processed.lapNumber !== null) {
+                  lines.push(`Tour ${passage.processed.lapNumber}`);
+                  lines.push("");
+                }
+
+                lines.push(
+                  `De ${formatMsAsDuration(passage.processed.lapStartRaceTime)} à ${formatMsAsDuration(passage.processed.lapEndRaceTime)} :`,
+                );
+                lines.push(
+                  `Durée : ${formatMsAsDuration(passage.processed.lapDuration, { forceDisplayHours: false })}`,
+                );
+                lines.push(`Vitesse : ${passage.processed.lapSpeed.toFixed(2)} km/h`);
+                lines.push(
+                  `Allure : ${formatMsAsDuration(passage.processed.lapPace, { forceDisplayHours: false })}/km`,
+                );
+                lines.push("");
+                lines.push(`De ${formatMsAsDuration(0)} à ${formatMsAsDuration(passage.processed.lapEndRaceTime)} :`);
+                lines.push(`Vitesse moyenne : ${passage.processed.averageSpeedSinceRaceStart.toFixed(2)} km/h`);
+                lines.push(
+                  `Allure moyenne : ${formatMsAsDuration(passage.processed.averagePaceSinceRaceStart, { forceDisplayHours: false })}/km`,
+                );
+
+                return lines;
+              }
+
+              if (datasetIndex === 1) {
+                const hourIndex = Math.min(Math.floor(dataIndex / 2), runner.hours.length - 1);
+                const hour = runner.hours[hourIndex];
+
+                const lastPassageEnd = runner.passages.at(-1)?.processed.lapEndRaceTime;
+                const displayEndRaceTime =
+                  lastPassageEnd !== undefined
+                  && lastPassageEnd > hour.startRaceTime
+                  && lastPassageEnd < hour.endRaceTime
+                    ? lastPassageEnd
+                    : hour.endRaceTime;
+
+                return [
+                  `De ${formatMsAsDuration(hour.startRaceTime)} à ${formatMsAsDuration(displayEndRaceTime)} :`,
+                  `Vitesse moyenne : ${hour.averageSpeed !== null ? `${hour.averageSpeed.toFixed(2)} km/h` : "–"}`,
+                  `Allure : ${hour.averagePace !== null ? `${formatMsAsDuration(hour.averagePace, { forceDisplayHours: false })}/km` : "–"}`,
+                ];
+              }
+
+              if (datasetIndex === 2) {
+                return `Vitesse moyenne générale : ${averageSpeed.toFixed(2)} km/h`;
+              }
+
+              return "";
+            },
+          },
+        },
+      },
+    }),
+    [race.duration, windowWidth, legendColor, gridColor, minSpeed, maxSpeed, runner, averageSpeed],
+  );
 
   return (
     <Card className="flex flex-col gap-3">
@@ -376,7 +361,9 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
         </div>
 
         <div className="col-span-6 xl:col-span-4 2xl:col-span-5">
-          <CanvasJSChart options={options} />
+          <div style={{ minHeight: 300 }}>
+            <Line data={data} options={options} />
+          </div>
         </div>
       </div>
     </Card>

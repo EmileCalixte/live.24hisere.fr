@@ -1,6 +1,19 @@
 import React from "react";
 import { type CategoryCode, getCategoryList, isCategoryCode } from "@emilecalixte/ffa-categories";
-import ReactDOMServer from "react-dom/server";
+import {
+  CategoryScale,
+  Chart,
+  type ChartData,
+  type ChartOptions,
+  Filler,
+  Legend,
+  LinearScale,
+  LineController,
+  LineElement,
+  PointElement,
+  Tooltip,
+} from "chart.js";
+import { Line } from "react-chartjs-2";
 import { GENDER } from "@live24hisere/core/constants";
 import type {
   Gender,
@@ -10,20 +23,16 @@ import type {
 } from "@live24hisere/core/types";
 import { objectUtils } from "@live24hisere/utils";
 import { CATEGORY_COLORS, GENDER_COLORS } from "../../../../../constants/chart";
-import { useChartTheme } from "../../../../../hooks/useChartTheme";
+import { useChartGridColor } from "../../../../../hooks/charts/useChartGridColor";
+import { useChartLegendColor } from "../../../../../hooks/charts/useChartLegendColor";
 import { useGetRunnerCategory } from "../../../../../hooks/useGetRunnerCategory";
 import { useWindowDimensions } from "../../../../../hooks/useWindowDimensions";
-import CanvasjsReact from "../../../../../lib/canvasjs/canvasjs.react";
-import {
-  getAntifreezeDataForDateXAxisChart,
-  getXAxisDateInterval,
-  getXAxisDateLabelValue,
-} from "../../../../../utils/chartUtils";
+import { getXAxisDateInterval } from "../../../../../utils/chartUtils";
 import { formatMsAsDuration } from "../../../../../utils/durationUtils";
 import { getProcessedTimeSlotsFromPassages } from "../../../../../utils/passageUtils";
 import { formatFloatNumber } from "../../../../../utils/utils";
 
-const CanvasJSChart = CanvasjsReact.CanvasJSChart;
+Chart.register(CategoryScale, Filler, Legend, LinearScale, LineController, LineElement, PointElement, Tooltip);
 
 interface TimeSlot {
   /**
@@ -58,7 +67,8 @@ export function AverageSpeedPerTimeSlotChart({
   timeSlotDuration,
   mode,
 }: AverageSpeedPerTimeSlotChartProps): React.ReactElement {
-  const chartTheme = useChartTheme();
+  const legendColor = useChartLegendColor();
+  const gridColor = useChartGridColor();
 
   const { width: windowWidth } = useWindowDimensions();
 
@@ -148,149 +158,140 @@ export function AverageSpeedPerTimeSlotChart({
     [categories],
   );
 
-  const getDisplayedGender = React.useCallback((gender: Gender) => {
-    if (gender === GENDER.F) {
-      return "Femmes";
-    }
-
-    return "Hommes";
-  }, []);
-
-  const getTooltipContent = React.useCallback(
-    (e: any) => {
-      if (mode === "category") {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        const { x: slotStartRaceTime, timeSlotIndex } = e.entries[0].dataPoint as { x: number; timeSlotIndex: number };
-
-        return ReactDOMServer.renderToString(
-          <div>
-            <div style={{ marginBottom: "0.75em" }}>{formatMsAsDuration(slotStartRaceTime)} :</div>
-
-            {objectUtils.entries(categoryTimeSlots).map(([categoryCode, timeSlots]) => (
-              <div key={categoryCode}>
-                <strong style={{ color: CATEGORY_COLORS[categoryCode] }}>
-                  {getDisplayedCategoryName(categoryCode)}
-                </strong>
-                <> </>:<> </>
-                {formatFloatNumber(timeSlots[timeSlotIndex].averageSpeed, 2)} km/h
-              </div>
-            ))}
-          </div>,
-        );
-      }
-
-      if (mode === "gender") {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        const { x: slotStartRaceTime, timeSlotIndex } = e.entries[0].dataPoint as { x: number; timeSlotIndex: number };
-
-        return ReactDOMServer.renderToString(
-          <div>
-            <div style={{ marginBottom: "0.75em" }}>{formatMsAsDuration(slotStartRaceTime)} :</div>
-
-            {objectUtils.entries(genderTimeSlots).map(([gender, timeSlots]) => (
-              <div key={gender}>
-                <strong style={{ color: GENDER_COLORS[gender] }}>{getDisplayedGender(gender)}</strong>
-                <> </>:<> </>
-                {formatFloatNumber(timeSlots[timeSlotIndex].averageSpeed, 2)} km/h
-              </div>
-            ))}
-          </div>,
-        );
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-      const { x: slotStartRaceTime, y: averageSpeed } = e.entries[0].dataPoint;
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      return `${formatMsAsDuration(slotStartRaceTime)} : ${formatFloatNumber(averageSpeed, 2)} km/h`;
-    },
-    [categoryTimeSlots, genderTimeSlots, getDisplayedCategoryName, getDisplayedGender, mode],
-  );
-
-  const getTimeSlotsDataPoints = React.useCallback(
+  const getTimeSlotsPoints = React.useCallback(
     (timeSlots: TimeSlot[]) => [
-      { x: 0, y: timeSlots[0].averageSpeed, timeSlotIndex: 0 },
-      ...timeSlots.map((timeSlot, index) => ({
+      { x: 0, y: timeSlots[0]?.averageSpeed },
+      ...timeSlots.map((timeSlot) => ({
         x: timeSlot.startRaceTime + timeSlotDuration,
         y: timeSlot.averageSpeed,
-        timeSlotIndex: index,
       })),
     ],
     [timeSlotDuration],
   );
 
-  const getData = React.useCallback(() => {
+  const data = React.useMemo<ChartData<"line">>(() => {
     if (mode === "category") {
-      return objectUtils.entries(categoryTimeSlots).map(([categoryCode, timeSlots]) => {
-        const categoryName = getDisplayedCategoryName(categoryCode);
-
-        return {
-          type: "line",
-          color: CATEGORY_COLORS[categoryCode],
-          showInLegend: true,
-          legendText: categoryName,
-          markerType: "none",
-          dataPoints: getTimeSlotsDataPoints(timeSlots),
-        };
-      });
+      return {
+        datasets: objectUtils.entries(categoryTimeSlots).map(([categoryCode, timeSlots]) => ({
+          label: getDisplayedCategoryName(categoryCode),
+          data: getTimeSlotsPoints(timeSlots),
+          borderColor: CATEGORY_COLORS[categoryCode] ?? "#ccc",
+          backgroundColor: CATEGORY_COLORS[categoryCode] ?? "#ccc",
+          pointRadius: 0,
+          tension: 0,
+        })),
+      };
     }
 
     if (mode === "gender") {
-      return objectUtils.entries(genderTimeSlots).map(([gender, timeSlots]) => ({
-        type: "line",
-        color: GENDER_COLORS[gender],
-        showInLegend: true,
-        legendText: gender === "M" ? "Hommes" : "Femmes",
-        markerType: "none",
-        dataPoints: getTimeSlotsDataPoints(timeSlots),
-      }));
+      return {
+        datasets: objectUtils.entries(genderTimeSlots).map(([gender, timeSlots]) => ({
+          label: gender === "M" ? "Hommes" : "Femmes",
+          data: getTimeSlotsPoints(timeSlots),
+          borderColor: GENDER_COLORS[gender as Gender],
+          backgroundColor: GENDER_COLORS[gender as Gender],
+          pointRadius: 0,
+          tension: 0,
+        })),
+      };
     }
 
-    return [
-      {
-        type: "area",
-        color: "#22aa22",
-        showInLegend: false,
-        markerType: "none",
-        dataPoints: getTimeSlotsDataPoints(globalAvgTimeSlots),
-      },
-    ];
-  }, [categoryTimeSlots, genderTimeSlots, getDisplayedCategoryName, getTimeSlotsDataPoints, globalAvgTimeSlots, mode]);
+    return {
+      datasets: [
+        {
+          data: getTimeSlotsPoints(globalAvgTimeSlots),
+          borderColor: "#22aa22",
+          backgroundColor: "rgba(34, 170, 34, 0.3)",
+          fill: true,
+          pointRadius: 0,
+          tension: 0,
+        },
+      ],
+    };
+  }, [mode, categoryTimeSlots, genderTimeSlots, globalAvgTimeSlots, getDisplayedCategoryName, getTimeSlotsPoints]);
 
-  const options = React.useMemo(
+  const options = React.useMemo<ChartOptions<"line">>(
     () => ({
-      backgroundColor: "transparent",
-      theme: chartTheme,
-      toolTip: {
-        enabled: true,
-        contentFormatter: getTooltipContent,
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: {
+        mode: "index",
+        intersect: false,
       },
-      axisX: {
-        crosshair: {
-          enabled: true,
-          labelFormatter: () => null,
+      scales: {
+        x: {
+          type: "linear",
+          min: 0,
+          max: race.duration * 1000,
+          ticks: {
+            stepSize: Math.max(getXAxisDateInterval(race.duration, windowWidth) * 60 * 1000, 3_600_000),
+            color: legendColor,
+            callback: (value) => formatMsAsDuration(Number(value)),
+          },
+          grid: {
+            color: gridColor,
+          },
         },
-        labelFormatter: getXAxisDateLabelValue,
-        minimum: 0,
-        maximum: race.duration * 1000,
-        intervalType: "minute",
-        interval: getXAxisDateInterval(race.duration, windowWidth),
-        labelAngle: -25,
-      },
-      axisY: {
-        crosshair: {
-          enabled: true,
-          snapToDataPoint: true,
-          labelFormatter: () => null,
+        y: {
+          min: 0,
+          ticks: {
+            color: legendColor,
+            callback: (value) => `${formatFloatNumber(Number(value), 0)} km/h`,
+          },
+          grid: {
+            color: gridColor,
+          },
         },
-        labelFormatter: (e: { value: number }) => formatFloatNumber(e.value, 0),
-        suffix: " km/h",
-        minimum: 0,
       },
-      data: [...getData(), getAntifreezeDataForDateXAxisChart(new Date(race.startTime))],
+      plugins: {
+        legend: {
+          display: mode !== "mixed",
+          position: "bottom",
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+          onClick: () => {},
+          labels: {
+            color: legendColor,
+          },
+        },
+        tooltip: {
+          enabled: true,
+          callbacks: {
+            title: (contexts) => {
+              const x = contexts[0].parsed.x;
+              return formatMsAsDuration(x ?? 0);
+            },
+            label: (context) => {
+              const speed = formatFloatNumber(context.parsed.y ?? 0, 2);
+              const label = context.dataset.label;
+
+              if (label) {
+                return `${label} : ${speed} km/h`;
+              }
+
+              return `${speed} km/h`;
+            },
+            afterBody: (contexts) => {
+              if (mode === "mixed") {
+                return "";
+              }
+
+              const dataIndex = contexts[0].dataIndex;
+              // dataIndex 0 = initial point (slot 0), dataIndex i >= 1 = slot i-1
+              const slotIndex = dataIndex === 0 ? 0 : dataIndex - 1;
+              const globalSpeed = globalAvgTimeSlots[slotIndex]?.averageSpeed ?? 0;
+
+              return `\nMoyenne globale : ${formatFloatNumber(globalSpeed, 2)} km/h`;
+            },
+          },
+        },
+      },
     }),
-    [chartTheme, getTooltipContent, race.duration, race.startTime, windowWidth, getData],
+    [race.duration, windowWidth, legendColor, gridColor, mode, globalAvgTimeSlots],
   );
 
-  return <CanvasJSChart options={options} />;
+  return (
+    <div style={{ minHeight: 300 }}>
+      <Line data={data} options={options} />
+    </div>
+  );
 }

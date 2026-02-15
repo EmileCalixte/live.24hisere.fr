@@ -1,18 +1,26 @@
 import React from "react";
+import {
+  BarController,
+  BarElement,
+  CategoryScale,
+  Chart,
+  type ChartData,
+  type ChartOptions,
+  Legend,
+  LinearScale,
+  Tooltip,
+} from "chart.js";
+import ChartDataLabels from "chartjs-plugin-datalabels";
+import { Bar } from "react-chartjs-2";
 import type { ProcessedPassage, PublicRace } from "@live24hisere/core/types";
 import { compareUtils } from "@live24hisere/utils";
-import { useChartTheme } from "../../../../../hooks/useChartTheme";
+import { useChartGridColor } from "../../../../../hooks/charts/useChartGridColor";
+import { useChartLegendColor } from "../../../../../hooks/charts/useChartLegendColor";
 import { useWindowDimensions } from "../../../../../hooks/useWindowDimensions";
-import CanvasjsReact from "../../../../../lib/canvasjs/canvasjs.react";
-import {
-  getAntifreezeDataForDateXAxisChart,
-  getXAxisDateInterval,
-  getXAxisDateLabelValue,
-} from "../../../../../utils/chartUtils";
+import { getXAxisDateInterval } from "../../../../../utils/chartUtils";
 import { formatMsAsDuration } from "../../../../../utils/durationUtils";
-import { formatFloatNumber } from "../../../../../utils/utils";
 
-const CanvasJSChart = CanvasjsReact.CanvasJSChart;
+Chart.register(BarController, BarElement, CategoryScale, LinearScale, Legend, Tooltip);
 
 interface TimeSlot {
   /**
@@ -45,7 +53,8 @@ export function PassageCountPerTimeSlotChart({
   passages,
   timeSlotDuration,
 }: PassageCountPerTimeSlotChartProps): React.ReactElement {
-  const chartTheme = useChartTheme();
+  const legendColor = useChartLegendColor();
+  const gridColor = useChartGridColor();
 
   const { width: windowWidth } = useWindowDimensions();
 
@@ -60,8 +69,17 @@ export function PassageCountPerTimeSlotChart({
   const timeSlots = React.useMemo(() => {
     const timeSlots = new Map<number, TimeSlot>();
 
+    const raceDurationMs = race.duration * 1000;
+
     for (const passage of sortedPassages) {
       const passageRaceTime = passage.processed.lapEndRaceTime;
+
+      // Exclude passages that have taken place after the end of the race
+      // to prevent the chart from displaying an extra column
+      if (passageRaceTime > raceDurationMs) {
+        continue;
+      }
+
       const timeSlotStartRaceTime = passageRaceTime - (passageRaceTime % timeSlotDuration);
 
       if (!timeSlots.has(timeSlotStartRaceTime)) {
@@ -80,62 +98,88 @@ export function PassageCountPerTimeSlotChart({
     }
 
     return Array.from(timeSlots.values());
-  }, [sortedPassages, timeSlotDuration]);
+  }, [sortedPassages, timeSlotDuration, race.duration]);
 
-  const getTooltipContent = React.useCallback(
-    (e: any) => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-      const { x, y: passageCount } = e.entries[0].dataPoint;
-
-      // Remove visual compensation of data point
-      const slotStartRaceTime = x - timeSlotDuration / 2;
-
-      return `De ${formatMsAsDuration(slotStartRaceTime)} à ${formatMsAsDuration(slotStartRaceTime + timeSlotDuration)} : ${passageCount} passages`;
-    },
-    [timeSlotDuration],
-  );
-
-  const options = React.useMemo(
+  const data = React.useMemo<ChartData<"bar">>(
     () => ({
-      backgroundColor: "transparent",
-      theme: chartTheme,
-      toolTip: {
-        enabled: true,
-        contentFormatter: getTooltipContent,
-      },
-      axisX: {
-        crosshair: {
-          enabled: false,
-        },
-        labelFormatter: getXAxisDateLabelValue,
-        minimum: 0,
-        maximum: race.duration * 1000,
-        intervalType: "minute",
-        interval: getXAxisDateInterval(race.duration, windowWidth),
-        labelAngle: -25,
-      },
-      axisY: {
-        labelFormatter: (e: { value: number }) => formatFloatNumber(e.value, 0),
-        suffix: windowWidth >= 768 ? " tours" : "",
-        margin: windowWidth >= 768 ? 0 : 20,
-        minimum: 0,
-      },
-      data: [
+      labels: timeSlots.map((timeSlot) => timeSlot.startRaceTime + timeSlotDuration / 2),
+      datasets: [
         {
-          type: "column",
-          color: "#22aa22",
-          showInLegend: false,
-          dataPoints: timeSlots.map((timeSlot) => ({
-            // Add half of timeSlotDuration to x value to show column at the right place
-            x: timeSlot.startRaceTime + timeSlotDuration / 2,
-            y: timeSlot.passageCount,
-          })),
+          data: timeSlots.map((timeSlot) => timeSlot.passageCount),
+          backgroundColor: "#22aa22",
         },
-        getAntifreezeDataForDateXAxisChart(new Date(race.startTime)),
       ],
     }),
-    [chartTheme, getTooltipContent, race.duration, race.startTime, timeSlotDuration, timeSlots, windowWidth],
+    [timeSlots, timeSlotDuration],
   );
 
-  return <CanvasJSChart options={options} />;
+  const options = React.useMemo<ChartOptions<"bar">>(
+    () => ({
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        x: {
+          type: "linear",
+          min: 0,
+          max: race.duration * 1000,
+          ticks: {
+            stepSize: Math.max(getXAxisDateInterval(race.duration, windowWidth) * 60 * 1000, 3_600_000),
+            color: legendColor,
+            callback: (value) => formatMsAsDuration(Number(value)),
+          },
+          grid: {
+            color: "transparent",
+          },
+        },
+        y: {
+          min: 0,
+          suggestedMax: Math.ceil(Math.max(0, ...timeSlots.map((ts) => ts.passageCount)) * 1.1),
+          ticks: {
+            color: legendColor,
+            callback: (value) => {
+              const suffix = windowWidth >= 768 ? " tours" : "";
+              return `${value}${suffix}`;
+            },
+          },
+          grid: {
+            color: gridColor,
+          },
+        },
+      },
+      plugins: {
+        legend: {
+          display: false,
+        },
+        datalabels: {
+          display: windowWidth / timeSlots.length >= 40, // prevent data labels from overlapping if the window is not wide enough
+          anchor: "end",
+          align: "end",
+          color: legendColor,
+          font: {
+            weight: "bold",
+          },
+        },
+        tooltip: {
+          enabled: true,
+          callbacks: {
+            title: () => [],
+            label: (context) => {
+              const slotCenterTime = context.parsed.x;
+              const slotStartRaceTime = (slotCenterTime ?? timeSlotDuration / 2) - timeSlotDuration / 2;
+              const passageCount = context.parsed.y;
+
+              return `De ${formatMsAsDuration(slotStartRaceTime)} à ${formatMsAsDuration(slotStartRaceTime + timeSlotDuration)} : ${passageCount} passages`;
+            },
+          },
+        },
+      },
+    }),
+    [race.duration, windowWidth, legendColor, gridColor, timeSlotDuration, timeSlots],
+  );
+
+  return (
+    <div style={{ minHeight: 300 }}>
+      <Bar data={data} options={options} plugins={[ChartDataLabels]} />
+    </div>
+  );
 }

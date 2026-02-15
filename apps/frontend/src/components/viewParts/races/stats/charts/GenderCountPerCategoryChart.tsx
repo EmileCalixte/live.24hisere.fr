@@ -1,13 +1,26 @@
 import React from "react";
 import type { CategoryCode } from "@emilecalixte/ffa-categories";
-import ReactDOMServer from "react-dom/server";
+import {
+  BarController,
+  BarElement,
+  CategoryScale,
+  Chart,
+  type ChartData,
+  type ChartOptions,
+  Legend,
+  LinearScale,
+  Tooltip,
+} from "chart.js";
+import ChartDataLabels from "chartjs-plugin-datalabels";
+import { Bar } from "react-chartjs-2";
 import { GENDER } from "@live24hisere/core/constants";
 import { objectUtils } from "@live24hisere/utils";
 import { GENDER_COLORS } from "../../../../../constants/chart";
-import { Theme } from "../../../../../constants/theme";
-import { appContext } from "../../../../../contexts/AppContext";
-import { useChartTheme } from "../../../../../hooks/useChartTheme";
-import CanvasjsReact from "../../../../../lib/canvasjs/canvasjs.react";
+import { useChartGridColor } from "../../../../../hooks/charts/useChartGridColor";
+import { useChartLegendColor } from "../../../../../hooks/charts/useChartLegendColor";
+import { useGetCategoryDisplayNameFromCode } from "../../../../../hooks/charts/useGetCategoryDisplayNameFromCode";
+
+Chart.register(BarController, BarElement, CategoryScale, LinearScale, Legend, Tooltip);
 
 export type CategoryGenderDistribution = Partial<
   Record<CategoryCode | "custom", { [GENDER.M]: number; [GENDER.F]: number }>
@@ -18,100 +31,122 @@ interface GenderCountPerCategoryChartProps {
   categories: Record<string, string>;
 }
 
-const CanvasJSChart = CanvasjsReact.CanvasJSChart;
-
 export function GenderCountPerCategoryChart({
   genderCountsByCategory,
   categories,
 }: GenderCountPerCategoryChartProps): React.ReactElement {
-  const { theme } = React.useContext(appContext).theme;
-  const chartTheme = useChartTheme();
+  const legendColor = useChartLegendColor();
+  const gridColor = useChartGridColor();
 
-  const getDisplayedCategoryCodeAndName = React.useCallback(
-    (categoryCode: CategoryCode | "custom") => {
-      const code = categoryCode === "custom" ? "Autres" : categoryCode;
-      const name = categories[categoryCode] ?? code;
+  const getCategoryDisplayNameFromCode = useGetCategoryDisplayNameFromCode(categories);
 
-      return { code, name };
-    },
-    [categories],
-  );
-
-  const getTooltipContent = React.useCallback(
-    (e: any) => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      const { categoryCode } = e.entries[0].dataPoint as { categoryCode: CategoryCode | "custom" };
-      const counts = genderCountsByCategory[categoryCode];
-
-      if (!counts) {
-        return "";
-      }
-
-      const maleCount = counts[GENDER.M];
-      const femaleCount = counts[GENDER.F];
-
-      return ReactDOMServer.renderToString(
-        <div>
-          <div style={{ marginBottom: "0.75em" }}>
-            <strong>{getDisplayedCategoryCodeAndName(categoryCode).name}</strong>
-          </div>
-
-          <div>
-            {maleCount} homme{maleCount >= 2 ? "s" : ""}
-          </div>
-
-          <div>
-            {femaleCount} femme{femaleCount >= 2 ? "s" : ""}
-          </div>
-
-          <div>Total : {maleCount + femaleCount}</div>
-        </div>,
-      );
-    },
-    [genderCountsByCategory, getDisplayedCategoryCodeAndName],
-  );
-
-  const options = React.useMemo(
+  const data = React.useMemo<ChartData<"bar">>(
     () => ({
-      backgroundColor: "transparent",
-      theme: chartTheme,
-      toolTip: {
-        enabled: true,
-        contentFormatter: getTooltipContent,
-      },
-      axisX: {
-        interval: 1, // Force display all column labels even if width is reduced
-      },
-      data: [
+      labels: objectUtils
+        .keys(genderCountsByCategory)
+        .map((categoryCode) => getCategoryDisplayNameFromCode(categoryCode)),
+      datasets: [
         {
-          type: "stackedColumn",
-          showInLegend: true,
-          name: "Hommes",
-          color: GENDER_COLORS[GENDER.M],
-          dataPoints: objectUtils.entries(genderCountsByCategory).map(([categoryCode, counts]) => ({
-            y: counts[GENDER.M],
-            label: getDisplayedCategoryCodeAndName(categoryCode).code,
-            categoryCode,
-          })),
+          label: "Hommes",
+          data: Object.values(genderCountsByCategory).map((counts) => counts[GENDER.M]),
+          backgroundColor: GENDER_COLORS[GENDER.M],
         },
         {
-          type: "stackedColumn",
-          showInLegend: true,
-          name: "Femmes",
-          color: GENDER_COLORS[GENDER.F],
-          indexLabel: "#total",
-          indexLabelPlacement: "top",
-          indexLabelFontColor: theme === Theme.DARK ? "#eee" : "#222",
-          dataPoints: objectUtils.entries(genderCountsByCategory).map(([categoryCode, counts]) => ({
-            y: counts[GENDER.F],
-            label: getDisplayedCategoryCodeAndName(categoryCode).code,
-            categoryCode,
-          })),
+          label: "Femmes",
+          data: Object.values(genderCountsByCategory).map((counts) => counts[GENDER.F]),
+          backgroundColor: GENDER_COLORS[GENDER.F],
         },
       ],
     }),
-    [chartTheme, genderCountsByCategory, getDisplayedCategoryCodeAndName, getTooltipContent, theme],
+    [genderCountsByCategory, getCategoryDisplayNameFromCode],
   );
 
-  return <CanvasJSChart options={options} />;
+  const maxTotal = React.useMemo(
+    () => Math.max(...Object.values(genderCountsByCategory).map((counts) => counts[GENDER.M] + counts[GENDER.F]), 0),
+    [genderCountsByCategory],
+  );
+
+  const options = React.useMemo<ChartOptions<"bar">>(
+    () => ({
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        x: {
+          stacked: true,
+          ticks: {
+            autoSkip: false,
+            color: legendColor,
+          },
+          grid: {
+            color: gridColor,
+          },
+        },
+        y: {
+          stacked: true,
+          suggestedMax: Math.ceil(maxTotal * 1.1),
+          ticks: {
+            color: legendColor,
+          },
+          grid: {
+            color: gridColor,
+          },
+        },
+      },
+      plugins: {
+        legend: {
+          position: "bottom",
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+          onClick: () => {},
+          labels: {
+            color: legendColor,
+          },
+        },
+        datalabels: {
+          display: (context) => context.datasetIndex === 1, // Only show on top dataset (Femmes)
+          anchor: "end",
+          align: "end",
+          color: legendColor,
+          font: {
+            weight: "bold",
+          },
+          formatter: (_value, context) => {
+            const maleCount = context.chart.data.datasets[0].data[context.dataIndex] as number;
+            const femaleCount = context.chart.data.datasets[1].data[context.dataIndex] as number;
+            return maleCount + femaleCount;
+          },
+        },
+        tooltip: {
+          enabled: true,
+          callbacks: {
+            title: (context) => {
+              const categoryCode = objectUtils.keys(genderCountsByCategory)[context[0].dataIndex];
+              return getCategoryDisplayNameFromCode(categoryCode);
+            },
+            label: () => "",
+            afterBody: (context) => {
+              const categoryCode = objectUtils.keys(genderCountsByCategory)[context[0].dataIndex];
+              const counts = genderCountsByCategory[categoryCode];
+              if (!counts) return "";
+
+              const maleCount = counts[GENDER.M];
+              const femaleCount = counts[GENDER.F];
+
+              return [
+                `${maleCount} homme${maleCount >= 2 ? "s" : ""}`,
+                `${femaleCount} femme${femaleCount >= 2 ? "s" : ""}`,
+                `Total : ${maleCount + femaleCount}`,
+              ];
+            },
+          },
+        },
+      },
+    }),
+    [legendColor, gridColor, maxTotal, genderCountsByCategory, getCategoryDisplayNameFromCode],
+  );
+
+  return (
+    <div style={{ minHeight: 300 }}>
+      <Bar data={data} options={options} plugins={[ChartDataLabels]} />
+    </div>
+  );
 }
