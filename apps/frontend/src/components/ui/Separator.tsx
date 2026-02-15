@@ -1,5 +1,5 @@
 import React from "react";
-import { Separator as Primitive } from "@base-ui-components/react/separator";
+import { Separator as Primitive } from "@base-ui/react/separator";
 import { twMerge } from "tailwind-merge";
 
 export const Separator = React.forwardRef<

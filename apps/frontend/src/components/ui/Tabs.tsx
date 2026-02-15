@@ -1,5 +1,5 @@
 import React from "react";
-import { Tabs as Primitive } from "@base-ui-components/react";
+import { Tabs as Primitive } from "@base-ui/react";
 import { twMerge } from "tailwind-merge";
 
 export const Tabs = Primitive.Root;

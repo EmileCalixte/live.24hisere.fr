@@ -1,5 +1,5 @@
 import React from "react";
-import { Dialog as Primitive } from "@base-ui-components/react/dialog";
+import { Dialog as Primitive } from "@base-ui/react/dialog";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { twMerge } from "tailwind-merge";
