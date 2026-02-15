@@ -26,7 +26,7 @@ export function HeaderThemeButton(): React.ReactElement {
     <button className="flex cursor-pointer items-center p-2" onClick={onClick}>
       {theme === Theme.DARK && <FontAwesomeIcon icon={faMoon} />}
 
-      {theme === Theme.LIGHT && <MdSunny className="translate-x-1 text-xl" />}
+      {theme === Theme.LIGHT && <MdSunny className="translate-x-0.5 text-xl" />}
     </button>
   );
 }

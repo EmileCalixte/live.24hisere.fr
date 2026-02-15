@@ -4,6 +4,7 @@ import { Navigate, Route, Routes, useMatch, useNavigate } from "react-router-dom
 import type { CustomRunnerCategory, PublicUser } from "@live24hisere/core/types";
 import { APP_BASE_TITLE } from "../constants/app";
 import { appContext, type AppContext } from "../contexts/AppContext";
+import { NavMenuProvider } from "../contexts/NavMenuContext";
 import { useGetCurrentUser } from "../hooks/api/requests/auth/useGetCurrentUser";
 import { useLogout } from "../hooks/api/requests/auth/useLogout";
 import { useGetAppData } from "../hooks/api/requests/public/appData/useGetAppData";
@@ -169,36 +170,38 @@ export default function App(): React.ReactElement {
   const showDisabledAppMessage = !user && !isAppEnabled && !isBypassDisabledAppRoute;
 
   return (
-    <div id="app" className="flex min-h-[100vh] flex-col">
+    <div id="app" className="flex min-h-screen flex-col">
       <Helmet>
         <title>{APP_BASE_TITLE}</title>
       </Helmet>
       <appContext.Provider value={appContextValues}>
-        <div id="app-content-wrapper" className="flex-1">
-          <Header />
-          <main id="page-wrapper" className="mt-3 pb-5">
-            {isLoading ? (
-              <CircularLoader />
-            ) : showDisabledAppMessage ? (
-              <DisabledAppView />
-            ) : (
-              <React.Suspense fallback={<CircularLoader />}>
-                <Routes>
-                  <Route path="/login" element={<LoginView />} />
-                  <Route path="/admin/*" element={<Admin />} />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/races" element={<RacesView />} />
-                  <Route path="/runner-details" element={<RunnerDetailsView />} />
-                  <Route path="/runner-details/search" element={<SearchRunnerView />} />
-                  <Route path="/runner-details/:runnerId" element={<RunnerDetailsView />} />
+        <NavMenuProvider>
+          <div id="app-content-wrapper" className="flex-1">
+            <Header />
+            <main id="page-wrapper" className="mt-3 pb-5">
+              {isLoading ? (
+                <CircularLoader />
+              ) : showDisabledAppMessage ? (
+                <DisabledAppView />
+              ) : (
+                <React.Suspense fallback={<CircularLoader />}>
+                  <Routes>
+                    <Route path="/login" element={<LoginView />} />
+                    <Route path="/admin/*" element={<Admin />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/races" element={<RacesView />} />
+                    <Route path="/runner-details" element={<RunnerDetailsView />} />
+                    <Route path="/runner-details/search" element={<SearchRunnerView />} />
+                    <Route path="/runner-details/:runnerId" element={<RunnerDetailsView />} />
 
-                  {/* Redirect any unresolved route to /races */}
-                  <Route path="*" element={<Navigate to="/races" replace />} />
-                </Routes>
-              </React.Suspense>
-            )}
-          </main>
-        </div>
+                    {/* Redirect any unresolved route to /races */}
+                    <Route path="*" element={<Navigate to="/races" replace />} />
+                  </Routes>
+                </React.Suspense>
+              )}
+            </main>
+          </div>
+        </NavMenuProvider>
         <Footer />
       </appContext.Provider>
     </div>
