@@ -15,7 +15,7 @@ import { numberUtils, objectUtils } from "@live24hisere/utils";
 import { useChartLegendColor } from "../../../../../hooks/charts/useChartLegendColor";
 import { getCountryName } from "../../../../../utils/countryUtils";
 
-Chart.register(ArcElement, DoughnutController, Legend, Tooltip, Colors, ChartDataLabels);
+Chart.register(ArcElement, DoughnutController, Legend, Tooltip, Colors);
 
 /**
  * Country code as key, count as value
@@ -29,7 +29,7 @@ interface CountryDistributionChartProps {
 export function CountryDistributionChart({ countsByCountry }: CountryDistributionChartProps): React.ReactElement {
   const legendColor = useChartLegendColor();
 
-  const totalCount = Object.values(countsByCountry).reduce((totalCount, count) => totalCount + count);
+  const totalCount = Object.values(countsByCountry).reduce((totalCount, count) => totalCount + count, 0);
 
   const data = React.useMemo<ChartData<"doughnut">>(
     () => ({
@@ -71,7 +71,7 @@ export function CountryDistributionChart({ countsByCountry }: CountryDistributio
             title: () => [],
             label: (context) => {
               const count = Number(context.raw);
-              const countryName = getCountryName(objectUtils.keys(countsByCountry)[context.dataIndex]);
+              const countryName = getCountryName(objectUtils.keys(countsByCountry)[context.dataIndex]) ?? "Autres";
 
               return `${countryName} : ${count} (${numberUtils.formatPercentage(count / totalCount)})`;
             },
@@ -82,5 +82,5 @@ export function CountryDistributionChart({ countsByCountry }: CountryDistributio
     [countsByCountry, legendColor, totalCount],
   );
 
-  return <Doughnut data={data} options={options} />;
+  return <Doughnut data={data} options={options} plugins={[ChartDataLabels]} />;
 }

@@ -160,7 +160,7 @@ export function AverageSpeedPerTimeSlotChart({
 
   const getTimeSlotsPoints = React.useCallback(
     (timeSlots: TimeSlot[]) => [
-      { x: 0, y: timeSlots[0].averageSpeed },
+      { x: 0, y: timeSlots[0]?.averageSpeed },
       ...timeSlots.map((timeSlot) => ({
         x: timeSlot.startRaceTime + timeSlotDuration,
         y: timeSlot.averageSpeed,
@@ -252,9 +252,6 @@ export function AverageSpeedPerTimeSlotChart({
           labels: {
             color: legendColor,
           },
-        },
-        datalabels: {
-          display: false,
         },
         tooltip: {
           enabled: true,

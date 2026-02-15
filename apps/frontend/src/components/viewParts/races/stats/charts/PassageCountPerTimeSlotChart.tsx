@@ -20,7 +20,7 @@ import { useWindowDimensions } from "../../../../../hooks/useWindowDimensions";
 import { getXAxisDateInterval } from "../../../../../utils/chartUtils";
 import { formatMsAsDuration } from "../../../../../utils/durationUtils";
 
-Chart.register(BarController, BarElement, CategoryScale, LinearScale, Legend, Tooltip, ChartDataLabels);
+Chart.register(BarController, BarElement, CategoryScale, LinearScale, Legend, Tooltip);
 
 interface TimeSlot {
   /**
@@ -179,7 +179,7 @@ export function PassageCountPerTimeSlotChart({
 
   return (
     <div style={{ minHeight: 300 }}>
-      <Bar data={data} options={options} />
+      <Bar data={data} options={options} plugins={[ChartDataLabels]} />
     </div>
   );
 }

@@ -8,7 +8,7 @@ import { CATEGORY_COLORS } from "../../../../../constants/chart";
 import { useChartLegendColor } from "../../../../../hooks/charts/useChartLegendColor";
 import { useGetCategoryDisplayNameFromCode } from "../../../../../hooks/charts/useGetCategoryDisplayNameFromCode";
 
-Chart.register(ArcElement, DoughnutController, Legend, Tooltip, ChartDataLabels);
+Chart.register(ArcElement, DoughnutController, Legend, Tooltip);
 
 export type CategoryDistribution = Partial<Record<CategoryCode | "custom", number>>;
 
@@ -23,7 +23,7 @@ export function CategoryDistributionChart({
 }: CategoryDistributionChartProps): React.ReactElement {
   const legendColor = useChartLegendColor();
 
-  const totalCount = Object.values(countsByCategory).reduce((totalCount, count) => totalCount + count);
+  const totalCount = Object.values(countsByCategory).reduce((totalCount, count) => totalCount + count, 0);
 
   const getCategoryDisplayNameFromCode = useGetCategoryDisplayNameFromCode(categories);
 
@@ -63,7 +63,12 @@ export function CategoryDistributionChart({
           font: {
             size: 12,
           },
-          formatter: (value, context) => `${value} ${objectUtils.keys(countsByCategory)[context.dataIndex]}`,
+          formatter: (value, context) => {
+            const categoryCode = objectUtils.keys(countsByCategory)[context.dataIndex];
+            const displayedCategoryCode = categoryCode === "custom" ? "Autres" : categoryCode;
+
+            return `${value} ${displayedCategoryCode}`;
+          },
         },
         tooltip: {
           enabled: true,
@@ -84,5 +89,5 @@ export function CategoryDistributionChart({
     [countsByCategory, getCategoryDisplayNameFromCode, totalCount, legendColor],
   );
 
-  return <Doughnut data={data} options={options} />;
+  return <Doughnut data={data} options={options} plugins={[ChartDataLabels]} />;
 }

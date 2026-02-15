@@ -116,11 +116,24 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
       }
     }
 
-    const hourSpeedPoints: Array<{ x: number; y: number }> = [];
+    const hourSpeedPoints: Array<{ x: number; y: number | null }> = [];
+
+    const lastPassageEndRaceTime = runner.passages.at(-1)?.processed.lapEndRaceTime;
 
     for (const hour of runner.hours) {
-      hourSpeedPoints.push({ x: hour.startRaceTime, y: hour.averageSpeed ?? 0 });
-      hourSpeedPoints.push({ x: hour.endRaceTime, y: hour.averageSpeed ?? 0 });
+      hourSpeedPoints.push({ x: hour.startRaceTime, y: hour.averageSpeed });
+
+      let endX = hour.endRaceTime;
+
+      if (
+        lastPassageEndRaceTime !== undefined
+        && lastPassageEndRaceTime > hour.startRaceTime
+        && lastPassageEndRaceTime < hour.endRaceTime
+      ) {
+        endX = lastPassageEndRaceTime;
+      }
+
+      hourSpeedPoints.push({ x: endX, y: hour.averageSpeed });
     }
 
     return {
@@ -205,7 +218,7 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
           },
         },
         y: {
-          min: Math.floor(minSpeed),
+          suggestedMin: Math.floor(minSpeed),
           suggestedMax: Math.ceil(maxSpeed),
           ticks: {
             color: legendColor,
@@ -225,9 +238,6 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
           labels: {
             color: legendColor,
           },
-        },
-        datalabels: {
-          display: false,
         },
         tooltip: {
           enabled: true,
@@ -271,8 +281,16 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
                 const hourIndex = Math.min(Math.floor(dataIndex / 2), runner.hours.length - 1);
                 const hour = runner.hours[hourIndex];
 
+                const lastPassageEnd = runner.passages.at(-1)?.processed.lapEndRaceTime;
+                const displayEndRaceTime =
+                  lastPassageEnd !== undefined
+                  && lastPassageEnd > hour.startRaceTime
+                  && lastPassageEnd < hour.endRaceTime
+                    ? lastPassageEnd
+                    : hour.endRaceTime;
+
                 return [
-                  `De ${formatMsAsDuration(hour.startRaceTime)} à ${formatMsAsDuration(hour.endRaceTime)} :`,
+                  `De ${formatMsAsDuration(hour.startRaceTime)} à ${formatMsAsDuration(displayEndRaceTime)} :`,
                   `Vitesse moyenne : ${hour.averageSpeed !== null ? `${hour.averageSpeed.toFixed(2)} km/h` : "–"}`,
                   `Allure : ${hour.averagePace !== null ? `${formatMsAsDuration(hour.averagePace, { forceDisplayHours: false })}/km` : "–"}`,
                 ];

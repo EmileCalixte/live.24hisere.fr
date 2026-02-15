@@ -5,7 +5,7 @@ import { Doughnut } from "react-chartjs-2";
 import { numberUtils } from "@live24hisere/utils";
 import { useChartLegendColor } from "../../../../../hooks/charts/useChartLegendColor";
 
-Chart.register(ArcElement, DoughnutController, Legend, Tooltip, ChartDataLabels);
+Chart.register(ArcElement, DoughnutController, Legend, Tooltip);
 
 interface StartingRunnersDistributionPieChart {
   startingCount: number;
@@ -19,8 +19,8 @@ export function StartingRunnersDistributionChart({
   const legendColor = useChartLegendColor();
 
   const totalCount = startingCount + nonStartingCount;
-  const startingRatio = startingCount / totalCount;
-  const nonStartingRatio = nonStartingCount / totalCount;
+  const startingRatio = totalCount <= 0 ? 0 : startingCount / totalCount;
+  const nonStartingRatio = totalCount <= 0 ? 0 : nonStartingCount / totalCount;
 
   const data = React.useMemo<ChartData<"doughnut">>(
     () => ({
@@ -75,5 +75,5 @@ export function StartingRunnersDistributionChart({
     [legendColor, startingRatio, nonStartingRatio],
   );
 
-  return <Doughnut data={data} options={options} />;
+  return <Doughnut data={data} options={options} plugins={[ChartDataLabels]} />;
 }

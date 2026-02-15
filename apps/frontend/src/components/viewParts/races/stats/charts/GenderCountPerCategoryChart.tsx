@@ -20,7 +20,7 @@ import { useChartGridColor } from "../../../../../hooks/charts/useChartGridColor
 import { useChartLegendColor } from "../../../../../hooks/charts/useChartLegendColor";
 import { useGetCategoryDisplayNameFromCode } from "../../../../../hooks/charts/useGetCategoryDisplayNameFromCode";
 
-Chart.register(BarController, BarElement, CategoryScale, LinearScale, Legend, Tooltip, ChartDataLabels);
+Chart.register(BarController, BarElement, CategoryScale, LinearScale, Legend, Tooltip);
 
 export type CategoryGenderDistribution = Partial<
   Record<CategoryCode | "custom", { [GENDER.M]: number; [GENDER.F]: number }>
@@ -156,7 +156,7 @@ export function GenderCountPerCategoryChart({
 
   return (
     <div style={{ minHeight: 300 }}>
-      <Bar data={data} options={options} />
+      <Bar data={data} options={options} plugins={[ChartDataLabels]} />
     </div>
   );
 }
