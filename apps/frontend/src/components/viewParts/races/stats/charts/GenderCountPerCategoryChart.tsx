@@ -38,16 +38,6 @@ export function GenderCountPerCategoryChart({
   const legendColor = useChartLegendColor();
   const gridColor = useChartGridColor();
 
-  const getDisplayedCategoryCodeAndName = React.useCallback(
-    (categoryCode: CategoryCode | "custom") => {
-      const code = categoryCode === "custom" ? "Autres" : categoryCode;
-      const name = categories[categoryCode] ?? code;
-
-      return { code, name };
-    },
-    [categories],
-  );
-
   const getCategoryDisplayNameFromCode = useGetCategoryDisplayNameFromCode(categories);
 
   const data = React.useMemo<ChartData<"bar">>(
@@ -130,7 +120,7 @@ export function GenderCountPerCategoryChart({
           callbacks: {
             title: (context) => {
               const categoryCode = objectUtils.keys(genderCountsByCategory)[context[0].dataIndex];
-              return getDisplayedCategoryCodeAndName(categoryCode).name;
+              return getCategoryDisplayNameFromCode(categoryCode);
             },
             label: () => "",
             afterBody: (context) => {
@@ -151,7 +141,7 @@ export function GenderCountPerCategoryChart({
         },
       },
     }),
-    [legendColor, gridColor, maxTotal, genderCountsByCategory, getDisplayedCategoryCodeAndName],
+    [legendColor, gridColor, maxTotal, genderCountsByCategory, getCategoryDisplayNameFromCode],
   );
 
   return (
