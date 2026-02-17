@@ -51,8 +51,8 @@ export default function RunnerDetailsStats({ runner, race, ranking }: RunnerDeta
 
   return (
     <>
-      <div className="grid-rows-auto grid grid-cols-6 gap-3">
-        <div className="col-span-6 lg:col-span-4 xl:col-span-3">
+      <div className="grid-rows-auto gap-default grid grid-cols-6">
+        <div className="col-span-6 2xl:col-span-3">
           <RunnerDetailsStatsRankingTable race={race} runner={runner} ranking={ranking} />
 
           <p className="mt-1 mb-0">
@@ -62,7 +62,7 @@ export default function RunnerDetailsStats({ runner, race, ranking }: RunnerDeta
           </p>
         </div>
 
-        <Card className="col-span-6 flex h-full flex-col gap-3 lg:col-span-2 xl:col-span-3">
+        <Card className="col-span-6 flex h-full flex-col gap-3 2xl:col-span-3">
           <h3>Données générales</h3>
 
           <ul className="grid-rows-auto grid grid-cols-2 gap-3">

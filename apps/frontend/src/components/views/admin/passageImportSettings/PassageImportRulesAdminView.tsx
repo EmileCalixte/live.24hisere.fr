@@ -42,7 +42,7 @@ export default function PassageImportRulesAdminView(): React.ReactElement {
         ) : rules.length < 1 ? (
           <p>Aucune règle n'a été créée.</p>
         ) : (
-          <div className="flex w-full flex-col gap-3 md:w-2/3 xl:w-1/3">
+          <div className="flex w-full flex-col gap-3 md:w-2/3 2xl:w-1/3">
             {rules.map((rule) => (
               <Link
                 key={rule.id}

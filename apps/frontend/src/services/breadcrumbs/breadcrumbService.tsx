@@ -97,7 +97,7 @@ export function getEditPassageImportRuleBreadcrumbs(): BreadcrumbsElement {
 }
 
 function getAdminCrumb(): CrumbProps {
-  return { label: "Administration", url: "/admin" };
+  return { label: "Administration" };
 }
 
 function getEditionsCrumbs(clickable = false): CrumbProps[] {

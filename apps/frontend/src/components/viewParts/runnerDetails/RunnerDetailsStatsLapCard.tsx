@@ -29,11 +29,11 @@ export function RunnerDetailsStatsLapCard({
             <> </>à <strong>{formatMsAsDuration(passage.processed.lapEndRaceTime)}</strong> de course
           </li>
 
-          <li className="col-span-2 lg:col-span-1">
+          <li className="col-span-2 xl:col-span-1">
             Vitesse&nbsp;: <strong>{passage.processed.lapSpeed.toFixed(2)} km/h</strong>
           </li>
 
-          <li className="col-span-2 lg:col-span-1">
+          <li className="col-span-2 xl:col-span-1">
             Allure&nbsp;:
             <> </>
             <strong>

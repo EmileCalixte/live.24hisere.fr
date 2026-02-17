@@ -40,7 +40,7 @@ export default function MenuListItem({
       className={clsx(
         isDragged && "dragged opacity-50",
         isDraggedOver && "dragged-over outline",
-        "flex gap-5 px-4 py-2 text-xl font-bold no-underline",
+        "flex gap-5 rounded-md px-4 py-2 text-xl font-bold no-underline",
         "bg-white dark:bg-neutral-800 dark:hover:bg-neutral-700",
         "text-app-green-600",
         "border border-neutral-300 dark:border-neutral-600",

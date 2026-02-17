@@ -1,3 +1,5 @@
+import { WINDOW_WIDTH_BREAKPOINTS } from "../constants/ui/sizing";
+
 /**
  * @param raceDuration The race duration, in seconds
  */
@@ -28,11 +30,11 @@ function getBaseXAxisDateInterval(raceDuration: number): number {
 export function getXAxisDateInterval(raceDuration: number, width: number): number {
   const baseInterval = getBaseXAxisDateInterval(raceDuration);
 
-  if (width < 768) {
+  if (width < WINDOW_WIDTH_BREAKPOINTS.MD) {
     return baseInterval * 4;
   }
 
-  if (width < 1024) {
+  if (width < WINDOW_WIDTH_BREAKPOINTS.LG) {
     return baseInterval * 2;
   }
 

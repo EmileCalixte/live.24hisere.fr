@@ -48,12 +48,7 @@ export default function SearchRunnerView(): React.ReactElement {
   }, [querySearch, runners]);
 
   return (
-    <Page
-      id="search-runners"
-      htmlTitle="Rechercher un coureur"
-      title="Rechercher un coureur"
-      contentClassName="flex flex-col gap-3"
-    >
+    <Page id="search-runners" htmlTitle="Rechercher un coureur" title="Rechercher un coureur" layout="flexGap">
       {runners === undefined ? (
         <CircularLoader />
       ) : (
@@ -62,7 +57,7 @@ export default function SearchRunnerView(): React.ReactElement {
           onSubmit={onSubmit}
         >
           <Input
-            className="grow-1"
+            className="grow"
             label="Nom et/ou prénom"
             value={search}
             onChange={(e) => {

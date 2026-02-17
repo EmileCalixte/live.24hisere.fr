@@ -14,6 +14,7 @@ import { verbose } from "../utils/utils";
 import CircularLoader from "./ui/CircularLoader";
 import Footer from "./ui/footer/Footer";
 import Header from "./ui/header/Header";
+import { NavMenuContainer } from "./ui/navMenu/NavMenuContainer";
 import DisabledAppView from "./views/DisabledAppView";
 import LoginView from "./views/LoginView";
 
@@ -176,30 +177,35 @@ export default function App(): React.ReactElement {
       </Helmet>
       <appContext.Provider value={appContextValues}>
         <NavMenuProvider>
-          <div id="app-content-wrapper" className="flex-1">
+          <div id="app-content-wrapper" className="flex flex-1 flex-col">
             <Header />
-            <main id="page-wrapper" className="mt-3 pb-5">
-              {isLoading ? (
-                <CircularLoader />
-              ) : showDisabledAppMessage ? (
-                <DisabledAppView />
-              ) : (
-                <React.Suspense fallback={<CircularLoader />}>
-                  <Routes>
-                    <Route path="/login" element={<LoginView />} />
-                    <Route path="/admin/*" element={<Admin />} />
-                    <Route path="/about" element={<About />} />
-                    <Route path="/races" element={<RacesView />} />
-                    <Route path="/runner-details" element={<RunnerDetailsView />} />
-                    <Route path="/runner-details/search" element={<SearchRunnerView />} />
-                    <Route path="/runner-details/:runnerId" element={<RunnerDetailsView />} />
 
-                    {/* Redirect any unresolved route to /races */}
-                    <Route path="*" element={<Navigate to="/races" replace />} />
-                  </Routes>
-                </React.Suspense>
-              )}
-            </main>
+            <div className="flex flex-1">
+              {(isAppEnabled || !!user) && <NavMenuContainer />}
+
+              <main id="page-wrapper" className="mt-3 flex-1 pb-8 lg:mt-6">
+                {isLoading ? (
+                  <CircularLoader />
+                ) : showDisabledAppMessage ? (
+                  <DisabledAppView />
+                ) : (
+                  <React.Suspense fallback={<CircularLoader />}>
+                    <Routes>
+                      <Route path="/login" element={<LoginView />} />
+                      <Route path="/admin/*" element={<Admin />} />
+                      <Route path="/about" element={<About />} />
+                      <Route path="/races" element={<RacesView />} />
+                      <Route path="/runner-details" element={<RunnerDetailsView />} />
+                      <Route path="/runner-details/search" element={<SearchRunnerView />} />
+                      <Route path="/runner-details/:runnerId" element={<RunnerDetailsView />} />
+
+                      {/* Redirect any unresolved route to /races */}
+                      <Route path="*" element={<Navigate to="/races" replace />} />
+                    </Routes>
+                  </React.Suspense>
+                )}
+              </main>
+            </div>
           </div>
         </NavMenuProvider>
         <Footer />
