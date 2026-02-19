@@ -148,7 +148,7 @@ export default function RacesView(): React.ReactElement {
             }}
             className="gap-default flex flex-col"
           >
-            <div>
+            <div className="print:hidden">
               <TabList>
                 <Tab value={TAB_RANKING}>Classement</Tab>
                 <Tab value={TAB_STATS}>Statistiques</Tab>
