@@ -1,9 +1,9 @@
 import React from "react";
 import { twMerge } from "tailwind-merge";
 
-export const TABLE_CELL_BORDER_CLASSNAME = "border border-solid border-neutral-400 dark:border-neutral-600";
+export const TABLE_CELL_BORDER_CLASSNAME = "border border-solid border-neutral-300 dark:border-neutral-700";
 export const TABLE_CELL_PADDING_CLASSNAME = "p-2 print:p-1";
-export const TABLE_HEADER_BG_CLASSNAME = "bg-white dark:bg-white/15";
+export const TABLE_HEADER_BG_CLASSNAME = "bg-white dark:bg-white/5";
 
 const TABLE_CELL_PRINT_CLASSNAME = "print:border-0 print:border-b-1 print:text-sm print:text-left";
 

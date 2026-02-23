@@ -38,7 +38,7 @@ export default function Header(): React.ReactElement {
         shape="square"
         padding="no"
         border="bottom-only"
-        className="flex h-16 px-3 md:px-5"
+        className="flex h-16 px-3 lg:px-8"
       >
         <div className="flex grow basis-0">
           {(isAppEnabled || user) && showResponsiveMenuButton && <HeaderResponsiveMenuButton />}
