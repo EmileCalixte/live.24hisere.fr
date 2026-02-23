@@ -1,12 +1,18 @@
 import React from "react";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useLocation } from "react-router-dom";
 import { navMenuContext } from "../../../contexts/NavMenuContext";
 import { Drawer, DrawerClose, DrawerContent } from "../Drawer";
 import { NavMenu } from "./NavMenu";
 
 export function NavMenuResponsiveContainer(): React.ReactElement {
   const { showResponsiveNavMenu, setShowResponsiveNavMenu } = React.useContext(navMenuContext);
+  const location = useLocation();
+
+  React.useEffect(() => {
+    setShowResponsiveNavMenu(false);
+  }, [location, setShowResponsiveNavMenu]);
 
   return (
     <Drawer
