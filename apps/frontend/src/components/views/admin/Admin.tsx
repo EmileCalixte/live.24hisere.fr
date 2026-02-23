@@ -2,7 +2,6 @@ import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { appContext } from "../../../contexts/AppContext";
 import CircularLoader from "../../ui/CircularLoader";
-import AdminHomeView from "./AdminHomeView";
 import CreateCustomRunerCategoryAdminView from "./customRunnerCategories/CreateCustomRunnerCategoryAdminView";
 import CustomRunnerCategoriesAdminView from "./customRunnerCategories/CustomRunnerCategoriesAdminView";
 import CustomRunnerCategoryDetailsAdminView from "./customRunnerCategories/CustomRunnerCategoryDetailsAdminView";
@@ -36,7 +35,6 @@ export default function Admin(): React.ReactElement {
 
   return (
     <Routes>
-      <Route path="/" element={<AdminHomeView />} />
       <Route path="editions" element={<EditionsAdminView />} />
       <Route path="editions/create" element={<CreateEditionAdminView />} />
       <Route path="editions/:editionId" element={<EditionDetailsAdminView />} />
@@ -57,7 +55,7 @@ export default function Admin(): React.ReactElement {
       <Route path="passage-import-rules/:ruleId" element={<PassageImportRuleDetailsAdminView />} />
       <Route path="disabled-app" element={<DisabledAppAdminView />} />
 
-      <Route path="*" element={<Navigate to="/admin" replace />} />
+      <Route path="*" element={<Navigate to="/admin/editions" replace />} />
     </Routes>
   );
 }

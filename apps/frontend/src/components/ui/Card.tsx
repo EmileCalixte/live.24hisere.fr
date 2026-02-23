@@ -1,9 +1,37 @@
+import type React from "react";
 import { twMerge } from "tailwind-merge";
+import { tv, type VariantProps } from "tailwind-variants";
+import { objectUtils } from "@live24hisere/utils";
 import type { PolymorphicProps } from "../../types/utils/react";
 
-type CardProps<TElement extends React.ElementType> = PolymorphicProps<TElement> & {
-  className?: string | undefined;
-};
+const card = tv({
+  base: "border-neutral-300 bg-white dark:border-neutral-700 dark:bg-neutral-800",
+  variants: {
+    shape: {
+      rounded: "rounded-md",
+      square: "",
+    },
+    padding: {
+      yes: "p-3 lg:px-6 lg:py-4",
+      no: "p-0",
+    },
+    border: {
+      all: "border",
+      "right-only": "border-r",
+      "bottom-only": "border-b",
+    },
+  },
+  defaultVariants: {
+    shape: "rounded",
+    padding: "yes",
+    border: "all",
+  },
+});
+
+type CardProps<TElement extends React.ElementType> = PolymorphicProps<TElement>
+  & VariantProps<typeof card> & {
+    className?: string | undefined;
+  };
 
 export function Card<TElement extends React.ElementType = "div">({
   as,
@@ -12,15 +40,10 @@ export function Card<TElement extends React.ElementType = "div">({
   ...props
 }: CardProps<TElement>): React.ReactElement {
   const Component = as ?? "div";
+  const componentProps = objectUtils.excludeKeys(props, objectUtils.keys(card.variants));
 
   return (
-    <Component
-      className={twMerge(
-        "border border-neutral-300 bg-white p-4 shadow-sm dark:border-neutral-700 dark:bg-neutral-800",
-        className,
-      )}
-      {...props}
-    >
+    <Component className={twMerge(card(props), className)} {...componentProps}>
       {children}
     </Component>
   );

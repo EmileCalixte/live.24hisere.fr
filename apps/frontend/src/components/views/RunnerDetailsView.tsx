@@ -191,9 +191,9 @@ export default function RunnerDetailsView(): React.ReactElement {
           ? "Détails coureur"
           : `Détails coureur ${selectedRunner.firstname} ${selectedRunner.lastname}`
       }
-      contentClassName="flex flex-col gap-4"
+      layout="flexGap"
     >
-      <div className="flex w-full flex-col gap-1 md:w-1/2 xl:w-1/4 print:hidden">
+      <div className="flex w-full flex-col gap-1 md:w-1/2 xl:w-1/3 2xl:w-1/4 print:hidden">
         <RunnerSelector runners={runners} onSelectRunner={onSelectRunner} selectedRunnerId={runnerId} />
 
         <div className="flex justify-end">
@@ -214,7 +214,7 @@ export default function RunnerDetailsView(): React.ReactElement {
       )}
 
       {selectedRaceRunner && (
-        <Card className="flex flex-col gap-3">
+        <Card className="gap-default flex flex-col">
           <div className="flex flex-col gap-1">
             <h2 className="flex items-center gap-2">
               {alpha2CountryCode && <Flag countryCode={alpha2CountryCode} />}
@@ -227,7 +227,7 @@ export default function RunnerDetailsView(): React.ReactElement {
             {selectedRace && (
               <div className="flex flex-wrap items-end gap-x-3 gap-y-1">
                 {runnerHasMultipleParticipations ? (
-                  <div className="w-full md:w-1/2 xl:w-1/4">
+                  <div className="w-full md:w-1/2 xl:w-1/3 2xl:w-1/4">
                     <Select
                       label="Course"
                       options={runnerRaceOptions}
@@ -269,7 +269,7 @@ export default function RunnerDetailsView(): React.ReactElement {
           </div>
 
           {selectedRankingRunner && selectedRace && ranking ? (
-            <div className="flex flex-col gap-3">
+            <div className="gap-default flex flex-col">
               <RunnerDetailsStats runner={selectedRankingRunner} race={selectedRace} ranking={ranking} />
 
               {selectedRankingRunner.totalAverageSpeed !== null && !selectedRace.isBasicRanking && (

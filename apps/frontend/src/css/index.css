@@ -17,6 +17,8 @@
 
   --default-transition-duration: 0.1s;
   --default-transition-timing-function: ease-out;
+
+  --color-active-item: oklch(64.4% 0.2032 142.76 / 0.2);
 }
 
 h1,
@@ -70,7 +72,7 @@ h6 {
 
 /* The `theme` attribute is added to the body only once React has loaded */
 body[data-theme="light"] {
-  --color-background: var(--color-neutral-100);
+  --color-background: var(--color-neutral-50);
 }
 
 /*
@@ -102,6 +104,10 @@ body {
 .print-exact {
   print-color-adjust: exact;
   -webkit-print-color-adjust: exact;
+}
+
+.gap-default {
+  @apply gap-3 lg:gap-6;
 }
 
 @media (min-width: 768px) {

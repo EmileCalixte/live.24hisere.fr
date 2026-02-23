@@ -113,13 +113,13 @@ export default function RacesView(): React.ReactElement {
   const racesViewContextValues: RacesViewContext = { selectedEdition, selectedRace, selectedRaceRunners };
 
   return (
-    <Page id="ranking" title="Courses" titleSrOnly htmlTitle={htmlTitle} contentClassName="flex flex-col gap-3">
+    <Page id="ranking" title="Courses" titleSrOnly htmlTitle={htmlTitle} layout="flexGap">
       {editions && editions.length < 1 && <p>Aucune donnée disponible.</p>}
 
-      <Card className="grid-rows-auto grid grid-cols-6 gap-3 print:hidden">
+      <Card className="grid-rows-auto gap-default grid grid-cols-8 print:hidden">
         {editions && editions.length >= 2 && (
           <Select
-            className="col-span-full sm:col-span-4 md:col-span-3 lg:col-span-2 2xl:col-span-1"
+            className="col-span-full sm:col-span-6 md:col-span-4 lg:col-span-3 2xl:col-span-2"
             label="Édition"
             options={editionOptions}
             onChange={onEditionSelect}
@@ -129,7 +129,7 @@ export default function RacesView(): React.ReactElement {
         )}
         {selectedEdition && (
           <Select
-            className="col-span-full sm:col-span-4 md:col-span-3 lg:col-span-2 2xl:col-span-1"
+            className="col-span-full sm:col-span-6 md:col-span-4 lg:col-span-3 2xl:col-span-2"
             label="Course"
             options={raceOptions}
             onChange={onRaceSelect}
@@ -146,9 +146,9 @@ export default function RacesView(): React.ReactElement {
             onValueChange={(newValue: Tab) => {
               onTabSelect(newValue);
             }}
-            className="flex flex-col gap-3"
+            className="gap-default flex flex-col"
           >
-            <div>
+            <div className="print:hidden">
               <TabList>
                 <Tab value={TAB_RANKING}>Classement</Tab>
                 <Tab value={TAB_STATS}>Statistiques</Tab>

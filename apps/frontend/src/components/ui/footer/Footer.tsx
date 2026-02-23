@@ -25,7 +25,7 @@ export default function Footer(): React.ReactElement {
         Seules les données du poste de chronométrage font foi.
       </p>
 
-      <ul className="footer-links flex flex-col justify-center gap-4 md:flex-row md:gap-0">
+      <ul className="footer-links flex flex-col justify-center gap-3 md:flex-row md:gap-0">
         <li>
           <Link to="/about" className="text-inherit dark:text-inherit">
             À propos
@@ -41,18 +41,6 @@ export default function Footer(): React.ReactElement {
             }}
           >
             Code source
-          </Link>
-        </li>
-        <li>
-          <Link
-            to="https://www.24hisere.fr"
-            className="text-inherit dark:text-inherit"
-            target="_blank"
-            onClick={() => {
-              trackEvent(TrackedEvent.FOOTER_NAVIGATE_TO_MAIN_WEBSITE);
-            }}
-          >
-            Les 24 Heures de l'Isère
           </Link>
         </li>
       </ul>

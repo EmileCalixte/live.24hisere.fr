@@ -1,9 +1,23 @@
 import type React from "react";
 import clsx from "clsx";
 import { Helmet } from "react-helmet";
+import { twMerge } from "tailwind-merge";
+import { tv, type VariantProps } from "tailwind-variants";
 import { APP_BASE_TITLE } from "../../constants/app";
 
-interface PageProps {
+const pageContent = tv({
+  variants: {
+    layout: {
+      default: "",
+      flexGap: "flex flex-col gap-default",
+    },
+  },
+  defaultVariants: {
+    layout: "default",
+  },
+});
+
+interface PageProps extends VariantProps<typeof pageContent> {
   children: React.ReactNode[] | React.ReactNode;
   id: string;
   htmlTitle: string;
@@ -24,10 +38,11 @@ export default function Page({
   aboveTitle,
   breadCrumbs,
   className,
+  layout,
   contentClassName,
 }: PageProps): React.ReactElement {
   return (
-    <div id={`page-${id}`} className={clsx("mx-3 flex flex-col gap-3 md:mx-5", className)}>
+    <div id={`page-${id}`} className={twMerge("mx-3 flex flex-col gap-3 lg:mx-8 lg:gap-6", className)}>
       <Helmet>
         <title>{[htmlTitle, APP_BASE_TITLE].join(" - ")}</title>
       </Helmet>
@@ -42,7 +57,7 @@ export default function Page({
         </h1>
       )}
 
-      <div id="page-content" className={contentClassName}>
+      <div id="page-content" className={twMerge(pageContent({ layout }), contentClassName)}>
         {children}
       </div>
     </div>

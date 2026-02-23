@@ -48,21 +48,16 @@ export default function SearchRunnerView(): React.ReactElement {
   }, [querySearch, runners]);
 
   return (
-    <Page
-      id="search-runners"
-      htmlTitle="Rechercher un coureur"
-      title="Rechercher un coureur"
-      contentClassName="flex flex-col gap-3"
-    >
+    <Page id="search-runners" htmlTitle="Rechercher un coureur" title="Rechercher un coureur" layout="flexGap">
       {runners === undefined ? (
         <CircularLoader />
       ) : (
         <form
-          className="flex w-full flex-col gap-2 sm:flex-row sm:items-end md:w-3/4 lg:w-1/2 xl:w-1/3"
+          className="flex w-full flex-col gap-2 sm:flex-row sm:items-end md:w-3/4 xl:w-1/2 2xl:w-1/3"
           onSubmit={onSubmit}
         >
           <Input
-            className="grow-1"
+            className="grow"
             label="Nom et/ou prénom"
             value={search}
             onChange={(e) => {
@@ -86,7 +81,7 @@ export default function SearchRunnerView(): React.ReactElement {
           {matchingRunners.length < 1 && <p>Aucun coureur trouvé. Essayez de modifier votre recherche.</p>}
 
           {matchingRunners.length >= 1 && (
-            <ul className="flex w-full flex-col gap-2 md:w-3/4 lg:w-1/2 xl:w-1/3">
+            <ul className="flex w-full flex-col gap-2 md:w-3/4 xl:w-1/2 2xl:w-1/3">
               {matchingRunners.map((runner) => (
                 <li key={runner.id}>
                   <Link to={`/runner-details/${runner.id}`} className="text-inherit no-underline dark:text-inherit">

@@ -181,18 +181,18 @@ export function StatsTabContent(): React.ReactElement {
           </Tabs>
 
           <div className="grid-rows-auto grid grid-cols-6 gap-5">
-            <div className="col-span-6 text-center lg:col-span-3 2xl:col-span-2">
+            <div className="col-span-6 flex max-h-120 flex-col items-center text-center xl:col-span-3 2xl:col-span-2">
               <h4>Catégories d'âge</h4>
               <CategoryDistributionChart countsByCategory={countsByCategory} categories={categories} />
             </div>
 
-            <div className="col-span-6 text-center lg:col-span-3 2xl:col-span-2">
+            <div className="col-span-6 flex max-h-120 flex-col items-center text-center xl:col-span-3 2xl:col-span-2">
               <h4>Pays</h4>
               <CountryDistributionChart countsByCountry={countsByCountry} />
             </div>
 
             {!selectedRace.isBasicRanking && (
-              <div className="col-span-6 text-center lg:col-span-3 2xl:col-span-2">
+              <div className="col-span-6 flex max-h-120 flex-col items-center text-center xl:col-span-3 2xl:col-span-2">
                 <h4>Partants / non-partants</h4>
                 <StartingRunnersDistributionChart startingCount={startingCount} nonStartingCount={nonStartingCount} />
               </div>

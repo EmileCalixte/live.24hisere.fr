@@ -32,10 +32,10 @@ export default function AboutView(): React.ReactElement {
       aboveTitle={
         <p className="mt-3">
           <Link to="/" className="flex items-baseline gap-1">
-            <span className="text-sm !no-underline">
+            <span className="text-sm">
               <FontAwesomeIcon icon={faChevronLeft} />
             </span>
-            Retour à l'accueil
+            Retour
           </Link>
         </p>
       }

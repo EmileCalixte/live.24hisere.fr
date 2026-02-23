@@ -6,6 +6,7 @@ import { objectUtils } from "@live24hisere/utils";
 import { TrackedEvent } from "../../../../constants/eventTracking/customEventNames";
 import { RankingTimeMode } from "../../../../constants/rankingTimeMode";
 import { SearchParam } from "../../../../constants/searchParams";
+import { WINDOW_WIDTH_BREAKPOINTS } from "../../../../constants/ui/sizing";
 import { appContext } from "../../../../contexts/AppContext";
 import { racesViewContext } from "../../../../contexts/RacesViewContext";
 import { useRankingTimeQueryString } from "../../../../hooks/queryString/useRankingTimeQueryString";
@@ -23,7 +24,7 @@ import RankingSettings from "./RankingSettings";
 import RankingTable from "./RankingTable";
 import ResponsiveRankingTable from "./responsive/ResponsiveRankingTable";
 
-const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
+const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = WINDOW_WIDTH_BREAKPOINTS.XL;
 
 export function RankingTabContent(): React.ReactElement {
   const { selectedRace, selectedRaceRunners } = React.useContext(racesViewContext);
@@ -180,7 +181,7 @@ export function RankingTabContent(): React.ReactElement {
   }
 
   return (
-    <Card className="flex flex-col gap-3">
+    <Card className="gap-default flex flex-col">
       <h2>Classement de la course {selectedRace.name}</h2>
 
       <div className="flex flex-wrap gap-x-10 gap-y-3 print:hidden">

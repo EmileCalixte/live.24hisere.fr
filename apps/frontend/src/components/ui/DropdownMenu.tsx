@@ -1,5 +1,5 @@
 import React from "react";
-import { Menu as Primitive } from "@base-ui-components/react/menu";
+import { Menu as Primitive } from "@base-ui/react/menu";
 import clsx from "clsx";
 
 export const DropdownMenu = Primitive.Root;

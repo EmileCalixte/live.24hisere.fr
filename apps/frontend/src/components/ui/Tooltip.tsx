@@ -1,5 +1,5 @@
 import React from "react";
-import { Tooltip as Primitive } from "@base-ui-components/react/tooltip";
+import { Tooltip as Primitive } from "@base-ui/react/tooltip";
 import { twMerge } from "tailwind-merge";
 
 const CONTENT_STYLE_CLASSNAME =
