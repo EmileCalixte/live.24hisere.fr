@@ -55,7 +55,6 @@ export default function Admin(): React.ReactElement {
       <Route path="passage-import-rules/:ruleId" element={<PassageImportRuleDetailsAdminView />} />
       <Route path="disabled-app" element={<DisabledAppAdminView />} />
 
-      <Route path="/" element={<Navigate to="/admin/editions" replace />} />
       <Route path="*" element={<Navigate to="/admin/editions" replace />} />
     </Routes>
   );

@@ -89,6 +89,7 @@ export function NavMenu(): React.ReactElement {
                           "hover:bg-active-item",
                         )}
                         target={item.external ? "_blank" : "_self"}
+                        rel={item.external ? "noreferrer" : undefined}
                       >
                         {item.label}
                       </NavLink>

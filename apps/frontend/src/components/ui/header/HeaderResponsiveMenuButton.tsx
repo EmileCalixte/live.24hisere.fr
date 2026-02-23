@@ -11,7 +11,11 @@ export function HeaderResponsiveMenuButton(): React.ReactElement {
   };
 
   return (
-    <button className="-ml-2 flex cursor-pointer items-center p-2" onClick={onClick}>
+    <button
+      className="-ml-2 flex cursor-pointer items-center p-2"
+      onClick={onClick}
+      aria-label="Afficher le menu de navigation"
+    >
       <FontAwesomeIcon icon={faBars} />
     </button>
   );

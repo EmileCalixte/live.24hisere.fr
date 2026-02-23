@@ -1,5 +1,7 @@
+import type React from "react";
 import { twMerge } from "tailwind-merge";
 import { tv, type VariantProps } from "tailwind-variants";
+import { objectUtils } from "@live24hisere/utils";
 import type { PolymorphicProps } from "../../types/utils/react";
 
 const card = tv({
@@ -38,9 +40,10 @@ export function Card<TElement extends React.ElementType = "div">({
   ...props
 }: CardProps<TElement>): React.ReactElement {
   const Component = as ?? "div";
+  const componentProps = objectUtils.excludeKeys(props, objectUtils.keys(card.variants));
 
   return (
-    <Component className={twMerge(card(props), className)} {...props}>
+    <Component className={twMerge(card(props), className)} {...componentProps}>
       {children}
     </Component>
   );

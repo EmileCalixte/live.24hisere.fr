@@ -23,7 +23,11 @@ export function HeaderThemeButton(): React.ReactElement {
   };
 
   return (
-    <button className="flex cursor-pointer items-center p-2" onClick={onClick}>
+    <button
+      className="flex cursor-pointer items-center p-2"
+      onClick={onClick}
+      aria-label={`Utiliser le thème ${theme === Theme.DARK ? "clair" : "sombre"}`}
+    >
       {theme === Theme.DARK && <FontAwesomeIcon icon={faMoon} />}
 
       {theme === Theme.LIGHT && <MdSunny className="translate-x-0.5 text-xl" />}
