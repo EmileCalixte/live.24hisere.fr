@@ -1,7 +1,7 @@
 import type React from "react";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { twMerge } from "tailwind-merge";
+import { cn } from "tailwind-variants";
 import type { GenderWithMixed, PublicRace } from "@live24hisere/core/types";
 import { NO_VALUE_PLACEHOLDER } from "../../../../constants/misc";
 import type { RankingRunner } from "../../../../types/Ranking";
@@ -52,7 +52,7 @@ export default function RankingTableRow({
       <Td className="p-0">
         <Link
           to={`/runner-details/${runner.id}?race=${race.id}`}
-          className={twMerge(
+          className={cn(
             TABLE_CELL_PADDING_CLASSNAME,
             "flex items-center gap-1.5 text-neutral-800 no-underline dark:text-neutral-200",
           )}

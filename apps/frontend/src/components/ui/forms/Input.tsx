@@ -1,5 +1,5 @@
 import React from "react";
-import { twMerge } from "tailwind-merge";
+import { cn } from "tailwind-variants";
 import { COMMON_INPUT_CLASSNAME } from "../../../constants/ui/input";
 import type { InputType } from "../../../types/Forms";
 
@@ -66,11 +66,11 @@ export function Input({
   }, [value]);
 
   return (
-    <label className={twMerge("flex", inline ? "items-center" : "flex-col", className)}>
+    <label className={cn("flex", inline ? "items-center" : "flex-col", className)}>
       {labelPosition === "before" && <span className={labelTextClassName}>{label}</span>}
 
       <input
-        className={twMerge(COMMON_INPUT_CLASSNAME, inputClassName, hasError && "border-red-500 dark:border-red-700")}
+        className={cn(COMMON_INPUT_CLASSNAME, inputClassName, hasError && "border-red-500 dark:border-red-700")}
         type={type}
         value={internalValue}
         onChange={handleChange}

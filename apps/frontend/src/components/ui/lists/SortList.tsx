@@ -1,5 +1,5 @@
 import React from "react";
-import clsx from "clsx";
+import { cn } from "tailwind-variants";
 import { MenuList } from "./MenuList/MenuList";
 
 interface SortListProps<T> {
@@ -58,7 +58,7 @@ export default function SortList<T>({
       {items.map((item, index) => (
         <li
           key={keyFunction(item)}
-          className={clsx(isSorting && "sorting")}
+          className={cn(isSorting && "sorting")}
           draggable={isSorting}
           onDragStart={
             isSorting

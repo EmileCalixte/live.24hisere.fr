@@ -1,5 +1,5 @@
 import type React from "react";
-import { twMerge } from "tailwind-merge";
+import { cn } from "tailwind-variants";
 import type { SelectOption } from "../../../types/Forms";
 
 interface RadioGroupProps<T extends SelectOption["value"]> {
@@ -20,7 +20,7 @@ export default function RadioGroup<T extends SelectOption["value"]>({
   className,
 }: RadioGroupProps<T>): React.ReactElement {
   return (
-    <fieldset className={twMerge("", className)}>
+    <fieldset className={cn("", className)}>
       <legend>{legend}</legend>
       {options.map((option) => (
         <div className="flex" key={option.value}>

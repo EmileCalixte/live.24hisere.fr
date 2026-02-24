@@ -1,7 +1,7 @@
 import React from "react";
 import { faGrip } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import clsx from "clsx";
+import { cn } from "tailwind-variants";
 import { Link } from "../../Link";
 
 interface MenuListItemProps {
@@ -37,7 +37,7 @@ export default function MenuListItem({
     <Link
       to={link}
       onClick={onClick}
-      className={clsx(
+      className={cn(
         isDragged && "dragged opacity-50",
         isDraggedOver && "dragged-over outline",
         "flex gap-5 rounded-md px-4 py-2 text-xl font-bold no-underline",
@@ -45,7 +45,7 @@ export default function MenuListItem({
         "text-app-green-600",
         "border border-neutral-300 dark:border-neutral-600",
         "shadow-sm transition-shadow hover:shadow-md dark:transition-colors",
-        isSorting && "!cursor-grab",
+        isSorting && "cursor-grab!",
       )}
     >
       {isSorting && (

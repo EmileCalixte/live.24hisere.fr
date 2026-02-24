@@ -1,6 +1,5 @@
 import type React from "react";
-import clsx from "clsx";
-import { twMerge } from "tailwind-merge";
+import { cn } from "tailwind-variants";
 import { BUTTON_CLASSNAMES, BUTTON_COLOR_TO_CLASSNAMES, BUTTON_SIZE_TO_CLASSNAMES } from "../../../constants/ui/button";
 import { LINK_CLASSAMES } from "../../../constants/ui/link";
 import type { ButtonColor, ButtonSize } from "../../../types/ui/button";
@@ -39,8 +38,8 @@ export function Button({
     <button
       className={
         variant === "link"
-          ? twMerge(LINK_CLASSAMES, className)
-          : twMerge(
+          ? cn(LINK_CLASSAMES, className)
+          : cn(
               !disabled && BUTTON_COLOR_TO_CLASSNAMES[color],
               BUTTON_SIZE_TO_CLASSNAMES[size],
               BUTTON_CLASSNAMES,
@@ -55,7 +54,7 @@ export function Button({
       onClick={handleClick}
       aria-busy={isLoading}
     >
-      <span className={clsx("flex items-center gap-2", isLoading && "opacity-0")}>
+      <span className={cn("flex items-center gap-2", isLoading && "opacity-0")}>
         {icon}
         {children}
       </span>

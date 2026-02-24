@@ -1,7 +1,7 @@
 import type React from "react";
 import { faAngleLeft, faAngleRight, faAnglesLeft, faAnglesRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { twMerge } from "tailwind-merge";
+import { cn } from "tailwind-variants";
 
 interface PaginationProps {
   minPage: number;
@@ -10,7 +10,7 @@ interface PaginationProps {
   setPage: (page: number) => void;
 }
 
-const buttonClassName = twMerge(
+const buttonClassName = cn(
   "text-[0.95em] flex items-center justify-center h-[2.1rem] min-w-[2.1rem] px-0.5",
   "border-1 border-neutral-200 dark:border-neutral-600",
   "[&:not(:disabled)]:cursor-pointer [&:not(:disabled)]:hover:bg-neutral-200 [&:not(:disabled)]:dark:hover:bg-neutral-700",
@@ -23,7 +23,7 @@ export default function Pagination({ minPage, maxPage, currentPage, setPage }: P
   return (
     <div className="pagination flex">
       <button
-        className={twMerge(buttonClassName, "ml-0 rounded-l-md")}
+        className={cn(buttonClassName, "ml-0 rounded-l-md")}
         onClick={() => {
           setPage(minPage);
         }}
@@ -86,7 +86,7 @@ export default function Pagination({ minPage, maxPage, currentPage, setPage }: P
         </button>
       )}
 
-      <button className={twMerge(buttonClassName, activeButtonClassName)} disabled>
+      <button className={cn(buttonClassName, activeButtonClassName)} disabled>
         {currentPage}
       </button>
 
@@ -145,7 +145,7 @@ export default function Pagination({ minPage, maxPage, currentPage, setPage }: P
       </button>
 
       <button
-        className={twMerge(buttonClassName, "rounded-r-md")}
+        className={cn(buttonClassName, "rounded-r-md")}
         onClick={() => {
           setPage(maxPage);
         }}

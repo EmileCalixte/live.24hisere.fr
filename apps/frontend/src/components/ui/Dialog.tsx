@@ -2,7 +2,7 @@ import React from "react";
 import { Dialog as Primitive } from "@base-ui/react/dialog";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { twMerge } from "tailwind-merge";
+import { cn } from "tailwind-variants";
 
 export const Dialog = Primitive.Root;
 export const DialogTrigger = Primitive.Trigger;
@@ -16,7 +16,7 @@ export const DialogPopup = React.forwardRef<
     <Primitive.Backdrop className="fixed inset-0 bg-black/50" />
 
     <Primitive.Popup
-      className={twMerge(
+      className={cn(
         "fixed top-1/2 left-1/2 max-h-[85vh] w-[90vw] max-w-160 -translate-x-1/2 -translate-y-1/2",
         "p-4",
         "bg-white shadow-lg dark:bg-neutral-700",
