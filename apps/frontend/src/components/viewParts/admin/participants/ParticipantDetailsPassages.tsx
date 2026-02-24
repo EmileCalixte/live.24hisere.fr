@@ -1,7 +1,7 @@
 import React from "react";
 import { faEye, faEyeSlash, faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import clsx from "clsx";
+import { cn } from "tailwind-variants";
 import { PASSAGE_ORIGIN } from "@live24hisere/core/constants";
 import type { AdminPassage, AdminProcessedPassage, AdminRaceWithRunnerCount } from "@live24hisere/core/types";
 import type { ReactStateSetter } from "../../../../types/utils/react";
@@ -116,13 +116,13 @@ export default function ParticipantDetailsPassages({
               </thead>
               <tbody>
                 {passages.map((passage) => (
-                  <Tr key={passage.id} className={clsx(passage.isHidden && "passage-hidden")}>
+                  <Tr key={passage.id} className={cn(passage.isHidden && "passage-hidden")}>
                     <Td className="text-xs">{passage.id}</Td>
                     <Td className="text-xs">{formatPassageOrigin(passage)}</Td>
-                    <Td className={clsx(passage.isHidden && "line-through")}>
+                    <Td className={cn(passage.isHidden && "line-through")}>
                       {formatDateAsString(passage.processed.lapEndTime)}
                     </Td>
-                    <Td className={clsx(passage.isHidden && "line-through")}>
+                    <Td className={cn(passage.isHidden && "line-through")}>
                       {formatMsAsDuration(passage.processed.lapEndRaceTime)}
                     </Td>
                     <Td>{passage.comment && <TruncateText maxLength={50}>{passage.comment}</TruncateText>}</Td>

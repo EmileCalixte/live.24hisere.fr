@@ -1,5 +1,5 @@
 import type React from "react";
-import clsx from "clsx";
+import { cn } from "tailwind-variants";
 import type { ProcessedPassage } from "@live24hisere/core/types";
 import { NO_VALUE_PLACEHOLDER } from "../../../constants/misc";
 import { formatMsAsDuration, formatMsDurationHms } from "../../../utils/durationUtils";
@@ -17,7 +17,7 @@ export function RunnerDetailsStatsLapCard({
   className,
 }: RunnerDetailsStatsLapCardProps): React.ReactElement {
   return (
-    <Card className={clsx("flex flex-col gap-3", className)}>
+    <Card className={cn("flex flex-col gap-3", className)}>
       <h3>
         {title}&nbsp;: {passage ? formatMsDurationHms(passage.processed.lapDuration) : NO_VALUE_PLACEHOLDER}
       </h3>

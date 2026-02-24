@@ -1,6 +1,6 @@
 import React from "react";
 import { Tooltip as Primitive } from "@base-ui/react/tooltip";
-import { twMerge } from "tailwind-merge";
+import { cn } from "tailwind-variants";
 
 const CONTENT_STYLE_CLASSNAME =
   "border-1 rounded-sm border-neutral-200 bg-white/95 px-2 py-1 shadow-md dark:border-neutral-600 dark:bg-neutral-700/95 max-w-[min(90vw,500px)]";
@@ -17,14 +17,14 @@ export const TooltipContent = React.forwardRef<
 >(({ children, style, ...props }, ref) => (
   <Primitive.Portal>
     <Primitive.Positioner sideOffset={5} side="top">
-      <Primitive.Popup {...props} className={twMerge(CONTENT_STYLE_CLASSNAME, CONTENT_ANIMATION_CLASSNAME)} ref={ref}>
+      <Primitive.Popup {...props} className={cn(CONTENT_STYLE_CLASSNAME, CONTENT_ANIMATION_CLASSNAME)} ref={ref}>
         {children}
         <Primitive.Arrow
-          className={twMerge(
-            "data-[side=bottom]:top-[-8px]",
-            "data-[side=left]:right-[-13px] data-[side=left]:rotate-90",
-            "data-[side=right]:left-[-13px] data-[side=right]:-rotate-90",
-            "data-[side=top]:bottom-[-8px] data-[side=top]:rotate-180",
+          className={cn(
+            "data-[side=bottom]:-top-2",
+            "data-[side=left]:-right-3.25 data-[side=left]:rotate-90",
+            "data-[side=right]:-left-3.25 data-[side=right]:-rotate-90",
+            "data-[side=top]:-bottom-2 data-[side=top]:rotate-180",
           )}
         >
           <ArrowSvg />

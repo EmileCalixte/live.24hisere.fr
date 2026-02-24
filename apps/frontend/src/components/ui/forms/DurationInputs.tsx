@@ -1,6 +1,6 @@
 import type React from "react";
 import { useCallback, useMemo } from "react";
-import clsx from "clsx";
+import { cn } from "tailwind-variants";
 import { getDurationAsMs } from "../../../utils/mathUtils";
 import { prefixNumber } from "../../../utils/utils";
 import { Input } from "./Input";
@@ -127,7 +127,7 @@ export default function DurationInputs({
   );
 
   return (
-    <fieldset className={clsx("flex gap-1.5", className)}>
+    <fieldset className={cn("flex gap-1.5", className)}>
       {legend && <legend>{legend}</legend>}
 
       <Input

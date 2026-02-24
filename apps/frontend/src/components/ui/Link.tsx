@@ -1,7 +1,7 @@
 import type React from "react";
 // eslint-disable-next-line no-restricted-imports -- This is the only place where we import Link from react-router-dom
 import { Link as ReactRouterLink, type To } from "react-router-dom";
-import { twMerge } from "tailwind-merge";
+import { cn } from "tailwind-variants";
 import { BUTTON_CLASSNAMES, BUTTON_COLOR_TO_CLASSNAMES, BUTTON_SIZE_TO_CLASSNAMES } from "../../constants/ui/button";
 import { LINK_CLASSAMES } from "../../constants/ui/link";
 import type { ButtonColor, ButtonSize } from "../../types/ui/button";
@@ -43,8 +43,8 @@ export const Link = ({
       to={to}
       className={
         variant === "link"
-          ? twMerge(LINK_CLASSAMES, className)
-          : twMerge(BUTTON_COLOR_TO_CLASSNAMES[color], BUTTON_SIZE_TO_CLASSNAMES[size], BUTTON_CLASSNAMES, className)
+          ? cn(LINK_CLASSAMES, className)
+          : cn(BUTTON_COLOR_TO_CLASSNAMES[color], BUTTON_SIZE_TO_CLASSNAMES[size], BUTTON_CLASSNAMES, className)
       }
       rel={props.target === "_blank" ? "noreferrer" : undefined}
       {...props}

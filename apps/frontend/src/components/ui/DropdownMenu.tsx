@@ -1,6 +1,6 @@
 import React from "react";
 import { Menu as Primitive } from "@base-ui/react/menu";
-import clsx from "clsx";
+import { cn } from "tailwind-variants";
 
 export const DropdownMenu = Primitive.Root;
 export const DropdownMenuTrigger = Primitive.Trigger;
@@ -12,7 +12,7 @@ export const DropdownMenuPopup = React.forwardRef<
   <Primitive.Portal>
     <Primitive.Positioner className="outline-none" sideOffset={8}>
       <Primitive.Popup
-        className={clsx("flex flex-col rounded-sm bg-white shadow-sm dark:bg-neutral-700", className)}
+        className={cn("flex flex-col rounded-sm bg-white shadow-sm dark:bg-neutral-700", className)}
         {...props}
         ref={ref}
       >
@@ -27,7 +27,7 @@ DropdownMenuPopup.displayName = "DropdownMenuPopup";
 export const DropdownMenuItem = React.forwardRef<HTMLButtonElement, React.ComponentPropsWithRef<typeof Primitive.Item>>(
   ({ children, className, ...props }) => (
     <Primitive.Item
-      className={clsx("p-2 hover:cursor-pointer hover:bg-neutral-200 dark:hover:bg-neutral-600", className)}
+      className={cn("p-2 hover:cursor-pointer hover:bg-neutral-200 dark:hover:bg-neutral-600", className)}
       {...props}
       render={<button>{children}</button>}
     />

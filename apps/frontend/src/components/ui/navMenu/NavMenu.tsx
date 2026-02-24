@@ -1,6 +1,6 @@
 import React from "react";
-import clsx from "clsx";
 import { NavLink } from "react-router-dom";
+import { cn } from "tailwind-variants";
 import { appContext } from "../../../contexts/AppContext";
 
 export interface NavMenuItem {
@@ -82,12 +82,14 @@ export function NavMenu(): React.ReactElement {
                     <li key={index}>
                       <NavLink
                         to={buildPath(category.toPrefix, item.to)}
-                        className={clsx(
-                          "box-border inline-block w-full rounded-sm px-3 py-0.75",
-                          "transition",
-                          "[&.active]:bg-active-item",
-                          "hover:bg-active-item",
-                        )}
+                        className={
+                          cn(
+                            "box-border inline-block w-full rounded-sm px-3 py-0.75",
+                            "transition",
+                            "[&.active]:bg-active-item",
+                            "hover:bg-active-item",
+                          ) ?? ""
+                        }
                         target={item.external ? "_blank" : "_self"}
                         rel={item.external ? "noreferrer" : undefined}
                       >

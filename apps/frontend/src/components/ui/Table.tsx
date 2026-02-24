@@ -1,5 +1,5 @@
 import React from "react";
-import { twMerge } from "tailwind-merge";
+import { cn } from "tailwind-variants";
 
 export const TABLE_CELL_BORDER_CLASSNAME = "border border-solid border-neutral-300 dark:border-neutral-700";
 export const TABLE_CELL_PADDING_CLASSNAME = "p-2 print:p-1";
@@ -9,7 +9,7 @@ const TABLE_CELL_PRINT_CLASSNAME = "print:border-0 print:border-b-1 print:text-s
 
 export const Table = React.forwardRef<HTMLTableElement, React.ComponentPropsWithoutRef<"table">>(
   ({ children, className, ...props }, ref) => (
-    <table className={twMerge("border-collapse", className)} {...props} ref={ref}>
+    <table className={cn("border-collapse", className)} {...props} ref={ref}>
       {children}
     </table>
   ),
@@ -24,7 +24,7 @@ export const Tr = React.forwardRef<
   }
 >(({ children, className, hoverEffect = true, alternateBgColors = true, ...props }, ref) => (
   <tr
-    className={twMerge(
+    className={cn(
       alternateBgColors
         && "odd:[&>td]:bg-neutral-50 even:[&>td]:bg-neutral-100 odd:[&>td]:dark:bg-neutral-800 even:[&>td]:dark:bg-neutral-900",
       hoverEffect && "hover:[&>td]:bg-black/5 hover:[&>td]:dark:bg-white/10",
@@ -41,7 +41,7 @@ Tr.displayName = "Tr";
 export const Th = React.forwardRef<HTMLTableCellElement, React.ComponentPropsWithoutRef<"th">>(
   ({ children, className, ...props }, ref) => (
     <th
-      className={twMerge(
+      className={cn(
         TABLE_CELL_BORDER_CLASSNAME,
         TABLE_CELL_PADDING_CLASSNAME,
         TABLE_CELL_PRINT_CLASSNAME,
@@ -61,12 +61,7 @@ Th.displayName = "Th";
 export const Td = React.forwardRef<HTMLTableCellElement, React.ComponentPropsWithoutRef<"td">>(
   ({ children, className, ...props }, ref) => (
     <td
-      className={twMerge(
-        TABLE_CELL_BORDER_CLASSNAME,
-        TABLE_CELL_PADDING_CLASSNAME,
-        TABLE_CELL_PRINT_CLASSNAME,
-        className,
-      )}
+      className={cn(TABLE_CELL_BORDER_CLASSNAME, TABLE_CELL_PADDING_CLASSNAME, TABLE_CELL_PRINT_CLASSNAME, className)}
       {...props}
       ref={ref}
     >

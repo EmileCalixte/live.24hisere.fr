@@ -1,5 +1,5 @@
 import type React from "react";
-import { twMerge } from "tailwind-merge";
+import { cn } from "tailwind-variants";
 import { COMMON_INPUT_CLASSNAME } from "../../../constants/ui/input";
 
 interface TextAreaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -18,7 +18,7 @@ export function TextArea({
   return (
     <label className="flex flex-col">
       <span className={labelClassName}>{label}</span>
-      <textarea {...props} className={twMerge(COMMON_INPUT_CLASSNAME, "h-[5em]")} style={{ ...props.style, resize }} />
+      <textarea {...props} className={cn(COMMON_INPUT_CLASSNAME, "h-[5em]")} style={{ ...props.style, resize }} />
     </label>
   );
 }

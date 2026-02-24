@@ -1,6 +1,6 @@
 import React from "react";
 import { DrawerPreview as Primitive } from "@base-ui/react/drawer";
-import clsx from "clsx";
+import { cn } from "tailwind-variants";
 
 export type DrawerOpenDirection = "left" | "right" | "up" | "down";
 
@@ -20,7 +20,7 @@ export const DrawerContent = React.forwardRef<
     <Primitive.Portal>
       <Primitive.Backdrop className="fixed inset-0 z-10 min-h-dvh bg-black/50 opacity-[calc(1-var(--drawer-swipe-progress))] transition-opacity duration-250 ease-out data-ending-style:opacity-0 data-ending-style:duration-[calc(var(--drawer-swipe-strength)*400ms)] data-starting-style:opacity-0 data-swiping:duration-0 supports-[-webkit-touch-callout:none]:absolute dark:bg-black/75" />
       <Primitive.Viewport
-        className={clsx(
+        className={cn(
           "fixed inset-0 z-10 flex items-stretch p-0",
           openDirection === "right" && "justify-end",
           openDirection === "left" && "justify-start",
@@ -29,7 +29,7 @@ export const DrawerContent = React.forwardRef<
         )}
       >
         <Primitive.Popup
-          className={clsx(
+          className={cn(
             "touch-auto overflow-y-auto overscroll-contain bg-white transition-transform duration-250 ease-out [--bleed:3rem] data-ending-style:duration-[calc(var(--drawer-swipe-strength)*250ms)] data-swiping:select-none dark:bg-neutral-800",
             isHorizontal
               && "h-full max-w-[calc(100vw-3rem+3rem)] transform-[translateX(var(--drawer-swipe-movement-x))]",
