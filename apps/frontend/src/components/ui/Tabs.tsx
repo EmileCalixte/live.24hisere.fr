@@ -20,7 +20,7 @@ export const TabList = React.forwardRef<
     <Primitive.Indicator
       className={cn(
         "rounded-sm bg-active-item",
-        "absolute top-px left-0 h-(--active-tab-height) w-(--active-tab-width)",
+        "absolute top-0 left-0 h-(--active-tab-height) w-(--active-tab-width)",
         "translate-x-(--active-tab-left) translate-y-(--active-tab-top)",
         "transition-all duration-150 ease-out",
       )}
