@@ -1,6 +1,6 @@
 import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { appContext } from "../../../contexts/AppContext";
+import { userContext } from "../../../contexts/UserContext";
 import CircularLoader from "../../ui/CircularLoader";
 import CreateCustomRunerCategoryAdminView from "./customRunnerCategories/CreateCustomRunnerCategoryAdminView";
 import CustomRunnerCategoriesAdminView from "./customRunnerCategories/CustomRunnerCategoriesAdminView";
@@ -23,7 +23,7 @@ import RunnerDetailsAdminView from "./runners/RunnerDetailsAdminView";
 import RunnersAdminView from "./runners/RunnersAdminView";
 
 export default function Admin(): React.ReactElement {
-  const { user } = React.useContext(appContext).user;
+  const { user } = React.useContext(userContext);
 
   if (user === null) {
     return <Navigate to="/" />;

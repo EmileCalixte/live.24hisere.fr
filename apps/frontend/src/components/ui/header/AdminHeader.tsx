@@ -1,12 +1,11 @@
 import React from "react";
-import { appContext } from "../../../contexts/AppContext";
+import { appDataContext } from "../../../contexts/AppDataContext";
+import { userContext } from "../../../contexts/UserContext";
 import AdminHeaderUserDropdown from "./AdminHeaderUserDropdown";
 
 export default function AdminHeader(): React.ReactElement {
-  const {
-    user: { user },
-    appData: { isAppEnabled },
-  } = React.useContext(appContext);
+  const { user } = React.useContext(userContext);
+  const { isAppEnabled } = React.useContext(appDataContext);
 
   if (!user) {
     throw new Error("User is not defined");

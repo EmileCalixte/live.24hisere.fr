@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { PublicRace, RaceRunnerWithProcessedPassages } from "@live24hisere/core/types";
 import { TrackedEvent } from "../../../constants/eventTracking/customEventNames";
 import { RUNNER_DETAILS_LAPS_SORT_COLUMNS, SortColumn, SortDirection } from "../../../constants/sort";
-import { appContext } from "../../../contexts/AppContext";
+import { appDataContext } from "../../../contexts/AppDataContext";
 import { useSortQueryString } from "../../../hooks/queryString/useSortQueryString";
 import { useRaceTime } from "../../../hooks/useRaceTime";
 import { useWindowDimensions } from "../../../hooks/useWindowDimensions";
@@ -30,7 +30,7 @@ export default function RunnerDetailsLaps({
   race,
   exportRunnerToXlsx,
 }: RunnerDetailsLapsProps): React.ReactElement {
-  const { serverTimeOffset } = React.useContext(appContext).appData;
+  const { serverTimeOffset } = React.useContext(appDataContext);
 
   const { sortColumn, sortDirection, setSortColumn, setSortDirection } = useSortQueryString(
     RUNNER_DETAILS_LAPS_SORT_COLUMNS,

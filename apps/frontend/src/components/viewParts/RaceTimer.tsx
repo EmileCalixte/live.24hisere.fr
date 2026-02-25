@@ -1,7 +1,6 @@
-import type React from "react";
-import { useContext, useMemo } from "react";
+import React from "react";
 import type { PublicRace } from "@live24hisere/core/types";
-import { appContext } from "../../contexts/AppContext";
+import { appDataContext } from "../../contexts/AppDataContext";
 import { useRaceTime } from "../../hooks/useRaceTime";
 import { formatMsAsDuration } from "../../utils/durationUtils";
 import { isRaceFinished, isRaceStarted } from "../../utils/raceUtils";
@@ -12,11 +11,11 @@ interface RaceTimerProps {
 }
 
 export default function RaceTimer({ race, allowNegative = false }: RaceTimerProps): React.ReactElement {
-  const { serverTimeOffset } = useContext(appContext).appData;
+  const { serverTimeOffset } = React.useContext(appDataContext);
 
   const raceTime = useRaceTime(race, serverTimeOffset);
 
-  const formattedRaceTime = useMemo(() => {
+  const formattedRaceTime = React.useMemo(() => {
     if (!isRaceStarted(race, serverTimeOffset) && !allowNegative) {
       return formatMsAsDuration(0);
     }

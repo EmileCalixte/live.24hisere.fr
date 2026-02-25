@@ -4,13 +4,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { MdSunny } from "react-icons/md";
 import { TrackedEvent } from "../../../constants/eventTracking/customEventNames";
 import { Theme } from "../../../constants/theme";
-import { appContext } from "../../../contexts/AppContext";
+import { themeContext } from "../../../contexts/ThemeContext";
 import { trackEvent } from "../../../utils/eventTracking/eventTrackingUtils";
 
 export function HeaderThemeButton(): React.ReactElement {
-  const {
-    theme: { theme, setTheme },
-  } = React.useContext(appContext);
+  const { theme, setTheme } = React.useContext(themeContext);
 
   const onClick: React.MouseEventHandler<HTMLButtonElement> = () => {
     if (theme === Theme.DARK) {

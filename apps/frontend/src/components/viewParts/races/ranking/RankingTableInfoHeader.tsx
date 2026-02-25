@@ -1,7 +1,7 @@
 import React from "react";
 import { GENDER } from "@live24hisere/core/constants";
 import type { GenderWithMixed, PublicRace } from "@live24hisere/core/types";
-import { appContext } from "../../../../contexts/AppContext";
+import { appDataContext } from "../../../../contexts/AppDataContext";
 import { formatMsAsDuration } from "../../../../utils/durationUtils";
 import { isRaceFinished } from "../../../../utils/raceUtils";
 import { TABLE_HEADER_BG_CLASSNAME, Td } from "../../../ui/Table";
@@ -20,7 +20,7 @@ export default function RankingTableInfoHeader({
   tableGender,
   tableRaceDuration,
 }: RankingTableInfoHeaderProps): React.ReactElement {
-  const { serverTimeOffset } = React.useContext(appContext).appData;
+  const { serverTimeOffset } = React.useContext(appDataContext);
 
   return (
     <Td colSpan={42} className={TABLE_HEADER_BG_CLASSNAME}>

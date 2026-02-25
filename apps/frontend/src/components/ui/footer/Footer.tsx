@@ -1,16 +1,14 @@
-import type React from "react";
-import { useContext } from "react";
+import React from "react";
 import { TrackedEvent } from "../../../constants/eventTracking/customEventNames";
-import { appContext } from "../../../contexts/AppContext";
+import { appDataContext } from "../../../contexts/AppDataContext";
+import { userContext } from "../../../contexts/UserContext";
 import { trackEvent } from "../../../utils/eventTracking/eventTrackingUtils";
 import { formatDateAsString } from "../../../utils/utils";
 import { Link } from "../Link";
 
 export default function Footer(): React.ReactElement {
-  const {
-    appData: { lastUpdateTime, isAppEnabled },
-    user: { user },
-  } = useContext(appContext);
+  const { lastUpdateTime, isAppEnabled } = React.useContext(appDataContext);
+  const { user } = React.useContext(userContext);
 
   return (
     <footer

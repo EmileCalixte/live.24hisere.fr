@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import type { AdminRunner } from "@live24hisere/core/types";
-import { appContext } from "../../../../contexts/AppContext";
+import { userContext } from "../../../../contexts/UserContext";
 import { useGetAdminCustomRunnerCategories } from "../../../../hooks/api/requests/admin/customRunnerCategories/useGetAdminCustomRunnerCategories";
 import { useGetAdminEdition } from "../../../../hooks/api/requests/admin/editions/useGetAdminEdition";
 import { usePostAdminRaceRunner } from "../../../../hooks/api/requests/admin/participants/usePostAdminRaceRunner";
@@ -23,7 +23,7 @@ import ParticipantDetailsForm from "../../../viewParts/admin/participants/Partic
 export default function CreateParticipantAdminView(): React.ReactElement {
   const navigate = useNavigate();
 
-  const { accessToken } = React.useContext(appContext).user;
+  const { accessToken } = React.useContext(userContext);
 
   const { raceId: urlRaceId } = useRequiredParams(["raceId"]);
 

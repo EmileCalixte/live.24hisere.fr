@@ -1,6 +1,6 @@
 import React from "react";
-import { appContext } from "../../contexts/AppContext";
+import { userContext } from "../../contexts/UserContext";
 
 export function useAccessToken(): string | null {
-  return React.useContext(appContext).user.accessToken;
+  return React.useContext(userContext).accessToken;
 }

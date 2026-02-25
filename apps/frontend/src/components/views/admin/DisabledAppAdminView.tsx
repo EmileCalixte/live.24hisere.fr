@@ -1,6 +1,6 @@
 import React from "react";
 import DOMPurify from "dompurify";
-import { appContext } from "../../../contexts/AppContext";
+import { appDataContext } from "../../../contexts/AppDataContext";
 import { useGetDisabledAppData } from "../../../hooks/api/requests/admin/config/useGetDisabledAppData";
 import { usePatchDisabledAppData } from "../../../hooks/api/requests/admin/config/usePatchDisabledAppData";
 import { getDisabledAppBreadcrumbs } from "../../../services/breadcrumbs/breadcrumbService";
@@ -13,9 +13,7 @@ import Page from "../../ui/Page";
 import { Separator } from "../../ui/Separator";
 
 export default function DisabledAppAdminView(): React.ReactElement {
-  const {
-    appData: { setIsAppEnabled: setAppDataIsAppEnabled },
-  } = React.useContext(appContext);
+  const { setIsAppEnabled: setAppDataIsAppEnabled } = React.useContext(appDataContext);
 
   const getDisabledAppDataQuery = useGetDisabledAppData();
   const disabledAppData = getDisabledAppDataQuery.data;
