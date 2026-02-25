@@ -3,7 +3,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { GENDER } from "@live24hisere/core/constants";
 import type { Gender } from "@live24hisere/core/types";
 import { COUNTRY_NULL_OPTION_VALUE } from "../../../../constants/forms";
-import { appContext } from "../../../../contexts/AppContext";
+import { userContext } from "../../../../contexts/UserContext";
 import { useGetAdminEditions } from "../../../../hooks/api/requests/admin/editions/useGetAdminEditions";
 import { useGetAdminRunnerParticipations } from "../../../../hooks/api/requests/admin/participants/useGetAdminRunnerParticipations";
 import { useGetAdminRaces } from "../../../../hooks/api/requests/admin/races/useGetAdminRaces";
@@ -25,7 +25,7 @@ import RunnerParticipationsTable from "../../../viewParts/admin/runners/RunnerPa
 export default function RunnerDetailsAdminView(): React.ReactElement {
   const navigate = useNavigate();
 
-  const { accessToken } = React.useContext(appContext).user;
+  const { accessToken } = React.useContext(userContext);
 
   const { runnerId: urlRunnerId } = useRequiredParams(["runnerId"]);
 

@@ -2,7 +2,7 @@ import React from "react";
 import { GENDER } from "@live24hisere/core/constants";
 import type { PublicRace } from "@live24hisere/core/types";
 import { NO_VALUE_PLACEHOLDER } from "../../../constants/misc";
-import { appContext } from "../../../contexts/AppContext";
+import { appDataContext } from "../../../contexts/AppDataContext";
 import { useGetRunnerCategory } from "../../../hooks/useGetRunnerCategory";
 import type { Ranking, RankingRunner, RankingRunnerGap } from "../../../types/Ranking";
 import { isRaceFinished } from "../../../utils/raceUtils";
@@ -24,7 +24,7 @@ export default function RunnerDetailsStatsRankingTable({
   runner,
   ranking,
 }: RunnerDetailsStatsGapsTableProps): React.ReactElement {
-  const { serverTimeOffset } = React.useContext(appContext).appData;
+  const { serverTimeOffset } = React.useContext(appDataContext);
 
   const getCategory = useGetRunnerCategory();
 

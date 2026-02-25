@@ -6,7 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { stringUtils } from "@live24hisere/utils";
 import { TrackedEvent } from "../../constants/eventTracking/customEventNames";
 import { SearchParam } from "../../constants/searchParams";
-import { appContext } from "../../contexts/AppContext";
+import { appDataContext } from "../../contexts/AppDataContext";
 import { useGetPublicEditions } from "../../hooks/api/requests/public/editions/useGetPublicEditions";
 import { useGetPublicRunnerParticipations } from "../../hooks/api/requests/public/participants/useGetPublicRunnerParticipations";
 import { useGetPublicRaces } from "../../hooks/api/requests/public/races/useGetPublicRaces";
@@ -35,7 +35,7 @@ import RunnerDetailsStats from "../viewParts/runnerDetails/RunnerDetailsStats";
 import RunnerSelector from "../viewParts/runnerDetails/RunnerSelector";
 
 export default function RunnerDetailsView(): React.ReactElement {
-  const { serverTimeOffset } = React.useContext(appContext).appData;
+  const { serverTimeOffset } = React.useContext(appDataContext);
 
   const { runnerId } = useParams(); // This param is optional, undefined if no runner selected
 

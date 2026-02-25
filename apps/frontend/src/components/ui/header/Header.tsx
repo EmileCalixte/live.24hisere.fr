@@ -1,7 +1,9 @@
 import React from "react";
 import { RESPONSIVE_MENU_BREAKPOINT_PX } from "../../../constants/ui/navMenu";
-import { appContext } from "../../../contexts/AppContext";
+import { appDataContext } from "../../../contexts/AppDataContext";
+import { fetchLoaderContext } from "../../../contexts/FetchLoaderContext";
 import { navMenuContext } from "../../../contexts/NavMenuContext";
+import { userContext } from "../../../contexts/UserContext";
 import { useWindowDimensions } from "../../../hooks/useWindowDimensions";
 import { Card } from "../Card";
 import AdminHeader from "./AdminHeader";
@@ -11,11 +13,9 @@ import { HeaderResponsiveMenuButton } from "./HeaderResponsiveMenuButton";
 import { HeaderThemeButton } from "./HeaderThemeButton";
 
 export default function Header(): React.ReactElement {
-  const {
-    user: { user },
-    headerFetchLoader: { fetchLevel },
-    appData: { fetchError, isAppEnabled },
-  } = React.useContext(appContext);
+  const { user } = React.useContext(userContext);
+  const { fetchLevel } = React.useContext(fetchLoaderContext);
+  const { fetchError, isAppEnabled } = React.useContext(appDataContext);
 
   const { showResponsiveNavMenu, setShowResponsiveNavMenu } = React.useContext(navMenuContext);
 

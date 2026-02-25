@@ -2,7 +2,7 @@ import React from "react";
 import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { PublicUser } from "@live24hisere/core/types";
-import { appContext } from "../../../contexts/AppContext";
+import { userContext } from "../../../contexts/UserContext";
 import { DropdownMenu, DropdownMenuItem, DropdownMenuPopup, DropdownMenuTrigger } from "../DropdownMenu";
 
 interface AdminHeaderUserDropdownProps {
@@ -10,7 +10,7 @@ interface AdminHeaderUserDropdownProps {
 }
 
 export default function AdminHeaderUserDropdown({ user }: AdminHeaderUserDropdownProps): React.ReactElement {
-  const { logout } = React.useContext(appContext).user;
+  const { logout } = React.useContext(userContext);
 
   const [isOpened, setIsOpened] = React.useState(false);
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
-import { appContext } from "../../contexts/AppContext";
+import { userContext } from "../../contexts/UserContext";
 import { useLogin } from "../../hooks/api/requests/auth/useLogin";
 import type { FormSubmitEventHandler } from "../../types/utils/react";
 import { Card } from "../ui/Card";
@@ -9,7 +9,7 @@ import { Input } from "../ui/forms/Input";
 import Page from "../ui/Page";
 
 export default function LoginView(): React.ReactElement {
-  const { accessToken, saveAccessToken, setUser } = React.useContext(appContext).user;
+  const { accessToken, saveAccessToken, setUser } = React.useContext(userContext);
 
   const loginMutation = useLogin();
 

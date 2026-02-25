@@ -7,7 +7,7 @@ import { TrackedEvent } from "../../../../constants/eventTracking/customEventNam
 import { RankingTimeMode } from "../../../../constants/rankingTimeMode";
 import { SearchParam } from "../../../../constants/searchParams";
 import { WINDOW_WIDTH_BREAKPOINTS } from "../../../../constants/ui/sizing";
-import { appContext } from "../../../../contexts/AppContext";
+import { appDataContext } from "../../../../contexts/AppDataContext";
 import { racesViewContext } from "../../../../contexts/RacesViewContext";
 import { useRankingTimeQueryString } from "../../../../hooks/queryString/useRankingTimeQueryString";
 import { useProcessedRunners } from "../../../../hooks/runners/useProcessedRunners";
@@ -28,7 +28,7 @@ const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = WINDOW_WIDTH_BREAKPOINTS.XL;
 
 export function RankingTabContent(): React.ReactElement {
   const { selectedRace, selectedRaceRunners } = React.useContext(racesViewContext);
-  const { serverTimeOffset, customRunnerCategories } = React.useContext(appContext).appData;
+  const { serverTimeOffset, customRunnerCategories } = React.useContext(appDataContext);
 
   const [selectedCategoryCode, setSelectedCategory] = useQueryState(SearchParam.CATEGORY);
   const [selectedGender, setSelectedGender] = useQueryState(SearchParam.GENDER, parseAsGender);
