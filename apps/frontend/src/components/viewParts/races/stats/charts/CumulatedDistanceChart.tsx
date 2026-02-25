@@ -52,8 +52,10 @@ export function CumulatedDistanceChart({
 
     const raceDurationMs = race.duration * 1000;
 
-    let cumulatedDistance = 0;
-    const points: Array<{ x: number; y: number }> = [{ x: 0, y: 0 }];
+    // Aggregate lap distances by timestamp: passages sharing the same lapEndRaceTime
+    // are merged into a single datapoint to avoid duplicate x values, which would cause
+    // inconsistent tooltip behaviour and unnecessary rendered points.
+    const distanceByTime = new Map<number, number>();
 
     for (const passage of sorted) {
       const raceTime = passage.processed.lapEndRaceTime;
@@ -65,7 +67,14 @@ export function CumulatedDistanceChart({
         continue;
       }
 
-      cumulatedDistance += passage.processed.lapDistance;
+      distanceByTime.set(raceTime, (distanceByTime.get(raceTime) ?? 0) + passage.processed.lapDistance);
+    }
+
+    let cumulatedDistance = 0;
+    const points: Array<{ x: number; y: number }> = [{ x: 0, y: 0 }];
+
+    for (const [raceTime, lapDistance] of distanceByTime) {
+      cumulatedDistance += lapDistance;
       points.push({ x: raceTime, y: cumulatedDistance });
     }
 
@@ -74,7 +83,7 @@ export function CumulatedDistanceChart({
     }
 
     return points;
-  }, [passages, race.duration, race.isImmediateStop, finalCumulatedDistance]);
+  }, [passages, race, finalCumulatedDistance]);
 
   const data = React.useMemo<ChartData<"line">>(
     () => ({
@@ -98,10 +107,11 @@ export function CumulatedDistanceChart({
 
     // If the race stops immediately at the end, the last datapoint is the race end time.
     // Otherwise (runners finish their current lap), the chart ends at the last passage time,
-    // but always at least at the race end time.
-    const xMax = race.isImmediateStop
-      ? race.duration * 1000
-      : Math.max(chartPoints[chartPoints.length - 1]?.x ?? 0, race.duration * 1000);
+    // but always at least at the race end time (including when there are no passages yet).
+    const xMax =
+      race.isImmediateStop || chartPoints.length <= 1
+        ? race.duration * 1000
+        : Math.max(chartPoints[chartPoints.length - 1].x, race.duration * 1000);
 
     return {
       responsive: true,
@@ -161,7 +171,7 @@ export function CumulatedDistanceChart({
         },
       },
     };
-  }, [race.duration, race.isImmediateStop, chartPoints, windowWidth, legendColor, gridColor]);
+  }, [race, chartPoints, windowWidth, legendColor, gridColor]);
 
   return (
     <div style={{ minHeight: 300 }}>
