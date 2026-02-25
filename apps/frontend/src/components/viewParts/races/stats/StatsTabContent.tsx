@@ -5,6 +5,7 @@ import { GENDER } from "@live24hisere/core/constants";
 import type { GenderWithMixed, ProcessedPassage } from "@live24hisere/core/types";
 import { compareUtils, objectUtils } from "@live24hisere/utils";
 import { SearchParam } from "../../../../constants/searchParams";
+import { appDataContext } from "../../../../contexts/AppDataContext";
 import { racesViewContext } from "../../../../contexts/RacesViewContext";
 import { useProcessedRunners } from "../../../../hooks/runners/useProcessedRunners";
 import { useGetRunnerCategory } from "../../../../hooks/useGetRunnerCategory";
@@ -18,11 +19,13 @@ import { Tab, TabList, Tabs } from "../../../ui/Tabs";
 import { AverageSpeedPerTimeSlotChart } from "./charts/AverageSpeedPerTimeSlotChart";
 import { type CategoryDistribution, CategoryDistributionChart } from "./charts/CategoryDistributionChart";
 import { type CountryDistribution, CountryDistributionChart } from "./charts/CountryDistributionChart";
+import { CumulatedDistanceChart } from "./charts/CumulatedDistanceChart";
 import { type CategoryGenderDistribution, GenderCountPerCategoryChart } from "./charts/GenderCountPerCategoryChart";
 import { PassageCountPerTimeSlotChart } from "./charts/PassageCountPerTimeSlotChart";
 import { StartingRunnersDistributionChart } from "./charts/StartingRunnersDistributionChart";
 
 export function StatsTabContent(): React.ReactElement {
+  const { serverTimeOffset } = React.useContext(appDataContext);
   const { selectedRace, selectedEdition, selectedRaceRunners } = React.useContext(racesViewContext);
 
   const [selectedGender, setSelectedGender] = useQueryState(SearchParam.GENDER, parseAsGender);
@@ -37,7 +40,7 @@ export function StatsTabContent(): React.ReactElement {
   const processedRunners = useProcessedRunners(
     selectedRaceRunners,
     selectedRace,
-    !!selectedRace && isRaceFinished(selectedRace),
+    !!selectedRace && isRaceFinished(selectedRace, serverTimeOffset),
   );
 
   const runnerCount = processedRunners?.length ?? 0;
@@ -240,6 +243,15 @@ export function StatsTabContent(): React.ReactElement {
                 runners={processedRunners}
                 timeSlotDuration={600000}
                 mode={selectedAvgSpeedChartMode}
+              />
+            </div>
+
+            <div className="text-center">
+              <h4>Distance cumulée</h4>
+              <CumulatedDistanceChart
+                race={selectedRace}
+                passages={allPassages}
+                finalCumulatedDistance={isRaceFinished(selectedRace, serverTimeOffset) ? cumulatedDistance : undefined}
               />
             </div>
           </section>
