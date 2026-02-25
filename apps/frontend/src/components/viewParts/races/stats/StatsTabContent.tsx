@@ -18,6 +18,7 @@ import { Tab, TabList, Tabs } from "../../../ui/Tabs";
 import { AverageSpeedPerTimeSlotChart } from "./charts/AverageSpeedPerTimeSlotChart";
 import { type CategoryDistribution, CategoryDistributionChart } from "./charts/CategoryDistributionChart";
 import { type CountryDistribution, CountryDistributionChart } from "./charts/CountryDistributionChart";
+import { CumulatedDistanceChart } from "./charts/CumulatedDistanceChart";
 import { type CategoryGenderDistribution, GenderCountPerCategoryChart } from "./charts/GenderCountPerCategoryChart";
 import { PassageCountPerTimeSlotChart } from "./charts/PassageCountPerTimeSlotChart";
 import { StartingRunnersDistributionChart } from "./charts/StartingRunnersDistributionChart";
@@ -240,6 +241,15 @@ export function StatsTabContent(): React.ReactElement {
                 runners={processedRunners}
                 timeSlotDuration={600000}
                 mode={selectedAvgSpeedChartMode}
+              />
+            </div>
+
+            <div className="text-center">
+              <h4>Distance cumulée</h4>
+              <CumulatedDistanceChart
+                race={selectedRace}
+                passages={allPassages}
+                finalCumulatedDistance={cumulatedDistance}
               />
             </div>
           </section>
