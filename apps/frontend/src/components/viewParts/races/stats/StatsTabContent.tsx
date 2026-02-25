@@ -5,6 +5,7 @@ import { GENDER } from "@live24hisere/core/constants";
 import type { GenderWithMixed, ProcessedPassage } from "@live24hisere/core/types";
 import { compareUtils, objectUtils } from "@live24hisere/utils";
 import { SearchParam } from "../../../../constants/searchParams";
+import { appDataContext } from "../../../../contexts/AppDataContext";
 import { racesViewContext } from "../../../../contexts/RacesViewContext";
 import { useProcessedRunners } from "../../../../hooks/runners/useProcessedRunners";
 import { useGetRunnerCategory } from "../../../../hooks/useGetRunnerCategory";
@@ -24,6 +25,7 @@ import { PassageCountPerTimeSlotChart } from "./charts/PassageCountPerTimeSlotCh
 import { StartingRunnersDistributionChart } from "./charts/StartingRunnersDistributionChart";
 
 export function StatsTabContent(): React.ReactElement {
+  const { serverTimeOffset } = React.useContext(appDataContext);
   const { selectedRace, selectedEdition, selectedRaceRunners } = React.useContext(racesViewContext);
 
   const [selectedGender, setSelectedGender] = useQueryState(SearchParam.GENDER, parseAsGender);
@@ -38,7 +40,7 @@ export function StatsTabContent(): React.ReactElement {
   const processedRunners = useProcessedRunners(
     selectedRaceRunners,
     selectedRace,
-    !!selectedRace && isRaceFinished(selectedRace),
+    !!selectedRace && isRaceFinished(selectedRace, serverTimeOffset),
   );
 
   const runnerCount = processedRunners?.length ?? 0;
@@ -249,7 +251,7 @@ export function StatsTabContent(): React.ReactElement {
               <CumulatedDistanceChart
                 race={selectedRace}
                 passages={allPassages}
-                finalCumulatedDistance={cumulatedDistance}
+                finalCumulatedDistance={isRaceFinished(selectedRace, serverTimeOffset) ? cumulatedDistance : undefined}
               />
             </div>
           </section>

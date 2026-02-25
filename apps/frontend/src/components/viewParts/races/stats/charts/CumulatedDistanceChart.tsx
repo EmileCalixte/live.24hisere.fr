@@ -28,9 +28,11 @@ interface CumulatedDistanceChartProps {
   race: PublicRace;
   passages: ProcessedPassage[];
   /**
-   * The total cumulated distance of all runners, in meters
+   * The total cumulated distance of all runners, in meters.
+   * When provided, a final datapoint is added at the race end time with this value.
+   * Should only be provided when the race is finished.
    */
-  finalCumulatedDistance: number;
+  finalCumulatedDistance: number | undefined;
 }
 
 export function CumulatedDistanceChart({
@@ -67,7 +69,7 @@ export function CumulatedDistanceChart({
       points.push({ x: raceTime, y: cumulatedDistance });
     }
 
-    if (race.isImmediateStop) {
+    if (race.isImmediateStop && finalCumulatedDistance) {
       points.push({ x: raceDurationMs, y: finalCumulatedDistance });
     }
 
@@ -95,10 +97,11 @@ export function CumulatedDistanceChart({
     const stepSize = Math.max(getXAxisDateInterval(race.duration, windowWidth) * 60 * 1000, 3_600_000);
 
     // If the race stops immediately at the end, the last datapoint is the race end time.
-    // Otherwise (runners finish their current lap), the chart ends at the last passage time.
+    // Otherwise (runners finish their current lap), the chart ends at the last passage time,
+    // but always at least at the race end time.
     const xMax = race.isImmediateStop
       ? race.duration * 1000
-      : (chartPoints[chartPoints.length - 1]?.x ?? race.duration * 1000);
+      : Math.max(chartPoints[chartPoints.length - 1]?.x ?? 0, race.duration * 1000);
 
     return {
       responsive: true,
