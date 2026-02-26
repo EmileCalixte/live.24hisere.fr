@@ -308,7 +308,7 @@ export function areRunnersEqual(
  * @param label an optional callback function to format the label
  */
 export function getRunnersSelectOptions<TRunner extends PublicRunner>(
-  runners: TRunner[] | false,
+  runners: TRunner[] | undefined,
   label?: (runner: TRunner) => string,
 ): SelectOption[] {
   if (!runners) {

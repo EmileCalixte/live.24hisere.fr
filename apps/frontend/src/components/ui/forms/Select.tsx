@@ -8,8 +8,8 @@ export interface SelectProps<
   label: string;
   options: Array<SelectOption<TValue>>;
   isLoading?: boolean;
-  loadingOptionLabel?: string;
-  placeholderLabel?: string;
+  loadingOptionLabel?: string | undefined;
+  placeholderLabel?: string | undefined;
   value?: TValue | undefined;
   selectRef?: React.Ref<HTMLSelectElement>;
 }

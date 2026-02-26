@@ -1,3 +1,4 @@
+import type { PublicEdition } from "./Edition";
 import type { RaceRunner } from "./Runner";
 import type { DateISOString } from "./utils/dates";
 
@@ -51,6 +52,16 @@ export interface PublicRace {
   isBasicRanking: boolean;
 }
 
+export type RaceWithEdition<
+  TRace extends PublicRace = PublicRace,
+  TEdition extends PublicEdition = PublicEdition,
+> = TRace & {
+  /**
+   * The edition to which the race belongs to
+   */
+  edition: TEdition;
+};
+
 /**
  * An object representing a race with additional admin properties
  */
@@ -59,11 +70,6 @@ export type AdminRace<TRace extends PublicRace = PublicRace> = TRace & {
    * Whether the race is publicly displayed or not
    */
   isPublic: boolean;
-
-  /**
-   * The ID of the edition the race belongs to
-   */
-  editionId: number;
 };
 
 export type AdminRaceWithOrder<TRace extends AdminRace = AdminRace> = TRace & {

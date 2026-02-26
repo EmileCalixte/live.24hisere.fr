@@ -1,6 +1,6 @@
-import React from "react";
+import type React from "react";
 import type { PublicRunner } from "@live24hisere/core/types";
-import { compareUtils } from "@live24hisere/utils";
+import { useNameSortedRunners } from "../../../hooks/runners/useNameSortedRunners";
 import { getRunnersSelectOptions } from "../../../utils/runnerUtils";
 import Select from "../../ui/forms/Select";
 
@@ -15,13 +15,7 @@ export default function RunnerSelector({
   onSelectRunner,
   selectedRunnerId,
 }: RunnerSelectorProps): React.ReactElement {
-  const sortedRunners = React.useMemo<PublicRunner[] | false>(() => {
-    if (!runners) {
-      return false;
-    }
-
-    return [...runners].sort((a, b) => compareUtils.spaceship(a.lastname + a.firstname, b.lastname + b.firstname));
-  }, [runners]);
+  const sortedRunners = useNameSortedRunners(runners);
 
   const selectOptions = getRunnersSelectOptions(
     sortedRunners,
