@@ -8,7 +8,7 @@ import { Checkbox } from "../../../ui/forms/Checkbox";
 import DurationInputs from "../../../ui/forms/DurationInputs";
 import { Input } from "../../../ui/forms/Input";
 import Select from "../../../ui/forms/Select";
-import InfoIconTooltip from "../../../ui/InfoIconTooltip";
+import InfoIconPopover from "../../../ui/InfoIconPopover";
 
 interface RaceDetailsFormProps {
   onSubmit: FormSubmitEventHandler;
@@ -174,7 +174,7 @@ export default function RaceDetailsForm({
         label={
           <span className="inline-flex gap-2">
             Arrêt immédiat
-            <InfoIconTooltip tooltipText="Si oui, les coureurs s'arrêtent immédiatement à la fin de la course. Si non, ils terminent leur tour en cours à la fin de la course." />
+            <InfoIconPopover popoverText="Si oui, les coureurs s'arrêtent immédiatement à la fin de la course. Si non, ils terminent leur tour en cours à la fin de la course." />
           </span>
         }
         checked={isImmediateStop}

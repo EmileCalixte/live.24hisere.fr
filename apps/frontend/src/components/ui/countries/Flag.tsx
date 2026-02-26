@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/static-components */
 import React from "react";
 import { getCountryName } from "../../../utils/countryUtils";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../Tooltip";
+import { Popover, PopoverContent, PopoverTrigger } from "../Popover";
 
 interface FlagProps {
   /**
@@ -60,13 +60,13 @@ export function Flag({
   );
 
   return countryName ? (
-    <Tooltip>
-      <TooltipTrigger>
+    <Popover>
+      <PopoverTrigger openOnHover={true} delay={0}>
         <Flag />
-      </TooltipTrigger>
+      </PopoverTrigger>
 
-      <TooltipContent>{countryName}</TooltipContent>
-    </Tooltip>
+      <PopoverContent>{countryName}</PopoverContent>
+    </Popover>
   ) : (
     <Flag />
   );

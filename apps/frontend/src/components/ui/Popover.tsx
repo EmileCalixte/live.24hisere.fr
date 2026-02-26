@@ -1,5 +1,5 @@
 import React from "react";
-import { Tooltip as Primitive } from "@base-ui/react/tooltip";
+import { Popover as Primitive } from "@base-ui/react/popover";
 import { cn } from "tailwind-variants";
 
 const CONTENT_STYLE_CLASSNAME =
@@ -7,11 +7,10 @@ const CONTENT_STYLE_CLASSNAME =
 const CONTENT_ANIMATION_CLASSNAME =
   "will-change-[transform,opacity] data-[state=delayed-open]:data-[side=bottom]:animate-slideUpAndFade data-[state=delayed-open]:data-[side=left]:animate-slideRightAndFade data-[state=delayed-open]:data-[side=right]:animate-slideLeftAndFade data-[state=delayed-open]:data-[side=top]:animate-slideDownAndFade";
 
-export const TooltipProvider = Primitive.Provider;
-export const Tooltip = Primitive.Root;
-export const TooltipTrigger = Primitive.Trigger;
+export const Popover = Primitive.Root;
+export const PopoverTrigger = Primitive.Trigger;
 
-export const TooltipContent = React.forwardRef<
+export const PopoverContent = React.forwardRef<
   React.ComponentRef<typeof Primitive.Popup>,
   React.ComponentPropsWithoutRef<typeof Primitive.Popup>
 >(({ children, style, ...props }, ref) => (
@@ -33,7 +32,7 @@ export const TooltipContent = React.forwardRef<
     </Primitive.Positioner>
   </Primitive.Portal>
 ));
-TooltipContent.displayName = "TooltipContent";
+PopoverContent.displayName = "PopoverContent";
 
 function ArrowSvg(props: React.ComponentProps<"svg">): React.ReactElement {
   return (
