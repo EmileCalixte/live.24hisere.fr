@@ -5,7 +5,7 @@ import type { Ranking, RankingRunner } from "../../../types/Ranking";
 import { formatMsAsDuration, formatMsDurationHms } from "../../../utils/durationUtils";
 import { approximateTimeToDistance, getFastestLapPassage, getSlowestLapPassage } from "../../../utils/passageUtils";
 import { Card } from "../../ui/Card";
-import InfoIconTooltip from "../../ui/InfoIconTooltip";
+import InfoIconPopover from "../../ui/InfoIconPopover";
 import { Link } from "../../ui/Link";
 import { RunnerDetailsStatsLapCard } from "./RunnerDetailsStatsLapCard";
 import RunnerDetailsStatsRankingTable from "./RunnerDetailsStatsRankingTable";
@@ -72,7 +72,7 @@ export default function RunnerDetailsStats({ runner, race, ranking }: RunnerDeta
                 {hasInitialDistance && (
                   <>
                     <> </>
-                    <InfoIconTooltip tooltipText="Il s'agit du nombre de tours complets effectués. La distance initiale parcourue avant le premier passage du coureur au point de chronométrage n'est pas considérée comme un tour." />
+                    <InfoIconPopover popoverText="Il s'agit du nombre de tours complets effectués. La distance initiale parcourue avant le premier passage du coureur au point de chronométrage n'est pas considérée comme un tour." />
                   </>
                 )}
               </li>
@@ -113,7 +113,7 @@ export default function RunnerDetailsStats({ runner, race, ranking }: RunnerDeta
                 </strong>
                 <> </>
                 {!splitTime100Km.exact && (
-                  <InfoIconTooltip tooltipText="Il s'agit d'une estimation du temps de course auquel le coureur a atteint les 100 km, basée sur ses temps de passage au point de chronométrage avant et après." />
+                  <InfoIconPopover popoverText="Il s'agit d'une estimation du temps de course auquel le coureur a atteint les 100 km, basée sur ses temps de passage au point de chronométrage avant et après." />
                 )}
               </li>
             )}

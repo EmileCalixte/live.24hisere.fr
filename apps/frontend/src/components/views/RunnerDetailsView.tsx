@@ -27,7 +27,7 @@ import { Flag } from "../ui/countries/Flag";
 import Select from "../ui/forms/Select";
 import { Link } from "../ui/Link";
 import Page from "../ui/Page";
-import RunnerStoppedTooltip from "../ui/tooltips/RunnerStoppedTooltip";
+import RunnerStoppedPopover from "../ui/popovers/RunnerStoppedPopover";
 import RaceTimer from "../viewParts/RaceTimer";
 import SpeedChart from "../viewParts/runnerDetails/charts/SpeedChart";
 import RunnerDetailsLaps from "../viewParts/runnerDetails/RunnerDetailsLaps";
@@ -261,9 +261,9 @@ export default function RunnerDetailsView(): React.ReactElement {
             {selectedRace && !isRaceFinished(selectedRace, serverTimeOffset) && selectedRankingRunner?.stopped && (
               <p className="flex gap-2 font-bold text-red-600">
                 Coureur arrêté
-                <RunnerStoppedTooltip>
+                <RunnerStoppedPopover>
                   <FontAwesomeIcon icon={faCircleInfo} />
-                </RunnerStoppedTooltip>
+                </RunnerStoppedPopover>
               </p>
             )}
           </div>
