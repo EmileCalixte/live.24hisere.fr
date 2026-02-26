@@ -39,8 +39,8 @@ export function NavMenu(): React.ReactElement {
       },
       {
         title: "Outils",
-        items: [{ label: "Comparer des coureurs", to: "/compare-runners" }],
-        show: false,
+        items: [{ label: "Comparaison de coureurs", to: "/compare-runners" }],
+        show: true,
       },
       {
         title: "Administration",

@@ -16,6 +16,7 @@ import LoginView from "./views/LoginView";
 
 const Admin = React.lazy(async () => await import("./views/admin/Admin"));
 const About = React.lazy(async () => await import("./views/AboutView"));
+const CompareRunnersView = React.lazy(async () => await import("./views/CompareRunnersView"));
 const RacesView = React.lazy(async () => await import("./views/RacesView"));
 const RunnerDetailsView = React.lazy(async () => await import("./views/RunnerDetailsView"));
 const SearchRunnerView = React.lazy(async () => await import("./views/SearchRunnerView"));
@@ -73,6 +74,7 @@ function AppContent(): React.ReactElement {
                     <Route path="/runner-details" element={<RunnerDetailsView />} />
                     <Route path="/runner-details/search" element={<SearchRunnerView />} />
                     <Route path="/runner-details/:runnerId" element={<RunnerDetailsView />} />
+                    <Route path="/compare-runners" element={<CompareRunnersView />} />
 
                     {/* Redirect any unresolved route to /races */}
                     <Route path="*" element={<Navigate to="/races" replace />} />
