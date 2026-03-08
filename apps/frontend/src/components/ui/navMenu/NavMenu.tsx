@@ -1,4 +1,6 @@
 import React from "react";
+import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { NavLink } from "react-router-dom";
 import { cn } from "tailwind-variants";
 import { userContext } from "../../../contexts/UserContext";
@@ -92,7 +94,14 @@ export function NavMenu(): React.ReactElement {
                         target={item.external ? "_blank" : "_self"}
                         rel={item.external ? "noreferrer" : undefined}
                       >
-                        {item.label}
+                        {item.external ? (
+                          <span className="flex items-center gap-2">
+                            {item.label}
+                            <FontAwesomeIcon icon={faArrowUpRightFromSquare} className="text-xs" />
+                          </span>
+                        ) : (
+                          item.label
+                        )}
                       </NavLink>
                     </li>
                   ))}
