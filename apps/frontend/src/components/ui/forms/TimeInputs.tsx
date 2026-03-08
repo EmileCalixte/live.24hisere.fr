@@ -196,15 +196,24 @@ export default function TimeInputs({
       if (e.key !== "ArrowUp" && e.key !== "ArrowDown") return;
       // Prevent the default browser behaviour (cursor movement / page scroll).
       e.preventDefault();
+
       const delta = e.key === "ArrowUp" ? 1 : -1;
       const { h, m, s } = valuesRef.current;
-      commit(
-        (parseInt(h) || 0) + (field === "h" ? delta : 0),
-        (parseInt(m) || 0) + (field === "m" ? delta : 0),
-        (parseInt(s) || 0) + (field === "s" ? delta : 0),
-      );
+      const newH = (parseInt(h) || 0) + (field === "h" ? delta : 0);
+      const newM = (parseInt(m) || 0) + (field === "m" ? delta : 0);
+      const newS = (parseInt(s) || 0) + (field === "s" ? delta : 0);
+      const totalMs = (newH * 3600 + newM * 60 + newS) * 1000;
+
+      // Bail out when going below minTime instead of letting commit clamp:
+      // clamping would silently reset unrelated fields (e.g. ↓ on 0h 2m 4s
+      // would zero out minutes/seconds). Exceeding maxTime is fine to clamp.
+      if (totalMs < minTime) {
+        return;
+      }
+
+      commit(newH, newM, newS);
     },
-    [commit],
+    [commit, minTime],
   );
 
   // Selecting all text on focus lets the user immediately overwrite the value
