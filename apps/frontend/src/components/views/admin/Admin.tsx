@@ -9,7 +9,6 @@ import DisabledAppAdminView from "./DisabledAppAdminView";
 import CreateEditionAdminView from "./editions/CreateEditionAdminView";
 import EditionDetailsAdminView from "./editions/EditionDetailsAdminView";
 import EditionsAdminView from "./editions/EditionsAdminView";
-import FastestLapsAdminView from "./FastestLapsAdminView";
 import CreateParticipantAdminView from "./participants/CreateParticipantAdminView";
 import ParticipantDetailsAdminView from "./participants/ParticipantDetailsAdminView";
 import CreatePassageImportRuleAdminView from "./passageImportSettings/CreatePassageImportRuleAdminView";
@@ -49,7 +48,6 @@ export default function Admin(): React.ReactElement {
       <Route path="custom-runner-categories" element={<CustomRunnerCategoriesAdminView />} />
       <Route path="custom-runner-categories/create" element={<CreateCustomRunerCategoryAdminView />} />
       <Route path="custom-runner-categories/:categoryId" element={<CustomRunnerCategoryDetailsAdminView />} />
-      <Route path="fastest-laps" element={<FastestLapsAdminView />} />
       <Route path="passage-import-rules" element={<PassageImportRulesAdminView />} />
       <Route path="passage-import-rules/create" element={<CreatePassageImportRuleAdminView />} />
       <Route path="passage-import-rules/:ruleId" element={<PassageImportRuleDetailsAdminView />} />

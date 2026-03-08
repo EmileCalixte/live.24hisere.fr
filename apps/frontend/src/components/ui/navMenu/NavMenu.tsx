@@ -51,7 +51,6 @@ export function NavMenu(): React.ReactElement {
           { label: "Coureurs", to: "/runners" },
           { label: "Catégories personnalisées", to: "/custom-runner-categories" },
           { label: "Import de passages", to: "/passage-import-rules" },
-          { label: "Tours les plus rapides", to: "/fastest-laps" },
           { label: "Désactivation de l'accès à l'application", to: "/disabled-app" },
         ],
         show: !!user,
