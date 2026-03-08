@@ -17,7 +17,7 @@ import type { SelectOption } from "../types/Forms";
 import type { RankingRunnerGap } from "../types/Ranking";
 import { formatMsAsDuration, formatMsDurationHms } from "./durationUtils";
 import { getPaceFromSpeed, getSpeed } from "./mathUtils";
-import { getSortedPassages } from "./passageUtils";
+import { getTimeSortedPassages } from "./passageUtils";
 import { formatFloatNumber } from "./utils";
 
 export function getRaceRunnerFromRunnerAndParticipant<TRunner extends PublicRunner>(
@@ -64,7 +64,7 @@ export function getRunnerWithPassagesFromRunnerAndPassages<TRunner extends RaceR
 ): TRunner & { passages: TPassage[] } {
   return {
     ...runner,
-    passages: getSortedPassages(passages),
+    passages: getTimeSortedPassages(passages),
   };
 }
 

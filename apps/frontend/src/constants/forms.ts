@@ -3,6 +3,7 @@ import type { Gender, GenderWithMixed } from "@live24hisere/core/types";
 import type { SelectOption } from "../types/Forms";
 import { getCountryName } from "../utils/countryUtils";
 import { CATEGORY_SCRATCH } from "./category";
+import { FastestLapsShowMode } from "./fastestLapsShowMode";
 import { RankingTimeMode } from "./rankingTimeMode";
 
 export const CATEGORY_SCRATCH_SELECT_OPTION: SelectOption<"scratch"> = {
@@ -30,6 +31,11 @@ export const RANKING_TIME_MODE_OPTIONS: Array<SelectOption<RankingTimeMode>> = [
 export const RANKING_TIME_MODE_RACE_FINISHED_OPTIONS: Array<SelectOption<RankingTimeMode>> = [
   { label: "Classement final", value: RankingTimeMode.NOW },
   RANKING_TIME_MODE_AT_OPTION,
+];
+
+export const FASTEST_LAPS_SHOW_MODE_OPTIONS: Array<SelectOption<FastestLapsShowMode>> = [
+  { label: "Uniquement le meilleur tour de chaque coureur", value: FastestLapsShowMode.ONLY_BEST_ONE },
+  { label: "Tous les tours de tous les coureurs", value: FastestLapsShowMode.ALL },
 ];
 
 export const COUNTRY_OPTIONS: Array<SelectOption<string>> = [

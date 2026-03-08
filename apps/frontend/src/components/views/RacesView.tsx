@@ -16,20 +16,22 @@ import CircularLoader from "../ui/CircularLoader";
 import Select from "../ui/forms/Select";
 import Page from "../ui/Page";
 import { Tab, TabContent, TabList, Tabs } from "../ui/Tabs";
+import { FastestLapsTabContent } from "../viewParts/races/fastestLaps/FastestLapsTabContent";
 import { RankingTabContent } from "../viewParts/races/ranking/RankingTabContent";
 import { StatsTabContent } from "../viewParts/races/stats/StatsTabContent";
 
-const TAB_RANKING = "ranking";
-const TAB_STATS = "stats";
+const TAB_ID_RANKING = "ranking";
+const TAB_ID_STATS = "stats";
+const TAB_ID_FASTEST_LAPS = "fastestLaps";
 
-const TABS = [TAB_RANKING, TAB_STATS] as const;
+const TAB_IDS = [TAB_ID_RANKING, TAB_ID_STATS, TAB_ID_FASTEST_LAPS] as const;
 
-type Tab = (typeof TABS)[number];
+type TabId = (typeof TAB_IDS)[number];
 
 export default function RacesView(): React.ReactElement {
   const [selectedEditionId, setSelectedEditionId] = useQueryState(SearchParam.EDITION, parseAsInteger);
   const [selectedRaceId, setSelectedRaceId] = useQueryState(SearchParam.RACE, parseAsInteger);
-  const [selectedTab, setSelectedTab] = useQueryState(SearchParam.TAB, parseAsStringLiteral(TABS));
+  const [selectedTab, setSelectedTab] = useQueryState(SearchParam.TAB, parseAsStringLiteral(TAB_IDS));
   const [isTabContentLoading, setIsTabContentLoading] = React.useState(false);
 
   const getEditionsQuery = useGetPublicEditions();
@@ -47,6 +49,14 @@ export default function RacesView(): React.ReactElement {
     () => races?.find((race) => race.id === selectedRaceId) ?? null,
     [races, selectedRaceId],
   );
+
+  const availableTabIds = React.useMemo(() => {
+    if (selectedRace?.isBasicRanking) {
+      return TAB_IDS.filter((t) => t !== TAB_ID_FASTEST_LAPS);
+    }
+
+    return TAB_IDS;
+  }, [selectedRace?.isBasicRanking]);
 
   const getRaceRunnersQuery = useGetPublicRaceRunners(selectedRace?.id);
   const selectedRaceRunners = getRaceRunnersQuery.data?.runners ?? null;
@@ -70,7 +80,7 @@ export default function RacesView(): React.ReactElement {
     void setSelectedRaceId(raceId);
   };
 
-  function onTabSelect(tab: Tab): void {
+  function onTabSelect(tab: TabId): void {
     trackEvent(TrackedEvent.RACES_VIEW_CHANGE_TAB, { tab });
 
     setIsTabContentLoading(true);
@@ -83,10 +93,10 @@ export default function RacesView(): React.ReactElement {
 
   // Set default tab (we don't use nuqs `withDefault` because we always want the tab to be displayed in params)
   React.useEffect(() => {
-    if (!arrayUtils.inArray(selectedTab, TABS)) {
-      void setSelectedTab(TAB_RANKING);
+    if (!arrayUtils.inArray(selectedTab, availableTabIds)) {
+      void setSelectedTab(TAB_ID_RANKING);
     }
-  }, [selectedTab, setSelectedTab]);
+  }, [availableTabIds, selectedTab, setSelectedTab]);
 
   // Auto-select the first edition
   React.useEffect(() => {
@@ -143,15 +153,16 @@ export default function RacesView(): React.ReactElement {
         <racesViewContext.Provider value={racesViewContextValues}>
           <Tabs
             value={selectedTab}
-            onValueChange={(newValue: Tab) => {
+            onValueChange={(newValue: TabId) => {
               onTabSelect(newValue);
             }}
             className="gap-default flex flex-col"
           >
             <div className="print:hidden">
               <TabList>
-                <Tab value={TAB_RANKING}>Classement</Tab>
-                <Tab value={TAB_STATS}>Statistiques</Tab>
+                <Tab value={TAB_ID_RANKING}>Classement</Tab>
+                <Tab value={TAB_ID_STATS}>Statistiques</Tab>
+                {!selectedRace.isBasicRanking && <Tab value={TAB_ID_FASTEST_LAPS}>Tours les + rapides</Tab>}
               </TabList>
             </div>
 
@@ -159,13 +170,19 @@ export default function RacesView(): React.ReactElement {
 
             {!isTabContentLoading && (
               <>
-                <TabContent value={TAB_RANKING}>
+                <TabContent value={TAB_ID_RANKING}>
                   <RankingTabContent />
                 </TabContent>
 
-                <TabContent value={TAB_STATS}>
+                <TabContent value={TAB_ID_STATS}>
                   <StatsTabContent />
                 </TabContent>
+
+                {!selectedRace.isBasicRanking && (
+                  <TabContent value={TAB_ID_FASTEST_LAPS}>
+                    <FastestLapsTabContent />
+                  </TabContent>
+                )}
               </>
             )}
           </Tabs>

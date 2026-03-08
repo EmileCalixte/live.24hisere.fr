@@ -15,7 +15,6 @@ import { useGetPublicRunners } from "../../hooks/api/requests/public/runners/use
 import { useProcessedRunnersWithProcessedHours } from "../../hooks/runners/useProcessedRunnersWithProcessedHours";
 import { useRaceSelectOptions } from "../../hooks/useRaceSelectOptions";
 import { useRanking } from "../../hooks/useRanking";
-import { getCountryAlpha2CodeFromAlpha3Code } from "../../utils/countryUtils";
 import { formatMsAsDuration } from "../../utils/durationUtils";
 import { trackEvent } from "../../utils/eventTracking/eventTrackingUtils";
 import { generateXlsxFromData } from "../../utils/excelUtils";
@@ -23,11 +22,11 @@ import { isRaceFinished } from "../../utils/raceUtils";
 import { getDataForExcelExport, getRaceRunnerFromRunnerAndParticipant } from "../../utils/runnerUtils";
 import { Card } from "../ui/Card";
 import CircularLoader from "../ui/CircularLoader";
-import { Flag } from "../ui/countries/Flag";
 import Select from "../ui/forms/Select";
 import { Link } from "../ui/Link";
 import Page from "../ui/Page";
 import RunnerStoppedPopover from "../ui/popovers/RunnerStoppedPopover";
+import { RunnerNameWithIcons } from "../viewParts/races/RunnerNameWithIcons";
 import RaceTimer from "../viewParts/RaceTimer";
 import SpeedChart from "../viewParts/runnerDetails/charts/SpeedChart";
 import RunnerDetailsLaps from "../viewParts/runnerDetails/RunnerDetailsLaps";
@@ -178,8 +177,6 @@ export default function RunnerDetailsView(): React.ReactElement {
     }
   }, [runnerParticipations, selectedRaceId, selectedRunner, setSelectedRaceId]);
 
-  const alpha2CountryCode = getCountryAlpha2CodeFromAlpha3Code(selectedRaceRunner?.countryCode ?? null);
-
   // const isRaceInProgress = !!selectedRace && !isRaceFinished(selectedRace, serverTimeOffset);
 
   return (
@@ -217,11 +214,7 @@ export default function RunnerDetailsView(): React.ReactElement {
         <Card className="gap-default flex flex-col">
           <div className="flex flex-col gap-1">
             <h2 className="flex items-center gap-2">
-              {alpha2CountryCode && <Flag countryCode={alpha2CountryCode} />}
-
-              <span>
-                {selectedRaceRunner.lastname.toUpperCase()} {selectedRaceRunner.firstname}
-              </span>
+              <RunnerNameWithIcons runner={selectedRaceRunner} strongClassName="[font-weight:inherit]" />
             </h2>
 
             {selectedRace && (

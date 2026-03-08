@@ -1,9 +1,11 @@
 import type {
   Participant,
+  PassageWithRunner,
   ProcessedPassage,
   PublicPassage,
   PublicRace,
   RaceRunner,
+  RaceRunnerWithPassages,
   RunnerProcessedData,
   RunnerProcessedTimeSlot,
 } from "@live24hisere/core/types";
@@ -14,7 +16,7 @@ import { getDistanceFromPassageCount, getRaceTime } from "./raceUtils";
 /**
  * Returns passages sorted in ascending time order
  */
-export function getSortedPassages<TPassage extends PublicPassage>(passages: TPassage[]): TPassage[] {
+export function getTimeSortedPassages<TPassage extends PublicPassage>(passages: TPassage[]): TPassage[] {
   return passages.toSorted((passageA, passageB) =>
     compareUtils.spaceship(new Date(passageA.time).getTime(), new Date(passageB.time).getTime()),
   );
@@ -139,6 +141,23 @@ export function getProcessedPassagesFromPassages<TPassage extends PublicPassage>
   }
 
   return processedPassages;
+}
+
+export function getPassagesWithRunnersFromPassagesAndRunners<TRunner extends RaceRunnerWithPassages>(
+  runners: TRunner[],
+): Array<PassageWithRunner<TRunner["passages"][number], TRunner>> {
+  const passagesWithRunners: Array<PassageWithRunner<TRunner["passages"][number], TRunner>> = [];
+
+  for (const runner of runners) {
+    for (const passage of runner.passages) {
+      passagesWithRunners.push({
+        ...passage,
+        runner,
+      });
+    }
+  }
+
+  return passagesWithRunners;
 }
 
 /**
@@ -317,7 +336,7 @@ export function approximateTimeToDistance(
    */
   raceTime: number | null;
 } {
-  const sortedPassages = getSortedPassages(passages);
+  const sortedPassages = getTimeSortedPassages(passages);
 
   let closestPassageBeforeDistance: (typeof passages)[number] | null = null;
   let closestPassageAfterDistance: (typeof passages)[number] | null = null;
