@@ -2,6 +2,7 @@ export const enum SearchParam {
   AVG_SPEED_CHART = "avgSpeedChart",
   CATEGORY = "category",
   EDITION = "edition",
+  FROM_RACE_TIME = "fromRaceTime",
   GENDER = "gender",
   PAGE = "page",
   RACE = "race",
@@ -16,4 +17,5 @@ export const enum SearchParam {
   SORT_DIRECTION = "sortDirection",
   TAB = "tab",
   TIME_MODE = "timeMode",
+  TO_RACE_TIME = "toRaceTime",
 }

@@ -40,6 +40,12 @@ export function FastestLapsTabContent(): React.ReactElement {
     parseAsEnum(FASTEST_LAPS_SHOW_MODES).withDefault(FastestLapsShowMode.ONLY_BEST_ONE),
   );
 
+  const [fromRaceTime, setFromRaceTime] = useQueryState(SearchParam.FROM_RACE_TIME, parseAsInteger.withDefault(0));
+  const [toRaceTime, setToRaceTime] = useQueryState(
+    SearchParam.TO_RACE_TIME,
+    parseAsInteger.withDefault(selectedRace?.duration ?? 0),
+  );
+
   const [page, setPage] = useQueryState(SearchParam.PAGE, parseAsInteger.withDefault(1));
 
   const { width: windowWidth } = useWindowDimensions();
@@ -87,7 +93,21 @@ export function FastestLapsTabContent(): React.ReactElement {
     }
 
     const fastestLaps = passagesWithRunners
-      .filter((passage) => passage.processed.lapNumber !== null)
+      .filter((passage) => {
+        if (passage.processed.lapNumber === null) {
+          return false;
+        }
+
+        if (passage.processed.lapStartRaceTime < fromRaceTime * 1000) {
+          return false;
+        }
+
+        if (passage.processed.lapEndRaceTime > toRaceTime * 1000) {
+          return false;
+        }
+
+        return true;
+      })
       .toSorted((a, b) => a.processed.lapDuration - b.processed.lapDuration);
 
     if (selectedShowMode === FastestLapsShowMode.ALL) {
@@ -104,7 +124,7 @@ export function FastestLapsTabContent(): React.ReactElement {
       alreadyOneLapRunnerIds.add(passage.runner.id);
       return true;
     });
-  }, [passagesWithRunners, selectedShowMode]);
+  }, [fromRaceTime, passagesWithRunners, selectedShowMode, toRaceTime]);
 
   const noData = !!fastestLaps && fastestLaps.length < 1;
 
@@ -156,6 +176,18 @@ export function FastestLapsTabContent(): React.ReactElement {
     void setSelectedShowMode(showMode);
   };
 
+  const onFromRaceTimeChange = (raceTime: number): void => {
+    trackEvent(TrackedEvent.CHANGE_FASTEST_LAPS_FROM_RACE_TIME, { time: raceTime });
+
+    void setFromRaceTime(Math.floor(raceTime / 1000));
+  };
+
+  const onToRaceTimeChange = (raceTime: number): void => {
+    trackEvent(TrackedEvent.CHANGE_FASTEST_LAPS_TO_RACE_TIME, { time: raceTime });
+
+    void setToRaceTime(Math.floor(raceTime / 1000));
+  };
+
   React.useEffect(() => {
     if (!pageCount) {
       return;
@@ -172,9 +204,19 @@ export function FastestLapsTabContent(): React.ReactElement {
       void setSelectedCategory(null);
       void setSelectedGender(null);
       void setSelectedShowMode(null);
+      void setFromRaceTime(null);
+      void setToRaceTime(null);
       void setPage(null);
     },
-    [setPage, setSelectedCategory, setSelectedGender, selectedRace, setSelectedShowMode],
+    [
+      setPage,
+      setSelectedCategory,
+      setSelectedGender,
+      selectedRace,
+      setSelectedShowMode,
+      setFromRaceTime,
+      setToRaceTime,
+    ],
   );
 
   if (!selectedRace) {
@@ -185,17 +227,20 @@ export function FastestLapsTabContent(): React.ReactElement {
     <Card className="gap-default flex flex-col">
       <h2>Tours les plus rapides sur la course {selectedRace.name}</h2>
 
-      <div className="flex flex-wrap gap-x-10 gap-y-3 print:hidden">
-        <FastestLapsSettings
-          categories={raceCategories}
-          selectedCategoryCode={selectedCategoryCode}
-          onCategorySelect={onCategorySelect}
-          selectedGender={selectedGender ?? "mixed"}
-          onGenderSelect={onGenderSelect}
-          selectedShowMode={selectedShowMode}
-          onShowModeSelect={onShowModeSelect}
-        />
-      </div>
+      <FastestLapsSettings
+        categories={raceCategories}
+        selectedCategoryCode={selectedCategoryCode}
+        onCategorySelect={onCategorySelect}
+        selectedGender={selectedGender ?? "mixed"}
+        onGenderSelect={onGenderSelect}
+        selectedShowMode={selectedShowMode}
+        onShowModeSelect={onShowModeSelect}
+        fromRaceTime={fromRaceTime}
+        onFromRaceTimeChange={onFromRaceTimeChange}
+        toRaceTime={toRaceTime}
+        onToRaceTimeChange={onToRaceTimeChange}
+        raceTime={selectedRace.duration}
+      />
 
       {noData && <p>Aucune donnée</p>}
 

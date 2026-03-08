@@ -4,8 +4,8 @@ import type { FormSubmitEventHandler } from "../../../../types/utils/react";
 import { formatDateAsString } from "../../../../utils/utils";
 import { Dialog, DialogPopup, DialogTitle } from "../../../ui/Dialog";
 import { Button } from "../../../ui/forms/Button";
-import DurationInputs from "../../../ui/forms/DurationInputs";
 import { TextArea } from "../../../ui/forms/TextArea";
+import TimeInputs from "../../../ui/forms/TimeInputs";
 
 interface RunnerDetailsPassageFormDialogProps {
   raceTime: number;
@@ -60,7 +60,7 @@ export default function RunnerDetailsPassageFormDialog({
           }}
           className="flex flex-col gap-3"
         >
-          <DurationInputs legend="Temps de course" duration={raceTime} setDuration={setRaceTime} />
+          <TimeInputs legend="Temps de course" time={raceTime} setTime={setRaceTime} />
 
           {time && <p>Date et heure : {formatDateAsString(time)}</p>}
 

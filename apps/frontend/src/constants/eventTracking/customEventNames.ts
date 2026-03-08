@@ -25,6 +25,8 @@ export const TrackedEvent = {
   CHANGE_FASTEST_LAPS_CATEGORY: "Change fastest laps category",
   CHANGE_FASTEST_LAPS_GENDER: "Change fastest laps gender",
   CHANGE_FASTEST_LAPS_SHOW_MODE: "Change fastest laps show mode",
+  CHANGE_FASTEST_LAPS_FROM_RACE_TIME: "Change fastest laps from race time",
+  CHANGE_FASTEST_LAPS_TO_RACE_TIME: "Change fastest laps to race time",
 
   DOWNLOAD_RUNNER_LAPS_XLSX: "Download runner laps XLSX",
 

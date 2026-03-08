@@ -5,9 +5,9 @@ import type { FormSubmitEventHandler } from "../../../../types/utils/react";
 import { getDateStringFromDate, getTimeStringFromDate } from "../../../../utils/utils";
 import { Button } from "../../../ui/forms/Button";
 import { Checkbox } from "../../../ui/forms/Checkbox";
-import DurationInputs from "../../../ui/forms/DurationInputs";
 import { Input } from "../../../ui/forms/Input";
 import Select from "../../../ui/forms/Select";
+import TimeInputs from "../../../ui/forms/TimeInputs";
 import InfoIconPopover from "../../../ui/InfoIconPopover";
 
 interface RaceDetailsFormProps {
@@ -160,7 +160,7 @@ export default function RaceDetailsForm({
         </div>
       </fieldset>
 
-      <DurationInputs legend="Durée" duration={duration} setDuration={setDuration} />
+      <TimeInputs legend="Durée" time={duration} setTime={setDuration} />
 
       <Checkbox
         label="Visible publiquement"

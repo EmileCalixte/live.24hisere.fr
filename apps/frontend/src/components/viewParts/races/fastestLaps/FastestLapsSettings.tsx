@@ -11,6 +11,7 @@ import type { SelectOption } from "../../../../types/Forms";
 import { getCategoriesSelectOptions } from "../../../../utils/categoryUtils";
 import RadioGroup from "../../../ui/forms/RadioGroup";
 import Select from "../../../ui/forms/Select";
+import TimeInputs from "../../../ui/forms/TimeInputs";
 
 interface FastestLapsSettingsProps {
   categories: Record<string, string> | null;
@@ -20,6 +21,11 @@ interface FastestLapsSettingsProps {
   onGenderSelect: (gender: GenderWithMixed) => void;
   selectedShowMode: FastestLapsShowMode;
   onShowModeSelect: (showMode: FastestLapsShowMode) => void;
+  fromRaceTime: number;
+  onFromRaceTimeChange: (raceTime: number) => void;
+  toRaceTime: number;
+  onToRaceTimeChange: (raceTime: number) => void;
+  raceTime: number;
 }
 
 export default function FastestLapsSettings({
@@ -30,6 +36,11 @@ export default function FastestLapsSettings({
   onGenderSelect,
   selectedShowMode,
   onShowModeSelect,
+  fromRaceTime,
+  onFromRaceTimeChange,
+  toRaceTime,
+  onToRaceTimeChange,
+  raceTime,
 }: FastestLapsSettingsProps): React.ReactElement {
   const categoriesOptions = React.useMemo<Array<SelectOption<string>>>(
     () => [CATEGORY_SCRATCH_SELECT_OPTION, ...getCategoriesSelectOptions(categories)],
@@ -37,7 +48,7 @@ export default function FastestLapsSettings({
   );
 
   return (
-    <>
+    <div className="flex flex-wrap gap-x-10 gap-y-3 print:hidden">
       <Select
         className="w-full sm:w-auto"
         label="Catégorie"
@@ -65,6 +76,24 @@ export default function FastestLapsSettings({
           onShowModeSelect(option.value);
         }}
       />
-    </>
+
+      <div className="flex gap-x-10 gap-y-3">
+        <TimeInputs
+          legend="De"
+          time={fromRaceTime * 1000}
+          setTime={onFromRaceTimeChange}
+          minTime={0}
+          maxTime={raceTime * 1000}
+        />
+
+        <TimeInputs
+          legend="À"
+          time={toRaceTime * 1000}
+          setTime={onToRaceTimeChange}
+          minTime={0}
+          maxTime={raceTime * 1000}
+        />
+      </div>
+    </div>
   );
 }

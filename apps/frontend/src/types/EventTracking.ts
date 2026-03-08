@@ -30,6 +30,8 @@ export interface EventTrackingData {
   [TrackedEvent.CHANGE_FASTEST_LAPS_CATEGORY]: { category: string };
   [TrackedEvent.CHANGE_FASTEST_LAPS_GENDER]: { gender: GenderWithMixed };
   [TrackedEvent.CHANGE_FASTEST_LAPS_SHOW_MODE]: { mode: FastestLapsShowMode };
+  [TrackedEvent.CHANGE_FASTEST_LAPS_FROM_RACE_TIME]: { time: number };
+  [TrackedEvent.CHANGE_FASTEST_LAPS_TO_RACE_TIME]: { time: number };
 
   [TrackedEvent.DOWNLOAD_RUNNER_LAPS_XLSX]: { raceId: number; runnerId: number };
 

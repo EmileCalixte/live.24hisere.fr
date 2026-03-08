@@ -1,55 +1,55 @@
 import type React from "react";
 import { useCallback, useMemo } from "react";
 import { cn } from "tailwind-variants";
-import { getDurationAsMs } from "../../../utils/mathUtils";
+import { getTimeAsMs } from "../../../utils/mathUtils";
 import { prefixNumber } from "../../../utils/utils";
 import { Input } from "./Input";
 
 const LABEL_CLASSNAME = "flex items-center gap-0.5";
 const INPUT_CLASSNAME = "w-[6ch]";
 
-interface DurationInputsProps {
+interface TimeInputsProps {
   legend?: string;
   className?: string;
 
   /**
-   * The duration, in ms
+   * The time, in ms
    */
-  duration: number;
+  time: number;
 
   /**
-   * Minimum duration, in ms
+   * Minimum time, in ms
    */
-  minDuration?: number;
+  minTime?: number;
 
   /**
-   * Maximum duration, in ms
+   * Maximum time, in ms
    */
-  maxDuration?: number;
+  maxTime?: number;
 
   /**
-   * @param duration The new duration, in ms
+   * @param time The new time, in ms
    */
-  setDuration: (duration: number) => void;
+  setTime: (time: number) => void;
 }
 
-export default function DurationInputs({
+export default function TimeInputs({
   legend,
   className,
-  duration,
-  minDuration = 0,
-  maxDuration,
-  setDuration,
-}: DurationInputsProps): React.ReactElement {
-  if (minDuration < 0) {
-    throw new Error("minDuration cannot be negative");
+  time,
+  minTime = 0,
+  maxTime,
+  setTime,
+}: TimeInputsProps): React.ReactElement {
+  if (minTime < 0) {
+    throw new Error("minTime cannot be negative");
   }
 
-  const hours = useMemo(() => Math.floor(duration / 1000 / 60 / 60), [duration]);
+  const hours = useMemo(() => Math.floor(time / 1000 / 60 / 60), [time]);
 
-  const minutes = useMemo(() => Math.floor(duration / 1000 / 60) % 60, [duration]);
+  const minutes = useMemo(() => Math.floor(time / 1000 / 60) % 60, [time]);
 
-  const seconds = useMemo(() => Math.floor(duration / 1000) % 60, [duration]);
+  const seconds = useMemo(() => Math.floor(time / 1000) % 60, [time]);
 
   const onHoursChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,21 +59,21 @@ export default function DurationInputs({
         return;
       }
 
-      const newDuration = getDurationAsMs(newHours, minutes, seconds);
+      const newTime = getTimeAsMs(newHours, minutes, seconds);
 
-      if (maxDuration !== undefined && newDuration > maxDuration) {
-        setDuration(maxDuration);
+      if (maxTime !== undefined && newTime > maxTime) {
+        setTime(maxTime);
         return;
       }
 
-      if (newDuration < minDuration) {
-        setDuration(minDuration);
+      if (newTime < minTime) {
+        setTime(minTime);
         return;
       }
 
-      setDuration(newDuration);
+      setTime(newTime);
     },
-    [setDuration, minDuration, maxDuration, minutes, seconds],
+    [setTime, minTime, maxTime, minutes, seconds],
   );
 
   const onMinutesChange = useCallback(
@@ -84,21 +84,21 @@ export default function DurationInputs({
         return;
       }
 
-      const newDuration = getDurationAsMs(hours, newMinutes, seconds);
+      const newTime = getTimeAsMs(hours, newMinutes, seconds);
 
-      if (maxDuration !== undefined && newDuration > maxDuration) {
-        setDuration(maxDuration);
+      if (maxTime !== undefined && newTime > maxTime) {
+        setTime(maxTime);
         return;
       }
 
-      if (newDuration < minDuration) {
-        setDuration(minDuration);
+      if (newTime < minTime) {
+        setTime(minTime);
         return;
       }
 
-      setDuration(newDuration);
+      setTime(newTime);
     },
-    [setDuration, minDuration, maxDuration, hours, seconds],
+    [setTime, minTime, maxTime, hours, seconds],
   );
 
   const onSecondsChange = useCallback(
@@ -109,21 +109,21 @@ export default function DurationInputs({
         return;
       }
 
-      const newDuration = getDurationAsMs(hours, minutes, newSeconds);
+      const newTime = getTimeAsMs(hours, minutes, newSeconds);
 
-      if (maxDuration !== undefined && newDuration > maxDuration) {
-        setDuration(maxDuration);
+      if (maxTime !== undefined && newTime > maxTime) {
+        setTime(maxTime);
         return;
       }
 
-      if (newDuration < minDuration) {
-        setDuration(minDuration);
+      if (newTime < minTime) {
+        setTime(minTime);
         return;
       }
 
-      setDuration(newDuration);
+      setTime(newTime);
     },
-    [setDuration, minDuration, maxDuration, hours, minutes],
+    [setTime, minTime, maxTime, hours, minutes],
   );
 
   return (
