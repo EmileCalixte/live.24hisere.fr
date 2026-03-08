@@ -41,10 +41,10 @@ export function FastestLapsTabContent(): React.ReactElement {
   );
 
   const [fromRaceTime, setFromRaceTime] = useQueryState(SearchParam.FROM_RACE_TIME, parseAsInteger.withDefault(0));
-  const [toRaceTime, setToRaceTime] = useQueryState(
-    SearchParam.TO_RACE_TIME,
-    parseAsInteger.withDefault(selectedRace?.duration ?? 0),
-  );
+  const [toRaceTimeRaw, setToRaceTime] = useQueryState(SearchParam.TO_RACE_TIME, parseAsInteger);
+  // Fall back to the current race's duration reactively — withDefault() would
+  // capture the value once at mount and become stale when the race changes.
+  const toRaceTime = toRaceTimeRaw ?? selectedRace?.duration ?? 0;
 
   const [page, setPage] = useQueryState(SearchParam.PAGE, parseAsInteger.withDefault(1));
 
