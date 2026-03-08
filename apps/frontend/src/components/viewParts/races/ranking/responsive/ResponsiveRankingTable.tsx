@@ -1,6 +1,5 @@
-import React from "react";
+import type React from "react";
 import type { GenderWithMixed, PublicRace } from "@live24hisere/core/types";
-import { useGetRunnerCategory } from "../../../../../hooks/useGetRunnerCategory";
 import type { Ranking, RankingRunner } from "../../../../../types/Ranking";
 import type { FormatGapMode } from "../../../../../utils/runnerUtils";
 import { Table, Tr } from "../../../../ui/Table";
@@ -28,40 +27,6 @@ export default function ResponsiveRankingTable({
   formatGapMode,
   showRunnerStoppedBadges,
 }: ResponsiveRankingTableProps): React.ReactElement {
-  const getCategory = useGetRunnerCategory();
-
-  const getRankingTableRow = React.useCallback(
-    (rankingRunner: RankingRunner) => {
-      const runnerCategoryCode = getCategory(rankingRunner, new Date(race.startTime)).code;
-
-      if (tableCategoryCode !== null) {
-        if (tableCategoryCode !== runnerCategoryCode) {
-          return null;
-        }
-      }
-
-      if (tableGender !== "mixed") {
-        if (tableGender.toUpperCase() !== rankingRunner.gender.toUpperCase()) {
-          return null;
-        }
-      }
-
-      return (
-        <ResponsiveRankingTableRow
-          key={rankingRunner.id}
-          race={race}
-          runner={rankingRunner}
-          tableCategoryCode={tableCategoryCode}
-          tableGender={tableGender}
-          showLastPassageTime={showLastPassageTime}
-          formatGapMode={formatGapMode}
-          showRunnerStoppedBadges={showRunnerStoppedBadges}
-        />
-      );
-    },
-    [formatGapMode, getCategory, race, showLastPassageTime, showRunnerStoppedBadges, tableCategoryCode, tableGender],
-  );
-
   return (
     <Table id="ranking-table">
       <thead>
@@ -74,7 +39,20 @@ export default function ResponsiveRankingTable({
           />
         </Tr>
       </thead>
-      <tbody>{ranking.map((runner) => getRankingTableRow(runner))}</tbody>
+      <tbody>
+        {ranking.map((runner: RankingRunner) => (
+          <ResponsiveRankingTableRow
+            key={runner.id}
+            race={race}
+            runner={runner}
+            tableCategoryCode={tableCategoryCode}
+            tableGender={tableGender}
+            showLastPassageTime={showLastPassageTime}
+            formatGapMode={formatGapMode}
+            showRunnerStoppedBadges={showRunnerStoppedBadges}
+          />
+        ))}
+      </tbody>
     </Table>
   );
 }

@@ -1,6 +1,4 @@
 import React from "react";
-import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { GenderWithMixed, PublicRace } from "@live24hisere/core/types";
 import { useGetRunnerCategory } from "../../../../../hooks/useGetRunnerCategory";
 import type { RankingRunner } from "../../../../../types/Ranking";
@@ -12,8 +10,8 @@ import { formatFloatNumber } from "../../../../../utils/utils";
 import RunnerStoppedBadge from "../../../../ui/badges/RunnerStoppedBadge";
 import { Flag } from "../../../../ui/countries/Flag";
 import GenderIcon from "../../../../ui/genders/GenderIcon";
-import { Link } from "../../../../ui/Link";
 import { Td, Tr } from "../../../../ui/Table";
+import ResponsiveTableRunnerLinkTd from "../../ResponsiveTableRunnerLinkTd";
 
 interface ResponsiveRankingTableRowProps {
   race: PublicRace;
@@ -162,17 +160,7 @@ export default function ResponsiveRankingTableRow({
           </div>
         )}
       </Td>
-      <Td className="relative p-0">
-        {/* As we cannot set up the link to take all available height in the cel, we use the 'after' pseudo-element to
-        create a clickable zone which covers all the cell. Yes, it works */}
-        <Link
-          to={`/runner-details/${runner.id}?race=${race.id}`}
-          className="flex items-center px-3 text-neutral-500 after:absolute after:inset-0 dark:text-neutral-500"
-          aria-label={`Consulter les détails du coureur ${runner.firstname} ${runner.lastname}`}
-        >
-          <FontAwesomeIcon icon={faChevronRight} />
-        </Link>
-      </Td>
+      <ResponsiveTableRunnerLinkTd race={race} runner={runner} />
     </Tr>
   );
 }

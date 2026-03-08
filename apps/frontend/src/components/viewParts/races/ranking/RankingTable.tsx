@@ -1,6 +1,5 @@
 import type React from "react";
 import type { GenderWithMixed, PublicRace } from "@live24hisere/core/types";
-import { useGetRunnerCategory } from "../../../../hooks/useGetRunnerCategory";
 import type { Ranking, RankingRunner } from "../../../../types/Ranking";
 import type { FormatGapMode } from "../../../../utils/runnerUtils";
 import { Table, Th, Tr } from "../../../ui/Table";
@@ -28,37 +27,6 @@ export default function RankingTable({
   formatGapMode,
   showRunnerStoppedBadges,
 }: RankingTableProps): React.ReactElement {
-  const getCategory = useGetRunnerCategory();
-
-  const getRankingTableRow = (rankingRunner: RankingRunner): React.ReactElement | null => {
-    const runnerCategory = getCategory(rankingRunner, new Date(race.startTime)).code;
-
-    if (tableCategoryCode !== null) {
-      if (tableCategoryCode !== runnerCategory) {
-        return null;
-      }
-    }
-
-    if (tableGender !== "mixed") {
-      if (tableGender.toUpperCase() !== rankingRunner.gender.toUpperCase()) {
-        return null;
-      }
-    }
-
-    return (
-      <RankingTableRow
-        key={rankingRunner.id}
-        race={race}
-        runner={rankingRunner}
-        tableCategoryCode={tableCategoryCode}
-        tableGender={tableGender}
-        showLastPassageTime={showLastPassageTime}
-        formatGapMode={formatGapMode}
-        showRunnerStoppedBadges={showRunnerStoppedBadges}
-      />
-    );
-  };
-
   return (
     <Table id="ranking-table" className="w-full">
       <thead>
@@ -81,7 +49,20 @@ export default function RankingTable({
           {!race.isBasicRanking && <Th>Écart 1er</Th>}
         </Tr>
       </thead>
-      <tbody>{ranking.map((runner) => getRankingTableRow(runner))}</tbody>
+      <tbody>
+        {ranking.map((runner: RankingRunner) => (
+          <RankingTableRow
+            key={runner.id}
+            race={race}
+            runner={runner}
+            tableCategoryCode={tableCategoryCode}
+            tableGender={tableGender}
+            showLastPassageTime={showLastPassageTime}
+            formatGapMode={formatGapMode}
+            showRunnerStoppedBadges={showRunnerStoppedBadges}
+          />
+        ))}
+      </tbody>
     </Table>
   );
 }

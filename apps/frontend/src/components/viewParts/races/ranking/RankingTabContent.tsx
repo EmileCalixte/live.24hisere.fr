@@ -1,14 +1,14 @@
 import React from "react";
-import { ALL_CATEGORY_CODES, getCategoryList } from "@emilecalixte/ffa-categories";
 import { useQueryState } from "nuqs";
 import type { GenderWithMixed } from "@live24hisere/core/types";
-import { objectUtils } from "@live24hisere/utils";
 import { TrackedEvent } from "../../../../constants/eventTracking/customEventNames";
 import { RankingTimeMode } from "../../../../constants/rankingTimeMode";
 import { SearchParam } from "../../../../constants/searchParams";
 import { WINDOW_WIDTH_BREAKPOINTS } from "../../../../constants/ui/sizing";
 import { appDataContext } from "../../../../contexts/AppDataContext";
 import { racesViewContext } from "../../../../contexts/RacesViewContext";
+import { useAllCategories } from "../../../../hooks/categories/useAllCategories";
+import { useRunnerFilteredCategories } from "../../../../hooks/categories/useRunnerFilteredCategories";
 import { useRankingTimeQueryString } from "../../../../hooks/queryString/useRankingTimeQueryString";
 import { useProcessedRunners } from "../../../../hooks/runners/useProcessedRunners";
 import { useGetRunnerCategory } from "../../../../hooks/useGetRunnerCategory";
@@ -37,19 +37,10 @@ export function RankingTabContent(): React.ReactElement {
 
   const { width: windowWidth } = useWindowDimensions();
 
-  const allCategories = React.useMemo(() => {
-    if (!selectedRace) {
-      return {};
-    }
-
-    const allCategories: Record<string, string> = getCategoryList(new Date(selectedRace.startTime));
-
-    for (const customCategory of customRunnerCategories) {
-      allCategories[customCategory.code] = customCategory.name;
-    }
-
-    return allCategories;
-  }, [customRunnerCategories, selectedRace]);
+  const allCategories = useAllCategories(
+    selectedRace ? new Date(selectedRace.startTime) : undefined,
+    customRunnerCategories,
+  );
 
   const {
     selectedTimeMode,
@@ -63,6 +54,30 @@ export function RankingTabContent(): React.ReactElement {
   const processedRunners = useProcessedRunners(selectedRaceRunners, selectedRace, !rankingDate);
 
   const ranking = useRanking(selectedRace ?? undefined, processedRunners, rankingDate);
+
+  const filteredRanking = React.useMemo(() => {
+    if (!ranking || !selectedRace) {
+      return null;
+    }
+
+    const raceStartDate = new Date(selectedRace.startTime);
+
+    return ranking.filter((runner) => {
+      if (selectedCategoryCode && getCategory(runner, raceStartDate).code !== selectedCategoryCode) {
+        return false;
+      }
+
+      if (selectedGender && runner.gender.toUpperCase() !== selectedGender.toUpperCase()) {
+        return false;
+      }
+
+      return true;
+    });
+  }, [getCategory, ranking, selectedCategoryCode, selectedGender, selectedRace]);
+
+  // Defer the display so filter/time-mode changes don't block the UI.
+  const deferredFilteredRanking = React.useDeferredValue(filteredRanking);
+  const isPending = deferredFilteredRanking !== filteredRanking;
 
   const onCategorySelect = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     const value = e.target.value;
@@ -112,36 +127,18 @@ export function RankingTabContent(): React.ReactElement {
     setRankingTimeMemory(timeToSave);
   };
 
-  const categories = React.useMemo<Record<string, string> | null>(() => {
-    if (!ranking || !selectedRace) {
-      return null;
-    }
-
-    const categoriesInRanking = new Set<string>();
-
-    for (const runner of ranking) {
-      categoriesInRanking.add(getCategory(runner, new Date(selectedRace.startTime)).code);
-    }
-
-    const categoriesToRemove = [];
-
-    const allCategoryCodes = [...ALL_CATEGORY_CODES, ...customRunnerCategories.map((c) => c.code)];
-
-    for (const categoryCode of allCategoryCodes) {
-      if (!categoriesInRanking.has(categoryCode)) {
-        categoriesToRemove.push(categoryCode);
-      }
-    }
-
-    return objectUtils.excludeKeys(allCategories, categoriesToRemove);
-  }, [allCategories, customRunnerCategories, getCategory, ranking, selectedRace]);
+  const raceCategories = useRunnerFilteredCategories(
+    allCategories,
+    processedRunners,
+    selectedRace ? new Date(selectedRace.startTime) : undefined,
+  );
 
   // Clear category param if a category is selected but no runner is in it in the ranking
   React.useEffect(() => {
-    if (categories && selectedCategoryCode && !(selectedCategoryCode in categories)) {
+    if (raceCategories && selectedCategoryCode && !(selectedCategoryCode in raceCategories)) {
       void setSelectedCategory(null);
     }
-  }, [categories, selectedCategoryCode, setSelectedCategory]);
+  }, [raceCategories, selectedCategoryCode, setSelectedCategory]);
 
   // Clear URL params on component unmount
   React.useEffect(
@@ -186,7 +183,7 @@ export function RankingTabContent(): React.ReactElement {
 
       <div className="flex flex-wrap gap-x-10 gap-y-3 print:hidden">
         <RankingSettings
-          categories={categories}
+          categories={raceCategories}
           onCategorySelect={onCategorySelect}
           onGenderSelect={onGenderSelect}
           setTimeMode={onTimeModeSelect}
@@ -201,14 +198,14 @@ export function RankingTabContent(): React.ReactElement {
         />
       </div>
 
-      {!ranking && <CircularLoader />}
+      {(deferredFilteredRanking === null || isPending) && <CircularLoader />}
 
-      {ranking && (
+      {deferredFilteredRanking !== null && !isPending && (
         <>
           {windowWidth > RESPONSIVE_TABLE_MAX_WINDOW_WIDTH && (
             <RankingTable
               race={selectedRace}
-              ranking={ranking}
+              ranking={deferredFilteredRanking}
               tableCategoryCode={selectedCategoryCode}
               tableGender={selectedGender ?? "mixed"}
               tableRaceDuration={selectedTimeMode === RankingTimeMode.AT ? selectedRankingTime : null}
@@ -221,7 +218,7 @@ export function RankingTabContent(): React.ReactElement {
           {windowWidth <= RESPONSIVE_TABLE_MAX_WINDOW_WIDTH && (
             <ResponsiveRankingTable
               race={selectedRace}
-              ranking={ranking}
+              ranking={deferredFilteredRanking}
               tableCategoryCode={selectedCategoryCode}
               tableGender={selectedGender ?? "mixed"}
               tableRaceDuration={selectedTimeMode === RankingTimeMode.AT ? selectedRankingTime : null}

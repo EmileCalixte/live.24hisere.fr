@@ -2,7 +2,7 @@ import type React from "react";
 import { useEffect, useState } from "react";
 import type { FormSubmitEventHandler } from "../../../../types/utils/react";
 import { Button } from "../../../ui/forms/Button";
-import DurationInputs from "../../../ui/forms/DurationInputs";
+import TimeInputs from "../../../ui/forms/TimeInputs";
 
 interface RankingSettingsTimeProps {
   isVisible: boolean;
@@ -33,7 +33,7 @@ export default function RankingSettingsTime({
 
   return (
     <form className="flex gap-3" style={{ visibility: isVisible ? "visible" : "hidden" }} onSubmit={onSubmit}>
-      <DurationInputs duration={time} setDuration={setTime} maxDuration={maxRankingTime} />
+      <TimeInputs time={time} setTime={setTime} maxTime={maxRankingTime} />
       <Button disabled={time === currentRankingTime}>OK</Button>
     </form>
   );

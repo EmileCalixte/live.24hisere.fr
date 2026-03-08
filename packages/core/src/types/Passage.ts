@@ -1,3 +1,4 @@
+import type { PublicRunner } from "./Runner";
 import type { DateISOString } from "./utils/dates";
 
 export type PassageOrigin = "DAG" | "CSV" | "MANUAL";
@@ -27,6 +28,10 @@ export type PassageWithRunnerIdAndRaceId<TPassage extends PublicPassage = Public
    * The ID of the runner of the passage
    */
   runnerId: number;
+};
+
+export type PassageWithRunner<TPassage extends PublicPassage, TRunner extends PublicRunner> = TPassage & {
+  runner: TRunner;
 };
 
 /**

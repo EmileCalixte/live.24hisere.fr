@@ -1,5 +1,6 @@
 import type { GenderWithMixed } from "@live24hisere/core/types";
 import type { TrackedEvent } from "../constants/eventTracking/customEventNames";
+import type { FastestLapsShowMode } from "../constants/fastestLapsShowMode";
 import type { RankingTimeMode } from "../constants/rankingTimeMode";
 import type { SortColumn, SortDirection } from "../constants/sort";
 
@@ -25,6 +26,12 @@ export interface EventTrackingData {
   [TrackedEvent.TOGGLE_RUNNER_SPEED_CHART_HOUR_SPEED]: { newValue: boolean };
   [TrackedEvent.TOGGLE_RUNNER_SPEED_CHART_AVG_SPEED]: { newValue: boolean };
   [TrackedEvent.TOGGLE_RUNNER_SPEED_CHART_AVG_SPEED_EVOLUTION]: { newValue: boolean };
+
+  [TrackedEvent.CHANGE_FASTEST_LAPS_CATEGORY]: { category: string };
+  [TrackedEvent.CHANGE_FASTEST_LAPS_GENDER]: { gender: GenderWithMixed };
+  [TrackedEvent.CHANGE_FASTEST_LAPS_SHOW_MODE]: { mode: FastestLapsShowMode };
+  [TrackedEvent.CHANGE_FASTEST_LAPS_FROM_RACE_TIME]: { time: number };
+  [TrackedEvent.CHANGE_FASTEST_LAPS_TO_RACE_TIME]: { time: number };
 
   [TrackedEvent.DOWNLOAD_RUNNER_LAPS_XLSX]: { raceId: number; runnerId: number };
 
