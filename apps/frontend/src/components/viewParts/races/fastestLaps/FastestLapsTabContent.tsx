@@ -146,6 +146,11 @@ export function FastestLapsTabContent(): React.ReactElement {
     return paginatedFastestLaps[page - 1];
   }, [page, paginatedFastestLaps]);
 
+  // Defer the display so filter/page changes don't block the UI.
+  // isPending is true while React is re-rendering with the new content.
+  const deferredPageContent = React.useDeferredValue(pageContent);
+  const isPending = deferredPageContent !== pageContent;
+
   const onCategorySelect = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     const value = e.target.value;
 
@@ -242,9 +247,9 @@ export function FastestLapsTabContent(): React.ReactElement {
         raceTime={selectedRace.duration}
       />
 
-      {noData && <p>Aucune donnée</p>}
+      {!isPending && noData && <p>Aucune donnée</p>}
 
-      {pageContent === undefined ? (
+      {deferredPageContent === undefined || isPending ? (
         <CircularLoader />
       ) : (
         <div className="flex flex-col gap-3">
@@ -261,7 +266,7 @@ export function FastestLapsTabContent(): React.ReactElement {
                 </Tr>
               </thead>
               <tbody>
-                {pageContent.map((passage) => (
+                {deferredPageContent.map((passage) => (
                   <Tr key={passage.id}>
                     <Td>{passage.runner.bibNumber}</Td>
                     <RunnerNameTd runner={passage.runner} race={selectedRace} />
@@ -286,7 +291,7 @@ export function FastestLapsTabContent(): React.ReactElement {
           )}
 
           {windowWidth <= RESPONSIVE_TABLE_MAX_WINDOW_WIDTH && (
-            <ResponsiveFastestLapsTable race={selectedRace} passages={pageContent} />
+            <ResponsiveFastestLapsTable race={selectedRace} passages={deferredPageContent} />
           )}
 
           {!noData && !!pageCount && pageCount > 1 && (

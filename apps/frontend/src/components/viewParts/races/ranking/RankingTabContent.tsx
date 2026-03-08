@@ -11,6 +11,7 @@ import { useAllCategories } from "../../../../hooks/categories/useAllCategories"
 import { useRunnerFilteredCategories } from "../../../../hooks/categories/useRunnerFilteredCategories";
 import { useRankingTimeQueryString } from "../../../../hooks/queryString/useRankingTimeQueryString";
 import { useProcessedRunners } from "../../../../hooks/runners/useProcessedRunners";
+import { useGetRunnerCategory } from "../../../../hooks/useGetRunnerCategory";
 import { useRanking } from "../../../../hooks/useRanking";
 import { useWindowDimensions } from "../../../../hooks/useWindowDimensions";
 import { parseAsGender } from "../../../../queryStringParsers/parseAsGender";
@@ -32,6 +33,8 @@ export function RankingTabContent(): React.ReactElement {
   const [selectedCategoryCode, setSelectedCategory] = useQueryState(SearchParam.CATEGORY);
   const [selectedGender, setSelectedGender] = useQueryState(SearchParam.GENDER, parseAsGender);
 
+  const getCategory = useGetRunnerCategory();
+
   const { width: windowWidth } = useWindowDimensions();
 
   const allCategories = useAllCategories(
@@ -51,6 +54,30 @@ export function RankingTabContent(): React.ReactElement {
   const processedRunners = useProcessedRunners(selectedRaceRunners, selectedRace, !rankingDate);
 
   const ranking = useRanking(selectedRace ?? undefined, processedRunners, rankingDate);
+
+  const filteredRanking = React.useMemo(() => {
+    if (!ranking || !selectedRace) {
+      return null;
+    }
+
+    const raceStartDate = new Date(selectedRace.startTime);
+
+    return ranking.filter((runner) => {
+      if (selectedCategoryCode && getCategory(runner, raceStartDate).code !== selectedCategoryCode) {
+        return false;
+      }
+
+      if (selectedGender && runner.gender.toUpperCase() !== selectedGender.toUpperCase()) {
+        return false;
+      }
+
+      return true;
+    });
+  }, [getCategory, ranking, selectedCategoryCode, selectedGender, selectedRace]);
+
+  // Defer the display so filter/time-mode changes don't block the UI.
+  const deferredFilteredRanking = React.useDeferredValue(filteredRanking);
+  const isPending = deferredFilteredRanking !== filteredRanking;
 
   const onCategorySelect = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     const value = e.target.value;
@@ -171,14 +198,14 @@ export function RankingTabContent(): React.ReactElement {
         />
       </div>
 
-      {!ranking && <CircularLoader />}
+      {(deferredFilteredRanking === null || isPending) && <CircularLoader />}
 
-      {ranking && (
+      {deferredFilteredRanking !== null && !isPending && (
         <>
           {windowWidth > RESPONSIVE_TABLE_MAX_WINDOW_WIDTH && (
             <RankingTable
               race={selectedRace}
-              ranking={ranking}
+              ranking={deferredFilteredRanking}
               tableCategoryCode={selectedCategoryCode}
               tableGender={selectedGender ?? "mixed"}
               tableRaceDuration={selectedTimeMode === RankingTimeMode.AT ? selectedRankingTime : null}
@@ -191,7 +218,7 @@ export function RankingTabContent(): React.ReactElement {
           {windowWidth <= RESPONSIVE_TABLE_MAX_WINDOW_WIDTH && (
             <ResponsiveRankingTable
               race={selectedRace}
-              ranking={ranking}
+              ranking={deferredFilteredRanking}
               tableCategoryCode={selectedCategoryCode}
               tableGender={selectedGender ?? "mixed"}
               tableRaceDuration={selectedTimeMode === RankingTimeMode.AT ? selectedRankingTime : null}
