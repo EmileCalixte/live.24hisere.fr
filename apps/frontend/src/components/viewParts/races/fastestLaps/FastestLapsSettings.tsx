@@ -79,7 +79,7 @@ export default function FastestLapsSettings({
 
       <div className="flex gap-x-10 gap-y-3">
         <TimeInputs
-          legend="De"
+          legend="À partir de"
           time={fromRaceTime * 1000}
           setTime={onFromRaceTimeChange}
           minTime={0}
@@ -87,7 +87,7 @@ export default function FastestLapsSettings({
         />
 
         <TimeInputs
-          legend="À"
+          legend="Jusqu'à"
           time={toRaceTime * 1000}
           setTime={onToRaceTimeChange}
           minTime={0}
