@@ -77,7 +77,7 @@ export default function FastestLapsSettings({
         }}
       />
 
-      <div className="flex gap-x-10 gap-y-3">
+      <div className="flex flex-wrap gap-x-10 gap-y-3">
         <TimeInputs
           legend="À partir de"
           time={fromRaceTime * 1000}
