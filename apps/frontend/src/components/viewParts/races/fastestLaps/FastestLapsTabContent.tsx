@@ -198,7 +198,7 @@ export function FastestLapsTabContent(): React.ReactElement {
       return;
     }
 
-    if (page > pageCount) {
+    if (page > pageCount || page < 1) {
       void setPage(1);
     }
   }, [page, pageCount, setPage]);
@@ -247,10 +247,10 @@ export function FastestLapsTabContent(): React.ReactElement {
         raceTime={selectedRace.duration}
       />
 
-      {!isPending && noData && <p>Aucune donnée</p>}
-
       {deferredPageContent === undefined || isPending ? (
         <CircularLoader />
+      ) : noData ? (
+        <p>Aucune donnée</p>
       ) : (
         <div className="flex flex-col gap-3">
           {windowWidth > RESPONSIVE_TABLE_MAX_WINDOW_WIDTH && (
@@ -294,7 +294,7 @@ export function FastestLapsTabContent(): React.ReactElement {
             <ResponsiveFastestLapsTable race={selectedRace} passages={deferredPageContent} />
           )}
 
-          {!noData && !!pageCount && pageCount > 1 && (
+          {!!pageCount && pageCount > 1 && (
             <div className="flex justify-center">
               <Pagination
                 minPage={1}

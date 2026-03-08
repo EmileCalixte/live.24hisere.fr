@@ -4,8 +4,8 @@ import type { CustomRunnerCategory } from "@live24hisere/core/types";
 
 /**
  * @param date The date for which categories should be retrieved
- * @param customRunnerCategories Optionnal additional categories
- * @returns A record with all existing at given date, an additional categories if given, with category codes as keys and category name as values
+ * @param customRunnerCategories Optional additional categories
+ * @returns A record containing all categories existing at the given date, plus any custom categories, with category codes as keys and category names as values
  */
 export function useAllCategories(
   date: Date | undefined,

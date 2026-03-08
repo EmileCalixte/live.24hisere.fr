@@ -21,7 +21,7 @@ export function useRunnerFilteredCategories(
       categoriesInRanking.add(getCategory(runner, date).code);
     }
 
-    const categoryCodesToRemove = [];
+    const categoryCodesToRemove: string[] = [];
     const allCategoryCodes = Object.keys(categories);
 
     for (const categoryCode of allCategoryCodes) {
