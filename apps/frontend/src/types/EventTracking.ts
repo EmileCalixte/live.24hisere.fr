@@ -16,6 +16,7 @@ export interface EventTrackingData {
   [TrackedEvent.CHANGE_RACE]: { raceId: number };
 
   [TrackedEvent.RACES_VIEW_CHANGE_TAB]: { tab: string };
+  [TrackedEvent.RUNNER_DETAILS_VIEW_CHANGE_TAB]: { tab: string };
 
   [TrackedEvent.CHANGE_RANKING_CATEGORY]: { category: string };
   [TrackedEvent.CHANGE_RANKING_GENDER]: { gender: GenderWithMixed };
