@@ -193,6 +193,7 @@ export function FastestLapsTabContent(): React.ReactElement {
     void setToRaceTime(Math.floor(raceTime / 1000));
   };
 
+  // Reset page if value is out of bounds
   React.useEffect(() => {
     if (!pageCount) {
       return;
@@ -202,6 +203,11 @@ export function FastestLapsTabContent(): React.ReactElement {
       void setPage(1);
     }
   }, [page, pageCount, setPage]);
+
+  // Reset page on filter change
+  React.useEffect(() => {
+    void setPage(1);
+  }, [selectedCategoryCode, selectedGender, selectedShowMode, fromRaceTime, toRaceTime, setPage]);
 
   // Clear URL params on component unmount or on selected race change
   React.useEffect(
