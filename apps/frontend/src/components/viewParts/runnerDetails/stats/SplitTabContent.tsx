@@ -3,7 +3,6 @@ import { parseAsArrayOf, parseAsInteger, useQueryState } from "nuqs";
 import type { RunnerProcessedDistanceSlot } from "@live24hisere/core/types";
 import { TrackedEvent } from "../../../../constants/eventTracking/customEventNames";
 import { SPLIT_TIMES_MODE_OPTIONS } from "../../../../constants/forms";
-import { Key } from "../../../../constants/keyboardEvent";
 import { SearchParam } from "../../../../constants/searchParams";
 import { SPLIT_TIMES_MODES, SplitTimesMode } from "../../../../constants/splitTimesMode";
 import { runnerDetailsViewContext } from "../../../../contexts/RunnerDetailsViewContext";
@@ -11,7 +10,7 @@ import { parseAsEnum } from "../../../../queryStringParsers/parseAsEnum";
 import { trackEvent } from "../../../../utils/eventTracking/eventTrackingUtils";
 import { getProcessedDistanceSlotsFromPassages } from "../../../../utils/passageUtils";
 import { formatFloatNumber } from "../../../../utils/utils";
-import { Input } from "../../../ui/forms/Input";
+import { DebouncedInput } from "../../../ui/forms/DebouncedInput";
 import RadioGroup from "../../../ui/forms/RadioGroup";
 import { SplitTimesTable } from "./SplitTimesTable";
 
@@ -87,7 +86,7 @@ export function SplitTabContent(): React.ReactElement {
     void setSelectedSplitTimesMode(splitTimesMode);
   }
 
-  function onRegularIntervalUpdate(inputValue: string): void {
+  function onRegularIntervalChange(inputValue: string): void {
     let value = parseFloat(inputValue);
 
     if (isNaN(value)) {
@@ -136,7 +135,7 @@ export function SplitTabContent(): React.ReactElement {
 
       {selectedSplitTimesMode === SplitTimesMode.REGULAR_INTERVAL ? (
         <div className="flex items-center gap-2">
-          <Input
+          <DebouncedInput
             inline
             inputClassName="w-20"
             label="Tous les "
@@ -145,14 +144,7 @@ export function SplitTabContent(): React.ReactElement {
             min={1}
             max={999.999}
             value={selectedRegularInterval / 1000}
-            onBlur={(e) => {
-              onRegularIntervalUpdate(e.target.value);
-            }}
-            onKeyDown={(e) => {
-              if (e.key === Key.ENTER) {
-                onRegularIntervalUpdate(e.currentTarget.value);
-              }
-            }}
+            onChange={onRegularIntervalChange}
           />
           km
         </div>
