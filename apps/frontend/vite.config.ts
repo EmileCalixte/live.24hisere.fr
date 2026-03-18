@@ -4,7 +4,7 @@
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react-swc";
 import { defineConfig, type PluginOption } from "vite";
-import { adapter, analyzer } from "vite-bundle-analyzer";
+import { analyzer, unstableRolldownAdapter } from "vite-bundle-analyzer";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -12,10 +12,10 @@ export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
-    adapter(
+    unstableRolldownAdapter(
       analyzer({
         analyzerMode: "static",
-        fileName: "bundle-visualization.html",
+        fileName: "apps/frontend/bundle-visualization.html",
       }),
     ) as unknown as PluginOption,
   ],
