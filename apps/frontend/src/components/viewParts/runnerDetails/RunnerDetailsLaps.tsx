@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { PublicRace, RaceRunnerWithProcessedPassages } from "@live24hisere/core/types";
 import { TrackedEvent } from "../../../constants/eventTracking/customEventNames";
 import { RUNNER_DETAILS_LAPS_SORT_COLUMNS, SortColumn, SortDirection } from "../../../constants/sort";
+import { WINDOW_WIDTH_BREAKPOINTS } from "../../../constants/ui/sizing";
 import { appDataContext } from "../../../contexts/AppDataContext";
 import { useSortQueryString } from "../../../hooks/queryString/useSortQueryString";
 import { useRaceTime } from "../../../hooks/useRaceTime";
@@ -17,7 +18,7 @@ import { Card } from "../../ui/Card";
 import { Button } from "../../ui/forms/Button";
 import { Table, Td, Th, Tr } from "../../ui/Table";
 
-const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = 960;
+const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = WINDOW_WIDTH_BREAKPOINTS.XL;
 
 interface RunnerDetailsLapsProps {
   runner: RankingRunner<MinimalRankingRunnerInput & RaceRunnerWithProcessedPassages>;

@@ -1,8 +1,11 @@
 import React from "react";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { parseAsArrayOf, parseAsInteger, useQueryState } from "nuqs";
 import type { RunnerProcessedDistanceSlot } from "@live24hisere/core/types";
 import { TrackedEvent } from "../../../../constants/eventTracking/customEventNames";
 import { SPLIT_TIMES_MODE_OPTIONS } from "../../../../constants/forms";
+import { Key } from "../../../../constants/keyboardEvent";
 import { SearchParam } from "../../../../constants/searchParams";
 import { SPLIT_TIMES_MODES, SplitTimesMode } from "../../../../constants/splitTimesMode";
 import { runnerDetailsViewContext } from "../../../../contexts/RunnerDetailsViewContext";
@@ -10,12 +13,16 @@ import { parseAsEnum } from "../../../../queryStringParsers/parseAsEnum";
 import { trackEvent } from "../../../../utils/eventTracking/eventTrackingUtils";
 import { getProcessedDistanceSlotsFromPassages } from "../../../../utils/passageUtils";
 import { formatFloatNumber } from "../../../../utils/utils";
+import { Button } from "../../../ui/forms/Button";
 import { DebouncedInput } from "../../../ui/forms/DebouncedInput";
+import { Input } from "../../../ui/forms/Input";
 import RadioGroup from "../../../ui/forms/RadioGroup";
 import { SplitTimesTable } from "./SplitTimesTable";
 
 export const MIN_REGULAR_INTERVAL = 1000;
 export const DEFAULT_REGULAR_INTERVAL = 50000;
+export const MIN_CUSTOM_INTERVAL = 1000;
+export const MIN_DISTANCE_BETWEEN_CUSTOM_INTERVALS = 1000;
 
 export function SplitTabContent(): React.ReactElement {
   const { selectedRankingRunner, selectedRace } = React.useContext(runnerDetailsViewContext);
@@ -86,6 +93,43 @@ export function SplitTabContent(): React.ReactElement {
     void setSelectedSplitTimesMode(splitTimesMode);
   }
 
+  const [customIntervalInputValue, setCustomIntervalInputValue] = React.useState("");
+
+  const customIntervalInputMeters = React.useMemo(() => {
+    const value = parseFloat(customIntervalInputValue);
+    return isNaN(value) || value <= 0 ? null : Math.round(value * 1000);
+  }, [customIntervalInputValue]);
+
+  const customIntervalTooClose = React.useMemo(() => {
+    if (customIntervalInputMeters === null) {
+      return false;
+    }
+
+    return selectedCustomIntervals.some(
+      (existing) => Math.abs(existing - customIntervalInputMeters) < MIN_DISTANCE_BETWEEN_CUSTOM_INTERVALS,
+    );
+  }, [customIntervalInputMeters, selectedCustomIntervals]);
+
+  const customIntervalTooLow = customIntervalInputMeters !== null && customIntervalInputMeters < MIN_CUSTOM_INTERVAL;
+
+  const customIntervalTooHigh =
+    customIntervalInputMeters !== null
+    && selectedRankingRunner !== undefined
+    && customIntervalInputMeters > selectedRankingRunner.distanceToLastPassage;
+
+  function addCustomInterval(): void {
+    if (customIntervalInputMeters === null || customIntervalTooLow || customIntervalTooClose || customIntervalTooHigh) {
+      return;
+    }
+
+    void setSelectedCustomIntervals([...selectedCustomIntervals, customIntervalInputMeters].toSorted((a, b) => a - b));
+    setCustomIntervalInputValue("");
+  }
+
+  function removeCustomInterval(meters: number): void {
+    void setSelectedCustomIntervals(selectedCustomIntervals.filter((i) => i !== meters));
+  }
+
   function onRegularIntervalChange(inputValue: string): void {
     let value = parseFloat(inputValue);
 
@@ -95,6 +139,34 @@ export function SplitTabContent(): React.ReactElement {
 
     void setSelectedRegularInterval(Math.round(value * 1000));
   }
+
+  // Clean custom intervals if invalid values are provided in URL
+  React.useEffect(() => {
+    if (selectedCustomIntervals.length <= 0) {
+      return;
+    }
+
+    if (selectedSplitTimesMode === SplitTimesMode.REGULAR_INTERVAL) {
+      void setSelectedCustomIntervals([]);
+    } else {
+      const cleanedCustomIntervals = selectedCustomIntervals
+        .filter(
+          (interval) =>
+            interval >= MIN_CUSTOM_INTERVAL && interval <= (selectedRankingRunner?.distanceToLastPassage ?? 0),
+        )
+        .toSorted((a, b) => a - b);
+
+      if (cleanedCustomIntervals.join(",") !== selectedCustomIntervals.join(",")) {
+        void setSelectedCustomIntervals(cleanedCustomIntervals);
+      }
+    }
+  }, [
+    selectedCustomIntervals,
+    selectedCustomIntervals.length,
+    selectedRankingRunner?.distanceToLastPassage,
+    selectedSplitTimesMode,
+    setSelectedCustomIntervals,
+  ]);
 
   // Clear URL params on component unmount or on selected race change
   React.useEffect(
@@ -149,24 +221,107 @@ export function SplitTabContent(): React.ReactElement {
           km
         </div>
       ) : (
-        <p>TODO input pour ajouter un intervalle</p>
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-2">
+            <Input
+              inline
+              inputClassName="w-20"
+              label="Ajouter un intervalle à"
+              labelTextClassName="mr-2"
+              type="number"
+              min={0}
+              step="any"
+              value={customIntervalInputValue}
+              onChange={(e) => {
+                setCustomIntervalInputValue(e.target.value);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === Key.ENTER) {
+                  addCustomInterval();
+                }
+              }}
+            />
+            km
+            <Button
+              size="sm"
+              disabled={
+                customIntervalInputMeters === null
+                || customIntervalTooLow
+                || customIntervalTooClose
+                || customIntervalTooHigh
+              }
+              onClick={addCustomInterval}
+              aria-label={
+                customIntervalInputMeters !== null
+                  ? `Ajouter l'intervalle ${formatFloatNumber(customIntervalInputMeters / 1000, 1, 3)} kilomètres`
+                  : undefined
+              }
+            >
+              Ajouter
+            </Button>
+          </div>
+
+          {customIntervalTooLow && (
+            <p role="alert">Choisissez un intervalle d'au moins {MIN_CUSTOM_INTERVAL / 1000} km.</p>
+          )}
+
+          {customIntervalTooHigh && (
+            <p role="alert">
+              Choisissez un intervalle inférieur à la distance du coureur (inférieur à{" "}
+              {formatFloatNumber(selectedRankingRunner.distanceToLastPassage / 1000, 3)} km).
+            </p>
+          )}
+
+          {customIntervalTooClose && (
+            <p role="alert">
+              Cet intervalle est trop proche d'un intervalle existant (écart minimum :{" "}
+              {MIN_DISTANCE_BETWEEN_CUSTOM_INTERVALS / 1000} km).
+            </p>
+          )}
+        </div>
       )}
 
       {regularIntervalTooHigh && (
-        <p>
+        <p role="alert">
           Choisissez un intervalle inférieur à la distance du coureur (inférieur à{" "}
           {formatFloatNumber(selectedRankingRunner.distanceToLastPassage / 1000, 3)} km).
         </p>
       )}
 
-      {regularIntervalTooLow && <p>Choisissez un intervalle d'au moins {MIN_REGULAR_INTERVAL / 1000} km.</p>}
+      {regularIntervalTooLow && (
+        <p role="alert">Choisissez un intervalle d'au moins {MIN_REGULAR_INTERVAL / 1000} km.</p>
+      )}
 
       {selectedSplitTimesMode === SplitTimesMode.CUSTOM && selectedIntervals.length < 1 && (
-        <p>Ajoutez au moins une distance intermédiaire pour commencer.</p>
+        <p>Ajoutez au moins une distance intermédiaire pour afficher les sections correspondantes.</p>
       )}
 
       {distanceSlots.length > 0 && (
         <>
+          {selectedCustomIntervals.length > 0 && (
+            <ul className="mt-3 flex flex-wrap gap-2 lg:-mb-2">
+              {selectedCustomIntervals.map((meters) => (
+                <li
+                  key={meters}
+                  className="flex items-center gap-1 rounded-sm border border-neutral-300 pl-2 dark:border-neutral-700"
+                >
+                  <span>{formatFloatNumber(meters / 1000, 1, 3)} km</span>
+
+                  <Button
+                    size="sm"
+                    color="transparent"
+                    onClick={() => {
+                      removeCustomInterval(meters);
+                    }}
+                    aria-label={`Enlever l'intervalle ${formatFloatNumber(meters / 1000, 1, 3)} kilomètres`}
+                  >
+                    <FontAwesomeIcon icon={faXmark} />
+                  </Button>
+                </li>
+              ))}
+            </ul>
+          )}
+
           <SplitTimesTable slots={distanceSlots} />
 
           {distanceSlots.some((slot) => !slot.startRaceTimeExact || !slot.endRaceTimeExact) && (
