@@ -154,7 +154,13 @@ export function SplitTabContent(): React.ReactElement {
           (interval) =>
             interval >= MIN_CUSTOM_INTERVAL && interval <= (selectedRankingRunner?.distanceToLastPassage ?? 0),
         )
-        .toSorted((a, b) => a - b);
+        .toSorted((a, b) => a - b)
+        .filter((interval, index, array) => {
+          if (index === 0) {
+            return true;
+          }
+          return interval - array[index - 1] >= MIN_DISTANCE_BETWEEN_CUSTOM_INTERVALS;
+        });
 
       if (cleanedCustomIntervals.join(",") !== selectedCustomIntervals.join(",")) {
         void setSelectedCustomIntervals(cleanedCustomIntervals);
