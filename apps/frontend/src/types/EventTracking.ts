@@ -3,6 +3,7 @@ import type { TrackedEvent } from "../constants/eventTracking/customEventNames";
 import type { FastestLapsShowMode } from "../constants/fastestLapsShowMode";
 import type { RankingTimeMode } from "../constants/rankingTimeMode";
 import type { SortColumn, SortDirection } from "../constants/sort";
+import type { SplitTimesMode } from "../constants/splitTimesMode";
 
 export type TrackedEventLabel = (typeof TrackedEvent)[keyof typeof TrackedEvent];
 
@@ -16,6 +17,7 @@ export interface EventTrackingData {
   [TrackedEvent.CHANGE_RACE]: { raceId: number };
 
   [TrackedEvent.RACES_VIEW_CHANGE_TAB]: { tab: string };
+  [TrackedEvent.RUNNER_DETAILS_VIEW_CHANGE_TAB]: { tab: string };
 
   [TrackedEvent.CHANGE_RANKING_CATEGORY]: { category: string };
   [TrackedEvent.CHANGE_RANKING_GENDER]: { gender: GenderWithMixed };
@@ -32,6 +34,8 @@ export interface EventTrackingData {
   [TrackedEvent.CHANGE_FASTEST_LAPS_SHOW_MODE]: { mode: FastestLapsShowMode };
   [TrackedEvent.CHANGE_FASTEST_LAPS_FROM_RACE_TIME]: { time: number };
   [TrackedEvent.CHANGE_FASTEST_LAPS_TO_RACE_TIME]: { time: number };
+
+  [TrackedEvent.CHANGE_SPLIT_TIMES_MODE]: { mode: SplitTimesMode; runnerId: number | undefined };
 
   [TrackedEvent.DOWNLOAD_RUNNER_LAPS_XLSX]: { raceId: number; runnerId: number };
 

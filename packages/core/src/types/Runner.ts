@@ -153,43 +153,78 @@ export interface RunnerProcessedData {
 export type RaceRunnerWithProcessedData<TRunner extends RaceRunner = RaceRunner> = TRunner & RunnerProcessedData;
 
 /**
- * An object containing the information of a runner's race hour
+ * Base interface for a processed slot (time-based or distance-based)
  */
-export interface RunnerProcessedTimeSlot {
+export interface RunnerProcessedSlot {
   /**
-   * The start time of the time slot
+   * The start time of the slot
    */
   startTime: Date;
 
   /**
-   * The race time at the start of the time slot, in milliseconds
+   * The race time at the start of the slot, in milliseconds
    */
   startRaceTime: number;
 
   /**
-   * The end time of the time slot
+   * The end time of the slot
    */
   endTime: Date;
 
   /**
-   * The race time at the end of the time slot, in milliseconds
+   * The race time at the end of the slot, in milliseconds
    */
   endRaceTime: number;
 
   /**
-   * The average speed of the runner during the time slot, in km/h
+   * The average speed of the runner during the slot, in km/h
    */
   averageSpeed: number | null;
 
   /**
-   * The average pace of the runner during the time slot, in ms/km
+   * The average pace of the runner during the slot, in ms/km
    */
   averagePace: number | null;
 
   /**
-   * The passages included in the time slot
+   * The passages included in the slot
    */
   passages: ProcessedPassage[];
+}
+
+/**
+ * An object containing the information of a runner's race hour (time-based slot)
+ */
+export type RunnerProcessedTimeSlot = RunnerProcessedSlot;
+
+/**
+ * An object containing the information of a runner's split time section (distance-based slot)
+ */
+export interface RunnerProcessedDistanceSlot extends RunnerProcessedSlot {
+  /**
+   * The start distance of the section, in meters
+   */
+  startDistance: number;
+
+  /**
+   * The end distance of the section, in meters
+   */
+  endDistance: number;
+
+  /**
+   * Whether startRaceTime is exact (passage at exact distance) or approximated
+   */
+  startRaceTimeExact: boolean;
+
+  /**
+   * Whether endRaceTime is exact (passage at exact distance) or approximated
+   */
+  endRaceTimeExact: boolean;
+
+  /**
+   * The duration of the section, in milliseconds
+   */
+  duration: number;
 }
 
 /**

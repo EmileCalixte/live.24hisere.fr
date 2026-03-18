@@ -11,6 +11,7 @@ export const TrackedEvent = {
   CHANGE_RACE: "Change race",
 
   RACES_VIEW_CHANGE_TAB: "Change tab in races view",
+  RUNNER_DETAILS_VIEW_CHANGE_TAB: "Change tab in runner details view",
 
   CHANGE_RANKING_CATEGORY: "Change ranking category",
   CHANGE_RANKING_GENDER: "Change ranking gender",
@@ -27,6 +28,8 @@ export const TrackedEvent = {
   CHANGE_FASTEST_LAPS_SHOW_MODE: "Change fastest laps show mode",
   CHANGE_FASTEST_LAPS_FROM_RACE_TIME: "Change fastest laps from race time",
   CHANGE_FASTEST_LAPS_TO_RACE_TIME: "Change fastest laps to race time",
+
+  CHANGE_SPLIT_TIMES_MODE: "Change split times mode",
 
   DOWNLOAD_RUNNER_LAPS_XLSX: "Download runner laps XLSX",
 

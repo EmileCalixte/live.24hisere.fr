@@ -5,6 +5,7 @@ import { getCountryName } from "../utils/countryUtils";
 import { CATEGORY_SCRATCH } from "./category";
 import { FastestLapsShowMode } from "./fastestLapsShowMode";
 import { RankingTimeMode } from "./rankingTimeMode";
+import { SplitTimesMode } from "./splitTimesMode";
 
 export const CATEGORY_SCRATCH_SELECT_OPTION: SelectOption<"scratch"> = {
   label: "Scratch (toutes catégories)",
@@ -36,6 +37,11 @@ export const RANKING_TIME_MODE_RACE_FINISHED_OPTIONS: Array<SelectOption<Ranking
 export const FASTEST_LAPS_SHOW_MODE_OPTIONS: Array<SelectOption<FastestLapsShowMode>> = [
   { label: "Uniquement le meilleur tour de chaque coureur", value: FastestLapsShowMode.ONLY_BEST_ONE },
   { label: "Tous les tours de tous les coureurs", value: FastestLapsShowMode.ALL },
+];
+
+export const SPLIT_TIMES_MODE_OPTIONS: Array<SelectOption<SplitTimesMode>> = [
+  { label: "Intervalles réguliers", value: SplitTimesMode.REGULAR_INTERVAL },
+  { label: "Intervalles personnalisés", value: SplitTimesMode.CUSTOM },
 ];
 
 export const COUNTRY_OPTIONS: Array<SelectOption<string>> = [

@@ -1,12 +1,13 @@
 import React from "react";
 import { faCircleInfo, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useQueryState } from "nuqs";
+import { parseAsStringLiteral, useQueryState } from "nuqs";
 import { useNavigate, useParams } from "react-router-dom";
-import { stringUtils } from "@live24hisere/utils";
+import { arrayUtils, stringUtils } from "@live24hisere/utils";
 import { TrackedEvent } from "../../constants/eventTracking/customEventNames";
 import { SearchParam } from "../../constants/searchParams";
 import { appDataContext } from "../../contexts/AppDataContext";
+import { runnerDetailsViewContext, type RunnerDetailsViewContext } from "../../contexts/RunnerDetailsViewContext";
 import { useGetPublicEditions } from "../../hooks/api/requests/public/editions/useGetPublicEditions";
 import { useGetPublicRunnerParticipations } from "../../hooks/api/requests/public/participants/useGetPublicRunnerParticipations";
 import { useGetPublicRaces } from "../../hooks/api/requests/public/races/useGetPublicRaces";
@@ -17,21 +18,27 @@ import { useRaceSelectOptions } from "../../hooks/useRaceSelectOptions";
 import { useRanking } from "../../hooks/useRanking";
 import { formatMsAsDuration } from "../../utils/durationUtils";
 import { trackEvent } from "../../utils/eventTracking/eventTrackingUtils";
-import { generateXlsxFromData } from "../../utils/excelUtils";
 import { isRaceFinished } from "../../utils/raceUtils";
-import { getDataForExcelExport, getRaceRunnerFromRunnerAndParticipant } from "../../utils/runnerUtils";
+import { getRaceRunnerFromRunnerAndParticipant } from "../../utils/runnerUtils";
 import { Card } from "../ui/Card";
 import CircularLoader from "../ui/CircularLoader";
 import Select from "../ui/forms/Select";
 import { Link } from "../ui/Link";
 import Page from "../ui/Page";
 import RunnerStoppedPopover from "../ui/popovers/RunnerStoppedPopover";
+import { Tab, TabContent, TabList, Tabs } from "../ui/Tabs";
 import { RunnerNameWithIcons } from "../viewParts/races/RunnerNameWithIcons";
 import RaceTimer from "../viewParts/RaceTimer";
-import SpeedChart from "../viewParts/runnerDetails/charts/SpeedChart";
-import RunnerDetailsLaps from "../viewParts/runnerDetails/RunnerDetailsLaps";
-import RunnerDetailsStats from "../viewParts/runnerDetails/RunnerDetailsStats";
 import RunnerSelector from "../viewParts/runnerDetails/RunnerSelector";
+import { SplitTabContent } from "../viewParts/runnerDetails/stats/SplitTabContent";
+import { StatsTabContent } from "../viewParts/runnerDetails/stats/StatsTabContent";
+
+const TAB_ID_STATS = "stats";
+const TAB_ID_SPLIT = "split";
+
+const TAB_IDS = [TAB_ID_STATS, TAB_ID_SPLIT] as const;
+
+type TabId = (typeof TAB_IDS)[number];
 
 export default function RunnerDetailsView(): React.ReactElement {
   const { serverTimeOffset } = React.useContext(appDataContext);
@@ -39,6 +46,8 @@ export default function RunnerDetailsView(): React.ReactElement {
   const { runnerId } = useParams(); // This param is optional, undefined if no runner selected
 
   const [selectedRaceId, setSelectedRaceId] = useQueryState(SearchParam.RACE);
+  const [selectedTab, setSelectedTab] = useQueryState(SearchParam.TAB, parseAsStringLiteral(TAB_IDS));
+  const [isTabContentLoading, setIsTabContentLoading] = React.useState(false);
 
   const navigate = useNavigate();
 
@@ -71,15 +80,23 @@ export default function RunnerDetailsView(): React.ReactElement {
     return race.name;
   });
 
+  const availableTabIds = React.useMemo(() => {
+    if (selectedRace?.isBasicRanking) {
+      return TAB_IDS.filter((t) => t !== TAB_ID_SPLIT);
+    }
+
+    return TAB_IDS;
+  }, [selectedRace?.isBasicRanking]);
+
   const getRunnersQuery = useGetPublicRunners();
   const runners = getRunnersQuery.data?.runners;
 
   const selectedRunner = React.useMemo(() => {
     if (!runners || runnerId === undefined) {
-      return undefined;
+      return null;
     }
 
-    return runners.find((runner) => runner.id.toString() === runnerId);
+    return runners.find((runner) => runner.id.toString() === runnerId) ?? null;
   }, [runnerId, runners]);
 
   const getRunnerParticipationsQuery = useGetPublicRunnerParticipations(selectedRunner?.id);
@@ -119,28 +136,30 @@ export default function RunnerDetailsView(): React.ReactElement {
     [ranking, selectedRaceRunner?.id],
   );
 
-  const onSelectRunner = React.useCallback(
+  const onRunnerSelect = React.useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
       void navigate(`/runner-details/${e.target.value}${window.location.search}`);
     },
     [navigate],
   );
 
-  const exportRunnerToXlsx = React.useCallback(() => {
-    if (!selectedRace || !selectedRaceEdition || !selectedRankingRunner) {
-      return;
-    }
+  function onTabSelect(tab: TabId): void {
+    trackEvent(TrackedEvent.RUNNER_DETAILS_VIEW_CHANGE_TAB, { tab });
 
-    trackEvent(TrackedEvent.DOWNLOAD_RUNNER_LAPS_XLSX, {
-      runnerId: selectedRankingRunner.id,
-      raceId: selectedRace.id,
+    setIsTabContentLoading(true);
+    void setSelectedTab(tab);
+
+    React.startTransition(() => {
+      setIsTabContentLoading(false);
     });
+  }
 
-    const filename =
-      `${selectedRankingRunner.firstname} ${selectedRankingRunner.lastname} - ${selectedRace.name} - ${selectedRaceEdition.name}`.trim();
-
-    generateXlsxFromData(getDataForExcelExport(selectedRankingRunner), filename);
-  }, [selectedRace, selectedRaceEdition, selectedRankingRunner]);
+  // Set default tab (we don't use nuqs `withDefault` because we always want the tab to be displayed in params)
+  React.useEffect(() => {
+    if (!arrayUtils.inArray(selectedTab, availableTabIds)) {
+      void setSelectedTab(TAB_ID_STATS);
+    }
+  }, [availableTabIds, selectedTab, setSelectedTab]);
 
   // Redirect to runner-details without selected runner if selected runner ID is unknown
   React.useEffect(() => {
@@ -177,21 +196,26 @@ export default function RunnerDetailsView(): React.ReactElement {
     }
   }, [runnerParticipations, selectedRaceId, selectedRunner, setSelectedRaceId]);
 
-  // const isRaceInProgress = !!selectedRace && !isRaceFinished(selectedRace, serverTimeOffset);
+  const runnerDetailsViewContextValues: RunnerDetailsViewContext = {
+    selectedRace,
+    selectedRaceEdition,
+    selectedRankingRunner,
+    ranking,
+  };
 
   return (
     <Page
       id="runner-details"
       title="Détails coureur"
       htmlTitle={
-        selectedRunner === undefined
+        selectedRunner === null
           ? "Détails coureur"
           : `Détails coureur ${selectedRunner.firstname} ${selectedRunner.lastname}`
       }
       layout="flexGap"
     >
       <div className="flex w-full flex-col gap-1 md:w-1/2 xl:w-1/3 2xl:w-1/4 print:hidden">
-        <RunnerSelector runners={runners} onSelectRunner={onSelectRunner} selectedRunnerId={runnerId} />
+        <RunnerSelector runners={runners} onSelectRunner={onRunnerSelect} selectedRunnerId={runnerId} />
 
         <div className="flex justify-end">
           <Link to="/runner-details/search" icon={<FontAwesomeIcon icon={faSearch} />}>
@@ -211,7 +235,7 @@ export default function RunnerDetailsView(): React.ReactElement {
       )}
 
       {selectedRaceRunner && (
-        <Card className="gap-default flex flex-col">
+        <Card className="flex flex-col gap-5">
           <div className="flex flex-col gap-1">
             <h2 className="flex items-center gap-2">
               <RunnerNameWithIcons runner={selectedRaceRunner} strongClassName="[font-weight:inherit]" />
@@ -261,30 +285,41 @@ export default function RunnerDetailsView(): React.ReactElement {
             )}
           </div>
 
-          {selectedRankingRunner && selectedRace && ranking ? (
-            <div className="gap-default flex flex-col">
-              <RunnerDetailsStats runner={selectedRankingRunner} race={selectedRace} ranking={ranking} />
+          {selectedRace && (
+            <runnerDetailsViewContext.Provider value={runnerDetailsViewContextValues}>
+              <Tabs
+                value={selectedTab}
+                onValueChange={(newValue: TabId) => {
+                  onTabSelect(newValue);
+                }}
+                className="flex flex-col gap-5"
+              >
+                {!selectedRace.isBasicRanking && (
+                  <div className="print:hidden">
+                    <TabList>
+                      <Tab value={TAB_ID_STATS}>Statistiques détaillées</Tab>
+                      <Tab value={TAB_ID_SPLIT}>Temps intermédiaires</Tab>
+                    </TabList>
+                  </div>
+                )}
 
-              {selectedRankingRunner.totalAverageSpeed !== null && !selectedRace.isBasicRanking && (
-                <SpeedChart
-                  runner={selectedRankingRunner}
-                  race={selectedRace}
-                  averageSpeed={selectedRankingRunner.totalAverageSpeed}
-                />
-              )}
+                {isTabContentLoading && <CircularLoader />}
 
-              {!selectedRace.isBasicRanking && selectedRankingRunner.passages.length > 0 && (
-                <RunnerDetailsLaps
-                  runner={selectedRankingRunner}
-                  race={selectedRace}
-                  exportRunnerToXlsx={exportRunnerToXlsx}
-                />
-              )}
-            </div>
-          ) : (
-            <p>
-              <CircularLoader asideText="Chargement des données" />
-            </p>
+                {!isTabContentLoading && (
+                  <>
+                    <TabContent value={TAB_ID_STATS}>
+                      <StatsTabContent />
+                    </TabContent>
+
+                    {!selectedRace.isBasicRanking && (
+                      <TabContent value={TAB_ID_SPLIT}>
+                        <SplitTabContent />
+                      </TabContent>
+                    )}
+                  </>
+                )}
+              </Tabs>
+            </runnerDetailsViewContext.Provider>
           )}
         </Card>
       )}

@@ -10,6 +10,7 @@ export const BUTTON_COLOR_TO_CLASSNAMES: Record<ButtonColor, string> = {
     "text-white dark:text-neutral-100/85 bg-orange-400 [&:not(.loading)]:hover:bg-orange-300 dark:bg-orange-700 [&:not(.loading)]:dark:hover:bg-orange-600",
   red: "text-white dark:text-neutral-100/85 bg-red-600 [&:not(.loading)]:hover:bg-red-400 dark:bg-red-800 [&:not(.loading)]:dark:hover:bg-red-700",
   gray: "text-white dark:text-neutral-200 bg-neutral-500 dark:bg-neutral-600 [&:not(.loading)]:hover:bg-neutral-400 [&:not(.loading)]:dark:hover:bg-neutral-500",
+  transparent: "",
 };
 
 export const BUTTON_SIZE_TO_CLASSNAMES: Record<ButtonSize, string> = {

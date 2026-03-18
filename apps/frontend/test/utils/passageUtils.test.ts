@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { ProcessedPassage, PublicPassage, PublicRace } from "@live24hisere/core/types";
 import {
   getFastestLapPassage,
+  getProcessedDistanceSlotsFromPassages,
   getProcessedPassagesFromPassages,
   getProcessedTimeSlotsFromPassages,
   getSlowestLapPassage,
@@ -279,5 +280,120 @@ describe("Get processed time slots from passages", () => {
   it("Average speed for the time slot should be null if time slot contains no passages", () => {
     expect(timeSlots[7].averageSpeed).toBe(null);
     expect(timeSlots[7].averagePace).toBe(null);
+  });
+});
+
+describe("Get processed distance slots from passages", () => {
+  // Race: initialDistance=500m, lapDistance=1000m, starts at 07:00:00
+  const race: PublicRace = {
+    id: 123,
+    editionId: 456,
+    name: "Test race",
+    initialDistance: "500",
+    lapDistance: "1000",
+    startTime: "2024-04-06T07:00:00.000Z",
+    duration: 86400,
+    isImmediateStop: true,
+    isBasicRanking: false,
+  };
+
+  // Passages and their processed data:
+  // id 111 (initial): lap [0m, 500m],   race time [0ms,     300_000ms]
+  // id 222:           lap [500m, 1500m], race time [300_000ms, 600_000ms]
+  // id 333:           lap [1500m, 2500m], race time [600_000ms, 900_000ms]
+  // id 444:           lap [2500m, 3500m], race time [900_000ms, 1_500_000ms]
+  // id 555:           lap [3500m, 4500m], race time [1_500_000ms, 2_700_000ms]
+  const passages: PublicPassage[] = [
+    { id: 111, time: "2024-04-06T07:05:00.000Z" },
+    { id: 222, time: "2024-04-06T07:10:00.000Z" },
+    { id: 333, time: "2024-04-06T07:15:00.000Z" },
+    { id: 444, time: "2024-04-06T07:25:00.000Z" },
+    { id: 555, time: "2024-04-06T07:45:00.000Z" },
+  ];
+
+  const processedPassages = getProcessedPassagesFromPassages(race, passages);
+
+  // totalDistance after last passage
+  const runnerTotalDistance = 4500;
+
+  it("should return an empty array if intervals is empty", () => {
+    expect(getProcessedDistanceSlotsFromPassages(race, processedPassages, [], runnerTotalDistance)).toEqual([]);
+  });
+
+  it("should return one slot when a single interval is given", () => {
+    const slots = getProcessedDistanceSlotsFromPassages(race, processedPassages, [1500], runnerTotalDistance);
+
+    expect(slots.length).toBe(1);
+    expect(slots[0].startDistance).toBe(0);
+    expect(slots[0].endDistance).toBe(1500);
+  });
+
+  it("should return exact race times when the interval falls on an exact passage distance", () => {
+    // passage 222 ends at exactly 1500m (raceTime=600_000ms)
+    const slots = getProcessedDistanceSlotsFromPassages(race, processedPassages, [1500], runnerTotalDistance);
+
+    expect(slots[0].startRaceTime).toBe(0);
+    expect(slots[0].startRaceTimeExact).toBe(true);
+    expect(slots[0].endRaceTime).toBe(600_000);
+    expect(slots[0].endRaceTimeExact).toBe(true);
+  });
+
+  it("should return an approximate end race time when the interval falls between two passages", () => {
+    // 2000m is between passage 222 (1500m, 600_000ms) and 333 (2500m, 900_000ms)
+    // interpolated raceTime = 600_000 + 300_000 * (500/1000) = 750_000ms
+    const slots = getProcessedDistanceSlotsFromPassages(race, processedPassages, [2000], runnerTotalDistance);
+
+    expect(slots[0].endRaceTimeExact).toBe(false);
+    expect(slots[0].endRaceTime).toBe(750_000);
+  });
+
+  it("should return an approximate start race time when the section start falls between two passages", () => {
+    // section 2000→3500: startDistance=2000 is between passage 222 and 333 → approximate
+    const slots = getProcessedDistanceSlotsFromPassages(race, processedPassages, [2000, 3500], runnerTotalDistance);
+
+    expect(slots[1].startRaceTimeExact).toBe(false);
+    expect(slots[1].startRaceTime).toBe(750_000);
+    expect(slots[1].endRaceTimeExact).toBe(true);
+    expect(slots[1].endRaceTime).toBe(1_500_000);
+  });
+
+  it("should compute correct duration, average speed and average pace", () => {
+    // section 0→1500: duration=600_000ms, speed=(1500m/600s)*3.6=9 km/h, pace=400_000 ms/km
+    // section 1500→3500: duration=900_000ms, distance=2000m, speed=(2000m/900s)*3.6=8 km/h, pace=450_000 ms/km
+    const slots = getProcessedDistanceSlotsFromPassages(race, processedPassages, [1500, 3500], runnerTotalDistance);
+
+    expect(slots[0].duration).toBe(600_000);
+    expect(slots[0].averageSpeed).toBe(9);
+    expect(slots[0].averagePace).toBe(400_000);
+
+    expect(slots[1].duration).toBe(900_000);
+    expect(slots[1].averageSpeed).toBe(8);
+    expect(slots[1].averagePace).toBe(450_000);
+  });
+
+  it("should include passages whose lap is partially or entirely within the distance section", () => {
+    // section 0→1500:   111 [0-500], 222 [500-1500], 333 [1500-2500] (starts at boundary)
+    // section 1500→3500: 333 [1500-2500], 444 [2500-3500], 555 [3500-4500] (starts at boundary)
+    const slots = getProcessedDistanceSlotsFromPassages(race, processedPassages, [1500, 3500], runnerTotalDistance);
+
+    expect(slots[0].passages.map((p) => p.id)).toEqual([111, 222, 333]);
+    expect(slots[1].passages.map((p) => p.id)).toEqual([333, 444, 555]);
+  });
+
+  it("should stop generating slots when the runner has not reached the end distance of a section", () => {
+    // runner only reached 4500m, so section 3500→5000 is skipped
+    const slots = getProcessedDistanceSlotsFromPassages(race, processedPassages, [1500, 5000], runnerTotalDistance);
+
+    expect(slots.length).toBe(1);
+    expect(slots[0].endDistance).toBe(1500);
+  });
+
+  it("should generate a slot when the interval equals the runner's total distance", () => {
+    // interval equals runnerTotalDistance exactly → one slot 0→4500 should be generated
+    const slots = getProcessedDistanceSlotsFromPassages(race, processedPassages, [4500], runnerTotalDistance);
+
+    expect(slots.length).toBe(1);
+    expect(slots[0].startDistance).toBe(0);
+    expect(slots[0].endDistance).toBe(4500);
   });
 });

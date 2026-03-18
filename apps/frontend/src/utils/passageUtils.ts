@@ -7,6 +7,7 @@ import type {
   RaceRunner,
   RaceRunnerWithPassages,
   RunnerProcessedData,
+  RunnerProcessedDistanceSlot,
   RunnerProcessedTimeSlot,
 } from "@live24hisere/core/types";
 import { compareUtils, dateUtils } from "@live24hisere/utils";
@@ -161,6 +162,44 @@ export function getPassagesWithRunnersFromPassagesAndRunners<TRunner extends Rac
 }
 
 /**
+ * Returns a processed time slot for the given race time interval
+ * @param race
+ * @param passages the list of passages sorted in ascending time order
+ * @param startRaceTimeMs start of the interval, in milliseconds
+ * @param endRaceTimeMs end of the interval, in milliseconds
+ */
+export function getProcessedTimeSlotInInterval(
+  race: PublicRace,
+  passages: ProcessedPassage[],
+  startRaceTimeMs: number,
+  endRaceTimeMs: number,
+): RunnerProcessedTimeSlot {
+  const raceStartTime = new Date(race.startTime);
+  const startTime = new Date(raceStartTime.getTime() + startRaceTimeMs);
+  const endTime = new Date(raceStartTime.getTime() + endRaceTimeMs);
+
+  const passagesInSlot = getRunnerLapsInTimeInterval(passages, startTime, endTime);
+
+  let averageSpeed = null;
+  let averagePace = null;
+
+  if (passagesInSlot.length > 0) {
+    averageSpeed = getAverageSpeedInInterval(passagesInSlot, startTime, endTime);
+    averagePace = getPaceFromSpeed(averageSpeed);
+  }
+
+  return {
+    startTime,
+    startRaceTime: startRaceTimeMs,
+    endTime,
+    endRaceTime: endRaceTimeMs,
+    passages: passagesInSlot,
+    averageSpeed,
+    averagePace,
+  };
+}
+
+/**
  * Returns processed time slots calculated from a list of passages
  * @param race
  * @param passages the list of passages sorted in ascending time order
@@ -173,42 +212,96 @@ export function getProcessedTimeSlotsFromPassages(
 ): RunnerProcessedTimeSlot[] {
   const timeSlots: RunnerProcessedTimeSlot[] = [];
 
-  const raceStartTime = new Date(race.startTime);
   const raceDurationMs = race.duration * 1000;
 
-  for (
-    let timeSlotStartRaceTime = 0;
-    timeSlotStartRaceTime < raceDurationMs;
-    timeSlotStartRaceTime += timeSlotDuration
-  ) {
-    const timeSlotEndRaceTime = Math.min(timeSlotStartRaceTime + timeSlotDuration - 1, raceDurationMs - 1);
-    const timeSlotStartTime = new Date(raceStartTime.getTime() + timeSlotStartRaceTime);
-    const timeSlotEndTime = new Date(raceStartTime.getTime() + timeSlotEndRaceTime);
-
-    const passagesInTimeSlot = getRunnerLapsInInterval(passages, timeSlotStartTime, timeSlotEndTime);
-
-    let averageSpeed = null;
-    let averagePace = null;
-
-    if (passagesInTimeSlot.length > 0) {
-      averageSpeed = getAverageSpeedInInterval(passagesInTimeSlot, timeSlotStartTime, timeSlotEndTime);
-      averagePace = getPaceFromSpeed(averageSpeed);
-    }
-
-    const timeSlot: RunnerProcessedTimeSlot = {
-      startTime: timeSlotStartTime,
-      startRaceTime: timeSlotStartRaceTime,
-      endTime: timeSlotEndTime,
-      endRaceTime: timeSlotEndRaceTime,
-      passages: passagesInTimeSlot,
-      averageSpeed,
-      averagePace,
-    };
-
-    timeSlots.push(timeSlot);
+  for (let startRaceTime = 0; startRaceTime < raceDurationMs; startRaceTime += timeSlotDuration) {
+    const endRaceTime = Math.min(startRaceTime + timeSlotDuration - 1, raceDurationMs - 1);
+    timeSlots.push(getProcessedTimeSlotInInterval(race, passages, startRaceTime, endRaceTime));
   }
 
   return timeSlots;
+}
+
+/**
+ * Returns processed distance slots (split sections) from a list of passages.
+ * Only sections whose end distance has been reached by the runner are generated.
+ * @param race
+ * @param passages the list of processed passages
+ * @param intervals sorted array of milestone distances in meters (e.g. [50000, 100000, 150000])
+ * @param runnerTotalDistance the total distance covered by the runner, in meters
+ */
+export function getProcessedDistanceSlotsFromPassages(
+  race: PublicRace,
+  passages: ProcessedPassage[],
+  intervals: number[],
+  runnerTotalDistance: number,
+): RunnerProcessedDistanceSlot[] {
+  if (intervals.length < 1) {
+    return [];
+  }
+
+  const raceStartTime = new Date(race.startTime);
+  const slots: RunnerProcessedDistanceSlot[] = [];
+
+  let previousInterval = 0;
+
+  for (const interval of intervals) {
+    const startDistance = previousInterval;
+    const endDistance = interval;
+
+    previousInterval = interval;
+
+    // Skip sections the runner has not reached
+    if (runnerTotalDistance < endDistance) {
+      break;
+    }
+
+    const startResult =
+      startDistance === 0
+        ? { exact: true, raceTime: 0 }
+        : approximateTimeToDistance(startDistance, passages, runnerTotalDistance, race.duration);
+
+    const endResult = approximateTimeToDistance(endDistance, passages, runnerTotalDistance, race.duration);
+
+    // Both race times are guaranteed non-null since the runner has reached endDistance
+    if (startResult.raceTime === null || endResult.raceTime === null) {
+      break;
+    }
+
+    const startRaceTime = startResult.raceTime;
+    const endRaceTime = endResult.raceTime;
+
+    const startTime = new Date(raceStartTime.getTime() + startRaceTime);
+    const endTime = new Date(raceStartTime.getTime() + endRaceTime);
+    const duration = endRaceTime - startRaceTime;
+
+    const passagesInSlot = getRunnerLapsInDistanceInterval(passages, startDistance, endDistance);
+
+    let averageSpeed: number | null = null;
+    let averagePace: number | null = null;
+
+    if (duration > 0) {
+      averageSpeed = getSpeed(endDistance - startDistance, duration);
+      averagePace = getPaceFromSpeed(averageSpeed);
+    }
+
+    slots.push({
+      startDistance,
+      endDistance,
+      startTime,
+      startRaceTime,
+      startRaceTimeExact: startResult.exact,
+      endTime,
+      endRaceTime,
+      endRaceTimeExact: endResult.exact,
+      duration,
+      passages: passagesInSlot,
+      averageSpeed,
+      averagePace,
+    });
+  }
+
+  return slots;
 }
 
 export function getFastestLapPassage<TPassage extends ProcessedPassage = ProcessedPassage>(
@@ -259,11 +352,39 @@ export function getSlowestLapPassage<TPassage extends ProcessedPassage = Process
 
 /**
  * @param passages
+ * @param startDistance start of the distance interval, in meters
+ * @param endDistance end of the distance interval, in meters
+ * @return Passages whose lap is entirely or partially within the distance interval
+ */
+function getRunnerLapsInDistanceInterval<TPassage extends ProcessedPassage = ProcessedPassage>(
+  passages: TPassage[],
+  startDistance: number,
+  endDistance: number,
+): TPassage[] {
+  return passages.filter((passage) => {
+    const lapStartDistance = passage.processed.totalDistance - passage.processed.lapDistance;
+
+    // lap END distance is BEFORE interval
+    if (passage.processed.totalDistance <= startDistance) {
+      return false;
+    }
+
+    // lap START distance is AFTER interval
+    if (lapStartDistance > endDistance) {
+      return false;
+    }
+
+    return true;
+  });
+}
+
+/**
+ * @param passages
  * @param intervalStart
  * @param intervalEnd
  * @return Passages that are entirely or partially in the interval
  */
-function getRunnerLapsInInterval<TPassage extends ProcessedPassage = ProcessedPassage>(
+function getRunnerLapsInTimeInterval<TPassage extends ProcessedPassage = ProcessedPassage>(
   passages: TPassage[],
   intervalStart: Date,
   intervalEnd: Date,

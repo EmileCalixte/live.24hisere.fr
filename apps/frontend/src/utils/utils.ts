@@ -54,10 +54,13 @@ export function getTimeStringFromDate(date: Date, separator = ":"): string {
   return `${hours}${separator}${minutes}${separator}${seconds}`;
 }
 
-export function formatFloatNumber(number: number, decimalsCount: number): string {
+export function formatFloatNumber(number: number, minDecimalsCount: number, maxDecimalsCount?: number): string {
+  const minimumFractionDigits = minDecimalsCount;
+  const maximumFractionDigits = Math.max(minDecimalsCount, maxDecimalsCount ?? 0);
+
   return new Intl.NumberFormat(navigator.language, {
-    minimumFractionDigits: decimalsCount,
-    maximumFractionDigits: decimalsCount,
+    minimumFractionDigits,
+    maximumFractionDigits,
   }).format(number);
 }
 
