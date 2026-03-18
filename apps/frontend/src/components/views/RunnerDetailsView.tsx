@@ -7,8 +7,7 @@ import { arrayUtils, stringUtils } from "@live24hisere/utils";
 import { TrackedEvent } from "../../constants/eventTracking/customEventNames";
 import { SearchParam } from "../../constants/searchParams";
 import { appDataContext } from "../../contexts/AppDataContext";
-// eslint-disable-next-line @typescript-eslint/consistent-type-imports -- maybe an eslint bug, because we have to really import runnerDetailsViewContext here
-import { runnerDetailsViewContext, RunnerDetailsViewContext } from "../../contexts/RunnerDetailsViewContext";
+import { runnerDetailsViewContext, type RunnerDetailsViewContext } from "../../contexts/RunnerDetailsViewContext";
 import { useGetPublicEditions } from "../../hooks/api/requests/public/editions/useGetPublicEditions";
 import { useGetPublicRunnerParticipations } from "../../hooks/api/requests/public/participants/useGetPublicRunnerParticipations";
 import { useGetPublicRaces } from "../../hooks/api/requests/public/races/useGetPublicRaces";
