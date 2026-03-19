@@ -1,5 +1,5 @@
 import React from "react";
-import { DrawerPreview as Primitive } from "@base-ui/react/drawer";
+import { Drawer as Primitive } from "@base-ui/react/drawer";
 import { cn } from "tailwind-variants";
 
 export type DrawerOpenDirection = "left" | "right" | "up" | "down";
