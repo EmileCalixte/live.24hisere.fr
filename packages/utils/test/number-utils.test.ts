@@ -26,10 +26,10 @@ describe("Range", () => {
   it("Should throw if step is not positive integer", () => {
     const error = "Step must be a must be a positive non-null integer";
 
-    expect(() => range(1, 5, 0)).toThrowError(error);
-    expect(() => range(1, 5, -1)).toThrowError(error);
-    expect(() => range(0, 0, 0)).toThrowError(error);
-    expect(() => range(0, 0, 0.5)).toThrowError(error);
-    expect(() => range(0, 0, -2.3)).toThrowError(error);
+    expect(() => range(1, 5, 0)).toThrow(error);
+    expect(() => range(1, 5, -1)).toThrow(error);
+    expect(() => range(0, 0, 0)).toThrow(error);
+    expect(() => range(0, 0, 0.5)).toThrow(error);
+    expect(() => range(0, 0, -2.3)).toThrow(error);
   });
 });
