@@ -106,10 +106,10 @@ importers:
         version: 3.2.0(date-fns@4.1.0)
       drizzle-orm:
         specifier: ^0.45.1
-        version: 0.45.1(gel@2.0.0)(mysql2@3.18.2(@types/node@22.19.15))
+        version: 0.45.1(gel@2.0.0)(mysql2@3.20.0(@types/node@22.19.15))
       mysql2:
-        specifier: ^3.18.2
-        version: 3.18.2(@types/node@22.19.15)
+        specifier: ^3.20.0
+        version: 3.20.0(@types/node@22.19.15)
       nest-commander:
         specifier: ^3.20.1
         version: 3.20.1(@nestjs/common@11.1.17(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.17)(@types/inquirer@8.2.10)(@types/node@22.19.15)(typescript@5.9.3)
@@ -4563,8 +4563,8 @@ packages:
     resolution: {integrity: sha512-WWdIxpyjEn+FhQJQQv9aQAYlHoNVdzIzUySNV1gHUPDSdZJ3yZn7pAAbQcV7B56Mvu881q9FZV+0Vx2xC44VWA==}
     engines: {node: ^18.17.0 || >=20.5.0}
 
-  mysql2@3.18.2:
-    resolution: {integrity: sha512-UfEShBFAZZEAKjySnTUuE7BgqkYT4mx+RjoJ5aqtmwSSvNcJ/QxQPXz/y3jSxNiVRedPfgccmuBtiPCSiEEytw==}
+  mysql2@3.20.0:
+    resolution: {integrity: sha512-eCLUs7BNbgA6nf/MZXsaBO1SfGs0LtLVrJD3WeWq+jPLDWkSufTD+aGMwykfUVPdZnblaUK1a8G/P63cl9FkKg==}
     engines: {node: '>= 8.0'}
     peerDependencies:
       '@types/node': '>= 8'
@@ -8825,10 +8825,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.45.1(gel@2.0.0)(mysql2@3.18.2(@types/node@22.19.15)):
+  drizzle-orm@0.45.1(gel@2.0.0)(mysql2@3.20.0(@types/node@22.19.15)):
     optionalDependencies:
       gel: 2.0.0
-      mysql2: 3.18.2(@types/node@22.19.15)
+      mysql2: 3.20.0(@types/node@22.19.15)
 
   dunder-proto@1.0.1:
     dependencies:
@@ -10574,7 +10574,7 @@ snapshots:
 
   mute-stream@2.0.0: {}
 
-  mysql2@3.18.2(@types/node@22.19.15):
+  mysql2@3.20.0(@types/node@22.19.15):
     dependencies:
       '@types/node': 22.19.15
       aws-ssl-profiles: 1.1.2
