@@ -36,6 +36,11 @@ export interface PublicRunner {
    * The ISO 3166-1 Alpha-3 code of the runner's country
    */
   countryCode: string | null;
+
+  /**
+   * The ID of the runner on the DUV website (https://statistik.d-u-v.org/)
+   */
+  duvRunnerId?: string | null;
 }
 
 export interface AdminRunner extends PublicRunner {
