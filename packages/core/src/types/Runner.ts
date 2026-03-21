@@ -40,7 +40,7 @@ export interface PublicRunner {
   /**
    * The ID of the runner on the DUV website (https://statistik.d-u-v.org/)
    */
-  duvRunnerId?: string | null;
+  duvRunnerId: string | null;
 }
 
 export interface AdminRunner extends PublicRunner {

@@ -20,10 +20,13 @@ export default function CreateRunnerAdminView(): React.ReactElement {
   const [gender, setGender] = React.useState<Gender>(GENDER.M);
   const [birthYear, setBirthYear] = React.useState((new Date().getFullYear() - 30).toString());
   const [countryCode, setCountryCode] = React.useState(COUNTRY_CODE_FRANCE);
+  const [duvRunnerId, setDuvRunnerId] = React.useState<string | null>(null);
   const [isPublic, setIsPublic] = React.useState(true);
 
   const onSubmit: FormSubmitEventHandler = (e) => {
     e.preventDefault();
+
+    const duvId = duvRunnerId?.trim();
 
     const body = {
       firstname,
@@ -31,6 +34,7 @@ export default function CreateRunnerAdminView(): React.ReactElement {
       gender,
       birthYear: parseInt(birthYear),
       countryCode: countryCode === COUNTRY_NULL_OPTION_VALUE ? null : countryCode,
+      duvRunnerId: duvId ?? null,
       isPublic,
     };
 
@@ -62,6 +66,8 @@ export default function CreateRunnerAdminView(): React.ReactElement {
             setBirthYear={setBirthYear}
             countryCode={countryCode}
             setCountryCode={setCountryCode}
+            duvRunnerId={duvRunnerId ?? ""}
+            setDuvRunnerId={setDuvRunnerId}
             isPublic={isPublic}
             setIsPublic={setIsPublic}
             submitButtonDisabled={postRunnerMutation.isPending}

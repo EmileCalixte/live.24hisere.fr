@@ -50,6 +50,7 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
   const [runnerGender, setRunnerGender] = React.useState<Gender>(GENDER.M);
   const [runnerBirthYear, setRunnerBirthYear] = React.useState("0");
   const [runnerCountryCode, setRunnerCountryCode] = React.useState<string | null>(null);
+  const [runnerDuvRunnerId, setRunnerDuvRunnerId] = React.useState<string | null>(null);
   const [runnerIsPublic, setRunnerIsPublic] = React.useState(false);
 
   const unsavedChanges = React.useMemo(() => {
@@ -63,9 +64,19 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
       runnerGender === runner.gender,
       runnerBirthYear === runner.birthYear,
       runnerCountryCode === runner.countryCode,
+      runnerDuvRunnerId === runner.duvRunnerId,
       runnerIsPublic === runner.isPublic,
     ].includes(false);
-  }, [runner, runnerFirstname, runnerLastname, runnerGender, runnerBirthYear, runnerCountryCode, runnerIsPublic]);
+  }, [
+    runner,
+    runnerFirstname,
+    runnerLastname,
+    runnerGender,
+    runnerBirthYear,
+    runnerCountryCode,
+    runnerDuvRunnerId,
+    runnerIsPublic,
+  ]);
 
   React.useEffect(() => {
     if (!runner) {
@@ -77,6 +88,7 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
     setRunnerGender(runner.gender);
     setRunnerBirthYear(runner.birthYear);
     setRunnerCountryCode(runner.countryCode);
+    setRunnerDuvRunnerId(runner.duvRunnerId);
     setRunnerIsPublic(runner.isPublic);
   }, [runner]);
 
@@ -87,11 +99,14 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
       return;
     }
 
+    const duvRunnerId = runnerDuvRunnerId?.trim();
+
     const body = {
       firstname: runnerFirstname,
       lastname: runnerLastname,
       birthYear: parseInt(runnerBirthYear),
       countryCode: runnerCountryCode === COUNTRY_NULL_OPTION_VALUE ? null : runnerCountryCode,
+      duvRunnerId: duvRunnerId ?? null,
       gender: runnerGender,
       isPublic: runnerIsPublic,
     };
@@ -145,6 +160,8 @@ export default function RunnerDetailsAdminView(): React.ReactElement {
               setBirthYear={setRunnerBirthYear}
               countryCode={runnerCountryCode}
               setCountryCode={setRunnerCountryCode}
+              duvRunnerId={runnerDuvRunnerId ?? ""}
+              setDuvRunnerId={setRunnerDuvRunnerId}
               isPublic={runnerIsPublic}
               setIsPublic={setRunnerIsPublic}
               submitButtonDisabled={patchRunnerMutation.isPending || !unsavedChanges}

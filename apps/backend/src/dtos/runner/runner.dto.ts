@@ -1,6 +1,10 @@
 import { Type } from "class-transformer";
 import { IsBoolean, IsInt, IsNotEmpty, IsOptional, IsString, Max, MaxLength, Min } from "class-validator";
-import { RUNNER_FIRSTNAME_MAX_LENGTH, RUNNER_LASTNAME_MAX_LENGTH } from "@live24hisere/core/constants";
+import {
+  RUNNER_DUV_RUNNER_ID_MAX_LENGTH,
+  RUNNER_FIRSTNAME_MAX_LENGTH,
+  RUNNER_LASTNAME_MAX_LENGTH,
+} from "@live24hisere/core/constants";
 import { Gender, PostRunnerAdminApiRequest } from "@live24hisere/core/types";
 import { IsGender } from "../../validation/validators/IsGender";
 import { IsISO31661Alpha3Code } from "../../validation/validators/IsISO31661Alpha3Code";
@@ -38,12 +42,8 @@ export class RunnerDto implements PostRunnerPayload {
   @IsNotEmpty()
   isPublic: boolean;
 
-  // @IsBoolean()
-  // @IsDefined()
-  // stopped: boolean;
-
-  // @IsInt()
-  // @IsNotEmpty()
-  // @Validate(RaceIdExistsRule)
-  // raceId: number;
+  @IsString()
+  @IsOptional()
+  @MaxLength(RUNNER_DUV_RUNNER_ID_MAX_LENGTH)
+  duvRunnerId: string | null = null;
 }

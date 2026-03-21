@@ -19,7 +19,7 @@ import {
   PatchRunnerAdminApiRequest,
   PostRunnerAdminApiRequest,
 } from "@live24hisere/core/types";
-import { objectUtils } from "@live24hisere/utils";
+import { objectUtils, typeUtils } from "@live24hisere/utils";
 import { RunnerDto } from "../../dtos/runner/runner.dto";
 import { UpdateRunnerDto } from "../../dtos/runner/updateRunner.dto";
 import { AuthGuard } from "../../guards/auth.guard";
@@ -48,6 +48,8 @@ export class RunnersController {
     const runner = await this.runnerService.createRunner({
       ...objectUtils.instanceToObject(runnerDto),
       birthYear: runnerDto.birthYear.toString(),
+      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- intentional here to catch empty string
+      duvRunnerId: runnerDto.duvRunnerId?.trim() || null,
     });
 
     return {
@@ -125,6 +127,7 @@ export class RunnersController {
 
     const updateRunnerData: Parameters<RunnerService["updateRunner"]>[1] = objectUtils.excludeKeys(updateRunnerDto, [
       "birthYear",
+      "duvRunnerId",
     ]);
 
     if (updateRunnerDto.birthYear) {
@@ -133,6 +136,10 @@ export class RunnersController {
 
     if (updateRunnerData.birthYear === undefined) {
       delete updateRunnerData.birthYear;
+    }
+
+    if (!typeUtils.isNullOrUndefined(updateRunnerDto.duvRunnerId)) {
+      updateRunnerData.duvRunnerId = updateRunnerDto.duvRunnerId.trim() || null;
     }
 
     const updatedRunner = await this.runnerService.updateRunner(runner.id, updateRunnerData);
