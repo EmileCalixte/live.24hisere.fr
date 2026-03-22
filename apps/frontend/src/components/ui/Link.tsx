@@ -1,4 +1,6 @@
 import type React from "react";
+import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // eslint-disable-next-line no-restricted-imports -- This is the only place where we import Link from react-router-dom
 import { Link as ReactRouterLink, type To } from "react-router-dom";
 import { cn } from "tailwind-variants";
@@ -22,6 +24,8 @@ export type LinkProps = Omit<React.ComponentProps<typeof ReactRouterLink>, "to">
   size?: ButtonSize;
 
   icon?: React.ReactNode;
+
+  showExternalIcon?: boolean;
 };
 
 export const Link = ({
@@ -30,6 +34,7 @@ export const Link = ({
   color = "green",
   size = "base",
   icon,
+  showExternalIcon = false,
   className,
   children,
   ...props
@@ -49,10 +54,11 @@ export const Link = ({
       rel={props.target === "_blank" ? "noreferrer" : undefined}
       {...props}
     >
-      {icon ? (
-        <span className="flex items-center gap-2">
+      {!!icon || showExternalIcon ? (
+        <span className="inline-flex items-center gap-2">
           {icon}
           {children}
+          {showExternalIcon && <FontAwesomeIcon icon={faArrowUpRightFromSquare} className="text-xs" />}
         </span>
       ) : (
         children

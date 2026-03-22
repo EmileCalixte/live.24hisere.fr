@@ -44,7 +44,7 @@ export default function RunnersTable({ runners }: RunnersTableProps): React.Reac
               <Td>{runner.birthYear}</Td>
               <Td>
                 {runner.duvRunnerId !== null ? (
-                  <Link to={getDuvRunnerUrl(runner.duvRunnerId)} target="_blank">
+                  <Link to={getDuvRunnerUrl(runner.duvRunnerId)} target="_blank" showExternalIcon>
                     {runner.duvRunnerId}
                   </Link>
                 ) : (
