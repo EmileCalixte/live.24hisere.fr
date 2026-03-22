@@ -640,7 +640,7 @@
         },
         "duv_runner_id": {
           "name": "duv_runner_id",
-          "type": "varchar",
+          "type": "varchar(36)",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
