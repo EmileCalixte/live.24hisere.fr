@@ -1,6 +1,7 @@
 import type React from "react";
 import type { AdminRunner, RunnerWithRaceCount } from "@live24hisere/core/types";
 import { getCountryAlpha2CodeFromAlpha3Code } from "../../../../utils/countryUtils";
+import { getDuvRunnerUrl } from "../../../../utils/duvUtils";
 import { Flag } from "../../../ui/countries/Flag";
 import { Link } from "../../../ui/Link";
 import { Table, Td, Th, Tr } from "../../../ui/Table";
@@ -18,6 +19,7 @@ export default function RunnersTable({ runners }: RunnersTableProps): React.Reac
           <Th>Nom</Th>
           <Th>Sexe</Th>
           <Th>Année naissance</Th>
+          <Th>DUV</Th>
           <Th>Public</Th>
           <Th>Courses</Th>
           <Th>Détails</Th>
@@ -40,6 +42,15 @@ export default function RunnersTable({ runners }: RunnersTableProps): React.Reac
               </Td>
               <Td>{runner.gender}</Td>
               <Td>{runner.birthYear}</Td>
+              <Td>
+                {runner.duvRunnerId !== null ? (
+                  <Link to={getDuvRunnerUrl(runner.duvRunnerId)} target="_blank" showExternalIcon>
+                    {runner.duvRunnerId}
+                  </Link>
+                ) : (
+                  "Non"
+                )}
+              </Td>
               <Td>{runner.isPublic ? "Oui" : "Non"}</Td>
               <Td>{runner.raceCount}</Td>
               <Td>

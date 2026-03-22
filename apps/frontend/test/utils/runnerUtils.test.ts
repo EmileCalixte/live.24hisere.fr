@@ -136,6 +136,7 @@ describe("Spaceship runners", () => {
     gender: "M",
     birthYear: "0",
     countryCode: "FRA",
+    duvRunnerId: "1234",
     raceId: 0,
     bibNumber: 123,
     customCategoryId: null,

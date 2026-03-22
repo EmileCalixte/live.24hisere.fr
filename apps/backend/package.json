@@ -6,6 +6,7 @@
     "create-user": "node dist/src/cli.js create-user",
     "update-password": "node dist/src/cli.js update-user-password",
     "anonymize-runners": "node dist/src/cli.js anonymize-runners",
+    "seed-duv-runner-ids": "node dist/src/cli.js seed-duv-runner-ids",
     "import-passages-csv": "node dist/src/cli.js import-passages-csv",
     "drizzle-kit": "drizzle-kit",
     "createmigration": "drizzle-kit generate --name",

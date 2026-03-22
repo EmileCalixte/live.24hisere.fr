@@ -17,6 +17,7 @@ import { useProcessedRunnersWithProcessedHours } from "../../hooks/runners/usePr
 import { useRaceSelectOptions } from "../../hooks/useRaceSelectOptions";
 import { useRanking } from "../../hooks/useRanking";
 import { formatMsAsDuration } from "../../utils/durationUtils";
+import { getDuvRunnerUrl } from "../../utils/duvUtils";
 import { trackEvent } from "../../utils/eventTracking/eventTrackingUtils";
 import { isRaceFinished } from "../../utils/raceUtils";
 import { getRaceRunnerFromRunnerAndParticipant } from "../../utils/runnerUtils";
@@ -236,53 +237,67 @@ export default function RunnerDetailsView(): React.ReactElement {
 
       {selectedRaceRunner && (
         <Card className="flex flex-col gap-5">
-          <div className="flex flex-col gap-1">
-            <h2 className="flex items-center gap-2">
-              <RunnerNameWithIcons runner={selectedRaceRunner} strongClassName="[font-weight:inherit]" />
-            </h2>
+          <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-1">
+              <h2 className="flex items-center gap-2">
+                <RunnerNameWithIcons runner={selectedRaceRunner} strongClassName="[font-weight:inherit]" />
+              </h2>
 
-            {selectedRace && (
-              <div className="flex flex-wrap items-end gap-x-3 gap-y-1">
-                {runnerHasMultipleParticipations ? (
-                  <div className="w-full md:w-1/2 xl:w-1/3 2xl:w-1/4">
-                    <Select
-                      label="Course"
-                      options={runnerRaceOptions}
-                      value={selectedRace.id}
-                      onChange={(e) => {
-                        void setSelectedRaceId(e.target.value);
-                      }}
-                    />
-                  </div>
-                ) : (
-                  <p>{stringUtils.joinNonEmpty([selectedRaceEdition?.name, selectedRace.name], " – ")}</p>
-                )}
+              {selectedRaceRunner.duvRunnerId && (
+                <div>
+                  <p>
+                    <Link to={getDuvRunnerUrl(selectedRaceRunner.duvRunnerId)} target="_blank" showExternalIcon>
+                      Voir ce coureur sur DUV
+                    </Link>
+                  </p>
+                </div>
+              )}
+            </div>
 
-                {!isRaceFinished(selectedRace) && (
-                  <span>
-                    <b>
-                      <RaceTimer race={selectedRace} />
-                    </b>{" "}
-                    / {formatMsAsDuration(selectedRace.duration * 1000)}
-                  </span>
-                )}
-              </div>
-            )}
+            <div className="flex flex-col gap-1">
+              {selectedRace && (
+                <div className="flex flex-wrap items-end gap-x-3 gap-y-1">
+                  {runnerHasMultipleParticipations ? (
+                    <div className="w-full md:w-1/2 xl:w-1/3 2xl:w-1/4">
+                      <Select
+                        label="Course"
+                        options={runnerRaceOptions}
+                        value={selectedRace.id}
+                        onChange={(e) => {
+                          void setSelectedRaceId(e.target.value);
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <p>{stringUtils.joinNonEmpty([selectedRaceEdition?.name, selectedRace.name], " – ")}</p>
+                  )}
 
-            {selectedParticipation && (
-              <p>
-                <strong>Dossard n° {selectedParticipation.bibNumber}</strong>
-              </p>
-            )}
+                  {!isRaceFinished(selectedRace) && (
+                    <span>
+                      <b>
+                        <RaceTimer race={selectedRace} />
+                      </b>{" "}
+                      / {formatMsAsDuration(selectedRace.duration * 1000)}
+                    </span>
+                  )}
+                </div>
+              )}
 
-            {selectedRace && !isRaceFinished(selectedRace, serverTimeOffset) && selectedRankingRunner?.stopped && (
-              <p className="flex gap-2 font-bold text-red-600">
-                Coureur arrêté
-                <RunnerStoppedPopover>
-                  <FontAwesomeIcon icon={faCircleInfo} />
-                </RunnerStoppedPopover>
-              </p>
-            )}
+              {selectedParticipation && (
+                <p>
+                  <strong>Dossard n° {selectedParticipation.bibNumber}</strong>
+                </p>
+              )}
+
+              {selectedRace && !isRaceFinished(selectedRace, serverTimeOffset) && selectedRankingRunner?.stopped && (
+                <p className="flex gap-2 font-bold text-red-600">
+                  Coureur arrêté
+                  <RunnerStoppedPopover>
+                    <FontAwesomeIcon icon={faCircleInfo} />
+                  </RunnerStoppedPopover>
+                </p>
+              )}
+            </div>
           </div>
 
           {selectedRace && (

@@ -2,6 +2,7 @@ import { Type } from "@nestjs/common/interfaces/type.interface";
 import { CreateUserCommand } from "./commands/createUser.command";
 import { AnonymizeRunnersCommand } from "./commands/db/anonymizeRunners.command";
 import { MigrateCommand } from "./commands/db/migrate.command";
+import { SeedDuvRunnerIdsCommand } from "./commands/db/seedDuvRunnerIds.command";
 import { ImportPassagesCsvCommand } from "./commands/passages/importPassagesCsv";
 import { CreatePasswordQuestionSet } from "./commands/questionSets/createPassword.questionSet";
 import { CurrentPasswordQuestionSet } from "./commands/questionSets/currentPassword.questionSet";
@@ -105,6 +106,7 @@ export const dependencies: Dependencies = {
   validationRules: [CustomRunnerCategoryIdExistsRule, EditionIdExistsRule, RaceIdExistsRule, RunnerIdExistsRule],
   commands: [
     AnonymizeRunnersCommand,
+    SeedDuvRunnerIdsCommand,
     CreateUserCommand,
     ImportPassagesCsvCommand,
     UpdateUserPasswordCommand,

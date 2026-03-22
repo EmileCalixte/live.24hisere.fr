@@ -3,11 +3,13 @@ import type { Gender } from "@live24hisere/core/types";
 import { COUNTRY_NULL_OPTION_VALUE, COUNTRY_OPTIONS_WITH_NULL, GENDER_OPTIONS } from "../../../../constants/forms";
 import type { FormSubmitEventHandler } from "../../../../types/utils/react";
 import { sortCountryOptions } from "../../../../utils/countryUtils";
+import { getDuvRunnerUrl } from "../../../../utils/duvUtils";
 import { Button } from "../../../ui/forms/Button";
 import { Checkbox } from "../../../ui/forms/Checkbox";
 import { Input } from "../../../ui/forms/Input";
 import RadioGroup from "../../../ui/forms/RadioGroup";
 import Select from "../../../ui/forms/Select";
+import { Link } from "../../../ui/Link";
 
 interface RunnerDetailsFormProps {
   onSubmit: FormSubmitEventHandler;
@@ -21,6 +23,8 @@ interface RunnerDetailsFormProps {
   setBirthYear: (birthYear: string) => void;
   countryCode: string | null;
   setCountryCode: (countryCode: string) => void;
+  duvRunnerId: string;
+  setDuvRunnerId: (duvRunnerId: string) => void;
   isPublic: boolean;
   setIsPublic: (stopped: boolean) => void;
   submitButtonDisabled: boolean;
@@ -38,6 +42,8 @@ export default function RunnerDetailsForm({
   setBirthYear,
   countryCode,
   setCountryCode,
+  duvRunnerId,
+  setDuvRunnerId,
   isPublic,
   setIsPublic,
   submitButtonDisabled,
@@ -68,20 +74,18 @@ export default function RunnerDetailsForm({
         }}
       />
 
-      <div className="d-flex flex-column gap-1">
-        <Input
-          label="Année de naissance"
-          type="number"
-          name="birthYear"
-          min={1900}
-          max={new Date().getFullYear()}
-          required
-          value={birthYear}
-          onChange={(e) => {
-            setBirthYear(e.target.value);
-          }}
-        />
-      </div>
+      <Input
+        label="Année de naissance"
+        type="number"
+        name="birthYear"
+        min={1900}
+        max={new Date().getFullYear()}
+        required
+        value={birthYear}
+        onChange={(e) => {
+          setBirthYear(e.target.value);
+        }}
+      />
 
       <Select
         label="Pays"
@@ -101,6 +105,25 @@ export default function RunnerDetailsForm({
           setGender(option.value);
         }}
       />
+
+      <div className="flex flex-col gap-1">
+        <Input
+          label="Identifiant DUV"
+          name="duvRunnerId"
+          maxLength={36}
+          value={duvRunnerId}
+          onChange={(e) => {
+            setDuvRunnerId(e.target.value);
+          }}
+        />
+        {duvRunnerId.trim().length > 0 && (
+          <p>
+            <Link to={getDuvRunnerUrl(duvRunnerId)} target="_blank">
+              Voir sur DUV
+            </Link>
+          </p>
+        )}
+      </div>
 
       <Checkbox
         label="Visible publiquement"

@@ -8,6 +8,7 @@ import {
   PASSAGE_IMPORT_RULE_URL_MAX_LENGTH,
   PASSAGE_ORIGINS,
   RACE_NAME_MAX_LENGTH,
+  RUNNER_DUV_RUNNER_ID_MAX_LENGTH,
   RUNNER_FIRSTNAME_MAX_LENGTH,
   RUNNER_LASTNAME_MAX_LENGTH,
 } from "@live24hisere/core/constants";
@@ -122,6 +123,7 @@ export const TABLE_RUNNER = mysqlTable(TABLE_NAME_RUNNER, (t) => ({
   birthYear: t.varchar({ length: 4 }).notNull(),
   countryCode: countryCode(),
   isPublic: t.boolean().notNull(),
+  duvRunnerId: t.varchar({ length: RUNNER_DUV_RUNNER_ID_MAX_LENGTH }),
 }));
 
 export const TABLE_CUSTOM_RUNNER_CATEGORY = mysqlTable(TABLE_NAME_CUSTOM_RUNNER_CATEGORY, (t) => ({
