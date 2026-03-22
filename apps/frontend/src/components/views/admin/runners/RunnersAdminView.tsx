@@ -6,7 +6,7 @@ import { getRunnersBreadcrumbs } from "../../../../services/breadcrumbs/breadcru
 import ComplexPageTitle from "../../../ComplexPageTitle";
 import { Card } from "../../../ui/Card";
 import CircularLoader from "../../../ui/CircularLoader";
-import { Input } from "../../../ui/forms/Input";
+import { DebouncedInput } from "../../../ui/forms/DebouncedInput";
 import Page from "../../../ui/Page";
 import RunnersTable from "../../../viewParts/admin/runners/RunnersTable";
 
@@ -49,13 +49,13 @@ export default function RunnersAdminView(): React.ReactElement {
       ) : (
         <Card className="flex flex-col gap-3">
           <div className="w-full md:w-1/2 xl:w-1/4">
-            <Input
+            <DebouncedInput
               label="Rechercher"
               placeholder="Nom ou prénom"
               autoComplete="off"
               value={search}
-              onChange={(e) => {
-                setSearch(e.target.value);
+              onChange={(value) => {
+                setSearch(value);
               }}
             />
           </div>
