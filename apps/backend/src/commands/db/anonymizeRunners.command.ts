@@ -13,6 +13,7 @@ import {
 import { Injectable } from "@nestjs/common";
 import { Command, CommandRunner, InquirerService } from "nest-commander";
 import { Gender } from "@live24hisere/core/types";
+import { FAKE_DATA_MAX_DUV_RUNNER_ID, FAKE_DATA_MIN_DUV_RUNNER_ID } from "../../constants/fakeData.constants";
 import { RunnerService } from "../../services/database/entities/runner.service";
 import { askConfirmation } from "../../utils/command-utils";
 
@@ -115,12 +116,18 @@ export class AnonymizeRunnersCommand extends CommandRunner {
       const firstname = faker.person.firstName(sex);
       const lastname = faker.person.lastName(sex);
 
+      const duvRunnerId =
+        runner.duvRunnerId !== null
+          ? faker.number.int({ min: FAKE_DATA_MIN_DUV_RUNNER_ID, max: FAKE_DATA_MAX_DUV_RUNNER_ID }).toString()
+          : null;
+
       const newRunner = await this.runnerService.updateRunner(runner.id, {
         countryCode,
         gender,
         birthYear,
         firstname,
         lastname,
+        duvRunnerId,
       });
 
       console.log(

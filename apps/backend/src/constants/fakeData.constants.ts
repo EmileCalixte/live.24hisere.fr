@@ -1,0 +1,2 @@
+export const FAKE_DATA_MIN_DUV_RUNNER_ID = 1;
+export const FAKE_DATA_MAX_DUV_RUNNER_ID = 2500000;
