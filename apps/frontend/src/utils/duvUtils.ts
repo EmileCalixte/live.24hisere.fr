@@ -2,5 +2,5 @@
  * @param id The ID of the runner on DUV
  */
 export function getDuvRunnerUrl(id: string): string {
-  return `https://statistik.d-u-v.org/getresultperson.php?runner=${id}`;
+  return `https://statistik.d-u-v.org/getresultperson.php?runner=${encodeURIComponent(id.trim())}`;
 }
