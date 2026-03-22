@@ -111,7 +111,6 @@ export default function RunnerDetailsForm({
           label="Identifiant DUV"
           name="duvRunnerId"
           maxLength={36}
-          required
           value={duvRunnerId}
           onChange={(e) => {
             setDuvRunnerId(e.target.value);

@@ -48,13 +48,13 @@ export function Input({
 
     setInternalValue(newValue);
 
-    if (e.target.validity.valid) {
+    if (type !== "number" || e.target.validity.valid) {
       onChange?.(e);
     }
   };
 
   const handleBlur: React.FocusEventHandler<HTMLInputElement> = (e) => {
-    if (value !== internalValue && !e.target.validity.valid) {
+    if (type === "number" && value !== internalValue && !e.target.validity.valid) {
       setInternalValue(valueToString(value));
     }
 
