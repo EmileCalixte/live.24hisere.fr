@@ -9,7 +9,7 @@ const DUV_RUNNER_ID_ASSIGNMENT_PROBABILITY = 0.9;
 @Injectable()
 @Command({
   name: "seed-duv-runner-ids",
-  description: `Assigns a random DUV runner ID to ${DUV_RUNNER_ID_ASSIGNMENT_PROBABILITY * 100}% of runners that don't already have one`,
+  description: `Assigns a random DUV runner ID to ${DUV_RUNNER_ID_ASSIGNMENT_PROBABILITY * 100}% of runners`,
 })
 export class SeedDuvRunnerIdsCommand extends CommandRunner {
   constructor(
