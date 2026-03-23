@@ -310,7 +310,9 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
 
           <h2>Retirer le coureur de la course</h2>
 
-          {runner.passages.length > 0 && <p>Les {runner.passages.length} du participant seront également supprimés.</p>}
+          {runner.passages.length > 0 && (
+            <p>Les {runner.passages.length} passages du participant seront également supprimés.</p>
+          )}
 
           <div>
             <Button color="red" isLoading={deleteRunnerMutation.isPending} onClick={deleteParticipant}>
