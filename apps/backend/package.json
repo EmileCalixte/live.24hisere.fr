@@ -61,7 +61,7 @@
     "@types/node": "22.19.15",
     "@types/supertest": "^7.2.0",
     "@vitest/coverage-v8": "^4.1.0",
-    "drizzle-kit": "^0.31.9",
+    "drizzle-kit": "^0.31.10",
     "jest-extended": "^7.0.0",
     "prettier": "^3.8.1",
     "source-map-support": "^0.5.20",
