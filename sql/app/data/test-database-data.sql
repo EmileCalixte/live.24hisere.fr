@@ -7,4 +7,4 @@ INSERT INTO `access_token` (`token`, `user_id`, `expiration_date`) VALUES
 ('TEST_ACCESS_TOKEN', 1, '9999-12-31 23:59:59');
 
 INSERT INTO `edition` (`id`, `name`, `order`, `is_public`) VALUES
-(8, 'Private edition', 6, 0);
+(8, 'Private edition', 7, 0);

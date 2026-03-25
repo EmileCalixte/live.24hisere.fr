@@ -33,6 +33,7 @@ describe("AppDataController (e2e)", () => {
       "isAppEnabled",
       "disabledAppMessage",
       "currentEditionId",
+      "customRunnerCategories",
       "lastUpdateTime",
       "globalInformationMessage",
     ]);
@@ -41,7 +42,14 @@ describe("AppDataController (e2e)", () => {
     expect(json.isAppEnabled).toBeBoolean();
     expect(json.disabledAppMessage).toBeOneOf([expect.any(String), null]);
     expect(json.currentEditionId).toBeOneOf([expect.any(Number), null]);
+    expect(json.customRunnerCategories).toBeArray();
     expect(json.lastUpdateTime).toBeDateString();
     expect(json.globalInformationMessage).toBeOneOf([expect.any(String), null]);
+
+    for (const customRunnerCategory of json.customRunnerCategories) {
+      expect(customRunnerCategory.id).toBeNumber();
+      expect(customRunnerCategory.code).toBeString();
+      expect(customRunnerCategory.name).toBeString();
+    }
   });
 });

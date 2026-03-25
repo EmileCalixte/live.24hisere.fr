@@ -1,6 +1,6 @@
 import { HttpStatus, INestApplication } from "@nestjs/common";
 import request from "supertest";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { AdminEdition, PublicEdition } from "@live24hisere/core/types";
 import { objectUtils } from "@live24hisere/utils";
 import { initApp } from "./_init";
@@ -25,6 +25,17 @@ describe("Edition endpoints (e2e)", { concurrent: false }, () => {
   });
 
   describe("EditionsController (e2e)", () => {
+    beforeAll(async () => {
+      const app = await initApp();
+
+      await request(app.getHttpServer())
+        .put("/admin/editions-order")
+        .send([8, 7, 6, 5, 4, 3, 2, 1])
+        .set("Authorization", ADMIN_USER_ACCESS_TOKEN);
+
+      await app.close();
+    });
+
     it("Get edition list (GET /editions)", async () => {
       const response = await request(app.getHttpServer()).get("/editions").expect(HttpStatus.OK);
 
@@ -41,11 +52,20 @@ describe("Edition endpoints (e2e)", { concurrent: false }, () => {
       }
 
       // Test editions order and test that private edition is not present
-      expect(json.editions.map((edition: PublicEdition) => edition.id)).toEqual([6, 5, 4, 3, 2, 1]);
+      expect(json.editions.map((edition: PublicEdition) => edition.id)).toEqual([7, 6, 5, 4, 3, 2, 1]);
     });
   });
 
   describe("Admin EditionsController (e2e)", () => {
+    beforeAll(async () => {
+      const app = await initApp();
+      await request(app.getHttpServer())
+        .put("/admin/editions-order")
+        .send([8, 7, 6, 5, 4, 3, 2, 1])
+        .set("Authorization", ADMIN_USER_ACCESS_TOKEN);
+      await app.close();
+    });
+
     it("Get edition list (GET /admin/editions)", async () => {
       const response = await request(app.getHttpServer())
         .get("/admin/editions")
@@ -57,16 +77,18 @@ describe("Edition endpoints (e2e)", { concurrent: false }, () => {
       expect(json.editions).toBeArray();
 
       for (const edition of json.editions) {
-        expect(edition).toContainAllKeys(["id", "name", "raceCount", "isPublic"]);
+        expect(edition).toContainAllKeys(["id", "name", "raceCount", "runnerCount", "isPublic"]);
 
         expect(edition.id).toBeNumber();
         expect(edition.name).toBeString();
         expect(edition.raceCount).toBeNumber();
+        expect(edition.raceCount).toBeNumber();
+        expect(edition.runnerCount).toBeNumber();
         expect(edition.isPublic).toBeBoolean();
       }
 
       // Test editions order and test that private edition is present
-      expect(json.editions.map((edition: AdminEdition) => edition.id)).toEqual([6, 5, 4, 3, 2, 1, 7]);
+      expect(json.editions.map((edition: AdminEdition) => edition.id)).toEqual([8, 7, 6, 5, 4, 3, 2, 1]);
     });
 
     it("Get an edition (GET /admin/editions/{id})", async () => {
@@ -137,7 +159,7 @@ describe("Edition endpoints (e2e)", { concurrent: false }, () => {
         const json = JSON.parse(editionListResponse.text);
 
         expect(json.editions).toBeArray();
-        expect(json.editions.length).toBe(7);
+        expect(json.editions.length).toBe(8);
 
         expect(json.editions.map((edition: AdminEdition) => edition.id).slice(0, 5)).toEqual([5, 2, 6, 1, 3]);
       });
@@ -145,7 +167,7 @@ describe("Edition endpoints (e2e)", { concurrent: false }, () => {
       it("Modify edition order with all edition IDs", async () => {
         const response = await request(app.getHttpServer())
           .put("/admin/editions-order")
-          .send([6, 5, 4, 3, 2, 1, 7])
+          .send([6, 5, 4, 3, 8, 2, 1, 7])
           .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
           .expect(HttpStatus.NO_CONTENT);
 
@@ -159,7 +181,7 @@ describe("Edition endpoints (e2e)", { concurrent: false }, () => {
 
         expect(json.editions).toBeArray();
 
-        expect(json.editions.map((edition: AdminEdition) => edition.id)).toEqual([6, 5, 4, 3, 2, 1, 7]);
+        expect(json.editions.map((edition: AdminEdition) => edition.id)).toEqual([6, 5, 4, 3, 8, 2, 1, 7]);
       });
     });
 
@@ -271,6 +293,7 @@ describe("Edition endpoints (e2e)", { concurrent: false }, () => {
           5,
           4,
           3,
+          8,
           2,
           1,
           7,
