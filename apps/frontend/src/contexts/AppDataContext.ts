@@ -14,6 +14,7 @@ export interface AppDataContext {
   currentEditionId: number | null;
   customRunnerCategories: CustomRunnerCategory[];
   disabledAppMessage: string | null;
+  globalInformationMessage: string | null;
 }
 
 export const appDataContext = React.createContext<AppDataContext>({
@@ -26,6 +27,7 @@ export const appDataContext = React.createContext<AppDataContext>({
   currentEditionId: null,
   customRunnerCategories: [],
   disabledAppMessage: null,
+  globalInformationMessage: null,
 });
 
 export function AppDataProvider({ children }: { children: React.ReactNode }): React.ReactElement {
@@ -35,6 +37,7 @@ export function AppDataProvider({ children }: { children: React.ReactNode }): Re
   const [serverTimeOffset, setServerTimeOffset] = React.useState(0);
   const [isAppEnabled, setIsAppEnabled] = React.useState(false);
   const [disabledAppMessage, setDisabledAppMessage] = React.useState<string | null>(null);
+  const [globalInformationMessage, setGlobalInformationMessage] = React.useState<string | null>(null);
   const [currentEditionId, setCurrentEditionId] = React.useState<number | null>(null);
   const [customRunnerCategories, setCustomRunnerCategories] = React.useState<CustomRunnerCategory[]>([]);
 
@@ -50,6 +53,7 @@ export function AppDataProvider({ children }: { children: React.ReactNode }): Re
 
     setIsAppEnabled(appData.isAppEnabled);
     setDisabledAppMessage(appData.disabledAppMessage);
+    setGlobalInformationMessage(appData.globalInformationMessage);
 
     setCurrentEditionId(appData.currentEditionId);
 
@@ -82,6 +86,7 @@ export function AppDataProvider({ children }: { children: React.ReactNode }): Re
       currentEditionId,
       customRunnerCategories,
       disabledAppMessage,
+      globalInformationMessage,
     }),
     [
       isLoading,
@@ -92,6 +97,7 @@ export function AppDataProvider({ children }: { children: React.ReactNode }): Re
       currentEditionId,
       customRunnerCategories,
       disabledAppMessage,
+      globalInformationMessage,
     ],
   );
 

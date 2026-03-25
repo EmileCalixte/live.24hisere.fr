@@ -8,6 +8,8 @@ import { EntityService } from "../entity.service";
 const KEY_IS_APP_ENABLED = "is_app_enabled";
 const KEY_DISABLED_APP_MESSAGE = "disabled_app_message";
 const KEY_CURRENT_EDITION_ID = "current_edition_id";
+const KEY_IS_GLOBAL_INFORMATION_MESSAGE_VISIBLE = "is_global_information_message_visible";
+const KEY_GLOBAL_INFORMATION_MESSAGE = "global_information_message";
 
 @Injectable()
 export class ConfigService extends EntityService {
@@ -33,6 +35,30 @@ export class ConfigService extends EntityService {
 
   public async setDisabledAppMessage(message: string): Promise<void> {
     await this.saveLine(KEY_DISABLED_APP_MESSAGE, message);
+  }
+
+  public async getIsGlobalInformationMessageVisible(): Promise<boolean | null> {
+    const config = await this.getLine(KEY_IS_GLOBAL_INFORMATION_MESSAGE_VISIBLE);
+
+    if (config?.value === undefined) {
+      return null;
+    }
+
+    return typeUtils.stringToBoolean(config.value);
+  }
+
+  public async setIsGlobalInformationMessageVisible(isVisible: boolean): Promise<void> {
+    await this.saveLine(KEY_IS_GLOBAL_INFORMATION_MESSAGE_VISIBLE, typeUtils.booleanToString(isVisible));
+  }
+
+  public async getGlobalInformationMessage(): Promise<string | null> {
+    const config = await this.getLine(KEY_GLOBAL_INFORMATION_MESSAGE);
+
+    return config?.value ?? null;
+  }
+
+  public async setGlobalInformationMessage(message: string): Promise<void> {
+    await this.saveLine(KEY_GLOBAL_INFORMATION_MESSAGE, message);
   }
 
   public async getCurrentEditionId(): Promise<number | null> {

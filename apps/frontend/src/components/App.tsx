@@ -9,6 +9,7 @@ import { ThemeProvider } from "../contexts/ThemeContext";
 import { userContext, UserProvider } from "../contexts/UserContext";
 import CircularLoader from "./ui/CircularLoader";
 import Footer from "./ui/footer/Footer";
+import GlobalInformationMessageCard from "./ui/GlobalInformationMessageCard";
 import Header from "./ui/header/Header";
 import { NavMenuContainer } from "./ui/navMenu/NavMenuContainer";
 import DisabledAppView from "./views/DisabledAppView";
@@ -45,6 +46,7 @@ function AppContent(): React.ReactElement {
   const isBypassDisabledAppRoute = isLoginRoute || isAdminRoute || isAboutRoute;
 
   const showDisabledAppMessage = !user && !isAppEnabled && !isBypassDisabledAppRoute;
+  const showGlobalInformationMessage = !isAdminRoute && !isAboutRoute;
 
   return (
     <div id="app" className="flex min-h-screen flex-col">
@@ -59,6 +61,8 @@ function AppContent(): React.ReactElement {
             {(isAppEnabled || !!user) && <NavMenuContainer />}
 
             <main id="page-wrapper" className="mt-3 flex-1 pb-8 lg:mt-6">
+              {showGlobalInformationMessage && <GlobalInformationMessageCard />}
+
               {isLoading ? (
                 <CircularLoader />
               ) : showDisabledAppMessage ? (

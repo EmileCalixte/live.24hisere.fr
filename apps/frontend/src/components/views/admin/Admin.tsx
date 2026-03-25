@@ -9,6 +9,7 @@ import DisabledAppAdminView from "./DisabledAppAdminView";
 import CreateEditionAdminView from "./editions/CreateEditionAdminView";
 import EditionDetailsAdminView from "./editions/EditionDetailsAdminView";
 import EditionsAdminView from "./editions/EditionsAdminView";
+import GlobalInformationMessageAdminView from "./GlobalInformationMessageAdminView";
 import CreateParticipantAdminView from "./participants/CreateParticipantAdminView";
 import ParticipantDetailsAdminView from "./participants/ParticipantDetailsAdminView";
 import CreatePassageImportRuleAdminView from "./passageImportSettings/CreatePassageImportRuleAdminView";
@@ -52,6 +53,7 @@ export default function Admin(): React.ReactElement {
       <Route path="passage-import-rules/create" element={<CreatePassageImportRuleAdminView />} />
       <Route path="passage-import-rules/:ruleId" element={<PassageImportRuleDetailsAdminView />} />
       <Route path="disabled-app" element={<DisabledAppAdminView />} />
+      <Route path="global-information-message" element={<GlobalInformationMessageAdminView />} />
 
       <Route path="*" element={<Navigate to="/admin/editions" replace />} />
     </Routes>

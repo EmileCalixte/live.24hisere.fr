@@ -12,6 +12,10 @@ export function getDisabledAppBreadcrumbs(): BreadcrumbsElement {
   return getBreadcrumbs([getAdminCrumb(), { label: "Accès à l'application" }]);
 }
 
+export function getGlobalInformationMessageBreadcrumbs(): BreadcrumbsElement {
+  return getBreadcrumbs([getAdminCrumb(), { label: "Message d'information global" }]);
+}
+
 export function getEditionsBreadcrumbs(): BreadcrumbsElement {
   return getBreadcrumbs(getEditionsCrumbs());
 }

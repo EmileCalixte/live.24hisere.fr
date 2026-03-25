@@ -1,4 +1,4 @@
-import type { DisabledAppData, PassageImportSettings } from "../Config";
+import type { DisabledAppData, GlobalInformationMessageData, PassageImportSettings } from "../Config";
 import type { ApiRequest } from "./ApiRequest";
 
 export interface GetDisabledAppDataAdminApiRequest extends ApiRequest {
@@ -11,6 +11,18 @@ export interface PatchDisabledAppDataAdminApiRequest extends ApiRequest {
   payload: Partial<DisabledAppData>;
 
   response: DisabledAppData;
+}
+
+export interface GetGlobalInformationMessageDataAdminApiRequest extends ApiRequest {
+  payload: never;
+
+  response: GlobalInformationMessageData;
+}
+
+export interface PatchGlobalInformationMessageDataAdminApiRequest extends ApiRequest {
+  payload: Partial<GlobalInformationMessageData>;
+
+  response: GlobalInformationMessageData;
 }
 
 export interface GetPassageImportSettingsAdminApiRequest extends ApiRequest {

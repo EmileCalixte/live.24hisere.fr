@@ -54,6 +54,7 @@ export function NavMenu(): React.ReactElement {
           { label: "Catégories personnalisées", to: "/custom-runner-categories" },
           { label: "Import de passages", to: "/passage-import-rules" },
           { label: "Désactivation de l'accès à l'application", to: "/disabled-app" },
+          { label: "Message d'information global", to: "/global-information-message" },
         ],
         show: !!user,
       },

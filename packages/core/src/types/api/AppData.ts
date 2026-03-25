@@ -35,5 +35,10 @@ export interface GetAppDataApiRequest extends ApiRequest {
      * Date and time the runners' data was exported from the timing system
      */
     lastUpdateTime: DateISOString | null;
+
+    /**
+     * If the global information message is visible, the message to be displayed
+     */
+    globalInformationMessage: string | null;
   };
 }

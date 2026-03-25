@@ -34,6 +34,7 @@ describe("AppDataController (e2e)", () => {
       "disabledAppMessage",
       "currentEditionId",
       "lastUpdateTime",
+      "globalInformationMessage",
     ]);
 
     expect(json.currentTime).toBeDateString();
@@ -41,5 +42,6 @@ describe("AppDataController (e2e)", () => {
     expect(json.disabledAppMessage).toBeOneOf([expect.any(String), null]);
     expect(json.currentEditionId).toBeOneOf([expect.any(Number), null]);
     expect(json.lastUpdateTime).toBeDateString();
+    expect(json.globalInformationMessage).toBeOneOf([expect.any(String), null]);
   });
 });
