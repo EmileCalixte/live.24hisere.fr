@@ -122,6 +122,12 @@ jobs:
           NODE_ENV: test
         run: pnpm backend test:e2e
 
+      - name: Run e2e tests again (idempotency check)
+        env:
+          DB_HOST: mariadb
+          NODE_ENV: test
+        run: pnpm backend test:e2e
+
   format:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-24.04
