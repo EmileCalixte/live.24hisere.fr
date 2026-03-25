@@ -12,6 +12,7 @@ import {
   ERROR_MESSAGE_EDITION_NOT_FOUND,
 } from "./constants/errors";
 import { badRequestBody, notFoundBody } from "./utils/errors";
+import { responseAtIndex } from "./utils/misc";
 
 describe("Edition endpoints (e2e)", { concurrent: false }, () => {
   let app: INestApplication;
@@ -118,19 +119,19 @@ describe("Edition endpoints (e2e)", { concurrent: false }, () => {
           .expect(HttpStatus.BAD_REQUEST),
       ]);
 
-      for (const response of [publicResponse, nonPublicResponse]) {
+      for (const [index, response] of [publicResponse, nonPublicResponse].entries()) {
         const json = JSON.parse(response.text);
 
         const edition = json.edition;
 
-        expect(edition).toBeObject();
+        expect(edition, responseAtIndex(index)).toBeObject();
 
-        expect(edition).toContainAllKeys(["id", "name", "raceCount", "isPublic"]);
+        expect(edition, responseAtIndex(index)).toContainAllKeys(["id", "name", "raceCount", "isPublic"]);
 
-        expect(edition.id).toBeNumber();
-        expect(edition.name).toBeString();
-        expect(edition.raceCount).toBeNumber();
-        expect(edition.isPublic).toBeBoolean();
+        expect(edition.id, responseAtIndex(index)).toBeNumber();
+        expect(edition.name, responseAtIndex(index)).toBeString();
+        expect(edition.raceCount, responseAtIndex(index)).toBeNumber();
+        expect(edition.isPublic, responseAtIndex(index)).toBeBoolean();
       }
 
       const notFoundJson = JSON.parse(notFoundResponse.text);
@@ -235,8 +236,8 @@ describe("Edition endpoints (e2e)", { concurrent: false }, () => {
             .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
         ]);
 
-        for (const response of responses) {
-          expect(response.statusCode).toBe(HttpStatus.UNPROCESSABLE_ENTITY);
+        for (const [index, response] of responses.entries()) {
+          expect(response.statusCode, responseAtIndex(index)).toBe(HttpStatus.UNPROCESSABLE_ENTITY);
 
           const json = JSON.parse(response.text);
 
@@ -328,8 +329,8 @@ describe("Edition endpoints (e2e)", { concurrent: false }, () => {
             .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
         ]);
 
-        for (const response of responses) {
-          expect(response.statusCode).toBe(HttpStatus.UNPROCESSABLE_ENTITY);
+        for (const [index, response] of responses.entries()) {
+          expect(response.statusCode, responseAtIndex(index)).toBe(HttpStatus.UNPROCESSABLE_ENTITY);
 
           const json = JSON.parse(response.text);
 

@@ -15,6 +15,7 @@ import {
   ERROR_MESSAGE_RACE_NOT_FOUND,
 } from "./constants/errors";
 import { badRequestBody, notFoundBody } from "./utils/errors";
+import { responseAtIndex } from "./utils/misc";
 
 describe.skip("Race endpoints (e2e)", { concurrent: false }, () => {
   let app: INestApplication;
@@ -35,10 +36,12 @@ describe.skip("Race endpoints (e2e)", { concurrent: false }, () => {
           request(app.getHttpServer()).get("/races?edition=invalid").expect(HttpStatus.BAD_REQUEST),
         ]);
 
-        for (const response of responses) {
+        for (const [index, response] of responses.entries()) {
           const json = JSON.parse(response.text);
 
-          expect(json).toEqual(badRequestBody("edition param must be provided in query string and must be numeric"));
+          expect(json, responseAtIndex(index)).toEqual(
+            badRequestBody("edition param must be provided in query string and must be numeric"),
+          );
         }
       });
 
@@ -137,10 +140,10 @@ describe.skip("Race endpoints (e2e)", { concurrent: false }, () => {
       expect(race.lapDistance).toBeString();
       expect(race.runnerCount).toBeNumber();
 
-      for (const response of [nonPublicResponse, notFoundResponse]) {
+      for (const [index, response] of [nonPublicResponse, notFoundResponse].entries()) {
         const json = JSON.parse(response.text);
 
-        expect(json).toEqual(notFoundBody(ERROR_MESSAGE_RACE_NOT_FOUND));
+        expect(json, responseAtIndex(index)).toEqual(notFoundBody(ERROR_MESSAGE_RACE_NOT_FOUND));
       }
 
       const invalidIdJson = JSON.parse(invalidIdResponse.text);
@@ -280,14 +283,14 @@ describe.skip("Race endpoints (e2e)", { concurrent: false }, () => {
           .expect(HttpStatus.BAD_REQUEST),
       ]);
 
-      for (const response of [publicResponse, nonPublicResponse]) {
+      for (const [index, response] of [publicResponse, nonPublicResponse].entries()) {
         const json = JSON.parse(response.text);
 
         const race = json.race;
 
-        expect(race).toBeObject();
+        expect(race, responseAtIndex(index)).toBeObject();
 
-        expect(race).toContainAllKeys([
+        expect(race, responseAtIndex(index)).toContainAllKeys([
           "id",
           "editionId",
           "name",
@@ -299,15 +302,15 @@ describe.skip("Race endpoints (e2e)", { concurrent: false }, () => {
           "runnerCount",
         ]);
 
-        expect(race.id).toBeNumber();
-        expect(race.name).toBeString();
-        expect(race.startTime).toBeDateString();
-        expect(race.startTime).toMatch(ISO8601_DATE_REGEX);
-        expect(race.duration).toBeNumber();
-        expect(race.initialDistance).toBeString();
-        expect(race.lapDistance).toBeString();
-        expect(race.isPublic).toBeBoolean();
-        expect(race.runnerCount).toBeNumber();
+        expect(race.id, responseAtIndex(index)).toBeNumber();
+        expect(race.name, responseAtIndex(index)).toBeString();
+        expect(race.startTime, responseAtIndex(index)).toBeDateString();
+        expect(race.startTime, responseAtIndex(index)).toMatch(ISO8601_DATE_REGEX);
+        expect(race.duration, responseAtIndex(index)).toBeNumber();
+        expect(race.initialDistance, responseAtIndex(index)).toBeString();
+        expect(race.lapDistance, responseAtIndex(index)).toBeString();
+        expect(race.isPublic, responseAtIndex(index)).toBeBoolean();
+        expect(race.runnerCount, responseAtIndex(index)).toBeNumber();
       }
 
       const notFoundJson = JSON.parse(notFoundResponse.text);
@@ -521,8 +524,8 @@ describe.skip("Race endpoints (e2e)", { concurrent: false }, () => {
             .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
         ]);
 
-        for (const response of responses) {
-          expect(response.statusCode).toBe(HttpStatus.UNPROCESSABLE_ENTITY);
+        for (const [index, response] of responses.entries()) {
+          expect(response.statusCode, responseAtIndex(index)).toBe(HttpStatus.UNPROCESSABLE_ENTITY);
 
           const json = JSON.parse(response.text);
 
@@ -728,8 +731,8 @@ describe.skip("Race endpoints (e2e)", { concurrent: false }, () => {
             .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
         ]);
 
-        for (const response of responses) {
-          expect(response.statusCode).toBe(HttpStatus.UNPROCESSABLE_ENTITY);
+        for (const [index, response] of responses.entries()) {
+          expect(response.statusCode, responseAtIndex(index)).toBe(HttpStatus.UNPROCESSABLE_ENTITY);
 
           const json = JSON.parse(response.text);
 

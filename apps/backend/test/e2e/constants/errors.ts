@@ -17,3 +17,7 @@ export const ERROR_MESSAGE_CANNOT_DELETE_RACE_WITH_RUNNERS = "Cannot delete a ra
 export const ERROR_MESSAGE_RUNNER_NOT_FOUND = "Runner not found";
 export const ERROR_MESSAGE_RUNNER_ID_MUST_BE_NUMBER = "Runner ID must be a number";
 export const ERROR_MESSAGE_RUNNER_ID_ALREADY_EXISTS = "A runner with the same ID already exists";
+
+export const ERROR_MESSAGE_PASSAGE_IMPORT_RULE_NOT_FOUND = "Passage import rule not found";
+export const ERROR_MESSAGE_PASSAGE_IMPORT_RULE_ID_MUST_BE_NUMBER = "Rule ID must be a number";
+export const ERROR_MESSAGE_PASSAGE_IMPORT_RULE_RACE_IDS_MUST_EXIST = "All race IDs must be IDs of existing races";

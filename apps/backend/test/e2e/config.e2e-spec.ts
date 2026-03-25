@@ -185,45 +185,4 @@ describe("Admin ConfigController (e2e)", () => {
       expect(json.globalInformationMessage).toBe(null);
     });
   });
-
-  describe("Test passage import settings (GET-PATCH /admin/passage-import)", () => {
-    const dagFileUrl = `http://dag-file.test/${Date.now()}`;
-
-    it("Get current passage import settings", async () => {
-      const response = await request(app.getHttpServer())
-        .get("/admin/passage-import")
-        .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
-        .expect(HttpStatus.OK);
-
-      const json = JSON.parse(response.text);
-
-      expect(json).toContainAllKeys(["dagFileUrl"]);
-
-      expect(json.dagFileUrl).toBeString();
-      expect(json.dagFileUrl).not.toBe(dagFileUrl);
-    });
-
-    it("Update passage import URL", async () => {
-      const response = await request(app.getHttpServer())
-        .patch("/admin/passage-import")
-        .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
-        .send({ dagFileUrl })
-        .expect(HttpStatus.OK);
-
-      const json = JSON.parse(response.text);
-
-      expect(json.dagFileUrl).toBe(dagFileUrl);
-    });
-
-    it("Get passage import data after URL update", async () => {
-      const response = await request(app.getHttpServer())
-        .get("/admin/passage-import")
-        .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
-        .expect(HttpStatus.OK);
-
-      const json = JSON.parse(response.text);
-
-      expect(json.dagFileUrl).toBe(dagFileUrl);
-    });
-  });
 });
