@@ -7,7 +7,6 @@ import { EntityService } from "../entity.service";
 
 const KEY_IS_APP_ENABLED = "is_app_enabled";
 const KEY_DISABLED_APP_MESSAGE = "disabled_app_message";
-const KEY_CURRENT_EDITION_ID = "current_edition_id";
 const KEY_IS_GLOBAL_INFORMATION_MESSAGE_VISIBLE = "is_global_information_message_visible";
 const KEY_GLOBAL_INFORMATION_MESSAGE = "global_information_message";
 
@@ -64,21 +63,6 @@ export class ConfigService extends EntityService {
     }
 
     await this.saveLine(KEY_GLOBAL_INFORMATION_MESSAGE, message);
-  }
-
-  public async getCurrentEditionId(): Promise<number | null> {
-    const config = await this.getLine(KEY_CURRENT_EDITION_ID);
-
-    return config?.value ? parseInt(config.value) : null;
-  }
-
-  public async setCurrentEditionId(editionId: number | null): Promise<void> {
-    if (editionId === null) {
-      await this.deleteLine(KEY_CURRENT_EDITION_ID);
-      return;
-    }
-
-    await this.saveLine(KEY_CURRENT_EDITION_ID, editionId.toString());
   }
 
   private async getLine(key: string): Promise<Config | null> {

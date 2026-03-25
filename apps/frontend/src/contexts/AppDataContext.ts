@@ -11,7 +11,6 @@ export interface AppDataContext {
   serverTimeOffset: number;
   isAppEnabled: boolean;
   setIsAppEnabled: (isAppEnabled: boolean) => void;
-  currentEditionId: number | null;
   customRunnerCategories: CustomRunnerCategory[];
   disabledAppMessage: string | null;
   globalInformationMessage: string | null;
@@ -24,7 +23,6 @@ export const appDataContext = React.createContext<AppDataContext>({
   serverTimeOffset: 0,
   isAppEnabled: false,
   setIsAppEnabled: () => {},
-  currentEditionId: null,
   customRunnerCategories: [],
   disabledAppMessage: null,
   globalInformationMessage: null,
@@ -38,7 +36,6 @@ export function AppDataProvider({ children }: { children: React.ReactNode }): Re
   const [isAppEnabled, setIsAppEnabled] = React.useState(false);
   const [disabledAppMessage, setDisabledAppMessage] = React.useState<string | null>(null);
   const [globalInformationMessage, setGlobalInformationMessage] = React.useState<string | null>(null);
-  const [currentEditionId, setCurrentEditionId] = React.useState<number | null>(null);
   const [customRunnerCategories, setCustomRunnerCategories] = React.useState<CustomRunnerCategory[]>([]);
 
   const getAppDataQuery = useGetAppData();
@@ -54,8 +51,6 @@ export function AppDataProvider({ children }: { children: React.ReactNode }): Re
     setIsAppEnabled(appData.isAppEnabled);
     setDisabledAppMessage(appData.disabledAppMessage);
     setGlobalInformationMessage(appData.globalInformationMessage);
-
-    setCurrentEditionId(appData.currentEditionId);
 
     setCustomRunnerCategories(appData.customRunnerCategories);
 
@@ -83,7 +78,6 @@ export function AppDataProvider({ children }: { children: React.ReactNode }): Re
       serverTimeOffset,
       isAppEnabled,
       setIsAppEnabled,
-      currentEditionId,
       customRunnerCategories,
       disabledAppMessage,
       globalInformationMessage,
@@ -94,7 +88,6 @@ export function AppDataProvider({ children }: { children: React.ReactNode }): Re
       lastUpdateTime,
       serverTimeOffset,
       isAppEnabled,
-      currentEditionId,
       customRunnerCategories,
       disabledAppMessage,
       globalInformationMessage,
