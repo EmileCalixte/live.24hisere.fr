@@ -15,7 +15,8 @@ export class CustomRunnerCategoryService extends EntityService {
       })
       .from(TABLE_CUSTOM_RUNNER_CATEGORY)
       .leftJoin(TABLE_PARTICIPANT, eq(TABLE_PARTICIPANT.customCategoryId, TABLE_CUSTOM_RUNNER_CATEGORY.id))
-      .where(eq(TABLE_CUSTOM_RUNNER_CATEGORY.id, categoryId));
+      .where(eq(TABLE_CUSTOM_RUNNER_CATEGORY.id, categoryId))
+      .groupBy(TABLE_CUSTOM_RUNNER_CATEGORY.id); // Avoid returning an object with null values if categoryID does not exist
 
     return this.getUniqueResult(categories);
   }
