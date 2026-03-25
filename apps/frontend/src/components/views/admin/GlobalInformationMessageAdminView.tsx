@@ -1,7 +1,9 @@
 import React from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import DOMPurify from "dompurify";
 import { useGetGlobalInformationMessageData } from "../../../hooks/api/requests/admin/config/useGetGlobalInformationMessageData";
 import { usePatchGlobalInformationMessageData } from "../../../hooks/api/requests/admin/config/usePatchGlobalInformationMessageData";
+import { QUERY_KEY_GET_APP_DATA } from "../../../hooks/api/requests/public/appData/useGetAppData";
 import { getGlobalInformationMessageBreadcrumbs } from "../../../services/breadcrumbs/breadcrumbService";
 import type { FormSubmitEventHandler } from "../../../types/utils/react";
 import { Card } from "../../ui/Card";
@@ -12,6 +14,8 @@ import Page from "../../ui/Page";
 import { Separator } from "../../ui/Separator";
 
 export default function GlobalInformationMessageAdminView(): React.ReactElement {
+  const queryClient = useQueryClient();
+
   const getGlobalInformationMessageDataQuery = useGetGlobalInformationMessageData();
   const globalInformationMessageData = getGlobalInformationMessageDataQuery.data;
 
@@ -42,6 +46,7 @@ export default function GlobalInformationMessageAdminView(): React.ReactElement 
     patchGlobalInformationMessageDataMutation.mutate(body, {
       onSuccess: () => {
         void getGlobalInformationMessageDataQuery.refetch();
+        void queryClient.invalidateQueries({ queryKey: [QUERY_KEY_GET_APP_DATA] });
       },
     });
   };
