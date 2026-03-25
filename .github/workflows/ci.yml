@@ -74,6 +74,54 @@ jobs:
       - name: Run ESLint
         run: pnpm lint
 
+  e2e:
+    if: github.event.pull_request.draft == false
+    needs: [build]
+    runs-on: ubuntu-24.04
+    container: ubuntu:24.04
+
+    services:
+      mariadb:
+        image: mariadb:11.8.3
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_USER: admin
+          MYSQL_PASSWORD: admin
+          MYSQL_DATABASE: live_test
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+          --health-start-period=30s
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+          path: .
+
+      - name: Install MariaDB client
+        run: apt-get install -y mariadb-client
+
+      - name: Initialize test database
+        run: |
+          mysql -h mariadb -u admin -padmin live_test < sql/app/data/live.sql
+          mysql -h mariadb -u admin -padmin live_test < sql/app/data/test-database-data.sql
+
+      - name: Run e2e tests
+        env:
+          DB_HOST: mariadb
+          NODE_ENV: test
+        run: pnpm backend test:e2e
+
   format:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-24.04

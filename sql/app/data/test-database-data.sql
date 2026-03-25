@@ -1,11 +1,3 @@
--- Create test database
-CREATE DATABASE IF NOT EXISTS `live_test`;
-GRANT ALL PRIVILEGES ON `live_test`.* TO 'admin'@'%';
-
--- Populate test database
-USE `live_test`;
-SOURCE /docker-entrypoint-initdb.d/live.sql;
-
 -- Add test data to test database
 INSERT INTO `user` (`id`, `username`, `password_hash`) VALUES
 (2, 'Test', '$argon2id$v=19$m=65536,t=4,p=1$dNCcA763Qsi4EKw0YSvLpA$lNNnaAlVDs7jFwMfSoMnLSziOhTFs4kL2VRcLq8Iwt8'); -- Password: `test`
