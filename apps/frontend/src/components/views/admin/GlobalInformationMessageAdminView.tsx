@@ -31,7 +31,7 @@ export default function GlobalInformationMessageAdminView(): React.ReactElement 
 
     return [
       isGlobalInformationMessageVisible === globalInformationMessageData.isGlobalInformationMessageVisible,
-      globalInformationMessage === globalInformationMessageData.globalInformationMessage,
+      (globalInformationMessage || null) === globalInformationMessageData.globalInformationMessage,
     ].includes(false);
   }, [globalInformationMessageData, globalInformationMessage, isGlobalInformationMessageVisible]);
 
@@ -40,7 +40,7 @@ export default function GlobalInformationMessageAdminView(): React.ReactElement 
 
     const body = {
       isGlobalInformationMessageVisible,
-      globalInformationMessage,
+      globalInformationMessage: globalInformationMessage || null,
     };
 
     patchGlobalInformationMessageDataMutation.mutate(body, {

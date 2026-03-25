@@ -57,7 +57,12 @@ export class ConfigService extends EntityService {
     return config?.value ?? null;
   }
 
-  public async setGlobalInformationMessage(message: string): Promise<void> {
+  public async setGlobalInformationMessage(message: string | null): Promise<void> {
+    if (message === null) {
+      await this.deleteLine(KEY_GLOBAL_INFORMATION_MESSAGE);
+      return;
+    }
+
     await this.saveLine(KEY_GLOBAL_INFORMATION_MESSAGE, message);
   }
 

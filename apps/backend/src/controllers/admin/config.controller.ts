@@ -62,7 +62,7 @@ export class ConfigController {
       );
     }
 
-    if (!typeUtils.isNullOrUndefined(updateGlobalInformationMessageDto.globalInformationMessage)) {
+    if (updateGlobalInformationMessageDto.globalInformationMessage !== undefined) {
       promises.push(
         this.configService.setGlobalInformationMessage(updateGlobalInformationMessageDto.globalInformationMessage),
       );

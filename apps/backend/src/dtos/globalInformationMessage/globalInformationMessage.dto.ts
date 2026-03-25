@@ -1,4 +1,4 @@
-import { IsBoolean, IsDefined, IsString, MaxLength } from "class-validator";
+import { IsBoolean, IsDefined, IsOptional, IsString, MaxLength } from "class-validator";
 import { CONFIG_VALUE_MAX_LENGTH } from "../../constants/config.constants";
 
 export class GlobalInformationMessageDto {
@@ -7,7 +7,7 @@ export class GlobalInformationMessageDto {
   isGlobalInformationMessageVisible: boolean;
 
   @IsString()
-  @IsDefined()
+  @IsOptional()
   @MaxLength(CONFIG_VALUE_MAX_LENGTH)
-  globalInformationMessage?: string;
+  globalInformationMessage?: string | null;
 }
