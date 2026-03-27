@@ -17,7 +17,6 @@ export class AppDataController {
     const [
       isAppEnabled,
       disabledAppMessage,
-      currentEditionId,
       customRunnerCategories,
       lastUpdateTime,
       isGlobalInformationMessageVisible,
@@ -25,7 +24,6 @@ export class AppDataController {
     ] = await Promise.all([
       this.configService.getIsAppEnabled(),
       this.configService.getDisabledAppMessage(),
-      this.configService.getCurrentEditionId(),
       this.customRunnerCategoryService.getCategories(),
       this.miscService.getLastUpdateTime(true),
       this.configService.getIsGlobalInformationMessageVisible(),
@@ -37,7 +35,6 @@ export class AppDataController {
       isAppEnabled: isAppEnabled ?? false,
       disabledAppMessage: isAppEnabled ? null : disabledAppMessage,
       globalInformationMessage: isGlobalInformationMessageVisible ? globalInformationMessage : null,
-      currentEditionId,
       customRunnerCategories,
       lastUpdateTime,
     };

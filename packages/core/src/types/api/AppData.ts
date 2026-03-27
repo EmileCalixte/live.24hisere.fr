@@ -22,11 +22,6 @@ export interface GetAppDataApiRequest extends ApiRequest {
     disabledAppMessage: string | null;
 
     /**
-     * The ID of the edition to be auto-selected
-     */
-    currentEditionId: number | null;
-
-    /**
      * The list of existing custom categories of runners
      */
     customRunnerCategories: CustomRunnerCategory[];

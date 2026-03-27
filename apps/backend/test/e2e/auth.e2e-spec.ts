@@ -12,6 +12,7 @@ import {
   ERROR_MESSAGE_INVALID_CREDENTIALS,
 } from "./constants/errors";
 import { unauthorizedBody } from "./utils/errors";
+import { responseAtIndex } from "./utils/misc";
 
 describe("AuthController (e2e)", { concurrent: false }, () => {
   let app: INestApplication;
@@ -48,8 +49,8 @@ describe("AuthController (e2e)", { concurrent: false }, () => {
 
     expect(json.user.username).toBe("Admin");
 
-    for (const response of [noAccessTokenResponse, unknownTokenResponse, expiredTokenResponse]) {
-      expect(response.statusCode).toBe(HttpStatus.UNAUTHORIZED);
+    for (const [index, response] of [noAccessTokenResponse, unknownTokenResponse, expiredTokenResponse].entries()) {
+      expect(response.statusCode, responseAtIndex(index)).toBe(HttpStatus.UNAUTHORIZED);
     }
 
     const noAccessTokenJson = JSON.parse(noAccessTokenResponse.text);
@@ -98,24 +99,24 @@ describe("AuthController (e2e)", { concurrent: false }, () => {
       request(app.getHttpServer()).post("/auth/login").type("form").send(urlUtils.encode(invalidPasswordCredentials)),
     ]);
 
-    for (const response of [loginResponse1, loginResponse2]) {
-      expect(response.statusCode).toBe(HttpStatus.CREATED);
+    for (const [index, response] of [loginResponse1, loginResponse2].entries()) {
+      expect(response.statusCode, responseAtIndex(index)).toBe(HttpStatus.CREATED);
 
       const json = JSON.parse(response.text);
 
-      expect(json).toContainAllKeys(["accessToken", "expirationTime"]);
-      expect(json.accessToken).toBeString();
-      expect(json.accessToken).toMatch(/^[0-9a-fA-F]{32}$/);
-      expect(json.expirationTime).toBeDateString();
-      expect(json.expirationTime).toMatch(ISO8601_DATE_REGEX);
+      expect(json, responseAtIndex(index)).toContainAllKeys(["accessToken", "expirationTime"]);
+      expect(json.accessToken, responseAtIndex(index)).toBeString();
+      expect(json.accessToken, responseAtIndex(index)).toMatch(/^[0-9a-fA-F]{32}$/);
+      expect(json.expirationTime, responseAtIndex(index)).toBeDateString();
+      expect(json.expirationTime, responseAtIndex(index)).toMatch(ISO8601_DATE_REGEX);
     }
 
-    for (const response of [unknownUserResponse, invalidPasswordResponse]) {
-      expect(response.statusCode).toBe(HttpStatus.UNAUTHORIZED);
+    for (const [index, response] of [unknownUserResponse, invalidPasswordResponse].entries()) {
+      expect(response.statusCode, responseAtIndex(index)).toBe(HttpStatus.UNAUTHORIZED);
 
       const json = JSON.parse(response.text);
 
-      expect(json).toEqual(unauthorizedBody(ERROR_MESSAGE_INVALID_CREDENTIALS));
+      expect(json, responseAtIndex(index)).toEqual(unauthorizedBody(ERROR_MESSAGE_INVALID_CREDENTIALS));
     }
 
     [accessToken1, accessToken2] = [loginResponse1, loginResponse2].map(
@@ -127,8 +128,8 @@ describe("AuthController (e2e)", { concurrent: false }, () => {
       request(app.getHttpServer()).get("/auth/current-user-info").set("Authorization", accessToken2),
     ]);
 
-    for (const response of userInfoResponses) {
-      expect(response.statusCode).toBe(HttpStatus.OK);
+    for (const [index, response] of userInfoResponses.entries()) {
+      expect(response.statusCode, responseAtIndex(index)).toBe(HttpStatus.OK);
     }
   });
 
@@ -139,9 +140,9 @@ describe("AuthController (e2e)", { concurrent: false }, () => {
       request(app.getHttpServer()).post("/auth/logout").set("Authorization", accessToken2),
     ]);
 
-    for (const response of logoutResponses) {
-      expect(response.statusCode).toBe(HttpStatus.NO_CONTENT);
-      expect(response.text).toBeEmpty();
+    for (const [index, response] of logoutResponses.entries()) {
+      expect(response.statusCode, responseAtIndex(index)).toBe(HttpStatus.NO_CONTENT);
+      expect(response.text, responseAtIndex(index)).toBeEmpty();
     }
 
     const deletedTokenResponses = await Promise.all([
@@ -156,12 +157,12 @@ describe("AuthController (e2e)", { concurrent: false }, () => {
       request(app.getHttpServer()).get("/auth/current-user-info").set("Authorization", accessToken2),
     ]);
 
-    for (const response of deletedTokenResponses) {
-      expect(response.statusCode).toBe(HttpStatus.UNAUTHORIZED);
+    for (const [index, response] of deletedTokenResponses.entries()) {
+      expect(response.statusCode, responseAtIndex(index)).toBe(HttpStatus.UNAUTHORIZED);
 
       const json = JSON.parse(response.text);
 
-      expect(json).toEqual(unauthorizedBody(ERROR_MESSAGE_ACCESS_TOKEN_INVALID));
+      expect(json, responseAtIndex(index)).toEqual(unauthorizedBody(ERROR_MESSAGE_ACCESS_TOKEN_INVALID));
     }
   });
 });

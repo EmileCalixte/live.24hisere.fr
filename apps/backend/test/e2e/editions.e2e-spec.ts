@@ -1,6 +1,6 @@
 import { HttpStatus, INestApplication } from "@nestjs/common";
 import request from "supertest";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { AdminEdition, PublicEdition } from "@live24hisere/core/types";
 import { objectUtils } from "@live24hisere/utils";
 import { initApp } from "./_init";
@@ -12,6 +12,7 @@ import {
   ERROR_MESSAGE_EDITION_NOT_FOUND,
 } from "./constants/errors";
 import { badRequestBody, notFoundBody } from "./utils/errors";
+import { responseAtIndex } from "./utils/misc";
 
 describe("Edition endpoints (e2e)", { concurrent: false }, () => {
   let app: INestApplication;
@@ -25,6 +26,17 @@ describe("Edition endpoints (e2e)", { concurrent: false }, () => {
   });
 
   describe("EditionsController (e2e)", () => {
+    beforeAll(async () => {
+      const app = await initApp();
+
+      await request(app.getHttpServer())
+        .put("/admin/editions-order")
+        .send([7, 6, 5, 4, 3, 2, 1])
+        .set("Authorization", ADMIN_USER_ACCESS_TOKEN);
+
+      await app.close();
+    });
+
     it("Get edition list (GET /editions)", async () => {
       const response = await request(app.getHttpServer()).get("/editions").expect(HttpStatus.OK);
 
@@ -40,12 +52,20 @@ describe("Edition endpoints (e2e)", { concurrent: false }, () => {
         expect(edition.raceCount).toBeNumber();
       }
 
-      // Test editions order and test that private edition is not present
-      expect(json.editions.map((edition: PublicEdition) => edition.id)).toEqual([6, 5, 4, 3, 2, 1]);
+      expect(json.editions.map((edition: PublicEdition) => edition.id)).toEqual([7, 6, 5, 4, 3, 2, 1]);
     });
   });
 
   describe("Admin EditionsController (e2e)", () => {
+    beforeAll(async () => {
+      const app = await initApp();
+      await request(app.getHttpServer())
+        .put("/admin/editions-order")
+        .send([7, 6, 5, 4, 3, 2, 1])
+        .set("Authorization", ADMIN_USER_ACCESS_TOKEN);
+      await app.close();
+    });
+
     it("Get edition list (GET /admin/editions)", async () => {
       const response = await request(app.getHttpServer())
         .get("/admin/editions")
@@ -57,16 +77,17 @@ describe("Edition endpoints (e2e)", { concurrent: false }, () => {
       expect(json.editions).toBeArray();
 
       for (const edition of json.editions) {
-        expect(edition).toContainAllKeys(["id", "name", "raceCount", "isPublic"]);
+        expect(edition).toContainAllKeys(["id", "name", "raceCount", "runnerCount", "isPublic"]);
 
         expect(edition.id).toBeNumber();
         expect(edition.name).toBeString();
         expect(edition.raceCount).toBeNumber();
+        expect(edition.raceCount).toBeNumber();
+        expect(edition.runnerCount).toBeNumber();
         expect(edition.isPublic).toBeBoolean();
       }
 
-      // Test editions order and test that private edition is present
-      expect(json.editions.map((edition: AdminEdition) => edition.id)).toEqual([6, 5, 4, 3, 2, 1, 7]);
+      expect(json.editions.map((edition: AdminEdition) => edition.id)).toEqual([7, 6, 5, 4, 3, 2, 1]);
     });
 
     it("Get an edition (GET /admin/editions/{id})", async () => {
@@ -96,19 +117,19 @@ describe("Edition endpoints (e2e)", { concurrent: false }, () => {
           .expect(HttpStatus.BAD_REQUEST),
       ]);
 
-      for (const response of [publicResponse, nonPublicResponse]) {
+      for (const [index, response] of [publicResponse, nonPublicResponse].entries()) {
         const json = JSON.parse(response.text);
 
         const edition = json.edition;
 
-        expect(edition).toBeObject();
+        expect(edition, responseAtIndex(index)).toBeObject();
 
-        expect(edition).toContainAllKeys(["id", "name", "raceCount", "isPublic"]);
+        expect(edition, responseAtIndex(index)).toContainAllKeys(["id", "name", "raceCount", "isPublic"]);
 
-        expect(edition.id).toBeNumber();
-        expect(edition.name).toBeString();
-        expect(edition.raceCount).toBeNumber();
-        expect(edition.isPublic).toBeBoolean();
+        expect(edition.id, responseAtIndex(index)).toBeNumber();
+        expect(edition.name, responseAtIndex(index)).toBeString();
+        expect(edition.raceCount, responseAtIndex(index)).toBeNumber();
+        expect(edition.isPublic, responseAtIndex(index)).toBeBoolean();
       }
 
       const notFoundJson = JSON.parse(notFoundResponse.text);
@@ -213,8 +234,8 @@ describe("Edition endpoints (e2e)", { concurrent: false }, () => {
             .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
         ]);
 
-        for (const response of responses) {
-          expect(response.statusCode).toBe(HttpStatus.UNPROCESSABLE_ENTITY);
+        for (const [index, response] of responses.entries()) {
+          expect(response.statusCode, responseAtIndex(index)).toBe(HttpStatus.UNPROCESSABLE_ENTITY);
 
           const json = JSON.parse(response.text);
 
@@ -305,8 +326,8 @@ describe("Edition endpoints (e2e)", { concurrent: false }, () => {
             .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
         ]);
 
-        for (const response of responses) {
-          expect(response.statusCode).toBe(HttpStatus.UNPROCESSABLE_ENTITY);
+        for (const [index, response] of responses.entries()) {
+          expect(response.statusCode, responseAtIndex(index)).toBe(HttpStatus.UNPROCESSABLE_ENTITY);
 
           const json = JSON.parse(response.text);
 
@@ -386,6 +407,65 @@ describe("Edition endpoints (e2e)", { concurrent: false }, () => {
         const json = JSON.parse(response.text);
 
         expect(json).toEqual(notFoundBody(ERROR_MESSAGE_EDITION_NOT_FOUND));
+      });
+    });
+
+    describe("Private edition visibility", () => {
+      let privateEditionId: number;
+
+      it("Create a private edition", async () => {
+        const response = await request(app.getHttpServer())
+          .post("/admin/editions")
+          .send({ name: "Private test edition", isPublic: false })
+          .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
+          .expect(HttpStatus.CREATED);
+
+        const json = JSON.parse(response.text);
+        privateEditionId = json.edition.id;
+      });
+
+      it("Verify it appears in GET /admin/editions", async () => {
+        const response = await request(app.getHttpServer())
+          .get("/admin/editions")
+          .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
+          .expect(HttpStatus.OK);
+
+        const json = JSON.parse(response.text);
+
+        expect(json.editions.map((e: AdminEdition) => e.id)).toContain(privateEditionId);
+      });
+
+      it("Verify it does not appear in GET /editions", async () => {
+        const response = await request(app.getHttpServer()).get("/editions").expect(HttpStatus.OK);
+
+        const json = JSON.parse(response.text);
+
+        expect(json.editions.map((e: PublicEdition) => e.id)).not.toContain(privateEditionId);
+      });
+
+      it("Make it public (PATCH /admin/editions/:id)", async () => {
+        const response = await request(app.getHttpServer())
+          .patch(`/admin/editions/${privateEditionId}`)
+          .send({ isPublic: true })
+          .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
+          .expect(HttpStatus.OK);
+
+        expect(JSON.parse(response.text).edition.isPublic).toBe(true);
+      });
+
+      it("Verify it now appears in GET /editions", async () => {
+        const response = await request(app.getHttpServer()).get("/editions").expect(HttpStatus.OK);
+
+        const json = JSON.parse(response.text);
+
+        expect(json.editions.map((e: PublicEdition) => e.id)).toContain(privateEditionId);
+      });
+
+      it("Delete the edition (cleanup)", async () => {
+        await request(app.getHttpServer())
+          .delete(`/admin/editions/${privateEditionId}`)
+          .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
+          .expect(HttpStatus.NO_CONTENT);
       });
     });
   });

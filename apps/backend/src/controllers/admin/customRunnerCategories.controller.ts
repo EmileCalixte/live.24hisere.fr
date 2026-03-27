@@ -70,7 +70,7 @@ export class CustomRunnerCategoriesController {
     ]);
 
     if (!category) {
-      throw new NotFoundException("Category not found");
+      throw new NotFoundException("Custom runner category not found");
     }
 
     return {
@@ -123,7 +123,7 @@ export class CustomRunnerCategoriesController {
     const category = await this.customRunnerCategoryService.getCategoryById(id);
 
     if (!category) {
-      throw new NotFoundException("Category not found");
+      throw new NotFoundException("Custom runner category not found");
     }
 
     if (category.runnerCount > 0) {

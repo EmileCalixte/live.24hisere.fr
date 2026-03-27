@@ -5,6 +5,7 @@ import { AdminPassageWithRunnerIdAndRaceId } from "@live24hisere/core/types";
 import { initApp } from "./_init";
 import { ADMIN_USER_ACCESS_TOKEN } from "./constants/accessToken";
 import { ISO8601_DATE_REGEX } from "./constants/dates";
+import { responseAtIndex } from "./utils/misc";
 
 describe.skip("Admin PassagesController (e2e)", () => {
   let app: INestApplication;
@@ -23,12 +24,12 @@ describe.skip("Admin PassagesController (e2e)", () => {
       request(app.getHttpServer()).get("/admin/passages?excludeHidden").set("Authorization", ADMIN_USER_ACCESS_TOKEN),
     ]);
 
-    for (const response of [withHiddenPassagesResponse, withoutHiddenPassagesResponse]) {
-      expect(response.statusCode).toBe(HttpStatus.OK);
+    for (const [index, response] of [withHiddenPassagesResponse, withoutHiddenPassagesResponse].entries()) {
+      expect(response.statusCode, responseAtIndex(index)).toBe(HttpStatus.OK);
 
       const json = JSON.parse(response.text);
 
-      expect(json.passages).toBeArray();
+      expect(json.passages, responseAtIndex(index)).toBeArray();
 
       let previousPassageTime: Date | null = null;
 

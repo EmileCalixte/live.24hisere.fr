@@ -14,6 +14,7 @@ import {
   ERROR_MESSAGE_RUNNER_NOT_FOUND,
 } from "./constants/errors";
 import { badRequestBody, notFoundBody } from "./utils/errors";
+import { responseAtIndex } from "./utils/misc";
 
 describe.skip("Runner endpoints (e2e)", { concurrent: false }, () => {
   let app: INestApplication;
@@ -109,10 +110,10 @@ describe.skip("Runner endpoints (e2e)", { concurrent: false }, () => {
         }
       }
 
-      for (const response of [nonPublicResponse, notFoundResponse]) {
+      for (const [index, response] of [nonPublicResponse, notFoundResponse].entries()) {
         const json = JSON.parse(response.text);
 
-        expect(json).toEqual(notFoundBody(ERROR_MESSAGE_RACE_NOT_FOUND));
+        expect(json, responseAtIndex(index)).toEqual(notFoundBody(ERROR_MESSAGE_RACE_NOT_FOUND));
       }
     });
   });
@@ -170,12 +171,12 @@ describe.skip("Runner endpoints (e2e)", { concurrent: false }, () => {
           .expect(HttpStatus.BAD_REQUEST),
       ]);
 
-      for (const response of [publicRunnerResponse, privateRunnerResponse]) {
+      for (const [index, response] of [publicRunnerResponse, privateRunnerResponse].entries()) {
         const json = JSON.parse(response.text);
 
         const runner = json.runner;
 
-        expect(runner).toContainAllKeys([
+        expect(runner, responseAtIndex(index)).toContainAllKeys([
           "id",
           "firstname",
           "lastname",
@@ -186,16 +187,16 @@ describe.skip("Runner endpoints (e2e)", { concurrent: false }, () => {
           "passages",
         ]);
 
-        expect(runner.id).toBeNumber();
-        expect(runner.firstname).toBeString();
-        expect(runner.lastname).toBeString();
-        expect(runner.gender).toBeOneOf(["M", "F"]);
-        expect(runner.birthYear).toBeString();
-        expect(runner.birthYear.length).toBe(4);
-        expect(runner.birthYear).toMatch(BIRTH_YEAR_REGEX);
-        expect(runner.stopped).toBeBoolean();
-        expect(runner.raceId).toBeNumber();
-        expect(runner.passages).toBeArray();
+        expect(runner.id, responseAtIndex(index)).toBeNumber();
+        expect(runner.firstname, responseAtIndex(index)).toBeString();
+        expect(runner.lastname, responseAtIndex(index)).toBeString();
+        expect(runner.gender, responseAtIndex(index)).toBeOneOf(["M", "F"]);
+        expect(runner.birthYear, responseAtIndex(index)).toBeString();
+        expect(runner.birthYear.length, responseAtIndex(index)).toBe(4);
+        expect(runner.birthYear, responseAtIndex(index)).toMatch(BIRTH_YEAR_REGEX);
+        expect(runner.stopped, responseAtIndex(index)).toBeBoolean();
+        expect(runner.raceId, responseAtIndex(index)).toBeNumber();
+        expect(runner.passages, responseAtIndex(index)).toBeArray();
 
         for (const passage of runner.passages) {
           expect(passage).toContainAllKeys(["id", "detectionId", "importTime", "time", "isHidden"]);
@@ -398,8 +399,8 @@ describe.skip("Runner endpoints (e2e)", { concurrent: false }, () => {
             .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
         ]);
 
-        for (const response of responses) {
-          expect(response.statusCode).toBe(HttpStatus.UNPROCESSABLE_ENTITY);
+        for (const [index, response] of responses.entries()) {
+          expect(response.statusCode, responseAtIndex(index)).toBe(HttpStatus.UNPROCESSABLE_ENTITY);
 
           const json = JSON.parse(response.text);
 
@@ -563,8 +564,8 @@ describe.skip("Runner endpoints (e2e)", { concurrent: false }, () => {
             .set("Authorization", ADMIN_USER_ACCESS_TOKEN),
         ]);
 
-        for (const response of responses) {
-          expect(response.statusCode).toBe(HttpStatus.UNPROCESSABLE_ENTITY);
+        for (const [index, response] of responses.entries()) {
+          expect(response.statusCode, responseAtIndex(index)).toBe(HttpStatus.UNPROCESSABLE_ENTITY);
 
           const json = JSON.parse(response.text);
 
