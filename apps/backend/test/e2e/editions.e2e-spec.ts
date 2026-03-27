@@ -31,7 +31,7 @@ describe("Edition endpoints (e2e)", { concurrent: false }, () => {
 
       await request(app.getHttpServer())
         .put("/admin/editions-order")
-        .send([8, 7, 6, 5, 4, 3, 2, 1])
+        .send([7, 6, 5, 4, 3, 2, 1])
         .set("Authorization", ADMIN_USER_ACCESS_TOKEN);
 
       await app.close();
@@ -52,7 +52,6 @@ describe("Edition endpoints (e2e)", { concurrent: false }, () => {
         expect(edition.raceCount).toBeNumber();
       }
 
-      // Test editions order and test that private edition is not present
       expect(json.editions.map((edition: PublicEdition) => edition.id)).toEqual([7, 6, 5, 4, 3, 2, 1]);
     });
   });
@@ -62,7 +61,7 @@ describe("Edition endpoints (e2e)", { concurrent: false }, () => {
       const app = await initApp();
       await request(app.getHttpServer())
         .put("/admin/editions-order")
-        .send([8, 7, 6, 5, 4, 3, 2, 1])
+        .send([7, 6, 5, 4, 3, 2, 1])
         .set("Authorization", ADMIN_USER_ACCESS_TOKEN);
       await app.close();
     });
@@ -88,8 +87,7 @@ describe("Edition endpoints (e2e)", { concurrent: false }, () => {
         expect(edition.isPublic).toBeBoolean();
       }
 
-      // Test editions order and test that private edition is present
-      expect(json.editions.map((edition: AdminEdition) => edition.id)).toEqual([8, 7, 6, 5, 4, 3, 2, 1]);
+      expect(json.editions.map((edition: AdminEdition) => edition.id)).toEqual([7, 6, 5, 4, 3, 2, 1]);
     });
 
     it("Get an edition (GET /admin/editions/{id})", async () => {
@@ -160,7 +158,7 @@ describe("Edition endpoints (e2e)", { concurrent: false }, () => {
         const json = JSON.parse(editionListResponse.text);
 
         expect(json.editions).toBeArray();
-        expect(json.editions.length).toBe(8);
+        expect(json.editions.length).toBe(7);
 
         expect(json.editions.map((edition: AdminEdition) => edition.id).slice(0, 5)).toEqual([5, 2, 6, 1, 3]);
       });
@@ -168,7 +166,7 @@ describe("Edition endpoints (e2e)", { concurrent: false }, () => {
       it("Modify edition order with all edition IDs", async () => {
         const response = await request(app.getHttpServer())
           .put("/admin/editions-order")
-          .send([6, 5, 4, 3, 8, 2, 1, 7])
+          .send([6, 5, 4, 3, 2, 1, 7])
           .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
           .expect(HttpStatus.NO_CONTENT);
 
@@ -182,7 +180,7 @@ describe("Edition endpoints (e2e)", { concurrent: false }, () => {
 
         expect(json.editions).toBeArray();
 
-        expect(json.editions.map((edition: AdminEdition) => edition.id)).toEqual([6, 5, 4, 3, 8, 2, 1, 7]);
+        expect(json.editions.map((edition: AdminEdition) => edition.id)).toEqual([6, 5, 4, 3, 2, 1, 7]);
       });
     });
 
@@ -294,7 +292,6 @@ describe("Edition endpoints (e2e)", { concurrent: false }, () => {
           5,
           4,
           3,
-          8,
           2,
           1,
           7,
@@ -410,6 +407,65 @@ describe("Edition endpoints (e2e)", { concurrent: false }, () => {
         const json = JSON.parse(response.text);
 
         expect(json).toEqual(notFoundBody(ERROR_MESSAGE_EDITION_NOT_FOUND));
+      });
+    });
+
+    describe("Private edition visibility", () => {
+      let privateEditionId: number;
+
+      it("Create a private edition", async () => {
+        const response = await request(app.getHttpServer())
+          .post("/admin/editions")
+          .send({ name: "Private test edition", isPublic: false })
+          .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
+          .expect(HttpStatus.CREATED);
+
+        const json = JSON.parse(response.text);
+        privateEditionId = json.edition.id;
+      });
+
+      it("Verify it appears in GET /admin/editions", async () => {
+        const response = await request(app.getHttpServer())
+          .get("/admin/editions")
+          .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
+          .expect(HttpStatus.OK);
+
+        const json = JSON.parse(response.text);
+
+        expect(json.editions.map((e: AdminEdition) => e.id)).toContain(privateEditionId);
+      });
+
+      it("Verify it does not appear in GET /editions", async () => {
+        const response = await request(app.getHttpServer()).get("/editions").expect(HttpStatus.OK);
+
+        const json = JSON.parse(response.text);
+
+        expect(json.editions.map((e: PublicEdition) => e.id)).not.toContain(privateEditionId);
+      });
+
+      it("Make it public (PATCH /admin/editions/:id)", async () => {
+        const response = await request(app.getHttpServer())
+          .patch(`/admin/editions/${privateEditionId}`)
+          .send({ isPublic: true })
+          .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
+          .expect(HttpStatus.OK);
+
+        expect(JSON.parse(response.text).edition.isPublic).toBe(true);
+      });
+
+      it("Verify it now appears in GET /editions", async () => {
+        const response = await request(app.getHttpServer()).get("/editions").expect(HttpStatus.OK);
+
+        const json = JSON.parse(response.text);
+
+        expect(json.editions.map((e: PublicEdition) => e.id)).toContain(privateEditionId);
+      });
+
+      it("Delete the edition (cleanup)", async () => {
+        await request(app.getHttpServer())
+          .delete(`/admin/editions/${privateEditionId}`)
+          .set("Authorization", ADMIN_USER_ACCESS_TOKEN)
+          .expect(HttpStatus.NO_CONTENT);
       });
     });
   });
