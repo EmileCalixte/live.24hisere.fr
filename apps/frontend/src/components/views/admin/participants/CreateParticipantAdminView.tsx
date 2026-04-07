@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import type { AdminRunner } from "@live24hisere/core/types";
+import { stringUtils } from "@live24hisere/utils";
 import { userContext } from "../../../../contexts/UserContext";
 import { useGetAdminCustomRunnerCategories } from "../../../../hooks/api/requests/admin/customRunnerCategories/useGetAdminCustomRunnerCategories";
 import { useGetAdminEdition } from "../../../../hooks/api/requests/admin/editions/useGetAdminEdition";
@@ -81,7 +82,16 @@ export default function CreateParticipantAdminView(): React.ReactElement {
         const isAlreadyParticipating = alreadyParticipatingRunnerIds.has(runner.id);
 
         return {
-          label: `${runner.lastname.toUpperCase()} ${runner.firstname}${isAlreadyParticipating ? " (déjà participant)" : ""}`,
+          label: stringUtils.joinNonEmpty(
+            [
+              runner.lastname.toUpperCase(),
+              runner.firstname,
+              `(${runner.birthYear})`,
+              runner.countryCode ? `(${runner.countryCode})` : null,
+              isAlreadyParticipating ? "(déjà participant)" : null,
+            ],
+            " ",
+          ),
           value: runner.id,
           disabled: isAlreadyParticipating,
         };
