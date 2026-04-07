@@ -55,7 +55,7 @@ export const Link = ({
       {...props}
     >
       {!!icon || showExternalIcon ? (
-        <span className="inline-flex items-center gap-2 underline">
+        <span className={cn("inline-flex items-center gap-2", variant === "link" && "underline")}>
           {icon}
           {children}
           {showExternalIcon && <FontAwesomeIcon icon={faArrowUpRightFromSquare} className="text-xs" />}

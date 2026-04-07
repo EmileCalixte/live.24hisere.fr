@@ -1,4 +1,5 @@
 import type React from "react";
+import { cn } from "tailwind-variants";
 import { COMMON_INPUT_CLASSNAME } from "../../../constants/ui/input";
 import type { SelectOption } from "../../../types/Forms";
 
@@ -27,12 +28,12 @@ export default function Select<TValue extends SelectOption["value"]>({
   ...props
 }: SelectProps<TValue>): React.ReactElement {
   return (
-    <div className={className}>
+    <div className={cn("min-w-0", className)}>
       <label className="flex flex-col">
         {label}
         <select
           ref={selectRef}
-          className={COMMON_INPUT_CLASSNAME}
+          className={cn("w-full", COMMON_INPUT_CLASSNAME)}
           disabled={disabled || isLoading}
           value={isLoading ? "_loading" : (value ?? "_placeholder")}
           {...props}
