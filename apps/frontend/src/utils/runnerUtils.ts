@@ -250,7 +250,13 @@ export function spaceshipRunners(
   isRaceFinished: boolean,
 ): ReturnType<typeof compareUtils.spaceship> {
   if (isBasicRanking) {
-    return compareUtils.spaceship(runner2.totalDistance, runner1.totalDistance);
+    const byDistance = compareUtils.spaceship(runner2.totalDistance, runner1.totalDistance);
+
+    if (byDistance !== 0) {
+      return byDistance;
+    }
+
+    return compareUtils.spaceship(runner1.bibNumber, runner2.bibNumber);
   }
 
   if (isRaceFinished) {
@@ -261,10 +267,25 @@ export function spaceshipRunners(
     ) {
       // When two runners have covered the same distance before the end of the race,
       // the one who has completed them the fastest is considered to be faster than the other.
-      return compareUtils.spaceship(runner1.lastPassageTime?.raceTime, runner2.lastPassageTime?.raceTime);
+      const byLastPassageTime = compareUtils.spaceship(
+        runner1.lastPassageTime?.raceTime,
+        runner2.lastPassageTime?.raceTime,
+      );
+
+      if (byLastPassageTime !== 0) {
+        return byLastPassageTime;
+      }
+
+      return compareUtils.spaceship(runner1.bibNumber, runner2.bibNumber);
     }
 
-    return compareUtils.spaceship(runner2.totalDistance, runner1.totalDistance);
+    const byDistance = compareUtils.spaceship(runner2.totalDistance, runner1.totalDistance);
+
+    if (byDistance !== 0) {
+      return byDistance;
+    }
+
+    return compareUtils.spaceship(runner1.bibNumber, runner2.bibNumber);
   }
 
   const runner1PassageCount = runner1.passages.length;
@@ -273,7 +294,16 @@ export function spaceshipRunners(
   if (runner1PassageCount === runner2PassageCount) {
     // When two runners have completed the same number of laps,
     // the one who has completed them the fastest is considered to be faster than the other.
-    return compareUtils.spaceship(runner1.lastPassageTime?.raceTime, runner2.lastPassageTime?.raceTime);
+    const byLastPassageTime = compareUtils.spaceship(
+      runner1.lastPassageTime?.raceTime,
+      runner2.lastPassageTime?.raceTime,
+    );
+
+    if (byLastPassageTime !== 0) {
+      return byLastPassageTime;
+    }
+
+    return compareUtils.spaceship(runner1.bibNumber, runner2.bibNumber);
   }
 
   return compareUtils.spaceship(runner2PassageCount, runner1PassageCount);

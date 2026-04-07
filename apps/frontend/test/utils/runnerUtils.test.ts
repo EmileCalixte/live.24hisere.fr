@@ -187,6 +187,14 @@ describe("Spaceship runners", () => {
     expect(spaceshipRunners(runner4, runner5, true, false)).toBe(1);
   });
 
+  it("Basic ranking: Should sort runners by bib number if total distance are equal", () => {
+    const runner1: SpaceshipableRunner = { ...baseRunner, totalDistance: 123456, bibNumber: 10 };
+    const runner2: SpaceshipableRunner = { ...baseRunner, totalDistance: 123456, bibNumber: 20 };
+
+    expect(spaceshipRunners(runner1, runner2, true, false)).toBe(-1);
+    expect(spaceshipRunners(runner2, runner1, true, false)).toBe(1);
+  });
+
   describe("Detailed ranking", () => {
     describe("Race finished", () => {
       it("Should sort runners by total distance if different", () => {
@@ -229,6 +237,24 @@ describe("Spaceship runners", () => {
 
         expect(spaceshipRunners(runner1, runner2, false, true)).toBe(1);
         expect(spaceshipRunners(runner2, runner1, false, true)).toBe(-1);
+      });
+
+      it("Should sort runners by bib number if total distance and last passage time are equal", () => {
+        const runner1: SpaceshipableRunner = {
+          ...baseRunner,
+          totalDistance: 123456,
+          bibNumber: 10,
+          lastPassageTime: { time: new Date(), raceTime: 50000 },
+        };
+        const runner2: SpaceshipableRunner = {
+          ...baseRunner,
+          totalDistance: 123456,
+          bibNumber: 20,
+          lastPassageTime: { time: new Date(), raceTime: 50000 },
+        };
+
+        expect(spaceshipRunners(runner1, runner2, false, true)).toBe(-1);
+        expect(spaceshipRunners(runner2, runner1, false, true)).toBe(1);
       });
     });
 
@@ -284,6 +310,38 @@ describe("Spaceship runners", () => {
         };
 
         expect(spaceshipRunners(runner1, runner2, false, false)).toBe(1);
+      });
+
+      it("Should sort runners by bib number if passage count and last passage time are equal", () => {
+        const runner1: SpaceshipableRunner = {
+          ...baseRunner,
+          bibNumber: 10,
+          lastPassageTime: { time: new Date(), raceTime: 8000 },
+          passages: [
+            { id: 123, time: "2024-04-06T10:00:00Z" },
+            { id: 456, time: "2024-04-06T11:00:00Z" },
+          ],
+        };
+        const runner2: SpaceshipableRunner = {
+          ...baseRunner,
+          bibNumber: 20,
+          lastPassageTime: { time: new Date(), raceTime: 8000 },
+          passages: [
+            { id: 234, time: "2024-04-06T10:30:00Z" },
+            { id: 345, time: "2024-04-06T10:45:00Z" },
+          ],
+        };
+
+        expect(spaceshipRunners(runner1, runner2, false, false)).toBe(-1);
+        expect(spaceshipRunners(runner2, runner1, false, false)).toBe(1);
+      });
+
+      it("Should sort runners by bib number if they have no passages", () => {
+        const runner1: SpaceshipableRunner = { ...baseRunner, bibNumber: 10, passages: [], lastPassageTime: undefined };
+        const runner2: SpaceshipableRunner = { ...baseRunner, bibNumber: 20, passages: [], lastPassageTime: undefined };
+
+        expect(spaceshipRunners(runner1, runner2, false, false)).toBe(-1);
+        expect(spaceshipRunners(runner2, runner1, false, false)).toBe(1);
       });
     });
   });
