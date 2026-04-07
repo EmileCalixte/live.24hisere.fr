@@ -337,8 +337,8 @@ describe("Spaceship runners", () => {
       });
 
       it("Should sort runners by bib number if they have no passages", () => {
-        const runner1: SpaceshipableRunner = { ...baseRunner, bibNumber: 10, passages: [], lastPassageTime: undefined };
-        const runner2: SpaceshipableRunner = { ...baseRunner, bibNumber: 20, passages: [], lastPassageTime: undefined };
+        const runner1: SpaceshipableRunner = { ...baseRunner, bibNumber: 10, passages: [], lastPassageTime: null };
+        const runner2: SpaceshipableRunner = { ...baseRunner, bibNumber: 20, passages: [], lastPassageTime: null };
 
         expect(spaceshipRunners(runner1, runner2, false, false)).toBe(-1);
         expect(spaceshipRunners(runner2, runner1, false, false)).toBe(1);
