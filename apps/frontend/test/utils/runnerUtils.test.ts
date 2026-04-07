@@ -187,12 +187,12 @@ describe("Spaceship runners", () => {
     expect(spaceshipRunners(runner4, runner5, true, false)).toBe(1);
   });
 
-  it("Basic ranking: Should sort runners by bib number if total distance are equal", () => {
+  it("Basic ranking: Should return 0 if total distance are equal", () => {
     const runner1: SpaceshipableRunner = { ...baseRunner, totalDistance: 123456, bibNumber: 10 };
     const runner2: SpaceshipableRunner = { ...baseRunner, totalDistance: 123456, bibNumber: 20 };
 
-    expect(spaceshipRunners(runner1, runner2, true, false)).toBe(-1);
-    expect(spaceshipRunners(runner2, runner1, true, false)).toBe(1);
+    expect(spaceshipRunners(runner1, runner2, true, false)).toBe(0);
+    expect(spaceshipRunners(runner2, runner1, true, false)).toBe(0);
   });
 
   describe("Detailed ranking", () => {
@@ -239,7 +239,7 @@ describe("Spaceship runners", () => {
         expect(spaceshipRunners(runner2, runner1, false, true)).toBe(-1);
       });
 
-      it("Should sort runners by bib number if total distance and last passage time are equal", () => {
+      it("Should return 0 if total distance and last passage time are equal", () => {
         const runner1: SpaceshipableRunner = {
           ...baseRunner,
           totalDistance: 123456,
@@ -253,8 +253,8 @@ describe("Spaceship runners", () => {
           lastPassageTime: { time: new Date(), raceTime: 50000 },
         };
 
-        expect(spaceshipRunners(runner1, runner2, false, true)).toBe(-1);
-        expect(spaceshipRunners(runner2, runner1, false, true)).toBe(1);
+        expect(spaceshipRunners(runner1, runner2, false, true)).toBe(0);
+        expect(spaceshipRunners(runner2, runner1, false, true)).toBe(0);
       });
     });
 
@@ -312,7 +312,7 @@ describe("Spaceship runners", () => {
         expect(spaceshipRunners(runner1, runner2, false, false)).toBe(1);
       });
 
-      it("Should sort runners by bib number if passage count and last passage time are equal", () => {
+      it("Should return 0 if passage count and last passage time are equal", () => {
         const runner1: SpaceshipableRunner = {
           ...baseRunner,
           bibNumber: 10,
@@ -332,16 +332,16 @@ describe("Spaceship runners", () => {
           ],
         };
 
-        expect(spaceshipRunners(runner1, runner2, false, false)).toBe(-1);
-        expect(spaceshipRunners(runner2, runner1, false, false)).toBe(1);
+        expect(spaceshipRunners(runner1, runner2, false, false)).toBe(0);
+        expect(spaceshipRunners(runner2, runner1, false, false)).toBe(0);
       });
 
-      it("Should sort runners by bib number if they have no passages", () => {
+      it("Should return 0 if runners have no passages", () => {
         const runner1: SpaceshipableRunner = { ...baseRunner, bibNumber: 10, passages: [], lastPassageTime: null };
         const runner2: SpaceshipableRunner = { ...baseRunner, bibNumber: 20, passages: [], lastPassageTime: null };
 
-        expect(spaceshipRunners(runner1, runner2, false, false)).toBe(-1);
-        expect(spaceshipRunners(runner2, runner1, false, false)).toBe(1);
+        expect(spaceshipRunners(runner1, runner2, false, false)).toBe(0);
+        expect(spaceshipRunners(runner2, runner1, false, false)).toBe(0);
       });
     });
   });

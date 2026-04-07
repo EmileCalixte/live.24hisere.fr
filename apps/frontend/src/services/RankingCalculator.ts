@@ -79,7 +79,19 @@ export class RankingCalculator<TRunner extends MinimalRankingRunnerInput> {
       });
     }
 
-    this.runners = this.runners.toSorted((a, b) => spaceshipRunners(a, b, race.isBasicRanking, this.isRaceFinished));
+    this.runners = this.runners.toSorted((a, b) => {
+      const result = spaceshipRunners(a, b, race.isBasicRanking, this.isRaceFinished);
+
+      // Use bib number as a stable tie-breaker so that equal runners are ordered
+      // by bib number rather than by arbitrary insertion order.
+      // Note: spaceshipRunners itself must NOT use bibNumber, as areRunnersEqual()
+      // relies on it returning 0 for true ties (to assign the same displayed rank).
+      if (result !== 0) {
+        return result;
+      }
+
+      return a.bibNumber - b.bibNumber;
+    });
   }
 
   public getRanking(): Ranking<TRunner> {
