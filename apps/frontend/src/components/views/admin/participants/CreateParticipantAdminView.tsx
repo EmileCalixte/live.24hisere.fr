@@ -86,6 +86,7 @@ export default function CreateParticipantAdminView(): React.ReactElement {
             [
               runner.lastname.toUpperCase(),
               runner.firstname,
+              `(${runner.gender})`,
               `(${runner.birthYear})`,
               runner.countryCode ? `(${runner.countryCode})` : null,
               isAlreadyParticipating ? "(déjà participant)" : null,
