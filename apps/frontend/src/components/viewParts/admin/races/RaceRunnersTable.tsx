@@ -3,6 +3,7 @@ import type { AdminRace, AdminRunner, RaceRunner } from "@live24hisere/core/type
 import { useGetRunnerCategory } from "../../../../hooks/useGetRunnerCategory";
 import { getCountryAlpha2CodeFromAlpha3Code } from "../../../../utils/countryUtils";
 import { Flag } from "../../../ui/countries/Flag";
+import GenderIcon from "../../../ui/genders/GenderIcon";
 import { Link } from "../../../ui/Link";
 import { Table, Td, Th, Tr } from "../../../ui/Table";
 import RunnerFinalDistanceQuickEdit from "./RunnerFinalDistanceQuickEdit";
@@ -44,6 +45,7 @@ export default function RaceRunnersTable({
               <Td>
                 <span className="flex items-center gap-2">
                   {alpha2CountryCode && <Flag countryCode={alpha2CountryCode} />}
+                  <GenderIcon gender={runner.gender} />
                   <Link to={`/admin/runners/${runner.id}`}>
                     {runner.firstname} {runner.lastname}
                   </Link>
