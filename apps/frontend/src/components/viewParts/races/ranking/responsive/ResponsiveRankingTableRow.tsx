@@ -134,7 +134,7 @@ export default function ResponsiveRankingTableRow({
         <div className="text-sm">{rowSecondaryRankings}</div>
 
         <div className="text-sm">
-          {formatFloatNumber(runner.totalDistance / 1000, 2)} km
+          {formatFloatNumber(runner.totalDistance / 1000, 3)} km
           {(() => {
             if (runner.totalAverageSpeed === null) {
               return null;

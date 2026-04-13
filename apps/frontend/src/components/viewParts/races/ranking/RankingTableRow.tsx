@@ -44,7 +44,7 @@ export default function RankingTableRow({
       {!race.isBasicRanking && (
         <Td>{raceInitialDistance > 0 ? Math.max(0, runner.passages.length - 1) : runner.passages.length}</Td>
       )}
-      <Td>{formatFloatNumber(runner.totalDistance / 1000, 2)} km</Td>
+      <Td>{formatFloatNumber(runner.totalDistance / 1000, 3)} km</Td>
       {showLastPassageTime && (
         <Td>
           {(() => {
