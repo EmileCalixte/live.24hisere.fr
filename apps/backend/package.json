@@ -63,7 +63,7 @@
     "@vitest/coverage-v8": "^4.1.0",
     "drizzle-kit": "^0.31.10",
     "jest-extended": "^7.0.0",
-    "prettier": "^3.8.1",
+    "prettier": "^3.8.2",
     "source-map-support": "^0.5.20",
     "supertest": "^7.2.2",
     "ts-loader": "^9.5.4",
