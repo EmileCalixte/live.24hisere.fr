@@ -234,9 +234,9 @@ export class ImportPassagesCsvCommand extends CommandRunner {
         throw new Error("Cannot extract data from time only input");
       }
 
-      const year = raceStartDate.getFullYear();
-      const month = raceStartDate.getMonth();
-      const day = raceStartDate.getDate();
+      const year = parseInt(formatInTimeZone(raceStartDate, "Europe/Paris", "yyyy"));
+      const month = parseInt(formatInTimeZone(raceStartDate, "Europe/Paris", "MM")) - 1; // 0-indexed
+      const day = parseInt(formatInTimeZone(raceStartDate, "Europe/Paris", "dd"));
       const hour = parseInt(match[1]);
       const minute = parseInt(match[2]);
       const second = parseInt(match[3]);
