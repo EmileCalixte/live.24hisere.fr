@@ -20,7 +20,7 @@ export default function RunnerFinalDistanceQuickEdit({
   const distanceBeforeEdit = React.useRef(runner.finalDistance);
 
   function save(): void {
-    if (distance !== distanceBeforeEdit.current) {
+    if (distance === distanceBeforeEdit.current) {
       return;
     }
 
