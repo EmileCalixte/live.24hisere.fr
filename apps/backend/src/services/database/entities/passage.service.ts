@@ -214,7 +214,7 @@ export class PassageService extends EntityService {
     const statement = sql`
       INSERT INTO passage (origin, import_time, participant_id, time, is_hidden)
       SELECT DISTINCT
-        ${PASSAGE_ORIGIN.MANUAL} as origin,
+        ${PASSAGE_ORIGIN.CSV} as origin,
         ${sqlImportTime} AS import_time,
         p.id AS participant_id,
         d.time AS time,

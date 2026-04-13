@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { fromZonedTime } from "date-fns-tz";
+import { formatInTimeZone, fromZonedTime } from "date-fns-tz";
 import { Command, CommandRunner, Option } from "nest-commander";
 import fs from "node:fs";
 import path from "node:path";
@@ -27,6 +27,17 @@ interface CsvLineData {
   bib: number;
   time: Date;
 }
+
+// ISO day of week: 1 = Monday, 7 = Sunday (matches date-fns "i" format token)
+const FRENCH_DAY_ABBR_TO_ISO_DAY: Record<string, number> = {
+  lun: 1,
+  mar: 2,
+  mer: 3,
+  jeu: 4,
+  ven: 5,
+  sam: 6,
+  dim: 7,
+};
 
 @Injectable()
 @Command({
@@ -198,6 +209,9 @@ export class ImportPassagesCsvCommand extends CommandRunner {
     // Format time only : "23h11'33,80"
     const timeOnlyRegex = /^(\d{2})h(\d{2})'(\d{2}),?\d*$/;
 
+    // Format French day abbreviation + time : "sam. 10:03:17.770"
+    const frenchDayRegex = /^(lun|mar|mer|jeu|ven|sam|dim)\.\s+(\d{2}):(\d{2}):(\d{2})(?:[.,]\d+)?$/;
+
     if (fullDateRegex.test(input)) {
       const match = fullDateRegex.exec(input);
 
@@ -234,6 +248,34 @@ export class ImportPassagesCsvCommand extends CommandRunner {
       }
 
       return date;
+    } else if (frenchDayRegex.test(input)) {
+      const match = frenchDayRegex.exec(input);
+
+      if (!match) {
+        throw new Error("Cannot extract data from French day time input");
+      }
+
+      const targetIsoDay = FRENCH_DAY_ABBR_TO_ISO_DAY[match[1]];
+      const hour = parseInt(match[2]);
+      const minute = parseInt(match[3]);
+      const second = parseInt(match[4]);
+
+      const parisZone = "Europe/Paris";
+
+      // Use formatInTimeZone to safely extract Paris local date components
+      // regardless of the server's local timezone
+      const startIsoDay = parseInt(formatInTimeZone(raceStartDate, parisZone, "i")); // 1=Mon..7=Sun
+      const startYear = parseInt(formatInTimeZone(raceStartDate, parisZone, "yyyy"));
+      const startMonth = parseInt(formatInTimeZone(raceStartDate, parisZone, "MM")) - 1; // 0-indexed
+      const startDate = parseInt(formatInTimeZone(raceStartDate, parisZone, "dd"));
+
+      const dayOffset = (targetIsoDay - startIsoDay + 7) % 7;
+
+      // new Date(y, m, d, h, min, sec) sets local time; fromZonedTime then
+      // re-interprets those same local values as Paris time → correct UTC
+      const candidate = new Date(startYear, startMonth, startDate + dayOffset, hour, minute, second, 0);
+
+      return fromZonedTime(candidate, parisZone);
     } else {
       throw new Error(`Invalid date or time format: ${input}`);
     }
