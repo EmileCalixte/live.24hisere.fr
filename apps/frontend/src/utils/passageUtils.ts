@@ -110,7 +110,8 @@ export function getProcessedPassagesFromPassages<TPassage extends PublicPassage>
       throw new Error("Invalid passage end time");
     }
 
-    totalDistance += lapDistance;
+    // round the distance to the nearest millimeter to prevent accumulation of float rounding errors
+    totalDistance = Math.round((totalDistance + lapDistance) * 1000) / 1000;
 
     const lapStartRaceTime = getRaceTime(race, lapStartTime);
     const lapEndRaceTime = getRaceTime(race, lapEndTime);
