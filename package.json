@@ -35,8 +35,8 @@
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^6.0.2",
     "@types/eslint-config-prettier": "^6.11.3",
-    "eslint": "^10.1.0",
-    "eslint-config-love": "151.0.0",
+    "eslint": "^10.2.0",
+    "eslint-config-love": "152.0.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
