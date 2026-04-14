@@ -18,8 +18,8 @@ export const TrackedEvent = {
   CHANGE_RANKING_TIME_MODE: "Change ranking time mode",
   CHANGE_RANKING_TIME: "Change ranking time",
 
-  CHANGE_SPLIT_100KM_CATEGORY: "Change ranking category",
-  CHANGE_SPLIT_100KM_GENDER: "Change ranking gender",
+  CHANGE_SPLIT_100KM_CATEGORY: "Change split 100km category",
+  CHANGE_SPLIT_100KM_GENDER: "Change split 100km gender",
 
   TOGGLE_RUNNER_SPEED_CHART_LAP_SPEED: "Toggle runner speed chart lap speed",
   TOGGLE_RUNNER_SPEED_CHART_HOUR_SPEED: "Toggle runner speed chart hour speed",
