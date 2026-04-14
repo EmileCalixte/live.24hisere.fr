@@ -118,3 +118,25 @@ export type RankingRunner<T extends MinimalRankingRunnerInput = MinimalRankingRu
 export type MinimalRankingRunnerInput = RaceRunnerWithProcessedPassages & RaceRunnerWithProcessedData;
 
 export type Ranking<T extends MinimalRankingRunnerInput = MinimalRankingRunnerInput> = Array<RankingRunner<T>>;
+
+export type SplitDistanceRankingRunner<T extends MinimalRankingRunnerInput = MinimalRankingRunnerInput> = T & {
+  /**
+   * The ranks of the runner on the split distance rankings, scratch, by category and by gender
+   */
+  ranks: RankingRunnerRanks;
+
+  /**
+   * The race time at which the runner reached the split distance, in milliseconds
+   */
+  raceTime: number;
+
+  /**
+   * Whether raceTime corresponds to an exact passage at the split distance (true)
+   * or an interpolated approximation (false)
+   */
+  exact: boolean;
+};
+
+export type SplitDistanceRanking<T extends MinimalRankingRunnerInput = MinimalRankingRunnerInput> = Array<
+  SplitDistanceRankingRunner<T>
+>;
