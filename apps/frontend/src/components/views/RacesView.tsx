@@ -18,13 +18,15 @@ import Page from "../ui/Page";
 import { Tab, TabContent, TabList, Tabs } from "../ui/Tabs";
 import { FastestLapsTabContent } from "../viewParts/races/fastestLaps/FastestLapsTabContent";
 import { RankingTabContent } from "../viewParts/races/ranking/RankingTabContent";
+import { Split100KmTabContent } from "../viewParts/races/split100Km/Split100KmTabContent";
 import { StatsTabContent } from "../viewParts/races/stats/StatsTabContent";
 
 const TAB_ID_RANKING = "ranking";
+const TAB_ID_SPLIT100 = "split100";
 const TAB_ID_STATS = "stats";
 const TAB_ID_FASTEST_LAPS = "fastestLaps";
 
-const TAB_IDS = [TAB_ID_RANKING, TAB_ID_STATS, TAB_ID_FASTEST_LAPS] as const;
+const TAB_IDS = [TAB_ID_RANKING, TAB_ID_SPLIT100, TAB_ID_STATS, TAB_ID_FASTEST_LAPS] as const;
 
 type TabId = (typeof TAB_IDS)[number];
 
@@ -50,13 +52,18 @@ export default function RacesView(): React.ReactElement {
     [races, selectedRaceId],
   );
 
-  const availableTabIds = React.useMemo(() => {
-    if (selectedRace?.isBasicRanking) {
-      return TAB_IDS.filter((t) => t !== TAB_ID_FASTEST_LAPS);
-    }
+  const isBasicRanking = !!selectedRace && selectedRace.isBasicRanking;
+  const showSplit100KmTab = !isBasicRanking;
+  const showFastestLapsTab = !isBasicRanking;
 
-    return TAB_IDS;
-  }, [selectedRace?.isBasicRanking]);
+  const availableTabIds = React.useMemo(() => {
+    const conditionalTabs: Record<string, boolean> = {
+      [TAB_ID_SPLIT100]: showSplit100KmTab,
+      [TAB_ID_FASTEST_LAPS]: showFastestLapsTab,
+    };
+
+    return TAB_IDS.filter((tabId) => conditionalTabs[tabId] ?? true);
+  }, [showFastestLapsTab, showSplit100KmTab]);
 
   const getRaceRunnersQuery = useGetPublicRaceRunners(selectedRace?.id);
   const selectedRaceRunners = getRaceRunnersQuery.data?.runners ?? null;
@@ -161,8 +168,9 @@ export default function RacesView(): React.ReactElement {
             <div className="print:hidden">
               <TabList>
                 <Tab value={TAB_ID_RANKING}>Classement</Tab>
+                {showSplit100KmTab && <Tab value={TAB_ID_SPLIT100}>100 km</Tab>}
                 <Tab value={TAB_ID_STATS}>Statistiques</Tab>
-                {!selectedRace.isBasicRanking && <Tab value={TAB_ID_FASTEST_LAPS}>Tours les + rapides</Tab>}
+                {showFastestLapsTab && <Tab value={TAB_ID_FASTEST_LAPS}>Meilleurs tours</Tab>}
               </TabList>
             </div>
 
@@ -174,11 +182,17 @@ export default function RacesView(): React.ReactElement {
                   <RankingTabContent />
                 </TabContent>
 
+                {showSplit100KmTab && (
+                  <TabContent value={TAB_ID_SPLIT100}>
+                    <Split100KmTabContent />
+                  </TabContent>
+                )}
+
                 <TabContent value={TAB_ID_STATS}>
                   <StatsTabContent />
                 </TabContent>
 
-                {!selectedRace.isBasicRanking && (
+                {showFastestLapsTab && (
                   <TabContent value={TAB_ID_FASTEST_LAPS}>
                     <FastestLapsTabContent />
                   </TabContent>

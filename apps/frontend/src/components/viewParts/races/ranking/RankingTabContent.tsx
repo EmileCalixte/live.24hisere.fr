@@ -30,7 +30,7 @@ export function RankingTabContent(): React.ReactElement {
   const { selectedRace, selectedRaceRunners } = React.useContext(racesViewContext);
   const { serverTimeOffset, customRunnerCategories } = React.useContext(appDataContext);
 
-  const [selectedCategoryCode, setSelectedCategory] = useQueryState(SearchParam.CATEGORY);
+  const [selectedCategoryCode, setSelectedCategoryCode] = useQueryState(SearchParam.CATEGORY);
   const [selectedGender, setSelectedGender] = useQueryState(SearchParam.GENDER, parseAsGender);
 
   const getCategory = useGetRunnerCategory();
@@ -85,11 +85,11 @@ export function RankingTabContent(): React.ReactElement {
     trackEvent(TrackedEvent.CHANGE_RANKING_CATEGORY, { category: value });
 
     if (value === "scratch") {
-      void setSelectedCategory(null);
+      void setSelectedCategoryCode(null);
       return;
     }
 
-    void setSelectedCategory(value);
+    void setSelectedCategoryCode(value);
   };
 
   const onGenderSelect = (gender: GenderWithMixed): void => {
@@ -136,19 +136,19 @@ export function RankingTabContent(): React.ReactElement {
   // Clear category param if a category is selected but no runner is in it in the ranking
   React.useEffect(() => {
     if (raceCategories && selectedCategoryCode && !(selectedCategoryCode in raceCategories)) {
-      void setSelectedCategory(null);
+      void setSelectedCategoryCode(null);
     }
-  }, [raceCategories, selectedCategoryCode, setSelectedCategory]);
+  }, [raceCategories, selectedCategoryCode, setSelectedCategoryCode]);
 
   // Clear URL params on component unmount
   React.useEffect(
     () => () => {
-      void setSelectedCategory(null);
+      void setSelectedCategoryCode(null);
       void setSelectedGender(null);
       void setSelectedTimeMode(null);
       void setRankingTime(null);
     },
-    [setRankingTime, setSelectedCategory, setSelectedGender, setSelectedTimeMode],
+    [setRankingTime, setSelectedCategoryCode, setSelectedGender, setSelectedTimeMode],
   );
 
   const isRaceNotFinished = !!selectedRace && !isRaceFinished(selectedRace, serverTimeOffset);

@@ -24,6 +24,9 @@ export interface EventTrackingData {
   [TrackedEvent.CHANGE_RANKING_TIME_MODE]: { timeMode: RankingTimeMode };
   [TrackedEvent.CHANGE_RANKING_TIME]: { time: number };
 
+  [TrackedEvent.CHANGE_SPLIT_100KM_CATEGORY]: { category: string };
+  [TrackedEvent.CHANGE_SPLIT_100KM_GENDER]: { gender: GenderWithMixed };
+
   [TrackedEvent.TOGGLE_RUNNER_SPEED_CHART_LAP_SPEED]: { newValue: boolean };
   [TrackedEvent.TOGGLE_RUNNER_SPEED_CHART_HOUR_SPEED]: { newValue: boolean };
   [TrackedEvent.TOGGLE_RUNNER_SPEED_CHART_AVG_SPEED]: { newValue: boolean };

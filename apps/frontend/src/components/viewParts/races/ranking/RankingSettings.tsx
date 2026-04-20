@@ -14,41 +14,36 @@ import RadioGroup from "../../../ui/forms/RadioGroup";
 import Select from "../../../ui/forms/Select";
 import RankingSettingsTime from "./RankingSettingsTime";
 
-interface RankingSettingsProps {
+type RankingSettingsProps = {
   categories: Record<string, string> | null;
   onCategorySelect: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onGenderSelect: (gender: GenderWithMixed) => void;
-  setTimeMode: (timeMode: RankingTimeMode) => void;
-  onRankingTimeSave: (time: number) => void;
   selectedCategoryCode: string | null;
   selectedGender: GenderWithMixed;
-  showTimeModeSelect: boolean;
-  selectedTimeMode: RankingTimeMode;
-  currentRankingTime: number;
-  maxRankingTime: number;
-  isRaceFinished: boolean;
-}
+} & (
+  | { showTimeModeSelect: false }
+  | {
+      showTimeModeSelect: true;
+      setTimeMode: (timeMode: RankingTimeMode) => void;
+      onRankingTimeSave: (time: number) => void;
+      selectedTimeMode: RankingTimeMode;
+      currentRankingTime: number;
+      maxRankingTime: number;
+      isRaceFinished: boolean;
+    }
+);
 
-export default function RankingSettings({
-  categories,
-  onCategorySelect,
-  onGenderSelect,
-  setTimeMode,
-  onRankingTimeSave,
-  selectedCategoryCode,
-  selectedGender,
-  showTimeModeSelect,
-  selectedTimeMode,
-  currentRankingTime,
-  maxRankingTime,
-  isRaceFinished,
-}: RankingSettingsProps): React.ReactElement {
+export default function RankingSettings(props: RankingSettingsProps): React.ReactElement {
+  const { categories, onCategorySelect, onGenderSelect, selectedCategoryCode, selectedGender, showTimeModeSelect } =
+    props;
+
   const categoriesOptions = React.useMemo<Array<SelectOption<string>>>(
     () => [CATEGORY_SCRATCH_SELECT_OPTION, ...getCategoriesSelectOptions(categories)],
     [categories],
   );
 
-  const rankingTimeModeOptions = isRaceFinished ? RANKING_TIME_MODE_RACE_FINISHED_OPTIONS : RANKING_TIME_MODE_OPTIONS;
+  const rankingTimeModeOptions =
+    showTimeModeSelect && props.isRaceFinished ? RANKING_TIME_MODE_RACE_FINISHED_OPTIONS : RANKING_TIME_MODE_OPTIONS;
 
   return (
     <>
@@ -76,17 +71,17 @@ export default function RankingSettings({
             legend="Heure"
             name="timeMode"
             options={rankingTimeModeOptions}
-            value={selectedTimeMode}
+            value={props.selectedTimeMode}
             onSelectOption={(option) => {
-              setTimeMode(option.value);
+              props.setTimeMode(option.value);
             }}
           />
 
           <RankingSettingsTime
-            isVisible={selectedTimeMode === RankingTimeMode.AT}
-            currentRankingTime={currentRankingTime}
-            onRankingTimeSave={onRankingTimeSave}
-            maxRankingTime={maxRankingTime}
+            isVisible={props.selectedTimeMode === RankingTimeMode.AT}
+            currentRankingTime={props.currentRankingTime}
+            onRankingTimeSave={props.onRankingTimeSave}
+            maxRankingTime={props.maxRankingTime}
           />
         </div>
       )}
