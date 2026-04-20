@@ -68,7 +68,7 @@ export function Split100KmTabContent(): React.ReactElement {
 
   const raceCategories = useRunnerFilteredCategories(
     allCategories,
-    processedRunners,
+    ranking ?? undefined,
     selectedRace ? new Date(selectedRace.startTime) : undefined,
   );
 
