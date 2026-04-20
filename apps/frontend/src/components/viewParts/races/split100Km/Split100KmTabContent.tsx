@@ -72,6 +72,22 @@ export function Split100KmTabContent(): React.ReactElement {
     selectedRace ? new Date(selectedRace.startTime) : undefined,
   );
 
+  // Clear category param if a category is selected but no runner is in it in the ranking
+  React.useEffect(() => {
+    if (raceCategories && selectedCategoryCode && !(selectedCategoryCode in raceCategories)) {
+      void setSelectedCategoryCode(null);
+    }
+  }, [raceCategories, selectedCategoryCode, setSelectedCategoryCode]);
+
+  // Clear URL params on component unmount
+  React.useEffect(
+    () => () => {
+      void setSelectedCategoryCode(null);
+      void setSelectedGender(null);
+    },
+    [setSelectedCategoryCode, setSelectedGender],
+  );
+
   const onCategorySelect = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     const value = e.target.value;
 
