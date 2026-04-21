@@ -36,6 +36,11 @@ Chart.register(CategoryScale, Filler, Legend, LinearScale, LineController, LineE
 const DEFAULT_MIN_SPEED = 0;
 const DEFAULT_MAX_SPEED = 10;
 
+const DATASET_INDEX_LAP_SPEED = 0;
+const DATASET_INDEX_HOUR_SPEED = 1;
+const DATASET_INDEX_AVG_SPEED = 2;
+const DATASET_INDEX_AVG_SPEED_EVOLUTION = 3;
+
 interface SpeedChartProps {
   runner: RaceRunnerWithProcessedPassages & RaceRunnerWithProcessedData & RunnerWithProcessedHours;
   race: PublicRace;
@@ -274,27 +279,74 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
             label: (context) => {
               const { datasetIndex, dataIndex } = context;
 
-              if (datasetIndex === 0 || datasetIndex === 3) {
-                if (hasFinalDistancePoint && dataIndex > runner.passages.length && runner.finalDistanceSpeed !== null) {
+              if (datasetIndex === DATASET_INDEX_LAP_SPEED || datasetIndex === DATASET_INDEX_AVG_SPEED_EVOLUTION) {
+                if (hasFinalDistancePoint && dataIndex > runner.passages.length) {
                   const lastPassage = runner.passages[runner.passages.length - 1];
-                  const lines: string[] = [
-                    `De ${formatMsAsDuration(lastPassage.processed.lapEndRaceTime)} à ${formatMsAsDuration(race.duration * 1000)} :`,
-                    `Vitesse : ${runner.finalDistanceSpeed.toFixed(2)} km/h`,
-                  ];
+                  const timeRange = `De ${formatMsAsDuration(lastPassage.processed.lapEndRaceTime)} à ${formatMsAsDuration(race.duration * 1000)} :`;
 
-                  if (runner.finalDistancePace !== null) {
-                    lines.push(
-                      `Allure : ${formatMsAsDuration(runner.finalDistancePace, { forceDisplayHours: false })}/km`,
-                    );
+                  if (datasetIndex === DATASET_INDEX_LAP_SPEED && runner.finalDistanceSpeed !== null) {
+                    const lines: string[] = [timeRange];
+
+                    if (runner.finalDistanceDuration !== null) {
+                      lines.push(
+                        `Durée : ${formatMsAsDuration(runner.finalDistanceDuration, { forceDisplayHours: false })}`,
+                      );
+                    }
+
+                    lines.push(`Vitesse : ${runner.finalDistanceSpeed.toFixed(2)} km/h`);
+
+                    if (runner.finalDistancePace !== null) {
+                      lines.push(
+                        `Allure : ${formatMsAsDuration(runner.finalDistancePace, { forceDisplayHours: false })}/km`,
+                      );
+                    }
+
+                    if (runner.totalAverageSpeed !== null) {
+                      lines.push("");
+                      lines.push(`De ${formatMsAsDuration(0)} à ${formatMsAsDuration(race.duration * 1000)} :`);
+                      lines.push(`Vitesse moyenne : ${runner.totalAverageSpeed.toFixed(2)} km/h`);
+
+                      if (runner.totalAveragePace !== null) {
+                        lines.push(
+                          `Allure moyenne : ${formatMsAsDuration(runner.totalAveragePace, { forceDisplayHours: false })}/km`,
+                        );
+                      }
+                    }
+
+                    return lines;
                   }
 
-                  if (runner.totalAverageSpeed !== null) {
+                  if (datasetIndex === DATASET_INDEX_AVG_SPEED_EVOLUTION && runner.totalAverageSpeed !== null) {
+                    const lines: string[] = [timeRange];
+
+                    if (runner.finalDistanceDuration !== null) {
+                      lines.push(
+                        `Durée : ${formatMsAsDuration(runner.finalDistanceDuration, { forceDisplayHours: false })}`,
+                      );
+                    }
+
+                    if (runner.finalDistanceSpeed !== null) {
+                      lines.push(`Vitesse : ${runner.finalDistanceSpeed.toFixed(2)} km/h`);
+                    }
+
+                    if (runner.finalDistancePace !== null) {
+                      lines.push(
+                        `Allure : ${formatMsAsDuration(runner.finalDistancePace, { forceDisplayHours: false })}/km`,
+                      );
+                    }
+
                     lines.push("");
                     lines.push(`De ${formatMsAsDuration(0)} à ${formatMsAsDuration(race.duration * 1000)} :`);
                     lines.push(`Vitesse moyenne : ${runner.totalAverageSpeed.toFixed(2)} km/h`);
-                  }
 
-                  return lines;
+                    if (runner.totalAveragePace !== null) {
+                      lines.push(
+                        `Allure moyenne : ${formatMsAsDuration(runner.totalAveragePace, { forceDisplayHours: false })}/km`,
+                      );
+                    }
+
+                    return lines;
+                  }
                 }
 
                 const passageIndex = Math.min(dataIndex, runner.passages.length - 1);
@@ -326,7 +378,7 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
                 return lines;
               }
 
-              if (datasetIndex === 1) {
+              if (datasetIndex === DATASET_INDEX_HOUR_SPEED) {
                 const hourIndex = Math.min(Math.floor(dataIndex / 2), runner.hours.length - 1);
                 const hour = runner.hours[hourIndex];
 
@@ -345,7 +397,7 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
                 ];
               }
 
-              if (datasetIndex === 2) {
+              if (datasetIndex === DATASET_INDEX_AVG_SPEED) {
                 return `Vitesse moyenne générale : ${averageSpeed.toFixed(2)} km/h`;
               }
 
