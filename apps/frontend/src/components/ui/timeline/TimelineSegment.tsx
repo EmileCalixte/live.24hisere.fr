@@ -1,3 +1,4 @@
+import type React from "react";
 import { cn } from "tailwind-variants";
 
 interface TimelineSegmentProps {
