@@ -40,7 +40,6 @@ interface TimelineSegmentProps extends Omit<React.ComponentProps<typeof Timeline
   passageDistance?: React.ReactNode;
   label?: React.ReactNode;
   speed?: number;
-  pace?: number;
   lapBadge?: "fastest" | "slowest" | undefined;
   isLastElement?: boolean;
 }
