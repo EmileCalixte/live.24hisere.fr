@@ -14,7 +14,12 @@ import {
 } from "chart.js";
 import { parseAsBoolean, useQueryState } from "nuqs";
 import { Line } from "react-chartjs-2";
-import type { PublicRace, RaceRunnerWithProcessedPassages, RunnerWithProcessedHours } from "@live24hisere/core/types";
+import type {
+  PublicRace,
+  RaceRunnerWithProcessedData,
+  RaceRunnerWithProcessedPassages,
+  RunnerWithProcessedHours,
+} from "@live24hisere/core/types";
 import { TrackedEvent } from "../../../../constants/eventTracking/customEventNames";
 import { SearchParam } from "../../../../constants/searchParams";
 import { useChartGridColor } from "../../../../hooks/charts/useChartGridColor";
@@ -31,8 +36,13 @@ Chart.register(CategoryScale, Filler, Legend, LinearScale, LineController, LineE
 const DEFAULT_MIN_SPEED = 0;
 const DEFAULT_MAX_SPEED = 10;
 
+const DATASET_INDEX_LAP_SPEED = 0;
+const DATASET_INDEX_HOUR_SPEED = 1;
+const DATASET_INDEX_AVG_SPEED = 2;
+const DATASET_INDEX_AVG_SPEED_EVOLUTION = 3;
+
 interface SpeedChartProps {
-  runner: RaceRunnerWithProcessedPassages & RunnerWithProcessedHours;
+  runner: RaceRunnerWithProcessedPassages & RaceRunnerWithProcessedData & RunnerWithProcessedHours;
   race: PublicRace;
   averageSpeed: number;
 }
@@ -63,14 +73,22 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
     parseAsBoolean.withDefault(true),
   );
 
+  const hasFinalDistancePoint = race.isImmediateStop && runner.finalDistanceSpeed !== null;
+
   const minSpeed = React.useMemo(() => {
     const minSpeed = runner.passages.reduce<number | undefined>(
       (min, passage) => (min === undefined || passage.processed.lapSpeed < min ? passage.processed.lapSpeed : min),
       undefined,
     );
 
-    return minSpeed ?? DEFAULT_MIN_SPEED;
-  }, [runner]);
+    const min = minSpeed ?? DEFAULT_MIN_SPEED;
+
+    if (hasFinalDistancePoint && runner.finalDistanceSpeed !== null) {
+      return Math.min(min, runner.finalDistanceSpeed);
+    }
+
+    return min;
+  }, [runner, hasFinalDistancePoint]);
 
   const maxSpeed = React.useMemo(() => {
     let max = DEFAULT_MAX_SPEED;
@@ -81,8 +99,12 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
       }
     }
 
+    if (hasFinalDistancePoint && runner.finalDistanceSpeed !== null && runner.finalDistanceSpeed > max) {
+      max = runner.finalDistanceSpeed;
+    }
+
     return max;
-  }, [runner]);
+  }, [runner, hasFinalDistancePoint]);
 
   const data = React.useMemo<ChartData<"line">>(() => {
     const lapSpeedPoints: Array<{ x: number; y: number }> = [];
@@ -113,6 +135,15 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
           x: passage.processed.lapEndRaceTime,
           y: passage.processed.lapSpeed,
         });
+
+        if (hasFinalDistancePoint && runner.finalDistanceSpeed !== null) {
+          lapSpeedPoints.push({ x: passage.processed.lapEndRaceTime, y: runner.finalDistanceSpeed });
+          lapSpeedPoints.push({ x: race.duration * 1000, y: runner.finalDistanceSpeed });
+
+          if (runner.totalAverageSpeed !== null) {
+            avgSpeedEvolutionPoints.push({ x: race.duration * 1000, y: runner.totalAverageSpeed });
+          }
+        }
       }
     }
 
@@ -188,6 +219,7 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
     runner,
     averageSpeed,
     race.duration,
+    hasFinalDistancePoint,
     showEachLapSpeed,
     showEachHourSpeed,
     showAverageSpeed,
@@ -247,7 +279,76 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
             label: (context) => {
               const { datasetIndex, dataIndex } = context;
 
-              if (datasetIndex === 0 || datasetIndex === 3) {
+              if (datasetIndex === DATASET_INDEX_LAP_SPEED || datasetIndex === DATASET_INDEX_AVG_SPEED_EVOLUTION) {
+                if (hasFinalDistancePoint && dataIndex > runner.passages.length) {
+                  const lastPassage = runner.passages[runner.passages.length - 1];
+                  const timeRange = `De ${formatMsAsDuration(lastPassage.processed.lapEndRaceTime)} à ${formatMsAsDuration(race.duration * 1000)} :`;
+
+                  if (datasetIndex === DATASET_INDEX_LAP_SPEED && runner.finalDistanceSpeed !== null) {
+                    const lines: string[] = [timeRange];
+
+                    if (runner.finalDistanceDuration !== null) {
+                      lines.push(
+                        `Durée : ${formatMsAsDuration(runner.finalDistanceDuration, { forceDisplayHours: false })}`,
+                      );
+                    }
+
+                    lines.push(`Vitesse : ${runner.finalDistanceSpeed.toFixed(2)} km/h`);
+
+                    if (runner.finalDistancePace !== null) {
+                      lines.push(
+                        `Allure : ${formatMsAsDuration(runner.finalDistancePace, { forceDisplayHours: false })}/km`,
+                      );
+                    }
+
+                    if (runner.totalAverageSpeed !== null) {
+                      lines.push("");
+                      lines.push(`De ${formatMsAsDuration(0)} à ${formatMsAsDuration(race.duration * 1000)} :`);
+                      lines.push(`Vitesse moyenne : ${runner.totalAverageSpeed.toFixed(2)} km/h`);
+
+                      if (runner.totalAveragePace !== null) {
+                        lines.push(
+                          `Allure moyenne : ${formatMsAsDuration(runner.totalAveragePace, { forceDisplayHours: false })}/km`,
+                        );
+                      }
+                    }
+
+                    return lines;
+                  }
+
+                  if (datasetIndex === DATASET_INDEX_AVG_SPEED_EVOLUTION && runner.totalAverageSpeed !== null) {
+                    const lines: string[] = [timeRange];
+
+                    if (runner.finalDistanceDuration !== null) {
+                      lines.push(
+                        `Durée : ${formatMsAsDuration(runner.finalDistanceDuration, { forceDisplayHours: false })}`,
+                      );
+                    }
+
+                    if (runner.finalDistanceSpeed !== null) {
+                      lines.push(`Vitesse : ${runner.finalDistanceSpeed.toFixed(2)} km/h`);
+                    }
+
+                    if (runner.finalDistancePace !== null) {
+                      lines.push(
+                        `Allure : ${formatMsAsDuration(runner.finalDistancePace, { forceDisplayHours: false })}/km`,
+                      );
+                    }
+
+                    lines.push("");
+                    lines.push(`De ${formatMsAsDuration(0)} à ${formatMsAsDuration(race.duration * 1000)} :`);
+                    lines.push(`Vitesse moyenne : ${runner.totalAverageSpeed.toFixed(2)} km/h`);
+
+                    if (runner.totalAveragePace !== null) {
+                      lines.push(
+                        `Allure moyenne : ${formatMsAsDuration(runner.totalAveragePace, { forceDisplayHours: false })}/km`,
+                      );
+                    }
+
+                    return lines;
+                  }
+                }
+
                 const passageIndex = Math.min(dataIndex, runner.passages.length - 1);
                 const passage = runner.passages[passageIndex];
                 const lines: string[] = [];
@@ -277,7 +378,7 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
                 return lines;
               }
 
-              if (datasetIndex === 1) {
+              if (datasetIndex === DATASET_INDEX_HOUR_SPEED) {
                 const hourIndex = Math.min(Math.floor(dataIndex / 2), runner.hours.length - 1);
                 const hour = runner.hours[hourIndex];
 
@@ -296,7 +397,7 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
                 ];
               }
 
-              if (datasetIndex === 2) {
+              if (datasetIndex === DATASET_INDEX_AVG_SPEED) {
                 return `Vitesse moyenne générale : ${averageSpeed.toFixed(2)} km/h`;
               }
 
@@ -306,7 +407,17 @@ export default function SpeedChart({ runner, race, averageSpeed }: SpeedChartPro
         },
       },
     }),
-    [race.duration, windowWidth, legendColor, gridColor, minSpeed, maxSpeed, runner, averageSpeed],
+    [
+      race.duration,
+      windowWidth,
+      legendColor,
+      gridColor,
+      minSpeed,
+      maxSpeed,
+      runner,
+      averageSpeed,
+      hasFinalDistancePoint,
+    ],
   );
 
   return (

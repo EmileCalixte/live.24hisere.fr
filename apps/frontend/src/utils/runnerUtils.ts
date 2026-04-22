@@ -81,6 +81,9 @@ export function getBasicRankingRunnerProcessedData(
       averagePaceToLastPassage: null,
       totalAverageSpeed: null,
       totalAveragePace: null,
+      finalDistanceDuration: null,
+      finalDistanceSpeed: null,
+      finalDistancePace: null,
       totalDistance: 0,
       distanceToLastPassage: 0,
     };
@@ -97,6 +100,9 @@ export function getBasicRankingRunnerProcessedData(
     totalDistance,
     totalAverageSpeed,
     totalAveragePace,
+    finalDistanceDuration: null,
+    finalDistanceSpeed: null,
+    finalDistancePace: null,
   };
 }
 
@@ -324,26 +330,56 @@ export function getRunnersSelectOptions<TRunner extends PublicRunner>(
 /**
  * Returns runner data ready for excel export
  */
-export function getDataForExcelExport(runner: RaceRunnerWithProcessedPassages): object[] {
-  const excelData: object[] = [];
+export function getDataForExcelExport(runner: RaceRunnerWithProcessedPassages & RaceRunnerWithProcessedData): object[] {
+  const finalDistance = runner.totalDistance - runner.distanceToLastPassage;
+  const totalRaceTime =
+    runner.lastPassageTime !== null && runner.finalDistanceDuration !== null
+      ? runner.lastPassageTime.raceTime + runner.finalDistanceDuration
+      : null;
 
-  runner.passages.forEach((passage) => {
-    excelData.push({
-      Tours: passage.processed.lapNumber,
-      "Temps total": formatMsAsDuration(passage.processed.lapEndRaceTime),
-      "Temps total (s)": Math.round(passage.processed.lapEndRaceTime / 1000),
-      "Distance totale (m)": passage.processed.totalDistance,
-      "Temps tour": formatMsAsDuration(passage.processed.lapDuration, { forceDisplayHours: false }),
-      "Temps tour (s)": Math.round(passage.processed.lapDuration / 1000),
-      "Distance tour (m)": passage.processed.lapDistance,
-      "Vitesse tour (km/h)": passage.processed.lapSpeed,
-      "Allure tour (min/km)": formatMsAsDuration(passage.processed.lapPace, { forceDisplayHours: false }),
-      "Vitesse moyenne depuis départ (km/h)": passage.processed.averageSpeedSinceRaceStart,
-      "Allure moyenne depuis départ (min/km)": formatMsAsDuration(passage.processed.averagePaceSinceRaceStart, {
-        forceDisplayHours: false,
-      }),
-    });
-  });
+  const passages = [
+    ...runner.passages,
+    ...(finalDistance > 0
+      ? [
+          {
+            processed: {
+              lapNumber: null,
+              lapEndRaceTime: totalRaceTime,
+              totalDistance: runner.totalDistance,
+              lapDuration: runner.finalDistanceDuration,
+              lapDistance: finalDistance,
+              lapSpeed: runner.finalDistanceSpeed,
+              lapPace: runner.finalDistancePace,
+              averageSpeedSinceRaceStart: runner.totalAverageSpeed,
+              averagePaceSinceRaceStart: runner.totalAveragePace,
+            },
+          },
+        ]
+      : []),
+  ];
 
-  return excelData;
+  return passages.map((passage) => ({
+    Tours: passage.processed.lapNumber,
+    "Temps total":
+      passage.processed.lapEndRaceTime !== null ? formatMsAsDuration(passage.processed.lapEndRaceTime) : null,
+    "Temps total (s)":
+      passage.processed.lapEndRaceTime !== null ? Math.round(passage.processed.lapEndRaceTime / 1000) : null,
+    "Distance totale (m)": passage.processed.totalDistance,
+    "Temps tour":
+      passage.processed.lapDuration !== null
+        ? formatMsAsDuration(passage.processed.lapDuration, { forceDisplayHours: false })
+        : null,
+    "Temps tour (s)": passage.processed.lapDuration !== null ? Math.round(passage.processed.lapDuration / 1000) : null,
+    "Distance tour (m)": passage.processed.lapDistance,
+    "Vitesse tour (km/h)": passage.processed.lapSpeed,
+    "Allure tour (min/km)":
+      passage.processed.lapPace !== null
+        ? formatMsAsDuration(passage.processed.lapPace, { forceDisplayHours: false })
+        : null,
+    "Vitesse moyenne depuis départ (km/h)": passage.processed.averageSpeedSinceRaceStart,
+    "Allure moyenne depuis départ (min/km)":
+      passage.processed.averagePaceSinceRaceStart !== null
+        ? formatMsAsDuration(passage.processed.averagePaceSinceRaceStart, { forceDisplayHours: false })
+        : null,
+  }));
 }

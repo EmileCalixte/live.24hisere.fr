@@ -1,29 +1,86 @@
 import React from "react";
-import { faFileExcel, faSortDown, faSortUp } from "@fortawesome/free-solid-svg-icons";
+import { faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { cn } from "tailwind-variants";
 import type { PublicRace, RaceRunnerWithProcessedPassages } from "@live24hisere/core/types";
-import { TrackedEvent } from "../../../constants/eventTracking/customEventNames";
-import { RUNNER_DETAILS_LAPS_SORT_COLUMNS, SortColumn, SortDirection } from "../../../constants/sort";
-import { WINDOW_WIDTH_BREAKPOINTS } from "../../../constants/ui/sizing";
 import { appDataContext } from "../../../contexts/AppDataContext";
-import { useSortQueryString } from "../../../hooks/queryString/useSortQueryString";
 import { useRaceTime } from "../../../hooks/useRaceTime";
-import { useWindowDimensions } from "../../../hooks/useWindowDimensions";
 import type { MinimalRankingRunnerInput, RankingRunner } from "../../../types/Ranking";
 import { formatMsAsDuration, formatMsDurationHms } from "../../../utils/durationUtils";
-import { trackEvent } from "../../../utils/eventTracking/eventTrackingUtils";
+import { getPaceFromSpeed } from "../../../utils/mathUtils";
 import { isRaceFinished, isRaceStarted } from "../../../utils/raceUtils";
-import { getOppositeSortDirection } from "../../../utils/sortUtils";
+import { formatFloatNumber } from "../../../utils/utils";
 import { Card } from "../../ui/Card";
 import { Button } from "../../ui/forms/Button";
-import { Table, Td, Th, Tr } from "../../ui/Table";
-
-const RESPONSIVE_TABLE_MAX_WINDOW_WIDTH = WINDOW_WIDTH_BREAKPOINTS.XL;
+import { TimelineDot } from "../../ui/timeline/TimelineDot";
+import { TimelineSegment } from "../../ui/timeline/TimelineSegment";
 
 interface RunnerDetailsLapsProps {
   runner: RankingRunner<MinimalRankingRunnerInput & RaceRunnerWithProcessedPassages>;
   race: PublicRace;
   exportRunnerToXlsx: () => unknown;
+}
+
+interface LapTimelineDot {
+  label: React.ReactNode;
+  time: number;
+}
+
+function LapTimelineDot({ label, time }: LapTimelineDot): React.ReactElement {
+  return (
+    <TimelineDot>
+      <span className="font-semibold">{label}</span>
+      {" – "}
+      <span>{formatMsAsDuration(time)}</span>
+    </TimelineDot>
+  );
+}
+
+interface TimelineSegmentProps extends Omit<React.ComponentProps<typeof TimelineSegment>, "children"> {
+  passageDistance?: React.ReactNode;
+  label?: React.ReactNode;
+  speed?: number;
+  lapBadge?: "fastest" | "slowest" | undefined;
+  isLastElement?: boolean;
+}
+
+function LapTimelineSegment({
+  passageDistance,
+  label,
+  speed,
+  lapBadge,
+  isLastElement = false,
+  ...props
+}: TimelineSegmentProps): React.ReactElement {
+  const pace = speed !== undefined ? getPaceFromSpeed(speed) : 0;
+
+  return (
+    <TimelineSegment {...props}>
+      <div
+        className={cn("flex flex-col gap-4 text-sm", passageDistance === undefined && "pt-4", !isLastElement && "pb-4")}
+      >
+        {passageDistance !== undefined && (
+          <div className="text-neutral-500 dark:text-neutral-400">{passageDistance}</div>
+        )}
+        {(label !== undefined || speed !== undefined) && (
+          <div>
+            {label !== undefined && <div>{label}</div>}
+            {speed !== undefined && (
+              <div className="text-neutral-500 dark:text-neutral-400">
+                {formatFloatNumber(speed, 2)} km/h – {formatMsDurationHms(pace)} / km
+                {lapBadge === "fastest" && (
+                  <span className="ml-2 text-green-600 dark:text-green-400">(meilleur tour)</span>
+                )}
+                {lapBadge === "slowest" && (
+                  <span className="ml-2 text-orange-500 dark:text-orange-400">(tour le + lent)</span>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </TimelineSegment>
+  );
 }
 
 export default function RunnerDetailsLaps({
@@ -33,299 +90,131 @@ export default function RunnerDetailsLaps({
 }: RunnerDetailsLapsProps): React.ReactElement {
   const { serverTimeOffset } = React.useContext(appDataContext);
 
-  const { sortColumn, sortDirection, setSortColumn, setSortDirection } = useSortQueryString(
-    RUNNER_DETAILS_LAPS_SORT_COLUMNS,
-    SortColumn.RACE_TIME,
-  );
-
   const raceTime = useRaceTime(race, serverTimeOffset);
 
-  const { width: windowWidth } = useWindowDimensions();
+  const raceFinished = isRaceFinished(race, serverTimeOffset);
+  const raceInProgress = isRaceStarted(race, serverTimeOffset) && !raceFinished;
 
-  const currentLapTime = React.useMemo(() => {
-    if (runner.passages.length === 0) {
+  const passages = React.useMemo(
+    () => [...runner.passages].sort((a, b) => a.processed.lapEndRaceTime - b.processed.lapEndRaceTime),
+    [runner.passages],
+  );
+
+  const currentLapDuration = React.useMemo(() => {
+    if (passages.length === 0) {
       return raceTime;
     }
 
-    const lastPassage = runner.passages[runner.passages.length - 1];
+    return raceTime - passages[passages.length - 1].processed.lapEndRaceTime;
+  }, [raceTime, passages]);
 
-    return raceTime - lastPassage.processed.lapEndRaceTime;
-  }, [raceTime, runner]);
+  const finalDistance = runner.totalDistance - runner.distanceToLastPassage;
 
-  const passagesToDisplay = React.useMemo(() => {
-    const passagesToDisplay = [...runner.passages];
+  const { fastestLapId, slowestLapId } = React.useMemo(() => {
+    const regularLaps = passages.filter((p) => p.processed.lapNumber !== null);
 
-    switch (sortColumn) {
-      case SortColumn.RACE_TIME:
-        passagesToDisplay.sort((passageA, passageB) => {
-          if (passageA.processed.lapEndRaceTime < passageB.processed.lapEndRaceTime) {
-            return sortDirection === SortDirection.ASC ? -1 : 1;
-          }
-
-          if (passageA.processed.lapEndRaceTime > passageB.processed.lapEndRaceTime) {
-            return sortDirection === SortDirection.ASC ? 1 : -1;
-          }
-
-          return 0;
-        });
-        break;
-      case SortColumn.LAP_SPEED:
-        passagesToDisplay.sort((passageA, passageB) => {
-          if (passageA.processed.lapSpeed < passageB.processed.lapSpeed) {
-            return sortDirection === SortDirection.ASC ? -1 : 1;
-          }
-
-          if (passageA.processed.lapSpeed > passageB.processed.lapSpeed) {
-            return sortDirection === SortDirection.ASC ? 1 : -1;
-          }
-
-          return 0;
-        });
-        break;
+    if (regularLaps.length === 0) {
+      return { fastestLapId: null, slowestLapId: null };
     }
 
-    return passagesToDisplay;
-  }, [runner, sortColumn, sortDirection]);
+    const fastest = regularLaps.reduce((a, b) => (a.processed.lapSpeed > b.processed.lapSpeed ? a : b));
+    const slowest = regularLaps.reduce((a, b) => (a.processed.lapSpeed < b.processed.lapSpeed ? a : b));
 
-  const currentLapTableRow = React.useMemo(() => {
-    if (runner.stopped) {
-      return null;
+    return { fastestLapId: fastest.id, slowestLapId: slowest.id };
+  }, [passages]);
+
+  const lastPassageDistanceLabel = React.useMemo(() => {
+    if (passages.length === 0) {
+      return undefined;
     }
 
-    return (
-      <Tr>
-        <Td colSpan={2}>Tour en cours</Td>
-        <Td>{formatMsAsDuration(raceTime)}</Td>
-        <Td>{formatMsDurationHms(currentLapTime)}</Td>
-        <Td colSpan={42} />
-      </Tr>
-    );
-  }, [currentLapTime, runner.stopped, raceTime]);
+    const last = passages[passages.length - 1];
 
-  const currentLapResponsiveTableRow = React.useMemo(() => {
-    if (runner.stopped) {
-      return null;
-    }
-
-    return (
-      <Tr>
-        <Td>
-          <div>
-            <strong>Tour en cours</strong>
-            &nbsp;–&nbsp;
-            {formatMsAsDuration(raceTime)}
-          </div>
-
-          <div className="text-sm">
-            Durée&nbsp;:&nbsp;
-            <strong>{formatMsDurationHms(currentLapTime)}</strong>
-          </div>
-        </Td>
-      </Tr>
-    );
-  }, [currentLapTime, runner.stopped, raceTime]);
-
-  const updateSort = React.useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>, clickedSortColumn: SortColumn) => {
-      e.preventDefault();
-
-      if (clickedSortColumn !== sortColumn) {
-        const newSortDirection = SortDirection.ASC;
-
-        trackEvent(TrackedEvent.CHANGE_RUNNER_LAPS_TABLE_SORT, {
-          newSortColumn: clickedSortColumn,
-          newSortDirection,
-        });
-
-        void setSortColumn(clickedSortColumn);
-        void setSortDirection(newSortDirection);
-
-        return;
-      }
-
-      const newSortDirection = getOppositeSortDirection(sortDirection);
-
-      trackEvent(TrackedEvent.CHANGE_RUNNER_LAPS_TABLE_SORT, {
-        newSortColumn: sortColumn,
-        newSortDirection,
-      });
-
-      void setSortDirection(newSortDirection);
-    },
-    [setSortColumn, setSortDirection, sortColumn, sortDirection],
-  );
-
-  const onResponsiveSortButtonClick = React.useCallback(() => {
-    if (sortColumn === SortColumn.RACE_TIME) {
-      const newSortColumn = SortColumn.LAP_SPEED;
-      const newSortDirection = SortDirection.DESC;
-
-      trackEvent(TrackedEvent.CHANGE_RUNNER_LAPS_TABLE_SORT, { newSortColumn, newSortDirection });
-
-      void setSortColumn(newSortColumn);
-      void setSortDirection(newSortDirection);
-
-      return;
-    }
-
-    const newSortColumn = SortColumn.RACE_TIME;
-    const newSortDirection = SortDirection.ASC;
-
-    trackEvent(TrackedEvent.CHANGE_RUNNER_LAPS_TABLE_SORT, { newSortColumn, newSortDirection });
-
-    void setSortColumn(newSortColumn);
-    void setSortDirection(newSortDirection);
-  }, [setSortColumn, setSortDirection, sortColumn]);
-
-  const showCurrentLap =
-    isRaceStarted(race, serverTimeOffset)
-    && !isRaceFinished(race, serverTimeOffset)
-    && sortColumn === SortColumn.RACE_TIME;
-
-  const showCurrentLapAtTopOfTable = showCurrentLap && sortDirection === SortDirection.DESC;
-  const showCurrentLapAtBottomOfTable = showCurrentLap && sortDirection === SortDirection.ASC;
+    return `${formatFloatNumber(last.processed.totalDistance / 1000, 2, 3)} km`;
+  }, [passages]);
 
   return (
     <Card className="flex flex-col gap-3">
-      <h3>Détails des tours</h3>
+      <h3 className="flex flex-col gap-3 sm:flex-row">
+        <span>Détails des tours</span>
 
-      <p>
-        <Button
-          variant="link"
-          onClick={() => {
-            exportRunnerToXlsx();
-          }}
-          icon={<FontAwesomeIcon icon={faFileExcel} />}
-        >
-          Télécharger au format Excel
-        </Button>
-      </p>
+        <span>
+          <Button
+            size="sm"
+            onClick={() => {
+              exportRunnerToXlsx();
+            }}
+            icon={<FontAwesomeIcon icon={faFileExcel} />}
+          >
+            Télécharger au format Excel
+          </Button>
+        </span>
+      </h3>
 
-      {windowWidth > RESPONSIVE_TABLE_MAX_WINDOW_WIDTH && (
-        <div>
-          <Table id="runner-laps-table">
-            <thead>
-              <Tr>
-                <Th>Nb. tours</Th>
-                <Th>Distance</Th>
-                <Th>
-                  <Button
-                    variant="link"
-                    onClick={(e) => {
-                      updateSort(e, SortColumn.RACE_TIME);
-                    }}
-                  >
-                    Temps de course
-                    {sortColumn === SortColumn.RACE_TIME && (
-                      <>
-                        {sortDirection === SortDirection.ASC && <FontAwesomeIcon icon={faSortDown} className="ms-1" />}
-                        {sortDirection === SortDirection.DESC && <FontAwesomeIcon icon={faSortUp} className="ms-1" />}
-                      </>
-                    )}
-                  </Button>
-                </Th>
-                <Th>Temps au tour</Th>
-                <Th>
-                  <Button
-                    variant="link"
-                    onClick={(e) => {
-                      updateSort(e, SortColumn.LAP_SPEED);
-                    }}
-                  >
-                    Vitesse
-                    {sortColumn === SortColumn.LAP_SPEED && (
-                      <>
-                        {sortDirection === SortDirection.ASC && <FontAwesomeIcon icon={faSortDown} className="ms-1" />}
-                        {sortDirection === SortDirection.DESC && <FontAwesomeIcon icon={faSortUp} className="ms-1" />}
-                      </>
-                    )}
-                  </Button>
-                </Th>
-                <Th>Allure</Th>
-                <Th>Vmoy. depuis le début</Th>
-                <Th>Allure depuis le début</Th>
-              </Tr>
-            </thead>
-            <tbody>
-              {showCurrentLapAtTopOfTable && <>{currentLapTableRow}</>}
+      <p>Distance du tour : {formatFloatNumber(Number(race.lapDistance), 0, 3)} m</p>
 
-              {passagesToDisplay.map((passage, index) => (
-                <Tr key={index}>
-                  <Td>{passage.processed.lapNumber ?? "–"}</Td>
-                  <Td>{(passage.processed.totalDistance / 1000).toFixed(2)} km</Td>
-                  <Td>{formatMsAsDuration(passage.processed.lapEndRaceTime)}</Td>
-                  <Td>{formatMsDurationHms(passage.processed.lapDuration)}</Td>
-                  <Td>{passage.processed.lapSpeed.toFixed(2)} km/h</Td>
-                  <Td>
-                    {formatMsDurationHms(passage.processed.lapPace)}
-                    <> </>/ km
-                  </Td>
-                  <Td>{passage.processed.averageSpeedSinceRaceStart.toFixed(2)} km/h</Td>
-                  <Td>
-                    {formatMsDurationHms(passage.processed.averagePaceSinceRaceStart)}
-                    <> </>/ km
-                  </Td>
-                </Tr>
-              ))}
+      <div>
+        <LapTimelineDot label="Départ" time={0} />
 
-              {showCurrentLapAtBottomOfTable && <>{currentLapTableRow}</>}
-            </tbody>
-          </Table>
-        </div>
-      )}
+        {passages.map((passage, index) => {
+          const prevPassage = index > 0 ? passages[index - 1] : null;
+          const passageDistance = prevPassage
+            ? `${formatFloatNumber(prevPassage.processed.totalDistance / 1000, 2, 3)} km`
+            : undefined;
+          const lapBadge =
+            passage.id === fastestLapId ? "fastest" : passage.id === slowestLapId ? "slowest" : undefined;
 
-      {windowWidth <= RESPONSIVE_TABLE_MAX_WINDOW_WIDTH && (
-        <>
-          <div>
-            <Button onClick={onResponsiveSortButtonClick}>
-              {sortColumn === SortColumn.RACE_TIME && <>Trier par vitesse</>}
+          return (
+            <React.Fragment key={passage.id}>
+              <LapTimelineSegment
+                passageDistance={passageDistance}
+                label={
+                  passage.processed.lapNumber === null
+                    ? `Distance initiale (${Math.round(passage.processed.lapDistance)} m) – ${formatMsDurationHms(passage.processed.lapDuration)}`
+                    : `Tour n° ${passage.processed.lapNumber} – ${formatMsDurationHms(passage.processed.lapDuration)}`
+                }
+                speed={passage.processed.lapSpeed}
+                lapBadge={lapBadge}
+              />
 
-              {sortColumn === SortColumn.LAP_SPEED && <>Trier par temps de passage</>}
-            </Button>
-          </div>
+              <LapTimelineDot label={`Passage n° ${index + 1}`} time={passage.processed.lapEndRaceTime} />
+            </React.Fragment>
+          );
+        })}
 
-          <Table id="runner-laps-table" className="w-full">
-            <tbody>
-              {showCurrentLapAtTopOfTable && <>{currentLapResponsiveTableRow}</>}
+        {raceInProgress && !runner.stopped && (
+          <LapTimelineSegment
+            passageDistance={lastPassageDistanceLabel}
+            label={`Tour en cours (${formatMsDurationHms(currentLapDuration)})`}
+            isLastElement
+          />
+        )}
 
-              {passagesToDisplay.map((passage, index) => (
-                <Tr key={index}>
-                  <Td>
-                    <div>
-                      <strong>
-                        {passage.processed.lapNumber === null && <>Premier passage</>}
+        {raceFinished && finalDistance <= 0 && lastPassageDistanceLabel !== undefined && (
+          <LapTimelineSegment passageDistance={lastPassageDistanceLabel} hideBorder isLastElement />
+        )}
 
-                        {passage.processed.lapNumber !== null && <>Tour {passage.processed.lapNumber}</>}
-                      </strong>
-                      &nbsp;–&nbsp;
-                      {formatMsAsDuration(passage.processed.lapEndRaceTime)}
-                    </div>
+        {raceFinished && finalDistance > 0 && (
+          <>
+            <LapTimelineSegment
+              passageDistance={lastPassageDistanceLabel}
+              label={`Distance finale (${Math.round(finalDistance)} m)${runner.finalDistanceDuration !== null ? ` – ${formatMsDurationHms(runner.finalDistanceDuration)}` : ""}`}
+              {...(runner.finalDistanceSpeed !== null
+                && runner.finalDistancePace !== null && {
+                  speed: runner.finalDistanceSpeed,
+                })}
+            />
 
-                    <div className="text-sm">
-                      Durée&nbsp;:&nbsp;
-                      <strong>{formatMsDurationHms(passage.processed.lapDuration)}</strong>
-                      <> </>|<> </>
-                      <strong>{passage.processed.lapSpeed.toFixed(2)} km/h</strong>
-                      <> </>|<> </>
-                      {formatMsDurationHms(passage.processed.lapPace)}
-                      <> </>/ km
-                    </div>
+            <LapTimelineDot label="Fin" time={race.duration * 1000} />
 
-                    <div className="text-sm">
-                      Depuis départ&nbsp;:&nbsp; {passage.processed.averageSpeedSinceRaceStart.toFixed(2)} km/h
-                      <> </>|<> </>
-                      {formatMsDurationHms(passage.processed.averagePaceSinceRaceStart)}
-                      <> </>/ km
-                    </div>
-                  </Td>
-                </Tr>
-              ))}
-
-              {showCurrentLapAtBottomOfTable && <>{currentLapResponsiveTableRow}</>}
-            </tbody>
-          </Table>
-        </>
-      )}
+            <LapTimelineSegment
+              passageDistance={`${formatFloatNumber(runner.totalDistance / 1000, 3)} km`}
+              hideBorder
+              isLastElement
+            />
+          </>
+        )}
+      </div>
     </Card>
   );
 }

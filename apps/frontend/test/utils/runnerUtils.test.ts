@@ -149,6 +149,9 @@ describe("Spaceship runners", () => {
     averagePaceToLastPassage: 0,
     totalAverageSpeed: 0,
     totalAveragePace: 0,
+    finalDistanceDuration: null,
+    finalDistanceSpeed: null,
+    finalDistancePace: null,
     lastPassageTime: {
       raceTime: 0,
       time: new Date(0),

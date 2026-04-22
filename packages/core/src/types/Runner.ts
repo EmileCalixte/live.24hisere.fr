@@ -140,6 +140,24 @@ export interface RunnerProcessedData {
   totalAveragePace: number | null;
 
   /**
+   * The duration of the final distance (after the last passage), in milliseconds.
+   * Null if the runner has no final distance or no passage
+   */
+  finalDistanceDuration: number | null;
+
+  /**
+   * The average speed of the runner during the final distance (after the last passage), in km/h.
+   * Null if the runner has no final distance or no passage
+   */
+  finalDistanceSpeed: number | null;
+
+  /**
+   * The average pace of the runner during the final distance (after the last passage), in ms/km.
+   * Null if the runner has no final distance or no passage
+   */
+  finalDistancePace: number | null;
+
+  /**
    * The time of the last passage of the runner. Null if runner has no passage
    */
   lastPassageTime: null | {

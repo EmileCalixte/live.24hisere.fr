@@ -1,10 +1,11 @@
 import { describe, expect, it } from "vitest";
-import type { ProcessedPassage, PublicPassage, PublicRace } from "@live24hisere/core/types";
+import type { Participant, ProcessedPassage, PublicPassage, PublicRace } from "@live24hisere/core/types";
 import {
   getFastestLapPassage,
   getProcessedDistanceSlotsFromPassages,
   getProcessedPassagesFromPassages,
   getProcessedTimeSlotsFromPassages,
+  getRunnerProcessedDataFromPassages,
   getSlowestLapPassage,
 } from "../../src/utils/passageUtils";
 
@@ -395,5 +396,79 @@ describe("Get processed distance slots from passages", () => {
     expect(slots.length).toBe(1);
     expect(slots[0].startDistance).toBe(0);
     expect(slots[0].endDistance).toBe(4500);
+  });
+});
+
+describe("getRunnerProcessedDataFromPassages - finalDistance fields", () => {
+  // Race: initialDistance=0m, lapDistance=1000m, duration=3600s (1h), starts at 07:00:00
+  const race: PublicRace = {
+    id: 1,
+    editionId: 1,
+    name: "Test race",
+    initialDistance: "0",
+    lapDistance: "1000",
+    startTime: "2024-04-06T07:00:00.000Z",
+    duration: 3600,
+    isImmediateStop: true,
+    isBasicRanking: false,
+  };
+
+  // Passage at 07:30:00: raceTime = 1_800_000ms, distanceToLastPassage = 1000m
+  const passages: PublicPassage[] = [{ id: 1, time: "2024-04-06T07:30:00.000Z" }];
+
+  // finalDistanceDuration = 3_600_000 - 1_800_000 = 1_800_000ms
+  // finalDistanceSpeed = getSpeed(500m, 1_800_000ms) = (0.5km) / (0.5h) = 1 km/h
+  // finalDistancePace = getPaceFromSpeed(1) = 3_600_000 ms/km
+  const participant500: Participant = {
+    id: 1,
+    runnerId: 1,
+    raceId: 1,
+    bibNumber: 1,
+    customCategoryId: null,
+    stopped: false,
+    finalDistance: "500",
+  };
+
+  it("should return null for all three fields when passages array is empty", () => {
+    const result = getRunnerProcessedDataFromPassages(participant500, race, [], true);
+
+    expect(result.finalDistanceDuration).toBeNull();
+    expect(result.finalDistanceSpeed).toBeNull();
+    expect(result.finalDistancePace).toBeNull();
+  });
+
+  it("should return null for all three fields when finalDistance is 0", () => {
+    const participant: Participant = { ...participant500, finalDistance: "0" };
+    const result = getRunnerProcessedDataFromPassages(participant, race, passages, true);
+
+    expect(result.finalDistanceDuration).toBeNull();
+    expect(result.finalDistanceSpeed).toBeNull();
+    expect(result.finalDistancePace).toBeNull();
+  });
+
+  it("should return null for all three fields when includeDistanceAfterLastPassage is false", () => {
+    const result = getRunnerProcessedDataFromPassages(participant500, race, passages, false);
+
+    expect(result.finalDistanceDuration).toBeNull();
+    expect(result.finalDistanceSpeed).toBeNull();
+    expect(result.finalDistancePace).toBeNull();
+  });
+
+  it("should compute correct values when finalDistance > 0 and last passage is before race end", () => {
+    const result = getRunnerProcessedDataFromPassages(participant500, race, passages, true);
+
+    expect(result.finalDistanceDuration).toBe(1_800_000);
+    expect(result.finalDistanceSpeed).toBe(1);
+    expect(result.finalDistancePace).toBe(3_600_000);
+  });
+
+  it("should return null speed and pace when last passage is at race end (finalDistanceDuration = 0)", () => {
+    // Passage at exactly race end: 07:00:00 + 3600s = 08:00:00: raceTime = 3_600_000ms
+    const passagesAtRaceEnd: PublicPassage[] = [{ id: 1, time: "2024-04-06T08:00:00.000Z" }];
+    const result = getRunnerProcessedDataFromPassages(participant500, race, passagesAtRaceEnd, true);
+
+    expect(result.finalDistanceDuration).toBe(0);
+    expect(result.finalDistanceSpeed).toBeNull();
+    expect(result.finalDistancePace).toBeNull();
   });
 });

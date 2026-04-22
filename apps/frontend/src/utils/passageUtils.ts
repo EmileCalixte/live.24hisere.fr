@@ -36,6 +36,9 @@ export function getRunnerProcessedDataFromPassages(
       averagePaceToLastPassage: null,
       totalAverageSpeed: null,
       totalAveragePace: null,
+      finalDistanceDuration: null,
+      finalDistanceSpeed: null,
+      finalDistancePace: null,
       totalDistance: 0,
       distanceToLastPassage: 0,
     };
@@ -63,6 +66,11 @@ export function getRunnerProcessedDataFromPassages(
 
   const totalAveragePace = getPaceFromSpeed(totalAverageSpeed);
 
+  const finalDistanceDuration = finalDistance > 0 ? race.duration * 1000 - lastPassageTime.raceTime : null;
+  const finalDistanceSpeed =
+    finalDistanceDuration !== null && finalDistanceDuration > 0 ? getSpeed(finalDistance, finalDistanceDuration) : null;
+  const finalDistancePace = finalDistanceSpeed !== null ? getPaceFromSpeed(finalDistanceSpeed) : null;
+
   return {
     lastPassageTime,
     distanceToLastPassage,
@@ -71,6 +79,9 @@ export function getRunnerProcessedDataFromPassages(
     totalDistance,
     totalAverageSpeed,
     totalAveragePace,
+    finalDistanceDuration,
+    finalDistanceSpeed,
+    finalDistancePace,
   };
 }
 
