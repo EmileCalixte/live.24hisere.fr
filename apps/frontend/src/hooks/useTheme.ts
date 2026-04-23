@@ -13,6 +13,7 @@ const windowMatchDark = window.matchMedia("(prefers-color-scheme: dark)");
 
 export function useTheme(): UseTheme {
   const bodyRef = React.useRef(document.querySelector("body"));
+  const isPrinting = React.useRef(false);
 
   const localStorageTheme = localStorage.getItem("preferredTheme");
 
@@ -31,9 +32,32 @@ export function useTheme(): UseTheme {
     body.setAttribute("data-theme", theme);
   }, [theme]);
 
+  React.useEffect(() => {
+    function onBeforePrint(): void {
+      isPrinting.current = true;
+    }
+
+    function onAfterPrint(): void {
+      isPrinting.current = false;
+    }
+
+    window.addEventListener("beforeprint", onBeforePrint);
+    window.addEventListener("afterprint", onAfterPrint);
+
+    return () => {
+      window.removeEventListener("beforeprint", onBeforePrint);
+      window.removeEventListener("afterprint", onAfterPrint);
+    };
+  }, []);
+
   // Auto-switch theme when system color scheme changes
   React.useEffect(() => {
     function onChange(e: MediaQueryListEvent): void {
+      // Ignore prefers-color-scheme changes triggered by the browser during print rendering
+      if (isPrinting.current) {
+        return;
+      }
+
       if (e.matches && theme === Theme.LIGHT) {
         trackEvent(TrackedEvent.AUTO_SWITCH_DARK_THEME);
         setTheme(Theme.DARK);
