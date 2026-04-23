@@ -17,7 +17,7 @@
     "start": "nest start",
     "start:dev": "pnpm nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
+    "start:prod": "node dist/src/main",
     "typecheck": "tsc --noEmit",
     "test": "exit 0",
     "test:watch": "vitest",
