@@ -2,9 +2,10 @@ import { defineConfig, devices, type PlaywrightTestConfig } from "@playwright/te
 
 const isCI = Boolean(process.env.CI);
 
-const reporter: PlaywrightTestConfig["reporter"] = isCI
-  ? "github"
-  : [["html", { outputFolder: "./test-e2e/playwright-report", open: "never" }]];
+const htmlReport = ["html", { outputFolder: "./test-e2e/playwright-report", open: "never" }] as const;
+const githubReport = ["github"] as const;
+
+const reporter: PlaywrightTestConfig["reporter"] = isCI ? [githubReport, htmlReport] : [htmlReport];
 
 export default defineConfig({
   testDir: "./test-e2e",
@@ -17,6 +18,7 @@ export default defineConfig({
   use: {
     baseURL: "http://localhost:3000",
     trace: "on-first-retry",
+    screenshot: "only-on-failure",
   },
   projects: [
     {
