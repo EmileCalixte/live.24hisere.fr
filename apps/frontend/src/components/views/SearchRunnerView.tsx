@@ -2,7 +2,6 @@ import React from "react";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQueryState } from "nuqs";
-import type { RunnerWithRaceCount } from "@live24hisere/core/types";
 import { latinizedIncludes } from "../../../../../packages/utils/src/string-utils";
 import { SearchParam } from "../../constants/searchParams";
 import { useGetPublicRunners } from "../../hooks/api/requests/public/runners/useGetPublicRunners";
@@ -21,7 +20,6 @@ export default function SearchRunnerView(): React.ReactElement {
 
   const [querySearch, setQuerySearch] = useQueryState(SearchParam.SEARCH);
   const [search, setSearch] = React.useState(querySearch ?? "");
-  const [matchingRunners, setMatchingRunners] = React.useState<RunnerWithRaceCount[] | undefined>(undefined);
 
   const onSubmit: FormSubmitEventHandler = (e) => {
     e.preventDefault();
@@ -29,22 +27,24 @@ export default function SearchRunnerView(): React.ReactElement {
     void setQuerySearch(search.trim());
   };
 
-  React.useEffect(() => {
-    if (!runners || !querySearch) {
-      return;
+  const matchingRunners = React.useMemo(() => {
+    if (!runners) {
+      return undefined;
     }
 
-    setMatchingRunners(
-      runners
-        .filter(
-          (runner) =>
-            latinizedIncludes(runner.firstname, querySearch)
-            || latinizedIncludes(runner.lastname, querySearch)
-            || latinizedIncludes(`${runner.firstname} ${runner.lastname}`, querySearch)
-            || latinizedIncludes(`${runner.lastname} ${runner.firstname}`, querySearch),
-        )
-        .sort(spaceshipRunnersByName),
-    );
+    if (!querySearch) {
+      return runners;
+    }
+
+    return runners
+      .filter(
+        (runner) =>
+          latinizedIncludes(runner.firstname, querySearch)
+          || latinizedIncludes(runner.lastname, querySearch)
+          || latinizedIncludes(`${runner.firstname} ${runner.lastname}`, querySearch)
+          || latinizedIncludes(`${runner.lastname} ${runner.firstname}`, querySearch),
+      )
+      .sort(spaceshipRunnersByName);
   }, [querySearch, runners]);
 
   return (

@@ -4,7 +4,6 @@ import type { PublicRace } from "@live24hisere/core/types";
 import { RankingTimeMode } from "../../constants/rankingTimeMode";
 import { SearchParam } from "../../constants/searchParams";
 import { parseAsEnum } from "../../queryStringParsers/parseAsEnum";
-import type { ReactStateSetter } from "../../types/utils/react";
 import { getDateFromRaceTime } from "../../utils/raceUtils";
 
 interface UseRankingTimeQueryString {
@@ -13,7 +12,7 @@ interface UseRankingTimeQueryString {
   selectedRankingTime: number | null;
   rankingDate: Date | undefined;
   setRankingTime: (time: number | null) => Promise<URLSearchParams>;
-  setRankingTimeMemory: ReactStateSetter<number | null>;
+  setRankingTimeMemory: (value: number | null) => void;
 }
 
 export function useRankingTimeQueryString(race: PublicRace | null): UseRankingTimeQueryString {
@@ -24,7 +23,10 @@ export function useRankingTimeQueryString(race: PublicRace | null): UseRankingTi
   const [rankingTime, setRankingTime] = useQueryState(SearchParam.RANKING_TIME, parseAsInteger);
 
   // To keep in memory the selected ranking time when the user selects current time ranking mode, in seconds
-  const [rankingTimeMemory, setRankingTimeMemory] = React.useState<number | null>(null);
+  const rankingTimeMemoryRef = React.useRef<number | null>(null);
+  const setRankingTimeMemory = React.useCallback((value: number | null) => {
+    rankingTimeMemoryRef.current = value;
+  }, []);
 
   // Ranking time in ms
   const selectedRankingTime = React.useMemo<number | null>(() => {
@@ -53,15 +55,15 @@ export function useRankingTimeQueryString(race: PublicRace | null): UseRankingTi
 
   const shouldResetRankingTime = React.useCallback(
     (newRaceDuration: number) => {
-      if (rankingTimeMemory === null) {
+      if (rankingTimeMemoryRef.current === null) {
         return false;
       }
 
-      if (rankingTimeMemory < 0) {
+      if (rankingTimeMemoryRef.current < 0) {
         return true;
       }
 
-      if (race && rankingTimeMemory > newRaceDuration) {
+      if (race && rankingTimeMemoryRef.current > newRaceDuration) {
         return true;
       }
 
@@ -69,7 +71,7 @@ export function useRankingTimeQueryString(race: PublicRace | null): UseRankingTi
       // duration of the newly selected race
       return selectedTimeMode !== RankingTimeMode.AT;
     },
-    [rankingTimeMemory, race, selectedTimeMode],
+    [race, selectedTimeMode],
   );
 
   React.useEffect(() => {
@@ -92,9 +94,9 @@ export function useRankingTimeQueryString(race: PublicRace | null): UseRankingTi
     }
 
     if (selectedTimeMode === RankingTimeMode.AT && rankingTime === null) {
-      void setRankingTime(rankingTimeMemory ?? race.duration);
+      void setRankingTime(rankingTimeMemoryRef.current ?? race.duration);
     }
-  }, [race, rankingTime, rankingTimeMemory, selectedTimeMode, setRankingTime]);
+  }, [race, rankingTime, selectedTimeMode, setRankingTime]);
 
   React.useEffect(() => {
     if (selectedTimeMode !== RankingTimeMode.AT) {

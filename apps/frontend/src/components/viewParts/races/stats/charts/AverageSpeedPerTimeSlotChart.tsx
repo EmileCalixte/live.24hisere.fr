@@ -188,8 +188,8 @@ export function AverageSpeedPerTimeSlotChart({
         datasets: objectUtils.entries(genderTimeSlots).map(([gender, timeSlots]) => ({
           label: gender === "M" ? "Hommes" : "Femmes",
           data: getTimeSlotsPoints(timeSlots),
-          borderColor: GENDER_COLORS[gender as Gender],
-          backgroundColor: GENDER_COLORS[gender as Gender],
+          borderColor: GENDER_COLORS[gender],
+          backgroundColor: GENDER_COLORS[gender],
           pointRadius: 0,
           tension: 0,
         })),

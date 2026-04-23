@@ -3,7 +3,7 @@
 /// <reference types="vitest" />
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react-swc";
-import { defineConfig, type PluginOption } from "vite";
+import { defineConfig } from "vite";
 import { analyzer, unstableRolldownAdapter } from "vite-bundle-analyzer";
 
 // https://vitejs.dev/config/
@@ -17,7 +17,7 @@ export default defineConfig({
         analyzerMode: "static",
         fileName: "apps/frontend/bundle-visualization.html",
       }),
-    ) as unknown as PluginOption,
+    ),
   ],
   server: {
     host: true,
