@@ -59,6 +59,71 @@ jobs:
       - name: Run tests on all packages
         run: pnpm test
 
+  test-e2e:
+    if: github.event.pull_request.draft == false
+    needs: [build]
+    runs-on: ubuntu-24.04
+    container: ubuntu:24.04
+
+    services:
+      database:
+        image: mariadb:11.8
+        env:
+          MARIADB_DATABASE: live_test
+          MARIADB_USER: admin
+          MARIADB_PASSWORD: admin
+          MARIADB_ROOT_PASSWORD: root
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    env:
+      NODE_ENV: production
+      TZ: UTC
+      FRONTEND_URL: http://localhost:3000
+      DB_HOST: database
+      DB_NAME: live_test
+      DB_USERNAME: admin
+      DB_PASSWORD: admin
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Install Playwright browsers
+        run: pnpm frontend exec playwright install --with-deps chromium
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+          path: .
+
+      - name: Run database migrations
+        run: pnpm backend run migrate
+
+      - name: Start backend
+        run: pnpm --filter @live24hisere/backend run start:prod &
+
+      - name: Wait for backend
+        run: timeout 60 bash -c 'until (echo > /dev/tcp/localhost/8000) 2>/dev/null; do sleep 2; done'
+
+      - name: Run E2E tests
+        run: pnpm test:e2e
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: apps/frontend/test-e2e/playwright-report/
+          retention-days: 7
+
   lint:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-24.04

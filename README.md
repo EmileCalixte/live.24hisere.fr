@@ -92,8 +92,26 @@ pnpm backend update-password
 
 ## Tests
 
+### Tests unitaires
+
 ```sh
 pnpm test
+```
+
+### Tests end-to-end (Playwright)
+
+```sh
+# Lancer les tests e2e en headless
+pnpm test:e2e
+
+# Afficher le rapport
+pnpm test:e2e:report
+```
+
+Ou lancer l'UI Playwright :
+
+```sh
+pnpm test:e2e:ui
 ```
 
 ## Installation en production
