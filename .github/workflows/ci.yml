@@ -104,6 +104,9 @@ jobs:
           name: build-artifacts
           path: .
 
+      - name: Build frontend for E2E
+        run: pnpm frontend run build:e2e
+
       - name: Run database migrations
         run: pnpm backend run migrate
 
