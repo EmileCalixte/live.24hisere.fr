@@ -114,6 +114,8 @@ Ou lancer l'UI Playwright :
 pnpm test:e2e:ui
 ```
 
+> Note : Les tests e2e nécessitent que l'app backend et la base de données soient lancées.
+
 ## Installation en production
 
 1. Cloner le dépôt GitHub dans le dossier souhaité sur le serveur
