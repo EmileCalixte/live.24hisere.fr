@@ -96,7 +96,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Install Playwright browsers
-        run: pnpm frontend run test:e2e:install -- --with-deps
+        run: pnpm frontend run test:e2e:install
 
       - name: Download build artifacts
         uses: actions/download-artifact@v4
