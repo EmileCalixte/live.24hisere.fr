@@ -1,6 +1,7 @@
 import { defineConfig, devices, type PlaywrightTestConfig } from "@playwright/test";
 
 const isCI = Boolean(process.env.CI);
+const frontendUrl = process.env.FRONTEND_URL ?? "http://localhost:3000";
 
 const htmlReport = ["html", { outputFolder: "./test-e2e/playwright-report", open: "never" }] as const;
 const githubReport = ["github"] as const;
@@ -16,7 +17,7 @@ export default defineConfig({
   reporter,
   outputDir: "./test-e2e/test-results",
   use: {
-    baseURL: "http://localhost:3000",
+    baseURL: frontendUrl,
     trace: "on-first-retry",
     screenshot: "only-on-failure",
   },
@@ -28,7 +29,7 @@ export default defineConfig({
   ],
   webServer: {
     command: isCI ? "pnpm run preview" : "pnpm run dev",
-    url: "http://localhost:3000",
+    url: frontendUrl,
     reuseExistingServer: !isCI,
     timeout: 120_000,
   },
