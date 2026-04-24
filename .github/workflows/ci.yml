@@ -107,8 +107,11 @@ jobs:
       - name: Build frontend for E2E
         run: pnpm frontend run build:e2e
 
-      - name: Run database migrations
-        run: pnpm backend run migrate
+      - name: Install MariaDB client
+        run: apt-get install -y mariadb-client
+
+      - name: Initialize test database
+        run: mysql -h database -u admin -padmin live_test < sql/app/live.sql
 
       - name: Start backend
         run: pnpm --filter @live24hisere/backend run start:prod &
