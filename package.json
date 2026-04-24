@@ -15,6 +15,7 @@
     "utils": "pnpm --filter @live24hisere/utils",
     "dev": "turbo run dev --parallel",
     "test": "turbo run test --parallel",
+    "test:e2e:install": "pnpm frontend run test:e2e:install",
     "test:e2e": "pnpm frontend run test:e2e",
     "test:e2e:ui": "pnpm frontend run test:e2e:ui",
     "test:e2e:report": "pnpm frontend run test:e2e:report",

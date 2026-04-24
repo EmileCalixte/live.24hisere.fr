@@ -100,6 +100,14 @@ pnpm test
 
 ### Tests end-to-end (Playwright)
 
+D'abord, installer les dépendances nécessaires à Playwright :
+
+```sh
+pnpm test:e2e:install
+```
+
+Ensuite les tests peuvent être lancés :
+
 ```sh
 # Lancer les tests e2e en headless
 pnpm test:e2e
