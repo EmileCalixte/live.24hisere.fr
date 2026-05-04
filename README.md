@@ -92,9 +92,37 @@ pnpm backend update-password
 
 ## Tests
 
+### Tests unitaires
+
 ```sh
 pnpm test
 ```
+
+### Tests end-to-end (Playwright)
+
+D'abord, installer les dépendances nécessaires à Playwright :
+
+```sh
+pnpm test:e2e:install
+```
+
+Ensuite les tests peuvent être lancés :
+
+```sh
+# Lancer les tests e2e en headless
+pnpm test:e2e
+
+# Afficher le rapport
+pnpm test:e2e:report
+```
+
+Ou lancer l'UI Playwright :
+
+```sh
+pnpm test:e2e:ui
+```
+
+> Note : Les tests e2e nécessitent que l'app backend et la base de données soient lancées.
 
 ## Installation en production
 
