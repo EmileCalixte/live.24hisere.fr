@@ -2,5 +2,6 @@
 node_modules/
 dist/
 .turbo
+apps/frontend/test-e2e/.auth/
 apps/frontend/test-e2e/playwright-report/
 apps/frontend/test-e2e/test-results/
