@@ -7,7 +7,7 @@ const ext = "{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx}";
 
 export default [
   {
-    ignores: ["**/dist", "**/lib", "eslint.config.js"],
+    ignores: ["**/dist", "**/lib", "eslint.config.js", "apps/frontend/test-e2e/{.auth,playwright-report,test-results}"],
   },
   {
     files: [`**/*.${ext}`],
