@@ -11,7 +11,11 @@ export const DrawerClose = Primitive.Close;
 
 export const DrawerContent = React.forwardRef<
   React.ComponentRef<typeof Primitive.Popup>,
-  React.ComponentPropsWithoutRef<typeof Primitive.Popup> & { openDirection?: DrawerOpenDirection; size?: string }
+  Omit<React.ComponentPropsWithoutRef<typeof Primitive.Popup>, "style"> & {
+    openDirection?: DrawerOpenDirection;
+    size?: string;
+    style?: React.CSSProperties;
+  }
 >(({ children, openDirection = "left", size = "24rem", style, ...props }, ref) => {
   const isHorizontal = openDirection === "left" || openDirection === "right";
   const sizeStyle: React.CSSProperties = isHorizontal ? { width: size } : { height: size };
