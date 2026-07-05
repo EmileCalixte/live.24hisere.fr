@@ -12,8 +12,7 @@ export interface RunnerDetailsViewContext {
   selectedRace: RaceWithRunnerCount | undefined;
   selectedRaceEdition: PublicEdition | undefined;
   selectedRankingRunner:
-    | RankingRunner<RaceRunnerWithProcessedPassages & RunnerWithProcessedHours & RaceRunnerWithProcessedData>
-    | undefined;
+    RankingRunner<RaceRunnerWithProcessedPassages & RunnerWithProcessedHours & RaceRunnerWithProcessedData> | undefined;
   ranking: Ranking | null;
 }
 
