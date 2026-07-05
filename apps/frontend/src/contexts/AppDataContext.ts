@@ -32,7 +32,6 @@ export const appDataContext = React.createContext<AppDataContext>({
 
 export function AppDataProvider({ children }: { children: React.ReactNode }): React.ReactElement {
   const [isLoading, setIsLoading] = React.useState(true);
-  const [fetchAppDataError, setFetchAppDataError] = React.useState<unknown>(null);
   const [lastUpdateTime, setLastUpdateTime] = React.useState(new Date());
   const [serverTimeOffset, setServerTimeOffset] = React.useState(0);
   const [isAppEnabled, setIsAppEnabled] = React.useState(false);
@@ -43,6 +42,7 @@ export function AppDataProvider({ children }: { children: React.ReactNode }): Re
 
   const getAppDataQuery = useGetAppData();
   const appData = getAppDataQuery.data;
+  const fetchAppDataError = getAppDataQuery.error;
 
   React.useEffect(() => {
     if (!appData) {
@@ -51,6 +51,7 @@ export function AppDataProvider({ children }: { children: React.ReactNode }): Re
 
     verbose("App data", appData);
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Legitimate sync of react-query cache (external system) into context state
     setIsAppEnabled(appData.isAppEnabled);
     setDisabledAppMessage(appData.disabledAppMessage);
     setGlobalInformationMessage(appData.globalInformationMessage);
@@ -70,10 +71,6 @@ export function AppDataProvider({ children }: { children: React.ReactNode }): Re
 
     setIsLoading(false);
   }, [appData]);
-
-  React.useEffect(() => {
-    setFetchAppDataError(getAppDataQuery.error);
-  }, [getAppDataQuery.error]);
 
   const value = React.useMemo<AppDataContext>(
     () => ({

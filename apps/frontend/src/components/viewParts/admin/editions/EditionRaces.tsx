@@ -41,14 +41,13 @@ export default function EditionRaces({ editionId, races, getRacesQuery }: Editio
     });
   }
 
-  React.useEffect(() => {
-    if (!races) {
-      return;
+  function handleSetIsSorting(sorting: boolean): void {
+    if (sorting) {
+      setSortingRaces(races ? [...races] : []);
     }
 
-    // When user enables/disables sorting mode, reset sortingRaces array with current races order
-    setSortingRaces([...races]);
-  }, [isSorting, races]);
+    setIsSorting(sorting);
+  }
 
   return (
     <>
@@ -73,14 +72,14 @@ export default function EditionRaces({ editionId, races, getRacesQuery }: Editio
           <>
             <SortListButtons
               isSorting={isSorting}
-              setIsSorting={setIsSorting}
+              setIsSorting={handleSetIsSorting}
               saveSort={saveSort}
               disabled={isSaving}
             />
 
             <div>
               <SortList
-                items={sortingRaces || []}
+                items={isSorting ? sortingRaces || [] : races}
                 keyFunction={(race) => race.id}
                 setItems={setSortingRaces}
                 isSorting={isSorting}

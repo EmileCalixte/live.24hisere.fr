@@ -24,12 +24,16 @@ export const userContext = React.createContext<UserContext>({
 export function UserProvider({ children }: { children: React.ReactNode }): React.ReactElement {
   const navigate = useNavigate();
 
-  const [accessToken, setAccessToken] = React.useState<string | null>(localStorage.getItem("accessToken"));
-  const [user, setUser] = React.useState<PublicUser | null | undefined>(undefined);
+  const [accessToken, setAccessToken] = React.useState<string | null>(() => localStorage.getItem("accessToken"));
+  // undefined = user not yet fetched, null = known to be not logged in
+  const [user, setUser] = React.useState<PublicUser | null | undefined>(() =>
+    accessToken === null ? null : undefined,
+  );
 
   const forgetAccessToken = React.useCallback(() => {
     localStorage.removeItem("accessToken");
     setAccessToken(null);
+    setUser(null);
   }, []);
 
   const getCurrentUserQuery = useGetCurrentUser(accessToken, forgetAccessToken);
@@ -50,7 +54,6 @@ export function UserProvider({ children }: { children: React.ReactNode }): React
     logoutMutation.mutate(accessToken, {
       onSuccess: () => {
         forgetAccessToken();
-        setUser(null);
         void navigate("/");
       },
     });
@@ -58,15 +61,10 @@ export function UserProvider({ children }: { children: React.ReactNode }): React
 
   React.useEffect(() => {
     if (lastFetchedCurrentUser) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Legitimate sync of react-query cache (external system) into overridable user state
       setUser(lastFetchedCurrentUser);
     }
   }, [lastFetchedCurrentUser]);
-
-  React.useEffect(() => {
-    if (accessToken === null) {
-      setUser(null);
-    }
-  }, [accessToken]);
 
   const value = React.useMemo<UserContext>(
     () => ({ accessToken, saveAccessToken, user, setUser, logout }),

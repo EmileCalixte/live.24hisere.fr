@@ -15,12 +15,7 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { GENDER } from "@live24hisere/core/constants";
-import type {
-  Gender,
-  PublicRace,
-  RaceRunnerWithProcessedPassages,
-  RunnerProcessedTimeSlot,
-} from "@live24hisere/core/types";
+import type { PublicRace, RaceRunnerWithProcessedPassages, RunnerProcessedTimeSlot } from "@live24hisere/core/types";
 import { objectUtils } from "@live24hisere/utils";
 import { CATEGORY_COLORS, GENDER_COLORS } from "../../../../../constants/chart";
 import { useChartGridColor } from "../../../../../hooks/charts/useChartGridColor";
@@ -188,8 +183,8 @@ export function AverageSpeedPerTimeSlotChart({
         datasets: objectUtils.entries(genderTimeSlots).map(([gender, timeSlots]) => ({
           label: gender === "M" ? "Hommes" : "Femmes",
           data: getTimeSlotsPoints(timeSlots),
-          borderColor: GENDER_COLORS[gender as Gender],
-          backgroundColor: GENDER_COLORS[gender as Gender],
+          borderColor: GENDER_COLORS[gender],
+          backgroundColor: GENDER_COLORS[gender],
           pointRadius: 0,
           tension: 0,
         })),

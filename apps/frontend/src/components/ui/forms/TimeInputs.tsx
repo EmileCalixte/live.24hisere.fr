@@ -79,12 +79,15 @@ export default function TimeInputs({
 
   // Sync display when time changes externally (e.g. a linked slider or reset).
   React.useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Syncs draft field with the controlled time prop, same as Input.tsx
     setH(pad(derivedHours));
   }, [derivedHours, setH]);
   React.useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Syncs draft field with the controlled time prop, same as Input.tsx
     setM(pad(derivedMinutes));
   }, [derivedMinutes, setM]);
   React.useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Syncs draft field with the controlled time prop, same as Input.tsx
     setS(pad(derivedSeconds));
   }, [derivedSeconds, setS]);
 

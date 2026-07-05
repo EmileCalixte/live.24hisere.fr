@@ -80,6 +80,7 @@ export default function CreateRaceAdminView(): React.ReactElement {
 
   React.useEffect(() => {
     if (editionOptions.length > 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Hand-rolled form default initialized from async-loaded data; will be resolved by the planned TanStack Form migration
       setRaceEditionId(editionOptions[0].value);
     }
   }, [editionOptions]);

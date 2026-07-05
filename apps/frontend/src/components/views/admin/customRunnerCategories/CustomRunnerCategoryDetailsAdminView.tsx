@@ -56,6 +56,7 @@ export default function CustomRunnerCategoryDetailsAdminView(): React.ReactEleme
       return;
     }
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Hand-rolled form initialized from async-loaded data; will be resolved by the planned TanStack Form migration
     setCategoryCode(category.code);
     setCategoryName(category.name);
   }, [category]);

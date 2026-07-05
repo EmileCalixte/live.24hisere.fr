@@ -62,6 +62,7 @@ export function Input({
   };
 
   React.useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Syncs draft value with the controlled prop; see TODO above, this component needs a broader rework
     setInternalValue(valueToString(value));
   }, [value]);
 
