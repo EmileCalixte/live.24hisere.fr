@@ -113,7 +113,7 @@ export function useRankingTimeQueryString(race: PublicRace | null): UseRankingTi
       void setRankingTime(race.duration);
       setRankingTimeMemory(race.duration);
     }
-  }, [race, selectedRankingTime, selectedTimeMode, setRankingTime]);
+  }, [race, selectedRankingTime, selectedTimeMode, setRankingTime, setRankingTimeMemory]);
 
   return {
     selectedTimeMode,
