@@ -72,6 +72,7 @@ export default function PassageImportRuleDetailsAdminView(): React.ReactElement 
       return;
     }
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Hand-rolled form initialized from async-loaded data; will be resolved by the planned TanStack Form migration
     setUrl(rule.url);
     setIsActive(rule.isActive);
   }, [rule]);

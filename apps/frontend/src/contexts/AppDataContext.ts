@@ -51,6 +51,7 @@ export function AppDataProvider({ children }: { children: React.ReactNode }): Re
 
     verbose("App data", appData);
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Legitimate sync of react-query cache (external system) into context state
     setIsAppEnabled(appData.isAppEnabled);
     setDisabledAppMessage(appData.disabledAppMessage);
     setGlobalInformationMessage(appData.globalInformationMessage);

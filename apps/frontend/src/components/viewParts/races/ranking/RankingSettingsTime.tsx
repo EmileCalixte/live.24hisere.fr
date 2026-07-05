@@ -28,6 +28,7 @@ export default function RankingSettingsTime({
 
   // Reset inputs when ranking time in settings is changed, for example when selected race changes
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Resets draft time when the controlled currentRankingTime prop changes externally
     setTime(currentRankingTime);
   }, [currentRankingTime]);
 

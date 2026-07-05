@@ -15,12 +15,7 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { GENDER } from "@live24hisere/core/constants";
-import type {
-  Gender,
-  PublicRace,
-  RaceRunnerWithProcessedPassages,
-  RunnerProcessedTimeSlot,
-} from "@live24hisere/core/types";
+import type { PublicRace, RaceRunnerWithProcessedPassages, RunnerProcessedTimeSlot } from "@live24hisere/core/types";
 import { objectUtils } from "@live24hisere/utils";
 import { CATEGORY_COLORS, GENDER_COLORS } from "../../../../../constants/chart";
 import { useChartGridColor } from "../../../../../hooks/charts/useChartGridColor";

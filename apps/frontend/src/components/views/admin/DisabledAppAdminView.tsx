@@ -54,6 +54,7 @@ export default function DisabledAppAdminView(): React.ReactElement {
       return;
     }
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- isAppEnabled/disabledAppMessage are hand-rolled form fields, will be resolved by the planned TanStack Form migration; setAppDataIsAppEnabled below stays a legitimate sync to the global AppDataContext
     setIsAppEnabled(disabledAppData.isAppEnabled);
     setAppDataIsAppEnabled(disabledAppData.isAppEnabled);
     setDisabledAppMessage(disabledAppData.disabledAppMessage ?? "");

@@ -23,10 +23,6 @@ export default function EditionsAdminView(): React.ReactElement {
   const [isSorting, setIsSorting] = React.useState(false);
   const [isSaving, setIsSaving] = React.useState(false);
 
-  React.useEffect(() => {
-    setSortingEditions(editions ?? []);
-  }, [editions]);
-
   function saveSort(): void {
     if (!sortingEditions) {
       return;
@@ -44,6 +40,14 @@ export default function EditionsAdminView(): React.ReactElement {
         });
       },
     });
+  }
+
+  function handleSetIsSorting(sorting: boolean): void {
+    if (sorting) {
+      setSortingEditions(editions ?? []);
+    }
+
+    setIsSorting(sorting);
   }
 
   return (
@@ -65,14 +69,14 @@ export default function EditionsAdminView(): React.ReactElement {
 
               <SortListButtons
                 isSorting={isSorting}
-                setIsSorting={setIsSorting}
+                setIsSorting={handleSetIsSorting}
                 saveSort={saveSort}
                 disabled={isSaving}
               />
 
               <div>
                 <SortList
-                  items={sortingEditions || []}
+                  items={isSorting ? sortingEditions || [] : editions}
                   keyFunction={(edition) => edition.id}
                   setItems={setSortingEditions}
                   isSorting={isSorting}

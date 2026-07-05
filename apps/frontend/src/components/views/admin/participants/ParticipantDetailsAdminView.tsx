@@ -185,6 +185,7 @@ export default function ParticipantDetailsAdminView(): React.ReactElement {
       return;
     }
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Hand-rolled form initialized from async-loaded data; will be resolved by the planned TanStack Form migration
     setParticipantBibNumber(runner.bibNumber);
     setParticipantCustomCategoryId(runner.customCategoryId);
     setParticipantIsStopped(runner.stopped);

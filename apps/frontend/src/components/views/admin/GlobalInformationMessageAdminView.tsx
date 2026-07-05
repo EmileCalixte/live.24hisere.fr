@@ -56,6 +56,7 @@ export default function GlobalInformationMessageAdminView(): React.ReactElement 
       return;
     }
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Hand-rolled form initialized from async-loaded data; will be resolved by the planned TanStack Form migration
     setIsGlobalInformationMessageVisible(globalInformationMessageData.isGlobalInformationMessageVisible);
     setGlobalInformationMessage(globalInformationMessageData.globalInformationMessage ?? "");
   }, [globalInformationMessageData]);
