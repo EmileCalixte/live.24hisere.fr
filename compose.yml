@@ -40,13 +40,11 @@ services:
       - "8081:8080"
 
   umami:
-    image: docker.umami.is/umami-software/umami:mysql-latest
+    image: docker.umami.is/umami-software/umami:3.0.3
     ports:
       - "9000:3000"
     environment:
-      DATABASE_URL: mysql://umami:umami@umami-db:3306/umami
-      DATABASE_TYPE: mysql
-      APP_SECRET: replace-me-with-a-random-string
+      DATABASE_URL: postgresql://umami:umami@umami-db:5432/umami
     depends_on:
       umami-db:
         condition: service_healthy
@@ -59,31 +57,17 @@ services:
       retries: 5
 
   umami-db:
-    image: mariadb:11.8.3
+    image: postgres:16.14
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: umami
-      MYSQL_PASSWORD: umami
-      MYSQL_DATABASE: umami
+      POSTGRES_USER: umami
+      POSTGRES_PASSWORD: umami
+      POSTGRES_DB: umami
     volumes:
       - ./sql/umami:/docker-entrypoint-initdb.d/
     healthcheck:
-      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      test: ["CMD-SHELL", "pg_isready -U umami -d umami"]
       start_period: 10s
       interval: 10s
       timeout: 5s
       retries: 3
-
-  umami-phpmyadmin:
-    image: phpmyadmin
-    restart: always
-    environment:
-      PMA_HOST: umami-db
-      PMA_USER: umami
-      PMA_PASSWORD: umami
-    depends_on:
-      umami-db:
-        condition: service_healthy
-    ports:
-      - "9090:80"
