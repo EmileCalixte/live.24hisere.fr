@@ -38,7 +38,6 @@ Si besoin, créez un fichier `apps/frontend/.env.development.local` à partir du
 - Fichiers statiques : [http://localhost:8081](http://localhost:8081)
 - PHPMyAdmin : [http://localhost:8080](http://localhost:8080)
 - Umami : [http://localhost:9000](http://localhost:9000) (utilisateur `admin` - mot de passe : `umami`)
-- PHPMyAdmin (Umami) : [http://localhost:9090](http://localhost:9090)
 
 ### Base de données
 
