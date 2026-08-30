@@ -34,7 +34,7 @@
     "@nestjs/core": "^11.1.27",
     "@nestjs/mapped-types": "^2.1.1",
     "@nestjs/platform-express": "^11.1.27",
-    "@nestjs/schedule": "^6.1.3",
+    "@nestjs/schedule": "^12.0.1",
     "@nestjs/swagger": "^11.4.5",
     "@types/papaparse": "^5.5.2",
     "argon2": "^0.44.0",
