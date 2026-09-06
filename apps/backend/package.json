@@ -30,7 +30,7 @@
     "@live24hisere/utils": "workspace:^",
     "@nestjs/axios": "^4.0.1",
     "@nestjs/common": "^11.1.27",
-    "@nestjs/config": "^4.0.4",
+    "@nestjs/config": "^12.0.0",
     "@nestjs/core": "^11.1.27",
     "@nestjs/mapped-types": "^2.1.1",
     "@nestjs/platform-express": "^11.1.27",
