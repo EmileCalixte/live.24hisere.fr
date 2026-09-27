@@ -60,17 +60,17 @@
     "@types/express": "^5.0.6",
     "@types/node": "22.19.15",
     "@types/supertest": "^7.2.1",
-    "@vitest/coverage-v8": "^4.1.10",
+    "@vitest/coverage-v8": "^5.0.1",
     "drizzle-kit": "^0.31.10",
     "jest-extended": "^7.0.0",
     "prettier": "^3.9.4",
     "source-map-support": "^0.5.20",
-    "supertest": "^7.2.2",
+    "supertest": "^7.3.0",
     "ts-loader": "^9.6.2",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "4.2.0",
     "typescript": "^5.9.3",
     "unplugin-swc": "^1.5.9",
-    "vitest": "^4.1.10"
+    "vitest": "^5.0.1"
   }
 }
